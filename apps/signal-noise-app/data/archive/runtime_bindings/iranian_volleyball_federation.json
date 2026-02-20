@@ -1,0 +1,337 @@
+{
+  "entity_id": "iranian_volleyball_federation",
+  "entity_name": "Iranian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "en.volleyball.ir",
+    "worldofvolley.com",
+    "asianvolleyball.net",
+    "en.volleyballworld.com",
+    "volleyweek.bg"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+      "https://www.linkedin.com/posts/jobs-somewhere_upgrade-your-career-globally-remote-activity-7355522415696752640-NoSI",
+      "https://www.linkedin.com/jobs/view/x96563-head-womens-volleyball-coach-at-northeastern-state-university-4365672559",
+      "https://www.linkedin.com/jobs/league-one-volleyball-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "iranian_volleyball_federation",
+      "entity_name": "Iranian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.volleyball.ir",
+        "https://www.linkedin.com/jobs/view/x96563-head-womens-volleyball-coach-at-northeastern-state-university-4365672559",
+        "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+        "https://www.linkedin.com/posts/jobs-somewhere_upgrade-your-career-globally-remote-activity-7355522415696752640-NoSI",
+        "https://en.volleyballworld.com",
+        "https://asianvolleyball.net",
+        "https://volleyweek.bg",
+        "https://www.linkedin.com/jobs/league-one-volleyball-jobs",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Iranian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:29:32.654738",
+          "domain_explored": "https://en.volleyball.ir",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:29:41.611699",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "International league results (Brazil, Italy, Poland, Turkey)",
+            "Player transfer confirmations ('Done deals')",
+            "Sponsorship naming rights (Vodafone, Ziraat Bankkart)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.3328208923339844
+            }
+          ],
+          "reasoning": "The content is entirely focused on international volleyball match results, standings, and player transfers. There is no mention of the Iranian Volleyball Federation, its governance, or any procurement activities (RFPs, technology investments, or job postings) related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:29:54.021860",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Confederation Governance",
+            "Strategic Coordination Meetings",
+            "Event Calendar Alignment",
+            "International Stakeholder Engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 923,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.7591118812561035
+            }
+          ],
+          "reasoning": "The content describes high-level strategic coordination between the Asian Volleyball Confederation (AVC), Volleyball World, and SV.LEAGUE regarding competition calendars and collaboration. While this indicates organizational activity, it is focused on governance and sporting regulations rather than procurement, technology acquisition, or vendor selection processes relevant to the Iranian Volleyball Federation specifically."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:30:03.656209",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "International league results (Italy, Poland, Brazil)",
+            "World ranking tables (Men/Women/Beach)",
+            "Streaming service promotion (VolleyballWorld TV)",
+            "Generic sports navigation (Schedule, Rankings, Replay)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.8056888580322266
+            }
+          ],
+          "reasoning": "The content is entirely focused on global sports results, rankings, and broadcast schedules. It lacks specific context regarding the Iranian Volleyball Federation's internal operations, governance, or procurement activities. This is a consumer-facing news platform, not a source for B2G intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:30:13.387647",
+          "domain_explored": "https://volleyweek.bg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Bulgarian sports news aggregation",
+            "Player performance statistics (points, blocks, efficiency)",
+            "International league coverage (Italy, Greece)",
+            "Match results and standings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.061131000518799
+            }
+          ],
+          "reasoning": "The content is entirely focused on sports journalism, specifically reporting on match results, player statistics, and league standings for Bulgarian players abroad. There is no mention of the Iranian Volleyball Federation, governance, procurement activities, or technology investments."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:30:26.797661",
+          "domain_explored": "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant",
+              "Business Development Lead - Club Recruiting",
+              "Club Recruiting Analyst",
+              "Manager, Fan Engagement & Insights",
+              "Total Rewards Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (LOVB vs Iranian Volleyball Federation)",
+            "US-based Job Postings",
+            "Commercial League Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 256,
+              "elapsed_seconds": 5.705579996109009
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn company page for 'League One Volleyball (LOVB)', a private entity based in the United States. This is completely unrelated to the 'Iranian Volleyball Federation' (IRI), which is the target entity. The job postings (Senior Accountant, Business Development, etc.) are for LOVB's operations and do not reflect procurement activities or governance patterns of the Iranian federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:30:33.966997",
+          "domain_explored": "https://www.linkedin.com/posts/jobs-somewhere_upgrade-your-career-globally-remote-activity-7355522415696752640-NoSI",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Recruitment Aggregation",
+            "Remote Work Promotion",
+            "Entity Mismatch (Jobs Somewhere vs Iranian Volleyball Federation)",
+            "Irrelevant User Comments (Korosh Khazeni, Behnam Fatah)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1724,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.15290904045105
+            }
+          ],
+          "reasoning": "The content is a promotional post from 'Jobs Somewhere', a third-party recruitment agency, regarding remote work opportunities with US companies. There is no connection to the Iranian Volleyball Federation, nor are there any procurement signals, RFPs, or technology investments related to the target entity. The comments, while from individuals with Iranian names, are expressions of interest in general employment, not federation-related activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:30:42.965805",
+          "domain_explored": "https://www.linkedin.com/jobs/view/x96563-head-womens-volleyball-coach-at-northeastern-state-university-4365672559",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Women's Volleyball Coach - Northeastern State University"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Northeastern State University vs Iranian Volleyball Federation)",
+            "Geographic Irrelevance (United States/Oklahoma)",
+            "Generic Job Board Interface (LinkedIn)",
+            "Role Irrelevance (Coaching vs Procurement/Technology)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1804,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.6501519680023193
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for a Head Women's Volleyball Coach at Northeastern State University (Oklahoma, USA). This represents a complete entity and geographic mismatch with the target entity, the Iranian Volleyball Federation. Additionally, the role is operational (coaching) rather than strategic or procurement-focused, offering no insight into the Federation's technology stack or vendor partnerships."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T06:31:06.542880",
+          "domain_explored": "https://www.linkedin.com/jobs/league-one-volleyball-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant",
+              "Business Development Lead - Club Recruiting",
+              "Club Recruiting Analyst",
+              "Manager, Fan Engagement & Insights",
+              "Total Rewards Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (LOVB vs Iranian Volleyball Federation)",
+            "Geographic Irrelevance (United States vs Iran)",
+            "Commercial League Structure (League One Volleyball)",
+            "Generic Job Board Interface (LinkedIn)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1882,
+              "output_tokens": 273,
+              "elapsed_seconds": 20.232884168624878
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job listing page for 'League One Volleyball' (LOVB), a commercial entity based in the United States. This is a distinct entity from the 'Iranian Volleyball Federation' (the target). The job postings (Senior Accountant, Business Development Lead, etc.) are for US-based roles and do not reflect procurement activities or governance patterns of the Iranian federation."
+        }
+      ],
+      "total_input_tokens": 12449,
+      "total_output_tokens": 1796,
+      "estimated_cost_usd": 0.064287
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Iranian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:31:06.544678"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345202",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:23.232378"
+}

@@ -1,0 +1,357 @@
+{
+  "entity_id": "fulham",
+  "entity_name": "Fulham",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "fulhamfc.com",
+    "fulham-fc.co.uk",
+    "fulham.com",
+    "premierleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/fulham-football-club-jobs",
+      "https://uk.linkedin.com/jobs/hammersmith-%26-fulham-council-jobs",
+      "https://uk.linkedin.com/jobs/kensington-jobs-hammersmith-and-fulham",
+      "https://uk.linkedin.com/jobs/summer-hire-jobs-hammersmith-and-fulham",
+      "https://uk.linkedin.com/jobs/it-career-jobs-hammersmith-and-fulham",
+      "https://www.linkedin.com/posts/fulham-fc_jobs-at-fulham-fc-fulham-fc-careers-activity-7163492414714798081-93O6",
+      "https://www.linkedin.com/posts/fulham-fc_jobs-at-fulham-fc-fulham-fc-careers-activity-7217557100179132416-PvTp"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fulham",
+      "entity_name": "Fulham",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/kensington-jobs-hammersmith-and-fulham",
+        "https://uk.linkedin.com/jobs/hammersmith-%26-fulham-council-jobs",
+        "https://fulham.com",
+        "https://fulham-fc.co.uk",
+        "https://fulhamfc.com",
+        "https://premierleague.com",
+        "https://uk.linkedin.com/jobs/fulham-football-club-jobs",
+        "https://uk.linkedin.com/jobs/summer-hire-jobs-hammersmith-and-fulham",
+        "https://uk.linkedin.com/jobs/it-career-jobs-hammersmith-and-fulham"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fulham may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:01:28.244980",
+          "domain_explored": "https://fulhamfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Recovery Technology (Wellness devices)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Vendor Partnership: BON CHARGE (Recovery/Wellness)",
+              "Category: Sports Science / Medical / Performance"
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Wellness Procurement",
+            "Corporate Partnership Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 222,
+              "elapsed_seconds": 3.4917421340942383
+            }
+          ],
+          "reasoning": "The content explicitly identifies a new commercial partnership with 'BON CHARGE' focused on 'recovery' (sports science/wellness). While this is a partnership rather than a direct RFP, it signals active procurement in the High Performance and Sports Science categories. The repeated 'Club' tag suggests this is an official organizational investment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:01:58.901287",
+          "domain_explored": "https://fulham-fc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Mention: Bet365 (Generic partner link, no active procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Outdated Information",
+            "Unofficial Source",
+            "Historical Data Only"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 197,
+              "elapsed_seconds": 19.14288330078125
+            }
+          ],
+          "reasoning": "The source is an unofficial fan site containing historical and general information about the club. The content is factually outdated (referencing Scott Parker as manager and the club's founding date as 1979, whereas the club was founded in 1879). There are no signals regarding current procurement activities, technology stacks, or corporate governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:02:02.588258",
+          "domain_explored": "https://fulham.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:02:08.630917",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level Partnership Structure",
+            "Generic Navigation Elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1223,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.831590175628662
+            }
+          ],
+          "reasoning": "The content provided is scraped from the Premier League's main homepage navigation and footer, not Fulham-specific content. It lists generic league-wide sponsors (e.g., 'Official Cloud & AI Partner') and navigation links (e.g., 'Fantasy Premier League'). While 'Official Cloud & AI Partner' indicates technology adoption at the league level, it does not constitute a specific procurement signal for Fulham FC. The content is noise relative to the specific entity target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:02:16.050217",
+          "domain_explored": "https://uk.linkedin.com/jobs/fulham-football-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HiBob (HR/Payroll - Likely Vendor)"
+            ],
+            "job_postings": [
+              "Part Time Management Accountant (Fulham FC Foundation)"
+            ],
+            "procurement_indicators": [
+              "Financial Management Hiring",
+              "HR Tech Vendor Targeting"
+            ]
+          },
+          "patterns_found": [
+            "Financial Systems Procurement",
+            "HRIS Stack Discovery (HiBob)",
+            "Operational Hiring (Foundation)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.9856841564178467
+            }
+          ],
+          "reasoning": "While the search results contained noise (vendor ads), the listing for a 'Part Time Management Accountant' at the Fulham FC Foundation indicates active financial operations and likely accounting software usage. The presence of 'HiBob' ads targeting Fulham employees suggests a potential existing relationship or intent in the HR/Payroll technology space."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:02:22.979417",
+          "domain_explored": "https://uk.linkedin.com/jobs/hammersmith-%26-fulham-council-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Principal Accountant - Regeneration & Development",
+              "Head of Facilities Management Services",
+              "Technical Assistant Civic Campus Apprentice"
+            ],
+            "procurement_indicators": [
+              "Civic Campus Construction (Potential indirect overlap with stadium planning/roads, but distinct entity)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Local Government vs. Football Club)",
+            "Public Sector Procurement Frameworks",
+            "Civic Infrastructure Projects"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.687276840209961
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Hammersmith & Fulham Council' (the local government authority, LBHF), not 'Fulham' (the football club). While the council is a major stakeholder in the borough and regulates planning/infrastructure, their job postings (e.g., Principal Accountant, Sessional Lecturer) do not provide direct procurement intelligence for the football club's commercial or sports operations. This is a false positive on the entity name."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:02:30.363409",
+          "domain_explored": "https://uk.linkedin.com/jobs/kensington-jobs-hammersmith-and-fulham",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Associate at Gopuff (Unrelated)",
+              "Care Assistant at Caremark Ltd (Unrelated)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Geographic vs. Corporate)",
+            "Generic Labor Market Data",
+            "Unrelated Industry Sectors (Caremark, Gopuff)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.5785281658172607
+            }
+          ],
+          "reasoning": "The search query 'Kensington jobs in Hammersmith And Fulham' targets a geographic region rather than the specific corporate entity 'Fulham Football Club'. The results returned (Caremark, Gopuff) are unrelated third-party employers operating within the geographic vicinity of the club's stadium. There is no signal of procurement activity, technology stack, or hiring specific to Fulham FC."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:02:38.297321",
+          "domain_explored": "https://uk.linkedin.com/jobs/summer-hire-jobs-hammersmith-and-fulham",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "M&A Internship",
+                "company": "Fluent Software",
+                "location": "Guildford",
+                "relevance": "Low"
+              },
+              {
+                "title": "Mortgage Advisor",
+                "company": "Mojo Mortgages",
+                "location": "London",
+                "relevance": "Low"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Geographic vs. Corporate)",
+            "Generic Labor Market Data",
+            "Unrelated Industry Sectors (Software, Mortgages, Retail)",
+            "Authentication Barrier (No Data Access)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1720,
+              "output_tokens": 308,
+              "elapsed_seconds": 4.216148853302002
+            }
+          ],
+          "reasoning": "The search query 'Summer Hire' combined with 'Hammersmith and Fulham' returns generic geographic results rather than specific Fulham FC procurement signals. The results include unrelated entities (Fluent Software, Mojo Mortgages, Caremark) and do not contain actionable intelligence regarding Fulham FC's technology stack or procurement needs. The content is largely repetitive login prompts."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:02:45.484964",
+          "domain_explored": "https://uk.linkedin.com/jobs/it-career-jobs-hammersmith-and-fulham",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Junior Communications Assistant (Vivienne Westwood)",
+              "Team Member (itsu)",
+              "General Hiring (Octopus Energy)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Geographic vs. Corporate)",
+            "Generic Labor Market Data",
+            "Unrelated Industry Sectors (Retail, Energy, Hospitality)",
+            "High Volume / Low Relevance Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1790,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.2605769634246826
+            }
+          ],
+          "reasoning": "The search results are based on the geographic location 'Hammersmith and Fulham' rather than the specific entity 'Fulham Football Club'. The listings returned are for unrelated organizations such as Vivienne Westwood, Octopus Energy, and itsu. There are no direct signals of procurement, technology adoption, or hiring specific to Fulham FC in this dataset."
+        }
+      ],
+      "total_input_tokens": 12242,
+      "total_output_tokens": 1914,
+      "estimated_cost_usd": 0.065436
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fulham may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:02:45.489315"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.118976",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:24.123083"
+}

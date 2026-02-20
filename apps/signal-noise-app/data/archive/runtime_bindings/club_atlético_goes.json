@@ -1,0 +1,126 @@
+{
+  "entity_id": "club_atl\u00e9tico_goes",
+  "entity_name": "Club Atl\u00e9tico Goes",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "fubb.org.uy",
+    "wikidata.org",
+    "commons.wikimedia.org",
+    "betsapi.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "club_atl\u00e9tico_goes",
+      "entity_name": "Club Atl\u00e9tico Goes",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://betsapi.com",
+        "https://wikidata.org",
+        "https://fubb.org.uy"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Club Atl\u00e9tico Goes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:10:04.008129",
+          "domain_explored": "https://fubb.org.uy",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:10:06.825436",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:10:10.142818",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:10:15.897096",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "unrelated_domain_content",
+            "sports_betting_aggregation",
+            "live_score_feeds"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.366014003753662
+            }
+          ],
+          "reasoning": "The scraped content is from BetsAPI, a sports data and betting aggregation platform. It contains live scores, odds, and match data for various global sports leagues. There is absolutely no connection to Club Atl\u00e9tico Goes, Uruguayan basketball, or organizational procurement activities."
+        }
+      ],
+      "total_input_tokens": 1444,
+      "total_output_tokens": 156,
+      "estimated_cost_usd": 0.006672
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Club Atl\u00e9tico Goes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:10:15.898551"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.234366",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:24.780792"
+}

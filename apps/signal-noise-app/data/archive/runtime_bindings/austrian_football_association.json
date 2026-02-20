@@ -1,0 +1,271 @@
+{
+  "entity_id": "austrian_football_association",
+  "entity_name": "Austrian Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "fk-austria.at",
+    "nft.oefb.at",
+    "flexmade.com",
+    "wikidata.org",
+    "patriots.com",
+    "soccatours.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_football_association",
+      "entity_name": "Austrian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://soccatours.com",
+        "https://flexmade.com",
+        "https://patriots.com",
+        "https://inside.fifa.com",
+        "https://fk-austria.at",
+        "https://wikidata.org",
+        "https://nft.oefb.at"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:11:27.168093",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding for stadium refurbishment (Burundi)",
+              "Global women's football development initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (FIFA vs. Austrian FA)",
+            "General Sports News Content",
+            "Global Governance Topics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.6907520294189453
+            }
+          ],
+          "reasoning": "The content is sourced from FIFA's global news portal and focuses on international competitions (Women's Champions Cup), global development programs (FIFA Forward), and infrastructure in Burundi. There is no mention of the Austrian Football Association (\u00d6FB), its specific procurement needs, or local technology implementations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:11:33.475380",
+          "domain_explored": "https://fk-austria.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Listings: Frankstahl, Wienholding, Macron, Harreither, Verbund, Generali, Schuller, Schwechater"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Club vs. Association)",
+            "Sports News Content",
+            "Ticketing & Fan Shop Content",
+            "Sponsorship Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.268044948577881
+            }
+          ],
+          "reasoning": "The scraped content is from FK Austria Wien (a specific football club), not the Austrian Football Association (the governing body). The content consists of sports news, match results, ticket sales, and sponsor listings. There is no overlap with the procurement or governance operations of the Association."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:11:41.450449",
+          "domain_explored": "https://nft.oefb.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "React (or similar SPA framework)",
+              "JavaScript (Required)",
+              "Blockchain/Web3 Integration (Implied by URL)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Dedicated project subdomain (nft.oefb.at)",
+              "Digital Asset Management Initiative"
+            ]
+          },
+          "patterns_found": [
+            "Single Page Application (SPA) Architecture",
+            "Custom Subdomain Deployment (nft.oefb.at)",
+            "JavaScript-Heavy Frontend Stack"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 475,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.697109937667847
+            }
+          ],
+          "reasoning": "While the specific content is obscured by client-side rendering, the URL structure 'nft.oefb.at' is a strong procurement signal indicating a dedicated digital project (Non-Fungible Tokens/Digital Collectibles). This implies prior investment in blockchain/digital asset infrastructure and associated web development vendors."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:11:48.475628",
+          "domain_explored": "https://flexmade.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Vendor vs. Target)",
+            "Generic Service Provider Content",
+            "Marketing Copy Repetition",
+            "No Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.986104965209961
+            }
+          ],
+          "reasoning": "The scraped content is from 'FlexMade', a software development vendor. There is absolutely no mention of the Austrian Football Association (\u00d6FB) or any related procurement activities. The content consists of repetitive marketing copy describing FlexMade's services and history. This represents a complete entity mismatch; we are analyzing a potential supplier, not the target entity's procurement data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:11:51.432579",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:11:58.054140",
+          "domain_explored": "https://patriots.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Peacock (Streaming)",
+              "NBC (Broadcast)",
+              "On Location (Hospitality Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (NFL Franchise vs. Austrian FA)",
+            "Consumer-Facing Content (News, Scores, Media)",
+            "Hospitality & Ticketing Operations",
+            "Sports Entertainment Architecture"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.3129098415374756
+            }
+          ],
+          "reasoning": "The scraped content is from the New England Patriots (NFL), an American football franchise. This constitutes a complete entity mismatch with the target, the Austrian Football Association (\u00d6FB). The content is focused on fan engagement, game previews, and media coverage, offering no relevant procurement intelligence for the Austrian entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:12:04.839576",
+          "domain_explored": "https://soccatours.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Commercial Travel Agency vs. Target Association)",
+            "B2C E-commerce Content (Pricing, Bookings, Packages)",
+            "Geographic Scope (Global vs. Austria-specific)",
+            "Hospitality & Tourism Domain Language"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1659,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.4283969402313232
+            }
+          ],
+          "reasoning": "The scraped content from soccatours.com identifies the entity as a commercial travel agency specializing in football training camps. While it lists 'Vienna, Austria' as a destination, there is no direct link to the Austrian Football Association (\u00d6FB) or its procurement operations. The content is purely consumer-facing (B2C), displaying package prices and hotel ratings, which contradicts the hypothesis of finding corporate procurement signals or governance patterns for the Association itself."
+        }
+      ],
+      "total_input_tokens": 8034,
+      "total_output_tokens": 1333,
+      "estimated_cost_usd": 0.044097
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:12:04.841490"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.202475",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:18.606019"
+}

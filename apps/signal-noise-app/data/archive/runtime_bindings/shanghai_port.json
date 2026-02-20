@@ -1,0 +1,199 @@
+{
+  "entity_id": "shanghai_port",
+  "entity_name": "Shanghai Port",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "en.portshanghai.com.cn",
+    "fcshanghaiport.com",
+    "english.shanghai.gov.cn",
+    "sipgbayport.com",
+    "shairport.com",
+    "kab.sww.sh.gov.cn"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://cn.linkedin.com/jobs/view/shanghai-port-captain-china-at-%E9%A9%AC%E5%A3%AB%E5%9F%BA-4289263451"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "shanghai_port",
+      "entity_name": "Shanghai Port",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://shairport.com",
+        "https://english.shanghai.gov.cn",
+        "https://cn.linkedin.com/jobs/view/shanghai-port-captain-china-at-%E9%A9%AC%E5%A3%AB%E5%9F%BA-4289263451",
+        "https://fcshanghaiport.com",
+        "https://en.portshanghai.com.cn",
+        "https://kab.sww.sh.gov.cn",
+        "https://sipgbayport.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Procurement Strategy Support",
+        "Contract Negotiation",
+        "TCO (Total Cost of Ownership) Analysis",
+        "Terminal Resource Optimization",
+        "Vendor/Supplier Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Shanghai Port may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:40:59.229091",
+          "domain_explored": "https://en.portshanghai.com.cn",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:41:02.267356",
+          "domain_explored": "https://fcshanghaiport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:41:08.029084",
+          "domain_explored": "https://english.shanghai.gov.cn",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:41:12.243807",
+          "domain_explored": "https://sipgbayport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:41:15.108342",
+          "domain_explored": "https://shairport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:41:21.133703",
+          "domain_explored": "https://kab.sww.sh.gov.cn",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:41:28.761415",
+          "domain_explored": "https://cn.linkedin.com/jobs/view/shanghai-port-captain-china-at-%E9%A9%AC%E5%A3%AB%E5%9F%BA-4289263451",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Terminal Operating Systems (implied by resource allocation)",
+              "Vessel Scheduling Software",
+              "Network Optimization Tools"
+            ],
+            "job_postings": [
+              "Shanghai Port Captain (Maersk)"
+            ],
+            "procurement_indicators": [
+              "Direct support for Procurement strategy planning",
+              "Involvement in contract negotiation",
+              "Total Cost of Ownership (TCO) management",
+              "Supplier management responsibilities",
+              "Project-based improvement initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Procurement Strategy Support",
+            "Contract Negotiation",
+            "TCO (Total Cost of Ownership) Analysis",
+            "Terminal Resource Optimization",
+            "Vendor/Supplier Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 325,
+              "elapsed_seconds": 4.232388019561768
+            }
+          ],
+          "reasoning": "The job description for 'Shanghai Port Captain' at Maersk explicitly lists 'Support Procurement department strategy planning, contract negotiation and TCO for specific project' as a key responsibility. This is a direct procurement signal indicating active involvement in supplier selection, cost analysis, and strategic sourcing within the port's ecosystem."
+        }
+      ],
+      "total_input_tokens": 1553,
+      "total_output_tokens": 325,
+      "estimated_cost_usd": 0.009534
+    },
+    "procurement_signals": [
+      "Procurement Strategy Support",
+      "Contract Negotiation",
+      "TCO (Total Cost of Ownership) Analysis",
+      "Terminal Resource Optimization",
+      "Vendor/Supplier Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Shanghai Port may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:41:28.763244"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.193781",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:13.253214"
+}

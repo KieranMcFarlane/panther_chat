@@ -1,0 +1,406 @@
+{
+  "entity_id": "wnba",
+  "entity_name": "WNBA",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "wnba.com",
+    "wnbastore.nba.com",
+    "wnbaexperiences.com",
+    "contact.nba.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/wnba-jobs",
+      "https://www.linkedin.com/jobs/wnba-marketing-jobs",
+      "https://www.linkedin.com/company/national-basketball-association/jobs",
+      "https://www.linkedin.com/jobs/search/?currentJobId=2937182298&keywords=los%20angeles%20sparks",
+      "https://www.linkedin.com/posts/makayla-brooks_nba-wnba-careers-more-than-basketball-activity-7364675522208985101-Zlqm"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wnba",
+      "entity_name": "WNBA",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/national-basketball-association/jobs",
+        "https://www.linkedin.com/jobs/search/?currentJobId=2937182298&keywords=los%20angeles%20sparks",
+        "https://www.linkedin.com/posts/makayla-brooks_nba-wnba-careers-more-than-basketball-activity-7364675522208985101-Zlqm",
+        "https://www.linkedin.com/jobs/wnba-jobs",
+        "https://www.linkedin.com/jobs/wnba-marketing-jobs",
+        "https://contact.nba.com",
+        "https://wnbastore.nba.com",
+        "https://wnbaexperiences.com",
+        "https://wnba.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Franchise Expansion Procurement (Golden State Valkyries)",
+        "Operational Security & Risk Management Investment",
+        "Premium Hospitality & Guest Experience Management",
+        "Corporate Partnership Activation (Design Services)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "WNBA may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:39:26.083145",
+          "domain_explored": "https://wnba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Software",
+              "Digital Streaming Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Rights Partnership (NBC)",
+              "Title Sponsorship Procurement (CarMax - WNBA Tip-Off 2026)",
+              "Brand Identity & Design Services (Phoenix Mercury Rebrand)",
+              "Broadcast Experience Enhancement (Athletes Unlimited)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Expansion (Media Rights)",
+            "League-wide Event Sponsorship Procurement",
+            "Franchise-level Branding & Design Investment",
+            "Digital Broadcast Infrastructure Enhancement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 941,
+              "output_tokens": 345,
+              "elapsed_seconds": 2.855639934539795
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing news, it reveals specific procurement activities. The 'NBC Sunday Night Basketball' headline confirms a new media rights partnership requiring broadcast technology integration. The 'CarMax' sponsorship indicates a procurement of sponsorship services for the Tip-Off event. The Phoenix Mercury rebranding suggests a procurement of creative design and branding agency services. The 'Fan-First Broadcast Experience' for Athletes Unlimited implies investment in new broadcast tech or production vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:39:36.130585",
+          "domain_explored": "https://wnbastore.nba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Fanatics/NBA infrastructure)",
+              "Payment Processors (Amex, Discover, Visa, Master Card, PayPal)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Expansion Team Merchandising (Golden State, Portland, Toronto)",
+              "Third-party Logistics/Shipping (Free shipping threshold)",
+              "Customer Service Outsourcing (Contact Us/Help links)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations (Fanatics/NBA Store)",
+            "Merchandising Strategy (Expansion Teams)",
+            "Consumer Promotions (Discount Codes)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 285,
+              "elapsed_seconds": 3.1690258979797363
+            }
+          ],
+          "reasoning": "The scraped content is from the official e-commerce storefront (wnbastore.nba.com). While it confirms active retail operations and merchandising for expansion teams (Golden State Valkyries, Portland Fire, Toronto Tempo), it provides no insight into B2B procurement, enterprise technology adoption, or organizational hiring. It is strictly B2C consumer content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:39:45.929341",
+          "domain_explored": "https://wnbaexperiences.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing/Event Management Platform (implied backend)",
+              "Waitlist/CRM Management Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Hospitality Operations (Official Experiences Provider)",
+              "Corporate Sponsorship Activation (DashPass)",
+              "Event Planning for 2026 (Draft & All-Star)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Hospitality Outsourcing",
+            "Sponsorship Integration (DashPass)",
+            "Event Logistics Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1259,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.2226390838623047
+            }
+          ],
+          "reasoning": "The content reveals that the WNBA has outsourced its official 'Experiences' and hospitality division to a third-party provider (likely On Location or similar, given the 'Official Experiences Provider' language). This indicates a procurement category for Event Management & Hospitality Services. The presence of 'DashPass' as a presenter indicates a sponsorship procurement model. While no direct RFP is visible, the existence of this sub-domain confirms an active vendor relationship for high-value event logistics."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:39:55.783384",
+          "domain_explored": "https://contact.nba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zendesk (Inferred from support.watch.nba.com structure)",
+              "NBA League Pass (Streaming Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Shared Service Agreement (Customer Support)",
+              "Vendor Consolidation (Contact Management)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Shared Services (NBA Contact Hub)",
+            "Customer Support Outsourcing (Zendesk/Third-party)",
+            "Digital Ticketing & Streaming Support"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 902,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.8702306747436523
+            }
+          ],
+          "reasoning": "The content is a generic customer support portal. While it confirms the WNBA utilizes shared services and likely outsourced ticketing/streaming support infrastructure (Zendesk/Watch.nba), it does not contain specific signals regarding active procurement cycles, RFPs, or new technology investments. It confirms operational status but not buying intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:40:05.813553",
+          "domain_explored": "https://www.linkedin.com/jobs/wnba-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Security Management Systems",
+              "CRM (Premium Seating/Hospitality)",
+              "Design Software (Adobe Creative Suite)"
+            ],
+            "job_postings": [
+              "VP, Security & Risk Mgmt (Phoenix Suns)",
+              "Account Mgr, Premium Exp (Phoenix Suns)",
+              "Senior Coordinator, Partner Designer (Phoenix Suns)",
+              "Future Career Opportunities (Golden State Valkyries)"
+            ],
+            "procurement_indicators": [
+              "Expansion Team Setup (Valkyries)",
+              "Security Vendor Management",
+              "Premium Service Contracting"
+            ]
+          },
+          "patterns_found": [
+            "Franchise Expansion Procurement (Golden State Valkyries)",
+            "Operational Security & Risk Management Investment",
+            "Premium Hospitality & Guest Experience Management",
+            "Corporate Partnership Activation (Design Services)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 372,
+              "elapsed_seconds": 3.831876754760742
+            }
+          ],
+          "reasoning": "The content provides direct evidence of organizational growth and investment through specific job postings. The listing for 'Future Career Opportunities with Golden State Valkyries' confirms the active procurement of infrastructure for the new expansion franchise. Additionally, roles like 'VP, Security & Risk Mgmt' and 'Account Mgr, Premium Exp' indicate active investment in security infrastructure and hospitality management technologies/services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:40:12.467952",
+          "domain_explored": "https://www.linkedin.com/jobs/wnba-marketing-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Coordinator, Partner Designer (Phoenix Suns)",
+              "Account Manager, Premium Experience (Phoenix Suns)"
+            ],
+            "procurement_indicators": [
+              "Franchise-level hiring for partner design services",
+              "Investment in premium hospitality operations"
+            ]
+          },
+          "patterns_found": [
+            "Franchise-Level Marketing Operations",
+            "Premium Experience Management",
+            "Partner Services Design"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 291,
+              "elapsed_seconds": 2.401524066925049
+            }
+          ],
+          "reasoning": "The scraped content is restricted to the login-gated section of LinkedIn, revealing only high-level job titles (Senior Coordinator, Account Manager) for the Phoenix Suns (a WNBA partner franchise) rather than the central WNBA league office. While these roles indicate franchise-level procurement for design and premium services, the lack of detailed job descriptions or league-wide specific data prevents a deeper analysis of procurement intent or technology stack. This represents a dead end in the current scraping path."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:40:18.580954",
+          "domain_explored": "https://www.linkedin.com/company/national-basketball-association/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Potential Shared Services Model (NBA/WNBA)",
+              "Access Control on Corporate Data"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Structure Complexity (NBA vs WNBA)",
+            "Shared Services/Parent Company Resource Allocation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 741,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.73022198677063
+            }
+          ],
+          "reasoning": "The scraped content indicates an access restriction ('Forbidden') on the NBA parent company jobs page. This prevents the extraction of specific job titles or descriptions that would signal procurement intent. While the existence of a parent company page suggests shared services, the lack of accessible data means no new procurement patterns can be confirmed."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:40:27.537285",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=2937182298&keywords=los%20angeles%20sparks",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Retail Manager - Crypto.com Arena (Levy Restaurants)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Venue Services (Food & Beverage/Retail)"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations Outsourcing (Levy Restaurants)",
+            "Third-party Concession Management",
+            "Franchise Venue Dependency"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1283,
+              "output_tokens": 264,
+              "elapsed_seconds": 5.210897207260132
+            }
+          ],
+          "reasoning": "The search results for 'Los Angeles Sparks' returned a single relevant listing for a Retail Manager at Crypto.com Arena, employed by Levy Restaurants (a third-party concessionaire). While this confirms the outsourcing of food and beverage retail operations at the Sparks' home venue, it does not provide direct evidence of active procurement initiatives, technology investments, or strategic hiring by the WNBA or the Sparks franchise itself. The signal is weak and tangential to the core procurement intelligence goals."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T05:40:50.373997",
+          "domain_explored": "https://www.linkedin.com/posts/makayla-brooks_nba-wnba-careers-more-than-basketball-activity-7364675522208985101-Zlqm",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital/Social Media Platforms",
+              "Data Analytics & Scouting Software",
+              "NIL (Name, Image, Likeness) Management Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in 'Game Presentation & Entertainment' (A/V production vendors)",
+              "Sourcing for 'Global sponsorships' (Agency management)",
+              "Procurement of 'Apparel' and 'Fashion' supply chain services",
+              "Need for 'Data roles' implying software procurement"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Revenue Diversification (Broadcast, Sponsorship, Premium)",
+            "Operational Complexity (Game Presentation, Digital Media, Scouting)",
+            "NIL & Data Analytics Investment",
+            "Global Brand Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1880,
+              "output_tokens": 355,
+              "elapsed_seconds": 18.294222116470337
+            }
+          ],
+          "reasoning": "While this content is a high-level career overview rather than a specific procurement document, it validates the existence of complex operational departments that require significant vendor support. Specifically, the mention of 'Broadcast rights,' 'Global sponsorships,' 'Scouting/data roles,' and 'In-arena production' confirms the need for technology stacks (CRM, Analytics) and specialized service providers (Production, Agencies) identified in previous iterations."
+        }
+      ],
+      "total_input_tokens": 11680,
+      "total_output_tokens": 2678,
+      "estimated_cost_usd": 0.07521
+    },
+    "procurement_signals": [
+      "Franchise Expansion Procurement (Golden State Valkyries)",
+      "Operational Security & Risk Management Investment",
+      "Premium Hospitality & Guest Experience Management",
+      "Corporate Partnership Activation (Design Services)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "WNBA may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:40:50.375083"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416386",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:51.812764"
+}

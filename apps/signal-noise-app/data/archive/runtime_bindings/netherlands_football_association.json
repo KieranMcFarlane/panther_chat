@@ -1,0 +1,189 @@
+{
+  "entity_id": "netherlands_football_association",
+  "entity_name": "Netherlands Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "onsoranje.nl",
+    "fifafoundation.org",
+    "lobbyfacts.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "netherlands_football_association",
+      "entity_name": "Netherlands Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://fifafoundation.org",
+        "https://lobbyfacts.eu",
+        "https://onsoranje.nl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Netherlands Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:14:28.944738",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation governance content",
+            "Women's football development initiatives",
+            "Infrastructure funding programs (FIFA Forward)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.7544569969177246
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global website (inside.fifa.com) and focuses on high-level governance, the FIFA Women's Champions Cup, and stadium funding in Burundi. While it mentions 'governance structures' and 'development', it contains no specific information regarding the Netherlands Football Association (KNVB) procurement activities, technology stack, or local vendor partnerships. The entity context does not match the target."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:14:37.789472",
+          "domain_explored": "https://onsoranje.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Single Sign-On (SSO) / Identity Management",
+              "Sub-domain architecture (tickets.knvb.nl)",
+              "Digital Learning Platforms (Dugout)",
+              "Community Platforms (E\u00e9n Tweetje)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized Authentication System (KNVB Account)",
+              "Dedicated Ticketing Platform (tickets.knvb.nl)",
+              "E-commerce Integration (KNVB Shop)",
+              "LMS (Dugout - Digital learning environment)",
+              "CRM/Community Platform (E\u00e9n Tweetje - for officials)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ecosystem Architecture",
+            "Single Sign-On (SSO) Implementation",
+            "Specialized Platform Procurement",
+            "Infrastructure Maintenance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 347,
+              "elapsed_seconds": 5.429069995880127
+            }
+          ],
+          "reasoning": "While the target page is in maintenance mode, the footer content reveals a complex, multi-vendor digital architecture. The presence of a centralized 'KNVB Account' (SSO) connecting to distinct specialized properties (Tickets, Shop, Education, Amateur) indicates significant procurement activity regarding identity management and platform integration. The maintenance mode itself suggests active infrastructure updates or migration."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:14:45.005604",
+          "domain_explored": "https://fifafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Recovery Programs (Global)",
+              "Digital Education Programme (Global)"
+            ]
+          },
+          "patterns_found": [
+            "Global Social Impact Governance",
+            "Infrastructure Recovery Programs",
+            "Advisory Board Composition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 265,
+              "elapsed_seconds": 3.3640098571777344
+            }
+          ],
+          "reasoning": "The content describes the FIFA Foundation's mission, governance structure (Board, Advisory Board), and social programs (YourSide, Refugee Programme). While it mentions 'revamping sports infrastructure' and a 'Digital Education Programme', these are presented as philanthropic activities or global initiatives rather than specific procurement signals or technology investments attributable to the Netherlands Football Association. The content lacks actionable procurement intent, vendor selection processes, or specific technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:14:51.572395",
+          "domain_explored": "https://lobbyfacts.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "EU Transparency Register Interface",
+            "Generic Lobbying Search Filters",
+            "High-volume Corporate Lobbying Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.3437092304229736
+            }
+          ],
+          "reasoning": "The content is a generic search interface and data dump from the EU Transparency Register (LobbyFacts). While it lists major technology vendors (Microsoft, Google, Amazon) and consultancies, it is a general directory of EU lobbying activities and does not contain specific procurement signals, job postings, or RFPs related to the Netherlands Football Association (KNVB). The entity is not mentioned in the provided text."
+        }
+      ],
+      "total_input_tokens": 5808,
+      "total_output_tokens": 1023,
+      "estimated_cost_usd": 0.032769
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Netherlands Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:14:51.574158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.206672",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:12.524578"
+}

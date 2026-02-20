@@ -1,0 +1,287 @@
+{
+  "entity_id": "malv\u00edn",
+  "entity_name": "Malv\u00edn",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "clubmalvin.uy",
+    "fubb.org.uy",
+    "zoominfo.com",
+    "aguada.com.uy",
+    "descubrimontevideo.uy"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uy.linkedin.com/jobs/view/t%C3%A9cnico-electromec%C3%A1nico-at-bizerba-argentina-3934700025",
+      "https://in.linkedin.com/jobs/view/salesperson-at-krox-technologies-llc-4366875473"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "malv\u00edn",
+      "entity_name": "Malv\u00edn",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://in.linkedin.com/jobs/view/salesperson-at-krox-technologies-llc-4366875473",
+        "https://descubrimontevideo.uy",
+        "https://clubmalvin.uy",
+        "https://uy.linkedin.com/jobs/view/t%C3%A9cnico-electromec%C3%A1nico-at-bizerba-argentina-3934700025",
+        "https://aguada.com.uy",
+        "https://zoominfo.com",
+        "https://fubb.org.uy"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Malv\u00edn may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:58:28.360837",
+          "domain_explored": "https://clubmalvin.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Payment Processing (Ita\u00fa Bank Integration)",
+              "Member Portal (Self-service/Autogesti\u00f3n)",
+              "Email Marketing (socios@clubmalvin.uy)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with financial institution (Ita\u00fa) for payment discounts",
+              "Investment in diverse program curriculum (Pilates, NEF, FEIF) requiring specialized staffing/contracting",
+              "Usage of digital enrollment forms for events (Traves\u00eda, Waterpolo)"
+            ]
+          },
+          "patterns_found": [
+            "Payment Gateway Integration (Ita\u00fa)",
+            "Self-service Member Portal (Autogesti\u00f3n)",
+            "Digital Marketing Campaigns (Social Media)",
+            "Program Management (Classes/Events)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 348,
+              "elapsed_seconds": 9.15324592590332
+            }
+          ],
+          "reasoning": "The content reveals a functional e-commerce and membership management infrastructure. The explicit mention of 'Autogesti\u00f3n' (self-service) and payment processing via 'tarjeta de cr\u00e9dito Ita\u00fa' indicates the use of a CRM or ERP system capable of handling recurring billing and event registration. While no direct procurement intent is stated, the active promotion of digital services suggests a mature operational environment that invests in software to manage members and payments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:58:42.510665",
+          "domain_explored": "https://fubb.org.uy",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:58:54.084690",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Content",
+            "Irrelevant B2B Data Platform",
+            "Third-Party Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 183,
+              "elapsed_seconds": 6.650345802307129
+            }
+          ],
+          "reasoning": "The analyzed content is the homepage of ZoomInfo, a B2B data intelligence platform. It contains generic marketing copy, product descriptions, and testimonials from unrelated companies (Seismic, McGriff). There is absolutely no information regarding the entity 'Malv\u00edn', its procurement activities, technology stack, or governance. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:59:19.068482",
+          "domain_explored": "https://aguada.com.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress",
+              "WooCommerce",
+              "Elementor",
+              "WPBakery"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket Sales Operations (Competitor)"
+            ]
+          },
+          "patterns_found": [
+            "Competitor Entity Content",
+            "Irrelevant Sports News",
+            "Generic CMS Structure (WordPress/WooCommerce)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 261,
+              "elapsed_seconds": 8.93480396270752
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Club Aguada' (aguada.com.uy), a direct competitor of Malv\u00edn in the Uruguayan basketball league (LUB). The text contains game results, schedules, and ticket sales for Aguada, not Malv\u00edn. While it confirms the league context, it provides zero procurement intelligence regarding Malv\u00edn's specific operations, technology stack, or vendor needs. The presence of WooCommerce indicates general e-commerce usage in the sector, but this is not a specific signal for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:59:59.856583",
+          "domain_explored": "https://descubrimontevideo.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Tourism Content",
+            "Event Aggregation",
+            "Public Service Information",
+            "No Corporate Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 189,
+              "elapsed_seconds": 4.358371734619141
+            }
+          ],
+          "reasoning": "The content is strictly focused on tourism promotion, cultural events, and travel itineraries for the city of Montevideo. It contains no information regarding the entity 'Malv\u00edn', its internal operations, technology stack, or procurement needs. The domain is a public-facing destination marketing site with no relevance to B2B procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:00:10.950506",
+          "domain_explored": "https://uy.linkedin.com/jobs/view/t%C3%A9cnico-electromec%C3%A1nico-at-bizerba-argentina-3934700025",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              {
+                "title": "T\u00e9cnico electromec\u00e1nico",
+                "entity": "Bizerba Argentina",
+                "location": "Montevideo, Uruguay",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Job Listing",
+            "Irrelevant Entity (Bizerba Argentina)",
+            "Generic Manufacturing Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 228,
+              "elapsed_seconds": 2.8438720703125
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for 'Bizerba Argentina', a machinery manufacturing company. While the location is Montevideo, there is no connection to the target entity 'Malv\u00edn' (a sports club). The role involves technical maintenance and sales, not procurement for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:00:23.894910",
+          "domain_explored": "https://in.linkedin.com/jobs/view/salesperson-at-krox-technologies-llc-4366875473",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Salesperson",
+                "company": "Krox Technologies LLC",
+                "location": "Surat, Gujarat, India",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Location (Surat, Gujarat, India)",
+            "Irrelevant Entity (Krox Technologies LLC)",
+            "Generic IT Consulting Role",
+            "False Positive Keyword Match ('Malv\u00edn' in unrelated job title)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.791534900665283
+            }
+          ],
+          "reasoning": "The content is a job posting for Krox Technologies LLC, an IT consulting firm located in Surat, Gujarat, India. While the text contains the keyword 'Malv\u00edn', it appears only in a 'Similar jobs' section referencing a role at 'Impacta Consultora' for a position in Malv\u00edn, Montevideo. This is a loose aggregation of keywords by the LinkedIn platform and does not represent a direct procurement signal or business activity by the target entity 'Malv\u00edn' (the sports club). The primary content is unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 9082,
+      "total_output_tokens": 1511,
+      "estimated_cost_usd": 0.049911
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Malv\u00edn may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:00:23.896723"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.234452",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:34.892862"
+}

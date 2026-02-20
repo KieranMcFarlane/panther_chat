@@ -1,0 +1,30 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "arsenal",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chelsea",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liverpool",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "manchester_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "borussia_dortmund",
+      "reason": "'list' object has no attribute 'items'"
+    }
+  ],
+  "start_time": "2026-01-30T14:37:33.448056",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-30T14:37:33.448989"
+}

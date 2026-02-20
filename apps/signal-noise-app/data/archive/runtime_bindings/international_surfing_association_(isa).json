@@ -1,0 +1,188 @@
+{
+  "entity_id": "international_surfing_association_(isa)",
+  "entity_name": "International Surfing Association (ISA)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "isasurf.org",
+    "isaworlds.com",
+    "worldpaddleawards.com",
+    "surfingaustralia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_surfing_association_(isa)",
+      "entity_name": "International Surfing Association (ISA)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://isaworlds.com",
+        "https://surfingaustralia.com",
+        "https://worldpaddleawards.com",
+        "https://isasurf.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Surfing Association (ISA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:51:18.127287",
+          "domain_explored": "https://isasurf.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMS (Learning Management System) - for Courses/Certificates",
+              "Membership Management Software - for Directory/Renewals",
+              "Event Management Platform - for World Championships/Olympics",
+              "Compliance/Case Management Software - for Integrity/Safe Report"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "ISA Scholarship Program (Potential procurement of financial management tools)",
+              "Olympic Solidarity Programs (Funding streams often require specific vendor procurement)",
+              "Safe Report (Likely a third-party whistleblowing service)"
+            ]
+          },
+          "patterns_found": [
+            "Education & Certification Platform",
+            "Membership Management System",
+            "Event Management & Hosting",
+            "Integrity & Compliance Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 385,
+              "elapsed_seconds": 11.58160400390625
+            }
+          ],
+          "reasoning": "The scraped content represents the site's main navigation structure. While it does not contain explicit RFPs, it reveals significant organizational capabilities and functional areas that require software support. Specifically, the 'Courses' (Coaching, Judging, Water Safety), 'Membership' (Directory, Renewals), and 'Integrity' (Anti-Doping, Safeguarding) sections indicate a reliance on Learning Management Systems (LMS), CRM/Member platforms, and Compliance tools. The listing of future events (2025) suggests active event management cycles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:51:26.980311",
+          "domain_explored": "https://isaworlds.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMS (Learning Management System) - Indicated by 'Courses', 'Certificate Directory', 'Renewals'",
+              "Membership Database - Indicated by 'Membership Directory', 'Become a member'",
+              "Event Management Software - Indicated by extensive list of World Championships & Olympic Games",
+              "Compliance/Case Management Software - Indicated by 'Safe Report', 'Ethics / Disciplinary'"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Certification Management",
+              "Scholarship Program Administration",
+              "Para Surfing Classification System (Research/Software)"
+            ]
+          },
+          "patterns_found": [
+            "Education & Certification Platform",
+            "Membership Management System",
+            "Event Management & Hosting",
+            "Integrity & Compliance Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 362,
+              "elapsed_seconds": 3.8779489994049072
+            }
+          ],
+          "reasoning": "The content confirms the existence of complex operational capabilities that require vendor support, specifically in Education (LMS for courses/scheduling), Membership (directories/renewals), and Integrity (Safeguarding/Anti-Doping). While no direct procurement intent (RFP/Job) is visible in this menu scrape, the scale of 'World' events and 'Olympic' involvement implies a reliance on enterprise-level software and service providers."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:51:35.662220",
+          "domain_explored": "https://worldpaddleawards.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:51:44.896255",
+          "domain_explored": "https://surfingaustralia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Surfing Portal (Custom SaaS/Membership Platform)",
+              "mySURF.tv (Video/Content Platform)",
+              "Social Media Integration (Facebook, Instagram, TikTok, LinkedIn)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Portal for Memberships & Course Renewals",
+              "Structured Partnership Programs (Government/State/Corporate)",
+              "High Performance Centre (HPC) Operations",
+              "National Squad Management (TALENT UNLSHD)"
+            ]
+          },
+          "patterns_found": [
+            "Membership Management System",
+            "Digital Transformation (Surfing Portal)",
+            "Partnership & Sponsorship Management",
+            "High Performance Program Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 334,
+              "elapsed_seconds": 3.7420217990875244
+            }
+          ],
+          "reasoning": "While Surfing Australia is a distinct entity from the ISA, this content validates the broader ecosystem's technology needs. The explicit mention of a 'Surfing Portal' for memberships, events, and courses indicates a procurement trend toward centralized digital platforms. The 'Partner with us' and structured 'Government/State Partners' sections suggest active vendor management and sponsorship procurement cycles that often require CRM upgrades."
+        }
+      ],
+      "total_input_tokens": 4291,
+      "total_output_tokens": 1081,
+      "estimated_cost_usd": 0.029088000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Surfing Association (ISA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:51:44.897739"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463407",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:28.083112"
+}

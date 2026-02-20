@@ -1,0 +1,190 @@
+{
+  "entity_id": "rk_maribor_branik",
+  "entity_name": "RK Maribor Branik",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rk-maribor.si",
+    "eurohandball.com",
+    "zoominfo.com",
+    "commons.wikimedia.org",
+    "wikidata.org",
+    "handball-planet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_maribor_branik",
+      "entity_name": "RK Maribor Branik",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://rk-maribor.si",
+        "https://eurohandball.com",
+        "https://handball-planet.com",
+        "https://zoominfo.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Maribor Branik may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:18:56.161449",
+          "domain_explored": "https://rk-maribor.si",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Youth recruitment and enrollment drives",
+            "Seasonal team management (2025/2026)",
+            "Sponsorship dependency"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 162,
+              "elapsed_seconds": 6.663444995880127
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on youth recruitment ('VPIS V ROKOMETNO \u0160OLO'), team categories for the upcoming season, and historical player statistics. There are no signals of business operations, technology infrastructure, or administrative procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:19:03.884373",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Cookie consent walls blocking content",
+            "Irrelevant tournament results (Denmark, Croatia)",
+            "Upstream event schedules (EHF Champions League, EURO 2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 211,
+              "elapsed_seconds": 4.50743293762207
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation's general news portal (eurohandball.com). It focuses on high-level international tournament results (Denmark, Croatia) and future EHF event schedules. There is no mention of the specific entity 'RK Maribor Branik', nor any localized procurement signals, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:19:06.831343",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:19:09.623422",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:19:12.549044",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:19:23.193309",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Focus on international tournaments (EHF EURO 2026)",
+            "Player transfer rumors and coach changes",
+            "Sponsorship mentions (Nexe Grupa)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1557,
+              "output_tokens": 194,
+              "elapsed_seconds": 6.455854892730713
+            }
+          ],
+          "reasoning": "The content is entirely focused on high-level international handball news (Denmark winning EHF EURO 2026, Croatia bronze, MVP awards) and general transfer market rumors. There is no mention of RK Maribor Branik, nor are there any signals regarding procurement, technology investments, or organizational governance for the target entity."
+        }
+      ],
+      "total_input_tokens": 4327,
+      "total_output_tokens": 567,
+      "estimated_cost_usd": 0.021485999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Maribor Branik may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:19:23.194655"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351696",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:03.548817"
+}

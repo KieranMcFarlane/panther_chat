@@ -1,0 +1,503 @@
+{
+  "entity_id": "victoria",
+  "entity_name": "Victoria",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "traditional_domestic_clubs",
+  "discovered_domains": [
+    "victoriassecret.com",
+    "victoria.ca",
+    "victoriatx.org",
+    "tourismvictoria.com",
+    "us.victoriabeckham.com",
+    "victoriamn.gov"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/full-time-jobs-melbourne-vic",
+      "https://www.linkedin.com/jobs/search/?geoId=103503296",
+      "https://au.linkedin.com/jobs/jobs-in-melbourne-vic",
+      "https://au.linkedin.com/jobs/open-position-jobs-melbourne-vic",
+      "https://ca.linkedin.com/jobs/victoria-bc-jobs",
+      "https://au.linkedin.com/jobs/international-companies-jobs-melbourne-vic",
+      "https://au.linkedin.com/jobs/immediate-start-jobs-melbourne-vic",
+      "https://www.linkedin.com/jobs/careers-jobs-victoria-il?trk=jobs_jserp_facet_geo_city",
+      "https://au.linkedin.com/jobs/economic-development-jobs-melbourne-vic",
+      "https://au.linkedin.com/jobs/career-jobs-wangaratta-vic"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "victoria",
+      "entity_name": "Victoria",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.16,
+        0.18
+      ],
+      "explored_domains": [
+        "https://victoriassecret.com",
+        "https://au.linkedin.com/jobs/full-time-jobs-melbourne-vic",
+        "https://victoriatx.org",
+        "https://tourismvictoria.com",
+        "https://www.linkedin.com/jobs/search/?geoId=103503296",
+        "https://victoria.ca",
+        "https://victoriamn.gov",
+        "https://au.linkedin.com/jobs/open-position-jobs-melbourne-vic",
+        "https://ca.linkedin.com/jobs/victoria-bc-jobs",
+        "https://us.victoriabeckham.com",
+        "https://au.linkedin.com/jobs/jobs-in-melbourne-vic"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Victoria may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:00:32.526445",
+          "domain_explored": "https://victoriassecret.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Insufficient Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 359,
+              "output_tokens": 123,
+              "elapsed_seconds": 4.262227773666382
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Loading' placeholders and truncation notices. There is no visible text, HTML structure, or metadata to analyze for procurement signals, technology stacks, or governance patterns."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:00:39.688853",
+          "domain_explored": "https://victoria.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET (WebApps)",
+              "E-commerce integration (Online Payments)"
+            ],
+            "job_postings": [
+              "City Careers (General)"
+            ],
+            "procurement_indicators": [
+              "Tender Portal (tender.victoria.ca)",
+              "Infrastructure Projects (Point Ellice Bridge Upgrades)",
+              "Development Tracker (Permits/Construction)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance Entity",
+            "Public Tendering Portal",
+            "Digital Service Delivery (Online Payments)",
+            "Infrastructure Projects (Bridge Upgrades)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.2520651817321777
+            }
+          ],
+          "reasoning": "The content confirms 'Victoria' is the City of Victoria (BC, Canada), a municipal government entity, rather than the private retailer. This shifts the procurement hypothesis from retail supply chains to civic infrastructure, IT services, and public works. The discovery of a specific subdomain 'tender.victoria.ca' is a direct procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:00:47.780084",
+          "domain_explored": "https://victoriatx.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CivicAlerts (implied by 'Alert Center' reference)",
+              "Digital Payment Systems (implied by Municipal Court/Warrant Resolution)",
+              "Transit Management Software (implied by 'Victoria Transit routes')"
+            ],
+            "job_postings": [
+              "Assistant Director of Maintenance, Golf Services",
+              "New Environmental Programs Manager",
+              "Recreation Coordinator"
+            ],
+            "procurement_indicators": [
+              "Construction of affordable apartment complex (The Victorian)",
+              "Construction of new shopping center",
+              "Water system review and improvement actions",
+              "Victoria Public Library facility modifications (soundproof booths)",
+              "Parks & Recreation tree planting initiatives (partnership with H-E-B/Texan by Nature)",
+              "City Council budget approval"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance Entity (City of Victoria, TX)",
+            "Infrastructure & Urban Development Projects",
+            "Public Works & Utility System Management",
+            "Recreation & Facility Upgrades",
+            "Community Engagement & Citizen Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 467,
+              "elapsed_seconds": 4.572610855102539
+            }
+          ],
+          "reasoning": "The content confirms the entity is the City of Victoria, Texas (a municipal government). While the specific text provided is a list of news headlines rather than dedicated tender notices, it reveals active procurement drivers: infrastructure construction (The Victorian apartment complex, shopping center), utility system improvements (water system review), and facility enhancements (library soundproof booths). These projects imply underlying vendor contracts and RFPs, warranting a weak acceptance to signal relevance for deeper crawling."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:00:55.430236",
+          "domain_explored": "https://tourismvictoria.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - implied by blog structure",
+              "Digital Analytics & SEO tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Biosphere Certification (implies procurement of sustainability auditing/compliance services)",
+              "Partnerships with Songhees Nation and Esquimalt Nation (implies vendor relationships for cultural programming)",
+              "Digital marketing campaigns (implies procurement of creative/agency services)"
+            ]
+          },
+          "patterns_found": [
+            "Destination Marketing Organization (DMO)",
+            "Biosphere Certification (Sustainability Standards)",
+            "Digital Content Strategy (Blog/Storytelling)",
+            "Indigenous Tourism Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 350,
+              "elapsed_seconds": 4.033167839050293
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'Tourism Victoria' (Greater Victoria), a Destination Marketing Organization (DMO). While the page is consumer-facing (marketing content), the explicit mention of 'Biosphere Certified destination' indicates a commitment to sustainability standards, which often requires procurement of measurement, reporting, and certification services. DMOs also typically procure digital marketing services, CRM software for visitor data, and creative services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:01:14.720415",
+          "domain_explored": "https://us.victoriabeckham.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Embedded Video Players",
+              "E-commerce Catalog System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Retail Interface",
+            "Product Catalog Navigation",
+            "Brand Marketing Content",
+            "Consumer-Facing Transactional Elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 250,
+              "elapsed_seconds": 16.258126974105835
+            }
+          ],
+          "reasoning": "The analyzed content is exclusively from a commercial fashion retail website (us.victoriabeckham.com). It contains product listings, 'Shop Now' calls to action, and marketing imagery. There are absolutely no governance structures, public tendering opportunities, municipal service indicators, or B2B procurement signals relevant to the 'Victoria' entity hypothesis established in previous iterations (which focused on municipal or tourism entities). This represents a false positive in the search string matching."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:01:21.667039",
+          "domain_explored": "https://victoriamn.gov",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CivicWeb (Legislative Management Portal)",
+              "Online Payment Systems (implied by 'Pay and Apply')",
+              "CMS (Standard Municipal Web Structure)"
+            ],
+            "job_postings": [
+              "Advisory Group Applications (Volunteer/Board Appointments)"
+            ],
+            "procurement_indicators": [
+              "2026 City Budget Book (Financial Planning)",
+              "Updated Utility Fees for 2026 (Revenue Management)",
+              "Highway 5 Tree Clearing & Construction (Infrastructure Contracts)",
+              "Highway 7 Improvement Projects (Civil Engineering/Construction)",
+              "Investment in Parks and Natural Resources (Capital Projects)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance Entity (City of Victoria, MN)",
+            "Digital Service Delivery (Online Payments, Service Requests)",
+            "Legislative Management System (CivicWeb Portal)",
+            "Infrastructure & Urban Planning Projects (Highway 7, Highway 5, Parks)",
+            "Community Engagement & Feedback Mechanisms"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1616,
+              "output_tokens": 441,
+              "elapsed_seconds": 3.8142318725585938
+            }
+          ],
+          "reasoning": "The content confirms the entity is the City of Victoria, Minnesota (municipal government). It demonstrates active procurement capabilities through 'Pay and Apply' and 'Request Service' modules, indicating a need for payment processing and CRM/workflow management software. The presence of a 'CivicWeb' portal suggests a specific vendor relationship for legislative management. Recent news regarding budget books, utility fees, and construction projects (Highway 5/7) signals active financial management and infrastructure spending, which drives procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:01:28.418800",
+          "domain_explored": "https://au.linkedin.com/jobs/full-time-jobs-melbourne-vic",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs"
+            ],
+            "job_postings": [
+              "Category Buyer Assistant - Myer (Docklands, Victoria)"
+            ],
+            "procurement_indicators": [
+              "Supply Chain Talent Acquisition",
+              "Retail Category Management"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Context (Melbourne, Victoria, Australia)",
+            "Procurement Role (Category Buyer Assistant)",
+            "Retail Sector Procurement (Myer)",
+            "Recruitment Platform (LinkedIn)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 271,
+              "elapsed_seconds": 2.5148022174835205
+            }
+          ],
+          "reasoning": "The content confirms the entity 'Victoria' refers to the state in Australia (specifically Melbourne) based on the URL and job location data. While the page is largely a login gate (low signal density), it reveals specific procurement activity within the region via the 'Category Buyer Assistant' listing at Myer. This indicates active hiring in supply chain management, validating the region's commercial procurement landscape."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:01:36.003849",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?geoId=103503296",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "Standard Financial Systems (implied by Accountant/Payment Officer roles)"
+            ],
+            "job_postings": [
+              "Accountant - IOEC (Victoria, Seychelles)",
+              "Debtors Administrator - IOEC (Victoria, Seychelles)",
+              "Payment Officer - Absa Group (Victoria, Seychelles)",
+              "General Manager - IOEC (Victoria, Seychelles)"
+            ],
+            "procurement_indicators": [
+              "Financial Management & Accounting Services",
+              "Debt Collection/Accounts Receivable Operations",
+              "Banking Infrastructure & Payment Processing"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Context (Victoria, Seychelles)",
+            "Financial Operations Roles (Accountant, Payment Officer)",
+            "Supply Chain & Retail Operations (IOEC)",
+            "Banking & Financial Services (Absa Group)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 364,
+              "elapsed_seconds": 4.310571908950806
+            }
+          ],
+          "reasoning": "The content confirms 'Victoria' as a geographic entity (Victoria, Seychelles) rather than the primary target (Victoria, BC or Australia). However, it reveals active procurement-relevant operations within this specific locale, specifically in financial services (Absa Group) and retail/export logistics (IOEC). While not the primary target, these roles indicate active administrative and operational spending."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T11:01:44.926662",
+          "domain_explored": "https://au.linkedin.com/jobs/jobs-in-melbourne-vic",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform"
+            ],
+            "job_postings": [
+              "Personal Hardship Assistance Program Officer (Victorian Department of Families, Fairness & Housing)",
+              "Curator (ACMI)",
+              "Digital Marketing Specialist (UNIQLO)",
+              "Events Specialist (MECCA Brands)",
+              "Professional, Brand Planning & Operations Pacific (Nike)",
+              "New Position at Brimbank Libraries (via Public Libraries Victoria)"
+            ],
+            "procurement_indicators": [
+              "Public Sector Governance: Victorian Department of Families, Fairness & Housing (DFFH) is a major purchaser of social services, IT, and administrative support.",
+              "Library Sector Coordination: Public Libraries Victoria (PLV) acts as a peak body or coordinating entity, suggesting potential for shared services or consortia procurement for library management systems (LMS) and digital content.",
+              "Corporate Presence: Major brands like Nike and UNIQLO maintain regional operations in Melbourne, implying local supply chain and logistics procurement needs."
+            ]
+          },
+          "patterns_found": [
+            "Geographic Context (Melbourne, Victoria, Australia)",
+            "Public Sector Hiring (Victorian Department of Families, Fairness & Housing)",
+            "Public Libraries Victoria (PLV) Coordination Role",
+            "Corporate Operations (Nike, MECCA Brands, UNIQLO)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1832,
+              "output_tokens": 545,
+              "elapsed_seconds": 4.7526631355285645
+            }
+          ],
+          "reasoning": "The content confirms the entity 'Victoria' refers to the Australian state (VIC). While the page is a job aggregator, it reveals specific public sector entities (Victorian Department of Families, Fairness & Housing, Public Libraries Victoria) that are significant procurement bodies. The 'Brimbank Libraries' listing under 'Public Libraries Victoria' indicates a centralized or coordinated governance structure for public services, which often leads to group procurement arrangements. However, the content is primarily a list of individual roles rather than explicit procurement signals (RFPs, tenders)."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T11:01:51.607241",
+          "domain_explored": "https://au.linkedin.com/jobs/open-position-jobs-melbourne-vic",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "Recruitment / ATS (Applicant Tracking System)"
+            ],
+            "job_postings": [
+              "Personal Hardship Assistance Program Officer (2x positions)",
+              "Project Officer (implied by truncated text)"
+            ],
+            "procurement_indicators": [
+              "Social Services Program Delivery",
+              "Public Sector Operational Staffing",
+              "Community Assistance Program Management"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Context (Melbourne, Victoria, Australia)",
+            "Public Sector Hiring (Victorian Department of Families, Fairness & Housing)",
+            "Program Management Roles (Personal Hardship Assistance Program Officer)",
+            "Recruitment Volume (220 Open Positions)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1915,
+              "output_tokens": 365,
+              "elapsed_seconds": 2.828740119934082
+            }
+          ],
+          "reasoning": "The content confirms the entity 'Victoria' refers to the State Government of Victoria (Australia) in this context. The listing of 'Personal Hardship Assistance Program Officer' roles within the Victorian Department of Families, Fairness & Housing indicates active operational management and potential procurement needs for social services, community support programs, or associated administrative technologies. However, the content is primarily a job listing interface rather than a direct tender or technology specification."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T11:02:01.055754",
+          "domain_explored": "https://ca.linkedin.com/jobs/victoria-bc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Client Success Manager - Buyerlink",
+              "Kitchen Crew - One Therapy Network",
+              "Cashier - One Therapy Network"
+            ],
+            "procurement_indicators": [
+              "Vendor Management (Client Success role at Buyerlink)",
+              "Healthcare Operations (One Therapy Network)"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Context (Victoria, British Columbia, Canada)",
+            "Private Sector Procurement Role (Buyerlink)",
+            "Healthcare Support Services (One Therapy Network)",
+            "Labor Market Activity (593 Jobs)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2000,
+              "output_tokens": 304,
+              "elapsed_seconds": 5.4707489013671875
+            }
+          ],
+          "reasoning": "The content confirms a new geographic entity (Victoria, BC) distinct from previous iterations (Victoria, Australia; Victoria, TX; Victoria, MN). The presence of a 'Client Success Manager' role at Buyerlink indicates private-sector vendor activity, though the specific procurement function is not explicit in the snippet. The high volume of jobs (593) suggests an active economy, but the specific signals are diluted by general labor listings (Kitchen Crew)."
+        }
+      ],
+      "total_input_tokens": 17074,
+      "total_output_tokens": 3755,
+      "estimated_cost_usd": 0.107547
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Victoria may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:02:01.057134"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.293259",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:48.928128"
+}

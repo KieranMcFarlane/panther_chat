@@ -1,0 +1,199 @@
+{
+  "entity_id": "dynamo_berlin",
+  "entity_name": "Dynamo Berlin",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "footballhistory.org",
+    "sportclub-dynamo-fanshop.de",
+    "wikidata.org",
+    "football.fandom.com",
+    "extremefootballtourism.blogspot.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dynamo_berlin",
+      "entity_name": "Dynamo Berlin",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sportclub-dynamo-fanshop.de",
+        "https://footballhistory.org",
+        "https://extremefootballtourism.blogspot.com",
+        "https://wikidata.org",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dynamo Berlin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:26:41.299481",
+          "domain_explored": "https://footballhistory.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "general_encyclopedia_content",
+            "historical_reference"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 165,
+              "elapsed_seconds": 4.975247859954834
+            }
+          ],
+          "reasoning": "The content provided is a general history of football (soccer) from an educational website (FootballHistory.org). It contains no information regarding the entity 'Dynamo Berlin', its current operations, procurement activities, or technology stack. It is entirely irrelevant to the objective of finding procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:26:49.384645",
+          "domain_explored": "https://sportclub-dynamo-fanshop.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Shopify/Magento-like structure)",
+              "Newsletter Marketing Tool"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Merchandising Operations",
+              "Customer Data Management (GDPR/DSGVO compliance mentioned)",
+              "Inventory Management (implied by product listings)"
+            ]
+          },
+          "patterns_found": [
+            "ecommerce_platform_usage",
+            "customer_account_management",
+            "newsletter_marketing",
+            "data_privacy_compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 277,
+              "elapsed_seconds": 4.019953966140747
+            }
+          ],
+          "reasoning": "The content represents the official fan shop (e-commerce) of Dynamo Berlin. While it does not contain direct procurement signals like RFPs, it confirms the use of an e-commerce platform and customer relationship management (CRM) systems (account creation, newsletter subscriptions). This indicates a digital infrastructure that requires maintenance and potential vendor support, justifying a weak signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:26:52.148999",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:27:01.968252",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "user_generated_content_platform",
+            "general_encyclopedia_content",
+            "wiki_structure",
+            "irrelevant_navigation_elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 194,
+              "elapsed_seconds": 4.9544548988342285
+            }
+          ],
+          "reasoning": "The scraped content represents the main page of a fan-maintained wiki (Football Fandom). It contains generic navigation, community guidelines, and general football news (e.g., Premier League, La Liga). There is no specific mention of 'Dynamo Berlin' in the provided text, nor are there any corporate signals, job postings, or procurement-related technologies associated with the entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:27:09.162515",
+          "domain_explored": "https://extremefootballtourism.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "personal_blog_platform",
+            "historical_narrative_content",
+            "unrelated_entity_focus",
+            "tourism_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 174,
+              "elapsed_seconds": 4.012136936187744
+            }
+          ],
+          "reasoning": "The content is a personal blog post regarding 'SV Avanti '31', a Dutch amateur club, and 'RKSVA'. It contains historical timelines, match results, and stadium photography credits. There is absolutely no connection to Dynamo Berlin, nor are there any procurement, technology, or business signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5778,
+      "total_output_tokens": 810,
+      "estimated_cost_usd": 0.029483999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dynamo Berlin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:27:09.163665"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321354",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:55.802141"
+}

@@ -1,0 +1,603 @@
+ENTITY-BY-ENTITY RESULTS (3-WAY COMPARISON)
+==========================================================================================
+
+Entity: entity_0001
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0002
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0003
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0004
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.34, 17 iters, 0 actionables
+  Savings (vs Old): $0.26 (43.3%)
+
+Entity: entity_0005
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0006
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0007
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0008
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0009
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.34, 17 iters, 0 actionables
+  Savings (vs Old): $0.26 (43.3%)
+
+Entity: entity_0010
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0011
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0012
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.60, 30 iters, 0 actionables
+  Savings (vs Old): $0.00 (0.0%)
+
+Entity: entity_0013
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.32, 16 iters, 0 actionables
+  Savings (vs Old): $0.28 (46.7%)
+
+Entity: entity_0014
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0015
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0016
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0017
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0018
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0019
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.56, 28 iters, 0 actionables
+  Savings (vs Old): $0.04 (6.7%)
+
+Entity: entity_0020
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0021
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0022
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0023
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.50, 25 iters, 0 actionables
+  Savings (vs Old): $0.10 (16.7%)
+
+Entity: entity_0024
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0025
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0026
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0027
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0028
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.32, 16 iters, 0 actionables
+  Savings (vs Old): $0.28 (46.7%)
+
+Entity: entity_0029
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0030
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.34, 17 iters, 0 actionables
+  Savings (vs Old): $0.26 (43.3%)
+
+Entity: entity_0031
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0032
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0033
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0034
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0035
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0036
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0037
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0038
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0039
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0040
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0041
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0042
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 1 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0043
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0044
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0045
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0046
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0047
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0048
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0049
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0050
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0051
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0052
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0053
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0054
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0055
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0056
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.34, 17 iters, 0 actionables
+  Savings (vs Old): $0.26 (43.3%)
+
+Entity: entity_0057
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0058
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0059
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0060
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0061
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0062
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.52, 26 iters, 0 actionables
+  Savings (vs Old): $0.08 (13.3%)
+
+Entity: entity_0063
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.34, 17 iters, 0 actionables
+  Savings (vs Old): $0.26 (43.3%)
+
+Entity: entity_0064
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.60, 30 iters, 0 actionables
+  Savings (vs Old): $0.00 (0.0%)
+
+Entity: entity_0065
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.32, 16 iters, 0 actionables
+  Savings (vs Old): $0.28 (46.7%)
+
+Entity: entity_0066
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.50, 25 iters, 0 actionables
+  Savings (vs Old): $0.10 (16.7%)
+
+Entity: entity_0067
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0068
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0069
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.52, 26 iters, 0 actionables
+  Savings (vs Old): $0.08 (13.3%)
+
+Entity: entity_0070
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.50, 25 iters, 0 actionables
+  Savings (vs Old): $0.10 (16.7%)
+
+Entity: entity_0071
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0072
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0073
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0074
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0075
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0076
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0077
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0078
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.44, 22 iters, 0 actionables
+  Savings (vs Old): $0.16 (26.7%)
+
+Entity: entity_0079
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0080
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0081
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0082
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0083
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.30, 15 iters, 0 actionables
+  Savings (vs Old): $0.30 (50.0%)
+
+Entity: entity_0084
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0085
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0086
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0087
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.58, 29 iters, 2 actionables
+  Savings (vs Old): $0.02 (3.3%)
+
+Entity: entity_0088
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0089
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0090
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+
+Entity: entity_0091
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0092
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.40, 20 iters, 0 actionables
+  Savings (vs Old): $0.20 (33.3%)
+
+Entity: entity_0093
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0094
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.48, 24 iters, 0 actionables
+  Savings (vs Old): $0.12 (20.0%)
+
+Entity: entity_0095
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.36, 18 iters, 0 actionables
+  Savings (vs Old): $0.24 (40.0%)
+
+Entity: entity_0096
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.50, 25 iters, 0 actionables
+  Savings (vs Old): $0.10 (16.7%)
+
+Entity: entity_0097
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.60, 30 iters, 0 actionables
+  Savings (vs Old): $0.00 (0.0%)
+
+Entity: entity_0098
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.38, 19 iters, 0 actionables
+  Savings (vs Old): $0.22 (36.7%)
+
+Entity: entity_0099
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.42, 21 iters, 0 actionables
+  Savings (vs Old): $0.18 (30.0%)
+
+Entity: entity_0100
+  OLD:           $0.60, 30 iters, 0 actionables
+  EARLY-STOP:    $0.60, 30 iters, 0 actionables
+  HYPOTHESIS:    $0.46, 23 iters, 0 actionables
+  Savings (vs Old): $0.14 (23.3%)
+

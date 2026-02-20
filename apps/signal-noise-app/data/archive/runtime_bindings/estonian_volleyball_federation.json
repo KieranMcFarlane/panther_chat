@@ -1,0 +1,194 @@
+{
+  "entity_id": "estonian_volleyball_federation",
+  "entity_name": "Estonian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "webpage.pve.onixweb.net",
+    "tncvolley.ee",
+    "volejbols.lv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "estonian_volleyball_federation",
+      "entity_name": "Estonian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://webpage.pve.onixweb.net",
+        "https://www-old.cev.eu",
+        "https://volejbols.lv",
+        "https://tncvolley.ee"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Estonian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:08:04.997390",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (2018-2022)",
+            "Standard footer links (Privacy Policy, Webmaster feedback)",
+            "Multi-language/association acronyms (CEV, FIVB, national federations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.9105498790740967
+            }
+          ],
+          "reasoning": "The content provided is a navigation menu and footer from the 'old' CEV (Confederation of European Volleyball) website. It lists historical events, general competition categories (Champions League, EuroVolley), and standard footer links. There is no specific information regarding the Estonian Volleyball Federation (Eesti V\u00f5rkpalli Liit), no procurement notices, no job postings, and no technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:08:14.732532",
+          "domain_explored": "https://webpage.pve.onixweb.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mailchimp (eepurl.com link detected)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (ParaVolley Europe vs Estonian Volleyball Federation)",
+            "Generic Contact Information Repetition",
+            "Newsletter Signup (Mailchimp/eepurl)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 851,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.7735931873321533
+            }
+          ],
+          "reasoning": "The content scraped is from ParaVolley Europe (a distinct entity based in Luxembourg), not the Estonian Volleyball Federation. The text consists entirely of repetitive footer elements (address, email) and a newsletter signup link. There are no procurement signals, technology stacks, or governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:08:23.074652",
+          "domain_explored": "https://tncvolley.ee",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Torneopal (Registration/Management Platform)",
+              "JavaScript (Form handling requirement)",
+              "Streaming Infrastructure (implied vendor for live links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Event Registration (Torneopal)",
+              "Digital Service Procurement (Streaming)",
+              "Sponsorship Packages (B2B procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Tournament Management SaaS (Torneopal)",
+            "Event Streaming Infrastructure",
+            "Third-party Registration Systems",
+            "Sponsorship/Partnership Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.045757055282593
+            }
+          ],
+          "reasoning": "The content reveals the Estonian Volleyball Federation's reliance on specific third-party technology vendors for event operations. The use of Torneopal for registration and the infrastructure for streaming 2000+ players indicate active investment in digital event management tools. While not a direct procurement RFP, this confirms the technology stack and vendor ecosystem used by the Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:08:31.411672",
+          "domain_explored": "https://volejbols.lv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Twitter/X Embedded Timeline",
+              "Facebook Social Plugin",
+              "YouTube Channel Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "LIAA Contract Nr. 17.1-1-L-2024/322 (Export Support)",
+              "European Regional Development Fund (ERDF) Co-financing",
+              "Project: MVU inovat\u012bvas uz\u0146\u0113m\u0113jdarb\u012bbas att\u012bst\u012bba"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Latvian vs Estonian Federation)",
+            "Public Funding Disclosure (LIAA/ERDF)",
+            "Social Media Aggregation (Twitter/Facebook/YouTube embeds)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 944,
+              "output_tokens": 273,
+              "elapsed_seconds": 2.885922908782959
+            }
+          ],
+          "reasoning": "The scraped content is from the Latvian Volleyball Federation (volejbols.lv), not the Estonian Volleyball Federation. While the content reveals procurement-relevant funding activities (LIAA agreement for export support), it applies to the wrong geographic entity and does not provide intelligence on the target's procurement needs."
+        }
+      ],
+      "total_input_tokens": 4655,
+      "total_output_tokens": 1008,
+      "estimated_cost_usd": 0.029085
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Estonian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:08:31.412934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339656",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:59.268509"
+}

@@ -1,0 +1,353 @@
+{
+  "entity_id": "bedford_blues",
+  "entity_name": "Bedford Blues",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "bedfordrugby.co.uk",
+    "bedfordblues.com",
+    "bluesfoundation.org.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/programme-manager-job-in-bedford-jobs-steppingley",
+      "https://uk.linkedin.com/jobs/view/fundraising-officer-at-back-home-band-4362702205",
+      "https://uk.linkedin.com/jobs/disability-sport-jobs",
+      "https://uk.linkedin.com/jobs/view/associate-director-of-development-major-gifts-2-vacancies-at-stanford-university-4336614922",
+      "https://uk.linkedin.com/jobs/view/charity-fundraiser-blue-cross-at-charity-link-4367187207",
+      "https://uk.linkedin.com/jobs/grant-making-jobs",
+      "https://uk.linkedin.com/jobs/flagship-jobs-milton-keynes",
+      "https://uk.linkedin.com/jobs/view/assistant-director-donor-experience-at-stanford-university-4338846375"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bedford_blues",
+      "entity_name": "Bedford Blues",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/disability-sport-jobs",
+        "https://bedfordrugby.co.uk",
+        "https://bluesfoundation.org.uk",
+        "https://uk.linkedin.com/jobs/view/fundraising-officer-at-back-home-band-4362702205",
+        "https://uk.linkedin.com/jobs/view/associate-director-of-development-major-gifts-2-vacancies-at-stanford-university-4336614922",
+        "https://uk.linkedin.com/jobs/programme-manager-job-in-bedford-jobs-steppingley",
+        "https://uk.linkedin.com/jobs/view/charity-fundraiser-blue-cross-at-charity-link-4367187207",
+        "https://bedfordblues.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bedford Blues may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:04:47.616021",
+          "domain_explored": "https://bedfordrugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketco (Ticketing & Events platform)",
+              "NFU Mutual (Sponsorship/Insurance Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced ticketing operations to Ticketco",
+              "Active Hospitality booking workflows",
+              "Newsletter marketing (Mailchimp or similar implied by 'Sign up here' structure)"
+            ]
+          },
+          "patterns_found": [
+            "Use of third-party ticketing platforms (Ticketco)",
+            "Hospitality and event management outsourcing",
+            "Sponsorship/Partnership reliance (NFU Mutual)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1267,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.087247848510742
+            }
+          ],
+          "reasoning": "The content reveals specific vendor usage (Ticketco for ticketing) and a reliance on external partners for hospitality and insurance (NFU Mutual). While no direct RFPs are present, the use of Ticketco indicates a procurement decision for digital ticketing/event management software. The repeated links to hospitality booking forms suggest an active commercial operations function."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:04:53.612015",
+          "domain_explored": "https://bedfordblues.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "GrayJay Sports (League Management Platform)"
+            ],
+            "job_postings": [
+              "Head Coaches for U13AAA, U15AA & U18AA (Volunteer/Coaching roles)"
+            ],
+            "procurement_indicators": [
+              "Usage of specialized sports league software (GrayJay Sports)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Hockey vs Rugby)",
+            "Sports Management Platform (GrayJay Sports)",
+            "League Structure Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 266,
+              "elapsed_seconds": 2.4451119899749756
+            }
+          ],
+          "reasoning": "The scraped content from 'bedfordblues.com' identifies the entity as 'Bedford Blues Minor Hockey Association' (BDMHA) located in Nova Scotia, not 'Bedford Blues Rugby Club' (UK). This is a false positive match on the entity name. While the site reveals the use of the 'GrayJay Sports' platform for league management, this is irrelevant to the target entity (Bedford Rugby). The confidence is negatively adjusted to filter out this incorrect entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:05:00.574457",
+          "domain_explored": "https://bluesfoundation.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Activity Deliverer (SEND)",
+              "Fundraising Manager (Full Time)"
+            ],
+            "procurement_indicators": [
+              "Expansion of Fundraising Operations",
+              "Community Program Delivery (SEND Schools)",
+              "Event Organization (Banger Rally)"
+            ]
+          },
+          "patterns_found": [
+            "Charitable Trust Structure",
+            "Community Outreach Programs (Project 500, ABILITY Blues)",
+            "Active Recruitment (Fundraising & Delivery Roles)",
+            "Event-based Fundraising (Banger Rally)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 308,
+              "elapsed_seconds": 2.452755928039551
+            }
+          ],
+          "reasoning": "The content confirms the existence of the Bedford Blues Foundation, the charitable arm of the club. While distinct from the main club procurement, the recruitment of a 'Fundraising Manager' and the operation of specific community projects (Project 500) indicate active budget utilization and potential needs for donor management software, event management tools, and volunteer coordination platforms. It signals organizational growth but is a secondary procurement channel compared to the main club operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:05:07.943961",
+          "domain_explored": "https://uk.linkedin.com/jobs/programme-manager-job-in-bedford-jobs-steppingley",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Programme Manager - Engineering (Central Bedfordshire College)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Education vs Sports)",
+            "Generic Job Board Noise",
+            "Geographic Proximity (Dunstable/Steppingley) without Entity Affiliation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.8319568634033203
+            }
+          ],
+          "reasoning": "The scraped content lists job postings for 'Central Bedfordshire College' and 'The Bedford College Group'. While geographically near Bedford, these are educational entities distinct from 'Bedford Blues' (Rugby Club). There is no mention of the target entity, Goldington Road, or rugby operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:05:14.608657",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/fundraising-officer-at-back-home-band-4362702205",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Word, Excel, PowerPoint, Outlook)",
+              "Social Media Platforms",
+              "CRM/Database (Implied by 'maintain a database')"
+            ],
+            "job_postings": [
+              "Fundraising Officer (Back Home Band)"
+            ],
+            "procurement_indicators": [
+              "Corporate Partnership Management",
+              "Community Engagement Strategy",
+              "Event Management"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Third-Party Recruitment)",
+            "Geographic Proximity (Luton vs Bedford)",
+            "Sector Misalignment (Disability Charity vs Rugby Club)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1630,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.252058982849121
+            }
+          ],
+          "reasoning": "The job posting is for a 'Fundraising Officer' role at 'Back Home Band' (a charity supporting individuals with additional needs), located in Luton. While the role involves corporate partnerships and fundraising, there is no direct link to Bedford Blues or the Blues Foundation. The entity is distinct, and the location is different, indicating this is irrelevant noise for the target entity's procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:05:22.607572",
+          "domain_explored": "https://uk.linkedin.com/jobs/disability-sport-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter"
+            ],
+            "job_postings": [
+              {
+                "role": "Fundraising Manager",
+                "entity": "Bedford Blues Foundation",
+                "location": "Bedford, England",
+                "posted": "2 weeks ago",
+                "url": "https://uk.linkedin.com/jobs/view/fundraising-manager-at-bedford-blues-foundation-4364312427"
+              }
+            ],
+            "procurement_indicators": [
+              "Active recruitment cycle",
+              "Foundation budget expansion",
+              "Use of professional recruitment platforms"
+            ]
+          },
+          "patterns_found": [
+            "Direct Entity Affiliation",
+            "Charitable Fundraising Recruitment",
+            "Operational Expansion",
+            "LinkedIn Recruiter Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1699,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.55164098739624
+            }
+          ],
+          "reasoning": "The search results contain a direct hit for 'Fundraising Manager' at 'Bedford Blues Foundation'. While this is a recruitment signal rather than a direct procurement tender, it indicates active investment in the Foundation's capability. This role likely requires budget management and potentially the procurement of fundraising tools or events, validating the entity's active operational status."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:05:29.953273",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/associate-director-of-development-major-gifts-2-vacancies-at-stanford-university-4336614922",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Stanford University vs Bedford Blues)",
+            "Geographic Irrelevance (California, USA vs Bedford, UK)",
+            "Sector Misalignment (Academic Engineering vs Rugby Club)",
+            "Job Board Noise (LinkedIn Aggregation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.896817922592163
+            }
+          ],
+          "reasoning": "The content is a job posting for Stanford University located in California, targeting the School of Engineering. There is no logical connection, procurement signal, or shared technology stack with Bedford Blues, a rugby club in the UK. This represents irrelevant noise in the data stream."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:05:36.175719",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/charity-fundraiser-blue-cross-at-charity-link-4367187207",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Blue Cross vs Bedford Blues)",
+            "Third-Party Recruitment Agency (Charity Link)",
+            "Geographic Irrelevance (Northampton vs Bedford)",
+            "Sector Misalignment (Animal Welfare vs Rugby Sports)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1860,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.639185905456543
+            }
+          ],
+          "reasoning": "The content describes a fundraising position for 'Blue Cross' (an animal welfare charity) managed by 'Charity Link' in Northampton. There is no connection to Bedford Blues (the rugby club) or its associated foundation. The geographic proximity (Northampton is approx. 30 miles away) is insufficient to establish relevance without entity affiliation."
+        }
+      ],
+      "total_input_tokens": 12684,
+      "total_output_tokens": 2084,
+      "estimated_cost_usd": 0.06931200000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bedford Blues may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:05:36.177875"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.279165",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:44:15.113776"
+}

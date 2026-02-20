@@ -1,0 +1,177 @@
+{
+  "entity_id": "comoros_basketball_federation",
+  "entity_name": "Comoros Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "dbpedia.org",
+    "purposebeyondplay.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "comoros_basketball_federation",
+      "entity_name": "Comoros Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://purposebeyondplay.com",
+        "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546",
+        "https://dbpedia.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Comoros Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:28:12.294731",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:28:19.111803",
+          "domain_explored": "https://dbpedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Knowledge Graph",
+              "DBpedia Databus",
+              "Linked Open Data (LOD)",
+              "Ontology Visualization"
+            ],
+            "job_postings": [
+              "Google Summer of Code (GSoC) Mentorship",
+              "DAAD Postdoc Net AI Fellow",
+              "DBpedia Internship"
+            ],
+            "procurement_indicators": [
+              "Become a Member (Association Membership)",
+              "Databus data deployment platform"
+            ]
+          },
+          "patterns_found": [
+            "Open Source Community Focus",
+            "Academic/Research Orientation",
+            "Knowledge Graph Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.262817859649658
+            }
+          ],
+          "reasoning": "The scraped content is from DBpedia, an open-source knowledge graph project. It focuses on community contributions, internships (GSoC), and data ontology management. There is absolutely no connection to the Comoros Basketball Federation, basketball governance, or sports-related procurement activities. This is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:28:25.109470",
+          "domain_explored": "https://purposebeyondplay.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Athlete Transition Support",
+            "Non-Profit/Charity Model",
+            "Mental Health & Wellness Services",
+            "Event Management (Sports & Unity Showcase)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.180957794189453
+            }
+          ],
+          "reasoning": "The content describes a non-profit organization focused on athlete transition and mental health. While they host events (Sports & Unity Showcase), there is no mention of the Comoros Basketball Federation, nor are there specific procurement signals (RFPs, tech stack details, or vendor needs) relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:28:32.658345",
+          "domain_explored": "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Delivery Driver Non CDL at Hardie's Fresh Foods (Houston, TX)",
+              "Package Delivery Driver at Routewise Logistics (Philadelphia, PA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (United States vs Comoros)",
+            "Sector Mismatch (Logistics vs Sports Administration)",
+            "Login Wall / Dynamic Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.0414628982543945
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Professional Driver' roles in the United States. There is no content, metadata, or links connecting this page to the Comoros Basketball Federation. The job listings (e.g., Hardie's Fresh Foods, Routewise Logistics) are logistics-focused and geographically distant from the target entity in Comoros. This is a false positive likely triggered by the URL slug 'african-union' appearing in a sample job title, but the content itself is irrelevant to the target entity's procurement."
+        }
+      ],
+      "total_input_tokens": 4349,
+      "total_output_tokens": 750,
+      "estimated_cost_usd": 0.024297
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Comoros Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:28:32.660875"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.265515",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:13.293077"
+}

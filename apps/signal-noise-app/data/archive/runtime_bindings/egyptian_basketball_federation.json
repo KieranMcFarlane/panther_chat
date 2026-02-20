@@ -1,0 +1,117 @@
+{
+  "entity_id": "egyptian_basketball_federation",
+  "entity_name": "Egyptian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "ebl.web.geniussports.com",
+    "sportingscribe.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "egyptian_basketball_federation",
+      "entity_name": "Egyptian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ebl.web.geniussports.com",
+        "https://sportingscribe.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Egyptian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:50:03.362330",
+          "domain_explored": "https://ebl.web.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Genius Sports (Web Platform / League Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of Genius Sports CMS/Hosting",
+              "Active sponsorship with Allianz (Allianz Super League)",
+              "League operations (Super Cup, scheduling)"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Platform Usage",
+            "League Management Operations",
+            "Sponsorship Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 251,
+              "elapsed_seconds": 35.89482593536377
+            }
+          ],
+          "reasoning": "The content confirms the Egyptian Basketball League (EBL) utilizes the Genius Sports platform (geniussports.com) for digital presence and league management. While this is not a direct procurement signal for a *new* vendor, it validates the existing technology stack and the federation's capacity for digital operations. The mention of 'Allianz Super League' indicates active sponsorship management."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:50:10.525065",
+          "domain_explored": "https://sportingscribe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Domain Suspension",
+            "Service Unavailability"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 499,
+              "output_tokens": 124,
+              "elapsed_seconds": 2.1583428382873535
+            }
+          ],
+          "reasoning": "The target URL is currently suspended and serves no content relevant to the Egyptian Basketball Federation or procurement activities. The domain is inactive, providing no actionable intelligence."
+        }
+      ],
+      "total_input_tokens": 1866,
+      "total_output_tokens": 375,
+      "estimated_cost_usd": 0.011223
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Egyptian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:50:10.525836"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.267485",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:47.955778"
+}

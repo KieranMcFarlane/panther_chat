@@ -1,0 +1,96 @@
+{
+  "entity_id": "motogp_world_championship",
+  "entity_name": "MotoGP World Championship",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "motogp.com",
+    "fim-moto.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "motogp_world_championship",
+      "entity_name": "MotoGP World Championship",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://motogp.com",
+        "https://fim-moto.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MotoGP World Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:42:34.605164",
+          "domain_explored": "https://motogp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Commercial content consumption (VideoPass/TimingPass)",
+            "Sponsorship visibility (Castrol, BK8)",
+            "Team operational news (riders, contracts, launches)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 189,
+              "elapsed_seconds": 7.140722990036011
+            }
+          ],
+          "reasoning": "The scraped content consists of sports journalism, race updates, and marketing copy related to rider contracts and team launches. While 'VideoPass' and 'TimingPass' are mentioned, they are consumer products, not procurement signals. There is no evidence of B2B technology acquisition, job postings, or organizational governance changes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:42:45.265017",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 18 column 71 (char 1070)"
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 189,
+      "estimated_cost_usd": 0.006918
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MotoGP World Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:42:45.265462"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374274",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:39.383849"
+}

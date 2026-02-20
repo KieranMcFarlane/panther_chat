@@ -1,0 +1,171 @@
+{
+  "entity_id": "cambodian_volleyball_federation",
+  "entity_name": "Cambodian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "activesgcircle.gov.sg",
+    "cambodianess.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://kh.linkedin.com/jobs/view/finance-manager-at-p-s-v-t-group-co-ltd-4320938683",
+      "https://www.linkedin.com/jobs/view/international-hakha-chin-cambodian-polish-kunama-turkish-tagalog-filipino-and-uzbek-interpreters-worlwide-at-globo-4344029812"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cambodian_volleyball_federation",
+      "entity_name": "Cambodian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://activesgcircle.gov.sg",
+        "https://cambodianess.com",
+        "https://kh.linkedin.com/jobs/view/finance-manager-at-p-s-v-t-group-co-ltd-4320938683",
+        "https://www.linkedin.com/jobs/view/international-hakha-chin-cambodian-polish-kunama-turkish-tagalog-filipino-and-uzbek-interpreters-worlwide-at-globo-4344029812"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cambodian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:05:13.984307",
+          "domain_explored": "https://activesgcircle.gov.sg",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:05:23.753667",
+          "domain_explored": "https://cambodianess.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news content",
+            "Geographic relevance (Cambodia)",
+            "Sector irrelevance (Defense, Environment, Arts)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.0025908946990967
+            }
+          ],
+          "reasoning": "The scraped content from Cambodianess.com represents a general news feed covering defense (Japan Security Assistance), environment (pollution), and culture (museum). There are no articles, job postings, or advertisements related to the Cambodian Volleyball Federation, sports governance, or associated technology procurements."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:05:34.823797",
+          "domain_explored": "https://kh.linkedin.com/jobs/view/finance-manager-at-p-s-v-t-group-co-ltd-4320938683",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP Systems",
+              "Accounting Software",
+              "MS Excel"
+            ],
+            "job_postings": [
+              "Finance Manager at P.S.V.T Group Co., Ltd. (Salary: $1,500-$1,700)"
+            ],
+            "procurement_indicators": [
+              "Explicit requirement for ERP system experience in job description",
+              "Mention of multi-entity financial consolidation needs",
+              "Investment in 'sports clubs' sector by parent company"
+            ]
+          },
+          "patterns_found": [
+            "Entity Affiliation",
+            "Job Posting",
+            "ERP Requirement",
+            "Governance & Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 289,
+              "elapsed_seconds": 2.879701852798462
+            }
+          ],
+          "reasoning": "The content confirms a direct link between the target entity (Cambodian Volleyball Federation) and the PSVT Group, which lists 'sports clubs (football & volleyball)' as a key investment area. The job posting for a Finance Manager indicates organizational growth and a requirement for 'ERP system experience,' signaling a potential procurement need for financial technology infrastructure."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:05:44.400759",
+          "domain_explored": "https://www.linkedin.com/jobs/view/international-hakha-chin-cambodian-polish-kunama-turkish-tagalog-filipino-and-uzbek-interpreters-worlwide-at-globo-4344029812",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Sector Irrelevance",
+            "Generic Job Board Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 164,
+              "elapsed_seconds": 4.128839015960693
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for translation roles, primarily focused on opportunities in the United States and with entities like 'Net2Source'. There is no mention, link, or relevance to the Cambodian Volleyball Federation, Cambodian sports governance, or associated procurement activities."
+        }
+      ],
+      "total_input_tokens": 4401,
+      "total_output_tokens": 629,
+      "estimated_cost_usd": 0.022638
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cambodian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:05:44.401474"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335406",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:27:32.424643"
+}

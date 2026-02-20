@@ -1,0 +1,212 @@
+{
+  "entity_id": "mitsubishi_sagamihara_dynaboars",
+  "entity_name": "Mitsubishi Sagamihara DynaBoars",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "league-one.jp",
+    "logisnext.com",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "rugbyasia247.com",
+    "rugbypass.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mitsubishi_sagamihara_dynaboars",
+      "entity_name": "Mitsubishi Sagamihara DynaBoars",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://globalsportsarchive.com",
+        "https://wikidata.org",
+        "https://rugbyasia247.com",
+        "https://logisnext.com",
+        "https://rugbypass.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mitsubishi Sagamihara DynaBoars may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:44:49.770913",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing System (ticketrugby.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of centralized league ticketing platform"
+            ]
+          },
+          "patterns_found": [
+            "League Schedule Aggregation",
+            "External Ticketing Platform Usage (ticketrugby.jp)",
+            "Abbreviated Team Naming Convention"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.7789809703826904
+            }
+          ],
+          "reasoning": "The content is a league schedule page for Japan Rugby League One. While it confirms the entity '\u76f8\u6a21\u539f\uff24\uff22' (Sagamihara DynaBoars) participates in the league, it provides no information regarding internal procurement, technology infrastructure, or business operations. The only actionable link is to a third-party ticketing vendor, which is a consumer-facing transaction, not a procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:44:52.740352",
+          "domain_explored": "https://logisnext.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:44:55.874590",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:45:02.136833",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Global Competition Taxonomy",
+            "Absence of Entity-Specific Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.8338780403137207
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com represents a generic navigation taxonomy for global soccer competitions (UEFA, CONCACAF, AFC, etc.). There is no mention of 'Mitsubishi Sagamihara DynaBoars', 'Japan Rugby League One', or specific procurement activities. The content is purely structural sports data and does not contain signals relevant to the target entity's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:45:10.042897",
+          "domain_explored": "https://rugbyasia247.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mitsubishi Estate Sponsorship (Distractor/Entity Confusion)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Sports Aggregation",
+            "Corporate Sponsorship News (Mitsubishi Estate)",
+            "Generic Tournament Calendars",
+            "Content Repetition (Navigation/Menu Loops)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 244,
+              "elapsed_seconds": 2.9519858360290527
+            }
+          ],
+          "reasoning": "The scraped content is from a regional rugby news aggregator (RugbyAsia247). While it mentions 'Mitsubishi Estate' in a sponsorship context for the Rugby World Cup 2027, this is a distinct entity from 'Mitsubishi Sagamihara DynaBoars' (a specific rugby club team). The content focuses on match results, tournament calendars, and regional news, lacking specific procurement signals, technology stacks, or operational details regarding the DynaBoars team itself."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:45:17.410624",
+          "domain_explored": "https://rugbypass.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Aggregation",
+            "International Tournament Focus (Six Nations, HSBC SVNS)",
+            "Generic News Feed Structure",
+            "Absence of Domestic League Signals (Japan League One)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 199,
+              "elapsed_seconds": 4.042856216430664
+            }
+          ],
+          "reasoning": "The scraped content from RugbyPass focuses exclusively on international rugby (Six Nations, HSBC SVNS) and global competitions. There is no mention of 'Mitsubishi', 'Sagamihara', 'DynaBoars', or the Japan League One. The content represents a generic sports news feed with no relevance to the specific procurement intelligence of the target entity."
+        }
+      ],
+      "total_input_tokens": 5964,
+      "total_output_tokens": 868,
+      "estimated_cost_usd": 0.030912000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mitsubishi Sagamihara DynaBoars may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:45:17.412178"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.274305",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:40:56.913495"
+}

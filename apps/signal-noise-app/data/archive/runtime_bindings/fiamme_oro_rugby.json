@@ -1,0 +1,273 @@
+{
+  "entity_id": "fiamme_oro_rugby",
+  "entity_name": "Fiamme Oro Rugby",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "fiammeororugby.it",
+    "federugby.it",
+    "valorugby.it",
+    "zoominfo.com",
+    "legaitalianarugby.com",
+    "historical-stats.epcrugby.com",
+    "zebreparma.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiamme_oro_rugby",
+      "entity_name": "Fiamme Oro Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legaitalianarugby.com",
+        "https://fiammeororugby.it",
+        "https://valorugby.it",
+        "https://federugby.it",
+        "https://zebreparma.it",
+        "https://zoominfo.com",
+        "https://historical-stats.epcrugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fiamme Oro Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:18:51.397332",
+          "domain_explored": "https://fiammeororugby.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (CMS)",
+              "Twitter/X (Social)",
+              "Facebook (Social)",
+              "Instagram (Social)",
+              "YouTube (Video)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership Management System (Implied)",
+              "Content Management System (Confirmed)"
+            ]
+          },
+          "patterns_found": [
+            "WordPress CMS Usage",
+            "User Authentication System",
+            "Social Media Integration",
+            "Membership/Registration Workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 256,
+              "elapsed_seconds": 24.70955491065979
+            }
+          ],
+          "reasoning": "The content reveals the underlying technology stack (WordPress) and functional workflows (Login/Join) but contains no explicit procurement signals (RFPs, partnerships, or new tech investments). The 'Join today' and 'Forgot password' elements indicate a digital membership capability, while the social media links suggest an active marketing stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:19:00.601152",
+          "domain_explored": "https://federugby.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Existing Sponsorships: IVECO (CUS Torino), SIA-MPL (Colorno), Arredissima (Villorba)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Match Reports",
+            "League Standings",
+            "Sponsorship Branding (IVECO, SIA-MPL, Arredissima)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 227,
+              "elapsed_seconds": 2.649120807647705
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports match reports, scores, and league standings for the Serie A Elite Femminile. While it lists commercial sponsors (e.g., IVECO, SIA-MPL), these are existing branding arrangements, not active procurement signals or new vendor opportunities. There is no information regarding technology stacks, job openings, or organizational governance relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:19:13.501650",
+          "domain_explored": "https://valorugby.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:19:23.185334",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "B2B Sales Platform",
+            "Generic GTM Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.492820978164673
+            }
+          ],
+          "reasoning": "The content is entirely marketing material from ZoomInfo, a B2B data vendor. It describes ZoomInfo's features and benefits for sales teams but contains zero specific information about Fiamme Oro Rugby's internal operations, technology stack, or procurement activities. It is irrelevant noise for the purpose of gathering intelligence on the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:19:35.308248",
+          "domain_explored": "https://legaitalianarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platform (Watch Now)",
+              "League Management System (Standings/Stats)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal: Soladria (Title Sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "League Standings",
+            "Match Reports",
+            "Video Streaming Integration",
+            "Sponsorship Branding (Soladria)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.533452033996582
+            }
+          ],
+          "reasoning": "The content is exclusively focused on league operations, match results, standings, and sports journalism for Serie A Elite. While it confirms Fiamme Oro Rugby is an active participant in this specific league, it contains no corporate governance, technology infrastructure, or procurement signals relevant to the entity's internal purchasing."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:19:57.617230",
+          "domain_explored": "https://historical-stats.epcrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Statistics Database",
+            "Historical Match Results",
+            "Public Fan Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1018,
+              "output_tokens": 175,
+              "elapsed_seconds": 15.11057186126709
+            }
+          ],
+          "reasoning": "The content is a public-facing historical statistics database for the Investec Champions Cup. It focuses on past fixtures, results, and player records. While it indicates data management capabilities within the sport, it provides no specific signals regarding Fiamme Oro Rugby's internal procurement activities, technology stack, or vendor selection processes."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:20:23.966965",
+          "domain_explored": "https://zebreparma.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Match Reports",
+            "League Standings",
+            "Merchandising Storefront",
+            "Sponsorship Tiers"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 192,
+              "elapsed_seconds": 18.408568620681763
+            }
+          ],
+          "reasoning": "The content analyzed is from Zebre Parma, a distinct professional rugby franchise and competitor to Fiamme Oro. The site is exclusively focused on consumer-facing content: match results (URC), player call-ups (Italia XV), ticket sales, and merchandising. There are no procurement signals, technology stacks, or corporate governance data relevant to Fiamme Oro's internal operations."
+        }
+      ],
+      "total_input_tokens": 8378,
+      "total_output_tokens": 1256,
+      "estimated_cost_usd": 0.043974
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fiamme Oro Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:20:23.967861"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281867",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:52.207824"
+}

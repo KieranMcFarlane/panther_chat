@@ -1,0 +1,298 @@
+{
+  "entity_id": "ice_hockey_africa",
+  "entity_name": "Ice Hockey Africa",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "nationalteamsoficehockey.com",
+    "icehockey24.com",
+    "ndl.ethernet.edu.et"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://za.linkedin.com/jobs/hockey-director-jobs",
+      "https://za.linkedin.com/jobs/view/field-hockey-coach-at-winning-ways-sports-academy-3845207387",
+      "https://za.linkedin.com/jobs/view/school-hockey-coach-1st-team-at-rand-park-high-school-4017208924",
+      "https://za.linkedin.com/jobs/view/skate-rink-guard-at-city-of-springfield-human-resources-4346009747"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ice_hockey_africa",
+      "entity_name": "Ice Hockey Africa",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://icehockey24.com",
+        "https://za.linkedin.com/jobs/view/field-hockey-coach-at-winning-ways-sports-academy-3845207387",
+        "https://nationalteamsoficehockey.com",
+        "https://za.linkedin.com/jobs/hockey-director-jobs",
+        "https://za.linkedin.com/jobs/view/school-hockey-coach-1st-team-at-rand-park-high-school-4017208924",
+        "https://za.linkedin.com/jobs/view/skate-rink-guard-at-city-of-springfield-human-resources-4346009747",
+        "https://ndl.ethernet.edu.et"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ice Hockey Africa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:58:17.910409",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from 'Toggle mobile menu' and 'Archives by Categories' structure)",
+              "Google Maps (inferred from 'select the corresponding location on the map')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Content Management System usage for regional updates",
+              "Digital infrastructure for mapping team locations"
+            ]
+          },
+          "patterns_found": [
+            "Regional Content Aggregation",
+            "Event Recaps & Schedules",
+            "Tag-based Taxonomy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 294,
+              "elapsed_seconds": 2.7105770111083984
+            }
+          ],
+          "reasoning": "The scraped content is from a general news aggregator ('National Teams of Ice Hockey') rather than the official 'Ice Hockey Africa' entity. However, the presence of specific tags like 'Algeria Sports Development', 'Arab Ice Hockey', and 'Bahrain Ice Hockey' confirms the existence of the ecosystem and a need for digital coverage. While not a direct procurement signal from the governing body, it validates the market scope and the potential need for centralized digital management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:58:40.663409",
+          "domain_explored": "https://icehockey24.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Client-side Rendering (indicated by 'Loading...' text)",
+              "Ad Injection Scripts"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Automated Content Loading",
+            "Advertisement-Heavy Layout"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 435,
+              "output_tokens": 210,
+              "elapsed_seconds": 15.602076053619385
+            }
+          ],
+          "reasoning": "The scraped content indicates a generic sports score aggregation platform (IceHockey24) rather than the official governing body or a specific organizational entity. The presence of repetitive 'AD' markers, 'Loading...' states, and generic 'Hockey' labels suggests an automated feed with no governance, procurement, or decision-making authority relevant to 'Ice Hockey Africa'."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:58:54.887660",
+          "domain_explored": "https://ndl.ethernet.edu.et",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:59:08.337537",
+          "domain_explored": "https://za.linkedin.com/jobs/hockey-director-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              {
+                "title": "Executive Director",
+                "organization": "Hashtag Nonprofit NPC",
+                "location": "Johannesburg, South Africa",
+                "relevance": "Low (Nonprofit sector, likely Field Hockey context)"
+              },
+              {
+                "title": "Director: Mandela University Africa Hub for Youth",
+                "organization": "Nelson Mandela University",
+                "location": "Port Elizabeth, South Africa",
+                "relevance": "Low (Academic sector, likely Field Hockey context)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Keyword Mismatch (Field Hockey vs. Ice Hockey)",
+            "Authentication Gate"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 408,
+              "elapsed_seconds": 4.405648231506348
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Hockey Director' roles in South Africa. The listings identified (e.g., Hashtag Nonprofit NPC, Nelson Mandela University) refer to 'Hockey' in the context of Field Hockey, which is the dominant form of the sport in Africa. There is no specific mention of 'Ice Hockey', 'Ice Hockey Africa', or related winter sports governance. Furthermore, the content is gated behind a login wall, preventing deep analysis of job descriptions for procurement signals. This does not advance the specific hypothesis regarding Ice Hockey Africa's procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:59:19.804914",
+          "domain_explored": "https://za.linkedin.com/jobs/view/field-hockey-coach-at-winning-ways-sports-academy-3845207387",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: Field Hockey Coach",
+              "Entity: Winning Ways Sports Academy",
+              "Location: Cape Town, South Africa",
+              "Type: Part-time",
+              "Requirements: SAHA Level 0/1, Police Clearance"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Mismatch (Field Hockey vs. Ice Hockey)",
+            "Local Academy Scope",
+            "Part-Time/Contract Employment",
+            "Generic Qualification Requirements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.5678391456604004
+            }
+          ],
+          "reasoning": "The job posting is explicitly for 'Field Hockey' at a local sports academy (Winning Ways Sports Academy) in Cape Town. This is a direct mismatch for the target entity 'Ice Hockey Africa,' which governs ice hockey. The role is a part-time coaching position for children (ages 6-13) requiring basic Level 0/1 qualifications, indicating a low-level operational role rather than a strategic procurement or technology investment signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:59:31.740789",
+          "domain_explored": "https://za.linkedin.com/jobs/view/school-hockey-coach-1st-team-at-rand-park-high-school-4017208924",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "School Hockey Coach - 1st Team",
+                "entity": "Rand Park High School",
+                "type": "Contract (Fixed-term)",
+                "domain": "Field Hockey / Education"
+              }
+            ],
+            "procurement_indicators": [
+              "Service Procurement: Coaching Services",
+              "Budget Cycle: Academic/Seasonal (Oct 2024 - May 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Keyword Mismatch (Field Hockey vs. Ice Hockey)",
+            "Education Sector Scope",
+            "Seasonal Contract Employment",
+            "Localized Procurement (School Level)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.2253780364990234
+            }
+          ],
+          "reasoning": "The job posting is for a 'School Hockey Coach' at Rand Park High School. The context clues (Gauteng school terms, SAHA accreditation, 'schoolboy hockey') confirm this is Field Hockey, not Ice Hockey. Furthermore, the hiring entity is a single high school, which represents a localized, education-sector procurement cycle rather than the continental or national organizational procurement signals relevant to 'Ice Hockey Africa'."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:59:48.031510",
+          "domain_explored": "https://za.linkedin.com/jobs/view/skate-rink-guard-at-city-of-springfield-human-resources-4346009747",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Skate Rink Guard - City of Springfield Human Resources (Durban, SA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Durban vs. Springfield)",
+            "Operational Role (Entry-level)",
+            "Municipal Recreation Scope",
+            "Manual Labor Focus (Ice Maintenance)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 257,
+              "elapsed_seconds": 4.997345685958862
+            }
+          ],
+          "reasoning": "The job posting is for an entry-level 'Skate Rink Guard' in Durban, South Africa. While it involves 'hockey leagues,' the context is municipal recreation (City of Springfield HR) and manual facility maintenance (scraping ice). There is no indication of procurement activity, technology investment, or governance relevant to Ice Hockey Africa's organizational development. The entity 'City of Springfield' appears to be a data anomaly or a local entity with a US-named department, but the role is purely operational."
+        }
+      ],
+      "total_input_tokens": 8190,
+      "total_output_tokens": 1746,
+      "estimated_cost_usd": 0.05076
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ice Hockey Africa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:59:48.035602"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.304755",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:47.716091"
+}

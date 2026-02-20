@@ -1,0 +1,198 @@
+{
+  "entity_id": "trefl_gda?sk",
+  "entity_name": "Trefl Gda?sk",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "treflgdansk.pl",
+    "www-old.cev.eu",
+    "en.volleyballworld.com",
+    "volleybox.net",
+    "inside.volleycountry.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "trefl_gda?sk",
+      "entity_name": "Trefl Gda?sk",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://treflgdansk.pl",
+        "https://en.volleyballworld.com",
+        "https://inside.volleycountry.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Trefl Gda?sk may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:49:43.903533",
+          "domain_explored": "https://treflgdansk.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Generic 'Kup bilet' buttons detected)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsor ecosystem (Energa, InPost, PGE, LUK)",
+              "Digital content delivery (YouTube/Shorts)"
+            ]
+          },
+          "patterns_found": [
+            "Sports league schedule data",
+            "Ticketing interface elements",
+            "Sponsorship naming conventions (Energa, InPost, PGE)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.9239509105682373
+            }
+          ],
+          "reasoning": "The content is exclusively focused on match results, future fixtures, and league standings for the 2025/2026 season. While it confirms the entity operates in a commercial sports environment requiring ticketing systems, it contains no specific signals regarding new technology procurement, vendor selection, or infrastructure upgrades."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:49:53.162929",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports federation navigation structure",
+            "Historical event calendar data",
+            "Generic footer links (Terms, Privacy, Feedback)",
+            "Team match listings (Champions League, CEV Cup)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.9364681243896484
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event listing from the European Volleyball Confederation (CEV) website. It contains no information regarding 'Trefl Gda\u0144sk' procurement activities, technology stack, or governance. The mention of 'Warsaw (POL)' is a generic geographical reference to a beach volleyball event location, not a signal from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:50:03.284744",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation navigation structure",
+            "Live streaming and OTT platform links (VolleyballWorld TV)",
+            "International ranking data tables",
+            "Generic content taxonomy (News, Schedule, Rankings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.095916986465454
+            }
+          ],
+          "reasoning": "The scraped content represents the global homepage of VolleyballWorld (FIVB), which aggregates international results and media. While it confirms the broader ecosystem in which Trefl Gda\u0144sk operates (evidenced by Poland's ranking), it contains no specific information regarding Trefl Gda\u0144sk's internal operations, technology stack, or procurement activities. The content is purely informational and consumer-facing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:50:12.216892",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Player transfer market data (Done deals, Rumors)",
+            "Community forum structure",
+            "User engagement metrics (Popular players, staff, clubs)",
+            "Dynamic content loading indicators (Loading states)",
+            "Polish player mentions (Tokajuk, Dulski, Siwczyk)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 239,
+              "elapsed_seconds": 2.863269090652466
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is a sports data aggregation platform focused on player transfers, rankings, and community discussions. While it contains data relevant to the volleyball ecosystem (including Polish players), it does not contain information regarding Trefl Gda\u0144sk's corporate procurement, technology stack, or governance. It is a market data source, not a corporate signal source for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:50:22.491969",
+          "domain_explored": "https://inside.volleycountry.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5775,
+      "total_output_tokens": 896,
+      "estimated_cost_usd": 0.030765
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Trefl Gda?sk may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:50:22.494692"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318771",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:39:09.883875"
+}

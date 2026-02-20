@@ -1,0 +1,121 @@
+{
+  "entity_id": "round_rock_express",
+  "entity_name": "Round Rock Express",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "north_american_minor_league",
+  "discovered_domains": [
+    "express.milbstore.com",
+    "goroundrock.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "round_rock_express",
+      "entity_name": "Round Rock Express",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://goroundrock.com",
+        "https://express.milbstore.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Round Rock Express may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:48:09.737419",
+          "domain_explored": "https://express.milbstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fanatics Platform (inferred from domain structure)",
+              "Magento (Likely underlying platform given Fanatics history)",
+              "Google Analytics (inferred from standard e-commerce tracking needs)",
+              "Payment Gateway (supports recurring/deferred purchases)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Fanatics (MiLB Store)",
+              "Inventory Management: Real-time stock levels visible (e.g., inventory:21)",
+              "Merchandising: Active sales of branded apparel"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Fanatics/MiLB)",
+            "Inventory Management Signals",
+            "Subscription/Recurring Payment Logic"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 350,
+              "elapsed_seconds": 6.019604921340942
+            }
+          ],
+          "reasoning": "The content is scraped HTML from the team's online store (express.milbstore.com). While it does not show direct procurement intent (like an RFP), it confirms the use of a specific e-commerce technology stack (Fanatics/MiLB platform) and reveals inventory management capabilities. This provides a 'WEAK_ACCEPT' signal as it establishes the current vendor ecosystem (Fanatics) which is relevant for cross-selling or understanding current partnerships, but does not indicate new procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:48:15.368954",
+          "domain_explored": "https://goroundrock.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Destination Marketing Content",
+            "Event Promotion",
+            "Tourism Board Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.7108819484710693
+            }
+          ],
+          "reasoning": "The scraped content from goroundrock.com is a tourism and visitor bureau portal focused on promoting local attractions, dining, and events. It serves a marketing function rather than a procurement or operational function for the Round Rock Express baseball team. There are no signals regarding vendor selection, purchasing, or technology stack implementation relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2776,
+      "total_output_tokens": 532,
+      "estimated_cost_usd": 0.016308
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Round Rock Express may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:48:15.370427"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309414",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:53.260827"
+}

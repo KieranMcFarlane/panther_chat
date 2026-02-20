@@ -1,0 +1,204 @@
+{
+  "entity_id": "paris\u0096roubaix",
+  "entity_name": "Paris\u0096Roubaix",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "paris-roubaix.fr",
+    "parisroubaixchallenge.com",
+    "paris-roubaix-femmes.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/paris-emplois-roubaix"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris\u0096roubaix",
+      "entity_name": "Paris\u0096Roubaix",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://parisroubaixchallenge.com",
+        "https://fr.linkedin.com/jobs/paris-emplois-roubaix",
+        "https://paris-roubaix.fr",
+        "https://paris-roubaix-femmes.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris\u0096Roubaix may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:59:18.854363",
+          "domain_explored": "https://paris-roubaix.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Player/Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Third-party video hosting platform (Dailymotion)",
+              "Third-party registration platform (implied by 'inscriptions' link)"
+            ]
+          },
+          "patterns_found": [
+            "Media hosting via Dailymotion (geo.dailymotion.com)",
+            "Event management and registration platform usage",
+            "Content delivery network (CDN) usage for media assets"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 264,
+              "elapsed_seconds": 6.960258960723877
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on the 2025 race results, highlights, and the 'Paris-Roubaix Challenge' (a mass participation event). While the presence of a Dailymotion player indicates a technology partnership for video hosting, this is a standard operational expense (SaaS usage) rather than a new procurement signal. No RFPs, job postings, or strategic investment indicators were found in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:59:34.763222",
+          "domain_explored": "https://parisroubaixchallenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Timeto (Event Registration & Management Platform)",
+              "YouTube (Video Hosting)",
+              "CMS (implied by site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of 'in.timeto.com' subdomain for registration (SaaS procurement)",
+              "Partnership with Santini for 'Santini collection' (Apparel procurement)",
+              "Affiliate link structure for 'Cure Leukaemia' charity bibs (Partnership management)",
+              "Reference to 'Tour operator' booking management (B2B service procurement)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Event Registration Platform (Timeto)",
+            "Third-party Ticketing/Registration Outsourcing",
+            "Charity Partnership Integration (Cure Leukaemia)",
+            "Merchandising Partnership (Santini)",
+            "Media Hosting (YouTube)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 378,
+              "elapsed_seconds": 7.600937843322754
+            }
+          ],
+          "reasoning": "The content reveals a dependency on 'Timeto' (in.timeto.com) for core registration and event management services. This indicates a procurement relationship for SaaS event platforms. Additionally, the integration of 'Santini' for merchandise and 'Cure Leukaemia' for charity bibs suggests an ecosystem of vendor partnerships. While no direct RFP is visible, the reliance on these specific platforms confirms active procurement in the event management and participant experience categories."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:59:57.091170",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (geo.dailymotion.com - Video Hosting/OTT)",
+              "A.S.O. Content Management Stack (Inferred from URL structure /fr/actus)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Title Sponsorship: Zwift (Title Partner)",
+              "Media Hosting: Dailymotion (Video distribution)",
+              "Photography Services: A.S.O./Thomas Maheux (Internal/Contracted)",
+              "Team Sponsorships: Visma | Lease a Bike, SD Worx - Protime, Lidl - Trek"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Content Delivery Network (Dailymotion Cloud/Player)",
+            "Title Sponsorship Integration (Zwift)",
+            "Media Rights Management (A.S.O.)",
+            "Standardized Event Web Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 334,
+              "elapsed_seconds": 15.116416215896606
+            }
+          ],
+          "reasoning": "The content confirms the event operates under the A.S.O. (Amaury Sport Organisation) umbrella, utilizing a shared digital infrastructure with the men's event (evidenced by the recurring Dailymotion player). The presence of 'Zwift' in the title indicates a major sponsorship procurement category. While no direct RFPs are visible, the reliance on third-party media hosting and title sponsorship validates the outsourcing model."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:00:08.851676",
+          "domain_explored": "https://fr.linkedin.com/jobs/paris-emplois-roubaix",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Banquier(\u00e8re) Priv\u00e9(e) du Dirigeant - Lille H/F (Ark\u00e9a Banque Priv\u00e9e)",
+              "Superviseur production H/F (L'Usine Nouvelle)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Keyword Noise (Paris/Roubaix)",
+            "Unrelated Industry Listings (Banking, Manufacturing)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 240,
+              "elapsed_seconds": 4.054850816726685
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn jobs search results page for the query 'Paris' in the location 'Roubaix'. The listings (e.g., Ark\u00e9a Banque Priv\u00e9e, L'Usine Nouvelle) are geographically coincident with the search terms but unrelated to the entity 'Paris\u2013Roubaix' (the cycling event). There are no procurement signals, technology stacks, or governance patterns relevant to the event organization."
+        }
+      ],
+      "total_input_tokens": 5836,
+      "total_output_tokens": 1216,
+      "estimated_cost_usd": 0.035748
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris\u0096Roubaix may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:00:08.852383"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.400634",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:41.883366"
+}

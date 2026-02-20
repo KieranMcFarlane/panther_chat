@@ -1,0 +1,311 @@
+{
+  "entity_id": "belgian_cricket_federation",
+  "entity_name": "Belgian Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "cricket-belgium.com",
+    "criciccb.be",
+    "rattleanddrum.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/sales-at-kriket-4288428106",
+      "https://be.linkedin.com/jobs/sports-coaching-jobs",
+      "https://be.linkedin.com/jobs/view/salesmanager-regionaal-at-kriket-4288692061",
+      "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_cricket_federation",
+      "entity_name": "Belgian Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://be.linkedin.com/jobs/view/salesmanager-regionaal-at-kriket-4288692061",
+        "https://cricket-belgium.com",
+        "https://criciccb.be",
+        "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF",
+        "https://be.linkedin.com/jobs/view/sales-at-kriket-4288428106",
+        "https://rattleanddrum.com",
+        "https://be.linkedin.com/jobs/sports-coaching-jobs",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:03:35.638385",
+          "domain_explored": "https://cricket-belgium.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LayerSlider (Web Technology)",
+              "WordPress (CMS implied by structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Supplementary Insurance for registered members",
+              "Training services for umpires, scorers, and coaches",
+              "Good governance implementation (Open, responsive, accurate decision making)"
+            ]
+          },
+          "patterns_found": [
+            "Insurance Procurement",
+            "Governance Framework",
+            "Training & Education Services",
+            "Sponsorship Dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.0548229217529297
+            }
+          ],
+          "reasoning": "The content explicitly mentions 'Supplementary Insurance for all our registered members,' which is a direct procurement signal for insurance services. Additionally, the mention of 'Good governance' and 'Training new umpires, scorers, coaches' indicates a requirement for professional services (consulting/training) and potential governance tools. While no specific RFP is visible, the operational needs are clearly defined."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:04:05.172130",
+          "domain_explored": "https://criciccb.be",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:04:14.750194",
+          "domain_explored": "https://rattleanddrum.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify based on structure)",
+              "Product Catalog System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "Musical Instrument Retail",
+            "Shopify/Consumer Platform Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.699122190475464
+            }
+          ],
+          "reasoning": "The scraped content from 'rattleanddrum.com' is a commercial e-commerce site listing musical instruments (cymbals, drums) and accessories. It is entirely unrelated to the Belgian Cricket Federation, sports governance, or organizational procurement. There is zero signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:04:42.067814",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic SaaS Marketing Content",
+            "B2B Data Platform Promotion",
+            "Sales Intelligence Tooling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 199,
+              "elapsed_seconds": 20.666856050491333
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage marketing copy for ZoomInfo, a B2B data intelligence platform. It contains no specific information regarding the Belgian Cricket Federation, its procurement activities, technology stack, or governance. The text describes ZoomInfo's product features (SalesOS, Copilot, etc.) and unrelated customer testimonials (Abhishek Kumar, Caio Lima, etc.). This is irrelevant noise for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:04:53.605635",
+          "domain_explored": "https://be.linkedin.com/jobs/view/sales-at-kriket-4288428106",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sales",
+                "department": "Sales & Partnerships",
+                "entity": "KRIKET",
+                "nature": "Retail/Field Sales"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "FMCG Product Sales",
+            "B2C Retail Expansion",
+            "Sustainable Food Production",
+            "Gig Economy/Start-up Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 266,
+              "elapsed_seconds": 2.5263638496398926
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a Sales role at 'KRIKET', a Belgian company producing cricket-based snacks. While the name contains phonetic similarities to 'Cricket', the entity is a food tech startup (FMCG) and not the Belgian Cricket Federation (sports governing body). The content focuses on retail distribution, event marketing, and B2B sales for food products, which contradicts the hypothesis of sports federation procurement (IT, infrastructure, turf management)."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:05:06.988668",
+          "domain_explored": "https://be.linkedin.com/jobs/sports-coaching-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Zwemlesgever (Swimming Instructor) - Sportoase",
+              "Zwemlesgevers - Stad Herentals"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Authentication Gate/Wall",
+            "Unrelated Sports Verticals (Swimming/Aquatics)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 233,
+              "elapsed_seconds": 4.545795917510986
+            }
+          ],
+          "reasoning": "The scraped content represents a generic, paginated job search results page for 'Sports Coaching' in Belgium, heavily obstructed by repeated authentication prompts ('Sign in to set job alerts'). The visible listings (e.g., Sportoase, Stad Herentals) are for swimming instructors and municipal roles, unrelated to the Belgian Cricket Federation. There is no specific content, technology stack, or procurement signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:05:17.722914",
+          "domain_explored": "https://be.linkedin.com/jobs/view/salesmanager-regionaal-at-kriket-4288692061",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Salesmanager regionaal"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "FMCG Product Sales",
+            "B2C Retail Expansion",
+            "Sustainable Food Production",
+            "Field Sales / Retail Distribution"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.5756120681762695
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Salesmanager regionaal' at KRIKET, a company producing cricket-based snacks. The role focuses on retail distribution, convincing shop owners to stock products, and representing the brand at fairs. This is a sales role for a consumer food product (FMCG), completely unrelated to the sport of cricket or the Belgian Cricket Federation. The entity 'KRIKET' is a food startup, not a sports governing body."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:05:26.325058",
+          "domain_explored": "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Interns at Royal Belgian Football Association (Tubize, Belgium)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Irrelevant Sports Verticals (Football, Handball, Rugby, Tennis)",
+            "Geographic Noise (Global listings, single Belgian hit for Football)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1735,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.1601479053497314
+            }
+          ],
+          "reasoning": "The content is a generic 'Monday Motivation' job aggregation post from 'Sport Business Jobs'. While it lists one Belgian entity (Royal Belgian Football Association), this is a different sport (Football) and irrelevant to the target entity (Belgian Cricket Federation). The content provides no insights into the technology stack, governance, or procurement activities of the Belgian Cricket Federation."
+        }
+      ],
+      "total_input_tokens": 10838,
+      "total_output_tokens": 1622,
+      "estimated_cost_usd": 0.056844000000000006
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:05:26.326447"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300155",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:38.978064"
+}

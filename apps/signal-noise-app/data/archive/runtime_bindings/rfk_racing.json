@@ -1,0 +1,189 @@
+{
+  "entity_id": "rfk_racing",
+  "entity_name": "RFK Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "rfkracing.com",
+    "rfkshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/racer-jobs",
+      "https://www.linkedin.com/posts/racer-jobs_do-you-have-what-it-takes-to-be-a-nascar-activity-7184203564750110721--8qG"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rfk_racing",
+      "entity_name": "RFK Racing",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://rfkshop.com",
+        "https://www.linkedin.com/posts/racer-jobs_do-you-have-what-it-takes-to-be-a-nascar-activity-7184203564750110721--8qG",
+        "https://rfkracing.com",
+        "https://www.linkedin.com/company/racer-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RFK Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:06:22.622384",
+          "domain_explored": "https://rfkracing.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:06:28.983122",
+          "domain_explored": "https://rfkshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure: /collections/, /products/, /cart/)",
+              "Customer Authentication Module"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "E-commerce infrastructure maintenance",
+              "Inventory procurement (Apparel, Diecasts, Novelties)",
+              "Shipping/Logistics partners (Free shipping >$100)",
+              "Payment gateway processing"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Digital Merchandising Strategy",
+            "Customer Account Management",
+            "Inventory Management (Collections/Categorization)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1382,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.3977949619293213
+            }
+          ],
+          "reasoning": "The content confirms RFK Racing utilizes a dedicated e-commerce platform (Shopify) for merchandise sales. While this is a consumer-facing channel rather than direct B2B procurement, the existence of a digital storefront indicates a need for e-commerce support services, payment processing, inventory management, and digital marketing tools. This provides a weak signal of operational capability and potential vendor needs for the retail arm of the organization."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:06:37.596758",
+          "domain_explored": "https://www.linkedin.com/company/racer-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Hubs.ly link shortener/tracking)",
+              "Job Board Aggregators"
+            ],
+            "job_postings": [
+              "Purchasing Intern - Apparel (Hendrick Motorsports - Competitor Signal)",
+              "Quality Control / Project Engineer (Haas Factory Team)",
+              "Graphic Designer (RCR - Competitor Signal)"
+            ],
+            "procurement_indicators": [
+              "Apparel Supply Chain Management",
+              "Technical Engineering Procurement",
+              "Race Team Alliance (RTA) Partnership Structure"
+            ]
+          },
+          "patterns_found": [
+            "Industry-Specific Job Board",
+            "Race Team Alliance Ecosystem",
+            "Purchasing & Apparel Roles",
+            "Technical Engineering Demand"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 334,
+              "elapsed_seconds": 5.580647945404053
+            }
+          ],
+          "reasoning": "While Racer Jobs is a third-party aggregator and not a direct procurement page for RFK Racing, it provides high-value intelligence on the broader NASCAR ecosystem (Race Team Alliance). The specific mention of a 'Purchasing Intern - Apparel' role at a competitor (Hendrick) validates the existence of apparel procurement functions within teams, which is relevant for RFK's merchandising strategy. It confirms the industry standard for these roles."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:06:43.934540",
+          "domain_explored": "https://www.linkedin.com/posts/racer-jobs_do-you-have-what-it-takes-to-be-a-nascar-activity-7184203564750110721--8qG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HubSpot (inferred from 'hubs.ly' URL structure)",
+              "LinkedIn (Social Recruiting)"
+            ],
+            "job_postings": [
+              "NASCAR Hauler Driver"
+            ],
+            "procurement_indicators": [
+              "Outsourced Recruitment Marketing (Racer Jobs)",
+              "Use of tracking links for candidate acquisition"
+            ]
+          },
+          "patterns_found": [
+            "ATS/Recruitment Marketing (HubSpot)",
+            "Logistics & Operations Hiring",
+            "Vendor-Managed Recruitment Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.2750110626220703
+            }
+          ],
+          "reasoning": "The content confirms RFK Racing is actively hiring for logistics roles (Hauler Drivers), utilizing a third-party job board (Racer Jobs) and a HubSpot-powered tracking link for applications. This indicates an active procurement of human capital and the use of marketing automation software (HubSpot) for recruitment workflows."
+        }
+      ],
+      "total_input_tokens": 4332,
+      "total_output_tokens": 899,
+      "estimated_cost_usd": 0.026481
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RFK Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:06:43.935751"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366141",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:19.682968"
+}

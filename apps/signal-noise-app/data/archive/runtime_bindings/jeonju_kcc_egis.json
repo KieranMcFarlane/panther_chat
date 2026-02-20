@@ -1,0 +1,208 @@
+{
+  "entity_id": "jeonju_kcc_egis",
+  "entity_name": "Jeonju KCC Egis",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "a.osmarks.net",
+    "koreajoongangdaily.joins.com",
+    "prepsportswear.com",
+    "sport.gov.mo",
+    "wikidata.org",
+    "bsportsfan.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jeonju_kcc_egis",
+      "entity_name": "Jeonju KCC Egis",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://koreajoongangdaily.joins.com",
+        "https://a.osmarks.net",
+        "https://bsportsfan.com",
+        "https://sport.gov.mo",
+        "https://prepsportswear.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jeonju KCC Egis may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:24:20.728661",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "static_content_error",
+            "irrelevant_hosting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 418,
+              "output_tokens": 144,
+              "elapsed_seconds": 4.088749170303345
+            }
+          ],
+          "reasoning": "The scraped content is from a personal static site (a.osmarks.net) hosting a Kiwix (offline Wikipedia) instance. It contains no information regarding Jeonju KCC Egis, its procurement activities, or its technology stack. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:24:27.462022",
+          "domain_explored": "https://koreajoongangdaily.joins.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'Canada's procurement chief' in general news (irrelevant to target entity)"
+            ]
+          },
+          "patterns_found": [
+            "general_news_portal",
+            "irrelevant_content",
+            "keyword_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 212,
+              "elapsed_seconds": 3.5045108795166016
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a major Korean news outlet (Korea JoongAng Daily). While it contains the word 'procurement' in a headline about a foreign government official, it is a general media source with no specific connection to the target entity, Jeonju KCC Egis. It does not contain entity-specific procurement signals, technology stack details, or governance patterns relevant to the target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:24:30.429049",
+          "domain_explored": "https://prepsportswear.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:24:42.283398",
+          "domain_explored": "https://sport.gov.mo",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Procurement Information section found on Macao Sport Bureau site (irrelevant to target)"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "irrelevant_government_entity",
+            "procurement_page_exists"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 196,
+              "elapsed_seconds": 6.604664087295532
+            }
+          ],
+          "reasoning": "The scraped content belongs to the Macao Sport Bureau (sport.gov.mo), a government entity in Macau. This is completely unrelated to the target entity, Jeonju KCC Egis (a Korean construction/engineering firm). Although the site contains a 'Procurement Information' (\u63a1\u8cfc\u8cc7\u8a0a) section, it is for the Macao government, not the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:24:45.151920",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:24:51.158650",
+          "domain_explored": "https://bsportsfan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_betting_platform",
+            "live_score_aggregation",
+            "irrelevant_content",
+            "entity_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.770869016647339
+            }
+          ],
+          "reasoning": "The content is entirely focused on sports betting, live scores, and odds aggregation (e.g., 'Dropping Odds', 'Bet365 Recent'). There is no connection to Jeonju KCC Egis, a construction glass manufacturer, nor any signals regarding corporate procurement, ERP systems, or RFPs."
+        }
+      ],
+      "total_input_tokens": 4823,
+      "total_output_tokens": 712,
+      "estimated_cost_usd": 0.025148999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jeonju KCC Egis may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:24:51.159383"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217483",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:39.320513"
+}

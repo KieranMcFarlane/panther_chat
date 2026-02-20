@@ -1,0 +1,410 @@
+{
+  "entity_id": "irish_volleyball_association",
+  "entity_name": "Irish Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "theviewfromthesideline.wordpress.com",
+    "mural.maynoothuniversity.ie",
+    "presentationsecondarylistowel.ie",
+    "localplanet.ie"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-volleyball-ireland-4233655207",
+      "https://ie.linkedin.com/jobs/head-volleyball-coach-jobs?trk=public_jobs_linkster_link",
+      "https://ie.linkedin.com/jobs/view/head-youth-volleyball-coach-coach-developer-at-volleyball-ireland-3566196442",
+      "https://ie.linkedin.com/jobs/view/operations-manager-at-volleyball-ireland-2666920086?refId=a%2F30diz5RkvO%2B8a9Rcuj%2Bw%3D%3D&trackingId=5hDl8NLBhVdLWJFVUanhPw%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://ie.linkedin.com/jobs/volleyball-coach-jobs",
+      "https://ie.linkedin.com/jobs/sports-advisor-jobs",
+      "https://ie.linkedin.com/jobs/view/technical-development-and-participation-manager-at-gaa-4314614973?position=7&pageNum=0&refId=wrf9K6TsLYWIMmhhfYgbCA%3D%3D&trackingId=81EefRkYRzkt4JvmyW2gUQ%3D%3D",
+      "https://ie.linkedin.com/jobs/director-of-coaching-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "irish_volleyball_association",
+      "entity_name": "Irish Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://ie.linkedin.com/jobs/head-volleyball-coach-jobs?trk=public_jobs_linkster_link",
+        "https://ie.linkedin.com/jobs/volleyball-coach-jobs",
+        "https://localplanet.ie",
+        "https://mural.maynoothuniversity.ie",
+        "https://theviewfromthesideline.wordpress.com",
+        "https://ie.linkedin.com/jobs/view/head-youth-volleyball-coach-coach-developer-at-volleyball-ireland-3566196442",
+        "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-volleyball-ireland-4233655207",
+        "https://ie.linkedin.com/jobs/view/operations-manager-at-volleyball-ireland-2666920086?refId=a%2F30diz5RkvO%2B8a9Rcuj%2Bw%3D%3D&trackingId=5hDl8NLBhVdLWJFVUanhPw%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://presentationsecondarylistowel.ie"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "executive_leadership_transition",
+        "strategic_growth_phase",
+        "commercial_expansion",
+        "digital_transformation_mandate",
+        "infrastructure_investment",
+        "operational_expansion",
+        "systems_implementation",
+        "facility_management_procurement",
+        "event_infrastructure_scaling",
+        "licensing_system_overhaul"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Irish Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:23:39.631946",
+          "domain_explored": "https://theviewfromthesideline.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_commentary",
+            "governance_issues"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 143,
+              "elapsed_seconds": 2.383098840713501
+            }
+          ],
+          "reasoning": "The content is an opinion piece regarding Ladies Gaelic Football (LGFA), player retirements, and county board management issues. It contains no information regarding the Irish Volleyball Association, its procurement activities, or technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:23:48.067273",
+          "domain_explored": "https://mural.maynoothuniversity.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EPrints 3.4"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "academic_repository",
+            "library_system"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1123,
+              "output_tokens": 168,
+              "elapsed_seconds": 5.524973154067993
+            }
+          ],
+          "reasoning": "The scraped content is from Maynooth University's research archive (MURAL), not the Irish Volleyball Association. It contains standard repository navigation (eTheses, Faculty lists) and technical footer info (EPrints 3.4). There is no connection to volleyball governance, sports procurement, or the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:23:50.944071",
+          "domain_explored": "https://presentationsecondarylistowel.ie",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:23:59.474493",
+          "domain_explored": "https://localplanet.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "archived_content",
+            "sustainability_focus",
+            "publisher_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.0079848766326904
+            }
+          ],
+          "reasoning": "The content describes 'The Local Planet', a magazine published by 'The FACTORY' focused on sustainable living. It is an archived publication (last active ~2008) exploring a restart of a print/digital magazine. This entity and content are unrelated to the Irish Volleyball Association or its procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:24:11.306026",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-volleyball-ireland-4233655207",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Transformation Platforms (implied need)",
+              "Financial Management Systems",
+              "Performance Systems"
+            ],
+            "job_postings": [
+              {
+                "role": "Chief Executive Officer",
+                "entity": "Volleyball Ireland",
+                "recruiter": "Odgers",
+                "focus": "Strategic Plan 'Feel the Buzz', Commercial Growth, Digital Transformation"
+              }
+            ],
+            "procurement_indicators": [
+              "Strategic Review (2027 planning cycle)",
+              "Infrastructure Projects (Beach Volleyball Centre)",
+              "Event Hosting (U20 Women's European Championship 2024)",
+              "Revenue Stream Development (Sponsorships/Marketing)",
+              "Operational Excellence (Governance/Safeguarding systems)"
+            ]
+          },
+          "patterns_found": [
+            "executive_leadership_transition",
+            "strategic_growth_phase",
+            "commercial_expansion",
+            "digital_transformation_mandate",
+            "infrastructure_investment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 424,
+              "elapsed_seconds": 8.207353830337524
+            }
+          ],
+          "reasoning": "The content represents a high-value procurement signal: the recruitment of a Chief Executive Officer. The job description explicitly mandates experience in 'digital transformation' and 'commercial growth,' indicating incoming leadership will likely assess and upgrade legacy systems, CRM, and operational infrastructure. The reference to a 'state-of-the-art Beach Volleyball Centre' and hosting European Championships signals active investment in facilities and associated event technology/service procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:24:21.792386",
+          "domain_explored": "https://ie.linkedin.com/jobs/head-volleyball-coach-jobs?trk=public_jobs_linkster_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Head Volleyball Coach",
+                "entity": "Birmingham City Schools",
+                "relevance": "Low - US Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "us_school_district_jobs",
+            "scraped_noise",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 228,
+              "elapsed_seconds": 7.190449953079224
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn jobs search results page for 'Head Volleyball Coach' roles. The listings identified (e.g., Birmingham City Schools) are US-based entities incorrectly geotagged to Irish locations (Tuam), or irrelevant to the target entity. There is no content specific to the Irish Volleyball Association's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:24:31.781020",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/head-youth-volleyball-coach-coach-developer-at-volleyball-ireland-3566196442",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Software",
+              "Athlete Management Systems (AMS)",
+              "Data Analytics Tools"
+            ],
+            "job_postings": [
+              "Head Youth Volleyball Coach & Coach Developer (Funded by FIVB/Sport Ireland)"
+            ],
+            "procurement_indicators": [
+              "Budget allocation: FIVB and Sport Ireland funding confirmed for new role.",
+              "System requirement: Need to 'Develop a process and programme for Talent ID' and 'standardised system of monitoring'.",
+              "Partnership intent: 'Develop relationships and partnerships with other National Federations and professional clubs'.",
+              "Strategic planning: Involvement in High-Performance Commission and strategic planning."
+            ]
+          },
+          "patterns_found": [
+            "funded_expansion",
+            "performance_system_implementation",
+            "data_driven_talent_id",
+            "strategic_vendor_partnerships",
+            "high_performance_commission_governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1672,
+              "output_tokens": 388,
+              "elapsed_seconds": 6.475135803222656
+            }
+          ],
+          "reasoning": "While this is a coaching role, the specific responsibilities regarding 'Talent ID systems', 'standardised monitoring of physical/technical ability', and 'partnerships with professional clubs' indicate a need for performance analysis software, database management, and potentially CRM tools to manage the pathway. The funding from FIVB and Sport Ireland confirms available budget for these strategic initiatives."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:24:41.612951",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/operations-manager-at-volleyball-ireland-2666920086?refId=a%2F30diz5RkvO%2B8a9Rcuj%2Bw%3D%3D&trackingId=5hDl8NLBhVdLWJFVUanhPw%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Licensing Management Systems",
+              "Event Management Platforms",
+              "Facility Management Software",
+              "CRM for Club Administration"
+            ],
+            "job_postings": [
+              "Operations Manager (4 years ago - Historical Context)",
+              "Administration Officer (Managed by Ops Manager)",
+              "Events Team (Managed by Ops Manager)"
+            ],
+            "procurement_indicators": [
+              "Development of future sports facilities (Construction/Fit-out)",
+              "National League & VLY Beach Tour logistics (Equipment/Transport)",
+              "Licensing process systems overhaul (IT/Software)",
+              "Annual Awards Evening organization (Hospitality/Venues)"
+            ]
+          },
+          "patterns_found": [
+            "operational_expansion",
+            "systems_implementation",
+            "facility_management_procurement",
+            "event_infrastructure_scaling",
+            "licensing_system_overhaul"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1770,
+              "output_tokens": 378,
+              "elapsed_seconds": 6.414520263671875
+            }
+          ],
+          "reasoning": "This job posting for an Operations Manager is a direct procurement signal. The explicit mention of 'improving systems,' 'implementing efficient processes,' and overseeing 'future sports facilities' indicates a need for operational technology, facility management vendors, and event infrastructure procurement. The role focuses on scaling national leagues and tours, which requires logistical and software support."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:24:50.011754",
+          "domain_explored": "https://ie.linkedin.com/jobs/volleyball-coach-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Head Volleyball Coach - Jones Valley Middle School",
+                "entity": "Birmingham City Schools",
+                "relevance": "Irrelevant (US Entity)"
+              },
+              {
+                "title": "Head Volleyball Coach - Jackson Olin High School",
+                "entity": "Birmingham City Schools",
+                "relevance": "Irrelevant (US Entity)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "scraped_noise",
+            "irrelevant_entity",
+            "geographic_mismatch",
+            "login_gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1824,
+              "output_tokens": 306,
+              "elapsed_seconds": 4.836348056793213
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn search results page for 'Volleyball Coach' roles. It primarily lists jobs for 'Birmingham City Schools' (US entity) incorrectly geotagged to Irish locations (Tuam, County Galway). The content is largely repetitive login prompts ('Sign in to set job alerts') and does not contain specific information regarding the Irish Volleyball Association's procurement, technology stack, or strategic operations."
+        }
+      ],
+      "total_input_tokens": 12399,
+      "total_output_tokens": 2201,
+      "estimated_cost_usd": 0.070212
+    },
+    "procurement_signals": [
+      "executive_leadership_transition",
+      "strategic_growth_phase",
+      "commercial_expansion",
+      "digital_transformation_mandate",
+      "infrastructure_investment",
+      "operational_expansion",
+      "systems_implementation",
+      "facility_management_procurement",
+      "event_infrastructure_scaling",
+      "licensing_system_overhaul"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Irish Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:24:50.013272"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345401",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:02.617541"
+}

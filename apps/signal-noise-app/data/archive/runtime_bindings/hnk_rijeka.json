@@ -1,0 +1,124 @@
+{
+  "entity_id": "hnk_rijeka",
+  "entity_name": "HNK Rijeka",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "nk-rijeka.hr",
+    "joma-sport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hnk_rijeka",
+      "entity_name": "HNK Rijeka",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://nk-rijeka.hr",
+        "https://joma-sport.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HNK Rijeka may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:29:36.255134",
+          "domain_explored": "https://nk-rijeka.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Web Shop)",
+              "Membership Management System (CRM)",
+              "Payment Gateway (implied by 'Kupi ulaznicu')",
+              "Logistics API (Hrvatska po\u0161ta / Paketa24)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of digital sales channels",
+              "Partnership with Hrvatska po\u0161ta for logistics",
+              "Merchandise inventory management (25/26 season kits)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Membership Management System",
+            "Logistics/Shipping Integration",
+            "Digital Ticketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 295,
+              "elapsed_seconds": 3.093698024749756
+            }
+          ],
+          "reasoning": "The content reveals active usage of an e-commerce platform (Web Shop) and a membership system ('U\u010dlani se'). The mention of 'Paketa24' (Croatian Post) indicates an established logistics integration for shipping. While this confirms digital capabilities, it does not explicitly signal a new procurement event (RFP) but confirms the operational technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:29:43.500390",
+          "domain_explored": "https://joma-sport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Demandware (Salesforce Commerce Cloud)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C E-commerce Interface",
+            "Marketing Content (Sales/Promotions)",
+            "Consumer Newsletter Signup"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.8342068195343018
+            }
+          ],
+          "reasoning": "The analyzed content belongs to 'joma-sport.com', which is the external website of a sportswear manufacturer (Joma). The content consists of consumer-facing marketing copy ('Second Sales', 'Join the #JomaTeam'), product catalogs, and standard e-commerce functionality (newsletter, login). There is no information regarding HNK Rijeka's internal operations, procurement needs, or vendor selection processes on this page. This represents a deviation from the target entity."
+        }
+      ],
+      "total_input_tokens": 2758,
+      "total_output_tokens": 518,
+      "estimated_cost_usd": 0.016044
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HNK Rijeka may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:29:43.501967"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.172601",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:09.563264"
+}

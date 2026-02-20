@@ -1,0 +1,156 @@
+{
+  "entity_id": "icelandic_volleyball_federation",
+  "entity_name": "Icelandic Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "women.volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://is.linkedin.com/jobs/view/high-performance-manager-at-blaksamband-%C3%ADslands-icelandic-volleyball-association-3777093431"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "icelandic_volleyball_federation",
+      "entity_name": "Icelandic Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://is.linkedin.com/jobs/view/high-performance-manager-at-blaksamband-%C3%ADslands-icelandic-volleyball-association-3777093431",
+        "https://women.volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Postings (High Performance Manager)",
+        "Sports Science Investment",
+        "Operational Infrastructure Needs",
+        "Data & Documentation Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Icelandic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:56:38.366869",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEV Solidarity Fund (Open for Applications)",
+              "Scouting & Development Programs (Active in Azerbaijan)",
+              "Strength & Conditioning Team Establishments (OSCG)"
+            ]
+          },
+          "patterns_found": [
+            "Funding Opportunities",
+            "Talent Identification",
+            "Sports Science Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 269,
+              "elapsed_seconds": 2.943892002105713
+            }
+          ],
+          "reasoning": "The content reveals the opening of the 'CEV Solidarity Fund' and active scouting/development programs. While this is a general European confederation update, it signals the availability of capital for development projects. The Icelandic Volleyball Federation (IBF), being a member federation, is a potential applicant for this fund. This indicates a potential upcoming need for tools, software, or services to support development projects, scouting, or 'Strength and Conditioning' initiatives, provided they secure this funding."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:56:41.363094",
+          "domain_explored": "https://women.volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:56:50.974351",
+          "domain_explored": "https://is.linkedin.com/jobs/view/high-performance-manager-at-blaksamband-%C3%ADslands-icelandic-volleyball-association-3777093431",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Player Management Systems (PMS)",
+              "Medical Records Software",
+              "Video Analysis Tools",
+              "Communication Platforms"
+            ],
+            "job_postings": [
+              "High Performance Manager (Full-time, On-site)"
+            ],
+            "procurement_indicators": [
+              "Budget allocation for new full-time senior role (Jan 2024)",
+              "Requirement for 'meticulous record keeping' implies database/CRM need",
+              "Collaboration with 'physio therapists, nutritionists, psychologists' suggests B2B service procurement",
+              "International travel and tournament logistics management"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (High Performance Manager)",
+            "Sports Science Investment",
+            "Operational Infrastructure Needs",
+            "Data & Documentation Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 354,
+              "elapsed_seconds": 6.174730062484741
+            }
+          ],
+          "reasoning": "The discovery of a direct job posting for a 'High Performance Manager' is a strong procurement signal. The role description explicitly outlines the need to build infrastructure for player tracking, medical records, and international logistics. This indicates an active phase of organizational growth and investment, which correlates with a high likelihood of procuring supporting software, tools, and services."
+        }
+      ],
+      "total_input_tokens": 2833,
+      "total_output_tokens": 623,
+      "estimated_cost_usd": 0.017844
+    },
+    "procurement_signals": [
+      "Job Postings (High Performance Manager)",
+      "Sports Science Investment",
+      "Operational Infrastructure Needs",
+      "Data & Documentation Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Icelandic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:56:50.975666"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.344866",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:10:01.164319"
+}

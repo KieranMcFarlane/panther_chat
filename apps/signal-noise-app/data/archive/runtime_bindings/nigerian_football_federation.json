@@ -1,0 +1,149 @@
+{
+  "entity_id": "nigerian_football_federation",
+  "entity_name": "Nigerian Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "cafonline.com",
+    "blazingprojects.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nigerian_football_federation",
+      "entity_name": "Nigerian Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://blazingprojects.com",
+        "https://inside.fifa.com",
+        "https://cafonline.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nigerian Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:47:29.533605",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward infrastructure funding (Global context)",
+              "Women's football development programs (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Global sports governance content",
+            "FIFA Forward funding program",
+            "Women's football development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 253,
+              "elapsed_seconds": 18.04157304763794
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal and focuses on high-level international governance, the FIFA Women's Champions Cup, and general infrastructure funding (FIFA Forward) in Burundi. There is no specific mention of the Nigerian Football Federation (NFF), its local procurement activities, technology stack, or specific vendor partnerships. The content is relevant to the global football ecosystem but does not contain actionable procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:47:34.900657",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation navigation structure",
+            "High-level tournament categorization (AFCON, Champions League)",
+            "Media content aggregation (Videos, Social Wall)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 975,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.3437697887420654
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive navigation menu items and UI labels (e.g., 'Show more', 'See all', 'Fixtures & Results') from the Confederation of African Football (CAF) homepage. There is no substantive text, news articles, or administrative sections visible in this sample that would indicate specific procurement activities, technology stacks, or vendor partnerships relevant to the Nigerian Football Federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:47:40.271868",
+          "domain_explored": "https://blazingprojects.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Apps (Android/Google Play)",
+              "Offline Access Architecture"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic resource aggregation",
+            "Mobile app distribution (Google Play Store)",
+            "Consumer-facing B2C marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 177,
+              "elapsed_seconds": 1.954085111618042
+            }
+          ],
+          "reasoning": "The content is entirely focused on a consumer application for students to download academic research materials. There is no connection to the Nigerian Football Federation, sports governance, or enterprise procurement processes."
+        }
+      ],
+      "total_input_tokens": 3826,
+      "total_output_tokens": 647,
+      "estimated_cost_usd": 0.021183
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nigerian Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:47:40.273204"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.207697",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:00.322751"
+}

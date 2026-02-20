@@ -1,0 +1,119 @@
+{
+  "entity_id": "rugby_americas_north",
+  "entity_name": "Rugby Americas North",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "rugbyamericasnorth.com",
+    "world.rugby"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_americas_north",
+      "entity_name": "Rugby Americas North",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://rugbyamericasnorth.com",
+        "https://world.rugby"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Americas North may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:24:23.166744",
+          "domain_explored": "https://rugbyamericasnorth.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Platforms",
+              "Learning Management Systems (LMS)",
+              "Donation/Fundraising Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Youth Leadership Academy Launch (Oct 2025)",
+              "60-Match Schedule Management (Nov 2025)",
+              "Hurricane Relief Fund Logistics (Oct 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Educational Program Launch",
+            "Event Management Complexity",
+            "Crisis Response/CSR Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.533573865890503
+            }
+          ],
+          "reasoning": "The content reveals the launch of an 'Inaugural Youth Leadership Academy' and the management of a large '60-Match Schedule' event. While not direct procurement, these initiatives imply a need for Learning Management Systems (LMS), event management software, and logistics support. The 'Hurricane Melissa Relief' effort suggests potential procurement for emergency aid logistics or fundraising platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:24:32.928237",
+          "domain_explored": "https://world.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Global Governing Body News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 544,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.365217924118042
+            }
+          ],
+          "reasoning": "The scraped content is a sports news article from World Rugby regarding match results (Fiji vs. France, New Zealand vs. Australia) in the HSBC SVNS series. It contains no information regarding Rugby Americas North (RAN), nor does it contain any procurement signals, job postings, or technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 1906,
+      "total_output_tokens": 434,
+      "estimated_cost_usd": 0.012228
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Americas North may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:24:32.929530"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.284043",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:14.389995"
+}

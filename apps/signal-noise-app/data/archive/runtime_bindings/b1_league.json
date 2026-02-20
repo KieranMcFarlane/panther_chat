@@ -1,0 +1,246 @@
+{
+  "entity_id": "b1_league",
+  "entity_name": "B1 League",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "nova-holdings.jp",
+    "asia-basket.com",
+    "proballers.com",
+    "japantimes.co.jp",
+    "en.sports-tokyo-info.metro.tokyo.lg.jp",
+    "mitsuifudosan.co.jp",
+    "shonanstring.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "b1_league",
+      "entity_name": "B1 League",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://asia-basket.com",
+        "https://nova-holdings.jp",
+        "https://shonanstring.com",
+        "https://mitsuifudosan.co.jp",
+        "https://proballers.com",
+        "https://japantimes.co.jp",
+        "https://en.sports-tokyo-info.metro.tokyo.lg.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "B1 League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:32:54.034337",
+          "domain_explored": "https://nova-holdings.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Studio Openings (Gaba Omotesando, Tennoji, Nagoya English Lab)",
+              "Subsidiary Acquisition: Iwate Grulla Morioka (J3 League)",
+              "Strategic Partnership: Borussia Dortmund (BVB) Soccer Academy",
+              "Strategic Partnership: Asahi Shuppan (CNN English Express)",
+              "New Service Launch: 'NOVA Junior High English' (Digital content potential)",
+              "New Service Launch: 'MY STUDY BASE' (Asmo academy)"
+            ]
+          },
+          "patterns_found": [
+            "Physical Expansion (New Studios/Offices)",
+            "M&A Activity (Subsidiary Acquisition)",
+            "Strategic Partnerships (BVB, Asahi Shuppan)",
+            "Integrated Facility Models (English Lab)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 343,
+              "elapsed_seconds": 5.824863910675049
+            }
+          ],
+          "reasoning": "The content confirms NOVA Holdings is the parent entity of the B1 League team (Hiroshima Dragonflies). While the page is a general news feed, it reveals aggressive expansion through new 'Learning Studio' openings, M&A (Iwate Grulla Morioka), and strategic partnerships. This indicates a healthy budget and potential procurement needs for facility construction, IT infrastructure for new locations, and marketing services for high-profile collaborations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:33:01.244700",
+          "domain_explored": "https://asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Game Results Reporting",
+            "Player Performance Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.072892904281616
+            }
+          ],
+          "reasoning": "The content is purely sports journalism covering game results, player awards, and league standings for Asian basketball (Japan B1/B2, China CBA, etc.). It contains no corporate strategy, business operations, or procurement signals relevant to the B1 League entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:33:04.334569",
+          "domain_explored": "https://proballers.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:33:07.135721",
+          "domain_explored": "https://japantimes.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:33:14.566334",
+          "domain_explored": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (X, Facebook, Instagram)",
+              "Content Management System (CMS)",
+              "Search Functionality"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partnership Section ('For companies and organizations')",
+              "Major Event Hosting (World Athletics Championships Tokyo 2025)",
+              "Facility Management Scope (Budokan usage fees, facility search)",
+              "Volunteer Program Management"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Sports Administration",
+            "Facility Management Information",
+            "Event Hosting & Legacy Management",
+            "Volunteer Coordination",
+            "Corporate Partnership Outreach"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 365,
+              "elapsed_seconds": 4.5854880809783936
+            }
+          ],
+          "reasoning": "The content represents the Tokyo Metropolitan Government's 'Office for Sports Promotion'. While primarily informational, it indicates a large-scale public sector entity responsible for managing sports facilities, events (including World Athletics Championships Tokyo 2025), and volunteer programs. The presence of sections like 'For companies and organizations' and 'Sports volunteer information' suggests potential procurement pathways for sponsorship, facility services, and event management technology, though direct RFPs are not visible in this specific text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:33:47.248905",
+          "domain_explored": "https://mitsuifudosan.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:33:55.928681",
+          "domain_explored": "https://shonanstring.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Automated Shooting Machines (Hardware)",
+              "Booking/Reservation Systems (implied by 'reservation required' events)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Open Call for Annual Advertising Sponsors",
+              "Franchise Operations (Contract with JAM required)",
+              "Venue Rental (Shonan-Omori Community Center)"
+            ]
+          },
+          "patterns_found": [
+            "Franchise Business Model",
+            "Sponsorship & Advertising Procurement",
+            "Facility Management & Equipment Operations",
+            "Community Event Hosting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.072827100753784
+            }
+          ],
+          "reasoning": "The content reveals ShonanSTRING as a specialized basketball facility operating under a franchise model (JAM). While primarily a local facility, the explicit solicitation for 'Annual Advertising Sponsors' indicates active procurement for marketing partnerships. The reliance on a specific franchise model (JAM) and specialized shooting equipment suggests potential procurement needs for maintenance, facility services, and franchise-related technology support, though direct B1 League procurement intent is tangential."
+        }
+      ],
+      "total_input_tokens": 5903,
+      "total_output_tokens": 1179,
+      "estimated_cost_usd": 0.035393999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "B1 League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:33:55.929595"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416462",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:00.666542"
+}

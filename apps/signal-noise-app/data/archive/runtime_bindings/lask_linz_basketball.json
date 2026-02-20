@@ -1,0 +1,143 @@
+{
+  "entity_id": "lask_linz_basketball",
+  "entity_name": "LASK Linz Basketball",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "lask.at",
+    "euroleague.com",
+    "flashscore.com",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lask_linz_basketball",
+      "entity_name": "LASK Linz Basketball",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://flashscore.com",
+        "https://sofascore.com",
+        "https://lask.at",
+        "https://euroleague.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LASK Linz Basketball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:08:49.044523",
+          "domain_explored": "https://lask.at",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:09:00.592804",
+          "domain_explored": "https://euroleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "sports_aggregation_portal",
+            "generic_standings_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 176,
+              "elapsed_seconds": 4.256844997406006
+            }
+          ],
+          "reasoning": "The scraped content is from a general sports news portal (euroleague.com) covering various leagues (hockey, volleyball, soccer) and generic standings. There is absolutely no mention of 'LASK Linz', 'Basketball', or specific club-level procurement activities. The content is high-level sports data, completely irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:09:06.680817",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "aggregation_portal",
+            "gambling_affiliate_content",
+            "generic_sports_scores",
+            "ad_heavy_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 618,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.9319911003112793
+            }
+          ],
+          "reasoning": "The content is from Flashscore, a live sports score aggregation portal. The text consists primarily of gambling warnings (AD, '18+', 'Joueurs-info-service.fr'), generic navigation links ('Football', 'Loading...'), and affiliate disclaimers. There is absolutely no content related to LASK Linz Basketball's internal operations, technology stack, or procurement activities. This is a consumer-facing results site, not a source for corporate intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:09:09.608418",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2004,
+      "total_output_tokens": 381,
+      "estimated_cost_usd": 0.011727
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LASK Linz Basketball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:09:09.609454"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227527",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:13.547904"
+}

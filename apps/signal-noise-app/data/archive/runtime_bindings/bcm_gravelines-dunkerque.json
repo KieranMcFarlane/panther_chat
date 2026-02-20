@@ -1,0 +1,191 @@
+{
+  "entity_id": "bcm_gravelines-dunkerque",
+  "entity_name": "BCM Gravelines-Dunkerque",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "bcmbasket.com",
+    "euroleaguebasketball.net",
+    "zoominfo.com",
+    "basketball-reference.com",
+    "bcm-gravelines.edan.io"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bcm_gravelines-dunkerque",
+      "entity_name": "BCM Gravelines-Dunkerque",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://basketball-reference.com",
+        "https://bcm-gravelines.edan.io",
+        "https://euroleaguebasketball.net",
+        "https://bcmbasket.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BCM Gravelines-Dunkerque may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:22:22.779721",
+          "domain_explored": "https://bcmbasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing System (Subdomain: billetterie.bcmbasket.com)",
+              "E-commerce Platform (Boutique)",
+              "Video Content Management (HTML5 Video Player)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Business Club Page (Potential procurement for partnership events/hospitality)",
+              "Organigramme Page (Insight into decision-making structure)",
+              "Contact Info (Direct line: 0328519700, Email: billetterie@bcmbasket.com)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Platform",
+            "E-commerce Infrastructure",
+            "Business Club (B2B Partnership) Operations",
+            "Organizational Structure (Organigramme)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 354,
+              "elapsed_seconds": 3.237978219985962
+            }
+          ],
+          "reasoning": "The content reveals a dedicated subdomain for ticketing (billetterie.bcmbasket.com) and an online boutique, indicating active use of e-commerce platforms. The presence of a 'Business Club' section suggests a structured B2B partnership unit which may require CRM or event management tools. The 'Organigramme' link indicates a defined organizational structure. While no direct RFP is visible, these functional areas imply ongoing vendor relationships for software maintenance and services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:22:30.619744",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide digital expansion (EuroLeague TV streaming rights)",
+              "Executive leadership transition (New CEO: Chus Bueno)"
+            ]
+          },
+          "patterns_found": [
+            "League-level Governance Change",
+            "Digital Media Rights Expansion (EuroLeague TV)",
+            "General League Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 245,
+              "elapsed_seconds": 4.133959054946899
+            }
+          ],
+          "reasoning": "The scraped content is from the Euroleague Basketball main site (league level), not the specific entity BCM Gravelines-Dunkerque. While the news of a new CEO and streaming rights indicates activity within the league ecosystem, it does not provide specific procurement signals, technology stack details, or RFPs for BCM Gravelines-Dunkerque. The content is too high-level to derive actionable local procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:22:33.692581",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:22:40.602772",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary Search Engine)",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Statistical Database",
+            "Global League Coverage (NBA, EuroLeague)",
+            "Internal Hiring (Marketing Manager)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.7946460247039795
+            }
+          ],
+          "reasoning": "The scraped content is from Basketball Reference, a general-purpose sports statistics database. While it mentions 'EuroLeague' and 'European competitions', it is an aggregator of historical data and scores, not a source for BCM Gravelines-Dunkerque's specific procurement activities, technology stack, or business operations. The job posting found is for the website owner (Sports Reference), not BCM."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:22:44.590714",
+          "domain_explored": "https://bcm-gravelines.edan.io",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4280,
+      "total_output_tokens": 837,
+      "estimated_cost_usd": 0.025395
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BCM Gravelines-Dunkerque may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:22:44.610588"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.211046",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:50.230763"
+}

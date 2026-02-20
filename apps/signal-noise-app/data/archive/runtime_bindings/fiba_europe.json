@@ -1,0 +1,157 @@
+{
+  "entity_id": "fiba_europe",
+  "entity_name": "FIBA Europe",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "global_governance_bodies",
+  "discovered_domains": [
+    "about.fiba.basketball",
+    "fiba.basketball",
+    "coaching.fibaeurope.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiba_europe",
+      "entity_name": "FIBA Europe",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://about.fiba.basketball",
+        "https://coaching.fibaeurope.com",
+        "https://fiba.basketball"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIBA Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:35:47.039344",
+          "domain_explored": "https://about.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "repetitive_content_structure",
+            "high_noise_to_signal_ratio",
+            "generic_mission_statement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 151,
+              "elapsed_seconds": 2.4881157875061035
+            }
+          ],
+          "reasoning": "The provided content is highly repetitive boilerplate text ('What we do', 'In Focus', 'Basketball') with no specific details regarding technology, vendors, or procurement activities. It appears to be a low-quality scrape of a generic landing page."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:36:10.001702",
+          "domain_explored": "https://fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship",
+                "details": "Ameresco listed as sponsor for 'Season X, Volume V' Power Rankings."
+              }
+            ]
+          },
+          "patterns_found": [
+            "high_noise_to_signal_ratio",
+            "content_duplication",
+            "editorial_focus",
+            "commercial_partnerships"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 236,
+              "elapsed_seconds": 16.452919006347656
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing sports news, game highlights, and editorial features. While 'Ameresco' appears as a sponsor for Power Rankings, this is a marketing partnership, not a procurement signal. The repetitive nature of the text (duplicated headlines) indicates a low-quality scrape of a news feed with no embedded corporate governance or technical infrastructure data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:36:22.197742",
+          "domain_explored": "https://coaching.fibaeurope.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Active Server Pages (ASP)",
+              "Microsoft IIS (inferred)",
+              "Legacy Portal Architecture"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legacy platform maintenance (low priority)",
+              "Educational content management needs"
+            ]
+          },
+          "patterns_found": [
+            "legacy_architecture",
+            "portal_based_structure",
+            "educational_content_focus",
+            "generic_contact_points"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 632,
+              "output_tokens": 253,
+              "elapsed_seconds": 5.0227861404418945
+            }
+          ],
+          "reasoning": "The content indicates a legacy, self-hosted portal (Active Server Pages) focused on educational content delivery for coaches. While this confirms the existence of a specific IT platform, it reveals no active procurement signals, vendor selection processes, or new technology investments. The contact points are generic support emails rather than procurement or decision-maker contacts."
+        }
+      ],
+      "total_input_tokens": 3395,
+      "total_output_tokens": 640,
+      "estimated_cost_usd": 0.019784999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIBA Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:36:22.199307"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.243136",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:23.663113"
+}

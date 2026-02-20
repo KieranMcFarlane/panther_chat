@@ -1,0 +1,126 @@
+{
+  "entity_id": "oceania_cycling_confederation_(occ)",
+  "entity_name": "Oceania Cycling Confederation (OCC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "oceaniacycling.org",
+    "auscycling.org.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oceania_cycling_confederation_(occ)",
+      "entity_name": "Oceania Cycling Confederation (OCC)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://oceaniacycling.org",
+        "https://auscycling.org.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oceania Cycling Confederation (OCC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:19:26.331817",
+          "domain_explored": "https://oceaniacycling.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "Event Calendar Widget"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational activity (event management)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Content Publishing (CMS)",
+            "External Event Linking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 568,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.9608309268951416
+            }
+          ],
+          "reasoning": "The scraped content consists of standard sports news updates (race results) and a 'Next Event' calendar widget. While this confirms the organization is active and uses a Content Management System (CMS) to publish updates, there are no explicit signals regarding new technology acquisitions, RFPs, or job postings. The content is operational rather than procurement-focused."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:19:35.621770",
+          "domain_explored": "https://auscycling.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ActiveCampaign (Email Marketing - activehosted.com)",
+              "Cloud Storage / Document Management (admin.platform.auscycling.org.au)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Project Ascent B2032+ (Strategic High-Performance Pathway)",
+              "Track World Cup 2026 (Major Event Operations)",
+              "Membership Management System (Ride Protected/Become a Member)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Project Implementation (Project Ascent B2032+)",
+            "Digital Marketing Automation (ActiveCampaign)",
+            "Document Management Systems (Cloud Storage)",
+            "Event Management Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 349,
+              "elapsed_seconds": 4.309370994567871
+            }
+          ],
+          "reasoning": "The content reveals a major strategic initiative ('Project Ascent B2032+') which typically requires significant procurement for consulting, technology, and infrastructure. Additionally, the presence of 'activehosted.com' (ActiveCampaign) indicates investment in marketing automation, and the 'platform.auscycling.org.au' subdomain suggests a dedicated document management or content delivery system. While no direct RFPs are visible, these infrastructure components signal active technology investment."
+        }
+      ],
+      "total_input_tokens": 1985,
+      "total_output_tokens": 569,
+      "estimated_cost_usd": 0.01449
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oceania Cycling Confederation (OCC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:19:35.624081"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.413466",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:52.857254"
+}

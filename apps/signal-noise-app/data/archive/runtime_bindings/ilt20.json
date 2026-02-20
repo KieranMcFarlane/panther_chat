@@ -1,0 +1,241 @@
+{
+  "entity_id": "ilt20",
+  "entity_name": "ILT20",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "ilt20.ae",
+    "theilt20.com",
+    "gulfgiants.com",
+    "apps.apple.com",
+    "espncricinfo.com",
+    "fancode.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ilt20",
+      "entity_name": "ILT20",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://ilt20.ae",
+        "https://fancode.com",
+        "https://theilt20.com",
+        "https://espncricinfo.com",
+        "https://gulfgiants.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "ILT20 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:07:03.803643",
+          "domain_explored": "https://ilt20.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sports Analysis Software",
+              "Video Analysis Tools",
+              "Data Visualization Platforms"
+            ],
+            "job_postings": [
+              "Head Analyst (Freddie Wilde)"
+            ],
+            "procurement_indicators": [
+              "Strategic focus on 'quality competition' implies need for high-performance analytics",
+              "Expansion into Saudi Arabia and Kuwait markets suggests potential need for localized marketing/CRM tools",
+              "League growth (Season 4) indicates operational scaling"
+            ]
+          },
+          "patterns_found": [
+            "Sports Analytics Investment",
+            "Strategic Growth & Expansion",
+            "International Association (GCC Focus)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 314,
+              "elapsed_seconds": 3.786051034927368
+            }
+          ],
+          "reasoning": "The content reveals a specific job role ('Head Analyst') and a focus on 'sustained excellence' and 'quality competition', indicating an investment in sports analytics and performance data tools. The repeated mentions of 'growth' and 'driving progress' suggest a maturing organization likely to invest in supporting infrastructure (CRM, ERP) to manage expansion, though no direct RFPs are present in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:07:18.732608",
+          "domain_explored": "https://theilt20.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Streaming Infrastructure",
+              "Scoring/Tournament Management Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement: Dubai International Stadium, Sheikh Zayed Cricket Stadium, Sharjah Cricket Stadium",
+              "Event Timeline: Season 4 scheduled for Dec 2025 - Feb 2026",
+              "Prize Money Liquidity: $700k Champion / $300k Runner-up",
+              "Stakeholders: Emirates Cricket Board (ECB), 6 Franchise Owners"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Venue Management",
+            "Franchise Model Procurement",
+            "Prize Money & Financial Liquidity",
+            "Seasonal Planning Cycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.826920747756958
+            }
+          ],
+          "reasoning": "The content confirms the operational scale of ILT20 (Season 4 planning, venue management across 3 stadiums) and the franchise structure (6 teams). While no direct RFPs are listed, the confirmation of a December 2025 start date indicates active procurement planning for event management, broadcasting, and venue services. The consistent prize pool ($1M+ total) indicates healthy financial liquidity for vendor contracts."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:07:30.892765",
+          "domain_explored": "https://gulfgiants.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Franchise Content Management",
+            "Match Reporting Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.5539190769195557
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on match reports, photos, and results for the 'Gulf Giants' franchise. It contains no information regarding procurement activities, technology stacks, or governance structures for the ILT20 league itself. The data is operational (sports reporting) rather than administrative (business procurement)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:07:34.285929",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:07:45.989054",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Global Tournament Scheduling (ICC, BCCI)",
+            "Generic Match Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.3303029537200928
+            }
+          ],
+          "reasoning": "The scraped content from ESPNcricinfo is a generic homepage feed displaying global cricket scores, schedules for ICC events (T20 WC, U-19), and other leagues (IPL, WPL). There is no mention of ILT20, its franchises, or specific organizational operations. The content is purely editorial and results-oriented, lacking procurement signals, technology stacks, or business intelligence relevant to the ILT20 entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:08:00.484963",
+          "domain_explored": "https://fancode.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Infrastructure (Generic)",
+              "Real-time Score Updates"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "OTT Platform Aggregation",
+            "Generic Sports Rights Management",
+            "Consumer-Facing Content Delivery"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 241,
+              "elapsed_seconds": 4.312514066696167
+            }
+          ],
+          "reasoning": "The scraped content from FanCode represents a consumer-facing streaming interface (OTT) displaying live match scores and video highlights. While FanCode is a known digital partner for various cricket leagues, this specific content dump contains no corporate information, vendor lists, or infrastructure details. It confirms the existence of a digital distribution channel for sports content but provides zero insight into the procurement operations or technology stack of the ILT20 entity itself."
+        }
+      ],
+      "total_input_tokens": 7319,
+      "total_output_tokens": 1237,
+      "estimated_cost_usd": 0.040512
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "ILT20 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:08:00.486302"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417396",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:21.691703"
+}

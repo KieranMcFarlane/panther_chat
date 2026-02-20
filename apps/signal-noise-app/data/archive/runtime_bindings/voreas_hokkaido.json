@@ -1,0 +1,192 @@
+{
+  "entity_id": "voreas_hokkaido",
+  "entity_name": "Voreas Hokkaido",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "voreas.co.jp",
+    "svleague.jp",
+    "voreas-megastore.moala.live",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "voreas_hokkaido",
+      "entity_name": "Voreas Hokkaido",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://svleague.jp",
+        "https://commons.wikimedia.org",
+        "https://voreas-megastore.moala.live",
+        "https://voreas.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Voreas Hokkaido may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:08:40.804592",
+          "domain_explored": "https://voreas.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticket-V (Ticketing Platform)",
+              "Moala (E-commerce/Merchandise Store)",
+              "V-ID (Fan Club/Membership Management)",
+              "WordPress (CMS - inferred from site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active reliance on external ticketing vendor (Ticket-V)",
+              "Outsourced e-commerce infrastructure (Moala)",
+              "Third-party fan club CRM (V-ID)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage (Ticket-V)",
+            "E-commerce Integration (Moala)",
+            "Fan Club Management (V-ID)",
+            "Content Management (WordPress)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 296,
+              "elapsed_seconds": 9.942850112915039
+            }
+          ],
+          "reasoning": "The content reveals specific third-party SaaS tools used for ticketing (Ticket-V), merchandise (Moala), and fan club management (V-ID). While this indicates active procurement in the 'Fan Engagement' and 'Operations' categories, it represents existing, implemented solutions rather than new RFPs or active searches. The presence of WordPress confirms the web stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:08:50.240744",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League Navigation Structure",
+            "Team Rostering (Voreas Hokkaido)",
+            "Static Content Delivery"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 442,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.176110029220581
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation structure of the SV League (Japan Volleyball League) website. While it confirms Voreas Hokkaido's participation as a member entity, the content is purely informational and navigational (links to Men/Women divisions). It contains no corporate governance, technology infrastructure, or commercial transaction data relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:09:02.180051",
+          "domain_explored": "https://voreas-megastore.moala.live",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Moala (E-commerce Platform)",
+              "Moala Live (Megastore Module)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Moala (Platform Provider)",
+              "Vendor: Hydro Flask (Licensed Merchandise Partnership)",
+              "Activity: 2025-26 Season Merchandise Procurement (Replica Jerseys, Uniforms)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Moala)",
+            "Merchandise Lifecycle Management",
+            "Inventory Status Indicators (In Stock vs Sold Out)",
+            "Licensing Partnership (Hydro Flask)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 314,
+              "elapsed_seconds": 3.8948731422424316
+            }
+          ],
+          "reasoning": "The content confirms Voreas Hokkaido utilizes the 'Moala' platform (specifically the 'Moala Live' Megastore) for direct-to-consumer e-commerce. While this confirms a vendor relationship (SaaS procurement), the content is primarily consumer-facing (product listings and prices) rather than procurement-facing. The presence of 'Sold Out' markers and 'Coming Soon' placeholders indicates active inventory management, but no explicit RFPs or new tech stack investments are detailed in this specific scrape."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:09:12.276321",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "Unrelated Content Context",
+            "No Corporate Affiliation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 146,
+              "elapsed_seconds": 3.747354030609131
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage text for Wikimedia Commons, a free media repository. There is no mention of Voreas Hokkaido, sports management, or procurement activities. The context is entirely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 4779,
+      "total_output_tokens": 945,
+      "estimated_cost_usd": 0.028512000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Voreas Hokkaido may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:09:12.290061"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.323807",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:59.354312"
+}

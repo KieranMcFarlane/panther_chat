@@ -1,0 +1,492 @@
+{
+  "entity_id": "new_zealand_football",
+  "entity_name": "New Zealand Football",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "nzfootball.co.nz",
+    "friendsoffootballnz.com",
+    "inside.fifa.com",
+    "nzfpandp.co.nz",
+    "oceaniafootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/head-of-growth-and-development-new-zealand-football-at-sport-canterbury-4362326515",
+      "https://nz.linkedin.com/jobs/view/performance-analysis-lead-for-the-football-ferns-new-zealand-football-at-sport-canterbury-4364200242",
+      "https://nz.linkedin.com/jobs/view/technical-director-new-zealand-football-at-sport-canterbury-4362474260",
+      "https://nz.linkedin.com/jobs/view/community-coach-development-manager-new-zealand-football-at-sport-canterbury-4362474261",
+      "https://nz.linkedin.com/jobs/view/philanthropy-and-partnerships-manager-at-new-zealand-football-foundation-4361272193",
+      "https://nz.linkedin.com/jobs/view/board-vacancy-northern-region-football-at-sport-canterbury-4359797303",
+      "https://nz.linkedin.com/jobs/view/head-of-high-performance-campaigns-at-new-zealand-football-4159101351",
+      "https://nz.linkedin.com/jobs/view/people-culture-manager-maternity-cover-at-new-zealand-football-3993677159",
+      "https://nz.linkedin.com/jobs/view/coach-referee-development-administrator-at-new-zealand-football-3996166206"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_zealand_football",
+      "entity_name": "New Zealand Football",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.32,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26,
+        0.32
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/technical-director-new-zealand-football-at-sport-canterbury-4362474260",
+        "https://friendsoffootballnz.com",
+        "https://nz.linkedin.com/jobs/view/philanthropy-and-partnerships-manager-at-new-zealand-football-foundation-4361272193",
+        "https://nzfootball.co.nz",
+        "https://inside.fifa.com",
+        "https://oceaniafootball.com",
+        "https://nz.linkedin.com/jobs/view/community-coach-development-manager-new-zealand-football-at-sport-canterbury-4362474261",
+        "https://nz.linkedin.com/jobs/view/head-of-growth-and-development-new-zealand-football-at-sport-canterbury-4362326515",
+        "https://nzfpandp.co.nz",
+        "https://nz.linkedin.com/jobs/view/performance-analysis-lead-for-the-football-ferns-new-zealand-football-at-sport-canterbury-4364200242"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Leadership Hiring (Head of Growth)",
+        "Digital Transformation Indicators (LinkedIn Recruiter)",
+        "Program Management & Implementation Requirements",
+        "Partnership & Stakeholder Management Focus",
+        "Inclusive Growth Mandate (Target Demographics)",
+        "Specialized Software Procurement (Hudl, Sportscode)",
+        "High-Performance Technology Investment",
+        "Vendor Ecosystem Integration (Elmo Talent ATS)",
+        "Data-Driven Decision Making Infrastructure",
+        "Strategic Leadership Hiring (Technical Director)",
+        "ATS Platform Usage (Elmo Talent)",
+        "Framework Implementation Procurement (Whole of Football 2.0)",
+        "Education & Training Material Requirements",
+        "Club Development Systems Investment",
+        "ATS Platform Usage (Elmo Talent)",
+        "Program Management & Resource Development",
+        "Learning Management System (LMS) Indicators",
+        "Strategic Workforce Development",
+        "CRM Software Specification (Raisely)",
+        "Digital Fundraising Infrastructure",
+        "Data Management & Reporting Requirements",
+        "Strategic Revenue Growth (Major Gifts/Bequests)",
+        "Entity Relationship (NZ Football Foundation)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New Zealand Football may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:40:11.243858",
+          "domain_explored": "https://nzfootball.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Newsletter Signup Form (Generic)",
+              "CMS (implied by structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Dedicated registrations email address implies database/CRM usage",
+              "Fan newsletter implies email marketing platform usage"
+            ]
+          },
+          "patterns_found": [
+            "Standard Content Management System (CMS) structure",
+            "Newsletter signup capability (Marketing Automation presence)",
+            "Dedicated functional email addresses (registrations@)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 317,
+              "elapsed_seconds": 2.988222122192383
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive navigation elements, footer text, and placeholder image titles (e.g., 'Untitled design 2'). While the presence of a 'Sign up to our fan newsletter' and a dedicated 'registrations@' email address confirms the use of basic marketing automation and database tools, there is no specific information regarding *new* procurement intent, active RFPs, or specific technology vendors in this text. The content is too generic to derive actionable procurement signals beyond the baseline existence of digital infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:40:20.116451",
+          "domain_explored": "https://friendsoffootballnz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Wellington Phoenix vs NZ Football)",
+            "Sports News Content",
+            "Coaching/Personnel focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 687,
+              "output_tokens": 168,
+              "elapsed_seconds": 5.186403036117554
+            }
+          ],
+          "reasoning": "The content provided focuses on the Wellington Phoenix academy and a coaching contract, which is unrelated to New Zealand Football's procurement activities. The domain 'friendsoffootballnz.com' appears to be a news aggregator rather than a source for organizational tenders or technology stack analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:40:26.060010",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (FIFA vs NZ Football)",
+            "Global Sports News Content",
+            "Generic Navigation Links",
+            "Future-Dated Content (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.9499471187591553
+            }
+          ],
+          "reasoning": "The content is from FIFA's global website (inside.fifa.com), not New Zealand Football (NZF). While FIFA is the governing body, this specific page contains global news, tournament results, and general 'What FIFA does' navigation. It lacks specific procurement signals, technology stacks, or governance details relevant to the NZF entity. The presence of future dates (2026) suggests this is a news feed or archive rather than a current procurement opportunity source."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:40:35.544481",
+          "domain_explored": "https://nzfpandp.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Interactive Web Components",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital content management requirements",
+              "Compliance alignment with Sport NZ (indicating reliance on external regulatory frameworks)"
+            ]
+          },
+          "patterns_found": [
+            "Dedicated sub-domain infrastructure (nzfpandp.co.nz)",
+            "Interactive content delivery (Player Development Tables)",
+            "Compliance-driven content updates (Concussion Guidelines)",
+            "Copyright footer confirming direct NZF ownership"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.607825994491577
+            }
+          ],
+          "reasoning": "While this sub-domain is focused on educational content rather than direct procurement, it confirms New Zealand Football's investment in specialized digital infrastructure for specific functional areas (Performance & Prevention). The presence of 'interactive tables' and a dedicated resource hub suggests a need for Content Management Systems (CMS) and web hosting services, albeit likely already procured. It confirms the entity's active digital presence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:40:46.241378",
+          "domain_explored": "https://oceaniafootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Maps Integration (Event Locations)",
+              "Video Platform (OFC TV)"
+            ],
+            "job_postings": [
+              "Career Opportunities (Generic Link - No specific roles listed in text)"
+            ],
+            "procurement_indicators": [
+              "Facility Booking Systems (OFC Academy Accommodation, Ngahue Reserve Field)",
+              "Tender/Regulatory Framework (OFC Professional League Club Licencing Committee)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Oceania Football Confederation vs New Zealand Football)",
+            "Confederation-level Governance Structure (President, General Secretariat, FIFA Council)",
+            "Multi-territory Operations (Papua New Guinea, Samoa, Fiji, Solomon Islands)",
+            "Sports Broadcasting & Competition Management (OFC TV, Men's Champions League)",
+            "Regional Development Programs (OFC Learn, Just Play, Women's Football)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 393,
+              "elapsed_seconds": 4.70656418800354
+            }
+          ],
+          "reasoning": "The content confirms the entity is the Oceania Football Confederation (OFC), the governing body for football in Oceania, not New Zealand Football (NZF). While NZF is a member association of OFC, this site represents the regional confederation. The content focuses on regional governance, international competitions across multiple Pacific nations, and confederation-wide development programs. There is no specific procurement signal for the target entity (NZF) here, only regional operational context."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:40:55.064813",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/head-of-growth-and-development-new-zealand-football-at-sport-canterbury-4362326515",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Talent Solutions",
+              "ATS (Applicant Tracking System) - implied by 'Apply' flow"
+            ],
+            "job_postings": [
+              "Head of Growth and Development - New Zealand Football (via Sport Canterbury)"
+            ],
+            "procurement_indicators": [
+              "Budget allocation for new Head Office function (Growth & Development)",
+              "Upcoming requirement for programme delivery tools (Women's/Futsal focus)",
+              "Vendor need for diversity & inclusion training/consulting",
+              "Partnership opportunities for community engagement platforms"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Leadership Hiring (Head of Growth)",
+            "Digital Transformation Indicators (LinkedIn Recruiter)",
+            "Program Management & Implementation Requirements",
+            "Partnership & Stakeholder Management Focus",
+            "Inclusive Growth Mandate (Target Demographics)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 390,
+              "elapsed_seconds": 5.37816309928894
+            }
+          ],
+          "reasoning": "The discovery of a 'Head of Growth and Development' role confirms active investment in organizational expansion and program implementation. While the role is strategic, the responsibilities explicitly mention 'designing and delivering strategies' and 'implementing development programmes,' which implies future procurement needs for tools, training platforms, and community engagement software. The use of LinkedIn for recruitment indicates a mature HR tech stack."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:41:02.806788",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/performance-analysis-lead-for-the-football-ferns-new-zealand-football-at-sport-canterbury-4364200242",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Hudl (Performance Analysis Platform)",
+              "Sportscode (Video Analysis Software)",
+              "Elmo Talent (Applicant Tracking System)"
+            ],
+            "job_postings": [
+              "Performance Analysis Lead for the Football Ferns"
+            ],
+            "procurement_indicators": [
+              "Requirement for 'Strong technical capability using analysis tools' implies existing or pending software licenses.",
+              "Use of external recruitment platform (Elmo Talent) suggests HR technology procurement.",
+              "Investment in 'High Performance' infrastructure and data insights."
+            ]
+          },
+          "patterns_found": [
+            "Specialized Software Procurement (Hudl, Sportscode)",
+            "High-Performance Technology Investment",
+            "Vendor Ecosystem Integration (Elmo Talent ATS)",
+            "Data-Driven Decision Making Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1811,
+              "output_tokens": 335,
+              "elapsed_seconds": 4.151181936264038
+            }
+          ],
+          "reasoning": "This job posting confirms active investment in specialized performance analysis software (Hudl/Sportscode), which are high-value SaaS or proprietary enterprise licenses requiring procurement. It also validates the use of the Elmo Talent platform for HR/Recruitment management, indicating a broader B2B software stack."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:41:09.715938",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/technical-director-new-zealand-football-at-sport-canterbury-4362474260",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Elmo Talent (ATS)"
+            ],
+            "job_postings": [
+              "Technical Director"
+            ],
+            "procurement_indicators": [
+              "National Curriculum & Framework Implementation",
+              "Coach/Referee Education Pathways",
+              "Club Capability Building Systems"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Leadership Hiring (Technical Director)",
+            "ATS Platform Usage (Elmo Talent)",
+            "Framework Implementation Procurement (Whole of Football 2.0)",
+            "Education & Training Material Requirements",
+            "Club Development Systems Investment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1894,
+              "output_tokens": 265,
+              "elapsed_seconds": 3.0753517150878906
+            }
+          ],
+          "reasoning": "The posting confirms a strategic leadership hire responsible for the 'Whole of Football 2.0' framework. This role implies significant future procurement in educational content, training systems, and club development technologies. The use of the 'Elmo Talent' ATS confirms the HR technology stack."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:41:17.046432",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/community-coach-development-manager-new-zealand-football-at-sport-canterbury-4362474261",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Elmo Talent (ATS)"
+            ],
+            "job_postings": [
+              "Community Coach Development Manager"
+            ],
+            "procurement_indicators": [
+              "Requirement for education resource development tools",
+              "Nationwide program delivery infrastructure",
+              "Workforce development software needs"
+            ]
+          },
+          "patterns_found": [
+            "ATS Platform Usage (Elmo Talent)",
+            "Program Management & Resource Development",
+            "Learning Management System (LMS) Indicators",
+            "Strategic Workforce Development"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1982,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.8122949600219727
+            }
+          ],
+          "reasoning": "The job posting confirms the use of the Elmo Talent ATS for recruitment, reinforcing the technology stack identified in previous iterations. The role requires the 'design, development, and delivery' of education resources and support programs, indicating a need for content management systems, digital learning tools, or LMS platforms to support a nationwide network of coaches."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T13:41:25.273000",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/philanthropy-and-partnerships-manager-at-new-zealand-football-foundation-4361272193",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Raisely (CRM/Donation Platform)",
+              "Digital Fundraising Tools",
+              "Donor Database Systems"
+            ],
+            "job_postings": [
+              "Philanthropy And Partnerships Manager"
+            ],
+            "procurement_indicators": [
+              "CRM Implementation & Maintenance",
+              "Digital Campaign Management Tools",
+              "Data Analytics & Impact Reporting Software"
+            ]
+          },
+          "patterns_found": [
+            "CRM Software Specification (Raisely)",
+            "Digital Fundraising Infrastructure",
+            "Data Management & Reporting Requirements",
+            "Strategic Revenue Growth (Major Gifts/Bequests)",
+            "Entity Relationship (NZ Football Foundation)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2063,
+              "output_tokens": 316,
+              "elapsed_seconds": 4.6631019115448
+            }
+          ],
+          "reasoning": "The job description explicitly names 'Raisely or similar' as the required CRM platform, confirming a specific technology choice within the NZ Football ecosystem. It also highlights a need for digital fundraising tools and data management services to support a $2.2m+ investment portfolio. While technically the Foundation, this represents the fundraising technology stack for the broader NZ Football family."
+        }
+      ],
+      "total_input_tokens": 16144,
+      "total_output_tokens": 2981,
+      "estimated_cost_usd": 0.09314700000000001
+    },
+    "procurement_signals": [
+      "Strategic Leadership Hiring (Head of Growth)",
+      "Digital Transformation Indicators (LinkedIn Recruiter)",
+      "Program Management & Implementation Requirements",
+      "Partnership & Stakeholder Management Focus",
+      "Inclusive Growth Mandate (Target Demographics)",
+      "Specialized Software Procurement (Hudl, Sportscode)",
+      "High-Performance Technology Investment",
+      "Vendor Ecosystem Integration (Elmo Talent ATS)",
+      "Data-Driven Decision Making Infrastructure",
+      "Strategic Leadership Hiring (Technical Director)",
+      "ATS Platform Usage (Elmo Talent)",
+      "Framework Implementation Procurement (Whole of Football 2.0)",
+      "Education & Training Material Requirements",
+      "Club Development Systems Investment",
+      "ATS Platform Usage (Elmo Talent)",
+      "Program Management & Resource Development",
+      "Learning Management System (LMS) Indicators",
+      "Strategic Workforce Development",
+      "CRM Software Specification (Raisely)",
+      "Digital Fundraising Infrastructure",
+      "Data Management & Reporting Requirements",
+      "Strategic Revenue Growth (Major Gifts/Bequests)",
+      "Entity Relationship (NZ Football Foundation)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New Zealand Football may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:41:25.275055"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.206967",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:50.543833"
+}

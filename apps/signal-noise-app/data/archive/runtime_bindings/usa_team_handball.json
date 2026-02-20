@@ -1,0 +1,139 @@
+{
+  "entity_id": "usa_team_handball",
+  "entity_name": "USA Team Handball",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "usateamhandball.org",
+    "usath-nationals.site"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "usa_team_handball",
+      "entity_name": "USA Team Handball",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://usath-nationals.site",
+        "https://usateamhandball.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Strategic Partnership Expansion",
+        "Facility & Infrastructure Development",
+        "Google Workspace Integration (Forms)",
+        "Digital Member Intake Processes"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "USA Team Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:39:28.168575",
+          "domain_explored": "https://usateamhandball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms (Athlete Intake)",
+              "Google Workspace (implied)",
+              "Video Hosting (JavaScript-dependent, potential YouTube/Vimeo)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership with Indian River State College (IRSC)",
+              "Establishment of National Training Presence on Florida's Treasure Coast",
+              "Athlete Intake Form implementation (Data Collection)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Expansion",
+            "Facility & Infrastructure Development",
+            "Google Workspace Integration (Forms)",
+            "Digital Member Intake Processes"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 857,
+              "output_tokens": 329,
+              "elapsed_seconds": 3.309676170349121
+            }
+          ],
+          "reasoning": "The content reveals a significant strategic partnership with Indian River State College (IRSC) to establish a National Training presence. This indicates a clear procurement intent related to facility operations, sports equipment, housing, and potentially local IT infrastructure for the new site. Additionally, the use of Google Forms for 'Athlete Intake' confirms the current technology stack and highlights a need for more robust data management solutions as the organization scales."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:39:38.993654",
+          "domain_explored": "https://usath-nationals.site",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Software (Custom/Proprietary based on URL structure)",
+              "YouTube (Livestreaming)",
+              "Social Media Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement: TBK Bank Sports Complex (Bettencourt, Iowa) for 2025 Championships",
+              "Event Services: Scoring, scheduling, and reporting platform",
+              "Broadcasting: Livestreaming production services"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Platform Usage",
+            "Venue Procurement (TBK Bank Sports Complex)",
+            "Digital Infrastructure (Livestreaming/YouTube)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.921002149581909
+            }
+          ],
+          "reasoning": "The content reveals the operational execution of the 2025 National Championships. While it does not contain explicit RFPs, it confirms the procurement of a major venue (TBK Bank Sports Complex, Bettencourt, Iowa) and the use of a dedicated event management platform (usath-nationals.site) for scoring and scheduling. This indicates a need for event technology services and venue management capabilities."
+        }
+      ],
+      "total_input_tokens": 2272,
+      "total_output_tokens": 634,
+      "estimated_cost_usd": 0.016326
+    },
+    "procurement_signals": [
+      "Strategic Partnership Expansion",
+      "Facility & Infrastructure Development",
+      "Google Workspace Integration (Forms)",
+      "Digital Member Intake Processes"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "USA Team Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:39:38.995677"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362503",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:52.390596"
+}

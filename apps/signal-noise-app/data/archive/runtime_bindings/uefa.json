@@ -1,0 +1,331 @@
+{
+  "entity_id": "uefa",
+  "entity_name": "UEFA",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "uefa.com",
+    "uefa.tv",
+    "shopuefa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/uefa/jobs/",
+      "https://www.linkedin.com/jobs/uefa-jobs-worldwide",
+      "https://ch.linkedin.com/company/uefa/jobs",
+      "https://www.linkedin.com/jobs/uefa-jobs",
+      "https://uk.linkedin.com/jobs/uefa-jobs",
+      "https://www.linkedin.com/jobs/view/4073760881/",
+      "https://www.linkedin.com/jobs/uefa-coach-jobs",
+      "https://www.linkedin.com/posts/allsportseventsjobs_job-opportunities-inside-uefa-activity-7158474034400112641-EyQi",
+      "https://www.linkedin.com/jobs/search/?currentJobId=4017709544&f_C=12198&geoId=92000000&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4010837364%2C4017709544%2C4015538449%2C4008011268%2C4020855073%2C4018147509%2C4009741436%2C4010837361"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uefa",
+      "entity_name": "UEFA",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.18,
+        0.18
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/uefa-jobs-worldwide",
+        "https://www.linkedin.com/company/uefa/jobs/",
+        "https://uk.linkedin.com/jobs/uefa-jobs",
+        "https://uefa.tv",
+        "https://shopuefa.com",
+        "https://www.linkedin.com/jobs/uefa-jobs",
+        "https://ch.linkedin.com/company/uefa/jobs",
+        "https://uefa.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Event-Specific Technology Procurement (EURO 2024/2025)",
+        "Hardware Infrastructure Acquisition",
+        "Overlay Services Management",
+        "Technical Services Coordination",
+        "ESG & Sustainability Procurement",
+        "Event-Specific Infrastructure Planning",
+        "IT & Digital Transformation Hiring",
+        "Marketing & Rights Management",
+        "Event-Specific Technology Procurement (EURO 2024/2025)",
+        "Hardware Infrastructure Acquisition",
+        "Overlay Services Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UEFA may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:21:01.566960",
+          "domain_explored": "https://uefa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:21:04.449674",
+          "domain_explored": "https://uefa.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:21:07.298860",
+          "domain_explored": "https://shopuefa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:21:16.102233",
+          "domain_explored": "https://www.linkedin.com/company/uefa/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ICT Hardware Infrastructure",
+              "Broadcast Overlay Technology",
+              "Technical Services Equipment"
+            ],
+            "job_postings": [
+              "EURO Project Coordinator",
+              "EURO Cluster Technology & Overlay Services Manager",
+              "EURO Technical Services Unit Coordinator",
+              "EURO Technical Services & Overlay Coordinators",
+              "EURO ICT Hardware Specialist"
+            ],
+            "procurement_indicators": [
+              "Sourcing of ICT hardware for tournament operations",
+              "Vendor management for technology overlay services",
+              "Coordination of technical service suppliers",
+              "Project-based procurement for event infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Event-Specific Technology Procurement (EURO 2024/2025)",
+            "Hardware Infrastructure Acquisition",
+            "Overlay Services Management",
+            "Technical Services Coordination"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 400,
+              "elapsed_seconds": 5.49225115776062
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn reveals active recruitment for roles directly tied to procurement and technology implementation for the upcoming EURO tournament. Specifically, the 'EURO ICT Hardware Specialist' and 'EURO Cluster Technology & Overlay Services Manager' roles indicate immediate requirements for hardware sourcing, vendor management for overlay services, and technical infrastructure setup. These are strong procurement signals involving ICT and event technology vendors."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:21:25.745663",
+          "domain_explored": "https://www.linkedin.com/jobs/uefa-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sustainability Reporting Tools",
+              "ESG Compliance Platforms",
+              "Digital Asset Management (DAM)",
+              "Marketing Automation Software"
+            ],
+            "job_postings": [
+              "Social & Environmental Sustainability Intern (Vaud, Switzerland)",
+              "General indication of 644 open roles worldwide"
+            ],
+            "procurement_indicators": [
+              "ESG Service Provider Requirements",
+              "Sustainable Supply Chain Management",
+              "Corporate Social Responsibility (CSR) Initiatives"
+            ]
+          },
+          "patterns_found": [
+            "ESG & Sustainability Procurement",
+            "Event-Specific Infrastructure Planning",
+            "IT & Digital Transformation Hiring",
+            "Marketing & Rights Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 343,
+              "elapsed_seconds": 6.083817005157471
+            }
+          ],
+          "reasoning": "The scraped content successfully bypassed the generic login wall to reveal specific job postings. The identification of a 'Social & Environmental Sustainability Intern' confirms active investment in ESG compliance, which drives procurement for sustainable vendors and reporting tools. The presence of 644 total jobs indicates a large-scale operational expansion, likely requiring significant vendor support for IT, Marketing, and Event Management."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:21:34.949067",
+          "domain_explored": "https://ch.linkedin.com/company/uefa/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ICT Hardware Infrastructure",
+              "Broadcast Overlay Technology",
+              "Technical Services Management"
+            ],
+            "job_postings": [
+              "EURO Cluster Technology & Overlay Services Manager",
+              "EURO ICT Hardware Specialist",
+              "EURO Technical Services Unit Coordinator",
+              "EURO Project Coordinator"
+            ],
+            "procurement_indicators": [
+              "Short-term hiring for event-specific technical implementation",
+              "Hardware acquisition for tournament deployment",
+              "Management of third-party overlay services (vendor management)"
+            ]
+          },
+          "patterns_found": [
+            "Event-Specific Technology Procurement (EURO 2024/2025)",
+            "Hardware Infrastructure Acquisition",
+            "Overlay Services Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 361,
+              "elapsed_seconds": 5.8776161670684814
+            }
+          ],
+          "reasoning": "The scraped content from the Swiss LinkedIn subdomain confirms and strengthens the signals found in previous iterations. It lists specific technical roles directly related to the 'EURO' tournament, specifically 'Cluster Technology & Overlay Services Manager' and 'ICT Hardware Specialist'. These roles indicate active procurement cycles for broadcast overlay technology and significant hardware infrastructure for the upcoming tournament, distinct from general IT operations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:21:47.185044",
+          "domain_explored": "https://www.linkedin.com/jobs/uefa-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Recreational Programs (Loudoun United FC)",
+              "Athlete Relations Associate (Fanatics)",
+              "Head Soccer Coach (TOCA Football)"
+            ],
+            "procurement_indicators": [
+              "Merchandising Operations (Fanatics roles suggest vendor activity, not UEFA procurement)"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Generic Sports Industry Roles",
+            "Vendor Ecosystem Presence (Fanatics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 272,
+              "elapsed_seconds": 8.48321008682251
+            }
+          ],
+          "reasoning": "The scraped content from the 'UEFA jobs' search query returns results for entities unrelated to the governing body UEFA (e.g., Loudoun United FC, Fanatics, TOCA Football, Rush Soccer). These are false positives generated by LinkedIn's keyword matching (likely matching 'United' or 'Soccer'). There are no direct procurement signals, technology investments, or corporate governance patterns attributable to UEFA itself in this dataset."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:21:54.300538",
+          "domain_explored": "https://uk.linkedin.com/jobs/uefa-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "LFCW PGA Head of Player Development - Liverpool Football Club",
+              "Associate Director - Sports & Major Events - Steer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Generic Sports Industry Roles",
+            "Vendor Ecosystem Presence (Fanatics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 233,
+              "elapsed_seconds": 3.2292609214782715
+            }
+          ],
+          "reasoning": "The search query 'UEFA jobs' within the UK territory returns results for entities within the football ecosystem (e.g., Liverpool FC, Steer) rather than the governing body UEFA itself. The content indicates a high noise-to-signal ratio where 'UEFA' is likely used as a keyword for relevance rather than an employer identifier. No direct procurement or hiring signals from UEFA were detected in the provided text."
+        }
+      ],
+      "total_input_tokens": 7806,
+      "total_output_tokens": 1609,
+      "estimated_cost_usd": 0.047553
+    },
+    "procurement_signals": [
+      "Event-Specific Technology Procurement (EURO 2024/2025)",
+      "Hardware Infrastructure Acquisition",
+      "Overlay Services Management",
+      "Technical Services Coordination",
+      "ESG & Sustainability Procurement",
+      "Event-Specific Infrastructure Planning",
+      "IT & Digital Transformation Hiring",
+      "Marketing & Rights Management",
+      "Event-Specific Technology Procurement (EURO 2024/2025)",
+      "Hardware Infrastructure Acquisition",
+      "Overlay Services Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UEFA may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:21:54.301343"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457910",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:09.183577"
+}

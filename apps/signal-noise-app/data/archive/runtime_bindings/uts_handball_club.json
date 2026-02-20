@@ -1,0 +1,111 @@
+{
+  "entity_id": "uts_handball_club",
+  "entity_name": "UTS Handball Club",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "nswhandball.com.au",
+    "activateuts.com.au",
+    "handballaustralia.org.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uts_handball_club",
+      "entity_name": "UTS Handball Club",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nswhandball.com.au",
+        "https://handballaustralia.org.au",
+        "https://activateuts.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UTS Handball Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:35:29.699036",
+          "domain_explored": "https://nswhandball.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:35:37.676063",
+          "domain_explored": "https://activateuts.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:35:47.855262",
+          "domain_explored": "https://handballaustralia.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_announcement",
+            "team_selection",
+            "event_marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 504,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.762310266494751
+            }
+          ],
+          "reasoning": "The content is a sports announcement regarding the 'Aussie Crocs' national team and the Asian Championship. It focuses on athletes, coaching staff, and match schedules. There is no mention of corporate governance, technology acquisition, job vacancies, or vendor spending relevant to the UTS Handball Club procurement profile."
+        }
+      ],
+      "total_input_tokens": 504,
+      "total_output_tokens": 163,
+      "estimated_cost_usd": 0.0039570000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UTS Handball Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:35:47.855740"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358031",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:10.678927"
+}

@@ -1,0 +1,204 @@
+{
+  "entity_id": "wonju_db_promy",
+  "entity_name": "Wonju DB Promy",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "grokipedia.com",
+    "globalsportsarchive.com",
+    "onesports.ph",
+    "oreateai.com",
+    "betonline.ag",
+    "bettingexpert.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wonju_db_promy",
+      "entity_name": "Wonju DB Promy",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://onesports.ph",
+        "https://globalsportsarchive.com",
+        "https://grokipedia.com",
+        "https://bettingexpert.com",
+        "https://oreateai.com",
+        "https://betonline.ag"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Wonju DB Promy may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:51:20.265851",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:51:26.611907",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports data aggregation",
+            "Irrelevant content (Global Soccer)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.872734785079956
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic index of international soccer leagues and tournaments (UEFA, AFC, CAF, etc.). It contains no information regarding 'Wonju DB Promy', a Korean basketball team, nor does it contain any procurement signals, technology stacks, or business intelligence relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:51:35.643125",
+          "domain_explored": "https://onesports.ph",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Irrelevant geographic focus (Philippines vs South Korea)",
+            "Consumer-facing content (Game highlights, player interviews)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.451343297958374
+            }
+          ],
+          "reasoning": "The content from onesports.ph is a sports news portal focused on Philippine basketball (PBA), volleyball (PVL), and international athletes. It contains no information regarding Wonju DB Promy, South Korean procurement, or enterprise technology stacks. The entity of interest (Wonju DB Promy) is not mentioned, and the content is purely consumer sports journalism."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:51:43.177500",
+          "domain_explored": "https://oreateai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing product marketing",
+            "Educational support tools (Essay writing)",
+            "Irrelevant to professional sports procurement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 603,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.279135227203369
+            }
+          ],
+          "reasoning": "The content is marketing copy for an AI essay writing service ('Oreateai'). It is entirely unrelated to Wonju DB Promy, a professional basketball team. There are no procurement signals, technology stacks relevant to sports operations, or governance patterns present."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:51:46.044711",
+          "domain_explored": "https://betonline.ag",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:51:57.330878",
+          "domain_explored": "https://bettingexpert.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing gambling content",
+            "Sports betting tips and odds aggregation",
+            "Marketing calls to action (Sign up, Free bets)",
+            "Irrelevant geographic focus (Global sports vs South Korean team)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 213,
+              "elapsed_seconds": 7.897425889968872
+            }
+          ],
+          "reasoning": "The scraped content from bettingexpert.com is exclusively focused on sports betting, gambling tips, and consumer promotions (e.g., 'Top Betting Free Bets', 'Become a Tipster'). There is no presence of B2B procurement signals, corporate governance information, or technology infrastructure details relevant to the operations of a professional basketball team like Wonju DB Promy."
+        }
+      ],
+      "total_input_tokens": 5007,
+      "total_output_tokens": 743,
+      "estimated_cost_usd": 0.026166000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Wonju DB Promy may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:51:57.333295"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217395",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:39.720752"
+}

@@ -1,0 +1,63 @@
+{
+  "report": {
+    "timestamp": "2026-02-03T19:09:02.774975+00:00",
+    "entities_tested": 3,
+    "total_cost_usd": 0.0,
+    "total_iterations": 0,
+    "entity_results": {
+      "liverpool-fc": {
+        "status": "failed",
+        "error": "No module named 'backend'"
+      },
+      "bayern-munich": {
+        "status": "failed",
+        "error": "No module named 'backend'"
+      },
+      "psg": {
+        "status": "failed",
+        "error": "No module named 'backend'"
+      }
+    },
+    "comparison": {
+      "best_confidence": {
+        "entity_id": null,
+        "confidence": 0.0
+      },
+      "lowest_cost": {
+        "entity_id": null,
+        "cost": Infinity
+      },
+      "most_iterations": {
+        "entity_id": null,
+        "iterations": 0
+      },
+      "actionable_count": 0
+    },
+    "analysis": {},
+    "averages": {
+      "confidence": 0.0,
+      "cost_usd": 0.0,
+      "iterations": 0.0
+    }
+  },
+  "detailed_results": {
+    "liverpool-fc": {
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "error": "No module named 'backend'",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 116, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 170, in __init__\n    from backend.hypothesis_manager import HypothesisManager\nModuleNotFoundError: No module named 'backend'\n"
+    },
+    "bayern-munich": {
+      "entity_id": "bayern-munich",
+      "entity_name": "Bayern Munich",
+      "error": "No module named 'backend'",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 116, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 170, in __init__\n    from backend.hypothesis_manager import HypothesisManager\nModuleNotFoundError: No module named 'backend'\n"
+    },
+    "psg": {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "error": "No module named 'backend'",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 116, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 170, in __init__\n    from backend.hypothesis_manager import HypothesisManager\nModuleNotFoundError: No module named 'backend'\n"
+    }
+  }
+}

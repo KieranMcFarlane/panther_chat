@@ -1,0 +1,236 @@
+{
+  "entity_id": "bretagne_classic_-_ouest-france",
+  "entity_name": "Bretagne Classic - Ouest-France",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "ouest-france.fr",
+    "uaeteamemirates.com",
+    "velowire.com",
+    "cyclingnews.com",
+    "redbullborahansgrohe.com",
+    "procyclingstats.com",
+    "allsportdb.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bretagne_classic_-_ouest-france",
+      "entity_name": "Bretagne Classic - Ouest-France",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://velowire.com",
+        "https://redbullborahansgrohe.com",
+        "https://uaeteamemirates.com",
+        "https://procyclingstats.com",
+        "https://ouest-france.fr",
+        "https://cyclingnews.com",
+        "https://allsportdb.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bretagne Classic - Ouest-France may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:30:17.082555",
+          "domain_explored": "https://ouest-france.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:30:54.784648",
+          "domain_explored": "https://uaeteamemirates.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Content_Sports_News",
+            "Domain_Cycling_Team"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 172,
+              "elapsed_seconds": 34.058409214019775
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'UAE Team Emirates' (uaeteamemirates.com), a professional cycling team, which is a completely different entity from the target 'Bretagne Classic - Ouest-France' (a cycling event organizer). The content focuses on race results, rider news, and social media feeds, offering zero procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:31:00.501603",
+          "domain_explored": "https://velowire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Content_Sports_News",
+            "Domain_Cycling_News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 452,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.7857179641723633
+            }
+          ],
+          "reasoning": "The scraped content from velowire.com is a cycling news outlet. It contains information about teams, rosters, and race schedules. It does not contain information about the internal operations, procurement needs, or technology stack of the entity 'Bretagne Classic - Ouest-France'. It is an external observer, not the entity itself."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:31:06.648350",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Content_Sports_News",
+            "Domain_Cycling_News",
+            "Token_Limit_Truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.156285285949707
+            }
+          ],
+          "reasoning": "The content provided is a list of sports news headlines and articles from Cyclingnews.com regarding cycling races, rider transfers, and equipment. It contains no information regarding the entity 'Bretagne Classic - Ouest-France', its organizational structure, or its procurement activities. The content is purely editorial sports coverage."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:31:12.987072",
+          "domain_explored": "https://redbullborahansgrohe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Content_Sports_News",
+            "Domain_Cycling_Team"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.151073932647705
+            }
+          ],
+          "reasoning": "The scraped content belongs to the 'Red Bull \u2013 BORA \u2013 hansgrohe' cycling team website, reporting on race results (Challenge Mallorca). This is a distinct entity from the target 'Bretagne Classic - Ouest-France' (a cycling event/organization). The content is purely sports news and contains no procurement, technology, or governance signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:31:15.805367",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:31:22.293991",
+          "domain_explored": "https://allsportdb.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Content_Sports_Calendar",
+            "Domain_Aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 141,
+              "elapsed_seconds": 3.35593318939209
+            }
+          ],
+          "reasoning": "The content is a generic sports event calendar for February 2026 (Olympics, Cricket, Futsal). It contains no information regarding the entity 'Bretagne Classic - Ouest-France', its organizational structure, or its procurement activities."
+        }
+      ],
+      "total_input_tokens": 6440,
+      "total_output_tokens": 826,
+      "estimated_cost_usd": 0.03171
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bretagne Classic - Ouest-France may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:31:22.294634"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.406803",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:42.956008"
+}

@@ -1,0 +1,199 @@
+{
+  "entity_id": "esp\u00e9rance_de_tunis",
+  "entity_name": "Esp\u00e9rance de Tunis",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "e-s-tunis.com",
+    "esperance-de-tunis.net",
+    "esperance-de-tunis.com",
+    "taraji-store.com",
+    "diwansport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "esp\u00e9rance_de_tunis",
+      "entity_name": "Esp\u00e9rance de Tunis",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://esperance-de-tunis.net",
+        "https://taraji-store.com",
+        "https://diwansport.com",
+        "https://esperance-de-tunis.com",
+        "https://e-s-tunis.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Esp\u00e9rance de Tunis may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:30:46.317384",
+          "domain_explored": "https://e-s-tunis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media content consumption",
+            "Sports match reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 370,
+              "output_tokens": 137,
+              "elapsed_seconds": 3.8873178958892822
+            }
+          ],
+          "reasoning": "The content provided is a video title and snippet regarding a football match summary (SSC - EST). This is operational/sports content and contains no data regarding organizational structure, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:30:53.322482",
+          "domain_explored": "https://esperance-de-tunis.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports match reporting",
+            "League standings",
+            "Multi-sport results (Football, Handball, Volleyball, Judo, Swimming)",
+            "Media content aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.4298267364501953
+            }
+          ],
+          "reasoning": "The scraped content is entirely focused on sports journalism, match results, and league standings. There are no corporate sections, job postings, or vendor information visible in this text. It appears to be a fan site or news portal (esperance-de-tunis.net) rather than the official corporate entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:31:14.182755",
+          "domain_explored": "https://esperance-de-tunis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports match reporting",
+            "League standings",
+            "Player transfer news (Mercato)",
+            "Fan engagement metrics"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 168,
+              "elapsed_seconds": 17.929637908935547
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports journalism, covering match results (Simba SC vs EST), player signings (Moez Haj Ali), and league standings. There are no corporate governance documents, career sections, or technology infrastructure details that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:31:21.726566",
+          "domain_explored": "https://taraji-store.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Email Marketing Tools (Newsletter subscription)",
+              "Payment Gateways (Pay later functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Physical Address: Avenue de l\u2019Arabie Saoudite, Tunis (Logistics/Store Ops)",
+              "Contact: +216 93 591 919 / [email protected]",
+              "Service Level Agreements: 'Exchange under 6 days', 'After-sales service guarantee'"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Digital Marketing Operations",
+            "Customer Service Infrastructure",
+            "Physical Retail Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.920383930206299
+            }
+          ],
+          "reasoning": "While the site is a consumer-facing store (B2C) rather than a corporate procurement portal, it confirms the entity utilizes an e-commerce platform, engages in digital marketing (email subscriptions), and manages physical inventory and logistics. This indicates potential procurement needs for inventory management systems, shipping/logistics partners, and CRM tools, though no direct RFPs are present."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:31:24.701189",
+          "domain_explored": "https://diwansport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4736,
+      "total_output_tokens": 801,
+      "estimated_cost_usd": 0.026223
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Esp\u00e9rance de Tunis may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:31:24.702114"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.348963",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:04.952652"
+}

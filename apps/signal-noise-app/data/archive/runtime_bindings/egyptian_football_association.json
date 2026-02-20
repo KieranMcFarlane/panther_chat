@@ -1,0 +1,148 @@
+{
+  "entity_id": "egyptian_football_association",
+  "entity_name": "Egyptian Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cafonline.com",
+    "inside.fifa.com",
+    "egyptnt.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "egyptian_football_association",
+      "entity_name": "Egyptian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://egyptnt.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Egyptian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:45:23.452983",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Repetitive UI elements (Show more/See all)",
+            "High-level event categorization (AFCON, Champions League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 921,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.282372236251831
+            }
+          ],
+          "reasoning": "The content provided is a repetitive list of navigation links and UI elements (e.g., 'Show more', 'See all') from the Confederation of African Football (CAF) website. It lacks specific details regarding the Egyptian Football Association's internal operations, technology stack, or procurement activities. The content is structural noise rather than actionable intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:45:51.316597",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (Global context only)",
+              "Infrastructure refurbishment projects (Burundi specific, not Egypt)"
+            ]
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Repetitive navigation/UI elements",
+            "High-level event promotion (FIFA Women's Champions Cup)",
+            "FIFA Forward program mentions (funding/infrastructure)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 262,
+              "elapsed_seconds": 25.017994165420532
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal and focuses on high-level governance, women's football development, and stadium refurbishment in Burundi. While 'FIFA Forward' indicates infrastructure spending, this is global governance content, not specific procurement intelligence for the Egyptian Football Association (EFA). There are no specific signals related to EFA vendor needs, technology stacks, or local RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:45:57.809079",
+          "domain_explored": "https://egyptnt.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static content repetition",
+            "Generic marketing copy",
+            "Basic informational navigation",
+            "Copyright footer (2023)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1226,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.1195881366729736
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of static, repetitive marketing copy describing the Egyptian National Team's history and achievements. There are no functional sections, administrative portals, vendor lists, or technology indicators present. The site appears to be a basic informational brochure site with no procurement signals."
+        }
+      ],
+      "total_input_tokens": 3574,
+      "total_output_tokens": 639,
+      "estimated_cost_usd": 0.020307
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Egyptian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:45:57.810415"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204880",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:41:22.750155"
+}

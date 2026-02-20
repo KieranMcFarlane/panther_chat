@@ -1,0 +1,362 @@
+{
+  "entity_id": "south_african_rugby_union",
+  "entity_name": "South African Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "sarugby.co.za",
+    "sarugbytravel.com",
+    "sarugbylegends.com",
+    "sarugbystats.co.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/janine-c-bbb6417_jobs-in-rugby-activity-7389976955049136128-RdWG",
+      "https://www.linkedin.com/posts/yusuf-jackson-00624092_jobs-in-rugby-activity-7293561648571670528-ShPF",
+      "https://www.linkedin.com/posts/jamie-robertson-6075b628_jobs-in-rugby-activity-7293558079382552576-2i7I",
+      "https://www.linkedin.com/posts/south-african-rugby-union-saru-_jobs-in-rugby-activity-7293555372626223104-UibR"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_african_rugby_union",
+      "entity_name": "South African Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26
+      ],
+      "explored_domains": [
+        "https://sarugbystats.co.za",
+        "https://www.linkedin.com/posts/yusuf-jackson-00624092_jobs-in-rugby-activity-7293561648571670528-ShPF",
+        "https://www.linkedin.com/posts/south-african-rugby-union-saru-_jobs-in-rugby-activity-7293555372626223104-UibR",
+        "https://sarugbylegends.com",
+        "https://sarugbytravel.com",
+        "https://www.linkedin.com/posts/janine-c-bbb6417_jobs-in-rugby-activity-7389976955049136128-RdWG",
+        "https://www.linkedin.com/posts/jamie-robertson-6075b628_jobs-in-rugby-activity-7293558079382552576-2i7I",
+        "https://sarugby.co.za"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Commercial Department Expansion",
+        "Direct Hiring Signals",
+        "Partnership Management Focus",
+        "Internal HR Process Handling",
+        "Operations Department Expansion",
+        "Tournament Delivery Infrastructure",
+        "Direct Hiring Signals",
+        "Event Logistics Capacity Building",
+        "Operations Department Expansion",
+        "Direct Hiring Signals",
+        "Workforce Scaling",
+        "Operations Department Expansion",
+        "Direct Hiring Signals",
+        "Workforce Scaling",
+        "High Engagement Volume"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South African Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:15:41.094436",
+          "domain_explored": "https://sarugby.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Services: SA Rugby Awards 2025 (Nominees revealed)",
+              "Logistics/Travel: Fourth Test confirmed for Baltimore (International expansion)",
+              "Venue/Operations: Bumper domestic schedule for 2026 (Local competitions)",
+              "Sponsorship Management: Vodacom URC activation"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Signals",
+            "Sponsorship Activation",
+            "International Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.513169765472412
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, specific headlines indicate underlying operational activities that drive procurement. The 'SA Rugby confirms bumper domestic schedule for 2026' suggests upcoming requirements for event management, logistics, and venue vendors. The 'Fourth Test confirmed for Baltimore' indicates international travel and logistics procurement needs. The 'SA Rugby Awards 2025' suggests event production and AV requirements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:15:49.994865",
+          "domain_explored": "https://sarugbytravel.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from 'Website Manager' and URL structure)",
+              "E-commerce Platform (for 'View Packages' and ticket sales)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Joint Partnership with SA Rugby Union (SA Rugby Travel)",
+              "Outsourced Travel & Tour Operations",
+              "Ticket-inclusive Package Management",
+              "Official Partner Status (Vendor Lock-in)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Model",
+            "Outsourced Service Operations",
+            "Event Logistics & Ticketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 319,
+              "elapsed_seconds": 2.881500005722046
+            }
+          ],
+          "reasoning": "The content confirms that SA Rugby Union operates via a commercial partnership model for its travel and logistics division. 'SA Rugby Travel' is identified as the 'official supporters travel partner' with a 'Joint partnership'. This indicates that procurement for travel services is likely handled through long-term vendor partnerships rather than open tenders. The presence of a 'Website Manager' author tag and the specific 2026 fixture planning indicates active digital management and future event planning cycles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:15:53.861099",
+          "domain_explored": "https://sarugbylegends.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:16:00.583999",
+          "domain_explored": "https://sarugbystats.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Data Archiving",
+            "Static Content Structure",
+            "Fan Engagement Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.696803092956543
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of historical statistics, match results, and archives (e.g., 'Results of all SA\u2019s International matches 1891 \u2013 1959', 'Currie Cup Winners'). This indicates a legacy information site with no dynamic functionality, vendor solicitations, or modern technology stack signals. It is a pure data repository with no procurement intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:16:08.587700",
+          "domain_explored": "https://www.linkedin.com/posts/janine-c-bbb6417_jobs-in-rugby-activity-7389976955049136128-RdWG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Manual HR Processes (Email-based applications)",
+              "LinkedIn (Recruitment channel)"
+            ],
+            "job_postings": [
+              {
+                "title": "Account Manager",
+                "department": "Commercial",
+                "application_method": "Email (careers@sarugby.co.za)",
+                "deadline": "Friday 14 November 2025"
+              }
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in Commercial unit",
+              "Potential requirement for CRM tools to support new Account Manager",
+              "Outsourced recruitment not utilized (in-house HR handling applications)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Department Expansion",
+            "Direct Hiring Signals",
+            "Partnership Management Focus",
+            "Internal HR Process Handling"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 354,
+              "elapsed_seconds": 4.698442220687866
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for an 'Account Manager' within the Commercial department. This is a direct procurement signal indicating organizational growth and investment in partnership management capabilities. The use of an internal email address (careers@sarugby.co.za) suggests current reliance on manual HR processes rather than an external ATS provider, presenting a potential opportunity for HR tech vendors."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:16:23.477619",
+          "domain_explored": "https://www.linkedin.com/posts/yusuf-jackson-00624092_jobs-in-rugby-activity-7293561648571670528-ShPF",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Department Vacancies (3 roles)",
+              "Competitions & Tournaments Delivery"
+            ],
+            "procurement_indicators": [
+              "Expansion of Operations Department",
+              "Focus on Event Delivery Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Operations Department Expansion",
+            "Tournament Delivery Infrastructure",
+            "Direct Hiring Signals",
+            "Event Logistics Capacity Building"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 259,
+              "elapsed_seconds": 11.516991138458252
+            }
+          ],
+          "reasoning": "The content confirms active recruitment within the Operations Department specifically for 'Competitions, Tournaments and Events'. This indicates a need for personnel to manage complex logistics and vendor relationships associated with event delivery. It signals internal capacity building which often precedes or accompanies increased procurement activity for event services, technology, and equipment."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:16:29.636637",
+          "domain_explored": "https://www.linkedin.com/posts/jamie-robertson-6075b628_jobs-in-rugby-activity-7293558079382552576-2i7I",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Department (3 Vacancies)"
+            ],
+            "procurement_indicators": [
+              "Departmental Expansion",
+              "Resource Scaling"
+            ]
+          },
+          "patterns_found": [
+            "Operations Department Expansion",
+            "Direct Hiring Signals",
+            "Workforce Scaling"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.787231922149658
+            }
+          ],
+          "reasoning": "This content confirms active recruitment within the Operations Department, indicating internal capacity building. While direct procurement signals (RFPs) are absent, the expansion of the Operations team suggests upcoming infrastructure needs and potential vendor management requirements associated with larger event delivery or tournament logistics."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:16:36.944900",
+          "domain_explored": "https://www.linkedin.com/posts/south-african-rugby-union-saru-_jobs-in-rugby-activity-7293555372626223104-UibR",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Department (3 Vacancies)"
+            ],
+            "procurement_indicators": [
+              "Internal Resource Expansion",
+              "Operational Capacity Building"
+            ]
+          },
+          "patterns_found": [
+            "Operations Department Expansion",
+            "Direct Hiring Signals",
+            "Workforce Scaling",
+            "High Engagement Volume"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1760,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.968169927597046
+            }
+          ],
+          "reasoning": "This is a direct official signal from the South African Rugby Union's corporate LinkedIn account confirming active recruitment within the Operations Department. The high volume of comments (933) indicates significant market interest and active talent pooling, reinforcing the entity's growth phase and operational scaling."
+        }
+      ],
+      "total_input_tokens": 10892,
+      "total_output_tokens": 1811,
+      "estimated_cost_usd": 0.059841
+    },
+    "procurement_signals": [
+      "Commercial Department Expansion",
+      "Direct Hiring Signals",
+      "Partnership Management Focus",
+      "Internal HR Process Handling",
+      "Operations Department Expansion",
+      "Tournament Delivery Infrastructure",
+      "Direct Hiring Signals",
+      "Event Logistics Capacity Building",
+      "Operations Department Expansion",
+      "Direct Hiring Signals",
+      "Workforce Scaling",
+      "Operations Department Expansion",
+      "Direct Hiring Signals",
+      "Workforce Scaling",
+      "High Engagement Volume"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South African Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:16:36.945595"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291818",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:16.871355"
+}

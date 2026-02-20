@@ -1,0 +1,30 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "aston_villa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "everton",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leicester_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "newcastle_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "west_ham_united",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-01-31T22:53:23.139290",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-31T22:53:23.177095"
+}

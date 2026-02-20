@@ -1,0 +1,146 @@
+{
+  "entity_id": "british_gt_championship",
+  "entity_name": "British GT Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "britishgt.com",
+    "silverstone.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/aimtechnologiesgroup_jobopportunities-jobs-mechanics-activity-7317450745165807616-80bE"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_gt_championship",
+      "entity_name": "British GT Championship",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://silverstone.co.uk",
+        "https://www.linkedin.com/posts/aimtechnologiesgroup_jobopportunities-jobs-mechanics-activity-7317450745165807616-80bE",
+        "https://britishgt.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British GT Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:32:18.781674",
+          "domain_explored": "https://britishgt.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:32:24.542743",
+          "domain_explored": "https://silverstone.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Silverstone venue infrastructure (Karting, F1 upgrades)",
+              "Hospitality vendor needs (Escapade Silverstone, The Gallery Restaurant)"
+            ]
+          },
+          "patterns_found": [
+            "Venue marketing content",
+            "Ticketing platforms",
+            "Hospitality services"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.739427089691162
+            }
+          ],
+          "reasoning": "The scraped content is from Silverstone Circuit (the venue owner), not the British GT Championship organizer. While British GT races at Silverstone, this content focuses on consumer ticket sales, F1 events, and karting. It contains no B2B procurement signals, technology stack details, or organizational decision-making patterns relevant to the British GT Championship entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:32:31.583945",
+          "domain_explored": "https://www.linkedin.com/posts/aimtechnologiesgroup_jobopportunities-jobs-mechanics-activity-7317450745165807616-80bE",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AIM Technologies (Data/Telemetry implied)"
+            ],
+            "job_postings": [
+              {
+                "role": "GT Mechanics",
+                "entity": "Mahiki Racing",
+                "context": "British GT Championship",
+                "contact": "info@mahikiracing.com"
+              }
+            ],
+            "procurement_indicators": [
+              "Operational Expenditure (OpEx) on personnel",
+              "Vendor Relationship (AIM Technologies Group involvement)",
+              "Supply Chain Activation (Race car parts/maintenance implied)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Hiring Activity",
+            "Team Expansion",
+            "Operational Readiness",
+            "Vendor Ecosystem (AIM Technologies)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 328,
+              "elapsed_seconds": 3.8486931324005127
+            }
+          ],
+          "reasoning": "The content confirms active operational spending and growth within the British GT ecosystem via a team (Mahiki Racing) hiring GT mechanics. While this is a direct hire (HR) rather than a vendor procurement (RFP), it indicates active investment in team infrastructure and performance capability. The poster (Steven Lake) represents AIM Technologies, suggesting a technology partnership or vendor role within the team structure."
+        }
+      ],
+      "total_input_tokens": 2849,
+      "total_output_tokens": 549,
+      "estimated_cost_usd": 0.016782
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British GT Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:32:31.586343"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376096",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:49.051362"
+}

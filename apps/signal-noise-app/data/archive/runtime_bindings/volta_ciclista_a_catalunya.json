@@ -1,0 +1,167 @@
+{
+  "entity_id": "volta_ciclista_a_catalunya",
+  "entity_name": "Volta Ciclista a Catalunya",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "voltacatalunya.cat",
+    "voltacatalunyafemenina.cat",
+    "velowire.com",
+    "teamvismaleaseabike.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volta_ciclista_a_catalunya",
+      "entity_name": "Volta Ciclista a Catalunya",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://voltacatalunya.cat",
+        "https://teamvismaleaseabike.com",
+        "https://voltacatalunyafemenina.cat",
+        "https://velowire.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volta Ciclista a Catalunya may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:43:58.760960",
+          "domain_explored": "https://voltacatalunya.cat",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Marketing Campaigns: Active promotion for 2026 editions implies budget allocation for media buying and creative services.",
+              "Event Logistics: Coordination of 'seus' (headquarters) implies venue management contracts.",
+              "Digital Content: Use of video galleries and official song contests ('iCatVolta') suggests ongoing investment in digital asset management and hosting."
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Marketing & Brand Partnerships",
+            "Content Production (Video/Music)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 294,
+              "elapsed_seconds": 4.57704496383667
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on race results, rider participation, and event marketing (editions 2025/2026). While this confirms the entity is operationally active, it contains zero technical infrastructure details, no job postings, and no explicit procurement signals (RFPs, tenders). It represents the 'public face' of the organization rather than operational back-office data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:44:01.618851",
+          "domain_explored": "https://voltacatalunyafemenina.cat",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:44:08.642634",
+          "domain_explored": "https://velowire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Broadcasting Partners: Eurosport, GCN, Discovery+",
+              "Local Broadcasters: TV3 (Catalonia), ETB (Basque Country)"
+            ]
+          },
+          "patterns_found": [
+            "Event Information Aggregation",
+            "Media Partnerships",
+            "Broadcasting Rights Distribution"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 463,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.967862129211426
+            }
+          ],
+          "reasoning": "The content from velowire.com is a third-party media aggregator providing logistical information (dates, routes) and broadcasting details for the Volta Ciclista a Catalunya. It does not contain primary source documentation regarding the organization's internal procurement activities, technology stack, or vendor selection processes. It confirms the event exists but offers no insight into purchasing behavior."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:44:14.864890",
+          "domain_explored": "https://teamvismaleaseabike.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Team Visma | Lease a Bike extends relationship with Garmin"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Sponsorship Renewals",
+            "Race Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.15615177154541
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Team Visma | Lease a Bike', a professional cycling team, not the 'Volta Ciclista a Catalunya' race organizer. While there is a mention of extending a relationship with Garmin (procurement activity), this is a vendor relationship for the team, not the race organizer entity being investigated. This content is irrelevant to the target entity's procurement signals."
+        }
+      ],
+      "total_input_tokens": 3325,
+      "total_output_tokens": 724,
+      "estimated_cost_usd": 0.020835
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volta Ciclista a Catalunya may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:44:14.866578"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.395467",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:27:32.587922"
+}

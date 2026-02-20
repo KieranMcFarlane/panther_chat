@@ -1,0 +1,196 @@
+{
+  "entity_id": "gabonese_volleyball_federation",
+  "entity_name": "Gabonese Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "shop.volleyballworld.com",
+    "delmarvasportsnetwork.com",
+    "apps.apple.com",
+    "finixsports.wordpress.com",
+    "paralympic.org",
+    "jvavolleyball.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gabonese_volleyball_federation",
+      "entity_name": "Gabonese Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://finixsports.wordpress.com",
+        "https://paralympic.org",
+        "https://jvavolleyball.org",
+        "https://shop.volleyballworld.com",
+        "https://apps.apple.com",
+        "https://delmarvasportsnetwork.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gabonese Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:25:28.407340",
+          "domain_explored": "https://shop.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify or similar enterprise suite)",
+              "Global Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global retail operations",
+              "International merchandise distribution"
+            ]
+          },
+          "patterns_found": [
+            "Global E-commerce Platform",
+            "Merchandise Retail",
+            "International Federation (FIVB) Asset"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.595902919769287
+            }
+          ],
+          "reasoning": "The scraped content is from 'volleyballworld.com', the official shop of the International Volleyball Federation (FIVB). It lists retail merchandise (jerseys for Netherlands, Italy, China, Poland) and is unrelated to the Gabonese Volleyball Federation. There are no signals regarding Gabonese procurement, governance, or local technology implementation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:25:31.805405",
+          "domain_explored": "https://delmarvasportsnetwork.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:25:49.719095",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Consumer App Storefront",
+            "Gaming and Entertainment Content",
+            "Generic Mobile Application Listings",
+            "Consumer Marketing (B2C)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 193,
+              "elapsed_seconds": 13.344490051269531
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of the Apple App Store, featuring global consumer trends, games (Roblox, Pok\u00e9mon), and utility apps. There is absolutely no connection to the Gabonese Volleyball Federation, nor are there any B2B procurement signals, job postings, or technology stack indicators relevant to the entity's governance or operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:25:52.634730",
+          "domain_explored": "https://finixsports.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:26:01.002855",
+          "domain_explored": "https://paralympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Governing Body Content",
+            "Major Event Marketing (Milano Cortina 2026)",
+            "Generic News Aggregation",
+            "Irrelevant Geographic Scope (International vs. Gabon)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 207,
+              "elapsed_seconds": 4.463421821594238
+            }
+          ],
+          "reasoning": "The content is from the International Paralympic Committee (IPC), a global governing body. The text focuses on general news, event marketing for the 2026 Winter Games, and historical information about the Paralympics. There is no mention of the Gabonese Volleyball Federation, nor are there any procurement signals, technology stacks, or vendor partnership details relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:26:05.069594",
+          "domain_explored": "https://jvavolleyball.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4345,
+      "total_output_tokens": 632,
+      "estimated_cost_usd": 0.022515
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gabonese Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:26:05.070485"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341124",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:36:09.259875"
+}

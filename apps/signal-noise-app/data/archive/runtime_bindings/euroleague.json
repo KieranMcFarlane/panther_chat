@@ -1,0 +1,353 @@
+{
+  "entity_id": "euroleague",
+  "entity_name": "EuroLeague",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "euroleaguebasketball.net",
+    "euroleague.tv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offers-activity-7237740683791355905-5qME",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404189313124478976-lppF",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404188397264596992-BlqG",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7356263496411447297-6lrU",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7345357800295882754-foxE",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7354430678161076224-qIZ7",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7298305684259901441-dPhk",
+      "https://www.linkedin.com/posts/euroleague-basketball_euroleague-jobs-activity-7254429248294141953-6Riq"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "euroleague",
+      "entity_name": "EuroLeague",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.22,
+        0.24
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7356263496411447297-6lrU",
+        "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7345357800295882754-foxE",
+        "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offers-activity-7237740683791355905-5qME",
+        "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404189313124478976-lppF",
+        "https://euroleaguebasketball.net",
+        "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404188397264596992-BlqG",
+        "https://euroleague.tv"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital CRM Expansion",
+        "IT Infrastructure Investment",
+        "Data Analytics Operations",
+        "Sustainability Governance",
+        "Content Production Scaling",
+        "ICT Infrastructure Expansion",
+        "Senior Technical Leadership Hiring",
+        "Operations Management",
+        "Senior Technical Product Leadership Hiring",
+        "Digital Product Strategy Expansion",
+        "Technology Stack Governance",
+        "Barcelona Tech Hub Growth"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "EuroLeague may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:57:43.740976",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Platforms (EuroLeague TV)",
+              "Video Streaming Infrastructure",
+              "Digital Rights Management (DRM)"
+            ],
+            "job_postings": [
+              "CEO Appointment (Chus Bueno)"
+            ],
+            "procurement_indicators": [
+              "Expansion of streaming services (Serie A Unipol rights)",
+              "New executive leadership (potential strategic shift)",
+              "Sponsorship activation (Motorola 'Magic Moments')"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Change",
+            "Digital Content Expansion (OTT)",
+            "Sponsorship Integration (Motorola)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 289,
+              "elapsed_seconds": 3.6760709285736084
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the appointment of a new CEO (Chus Bueno) is a significant governance event that often precedes strategic reviews and new vendor partnerships. Additionally, the expansion of EuroLeague TV to secure streaming rights for external leagues (Serie A) indicates active investment in digital infrastructure and content delivery platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:57:46.624956",
+          "domain_explored": "https://euroleague.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:57:53.990664",
+          "domain_explored": "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offers-activity-7237740683791355905-5qME",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Platforms (Salesforce/HubSpot implied)",
+              "Data Analytics Tools (Tableau/Power BI implied)",
+              "Marketing Automation Software"
+            ],
+            "job_postings": [
+              "Manager, Digital CRM",
+              "Executive, IT",
+              "Data Analyst",
+              "Graphic designer",
+              "Manager, Sustainability",
+              "Manager, Video Producer"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in IT & Data",
+              "New functional department creation (Sustainability)",
+              "Centralized operations in Barcelona (HQ)"
+            ]
+          },
+          "patterns_found": [
+            "Digital CRM Expansion",
+            "IT Infrastructure Investment",
+            "Data Analytics Operations",
+            "Sustainability Governance",
+            "Content Production Scaling"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 324,
+              "elapsed_seconds": 3.932724952697754
+            }
+          ],
+          "reasoning": "The discovery of specific job postings for 'Manager, Digital CRM', 'Executive, IT', and 'Data Analyst' provides direct evidence of active procurement and investment in technology and data infrastructure. Hiring for a 'Manager, Sustainability' also indicates new governance frameworks requiring vendor support."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:58:01.975450",
+          "domain_explored": "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404189313124478976-lppF",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ICT Infrastructure",
+              "Cloud Services",
+              "Network Operations",
+              "IT Service Management"
+            ],
+            "job_postings": [
+              "Senior Manager, ICT Infrastructure & Operations (Barcelona, Spain)"
+            ],
+            "procurement_indicators": [
+              "Senior Management Hiring (Budget Authority)",
+              "Infrastructure Operations (Vendor Management)",
+              "Location: Barcelona (HQ Operations)"
+            ]
+          },
+          "patterns_found": [
+            "ICT Infrastructure Expansion",
+            "Senior Technical Leadership Hiring",
+            "Operations Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.7641282081604
+            }
+          ],
+          "reasoning": "The discovery of a 'Senior Manager, ICT Infrastructure & Operations' role is a strong procurement signal. This seniority level indicates a structural need to manage vendors, oversee IT budgets, and execute infrastructure upgrades (hardware, cloud, networking). It confirms active investment in the technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:58:08.621442",
+          "domain_explored": "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7404188397264596992-BlqG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Product Management Tools (e.g., Jira, Productboard)",
+              "Cloud Infrastructure",
+              "API Management",
+              "Agile Frameworks"
+            ],
+            "job_postings": [
+              "Director of Technical Product Management (Barcelona, Spain)"
+            ],
+            "procurement_indicators": [
+              "Strategic hiring in Product/Tech",
+              "Investment in digital product governance",
+              "Centralization of technical decision-making"
+            ]
+          },
+          "patterns_found": [
+            "Senior Technical Product Leadership Hiring",
+            "Digital Product Strategy Expansion",
+            "Technology Stack Governance",
+            "Barcelona Tech Hub Growth"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1615,
+              "output_tokens": 286,
+              "elapsed_seconds": 3.424104928970337
+            }
+          ],
+          "reasoning": "The hiring of a Director of Technical Product Management is a strong procurement signal. This senior role typically involves budgetary authority for software tools, cloud infrastructure, and vendor selection for digital products. It confirms a continued trend of IT investment and digital transformation."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:58:15.585661",
+          "domain_explored": "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7356263496411447297-6lrU",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Software",
+              "Audio-Visual (AV) Systems",
+              "Video Editing Tools",
+              "In-Arena Display Technology"
+            ],
+            "job_postings": [
+              "Manager, Entertainment & Sports Production"
+            ],
+            "procurement_indicators": [
+              "Investment in live event quality",
+              "Potential vendor partnerships for show production",
+              "Audio-visual equipment procurement"
+            ]
+          },
+          "patterns_found": [
+            "Live Event Production Management",
+            "Audio-Visual Infrastructure Investment",
+            "Fan Experience Enhancement",
+            "In-Arena Technology Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1696,
+              "output_tokens": 353,
+              "elapsed_seconds": 3.5165281295776367
+            }
+          ],
+          "reasoning": "The hiring of a Manager for Entertainment & Sports Production indicates a focus on the live event product and in-arena fan experience. While this is an operational role rather than a direct IT procurement role, it suggests potential procurement needs for AV equipment, broadcast software, lighting, and fan engagement technologies (e.g., interactive displays, sound systems). It supports the broader trend of organizational growth and investment in the quality of the product, but it is a weaker signal for software/IT procurement specifically compared to the previous digital/CRM roles."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:58:22.865264",
+          "domain_explored": "https://www.linkedin.com/posts/euroleague-basketball_euroleague-basketball-careers-new-job-offer-activity-7345357800295882754-foxE",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud",
+              "Digital Asset Management (DAM) Systems"
+            ],
+            "job_postings": [
+              "Executive, Graphic Designer (Barcelona, Spain)"
+            ],
+            "procurement_indicators": [
+              "Internal capacity building for marketing materials",
+              "Potential future need for creative agencies or freelancers",
+              "Software licensing requirements for design tools"
+            ]
+          },
+          "patterns_found": [
+            "Creative Services Expansion",
+            "Digital Asset Management",
+            "Marketing Content Production"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1776,
+              "output_tokens": 269,
+              "elapsed_seconds": 3.846179723739624
+            }
+          ],
+          "reasoning": "The hiring of an Executive Graphic Designer indicates an internal investment in creative capabilities. While this is a direct hiring signal rather than a third-party procurement signal, it suggests a growing demand for design software, digital asset management tools, and potentially external creative vendor support to scale operations."
+        }
+      ],
+      "total_input_tokens": 9448,
+      "total_output_tokens": 1792,
+      "estimated_cost_usd": 0.055224
+    },
+    "procurement_signals": [
+      "Digital CRM Expansion",
+      "IT Infrastructure Investment",
+      "Data Analytics Operations",
+      "Sustainability Governance",
+      "Content Production Scaling",
+      "ICT Infrastructure Expansion",
+      "Senior Technical Leadership Hiring",
+      "Operations Management",
+      "Senior Technical Product Leadership Hiring",
+      "Digital Product Strategy Expansion",
+      "Technology Stack Governance",
+      "Barcelona Tech Hub Growth"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "EuroLeague may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:58:22.868340"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.415281",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:14.654878"
+}

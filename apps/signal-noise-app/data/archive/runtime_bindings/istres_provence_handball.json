@@ -1,0 +1,239 @@
+{
+  "entity_id": "istres_provence_handball",
+  "entity_name": "Istres Provence Handball",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "istreshandball.com",
+    "billetterie.istreshandball.com",
+    "globalsportsarchive.com",
+    "wikidata.org",
+    "billetterie.psg.fr",
+    "istres-tourisme.com",
+    "ffhandball.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "istres_provence_handball",
+      "entity_name": "Istres Provence Handball",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://istres-tourisme.com",
+        "https://globalsportsarchive.com",
+        "https://istreshandball.com",
+        "https://billetterie.istreshandball.com",
+        "https://billetterie.psg.fr",
+        "https://wikidata.org",
+        "https://ffhandball.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Istres Provence Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:59:49.586347",
+          "domain_explored": "https://istreshandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (External SaaS via billetterie.istreshandball.com)",
+              "Email Marketing Tool (Newsletter signup form)",
+              "CMS (Website content management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Solution",
+              "Partnership Management (Partenaires majeurs)",
+              "Fundraising Operations (Grand Loto)",
+              "Youth Training Logistics (Training Camp aux 2 Alpes)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Platform",
+            "Newsletter Marketing",
+            "Sponsorship/Partnership Structure",
+            "Event Management (Training Camps/Lottery)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 317,
+              "elapsed_seconds": 4.304182052612305
+            }
+          ],
+          "reasoning": "The content reveals a dedicated subdomain for ticketing (billetterie.istreshandball.com), indicating a procurement relationship with a ticketing provider. The presence of a newsletter signup suggests the use of email marketing tools. The 'Grand Loto' and 'Training Camp' events indicate potential procurement needs for event management, fundraising platforms, or travel/logistics services, though no active RFPs are visible."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:59:55.622397",
+          "domain_explored": "https://billetterie.istreshandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (SaaS)",
+              "E-commerce Storefront",
+              "Payment Gateway Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of paid events (Ticket sales)",
+              "Seasonal subscription management (Abonnement)",
+              "Multi-venue event coordination (Halle Polyvalente, Complexe Sportif Le Podium)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Ticketing Platform",
+            "Event Management Operations",
+            "E-commerce Integration",
+            "Multi-venue Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 282,
+              "elapsed_seconds": 2.72241473197937
+            }
+          ],
+          "reasoning": "The content confirms the active use of a third-party ticketing platform (billetterie subdomain) to manage sales for 'Liqui Moly Starligue' matches, subscriptions, and events (LOTO). This validates the 'Digital Ticketing' capability identified in Iteration 1. While it confirms the technology stack, it does not reveal new procurement intent (RFPs) or decision-makers, hence a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:00:01.173910",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Generic Sports Aggregator",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.035371780395508
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic navigation menu for global soccer leagues and competitions. It contains no information regarding Istres Provence Handball, its procurement activities, technology stack, or governance. This data is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:00:04.104459",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:00:07.002695",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:00:09.827793",
+          "domain_explored": "https://istres-tourisme.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:00:18.629210",
+          "domain_explored": "https://ffhandball.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Federation Portal",
+            "Club Locator Tool",
+            "Mass Participation Content",
+            "No Entity-Specific Procurement Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 615,
+              "output_tokens": 230,
+              "elapsed_seconds": 5.236965894699097
+            }
+          ],
+          "reasoning": "The content analyzed is from the French Handball Federation (FFHB), a national governing body. While relevant to the sport's ecosystem, it is a generic portal focused on mass participation, club discovery, and general regulations. It does not contain specific procurement signals, technology stack details, or governance information attributable to the target entity, Istres Provence Handball. The content is too broad and lacks the necessary specificity to indicate buying intent or operational infrastructure for the specific club."
+        }
+      ],
+      "total_input_tokens": 4860,
+      "total_output_tokens": 987,
+      "estimated_cost_usd": 0.029385
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Istres Provence Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:00:18.631475"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350409",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:34.085799"
+}

@@ -1,0 +1,408 @@
+{
+  "entity_id": "austrian_volleyball_federation",
+  "entity_name": "Austrian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "volleynet.at",
+    "inside.cev.eu",
+    "worldofvolley.com",
+    "eige.europa.eu",
+    "developmentaid.org",
+    "vldinamo.ru"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://at.linkedin.com/jobs/view/administration-ligen-und-backofficeverwaltung-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4270187014",
+      "https://at.linkedin.com/jobs/view/sportdirektor-in-volleyball-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4040852926"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_volleyball_federation",
+      "entity_name": "Austrian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://eige.europa.eu",
+        "https://developmentaid.org",
+        "https://volleynet.at",
+        "https://at.linkedin.com/jobs/view/sportdirektor-in-volleyball-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4040852926",
+        "https://inside.cev.eu",
+        "https://at.linkedin.com/jobs/view/administration-ligen-und-backofficeverwaltung-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4270187014",
+        "https://vldinamo.ru",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Procurement Authority (Budget Responsibility)",
+        "Infrastructure & Project Development Management",
+        "Partnership Acquisition (Akquise Kooperationspartner)",
+        "Event Organization & Commercialization Requirements",
+        "High-Level Executive Hiring (C-Suite/Director Level)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:54:30.103084",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical Event Hosting: Austria listed as host for EuroBeachVolley 2021 (Vienna) and EuroSnowVolley 2018 (St. Anton/Wagrain). Indicates past capability for event management, but no current procurement intent."
+            ]
+          },
+          "patterns_found": [
+            "Navigational Sitemap Structure",
+            "Historical Event Listings (2018-2022)",
+            "Generic Footer Links (Federation List)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 268,
+              "elapsed_seconds": 2.9012789726257324
+            }
+          ],
+          "reasoning": "The content is a navigational dump from the 'old' CEV (Confederation of European Volleyball) website. It lists historical events (e.g., 2021 Vienna, 2018 Wagrain), generic competition structures, and footer links to national federations (including Austria). There is no specific content regarding the Austrian Volleyball Federation's operations, technology stack, or procurement activities. The mention of 'Austria' is limited to a standard footer link."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:55:20.999776",
+          "domain_explored": "https://volleynet.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Detected via structured menu and content repetition)",
+              "Newsletter Marketing Tool (Generic/Custom form implementation)",
+              "GDPR Compliance Framework"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Marketing Operations (Newsletter acquisition)",
+              "Data Privacy Compliance (DSGVO link)"
+            ]
+          },
+          "patterns_found": [
+            "Repetitive UI Component Structure (Newsletter Widget)",
+            "GDPR/DSGVO Compliance Links",
+            "Content Management System Artifacts",
+            "Sports League Management Content (AVL)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 314,
+              "elapsed_seconds": 44.708484172821045
+            }
+          ],
+          "reasoning": "The content is heavily dominated by a repetitive newsletter signup form and sports league results (Austrian Volley League). While this indicates active digital engagement and the use of a Content Management System (CMS), it does not show explicit procurement intent (RFPs, tenders). However, the presence of a structured newsletter infrastructure and GDPR compliance links confirms digital operations, warranting a weak signal for potential future marketing or CRM tool procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:55:29.099524",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic News Aggregation Layout",
+            "Federational Development Content",
+            "Event Bidding News (EuroVolley)",
+            "Sports Science/Staffing Updates (Strength & Conditioning)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 203,
+              "elapsed_seconds": 4.611255168914795
+            }
+          ],
+          "reasoning": "The content provided is a list of general sports news articles regarding development, scouting, and event bidding for other federations (Azerbaijan, Montenegro, Slovenia). There are no specific references to the Austrian Volleyball Federation, nor are there any signals related to procurement, technology acquisition, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:55:39.339393",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Branding: Vodafone Sultanlar Ligi, SuperLega Credem Banca",
+              "Market Activity: Player transfer confirmations ('Olympiacos Confirm Signing')"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Sports News Aggregation",
+            "International League Coverage (Brazil, Italy, Poland, Turkey)",
+            "Transfer/Transaction News ('Done Deals')",
+            "Sponsorship Visibility (Vodafone, Credem Banca, HDI)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 247,
+              "elapsed_seconds": 7.152228116989136
+            }
+          ],
+          "reasoning": "The content is entirely focused on match results, league standings, and player transfers for the 2025-2026 season. While 'Done Deals' indicates commercial activity, it refers to player contracts, not B2B procurement or technology vendors. The site is a media outlet, not the governing body or a corporate procurement portal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:55:47.525713",
+          "domain_explored": "https://eige.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Reference to 'Gender-responsive Public Procurement' Toolkit (Policy context, not a tender)"
+            ]
+          },
+          "patterns_found": [
+            "Policy and Advocacy Content (Gender Equality Index 2025)",
+            "Social Research Data (Surveys on Violence/Harassment)",
+            "Educational Toolkits (Gender-responsive Procurement)",
+            "EU Agency Governance Structure (Management Board references)",
+            "Generic Newsletter Subscription Module"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.909477949142456
+            }
+          ],
+          "reasoning": "The scraped content is from the European Institute for Gender Equality (EIGE), an EU agency. While it mentions 'Gender-responsive Public Procurement' as a toolkit topic, this refers to policy guidelines for external entities, not EIGE's own procurement needs or vendor selection. The content focuses on social statistics, policy reports, and advocacy, which are irrelevant to the Austrian Volleyball Federation's technology or operational procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:55:53.764437",
+          "domain_explored": "https://developmentaid.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "reCAPTCHA"
+            ],
+            "job_postings": [
+              "Senior Grants Manager (IRC - Yemen)",
+              "Senior Procurement and Supply Manager (Swiss TPH)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International Development Aggregation",
+            "Humanitarian Aid Content (Somalia, South Sudan, Myanmar)",
+            "Generic Job Board Functionality",
+            "Third-Party Sector News (Editorial content)",
+            "Global Statistical Data (Tenders, Grants by region)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 244,
+              "elapsed_seconds": 2.971640110015869
+            }
+          ],
+          "reasoning": "The content is from a general international development portal (DevelopmentAid) focusing on global aid, humanitarian crises, and macro-trends. It lacks specific relevance to the Austrian Volleyball Federation, showing no signals of their specific procurement activities, technology stack, or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:56:02.329490",
+          "domain_explored": "https://vldinamo.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "intickets.ru (Ticketing iframe)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Russian Language Content (Cyrillic)",
+            "Team Roster and Player Management Data",
+            "Ticketing Integration (iframeab-pre9873.intickets.ru)",
+            "Domestic League Standings (Superliga 2026)",
+            "Sponsorship/Partner Structure (General/Leading/Technical Partners)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1723,
+              "output_tokens": 234,
+              "elapsed_seconds": 4.369798898696899
+            }
+          ],
+          "reasoning": "The content is exclusively related to the Russian women's volleyball club VC Dynamo Moscow. It contains operational data such as player rosters, match results, and ticket sales, but no information regarding the Austrian Volleyball Federation or its procurement activities. The entity is geographically and organizationally irrelevant to the target."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:56:10.919346",
+          "domain_explored": "https://at.linkedin.com/jobs/view/administration-ligen-und-backofficeverwaltung-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4270187014",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Standard Suite implied by 'g\u00e4ngigen Office-Anwendungen')"
+            ],
+            "job_postings": [
+              {
+                "title": "Administration Ligen- und Backofficeverwaltung",
+                "status": "Closed / Filled",
+                "location": "Wien, \u00d6sterreich",
+                "salary": "EUR 2.200,- brutto (40h)",
+                "contact": "office@volleynet.at"
+              }
+            ],
+            "procurement_indicators": [
+              "Financial workflow management (Invoicing/Funding)",
+              "Event organization logistics",
+              "League administration software usage implied"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Administration/Backoffice)",
+            "Financial Administration Indicators (Invoicing/Funding)",
+            "Event Organization Requirements",
+            "IT Skills Requirement (Office Applications)",
+            "Contact Domain Discovery (office@volleynet.at)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1818,
+              "output_tokens": 382,
+              "elapsed_seconds": 4.876105070114136
+            }
+          ],
+          "reasoning": "While this is a job posting rather than a direct tender, it confirms active administrative operations and explicitly mentions 'Mithilfe bei Finanzthemen' (Assistance in financial topics) and 'Ausstellen von Rechnungen' (Issuing invoices), indicating financial workflows that may require supporting software or tools. It also confirms the entity's location in Vienna and operational scale (National leagues, international events)."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T11:56:30.839603",
+          "domain_explored": "https://at.linkedin.com/jobs/view/sportdirektor-in-volleyball-at-%C3%B6sterreichischer-volleyballverband-austrian-volleyball-federation-4040852926",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Standard Office Applications (Microsoft Office / G Suite)",
+              "Email Communication Platforms (Standard for office@volleynet.at)"
+            ],
+            "job_postings": [
+              {
+                "title": "Sportdirektor*in Volleyball",
+                "status": "Closed / Filled",
+                "salary": "EUR 3.700,- brutto (Base)",
+                "contact": "Christoph Wimberger (Event- und Partnermanager)",
+                "focus": "Strategic Development, Budget Management, Infrastructure, Partner Acquisition"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget Responsibility: Explicit control over 'Sportbudget'",
+              "Infrastructure Management: Responsibility for 'Infrastruktur' and 'Projektentwicklung'",
+              "Vendor/Partner Management: 'Akquise & Betreuung Kooperationspartner' (Acquisition of partners)",
+              "Event Procurement: 'Vermarktungsaufgaben' (Marketing/Sales tasks) for National Team events",
+              "Stakeholder Procurement: Cooperation with 'Bundes-Sport GmbH' and 'Sport Austria'"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Procurement Authority (Budget Responsibility)",
+            "Infrastructure & Project Development Management",
+            "Partnership Acquisition (Akquise Kooperationspartner)",
+            "Event Organization & Commercialization Requirements",
+            "High-Level Executive Hiring (C-Suite/Director Level)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1910,
+              "output_tokens": 574,
+              "elapsed_seconds": 16.395686149597168
+            }
+          ],
+          "reasoning": "This job posting for 'Sportdirektor*in' (Sports Director) reveals significant procurement authority and strategic responsibility within the Austrian Volleyball Federation. Unlike the previous administrative role, this position explicitly includes 'Sportbudget' (Sports Budget) control, 'Infrastruktur' (Infrastructure) management, and 'Akquise & Betreuung Kooperationspartner' (Acquisition & Care of Cooperation Partners). This indicates direct involvement in vendor selection, partnership procurement, and infrastructure investment decisions. The role requires high-level stakeholder management with entities like Sport Austria and FIVB, suggesting a need for compliant, professional procurement processes."
+        }
+      ],
+      "total_input_tokens": 14506,
+      "total_output_tokens": 2747,
+      "estimated_cost_usd": 0.08472299999999999
+    },
+    "procurement_signals": [
+      "Strategic Procurement Authority (Budget Responsibility)",
+      "Infrastructure & Project Development Management",
+      "Partnership Acquisition (Akquise Kooperationspartner)",
+      "Event Organization & Commercialization Requirements",
+      "High-Level Executive Hiring (C-Suite/Director Level)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:56:30.847315"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.332796",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:59.893464"
+}

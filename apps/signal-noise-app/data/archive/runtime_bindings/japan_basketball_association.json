@@ -1,0 +1,189 @@
+{
+  "entity_id": "japan_basketball_association",
+  "entity_name": "Japan Basketball Association",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "japanbasketball.jp",
+    "zoominfo.com",
+    "wikidata.org",
+    "selling.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_basketball_association",
+      "entity_name": "Japan Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://japanbasketball.jp",
+        "https://zoominfo.com",
+        "https://wikidata.org",
+        "https://selling.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:24:17.762693",
+          "domain_explored": "https://japanbasketball.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-learning Platform (LMS)",
+              "Registration Management System",
+              "Ticketing Platform (implied by '\u30c1\u30b1\u30c3\u30c8\u6982\u8981')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "E-Learning Course Administration (Recurring)",
+              "Annual Registration System Operations (Feb/Mar Cycle)",
+              "Mid-term Policy Implementation (U15 Category)",
+              "CSR Partnership Execution (Softbank)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Education Platform Usage",
+            "Annual Registration Cycle",
+            "Strategic Policy Development",
+            "CSR/Partnership Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 351,
+              "elapsed_seconds": 14.465604782104492
+            }
+          ],
+          "reasoning": "The content reveals active usage of an e-learning platform for referee and coach certification ('E \u7d1a\u5be9\u5224', 'E \u7d1a\u30b3\u30fc\u30c1', 'TO \u57fa\u790e\u8b1b\u7fd2'). This indicates a reliance on digital education technology, likely requiring an LMS or vendor support. The '2025\u5e74\u5ea6\u5404\u7a2e\u767b\u9332' (2025 Annual Registration) signal suggests an active administrative cycle, potentially involving CRM or database management updates. The 'U15\u30ab\u30c6\u30b4\u30ea\u30fc\u4e2d\u671f\u65b9\u91dd2025' (U15 Category Mid-term Policy) indicates strategic planning which often precedes procurement for new programs. The partnership with Softbank 'NatureBank' shows a pattern of CSR/vendor collaboration."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:24:28.205014",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Content",
+            "Vendor Landing Page",
+            "Irrelevant Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.307323932647705
+            }
+          ],
+          "reasoning": "The provided content is a direct scrape of ZoomInfo's corporate marketing homepage. It contains generic sales pitches, testimonials from unrelated companies (Seismic, McGriff), and product feature descriptions. There is absolutely no specific information regarding the Japan Basketball Association's internal operations, technology stack, or procurement activities. This content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:24:39.209649",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Content",
+            "Community-Driven Data Model",
+            "Open Source Infrastructure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.021085739135742
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page and general documentation for Wikidata, a Wikimedia project. It contains generic information about the platform's structure, community events (e.g., WikidataCon), and technical documentation (SPARQL). There is no specific information regarding the Japan Basketball Association (JBA), its procurement activities, vendor selection, or technology stack. The content is entirely unrelated to the target entity's purchasing behavior or operational needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:24:46.392188",
+          "domain_explored": "https://selling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic News Aggregation",
+            "Irrelevant Financial Headlines",
+            "Lack of Entity Specificity",
+            "Token Truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.568132162094116
+            }
+          ],
+          "reasoning": "The content provided is a generic feed of global financial and technology news (e.g., Boeing, Nvidia, Bitcoin, UK supermarkets). There is no mention of the Japan Basketball Association (JBA), Japanese basketball, or specific procurement activities related to the entity. The content is truncated and appears to be a scraped list of trending headlines rather than targeted intelligence."
+        }
+      ],
+      "total_input_tokens": 5747,
+      "total_output_tokens": 966,
+      "estimated_cost_usd": 0.031730999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:24:46.396007"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.270069",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:25.430580"
+}

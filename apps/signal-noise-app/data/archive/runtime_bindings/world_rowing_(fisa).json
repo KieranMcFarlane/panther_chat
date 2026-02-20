@@ -1,0 +1,200 @@
+{
+  "entity_id": "world_rowing_(fisa)",
+  "entity_name": "World Rowing (FISA)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "worldrowing.com",
+    "wwf.panda.org",
+    "wikidata.org",
+    "rowingcanada.org",
+    "concept2.ch"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_rowing_(fisa)",
+      "entity_name": "World Rowing (FISA)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rowingcanada.org",
+        "https://concept2.ch",
+        "https://worldrowing.com",
+        "https://wwf.panda.org",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Rowing (FISA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:14:23.823636",
+          "domain_explored": "https://worldrowing.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1603)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:14:33.853429",
+          "domain_explored": "https://wwf.panda.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "directory_listing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 141,
+              "elapsed_seconds": 2.524844169616699
+            }
+          ],
+          "reasoning": "The content provided is from the World Wide Fund for Nature (WWF) website, not World Rowing (FISA). It contains a list of global office locations and links. There is zero relevance to the target entity's procurement activities, technology stack, or governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:14:42.970342",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "open_source_repository",
+            "community_portal"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.5043880939483643
+            }
+          ],
+          "reasoning": "The scraped content is from Wikidata, a free and open knowledge base, not World Rowing (FISA). The content describes data entities, community editing, and SPARQL queries. There is no relationship to World Rowing's procurement, operations, or technology stack. This appears to be a navigation error or irrelevant result in the scraping process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:14:52.287479",
+          "domain_explored": "https://rowingcanada.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript:void(0) (Indicates client-side navigation or placeholder links)",
+              "Concept2 (Event Sponsorship/Partnership)"
+            ],
+            "job_postings": [
+              "Lead Therapist (Posted Jan 23, 2026)"
+            ],
+            "procurement_indicators": [
+              "2026 RCA National Conference (Governance/Planning event)",
+              "2025 RCA Excellence Awards (Operational activity)"
+            ]
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "national_federation_site",
+            "job_postings",
+            "event_calendar"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 273,
+              "elapsed_seconds": 2.9027528762817383
+            }
+          ],
+          "reasoning": "The content analyzed is from Rowing Canada Aviron (rowingcanada.org), a distinct entity from the target World Rowing (FISA). While the site contains relevant industry signals (job postings, events), it represents a downstream stakeholder (National Federation) rather than the target organization. Procurement signals here do not directly inform FISA's procurement strategy."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:15:04.368737",
+          "domain_explored": "https://concept2.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_ecommerce_site",
+            "product_marketing",
+            "irrelevant_domain_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.622467041015625
+            }
+          ],
+          "reasoning": "The content is from Concept2, a vendor of rowing equipment (RowErg, SkiErg, BikeErg). While Concept2 is a relevant partner in the rowing ecosystem, this specific page is a localized product marketing site (German/Swiss) focused on consumer sales and apps. It does not contain procurement signals, decision-making structures, or technology investments related to World Rowing's internal operations."
+        }
+      ],
+      "total_input_tokens": 5796,
+      "total_output_tokens": 780,
+      "estimated_cost_usd": 0.029088000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Rowing (FISA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:15:04.369899"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.461267",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:04.052207"
+}

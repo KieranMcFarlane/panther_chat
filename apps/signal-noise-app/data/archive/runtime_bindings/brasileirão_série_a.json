@@ -1,0 +1,251 @@
+{
+  "entity_id": "brasileir\u00e3o_s\u00e9rie_a",
+  "entity_name": "Brasileir\u00e3o S\u00e9rie A",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "ge.globo.com",
+    "lance.com.br",
+    "claro.com.br",
+    "cnnbrasil.com.br",
+    "esportes.r7.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mx.linkedin.com/jobs/view/live-data-production-editor-sports-seasonal-part-time-at-nielsen-4302926128"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brasileir\u00e3o_s\u00e9rie_a",
+      "entity_name": "Brasileir\u00e3o S\u00e9rie A",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ge.globo.com",
+        "https://esportes.r7.com",
+        "https://claro.com.br",
+        "https://cnnbrasil.com.br",
+        "https://lance.com.br",
+        "https://mx.linkedin.com/jobs/view/live-data-production-editor-sports-seasonal-part-time-at-nielsen-4302926128"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brasileir\u00e3o S\u00e9rie A may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:05:44.029620",
+          "domain_explored": "https://ge.globo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Personalization Engines",
+              "Customer Feedback Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User Feedback Surveys",
+            "Customer Experience (CX) Optimization",
+            "Personalization Algorithms"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 508,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.354949951171875
+            }
+          ],
+          "reasoning": "The scraped content is a user interface (UI) element from Globo Esporte (ge.globo.com) consisting of a satisfaction survey (NPS) and a feedback form regarding content personalization. This is a consumer-facing feature of the media outlet, not a procurement signal or internal operational document from the Brasileir\u00e3o S\u00e9rie A organization. It indicates the use of personalization technology by the publisher, but provides no insight into the league's purchasing intent, vendor selection, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:06:02.059411",
+          "domain_explored": "https://lance.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Match Scheduling",
+            "League Standings",
+            "Social Media Widgets"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 153,
+              "elapsed_seconds": 12.758563756942749
+            }
+          ],
+          "reasoning": "The content is purely sports journalism, focusing on match results (Supercopa, Paulist\u00e3o), team rankings, and upcoming game schedules. There are no corporate governance signals, technology infrastructure details, or procurement intent visible in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:06:17.008935",
+          "domain_explored": "https://claro.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Product Marketing",
+            "Consumer Sales Funnels",
+            "Telecommunications Service Bundling",
+            "E-commerce Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 174,
+              "elapsed_seconds": 4.938032150268555
+            }
+          ],
+          "reasoning": "The content is exclusively focused on B2C (Business-to-Consumer) sales of internet, mobile, and TV plans. It contains no information regarding Brasileir\u00e3o S\u00e9rie A's internal operations, technology stack, or procurement needs. The entity appears to be a service provider or sponsor, not the target of the analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:06:26.419780",
+          "domain_explored": "https://cnnbrasil.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Political Coverage",
+            "Sports Journalism",
+            "Financial Market Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.3626959323883057
+            }
+          ],
+          "reasoning": "The scraped content from CNN Brasil is a general news feed covering politics (STF, Congress), economics (Mercosul-UE, Fed), and sports (Corinthians, Palmeiras). While it mentions 'Intelig\u00eancia Artificial' in a political headline regarding the Chamber of Deputies, this refers to legislative regulation (AI Acts/Laws) rather than the procurement of technology by the Brasileir\u00e3o S\u00e9rie A entity itself. There are no signals of RFPs, vendor selection, or technology stack implementation specific to the league organization."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:06:36.516195",
+          "domain_explored": "https://esportes.r7.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "League Standings & Results",
+            "Clickbait Content Strategy",
+            "Video Entertainment (Shorts)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.8176472187042236
+            }
+          ],
+          "reasoning": "The content from R7 Esportes is purely editorial, focusing on match results, player transfers, and league standings. There are no indicators of corporate procurement, technology infrastructure, or business operations related to the Brasileir\u00e3o S\u00e9rie A entity itself."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:06:50.467179",
+          "domain_explored": "https://mx.linkedin.com/jobs/view/live-data-production-editor-sports-seasonal-part-time-at-nielsen-4302926128",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Manager, Global Partnerships - Los Angeles Lakers",
+              "Brand Activation Manager - MrBeast",
+              "Product Solutions Specialist - MrBeast",
+              "Senior Account Manager (NY) - Netflix"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Job Aggregation",
+            "Irrelevant Industry Sectors (Beauty, General Entertainment)",
+            "Geographic Mismatch (United States vs Brazil)",
+            "Vendor Ecosystem (Nielsen, Netflix, MrBeast)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.953221082687378
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page primarily listing opportunities in the United States for entities like Nielsen, Netflix, and L'Or\u00e9al. While Nielsen is a vendor in the sports data space, this specific page does not contain procurement signals, RFPs, or technology investments specific to 'Brasileir\u00e3o S\u00e9rie A' or its organizing body. The geographic and entity focus is misaligned with the target."
+        }
+      ],
+      "total_input_tokens": 8003,
+      "total_output_tokens": 1229,
+      "estimated_cost_usd": 0.042443999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brasileir\u00e3o S\u00e9rie A may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:06:50.468566"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419067",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:16.423708"
+}

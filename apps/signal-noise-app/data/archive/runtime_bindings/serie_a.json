@@ -1,0 +1,189 @@
+{
+  "entity_id": "serie_a",
+  "entity_name": "Serie A",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "en.legaseriea.it",
+    "italyseriea.com",
+    "football-italia.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ee.linkedin.com/jobs/view/esports-trader-at-genius-sports-2658697683?refId=2Bj2R8om8e8Sw8Z49MsC3A%3D%3D&trackingId=eWVUxZo7BHyCqZ2xVLgqVQ%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://mt.linkedin.com/jobs/view/209993569"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "serie_a",
+      "entity_name": "Serie A",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://en.legaseriea.it",
+        "https://ee.linkedin.com/jobs/view/esports-trader-at-genius-sports-2658697683?refId=2Bj2R8om8e8Sw8Z49MsC3A%3D%3D&trackingId=eWVUxZo7BHyCqZ2xVLgqVQ%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://italyseriea.com",
+        "https://football-italia.net",
+        "https://mt.linkedin.com/jobs/view/209993569"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Serie A may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:08:17.793619",
+          "domain_explored": "https://en.legaseriea.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:08:28.795507",
+          "domain_explored": "https://italyseriea.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General informational content",
+            "Fan-focused statistics",
+            "Historical data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1344,
+              "output_tokens": 163,
+              "elapsed_seconds": 7.081682920455933
+            }
+          ],
+          "reasoning": "The scraped content from 'italyseriea.com' is purely informational and descriptive, focusing on league structure, historical winners, and stadium attendance. It contains no corporate governance details, technology infrastructure information, or business operations data relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:08:31.725319",
+          "domain_explored": "https://football-italia.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:08:41.787283",
+          "domain_explored": "https://ee.linkedin.com/jobs/view/esports-trader-at-genius-sports-2658697683?refId=2Bj2R8om8e8Sw8Z49MsC3A%3D%3D&trackingId=eWVUxZo7BHyCqZ2xVLgqVQ%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Data Capture Systems",
+              "Automated Streaming Technology",
+              "Odds Compilation Software"
+            ],
+            "job_postings": [
+              "eSports Trader (Genius Sports - Vendor side)"
+            ],
+            "procurement_indicators": [
+              "Official Data Partner: Genius Sports",
+              "Service Scope: Data capture, management, analysis, integrity protection",
+              "Commercial Partnership: Betting and media ecosystem integration"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation",
+            "Data Rights Management",
+            "Betting/Integrity Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.754509925842285
+            }
+          ],
+          "reasoning": "While this is a job posting for Genius Sports (a vendor), it explicitly confirms Genius Sports as the 'official data, technology and commercial partner' of Serie A. This validates an active vendor relationship for data capture, management, and betting integrity. It is a 'Weak Accept' because it confirms existing procurement (vendor ecosystem) rather than new active solicitations by the league itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:08:47.931473",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/209993569",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Excel"
+            ],
+            "job_postings": [
+              "Odds-trader with focus on European sports (Scandistaff - 9 years ago)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Betting Industry Operations",
+            "Labor Outsourcing (Malta/Gibraltar)",
+            "Data Consumption (Odds Trading)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.878056049346924
+            }
+          ],
+          "reasoning": "The content is a job posting for a third-party betting operator (recruited via Scandistaff) seeking an Odds Trader. While it mentions 'Serie A' as a league to monitor, this indicates data consumption for betting purposes, not procurement activity by the league entity itself. The post is 9 years old, further diminishing its relevance to current procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 4410,
+      "total_output_tokens": 678,
+      "estimated_cost_usd": 0.0234
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Serie A may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:08:47.932811"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418371",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:09.291546"
+}

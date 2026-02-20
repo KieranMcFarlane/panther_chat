@@ -1,0 +1,146 @@
+{
+  "entity_id": "ethiopian_basketball_federation",
+  "entity_name": "Ethiopian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "pacifictigers.com",
+    "ethiopianbusinessreview.net",
+    "towsontigers.com",
+    "jnssm.uk.ac.ir"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ethiopian_basketball_federation",
+      "entity_name": "Ethiopian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://towsontigers.com",
+        "https://ethiopianbusinessreview.net",
+        "https://jnssm.uk.ac.ir",
+        "https://pacifictigers.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ethiopian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:22:51.174569",
+          "domain_explored": "https://pacifictigers.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:23:01.432300",
+          "domain_explored": "https://ethiopianbusinessreview.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General business news aggregation",
+            "Macro-economic indicators (Banking, Telecom, Aviation)",
+            "No specific entity mentions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 178,
+              "elapsed_seconds": 4.551044225692749
+            }
+          ],
+          "reasoning": "The scraped content consists of general business news headlines regarding major Ethiopian entities (Ethiopian Airlines, Ethio Telecom, Awash Bank). There is absolutely no mention of the Ethiopian Basketball Federation, sports procurement, or related federation activities. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:23:04.780124",
+          "domain_explored": "https://towsontigers.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:23:12.477722",
+          "domain_explored": "https://jnssm.uk.ac.ir",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iThenticate (Plagiarism detection)",
+              "OJS (Implied by journal structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic journal platform",
+            "Focus on sports management research",
+            "Open-access publishing model",
+            "Use of plagiarism detection software (iThenticate)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.2039990425109863
+            }
+          ],
+          "reasoning": "The content is the homepage of the 'Journal of New Studies in Sport Management' (JNSSM), an academic publication hosted by Shahid Bahonar University of Kerman (Iran). While the subject matter (sports management) aligns broadly with the target entity, this is a scholarly journal for research dissemination, not the operational body of the Ethiopian Basketball Federation. There are no procurement signals, job postings, or vendor partnerships related to the target entity."
+        }
+      ],
+      "total_input_tokens": 2883,
+      "total_output_tokens": 430,
+      "estimated_cost_usd": 0.015099000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ethiopian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:23:12.479715"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269010",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:54.412777"
+}

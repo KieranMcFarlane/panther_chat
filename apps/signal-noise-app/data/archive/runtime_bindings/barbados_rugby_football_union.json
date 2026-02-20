@@ -1,0 +1,158 @@
+{
+  "entity_id": "barbados_rugby_football_union",
+  "entity_name": "Barbados Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "olympic.org.bb",
+    "sportingbarbados.com",
+    "rugbyamericasnorth.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "barbados_rugby_football_union",
+      "entity_name": "Barbados Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://rugbyamericasnorth.com",
+        "https://olympic.org.bb",
+        "https://sportingbarbados.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Barbados Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:49:02.174535",
+          "domain_explored": "https://olympic.org.bb",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Virtual Reality (VR) (Museum Feature)",
+              "Social Media Management (Twitter/X, Instagram integration)",
+              "Digital Reporting (PDF Annual Reports)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Release of 2024 Annual Report (Indicates financial closure/new budget cycle)",
+              "Launch of 'Sustainability Strategy 2025-2030' (Indicates long-term procurement planning)",
+              "Implementation of 'Re-Presenting Female Leaders in Sport' workshop (Program execution)",
+              "Olympic Museum upgrades (VR Feature)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Governance (Sustainability Strategy 2025-2030)",
+            "Digital Engagement (VR Museum Feature)",
+            "Operational Reporting (2024 Annual Report)",
+            "Educational Programs (Workshops & Academy)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 386,
+              "elapsed_seconds": 5.58894419670105
+            }
+          ],
+          "reasoning": "The content reveals active strategic planning (Sustainability Strategy 2025-2030) and digital infrastructure investments (VR Museum Feature). While these are not direct tenders for the Rugby Union, the BOA is the governing body for National Federations (including Rugby). The 'Sustainability Strategy' and 'Annual Report' indicate budget cycles and potential funding allocation for member federations. The VR feature suggests a willingness to adopt new technology, which could trickle down to federations seeking modernization."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:49:09.538515",
+          "domain_explored": "https://sportingbarbados.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Media Coverage",
+            "Event Promotion (CPL, Golf, Cricket)",
+            "Sponsorship Recognition (Diamonds International, Chefette)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.8100271224975586
+            }
+          ],
+          "reasoning": "The content is from a general sports tourism and news portal ('Sporting Barbados'). While it mentions local sports entities, it focuses on event results, athlete profiles, and general news rather than the internal governance, operations, or procurement needs of the Barbados Rugby Football Union. No specific signals related to Rugby Union operations or RFU spending were detected."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:49:16.808175",
+          "domain_explored": "https://rugbyamericasnorth.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Youth Leadership Academy (Potential for educational services/tech procurement)",
+              "RAN Sevens (Event management/travel logistics)",
+              "Hurricane Relief (Disaster aid/funding allocation)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance (RAN)",
+            "Youth Development Programming",
+            "Event Logistics (RAN Sevens)",
+            "Crisis Response Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.910313844680786
+            }
+          ],
+          "reasoning": "While this is the regional governing body (Rugby Americas North) and not the direct procurement site for the Barbados Rugby Football Union (BRFU), it provides critical context on BRFU's ecosystem. The 'Youth Leadership Academy' and 'RAN Sevens' indicate regional programs that likely require local implementation, technology, or travel procurement by member unions like Barbados. It confirms the entity operates within a structured international federation."
+        }
+      ],
+      "total_input_tokens": 4283,
+      "total_output_tokens": 853,
+      "estimated_cost_usd": 0.025644
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Barbados Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:49:16.809428"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.285926",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:01.341518"
+}

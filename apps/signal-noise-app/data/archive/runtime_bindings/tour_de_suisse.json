@@ -1,0 +1,172 @@
+{
+  "entity_id": "tour_de_suisse",
+  "entity_name": "Tour de Suisse",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "tourdesuisse.ch",
+    "cyclingnews.com",
+    "tds-velo.ch",
+    "tissottiming.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_de_suisse",
+      "entity_name": "Tour de Suisse",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://tourdesuisse.ch",
+        "https://tissottiming.com",
+        "https://cyclingnews.com",
+        "https://tds-velo.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour de Suisse may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:33:25.140447",
+          "domain_explored": "https://tourdesuisse.ch",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1337)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:33:40.401971",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_news_coverage",
+            "race_results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 152,
+              "elapsed_seconds": 8.71671986579895
+            }
+          ],
+          "reasoning": "The provided content from Cyclingnews.com is exclusively sports journalism covering race results (Cyclo-cross World Championships, Cadel Evans Great Ocean Road Race) and rider equipment. There is no mention of Tour de Suisse organization, business operations, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:33:56.493713",
+          "domain_explored": "https://tds-velo.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Issuu (Digital Publishing/Booklet)",
+              "Likely E-commerce Platform (Implied by 'Konfigurator' and 'Modellfinder')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_product_catalog",
+            "b2c_sales_workflow",
+            "product_showroom",
+            "consumer_warranty_services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 249,
+              "elapsed_seconds": 8.787180185317993
+            }
+          ],
+          "reasoning": "The content analyzed from tds-velo.ch is strictly B2C (Business-to-Consumer) focused, promoting the sale of 'Tour de Suisse' branded bicycles and e-bikes. It details a customer journey for purchasing bikes (Model selection, Configuration, Test drives) and consumer services (Warranty, Recall actions). This represents the commercial output of the entity rather than the operational procurement, governance, or B2B vendor sourcing signals required for the target entity analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:34:07.934432",
+          "domain_explored": "https://tissottiming.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Transponder Timing Systems",
+              "TV Graphics Software",
+              "Data Tracking Hardware",
+              "Real-time Scoring Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Timekeeper Partnership (Tour de Suisse)",
+              "Vendor: Tissot Timing",
+              "Service: Event Data Management & Timekeeping"
+            ]
+          },
+          "patterns_found": [
+            "vendor_partnership",
+            "timing_infrastructure",
+            "data_services_provider",
+            "event_tech_stack"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 473,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.770904779434204
+            }
+          ],
+          "reasoning": "Tissot Timing is the official timekeeper for the Tour de Suisse (and UCI cycling). This content reveals a critical vendor partnership and the specific technology stack used for race logistics and data. While not a direct procurement document, it identifies a key supplier relationship and the technological capabilities (timing, data tracking, TV graphics) that are procured by the event organizers."
+        }
+      ],
+      "total_input_tokens": 3253,
+      "total_output_tokens": 676,
+      "estimated_cost_usd": 0.019899
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour de Suisse may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:34:07.936233"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.402019",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:13.723146"
+}

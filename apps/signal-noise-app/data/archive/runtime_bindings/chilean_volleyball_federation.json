@@ -1,0 +1,175 @@
+{
+  "entity_id": "chilean_volleyball_federation",
+  "entity_name": "Chilean Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "evoting.com",
+    "wikiwand.com",
+    "betsapi.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/performance-and-promotion-specialist-18-24-month-project-at-smbc-group-4366225287"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chilean_volleyball_federation",
+      "entity_name": "Chilean Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://evoting.com",
+        "https://betsapi.com",
+        "https://www.linkedin.com/jobs/view/performance-and-promotion-specialist-18-24-month-project-at-smbc-group-4366225287",
+        "https://wikiwand.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chilean Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:42:09.125942",
+          "domain_explored": "https://evoting.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EVoters (Electronic Voting System)",
+              "EHolders",
+              "EParticipa",
+              "EAsambleas",
+              "EAssistance"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_site_navigation",
+            "product_portfolio_structure",
+            "b2b_service_marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 272,
+              "elapsed_seconds": 5.6770179271698
+            }
+          ],
+          "reasoning": "The content provided is a navigation menu and site map scraped from 'evoting.com', which is a vendor website (E-Voting) offering electronic voting platforms. While the Chilean Volleyball Federation (Fevochi) is a potential customer for such services (elections/assembly management), this content does not contain specific signals regarding Fevochi's current procurement activities, technology stack, or intent to purchase. It merely describes the vendor's capabilities (Security, Platforms like EVoters/EAsambleas). There is no mention of the Chilean Volleyball Federation in the text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:42:11.909286",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:42:18.945553",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_data_feed",
+            "live_score_aggregation",
+            "api_service_pricing",
+            "irrelevant_content_match"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 167,
+              "elapsed_seconds": 3.353114128112793
+            }
+          ],
+          "reasoning": "The content is from a sports betting data provider (BetsAPI). While it lists 'Volleyball' as a category, the context is purely for gambling odds and live scores, not federation procurement or governance. There are no signals of the Chilean Volleyball Federation purchasing services or technology here."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:42:26.417174",
+          "domain_explored": "https://www.linkedin.com/jobs/view/performance-and-promotion-specialist-18-24-month-project-at-smbc-group-4366225287",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Performance and Promotion Specialist",
+                "entity": "SMBC Group",
+                "location": "New York, NY",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "financial_services_sector",
+            "human_resources_role",
+            "job_posting_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.8659379482269287
+            }
+          ],
+          "reasoning": "The content is a job posting for SMBC Group (Sumitomo Mitsui Banking Corporation), a global financial institution. While SMBC has a presence in the Americas (including Chile), the role is for a 'Performance and Promotion Specialist' within their HR/Talent Management division in New York. This is unrelated to the Chilean Volleyball Federation's needs for sports technology, event management, or federation-specific procurement."
+        }
+      ],
+      "total_input_tokens": 4302,
+      "total_output_tokens": 693,
+      "estimated_cost_usd": 0.023301000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chilean Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:42:26.417820"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.336074",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:35.307945"
+}

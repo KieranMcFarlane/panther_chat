@@ -1,0 +1,340 @@
+{
+  "entity_id": "yokohama_f._marinos",
+  "entity_name": "Yokohama F. Marinos",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "f-marinos.com",
+    "irisoele.com",
+    "nissan-global.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jo-yanagawa-cfa-6321bb179_find-jobs-hays-japan-activity-6610348830850420736-ZJJA",
+      "https://www.linkedin.com/jobs/view/partnerships-intern-at-new-york-city-fc-4344225960",
+      "https://www.linkedin.com/jobs/view/director-ticket-operations-at-new-york-city-fc-4358194529",
+      "https://www.linkedin.com/jobs/view/part-time-associate-growth-marketing-at-new-york-city-fc-4341194377",
+      "https://www.linkedin.com/jobs/view/street-team-live-events-at-new-york-city-fc-4352450994",
+      "https://www.linkedin.com/jobs/view/ticket-sales-and-service-intern-at-new-york-city-fc-4344260478"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "yokohama_f._marinos",
+      "entity_name": "Yokohama F. Marinos",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/director-ticket-operations-at-new-york-city-fc-4358194529",
+        "https://www.linkedin.com/jobs/view/partnerships-intern-at-new-york-city-fc-4344225960",
+        "https://www.linkedin.com/jobs/view/part-time-associate-growth-marketing-at-new-york-city-fc-4341194377",
+        "https://nissan-global.com",
+        "https://irisoele.com",
+        "https://f-marinos.com",
+        "https://www.linkedin.com/jobs/view/street-team-live-events-at-new-york-city-fc-4352450994",
+        "https://www.linkedin.com/posts/jo-yanagawa-cfa-6321bb179_find-jobs-hays-japan-activity-6610348830850420736-ZJJA"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Yokohama F. Marinos may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:56:39.715219",
+          "domain_explored": "https://f-marinos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive content structure",
+            "Standard match schedule formatting",
+            "Public facing operational data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.5804669857025146
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of repetitive match schedule data (dates, opponents, venues) and standard navigation labels. There are no explicit mentions of technology vendors, job openings, or strategic initiatives that indicate procurement activity. The content is purely operational fan engagement material."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:56:51.704576",
+          "domain_explored": "https://irisoele.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Mismatch",
+            "Standard Corporate News Feed",
+            "Product Catalog Structure",
+            "Investor Relations (IR) Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.9829819202423096
+            }
+          ],
+          "reasoning": "The scraped content is from 'Iriso Electronics' (\u30a4\u30ea\u30bd\u96fb\u5b50\u5de5\u696d), a manufacturer of electronic connectors, and is completely unrelated to the target entity 'Yokohama F. Marinos'. The content consists of product releases, financial reports, and event listings for Iriso, offering zero procurement intelligence for the football club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:57:09.556463",
+          "domain_explored": "https://nissan-global.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ProPILOT (Next-gen AI)",
+              "e-POWER"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Nissan Global vs. Yokohama F. Marinos)",
+            "Generic Corporate Marketing Content",
+            "Product Promotion (X-Trail, LEAF)",
+            "High-Level Branding (Sustainability, Innovation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 249,
+              "elapsed_seconds": 10.330300092697144
+            }
+          ],
+          "reasoning": "The scraped content is from the global corporate homepage of Nissan Motor Co., Ltd., not Yokohama F. Marinos. While Nissan is the parent company, this specific content focuses on consumer automotive products (LEAF, X-Trail), high-level sustainability goals, and general brand storytelling. It lacks the specific operational, procurement, or technological signals relevant to the day-to-day management of the football club. The content is purely promotional B2C marketing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:57:18.047538",
+          "domain_explored": "https://www.linkedin.com/posts/jo-yanagawa-cfa-6321bb179_find-jobs-hays-japan-activity-6610348830850420736-ZJJA",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Media Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Hays (Official Partner / Recruitment Services)",
+              "Partnership Status: Active (as of 6y ago)"
+            ]
+          },
+          "patterns_found": [
+            "Official Partnership Confirmation",
+            "Sponsorship Alignment",
+            "Corporate Social Engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1541,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.544952869415283
+            }
+          ],
+          "reasoning": "The content confirms an existing commercial partnership with Hays, a global recruitment firm. While the post is celebratory (J-League Champions), the explicit mention of 'Official Partner' status validates a vendor relationship. This indicates the club engages with external agencies for HR/Recruitment services, which is a procurement-relevant signal, though the post itself is not a direct RFP or job listing."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:57:26.977724",
+          "domain_explored": "https://www.linkedin.com/jobs/view/partnerships-intern-at-new-york-city-fc-4344225960",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (PowerPoint, Excel, Word)",
+              "Apple TV (Streaming context)"
+            ],
+            "job_postings": [
+              {
+                "title": "Partnerships Intern",
+                "entity": "New York City FC",
+                "department": "Partnerships",
+                "relevance": "Low (Wrong Entity)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (New York City FC vs. Yokohama F. Marinos)",
+            "Standard Internship Posting",
+            "Operational Support Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.596144914627075
+            }
+          ],
+          "reasoning": "The content is a job description for a Partnerships Intern role at New York City FC (MLS). While this provides insight into the operational structure of a football club, it is for a different entity (NYCFC) and a junior internship role with no procurement authority or strategic technology purchasing power. It does not contain signals relevant to Yokohama F. Marinos."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:57:35.921870",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-ticket-operations-at-new-york-city-fc-4358194529",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Paciolan (Ticketing Platform)"
+            ],
+            "job_postings": [
+              "Director, Ticket Operations (New York City FC) - Irrelevant Entity"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (New York City FC vs. Yokohama F. Marinos)",
+            "Generic Job Board Aggregation",
+            "Vendor-Centric Content (Paciolan)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.3760759830474854
+            }
+          ],
+          "reasoning": "The content provided is a LinkedIn job listing for a 'Director, Ticket Operations' role at New York City FC, not Yokohama F. Marinos. While the URL and title suggest a relevant operational role, the entity is incorrect. Additionally, the visible text is dominated by generic job board recommendations for other entities (UCLA, Pickleball, etc.) and vendor branding (Paciolan), offering no specific procurement intelligence regarding Yokohama F. Marinos."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:57:59.276613",
+          "domain_explored": "https://www.linkedin.com/jobs/view/part-time-associate-growth-marketing-at-new-york-city-fc-4341194377",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Director, Practical Nursing Program",
+              "Practical Nursing Instructor - Part-Time",
+              "Architectural/CAD Instructor"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Lancaster County Career And Technology Center vs. Yokohama F. Marinos)",
+            "Geographic Irrelevance (Pennsylvania, USA vs. Japan)",
+            "Educational Sector Content (Nursing/CAD Education vs. Professional Sports)",
+            "Generic Job Board Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1758,
+              "output_tokens": 279,
+              "elapsed_seconds": 17.71838688850403
+            }
+          ],
+          "reasoning": "The content provided is a job listing page for the Lancaster County Career And Technology Center in Pennsylvania. There is no connection to Yokohama F. Marinos, Japanese football, or relevant procurement activities for the target entity. The URL also suggests a redirect or error, as the content does not match the 'New York City FC' title implied by the input URL, but regardless, it is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T01:58:13.809303",
+          "domain_explored": "https://www.linkedin.com/jobs/view/street-team-live-events-at-new-york-city-fc-4352450994",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Street Team, Live Events",
+                "entity": "New York City FC",
+                "department": "Marketing",
+                "location": "New York, NY",
+                "type": "Part-Time",
+                "relevance": "Low"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (New York City FC vs. Yokohama F. Marinos)",
+            "Geographic Irrelevance (New York, NY vs. Yokohama, Japan)",
+            "Standard Job Board Formatting",
+            "Operational/Logistical Role Description"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1856,
+              "output_tokens": 314,
+              "elapsed_seconds": 5.342695951461792
+            }
+          ],
+          "reasoning": "The content provided is a job description for a 'Street Team, Live Events' role at New York City FC. This represents a clear entity mismatch with the target entity, Yokohama F. Marinos. While the role involves event logistics and brand ambassadorship, it is an operational, part-time hourly position ($19/hr) focused on execution rather than procurement decision-making or technology investment. The geographic context (New York) further confirms the irrelevance to the Japanese target entity."
+        }
+      ],
+      "total_input_tokens": 12670,
+      "total_output_tokens": 1955,
+      "estimated_cost_usd": 0.067335
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Yokohama F. Marinos may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:58:13.828067"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.131194",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:32.602931"
+}

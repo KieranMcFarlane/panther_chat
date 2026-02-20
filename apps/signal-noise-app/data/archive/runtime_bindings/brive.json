@@ -1,0 +1,514 @@
+{
+  "entity_id": "brive",
+  "entity_name": "Brive",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "emerging_professional_league_clubs",
+  "discovered_domains": [
+    "brive-tourisme.com",
+    "brive.com",
+    "brive.fr",
+    "cabrive-rugby.com",
+    "brivesoluciones.com",
+    "lovelybrivefestival.com",
+    "aeroport-brive-vallee-dordogne.com",
+    "brive-tonneliers.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/job-emplois-r%C3%A9gion-de-brive-la-gaillarde-france",
+      "https://www.linkedin.com/jobs/explo-jobs-worldwide",
+      "https://www.linkedin.com/jobs/search/?currentJobId=2839542770&f_TPR=r86400&geoId=91000002&keywords=pharmacovigilance%20jobs",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3063442079&f_TPR=r2592000&geoId=105015875&keywords=g%C3%A9omaticien&location=France",
+      "https://fr.linkedin.com/jobs/view/customer-service-representative-france-at-mouser-electronics-4310973883"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brive",
+      "entity_name": "Brive",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://brive.com",
+        "https://brive-tonneliers.com",
+        "https://brive-tourisme.com",
+        "https://brivesoluciones.com",
+        "https://aeroport-brive-vallee-dordogne.com",
+        "https://www.linkedin.com/jobs/explo-jobs-worldwide",
+        "https://fr.linkedin.com/jobs/view/customer-service-representative-france-at-mouser-electronics-4310973883",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3063442079&f_TPR=r2592000&geoId=105015875&keywords=g%C3%A9omaticien&location=France",
+        "https://fr.linkedin.com/jobs/job-emplois-r%C3%A9gion-de-brive-la-gaillarde-france",
+        "https://cabrive-rugby.com",
+        "https://brive.fr",
+        "https://www.linkedin.com/jobs/search/?currentJobId=2839542770&f_TPR=r86400&geoId=91000002&keywords=pharmacovigilance%20jobs",
+        "https://lovelybrivefestival.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Municipal Governance Portal",
+        "Public Works & Infrastructure Projects",
+        "Digital Citizen Services (Mobile App)",
+        "Recruitment Portal",
+        "Cultural & Event Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brive may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:44:53.593116",
+          "domain_explored": "https://brive-tourisme.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions 'Boutique 100% Gaillard' (Local retail, not procurement)",
+              "Mentions 'Brive Festival' (Cultural event, not procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Tourism promotion content",
+            "Event listings (Agenda)",
+            "Local business directory (Bons plans)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.265669822692871
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material from the Brive Tourism website. It promotes local events, gastronomy, and heritage sites. There are no technical specifications, vendor lists, job postings, or governance documents present that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:45:04.854784",
+          "domain_explored": "https://brive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Student Relationship Management (likely CRM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Scholarship programs (B2C)",
+              "University partnership models (Affiliate/Agreement)"
+            ]
+          },
+          "patterns_found": [
+            "EdTech Platform Content",
+            "Student Recruitment Services",
+            "Scholarship Offers",
+            "B2C Service Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.315782785415649
+            }
+          ],
+          "reasoning": "The content analyzed from brive.com belongs to 'Brive', an EdTech platform connecting students with universities, not the territorial entity of Brive (Corr\u00e8ze, France). The site focuses on student recruitment, application processing, and scholarships. There are no signals relevant to the procurement, governance, or technology stack of the French commune or its tourism office."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:45:16.657100",
+          "domain_explored": "https://brive.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Brive en poche - iOS/Android)",
+              "Real-time Parking Management Systems",
+              "LED Infrastructure"
+            ],
+            "job_postings": [
+              "General Recruitment Portal ('Brive recrute')"
+            ],
+            "procurement_indicators": [
+              "Public Works: Modernization of public lighting (100% LED)",
+              "Urban Planning: Authorizations and permits management",
+              "Facilities Management: Upgrades to Halle Brassens (fluidity/confort)",
+              "IT Services: Maintenance of 'Brive en poche' app and Wifi points"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance Portal",
+            "Public Works & Infrastructure Projects",
+            "Digital Citizen Services (Mobile App)",
+            "Recruitment Portal",
+            "Cultural & Event Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 359,
+              "elapsed_seconds": 3.3004190921783447
+            }
+          ],
+          "reasoning": "The content confirms 'Brive' as the official digital portal for the Ville de Brive (Municipality). It reveals active procurement drivers including a completed LED modernization project (Travaux), a dedicated recruitment section ('Brive recrute'), and the management of a mobile application ('Brive en poche') for citizen services. This shifts the entity definition from a generic brand to a public sector buyer with active infrastructure and HR needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:45:28.410014",
+          "domain_explored": "https://cabrive-rugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team News & Results",
+            "Ticketing & Merchandise Sales",
+            "Player Transfers & Contracts",
+            "Match Schedules"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.37166428565979
+            }
+          ],
+          "reasoning": "The content is exclusively related to the CA Brive rugby club (sports team, match results, player transfers, ticketing). It contains no information regarding municipal governance, corporate procurement, or technology acquisition relevant to the target entity 'Brive'."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:45:38.551829",
+          "domain_explored": "https://brivesoluciones.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI for HR",
+              "Psychometric Testing Algorithms",
+              "Analytics Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B SaaS Product Marketing",
+            "HR Tech / Recruitment Software",
+            "Pricing Plans (Freemium, Standard, Advance)",
+            "Lead Generation Forms (Ebook download)",
+            "Spanish Language Content (LATAM focus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 242,
+              "elapsed_seconds": 2.5991649627685547
+            }
+          ],
+          "reasoning": "The content is clearly from a B2B SaaS provider (Evaluatest/Brive Soluciones) selling HR and recruitment software. It lists pricing plans, features, and lead generation forms. This represents a vendor selling services, not the municipal entity 'Brive' (France) engaging in procurement activities. It contradicts the hypothesis of finding procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:45:48.562448",
+          "domain_explored": "https://lovelybrivefestival.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Music Festival Line-up Listings",
+            "Event Schedule (July 2026)",
+            "Artist Promotion & Ticketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.244757890701294
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 'Lovely Brive Festival' 2026 program, listing artists, dates, and stages. This is a B2C event marketing site with no indicators of municipal governance, corporate procurement, or enterprise technology adoption."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:46:22.046865",
+          "domain_explored": "https://aeroport-brive-vallee-dordogne.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T01:46:32.580643",
+          "domain_explored": "https://brive-tonneliers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wine Industry (Cooperage/Tonnellerie)",
+            "B2B Product Catalog (Barrels/Casks)",
+            "Corporate Social Responsibility (CSR) Content",
+            "Heritage Preservation Partnerships"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.8109078407287598
+            }
+          ],
+          "reasoning": "The entity 'Brive Tonneliers' is a commercial cooperage manufacturing wine barrels, distinct from the municipal entity 'Brive' (Ville de Brive) identified in Iteration 3. The content focuses on craftsmanship, product lines (Ma\u00eetre Tonnelier), and philanthropy (Fondation du Patrimoine), with no signals of public procurement, governance, or enterprise technology acquisition."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T01:46:45.570200",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-emplois-r%C3%A9gion-de-brive-la-gaillarde-france",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "\u00c9quipier polyvalent (Bertrand Franchise)",
+              "Secr\u00e9taire (Adapei de la Corr\u00e8ze)",
+              "Plongeur (Bertrand Franchise)",
+              "Contr\u00f4leur Financier Groupe (L'Usine Nouvelle)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Low-skill Service Roles (Hospitality/Food Service)",
+            "General Administrative Roles",
+            "Recruitment Agency Listings (L'Usine Nouvelle)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 301,
+              "elapsed_seconds": 7.991573810577393
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for the geographic area of Brive-la-Gaillarde. The listings are dominated by entry-level roles (e.g., 'Plongeur', '\u00c9quipier polyvalent') and general administrative positions ('Secr\u00e9taire') within local franchises or associations. There are no specific signals regarding the procurement activities, technology stack, or strategic vendor partnerships of the target entity 'Brive' (Municipality). This data reflects the general labor market rather than corporate procurement intent."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T01:46:52.641867",
+          "domain_explored": "https://www.linkedin.com/jobs/explo-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ingeniero de Seguridad - EXPLO DRILLING PERU",
+              "Responsable Logistique Projet BENI - RDC \u2013 H/F - Julisha.cd",
+              "Especialista de Desenvolvimento Organizacional - Softys",
+              "Senior Software Engineer - Explo",
+              "EXPLO Middle School Residence Director (Summer) - EXPLO"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Mismatch (Explo vs Brive)",
+            "Global Job Aggregation",
+            "Unrelated Sectors (Mining, Education, Software)",
+            "Geographic Dispersion (Peru, DRC, Brazil, USA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1827,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.491888999938965
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job search results page for the keyword 'Explo', not 'Brive'. The entities listed (Explo Drilling, Explo, Softys) are unrelated to the target entity (Brive, France). There are zero procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T01:47:16.854157",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=2839542770&f_TPR=r86400&geoId=91000002&keywords=pharmacovigilance%20jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Drug Safety Associate (wherewework Hellas, Greece)",
+              "Safety Monitor Europe (Emmes Group, Slovenia)",
+              "Clinical Safety Specialist (Novocure, Poland)",
+              "Pharmacien Production de Nuit (UPSA, Agen, France)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Mismatch (Pharmacovigilance vs Brive)",
+            "Global Job Aggregation (European Economic Area)",
+            "Unrelated Sectors (Pharmaceuticals, Clinical Safety)",
+            "Geographic Dispersion (Greece, Slovenia, Poland, Agen)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1906,
+              "output_tokens": 289,
+              "elapsed_seconds": 18.691473960876465
+            }
+          ],
+          "reasoning": "The search query 'pharmacovigilance jobs' targets the pharmaceutical and clinical safety sectors, which are unrelated to the municipal governance or technology procurement scope for the entity 'Brive'. The results are geographically dispersed across the EEA (with only one result in nearby Agen, but for a private pharma company UPSA), and there is no connection to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T01:47:27.350675",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3063442079&f_TPR=r2592000&geoId=105015875&keywords=g%C3%A9omaticien&location=France",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "GIS Software (implied by Geomatics roles)",
+              "Cartography Tools",
+              "Surveying Equipment"
+            ],
+            "job_postings": [
+              "G\u00e9om\u00e8tre (Surveyor) - SEGULA Technologies (Occitanie)",
+              "G\u00e9omaticien - Ville de Troyes (Grand Est)",
+              "Cartographe - Om\u00e9a (Auvergne-Rh\u00f4ne-Alpes)",
+              "D\u00e9veloppeur g\u00e9omaticien - Coexya (Auvergne-Rh\u00f4ne-Alpes)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "National Job Aggregation (France-wide)",
+            "Irrelevant Geographic Locations (Occitanie, Grand Est, Normandy)",
+            "Specialized Technical Roles (GIS, Surveying, Cartography)",
+            "Private Sector & Non-Local Municipal Employers"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1999,
+              "output_tokens": 346,
+              "elapsed_seconds": 4.289061069488525
+            }
+          ],
+          "reasoning": "The search results for 'G\u00e9omaticien' (Geomatics/Surveying specialist) in France return job postings exclusively outside the target region of Brive (Corr\u00e8ze). The listings are geographically dispersed (Troyes, Caissargues, Normandy) and primarily associated with entities like SEGULA Technologies, Ville de Troyes, and France Travail. There is no mention of Brive or the Communaut\u00e9 d'agglom\u00e9ration de Brive, indicating this search path does not yield procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T01:47:39.977505",
+          "domain_explored": "https://fr.linkedin.com/jobs/view/customer-service-representative-france-at-mouser-electronics-4310973883",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "SAINT LAURENT Client Advisor (Las Vegas, NV)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Mismatch (Conseiller Bancaire vs Brive)",
+            "Geographic Irrelevance (Las Vegas, United States)",
+            "Global Job Aggregation",
+            "Unrelated Sectors (Luxury Retail, Fashion)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2088,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.8751020431518555
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered for 'Conseiller Bancaire' (Bank Advisor) roles, but the visible results are for 'Client Advisor' positions at Saint Laurent in Las Vegas. There is no connection to the entity 'Brive' (the French commune) or its procurement activities. The content is irrelevant noise generated by the job aggregation platform."
+        }
+      ],
+      "total_input_tokens": 20140,
+      "total_output_tokens": 2995,
+      "estimated_cost_usd": 0.105345
+    },
+    "procurement_signals": [
+      "Municipal Governance Portal",
+      "Public Works & Infrastructure Projects",
+      "Digital Citizen Services (Mobile App)",
+      "Recruitment Portal",
+      "Cultural & Event Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brive may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:47:39.978780"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.272394",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:19:05.643765"
+}

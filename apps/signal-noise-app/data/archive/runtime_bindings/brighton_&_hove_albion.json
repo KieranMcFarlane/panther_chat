@@ -1,0 +1,420 @@
+{
+  "entity_id": "brighton_&_hove_albion",
+  "entity_name": "Brighton & Hove Albion",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "brightonandhovealbion.com",
+    "premierleague.com",
+    "bhafcfoundation.org.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs",
+      "https://uk.linkedin.com/jobs/albion-jobs-greater-brighton-and-hove-area",
+      "https://uk.linkedin.com/jobs/view/marketing-executive-at-brighton-hove-albion-football-club-4356643723",
+      "https://uk.linkedin.com/jobs/view/matchday-av-operator-at-brighton-hove-albion-football-club-4352563568",
+      "https://uk.linkedin.com/jobs/view/procurement-officer-at-brighton-hove-albion-football-club-4356171185",
+      "https://uk.linkedin.com/jobs/stadium-jobs-greater-brighton-and-hove-area",
+      "https://uk.linkedin.com/jobs/view/senior-partnership-executive-at-brighton-hove-albion-football-club-4352988601",
+      "https://uk.linkedin.com/jobs/view/player-services-executive-women-s-girls-at-brighton-hove-albion-football-club-4354098498",
+      "https://uk.linkedin.com/jobs/stadium-jobs-brighton-and-hove"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brighton_&_hove_albion",
+      "entity_name": "Brighton & Hove Albion",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26,
+        0.26
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs-worldwide",
+        "https://uk.linkedin.com/jobs/view/marketing-executive-at-brighton-hove-albion-football-club-4356643723",
+        "https://bhafcfoundation.org.uk",
+        "https://premierleague.com",
+        "https://uk.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs",
+        "https://uk.linkedin.com/jobs/albion-jobs-greater-brighton-and-hove-area",
+        "https://uk.linkedin.com/jobs/view/matchday-av-operator-at-brighton-hove-albion-football-club-4352563568",
+        "https://brightonandhovealbion.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Procurement Recruitment",
+        "Direct Procurement Role",
+        "Marketing Expansion",
+        "Geographic Anchoring (Falmer)",
+        "Active Procurement Role",
+        "Marketing Expansion",
+        "Direct Hiring Intent",
+        "Active Procurement Recruitment",
+        "Infrastructure Security Investment",
+        "Marketing Capability Expansion",
+        "Direct Hiring Intent",
+        "Marketing Technology Stack Expansion",
+        "Ecommerce Automation Investment",
+        "Data-Driven Retail Strategy",
+        "CRM & Personalization Tooling"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brighton & Hove Albion may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:10:14.584550",
+          "domain_explored": "https://brightonandhovealbion.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Likely CMS (indicated by structured navigation and 'Clear' functionality)",
+              "Ticketing Platform (tickets.brightonandhovealbion.com - subdomain isolation)",
+              "E-commerce Platform (shop.brightonandhovealbion.com - subdomain isolation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Link: American Express (Main Club Sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Standard Sports Club Navigation",
+            "Content Management System (CMS) Artifacts",
+            "Sponsorship Visibility (American Express)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 277,
+              "elapsed_seconds": 2.7713868618011475
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive navigation headers and recent sports news headlines (player loans, match results). There are no explicit procurement signals, technology stack details, or job postings present in this specific text segment. The presence of American Express as a 'Main Club Sponsor' is a known partnership, not a new procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:10:20.318373",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Cloud & AI Partnership (Oracle - implied context, not specific to BHAFC)"
+            ]
+          },
+          "patterns_found": [
+            "League-level Partnership Aggregation",
+            "Generic Navigation Artifacts",
+            "Sponsorship Taxonomy (Lead, Official, Licensee)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1176,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.5166430473327637
+            }
+          ],
+          "reasoning": "The content provided is from the Premier League's main homepage navigation and footer, not specific to Brighton & Hove Albion. While it lists 'Official Cloud & AI Partner' and 'Official Bank' categories, these are league-wide sponsorships (e.g., Oracle, Barclays) and do not indicate specific procurement activity, technology stack choices, or vendor selection processes by Brighton & Hove Albion specifically. The data is too generic to derive actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:10:26.783007",
+          "domain_explored": "https://bhafcfoundation.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media Hosting)",
+              "Custom Donation Subdomain (implies Payment Gateway/CRM)"
+            ],
+            "job_postings": [
+              "Chief Executive Officer (CEO) - Governance/Leadership"
+            ],
+            "procurement_indicators": [
+              "Operational Scale: Managing 35,000 participants implies backend data management needs",
+              "Educational Programs: Engagement with 150 schools suggests potential procurement of educational materials or software",
+              "Donation Platform: Dedicated subdomain indicates third-party payment processing vendor"
+            ]
+          },
+          "patterns_found": [
+            "Charitable Governance Structure",
+            "Community Program Delivery Scale",
+            "Donation Infrastructure",
+            "Executive Leadership Transition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 329,
+              "elapsed_seconds": 3.1898579597473145
+            }
+          ],
+          "reasoning": "While the content is primarily mission-focused, the scale of operations (35,000 people, 150 schools) and the explicit appointment of a new CEO indicate a complex organizational structure requiring operational support systems. The presence of a dedicated donation subdomain (`donate.bhafcfoundation.org.uk`) signals investment in payment processing and CRM infrastructure."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:10:33.932486",
+          "domain_explored": "https://www.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions (Recruitment Platform)"
+            ],
+            "job_postings": [
+              {
+                "role": "Procurement Officer",
+                "location": "Falmer, England, United Kingdom",
+                "posted": "6 days ago",
+                "signal_strength": "High"
+              },
+              {
+                "role": "Marketing Executive",
+                "location": "Falmer, England, United Kingdom",
+                "posted": "4 days ago",
+                "signal_strength": "Medium"
+              }
+            ],
+            "procurement_indicators": [
+              "Dedicated Procurement Headcount",
+              "Centralized Operations (Falmer HQ)"
+            ]
+          },
+          "patterns_found": [
+            "Active Procurement Recruitment",
+            "Direct Procurement Role",
+            "Marketing Expansion",
+            "Geographic Anchoring (Falmer)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 348,
+              "elapsed_seconds": 4.174043893814087
+            }
+          ],
+          "reasoning": "The content reveals a direct and explicit procurement signal: a job posting for a 'Procurement Officer' at the entity's headquarters (Falmer). This confirms the existence of a dedicated procurement function, moving the confidence from 'Capability' (Iteration 3) to 'Active Intent/Operations'. The 'Marketing Executive' posting suggests parallel growth in commercial operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:10:40.536102",
+          "domain_explored": "https://uk.linkedin.com/jobs/brighton-%26-hove-albion-football-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Procurement Officer",
+                "location": "Falmer, England, United Kingdom",
+                "posted": "6 days ago",
+                "source": "LinkedIn"
+              },
+              {
+                "title": "Marketing Executive",
+                "location": "Falmer, England, United Kingdom",
+                "posted": "4 days ago",
+                "source": "LinkedIn"
+              }
+            ],
+            "procurement_indicators": [
+              "Dedicated Procurement Hiring",
+              "Commercial Department Growth"
+            ]
+          },
+          "patterns_found": [
+            "Active Procurement Role",
+            "Marketing Expansion",
+            "Direct Hiring Intent"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.0574939250946045
+            }
+          ],
+          "reasoning": "The content explicitly lists a 'Procurement Officer' role posted 6 days ago, confirming active recruitment within the procurement function. Additionally, a 'Marketing Executive' role suggests continued commercial investment. This moves the analysis from general discovery to specific confirmation of procurement personnel."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:10:50.562996",
+          "domain_explored": "https://uk.linkedin.com/jobs/albion-jobs-greater-brighton-and-hove-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Cloud Infrastructure",
+              "Security Operations (SecOps)"
+            ],
+            "job_postings": [
+              "Procurement Officer (Brighton & Hove Albion FC)",
+              "Cloud & Security Operations Engineer (Brighton & Hove Albion FC)",
+              "Marketing Executive (Brighton & Hove Albion FC)"
+            ],
+            "procurement_indicators": [
+              "Dedicated Procurement Role (Direct evidence of function)",
+              "Security Engineering (Implies infrastructure procurement needs)",
+              "Recruitment Velocity (Multiple roles posted within 6 days)"
+            ]
+          },
+          "patterns_found": [
+            "Active Procurement Recruitment",
+            "Infrastructure Security Investment",
+            "Marketing Capability Expansion",
+            "Direct Hiring Intent"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 334,
+              "elapsed_seconds": 6.393932104110718
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a dedicated Procurement Officer role, indicating a formalization of procurement processes. Additionally, the presence of a Cloud & Security Operations Engineer role suggests active investment in IT infrastructure, which often precedes or accompanies ERP/Procurement system upgrades. The Marketing Executive role further supports general business expansion."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:10:59.846582",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/marketing-executive-at-brighton-hove-albion-football-club-4356643723",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Email Marketing Platforms (e.g., Dotmailer, Mailchimp)",
+              "Personalization Engines",
+              "Ecommerce Platforms",
+              "Retail Analytics Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Marketing Executive",
+                "focus": "Retail Marketing & Ecommerce",
+                "location": "American Express Stadium",
+                "contract": "Permanent",
+                "deadline": "6th February 2026"
+              }
+            ],
+            "procurement_indicators": [
+              "Requirement for 'email marketing platforms and personalization tools'",
+              "Focus on 'retail campaigns and automations' implies software licensing needs",
+              "Reporting on 'analytical and statistical insights' suggests data visualization or BI tool usage"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Technology Stack Expansion",
+            "Ecommerce Automation Investment",
+            "Data-Driven Retail Strategy",
+            "CRM & Personalization Tooling"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1734,
+              "output_tokens": 389,
+              "elapsed_seconds": 5.407931804656982
+            }
+          ],
+          "reasoning": "The job description for a Marketing Executive explicitly outlines the use of specific technology platforms ('email marketing platforms', 'personalization tools') to drive retail and ecommerce campaigns. This indicates active investment in the marketing technology stack (MarTech) and a requirement for vendor tools to support customer data analytics and campaign automation."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:11:20.333875",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/matchday-av-operator-at-brighton-hove-albion-football-club-4352563568",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (US-based roles)",
+            "Competitor Benchmarking (Miami HEAT, Colorado Rockies)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1806,
+              "output_tokens": 220,
+              "elapsed_seconds": 15.969292163848877
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Audio Visual Specialist' roles in the United States. While it includes sports entities like the Miami HEAT and Colorado Rockies, it contains zero specific data regarding Brighton & Hove Albion's procurement activities, technology stack, or hiring needs. The URL suggests a specific BHAFC job was targeted, but the scraped content failed to capture it, returning only the sidebar or related searches instead."
+        }
+      ],
+      "total_input_tokens": 12312,
+      "total_output_tokens": 2446,
+      "estimated_cost_usd": 0.073626
+    },
+    "procurement_signals": [
+      "Active Procurement Recruitment",
+      "Direct Procurement Role",
+      "Marketing Expansion",
+      "Geographic Anchoring (Falmer)",
+      "Active Procurement Role",
+      "Marketing Expansion",
+      "Direct Hiring Intent",
+      "Active Procurement Recruitment",
+      "Infrastructure Security Investment",
+      "Marketing Capability Expansion",
+      "Direct Hiring Intent",
+      "Marketing Technology Stack Expansion",
+      "Ecommerce Automation Investment",
+      "Data-Driven Retail Strategy",
+      "CRM & Personalization Tooling"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brighton & Hove Albion may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:11:20.336571"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.118142",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:33.474162"
+}

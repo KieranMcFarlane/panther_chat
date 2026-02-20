@@ -1,0 +1,126 @@
+{
+  "test_timestamp": "20260123_032151",
+  "test_results": {
+    "total_rfps_detected": 2,
+    "verified_rfps": 2,
+    "rejected_rfps": 0,
+    "entities_checked": 5,
+    "highlights": [
+      {
+        "organization": "Manchester United",
+        "status": "PARTNERSHIP",
+        "title": "Digital Transformation Partnership",
+        "budget": "Not specified",
+        "deadline": null,
+        "confidence": 0.75,
+        "fit_score": 37,
+        "discovery_method": "perplexity_primary",
+        "competitive_intel": null
+      },
+      {
+        "organization": "Premier League",
+        "status": "ACTIVE_RFP",
+        "title": "Digital Fan Engagement Platform",
+        "budget": "\u00a3200,000-300,000",
+        "deadline": "2025-03-15",
+        "confidence": 0.92,
+        "fit_score": 94,
+        "discovery_method": "perplexity_primary",
+        "competitive_intel": {
+          "digital_maturity": "HIGH",
+          "current_partners": [
+            "Adobe",
+            "Salesforce",
+            "AWS"
+          ],
+          "recent_projects": [
+            {
+              "vendor": "Adobe",
+              "project": "Fan Analytics Platform",
+              "year": 2024
+            }
+          ],
+          "competitors": [
+            "Deloitte Digital",
+            "IBM iX",
+            "Accenture Sports"
+          ],
+          "yp_advantages": [
+            "Sports-specific expertise",
+            "UK-based",
+            "ISO 27001 certified"
+          ],
+          "decision_makers": [
+            {
+              "name": "Sarah Thompson",
+              "title": "Director of Digital Transformation"
+            }
+          ]
+        }
+      }
+    ],
+    "perplexity_usage": {
+      "discovery_queries": 5,
+      "validation_queries": 0,
+      "competitive_intel_queries": 1,
+      "total_queries": 0
+    },
+    "brightdata_usage": {
+      "targeted_domain_queries": 0,
+      "broad_web_queries": 0,
+      "total_queries": 0
+    }
+  },
+  "test_entities": [
+    {
+      "neo4j_id": "1",
+      "labels": [
+        "Club"
+      ],
+      "name": "Manchester United",
+      "sport": "Football",
+      "country": "England",
+      "type": "Club"
+    },
+    {
+      "neo4j_id": "2",
+      "labels": [
+        "League"
+      ],
+      "name": "Premier League",
+      "sport": "Football",
+      "country": "England",
+      "type": "League"
+    },
+    {
+      "neo4j_id": "3",
+      "labels": [
+        "Federation"
+      ],
+      "name": "Football Association",
+      "sport": "Football",
+      "country": "England",
+      "type": "Federation"
+    },
+    {
+      "neo4j_id": "4",
+      "labels": [
+        "Club"
+      ],
+      "name": "Real Madrid",
+      "sport": "Football",
+      "country": "Spain",
+      "type": "Club"
+    },
+    {
+      "neo4j_id": "5",
+      "labels": [
+        "Tournament"
+      ],
+      "name": "Champions League",
+      "sport": "Football",
+      "country": "Europe",
+      "type": "Tournament"
+    }
+  ]
+}

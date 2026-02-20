@@ -1,0 +1,326 @@
+{
+  "entity_id": "indonesian_volleyball_federation",
+  "entity_name": "Indonesian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "asianvolleyball.net",
+    "setkab.go.id",
+    "petrokimia-gresik.com",
+    "observerid.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0",
+      "https://mv.linkedin.com/jobs/view/volleyball-coach-at-national-volleyball-team-4314697976",
+      "https://www.linkedin.com/posts/luizfgiacomelli_jobs-activity-7419811341722562560-2puj"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "indonesian_volleyball_federation",
+      "entity_name": "Indonesian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/luizfgiacomelli_jobs-activity-7419811341722562560-2puj",
+        "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0",
+        "https://mv.linkedin.com/jobs/view/volleyball-coach-at-national-volleyball-team-4314697976",
+        "https://observerid.com",
+        "https://asianvolleyball.net",
+        "https://setkab.go.id",
+        "https://petrokimia-gresik.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Indonesian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:27:27.193644",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Collaboration between AVC and Volleyball World",
+              "Competition calendar alignment"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance Meetings",
+            "Strategic Alignment Discussions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 833,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.9740428924560547
+            }
+          ],
+          "reasoning": "The content describes a coordination meeting between the Asian Volleyball Confederation (AVC), Volleyball World, and SV.LEAGUE in Japan. While this indicates high-level strategic alignment within the Asian volleyball ecosystem, it does not contain specific procurement signals, technology investments, or direct operational decisions related to the Indonesian Volleyball Federation (PBVSI). The entity is AVC, not PBVSI."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:27:40.914122",
+          "domain_explored": "https://setkab.go.id",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Government Housing Policy",
+            "Infrastructure Development",
+            "Ministerial Meetings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 505,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.462048053741455
+            }
+          ],
+          "reasoning": "The content is focused on the Indonesian President's directive regarding subsidized housing programs (Rumah Subsidi) and infrastructure development at Hambalang. There is no mention of the Indonesian Volleyball Federation (PBVSI), sports governance, or related procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:27:51.514690",
+          "domain_explored": "https://petrokimia-gresik.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms (Survey)",
+              "Social Media Platforms (Instagram, Facebook, Twitter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Surveys (Website User Experience)",
+              "CSR Activities (Sembako distribution, Agronom training)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Social Responsibility (CSR) Initiatives",
+            "Agriculture Sector Focus",
+            "Fertilizer Manufacturing Operations",
+            "ISO Certification & Compliance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.932385206222534
+            }
+          ],
+          "reasoning": "The scraped content is from PT Petrokimia Gresik, a state-owned fertilizer manufacturer. While it mentions 'Citizen Games' and sports festivals, the core entity is a BUMN in the agriculture/chemical sector, not the Indonesian Volleyball Federation (PBVSI). There is no direct procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:28:02.185191",
+          "domain_explored": "https://observerid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Reporting",
+            "International Football Partnerships",
+            "Lifestyle and Health Content",
+            "Opinion/Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 210,
+              "elapsed_seconds": 2.4607248306274414
+            }
+          ],
+          "reasoning": "The scraped content from observerid.com represents a general news and lifestyle portal. While there is a 'SPORT' section, the content focuses on international football partnerships (Borussia Dortmund, Cerezo Osaka), golf, and general health news. There is no specific mention of the Indonesian Volleyball Federation (PBVSI), nor are there any procurement signals, RFPs, or technology investment opportunities related to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:28:11.558679",
+          "domain_explored": "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant",
+              "Business Development Lead - Club Recruiting"
+            ],
+            "procurement_indicators": [
+              "Actively Hiring status",
+              "Recruitment for administrative roles"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Target: Indonesia vs. Source: USA)",
+            "Private Sector League Operations (LOVB)",
+            "General Administrative Hiring (Accounting, Business Dev)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.6080162525177
+            }
+          ],
+          "reasoning": "The scraped content refers to 'League One Volleyball (LOVB)', a private entity based in the United States, not the Indonesian Volleyball Federation (PBVSI). While the content contains procurement signals (job postings), they are for the wrong entity and geographic location. Therefore, this does not contribute to the intelligence gathering for the Indonesian target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:28:23.410605",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Social & Environmental Sustainability Intern at UEFA (Vaud, Switzerland)",
+              "Fachspezialist/in Sport-Aussenanlagen at Swiss Federal Institute (Magglingen, Switzerland)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Switzerland vs. Indonesia)",
+            "Entity Mismatch (UEFA, Swiss Federal Institute vs. PBVSI)",
+            "Sector Mismatch (Internships vs. Procurement)",
+            "Login Wall/Gated Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1676,
+              "output_tokens": 271,
+              "elapsed_seconds": 6.654317140579224
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn jobs search result page for 'Sport' roles located in Switzerland (geoId=106693272). The visible listings are for UEFA and the Swiss Federal Institute of Sport Magglingen. There is no content related to the Indonesian Volleyball Federation (PBVSI), Indonesian government procurement, or the Indonesian technology sector. The geographic and entity scope is entirely irrelevant to the target."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:28:34.047087",
+          "domain_explored": "https://mv.linkedin.com/jobs/view/volleyball-coach-at-national-volleyball-team-4314697976",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Volleyball Coach - National Volleyball Team (Maldives)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Maldives vs. Indonesia)",
+            "Entity Mismatch (Maldives National Team vs. Indonesian Volleyball Federation)",
+            "Operational Hiring (Coaching Staff vs. Procurement/Tech)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1758,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.3324227333068848
+            }
+          ],
+          "reasoning": "The content is a job posting for a Volleyball Coach for the National Volleyball Team in Hulhumale', Maldives. This represents a complete geographic and entity mismatch with the target entity, the Indonesian Volleyball Federation (PBVSI). Additionally, the role is operational/sports-focused rather than procurement or technology-focused."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:28:39.629292",
+          "domain_explored": "https://www.linkedin.com/posts/luizfgiacomelli_jobs-activity-7419811341722562560-2puj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Club Recruiting (M&A) Analyst",
+              "Business Development Lead",
+              "Part-Time Deal Lead"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Target: Indonesia vs. Source: USA)",
+            "Operational Focus (M&A, Club Acquisition vs. Procurement)",
+            "Private Sector League Operations (LOVB)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1846,
+              "output_tokens": 208,
+              "elapsed_seconds": 1.8448290824890137
+            }
+          ],
+          "reasoning": "The content describes hiring for M&A and Business Development roles at LOVB (League One Volleyball), a private entity based in the USA. This is completely unrelated to the Indonesian Volleyball Federation (PBVSI) and does not contain procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 11170,
+      "total_output_tokens": 1769,
+      "estimated_cost_usd": 0.060045
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Indonesian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:28:39.633000"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345100",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:41.032492"
+}

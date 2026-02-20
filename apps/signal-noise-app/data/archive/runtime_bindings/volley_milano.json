@@ -1,0 +1,281 @@
+{
+  "entity_id": "volley_milano",
+  "entity_name": "Volley Milano",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "powervolleymilano.it",
+    "verovolley.com",
+    "championsleague.cev.eu",
+    "en.volleyballworld.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/arval-cosmetici?trk=public_jobs_jserp-result_job-search-card-subtitle"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volley_milano",
+      "entity_name": "Volley Milano",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://powervolleymilano.it",
+        "https://globalsportsarchive.com",
+        "https://verovolley.com",
+        "https://championsleague.cev.eu",
+        "https://en.volleyballworld.com",
+        "https://www.linkedin.com/company/arval-cosmetici?trk=public_jobs_jserp-result_job-search-card-subtitle"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Sponsorship Procurement (Volleyball)",
+        "Cross-Industry Partnership",
+        "Sports Marketing Portfolio",
+        "Strategic Brand Alignment"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volley Milano may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:15:49.584258",
+          "domain_explored": "https://powervolleymilano.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Analytics (_ga, _ga_)",
+              "Custom Cookie Consent Management (PowerVolley_CookieConsent)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of Google Analytics suggests potential need for GDPR compliance consulting or alternative analytics tools.",
+              "Reliance on 'Allianz Cloud' and 'Forum di Assago' indicates B2B relationships with venue operators or service providers for events.",
+              "Reference to 'Ufficio Stampa' suggests procurement of PR/Communication services."
+            ]
+          },
+          "patterns_found": [
+            "Google Analytics (GA/GA_) usage",
+            "Cookie consent management platform",
+            "Third-party data processing (Google policies)",
+            "Venue management (Allianz Cloud, Forum di Assago)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 320,
+              "elapsed_seconds": 4.517663955688477
+            }
+          ],
+          "reasoning": "The content reveals specific technology usage (Google Analytics) and infrastructure dependencies (Allianz Cloud, Forum di Assago). While no direct RFPs are visible, the reliance on third-party analytics and venue management indicates potential procurement needs for data privacy compliance tools and venue services/logistics."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:16:03.626701",
+          "domain_explored": "https://verovolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media hosting)",
+              "Ticketing Platform (Unspecified vendor via 'Biglietteria' link)",
+              "CMS (Dynamic news/blog content)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deals: Numia (Title Sponsor), SAINT, Agenzia YES",
+              "Venue Management: Allianz Cloud",
+              "Educational Partnership: Master Sport Design & Management POLIMI 2025-26",
+              "Event Services: Musei Civici di Monza partnership"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement (Numia, Allianz, Credem Banca, Tigot\u00e0)",
+            "Venue Procurement (Allianz Cloud)",
+            "Academic Partnership (Politecnico di Milano)",
+            "Digital Asset Management (YouTube Channel, Photogallery)",
+            "Ticketing Platform Integration (Biglietteria section)",
+            "Event Organization (Cartellone Challenge)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 376,
+              "elapsed_seconds": 4.926081895828247
+            }
+          ],
+          "reasoning": "The content confirms Vero Volley as a multi-brand organization managing significant procurement for sponsorships, venue operations (Allianz Cloud), and media production. While direct IT procurement signals are absent, the scale of operations (managing multiple teams, venues, and media rights) implies a need for CRM, ticketing, and digital asset management solutions. The partnership with POLIMI indicates an investment in management education."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:16:15.705543",
+          "domain_explored": "https://championsleague.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Navigation",
+            "Non-Specific Content",
+            "Token Limit Fragmentation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 554,
+              "output_tokens": 175,
+              "elapsed_seconds": 5.278239965438843
+            }
+          ],
+          "reasoning": "The content provided is a fragmented navigation menu from the CEV (Confederation of European Volleyball) domain, not specific to Volley Milano. It contains generic links for Men's and Women's Champions Leagues and references to 2026 events. There are no procurement signals, technology stacks, or organizational data specific to Volley Milano in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:16:23.790574",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Navigation",
+            "Non-Specific Content",
+            "Token Limit Fragmentation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.2032768726348877
+            }
+          ],
+          "reasoning": "The content provided is a highly repetitive, fragmented dump of global sports rankings and generic navigation elements from VolleyballWorld. It contains no specific references to 'Volley Milano', 'Power Volley Milano', or their specific procurement activities. The data is dominated by ranking tables (Poland, Italy, Brazil) and UI text ('See All', 'Full Schedule') which offers no insight into the target entity's internal operations, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:16:37.342387",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Navigation",
+            "Non-Specific Content",
+            "Token Limit Fragmentation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 165,
+              "elapsed_seconds": 4.418861150741577
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic sitemap or navigation list for various soccer leagues (UEFA, Premier League, etc.) and global regions. It contains no specific information regarding Volley Milano, its technology stack, partnerships, or procurement activities. This is irrelevant data for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:16:52.878891",
+          "domain_explored": "https://www.linkedin.com/company/arval-cosmetici?trk=public_jobs_jserp-result_job-search-card-subtitle",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship/Partnership",
+                "details": "Arval Cosmetici lists Vero Volley as a key partner alongside UYBA (Unione Sportiva Busto Arsizio).",
+                "source": "LinkedIn Company Update",
+                "value_signal": "Medium-High (Active Sports Marketing Portfolio)"
+              },
+              {
+                "type": "Strategic Sourcing",
+                "details": "Procurement of sports marketing platforms to express brand values of 'squadra, inclusione e condivisione' (team, inclusion, sharing).",
+                "source": "Company Description/Update"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement (Volleyball)",
+            "Cross-Industry Partnership",
+            "Sports Marketing Portfolio",
+            "Strategic Brand Alignment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1642,
+              "output_tokens": 359,
+              "elapsed_seconds": 10.18709397315979
+            }
+          ],
+          "reasoning": "The content explicitly confirms a procurement relationship between Arval Cosmetici and Vero Volley (specifically mentioning 'collaborazioni con Vero Volley'). This validates the existence of a vendor/sponsorship contract. Additionally, it reveals a broader sports marketing strategy that includes UYBA and a new motorsport partnership, indicating a structured budget for sports procurement."
+        }
+      ],
+      "total_input_tokens": 8075,
+      "total_output_tokens": 1598,
+      "estimated_cost_usd": 0.048195
+    },
+    "procurement_signals": [
+      "Sponsorship Procurement (Volleyball)",
+      "Cross-Industry Partnership",
+      "Sports Marketing Portfolio",
+      "Strategic Brand Alignment"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volley Milano may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:16:52.880900"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328554",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:55:06.865690"
+}

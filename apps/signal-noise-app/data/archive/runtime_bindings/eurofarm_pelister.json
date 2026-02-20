@@ -1,0 +1,226 @@
+{
+  "entity_id": "eurofarm_pelister",
+  "entity_name": "Eurofarm Pelister",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rkeurofarmpelister.com",
+    "eurohandball.com",
+    "ehfcl.eurohandball.com",
+    "tickets-official.fcbarcelona.com",
+    "seha-liga.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eurofarm_pelister",
+      "entity_name": "Eurofarm Pelister",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ehfcl.eurohandball.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://tickets-official.fcbarcelona.com",
+        "https://rkeurofarmpelister.com",
+        "https://seha-liga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eurofarm Pelister may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:12:21.631334",
+          "domain_explored": "https://rkeurofarmpelister.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "S7 (Platform/CMS provider)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Accreditation process management for matches",
+              "Digital content management (News/Updates)",
+              "Event organization (70th birthday academy)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Presence Maintenance",
+            "Event Management Operations",
+            "Organizational Restructuring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.870971918106079
+            }
+          ],
+          "reasoning": "The content confirms the entity is active and undergoing organizational changes (new coach, team restructuring). While no direct procurement signals (RFPs) are present, the mention of 'accreditation processes' for matches and the active management of a digital news platform indicate operational needs for event management software and potential web maintenance services. The 'powered by S7' tag indicates a vendor relationship."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:12:31.150184",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Cookie Consent Walls",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.265338897705078
+            }
+          ],
+          "reasoning": "The scraped content belongs to the European Handball Federation (eurohandball.com), which is completely unrelated to the target entity, Eurofarm Pelister (a Macedonian pharmaceutical/retail company). The content contains sports news, tournament schedules, and cookie consent messages. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:12:40.471301",
+          "domain_explored": "https://ehfcl.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Generic Navigation Structure",
+            "Irrelevant Content (Match Results)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.6072041988372803
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to the EHF Champions League (sports news, match results, and competition navigation). There is no mention of 'Eurofarm Pelister', corporate procurement activities, or technology stacks relevant to the target entity. This domain is a sports governing body site, distinct from the target entity's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:12:56.961008",
+          "domain_explored": "https://tickets-official.fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "404 Error State",
+            "Broken Link Traversal"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 634,
+              "output_tokens": 142,
+              "elapsed_seconds": 9.650192737579346
+            }
+          ],
+          "reasoning": "The target URL (tickets-official.fcbarcelona.com) belongs to FC Barcelona, a completely different entity than Eurofarm Pelister. The content is a generic 404 error page with no relevance to the subject entity's procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:13:21.381738",
+          "domain_explored": "https://seha-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:13:52.127092",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Generic Navigation Structure",
+            "Irrelevant Content (Match Results)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 184,
+              "elapsed_seconds": 23.46141290664673
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a sitemap or navigation list for various soccer leagues and tournaments (UEFA, Premier League, etc.). It contains no information regarding Eurofarm Pelister, procurement activities, technology stacks, or organizational governance. The content is purely sports-related and irrelevant to the procurement intelligence objective."
+        }
+      ],
+      "total_input_tokens": 6445,
+      "total_output_tokens": 941,
+      "estimated_cost_usd": 0.03345
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eurofarm Pelister may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:13:52.127934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359678",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:24.918530"
+}

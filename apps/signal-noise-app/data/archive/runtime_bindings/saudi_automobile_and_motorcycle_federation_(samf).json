@@ -1,0 +1,235 @@
+{
+  "entity_id": "saudi_automobile_and_motorcycle_federation_(samf)",
+  "entity_name": "Saudi Automobile and Motorcycle Federation (SAMF)",
+  "template_id": "tpl_global_governing_federations_v1",
+  "cluster_id": "nat_motor_gov_body",
+  "discovered_domains": [
+    "saudiarabiangp.com",
+    "nationalautoaward.com",
+    "saudimotorsport.com",
+    "fiaformulae.com",
+    "arabnews.pk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "saudi_automobile_and_motorcycle_federation_(samf)",
+      "entity_name": "Saudi Automobile and Motorcycle Federation (SAMF)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://saudimotorsport.com",
+        "https://arabnews.pk",
+        "https://saudiarabiangp.com",
+        "https://fiaformulae.com",
+        "https://nationalautoaward.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Saudi Automobile and Motorcycle Federation (SAMF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:06:43.188234",
+          "domain_explored": "https://saudiarabiangp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Responsive Web Design"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Operations Scale (Implies need for vendor support)"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Event Management",
+            "Multilingual Content Delivery (Arabic/English)",
+            "Public Facing Digital Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 425,
+              "output_tokens": 231,
+              "elapsed_seconds": 16.770002126693726
+            }
+          ],
+          "reasoning": "The provided text consists primarily of navigation UI elements ('Latest News', '\u0645\u0634\u0627\u0647\u062f\u0629 \u0627\u0644\u0643\u0644', '\u0627\u0644\u062a\u0645\u0631\u064a\u0631 \u0644\u0644\u0627\u0633\u062a\u0643\u0634\u0627\u0641') and lacks substantive content regarding specific technologies, job vacancies, or procurement notices. While the domain confirms SAMF's involvement in major events (Saudi Arabian GP), the text itself does not contain actionable procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:07:13.892787",
+          "domain_explored": "https://nationalautoaward.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "nascode.com (Web Development Vendor)",
+              "Multilingual CMS (English/Arabic content structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Production & Logistics (Large scale gala in Jeddah)",
+              "Web Development & Digital Maintenance (Vendor: nascode.com)",
+              "Sponsorship Management (Partners: J-Band, Valvoline, etc.)",
+              "Voting/Audit Infrastructure (Implied by '600 nominated models' and '25 categories')"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Production",
+            "Digital Platform Development",
+            "Strategic Sponsorship Ecosystem",
+            "Vendor Attribution (Web Development)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 356,
+              "elapsed_seconds": 22.921536922454834
+            }
+          ],
+          "reasoning": "The content reveals the 'National Auto Award' is a distinct, high-profile event property managed under the patronage of the Saudi Arabian Motorsport Federation (SAMF). While the site itself is a static brochure, the scale (600+ nominees, 25 categories, Jeddah venue) and the explicit vendor attribution ('website developed by nascode.com') confirm SAMF's procurement of event management, digital production, and web development services. This identifies a specific procurement channel (large-scale gala events) rather than direct operational procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:07:26.275814",
+          "domain_explored": "https://saudimotorsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Organization of Formula 1 Saudi Grand Prix",
+              "Organization of Dakar Rally",
+              "Organization of Extreme E series",
+              "Hosting of European GT series (Nov 2024)",
+              "Hosting of WRC Final Round (2025)"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Hosting (F1, Dakar, WRC)",
+            "Public-Private Governance Structure (Ministry of Sports oversight)",
+            "High-Profile Leadership (Royal Family Chairman)",
+            "Vision 2030 Strategic Alignment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 279,
+              "elapsed_seconds": 3.7548158168792725
+            }
+          ],
+          "reasoning": "The content establishes the 'Saudi Motorsport Company' (SMC) as the commercial and operational arm under SAMF. While the text is purely informational (About Us), the explicit listing of high-value international events (F1, Dakar, GT) confirms the entity acts as a major procurer of event services, infrastructure, and technology, justifying a weak signal for procurement capability."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:07:36.309263",
+          "domain_explored": "https://fiaformulae.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Infosys (AI-powered Stats Centre)",
+              "Amazon Prime Video (OTT Distribution)",
+              "Hankook (Official Tyre Supplier)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Sponsorship Agreements (Infosys, Jaguar TCS Racing)",
+              "Media Rights Licensing (Amazon Prime Video)"
+            ]
+          },
+          "patterns_found": [
+            "Global Sports Federation Content",
+            "Third-Party Event Hosting (Jeddah E-Prix)",
+            "Sponsorship Ecosystem (Infosys, Hankook, Jaguar TCS)",
+            "OTT Media Distribution (Amazon Prime Video)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 322,
+              "elapsed_seconds": 3.2221598625183105
+            }
+          ],
+          "reasoning": "The analyzed content is from the global Formula E federation (fiaformulae.com), not the Saudi Automobile and Motorcycle Federation (SAMF). While the content mentions the 'Jeddah E-Prix,' this indicates that SAMF is a client or local promoter utilizing services provided by the global federation, rather than the source of procurement signals for the federation's own tech stack. The site promotes global sponsors (Infosys, Amazon) and global media rights, which are centralized procurement activities of the international body, not SAMF."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:07:47.448060",
+          "domain_explored": "https://arabnews.pk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevant Geographic Focus (Pakistan/Central Asia)",
+            "Entertainment & Politics Content Mix",
+            "Lack of Entity-Specific Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 227,
+              "elapsed_seconds": 2.402754068374634
+            }
+          ],
+          "reasoning": "The scraped content from Arab News (Pakistan edition) is a general news feed covering international politics, entertainment (Grammys), and unrelated sports (Djokovic, San Siro). While there is a peripheral mention of a 'Bahrain Championship playoff', this is sports reporting rather than organizational procurement intelligence for the Saudi Automobile and Motorcycle Federation (SAMF). There are no technology stacks, job postings, or RFPs related to SAMF's operations."
+        }
+      ],
+      "total_input_tokens": 6512,
+      "total_output_tokens": 1415,
+      "estimated_cost_usd": 0.040761000000000006
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Saudi Automobile and Motorcycle Federation (SAMF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:07:47.457248"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380738",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:53:29.358425"
+}

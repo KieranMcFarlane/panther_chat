@@ -1,0 +1,308 @@
+{
+  "entity_id": "ifk_sk\u00f6vde",
+  "entity_name": "IFK Sk\u00f6vde",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "ifkskovdehandboll.com",
+    "svenskalag.se",
+    "skovdeaik.se",
+    "apps.apple.com",
+    "play.google.com",
+    "skadevihandbollscup.com",
+    "zoominfo.com",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ifk_sk\u00f6vde",
+      "entity_name": "IFK Sk\u00f6vde",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://skadevihandbollscup.com",
+        "https://flashscore.com",
+        "https://ifkskovdehandboll.com",
+        "https://skovdeaik.se",
+        "https://svenskalag.se",
+        "https://zoominfo.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IFK Sk\u00f6vde may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:41:19.829206",
+          "domain_explored": "https://ifkskovdehandboll.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Instagram (Social Media)",
+              "Ticketing System (Implied by 'K\u00f6p biljett' flows)",
+              "Lottery/Gaming Platform (50/50 Lotter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Publication of 'Partnerrapport 2024-25' (Indicates active B2B partnership management)",
+              "Sponsorship activation (Svensk Fastighetsf\u00f6rmedling Quiz)",
+              "Digital fundraising operations (50/50 Lottery)"
+            ]
+          },
+          "patterns_found": [
+            "Partnership Reporting",
+            "Commercial Sponsorship Ecosystem",
+            "Digital Ticketing & Lottery Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 286,
+              "elapsed_seconds": 13.133401870727539
+            }
+          ],
+          "reasoning": "The content reveals a structured commercial partnership ecosystem ('Partnerrapport 2024-25', 'Svensk Fastighetsf\u00f6rmedling') and digital revenue streams (50/50 lottery, ticketing). While no direct RFP is visible, the active management of partner relationships and digital sales channels indicates a need for CRM, marketing automation, and partner management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:41:29.725665",
+          "domain_explored": "https://svenskalag.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Svenskalag.se (Platform)",
+              "Web Analytics (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Management",
+            "Web Analytics Usage",
+            "Platform Hosting (Svenskalag.se)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 534,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.7589058876037598
+            }
+          ],
+          "reasoning": "The content provided is a standard Cookie Consent banner text from the Svenskalag.se platform. It confirms the use of web analytics and cookies but contains no specific information regarding IFK Sk\u00f6vde's internal procurement processes, technology stack choices (other than the platform host), or upcoming investments. It is a generic functional element rather than a strategic signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:41:41.375196",
+          "domain_explored": "https://skovdeaik.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportAdmin (Platform & App)",
+              "Google Play / App Store (Distribution)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SportAdmin Login Portal (Admin/Leader)",
+              "SportAdmin Member App (iOS/Android)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sk\u00f6vde AIK vs IFK Sk\u00f6vde)",
+            "SportAdmin Platform Usage",
+            "Youth Academy Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 226,
+              "elapsed_seconds": 3.8692941665649414
+            }
+          ],
+          "reasoning": "The scraped content confirms the target entity is Sk\u00f6vde AIK (Sk\u00f6vde Allm\u00e4nna Idrottsklubb - Football), not IFK Sk\u00f6vde (Handball). While this reveals the local competitor's technology stack (SportAdmin), it provides zero procurement intelligence for the target entity (IFK Sk\u00f6vde). The data is irrelevant to the objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:41:44.713380",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:41:53.271052",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Aggregation",
+            "Gaming App Storefront",
+            "Platform Noise"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 151,
+              "elapsed_seconds": 2.624959945678711
+            }
+          ],
+          "reasoning": "The scraped content is a generic listing of video games (Arknights, Clash of Clans, etc.) from the Google Play Store. It contains no references to IFK Sk\u00f6vde, sports management, handball, or organizational procurement activities. This is irrelevant platform noise."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:42:03.296995",
+          "domain_explored": "https://skadevihandbollscup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email (Google Workspace / Microsoft 365 implied)",
+              "Legacy Telephony (Fax)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Logistics & Operations (Skadevi Handbollscup)",
+              "Venue Management Requirements",
+              "Potential Vendor Needs: Food & Beverage, Equipment, Accommodation"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Dedicated Organizational Email Domain",
+            "Legacy Communication Infrastructure (Fax)",
+            "Physical Logistics (Postal Box)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 921,
+              "output_tokens": 277,
+              "elapsed_seconds": 2.6684749126434326
+            }
+          ],
+          "reasoning": "The content confirms IFK Sk\u00f6vde HK as the operator of the 'Skadevi Handbollscup', a significant recurring event requiring procurement of goods, services, and logistics. While the page itself is static contact info, the existence of a dedicated tournament email and organizational structure implies an active operational unit with potential vendor needs for sports events."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:42:10.417604",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B Marketing Content",
+            "Vendor Landing Page",
+            "Third-Party Data Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.663182020187378
+            }
+          ],
+          "reasoning": "The content is a generic marketing landing page for ZoomInfo, a B2B data provider. It contains no specific information regarding IFK Sk\u00f6vde's internal operations, technology stack, or procurement activities. It is 'noise' generated by the scraping tool hitting a vendor site rather than the target entity's domain."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T01:42:22.317084",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Gambling Affiliate Content",
+            "Cookie Consent Walls",
+            "Dynamic Data Loading"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 871,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.9542739391326904
+            }
+          ],
+          "reasoning": "The content is scraped from Flashscore, a generic sports results aggregator. The text consists of repetitive 'Loading...' placeholders, generic gambling warnings (AD), and standard navigation links. There is no specific content related to IFK Sk\u00f6vde, no organizational infrastructure, and no procurement signals. This represents 'noise' in the data gathering process."
+        }
+      ],
+      "total_input_tokens": 8313,
+      "total_output_tokens": 1498,
+      "estimated_cost_usd": 0.047409
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IFK Sk\u00f6vde may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:42:22.336824"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359918",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:44.825631"
+}

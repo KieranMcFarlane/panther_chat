@@ -1,0 +1,142 @@
+{
+  "entity_id": "valorugby_emilia",
+  "entity_name": "Valorugby Emilia",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "valorugby.it",
+    "federugby.it",
+    "legaitalianarugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "valorugby_emilia",
+      "entity_name": "Valorugby Emilia",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://federugby.it",
+        "https://valorugby.it",
+        "https://legaitalianarugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Valorugby Emilia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:31:40.470086",
+          "domain_explored": "https://valorugby.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:31:49.220370",
+          "domain_explored": "https://federugby.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcasting platforms: Sky Sport, NOW, TV8",
+              "Event infrastructure: Maxischermi (Large screens/LED)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event sponsorship activation (Birra Peroni Nastro Azzurro Terzo Tempo Village)",
+              "Media rights management"
+            ]
+          },
+          "patterns_found": [
+            "National sports federation news coverage",
+            "Event management and sponsorship activation",
+            "Broadcasting rights distribution (Sky Sport, NOW, TV8)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 327,
+              "elapsed_seconds": 5.652720212936401
+            }
+          ],
+          "reasoning": "The analyzed content from 'federugby.it' focuses exclusively on the Italian National Rugby Team's preparations for the 2026 Six Nations Championship and the associated event logistics in Rome. While it mentions commercial partners (Sky, NOW, Birra Peroni) and event infrastructure (Village), these are established macro-level sponsorships and broadcast deals relevant to the Federation (FIR) and the event organizers, not specific procurement signals or technology investment patterns for the target entity, Valorugby Emilia. There is no mention of Valorugby Emilia, its specific vendors, or its operational needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:32:01.933564",
+          "domain_explored": "https://legaitalianarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platform (Watch Now functionality)",
+              "Content Management System (CMS) for League standings and news",
+              "Digital Asset Management (Video Highlights)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Integration: 'Soladria Serie A Elite' naming rights suggests active sponsorship procurement.",
+              "Media Rights: 'Palinsesto TV' indicates contracts for broadcasting and production services.",
+              "League Infrastructure: Reliance on 'Lega Italiana Rugby' for digital presence suggests shared services or centralized procurement."
+            ]
+          },
+          "patterns_found": [
+            "League-level digital content management",
+            "Centralized broadcasting rights distribution (Soladria Serie A Elite)",
+            "Sponsorship ecosystem activation (Rugby Hub, Soladria)",
+            "Performance analytics infrastructure (League standings, live scoring)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 381,
+              "elapsed_seconds": 6.2545201778411865
+            }
+          ],
+          "reasoning": "While the page itself is a scoreboard, it confirms Valorugby Emilia operates within a centralized digital ecosystem managed by 'Lega Italiana Rugby'. The presence of 'Watch Now' links, video highlights, and a title sponsor ('Soladria') indicates a structured procurement pipeline for media production, streaming technology, and sponsorship management platforms at the League level, which Valorugby benefits from."
+        }
+      ],
+      "total_input_tokens": 2836,
+      "total_output_tokens": 708,
+      "estimated_cost_usd": 0.019128
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Valorugby Emilia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:32:01.935245"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281707",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:26.105835"
+}

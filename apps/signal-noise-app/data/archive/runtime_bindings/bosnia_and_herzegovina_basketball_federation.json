@@ -1,0 +1,187 @@
+{
+  "entity_id": "bosnia_and_herzegovina_basketball_federation",
+  "entity_name": "Bosnia and Herzegovina Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "basketnews.com",
+    "basketball.fandom.com",
+    "basketballplus.eu",
+    "celebritytalent.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ba.linkedin.com/jobs/view/women-s-professional-basketball-player-at-kk-jumper-zenica-4246328868"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bosnia_and_herzegovina_basketball_federation",
+      "entity_name": "Bosnia and Herzegovina Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://celebritytalent.net",
+        "https://basketballplus.eu",
+        "https://basketnews.com",
+        "https://ba.linkedin.com/jobs/view/women-s-professional-basketball-player-at-kk-jumper-zenica-4246328868",
+        "https://basketball.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bosnia and Herzegovina Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:43:51.891233",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:43:58.048192",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General basketball encyclopedia content",
+            "Fandom/Wiki platform structure",
+            "Irrelevant entity scope (Global/NBA focus vs. Bosnia and Herzegovina specific)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1344,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.151113986968994
+            }
+          ],
+          "reasoning": "The scraped content is the homepage of 'Basketball Wiki' on Fandom. It is a general information repository about basketball globally (NBA, WNBA, College) and is user-generated. It contains no specific information regarding the Bosnia and Herzegovina Basketball Federation's internal operations, technology stack, or procurement activities. The content is purely encyclopedic and unrelated to the specific entity's purchasing signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:44:10.598870",
+          "domain_explored": "https://basketballplus.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Distance Learning Platform (eB+)",
+              "Web-based Educational Games"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "National Federation Programs (Vendor relationship)",
+              "Specialist Coach Education (Training procurement)",
+              "Sports Tourism & Camp Organization (Event services)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Programs",
+            "Digital Education Platform (eB+)",
+            "Sports Tourism Services",
+            "Specialist Education"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 881,
+              "output_tokens": 292,
+              "elapsed_seconds": 2.8395118713378906
+            }
+          ],
+          "reasoning": "The content explicitly lists 'PROGRAMI NACIONALNIH KO\u0160ARKA\u0160KIH FEDERACIJA' (Programs of National Basketball Federations) as a core offering. This indicates the entity acts as a service provider to federations (potentially including the Bosnia and Herzegovina Basketball Federation). The presence of 'eB+ Internet dopisna edukacija' (distance learning) and 'edukacija trenera specijalista' suggests a B2G service model involving digital platforms and training procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:44:13.760443",
+          "domain_explored": "https://celebritytalent.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:44:42.201353",
+          "domain_explored": "https://ba.linkedin.com/jobs/view/women-s-professional-basketball-player-at-kk-jumper-zenica-4246328868",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: Women's professional basketball player",
+              "Entity: KK Jumper Zenica",
+              "Type: Contract / Player Recruitment"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (KK Jumper Zenica vs. National Federation)",
+            "Operational Role (Athletic Recruitment vs. Corporate Procurement)",
+            "Contract/Agent-based Engagement Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 284,
+              "elapsed_seconds": 25.035305976867676
+            }
+          ],
+          "reasoning": "The content is a job posting for a professional basketball player at KK Jumper Zenica, a specific club team, not the Bosnia and Herzegovina Basketball Federation (KSBI). While it confirms the existence of professional basketball operations in the region, it represents an athletic recruitment activity (player acquisition) rather than organizational procurement (vendor acquisition, technology investment, or service contracting). There are no signals of B2B procurement, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3794,
+      "total_output_tokens": 791,
+      "estimated_cost_usd": 0.023247
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bosnia and Herzegovina Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:44:42.202631"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.254145",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:40:45.422137"
+}

@@ -1,0 +1,30 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "arsenal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chelsea",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liverpool",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "manchester_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "borussia_dortmund",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-01-30T14:38:14.937642",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-30T14:38:14.938579"
+}

@@ -1,0 +1,167 @@
+{
+  "entity_id": "kaa_gent",
+  "entity_name": "KAA Gent",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "kaagent.be",
+    "kaag.roboticket.com",
+    "proleague.be"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/business-controller-at-kaa-gent-4081139385?refId=gSsXyc9Cc8BVqonFJI9jcw%3D%3D&trackingId=adTfGUN2pbIY7L9%2FhED0eQ%3D%3D"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kaa_gent",
+      "entity_name": "KAA Gent",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://kaag.roboticket.com",
+        "https://proleague.be",
+        "https://be.linkedin.com/jobs/view/business-controller-at-kaa-gent-4081139385?refId=gSsXyc9Cc8BVqonFJI9jcw%3D%3D&trackingId=adTfGUN2pbIY7L9%2FhED0eQ%3D%3D",
+        "https://kaagent.be"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KAA Gent may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:11:07.735478",
+          "domain_explored": "https://kaagent.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports_news_content",
+            "Player_transfer_announcement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 409,
+              "output_tokens": 132,
+              "elapsed_seconds": 3.8073229789733887
+            }
+          ],
+          "reasoning": "The content provided is a sports news update regarding player transfers (Cauwel and Tour\u00e9). It contains no information regarding business operations, technology infrastructure, job vacancies, or procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:11:10.727658",
+          "domain_explored": "https://kaag.roboticket.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:11:17.363474",
+          "domain_explored": "https://proleague.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports_news_content",
+            "League_announcements",
+            "Event_marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 168,
+              "elapsed_seconds": 3.3907909393310547
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the Belgian Pro League's general activities, match summaries, and league-wide initiatives (e.g., 'Week van de Belgische Muziek', 'bedrijventoernooi'). There is no specific mention of KAA Gent, nor are there any procurement signals, technology investments, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:11:23.449577",
+          "domain_explored": "https://be.linkedin.com/jobs/view/business-controller-at-kaa-gent-4081139385?refId=gSsXyc9Cc8BVqonFJI9jcw%3D%3D&trackingId=adTfGUN2pbIY7L9%2FhED0eQ%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Exact Online"
+            ],
+            "job_postings": [
+              "Business Controller"
+            ],
+            "procurement_indicators": [
+              "Financial process optimization initiative",
+              "Cash planning and monitoring improvements",
+              "License control compliance requirements"
+            ]
+          },
+          "patterns_found": [
+            "Job_Posting_Finance",
+            "Technology_Stack_Exact_Online",
+            "Process_Optimization_Indicators"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.3820669651031494
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct RFP, it reveals critical procurement intelligence regarding KAA Gent's technology stack and financial maturity. The explicit requirement for 'Exact Online' confirms their accounting software, and the focus on 'optimization of financial processes' suggests a readiness to upgrade or improve internal tools, which is a strong signal for potential software procurement or consulting needs."
+        }
+      ],
+      "total_input_tokens": 3330,
+      "total_output_tokens": 563,
+      "estimated_cost_usd": 0.018435
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KAA Gent may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:11:23.451921"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.178604",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:13.983291"
+}

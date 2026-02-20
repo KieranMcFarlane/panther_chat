@@ -1,0 +1,272 @@
+{
+  "entity_id": "bjerringbro-silkeborg",
+  "entity_name": "Bjerringbro-Silkeborg",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "bjerringbro-silkeborg.dk",
+    "shop.bjerringbro-silkeborg.dk",
+    "eurohandball.com",
+    "handball-planet.com",
+    "aalborghaandbold.dk",
+    "sporting.pt"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bjerringbro-silkeborg",
+      "entity_name": "Bjerringbro-Silkeborg",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://aalborghaandbold.dk",
+        "https://bjerringbro-silkeborg.dk",
+        "https://eurohandball.com",
+        "https://shop.bjerringbro-silkeborg.dk",
+        "https://handball-planet.com",
+        "https://sporting.pt"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bjerringbro-Silkeborg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:43:28.054951",
+          "domain_explored": "https://bjerringbro-silkeborg.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Praktikant (Intern)",
+                "context": "Generic interview snippet regarding interest in handball, likely sports/operations related rather than technical/commercial procurement."
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Partnership/Sponsorship",
+                "details": "Active partnerships with Grundfos, Sport24, JYSK arena."
+              },
+              {
+                "type": "Event Services",
+                "details": "Catering services used (Madselskabet Silkeborg) for fan events."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement & Event Marketing",
+            "Sponsorship Activation (Grundfos, Sport24)",
+            "Youth Academy Operations (BSH Ungdom)",
+            "Ticket Sales & Merchandising"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.3603711128234863
+            }
+          ],
+          "reasoning": "The scraped content consists of social media feed updates (Facebook) and general news articles focused on sports results, player injuries, fan events, and youth camps. There is no mention of enterprise software, IT infrastructure, administrative job postings, or organizational governance changes that would indicate a procurement need."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:43:38.296089",
+          "domain_explored": "https://shop.bjerringbro-silkeborg.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Shopify-like structure)",
+              "JavaScript-dependent frontend",
+              "User Account/Dashboard System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active ticket sales workflow",
+              "Hospitality/Fan dining management",
+              "Digital cart and checkout system"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce & Ticketing Operations",
+            "User Account Management (Self-service)",
+            "Event & Hospitality Sales (Fanspisning)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1192,
+              "output_tokens": 297,
+              "elapsed_seconds": 2.867626905441284
+            }
+          ],
+          "reasoning": "The content reveals a dedicated e-commerce platform (shop.bjerringbro-silkeborg.dk) for ticketing and merchandise. While the raw HTML is repetitive and lacks specific vendor names, the structure indicates active use of a 'Point of Sale' system, user account management ('Min konto'), and specific sales workflows for hospitality ('Fanspisning'). This confirms digital procurement capabilities in the retail/ticketing domain, though the specific technology vendor remains unidentified."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:43:48.625079",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Event Scheduling (EHF Competitions)",
+            "Cookie Consent Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.7733988761901855
+            }
+          ],
+          "reasoning": "The content is scraped from the European Handball Federation (EHF) news portal and focuses on general tournament results (Denmark winning EHF EURO), player awards (MVP Gidsel), and future competition schedules. There is no mention of Bjerringbro-Silkeborg (BS), their specific procurement needs, technology stack, or organizational operations. The content is irrelevant to the target entity's procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:43:59.086049",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Transfer Market Activity",
+            "Event Results Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 184,
+              "elapsed_seconds": 3.7263131141662598
+            }
+          ],
+          "reasoning": "The scraped content from handball-planet.com is a sports news feed focused on the EHF EURO 2026 results, player transfers, and awards. It contains no information regarding Bjerringbro-Silkeborg's internal operations, technology stack, or procurement needs. The content is purely informational and editorial, lacking any corporate or organizational signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:44:14.194492",
+          "domain_explored": "https://aalborghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Academy Structure: Aalborg utilizes 'Elitesport Vendsyssel' partnerships and specific coaching setups.",
+              "Competitor Merchandising: Active sale of 2025/26 season kits (Home, Away, GK, Pre-game).",
+              "Competitor Ticketing: Sales for 'Final4 in Boxen' and standard home matches at Sparekassen Danmark Arena."
+            ]
+          },
+          "patterns_found": [
+            "Competitor Analysis (Aalborg H\u00e5ndbold)",
+            "Merchandising & Retail (Jersey Sales)",
+            "Ticketing Operations (Event Sales)",
+            "Youth Academy Operations (Eliteakademi)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 318,
+              "elapsed_seconds": 7.99796986579895
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Aalborg H\u00e5ndbold, a direct competitor to Bjerringbro-Silkeborg (BSH) in the Danish Handball League. While this provides valuable market intelligence regarding competitor operations (academy structure, merchandising, ticketing), it contains zero direct procurement signals, technology stack information, or job postings specific to the target entity, Bjerringbro-Silkeborg. The analysis cannot proceed on the target entity using this source."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:44:25.501769",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy Frontend (indicated by 'Update Browser' prompt)",
+              "Ticketing Platform (Generic 'Comprar Bilhetes' functionality)",
+              "Membership Management System ('Faz-te s\u00f3cio')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Multi-sport facility management needs",
+              "Youth academy logistics coordination"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Sport Club Operations",
+            "Event Scheduling & Ticketing",
+            "Fan Engagement (Membership)",
+            "Youth Academy Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1637,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.332626104354858
+            }
+          ],
+          "reasoning": "The content is from Sporting CP (Portugal), a competitor entity, not Bjerringbro-Silkeborg. While it confirms industry standards for club operations (ticketing, membership, multi-sport management), it provides no direct procurement signals or technology stack intelligence specific to the target entity (BSH). The 'Update Browser' message suggests a legacy frontend stack, but this is not applicable to BSH."
+        }
+      ],
+      "total_input_tokens": 8787,
+      "total_output_tokens": 1615,
+      "estimated_cost_usd": 0.050586
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bjerringbro-Silkeborg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:44:25.503507"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352132",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:40.451930"
+}

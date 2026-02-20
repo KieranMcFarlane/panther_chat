@@ -1,0 +1,208 @@
+{
+  "entity_id": "kk_split",
+  "entity_name": "KK Split",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "kksplit.com",
+    "kk-split.com",
+    "aba-liga.com",
+    "kkdubrovnik.net",
+    "shop.kk-split.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kk_split",
+      "entity_name": "KK Split",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://kksplit.com",
+        "https://kkdubrovnik.net",
+        "https://aba-liga.com",
+        "https://kk-split.com",
+        "https://shop.kk-split.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Job Posting: Commercial Revenue Manager",
+        "Ticketing Platform Usage: Adriaticket",
+        "Sponsorship/Partnership Structure",
+        "Season Ticket Sales Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KK Split may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:17:02.054579",
+          "domain_explored": "https://kksplit.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:17:17.485208",
+          "domain_explored": "https://kk-split.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Adriaticket (Ticketing Platform)",
+              "YouTube (Video Hosting)",
+              "WordPress (CMS - inferred from admin user structure)"
+            ],
+            "job_postings": [
+              {
+                "role": "Voditelj/ica komercijalnih prihoda",
+                "date_published": "30/01/2026",
+                "intent": "Revenue generation, Sponsorship acquisition, Commercial partnerships"
+              }
+            ],
+            "procurement_indicators": [
+              "Active search for commercial leadership (implies need for CRM/Sponsorship tools)",
+              "Outsourced ticketing operations to Adriaticket",
+              "Sponsorship packages available (KK Split Sponsors section)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Commercial Revenue Manager",
+            "Ticketing Platform Usage: Adriaticket",
+            "Sponsorship/Partnership Structure",
+            "Season Ticket Sales Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1381,
+              "output_tokens": 348,
+              "elapsed_seconds": 11.347936868667603
+            }
+          ],
+          "reasoning": "The discovery of a specific job posting for a 'Voditelj/ica komercijalnih prihoda' (Head of Commercial Revenue) is a direct procurement signal indicating an active focus on monetization and revenue generation. Additionally, the use of 'adriaticket.com' for ticketing confirms a B2B relationship with a ticketing vendor."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:17:20.416416",
+          "domain_explored": "https://aba-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:17:28.223299",
+          "domain_explored": "https://kkdubrovnik.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sofascore (Data Visualization)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis (KK Split vs KK Dubrovnik)",
+            "League Affiliation (SuperSport Premijer Liga)",
+            "Third-Party Integration (Sofascore)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.9535276889801025
+            }
+          ],
+          "reasoning": "The scraped content is from a competitor's (KK Dubrovnik) news feed and contains only historical narratives, game results, and match previews. While it mentions KK Split, it provides no insights into KK Split's internal operations, technology stack, or procurement activities. The presence of 'Sofascore' indicates a passive data integration rather than an active procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:17:37.247248",
+          "domain_explored": "https://shop.kk-split.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WooCommerce",
+              "WordPress"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Inventory Procurement (Jerseys, Memorabilia)",
+              "Textile Manufacturing Sourcing",
+              "Digital Payment Gateway Integration"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Platform Usage (WooCommerce)",
+            "Merchandise Procurement (Jerseys, Memorabilia)",
+            "Inventory Management (Variable Products/Sizes)",
+            "Payment Processing (PDV/VAT Inclusion)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1058,
+              "output_tokens": 287,
+              "elapsed_seconds": 4.637390851974487
+            }
+          ],
+          "reasoning": "The discovery of the dedicated shop subdomain (shop.kk-split.com) confirms active digital commerce operations. The presence of a WooCommerce-based store indicates procurement needs for physical inventory (textiles, manufacturing) and e-commerce infrastructure maintenance (hosting, payment gateways). While this confirms commercial activity, it is a standard operational capability rather than a new high-value strategic signal, warranting a weak acceptance."
+        }
+      ],
+      "total_input_tokens": 3904,
+      "total_output_tokens": 851,
+      "estimated_cost_usd": 0.024477
+    },
+    "procurement_signals": [
+      "Job Posting: Commercial Revenue Manager",
+      "Ticketing Platform Usage: Adriaticket",
+      "Sponsorship/Partnership Structure",
+      "Season Ticket Sales Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KK Split may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:17:37.248964"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.225467",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:46:06.589197"
+}

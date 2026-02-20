@@ -1,0 +1,209 @@
+{
+  "entity_id": "develi_belediyespor",
+  "entity_name": "Develi Belediyespor",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "vault.nimc.gov.ng",
+    "campus.sdh.gba.gov.ar",
+    "volleybox.net",
+    "volleytimes.com",
+    "ntvspor.net",
+    "kayseriolay.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "develi_belediyespor",
+      "entity_name": "Develi Belediyespor",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kayseriolay.com",
+        "https://campus.sdh.gba.gov.ar",
+        "https://vault.nimc.gov.ng",
+        "https://volleytimes.com",
+        "https://volleybox.net",
+        "https://ntvspor.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Develi Belediyespor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:47:38.879170",
+          "domain_explored": "https://vault.nimc.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:47:58.111665",
+          "domain_explored": "https://campus.sdh.gba.gov.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:48:14.928196",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports transfer market data",
+            "Player rankings and statistics",
+            "Forum and community content",
+            "No corporate governance or procurement terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 195,
+              "elapsed_seconds": 10.20165205001831
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is exclusively related to volleyball sports data, including player transfers, rankings, and community discussions. There is no presence of corporate procurement signals, RFPs, or technology investment indicators relevant to 'Develi Belediyespor' in a business or governance context. The content is purely sports-focused."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:48:24.222884",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Match results and standings",
+            "Player transfer rumors",
+            "Photogallery content",
+            "No corporate or governance content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 176,
+              "elapsed_seconds": 4.279170751571655
+            }
+          ],
+          "reasoning": "The content from Volleytimes.com is exclusively focused on sports journalism, covering volleyball match results, player transfers, and league standings. There is no content related to business operations, technology procurement, or administrative governance for Develi Belediyespor."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:48:37.750144",
+          "domain_explored": "https://ntvspor.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Football transfer rumors",
+            "Match results and standings",
+            "General sports journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 166,
+              "elapsed_seconds": 5.418076038360596
+            }
+          ],
+          "reasoning": "The content is exclusively focused on Turkish 'S\u00fcper Lig' football news, specifically regarding major clubs (Galatasaray, Fenerbah\u00e7e, Be\u015fikta\u015f) and player transfers. There is no content related to Develi Belediyespor, municipal governance, or administrative procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:48:50.762363",
+          "domain_explored": "https://kayseriolay.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local news aggregation",
+            "Sports news (Kayserispor)",
+            "Obituaries and local events",
+            "Municipal political commentary"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 186,
+              "elapsed_seconds": 5.794893980026245
+            }
+          ],
+          "reasoning": "The content is a standard local news aggregator (Kayseri Olay) focusing on general news, sports (Kayserispor), weather, and local obituaries. While it mentions 'Develi' in an obituary and references municipal council members, there are no signals regarding procurement, technology investments, or business operations relevant to Develi Belediyespor."
+        }
+      ],
+      "total_input_tokens": 5959,
+      "total_output_tokens": 723,
+      "estimated_cost_usd": 0.028722
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Develi Belediyespor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:48:50.764139"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319327",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:54.776300"
+}

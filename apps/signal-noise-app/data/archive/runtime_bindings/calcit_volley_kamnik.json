@@ -1,0 +1,182 @@
+{
+  "entity_id": "calcit_volley_kamnik",
+  "entity_name": "Calcit Volley Kamnik",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "globalsportsarchive.com",
+    "volleytimes.com",
+    "es.churchpop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "calcit_volley_kamnik",
+      "entity_name": "Calcit Volley Kamnik",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://www-old.cev.eu",
+        "https://volleytimes.com",
+        "https://es.churchpop.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Calcit Volley Kamnik may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:33:21.618581",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports federation navigation structure",
+            "Generic event calendar listings",
+            "Standard footer links (Privacy Policy, Terms of Use)",
+            "Historical/Cached web content (Copyright 2011)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.3135998249053955
+            }
+          ],
+          "reasoning": "The content provided is a navigation dump from the CEV (Conf\u00e9d\u00e9ration Europ\u00e9enne de Volleyball) website. It lists generic competition categories (Champions League, EuroVolley), global event locations, and standard footer links. There is no mention of Calcit Volley Kamnik, no specific job postings, and no technology stack information relevant to the target entity. This is irrelevant noise for the specific procurement intelligence of Calcit Volley Kamnik."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:33:33.617665",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "High-volume event listings (UEFA, CONCACAF, CAF)",
+            "Standard taxonomy links (Soccer, Leagues, Teams)",
+            "Absence of organizational specific content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.6272571086883545
+            }
+          ],
+          "reasoning": "The content is a generic sports aggregation site listing global soccer leagues and tournaments. There is no mention of Calcit Volley Kamnik, volleyball, or organizational operations. It is a data repository for results, not a source for procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:33:43.494942",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news feed structure",
+            "High-volume match results aggregation",
+            "Standard editorial taxonomy (Italy, France, Poland, European Cups)",
+            "Player transfer rumors and coach changes",
+            "Multimedia gallery listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.086116075515747
+            }
+          ],
+          "reasoning": "The content is a standard sports news aggregator covering international volleyball (Italy, France, Poland, Turkey, etc.). It focuses exclusively on match results, standings, and player transfers. There is no content related to club management, operations, or procurement activities for Calcit Volley Kamnik."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:33:56.415071",
+          "domain_explored": "https://es.churchpop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Newsletter Subscription Form (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic content management taxonomy (Art\u00edculos, Santos cat\u00f3licos, Consejos)",
+            "Newsletter subscription forms (Mailchimp/standard web forms)",
+            "High-volume editorial content aggregation",
+            "Standard footer/navigation structure",
+            "Irrelevant subject matter (Catholic evangelization vs. Volleyball procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 250,
+              "elapsed_seconds": 5.580758094787598
+            }
+          ],
+          "reasoning": "The content is entirely unrelated to Calcit Volley Kamnik or volleyball operations. It is a Spanish-language Catholic news and lifestyle site (ChurchPop) featuring articles on saints, prayer, and family life. The only technical signals are generic newsletter subscription forms, which do not indicate specific procurement intent for the target entity."
+        }
+      ],
+      "total_input_tokens": 5813,
+      "total_output_tokens": 868,
+      "estimated_cost_usd": 0.030459
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Calcit Volley Kamnik may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:33:56.417835"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326094",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:58.453531"
+}

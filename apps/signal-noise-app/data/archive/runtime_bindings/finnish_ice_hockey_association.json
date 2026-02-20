@@ -1,0 +1,143 @@
+{
+  "entity_id": "finnish_ice_hockey_association",
+  "entity_name": "Finnish Ice Hockey Association",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "internationalhockeywiki.com",
+    "internationalhockey.fandom.com",
+    "eurohockey.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "finnish_ice_hockey_association",
+      "entity_name": "Finnish Ice Hockey Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://internationalhockeywiki.com",
+        "https://internationalhockey.fandom.com",
+        "https://eurohockey.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Finnish Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:38:32.711057",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:38:42.040238",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports encyclopedia content",
+            "Historical records and databases",
+            "Global league listings (including Liiga)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.59962797164917
+            }
+          ],
+          "reasoning": "The scraped content represents a general knowledge wiki about international ice hockey history and statistics. While it mentions 'Liiga' (the Finnish professional league) and lists Finland as an IIHF member, it contains no information regarding the Finnish Ice Hockey Association's internal operations, technology stack, or procurement activities. It is a historical reference site, not a business or government procurement portal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:38:47.258649",
+          "domain_explored": "https://internationalhockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports encyclopedia content",
+            "Historical records and databases",
+            "Global league listings (including Liiga)",
+            "User-generated content structure (Fandom/Wiki platform)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.317352056503296
+            }
+          ],
+          "reasoning": "The scraped content represents a generic wiki homepage (International Hockey Wiki on Fandom). While it mentions 'Liiga' (the Finnish elite league) and lists Finland as an IIHF member, it contains no operational data regarding the Finnish Ice Hockey Association's internal procurement, technology stack, or governance. It is purely informational/encyclopedic content."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:38:50.182909",
+          "domain_explored": "https://eurohockey.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2853,
+      "total_output_tokens": 409,
+      "estimated_cost_usd": 0.014694
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Finnish Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:38:50.183749"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305916",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:39:33.579132"
+}

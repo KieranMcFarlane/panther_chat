@@ -1,0 +1,205 @@
+{
+  "entity_id": "british_virgin_islands_basketball_federation",
+  "entity_name": "British Virgin Islands Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "virginislandsdailynews.com",
+    "bviolympics.org",
+    "virginislandsnewsonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/jobs-for-europe-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/view/senior-litigation-lawyer-5pqe%2B-the-british-virgin-islands-at-hydrogen-group-4340374751"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_virgin_islands_basketball_federation",
+      "entity_name": "British Virgin Islands Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://virginislandsdailynews.com",
+        "https://virginislandsnewsonline.com",
+        "https://uk.linkedin.com/jobs/view/senior-litigation-lawyer-5pqe%2B-the-british-virgin-islands-at-hydrogen-group-4340374751",
+        "https://bviolympics.org",
+        "https://www.linkedin.com/jobs/jobs-for-europe-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British Virgin Islands Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:49:26.543138",
+          "domain_explored": "https://virginislandsdailynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "paywall_access_blocker",
+            "generic_content_wrapper"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 459,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.0352911949157715
+            }
+          ],
+          "reasoning": "The provided text consists solely of repetitive UI elements ('Your E-edition is ready') and navigation links from the Virgin Islands Daily News. It contains no substantive articles, organizational details, or specific mentions of the British Virgin Islands Basketball Federation. The content is effectively a paywall or access prompt, providing zero intelligence regarding procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:49:29.555393",
+          "domain_explored": "https://bviolympics.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:49:36.472128",
+          "domain_explored": "https://virginislandsnewsonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Corporate transition mentioned for BVITB)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Government Infrastructure Loan ($100m loan for water/sewerage)",
+              "Public Estate Revitalisation (Demolition contracts)",
+              "Digital Platform Migration (BVITB social media consolidation)"
+            ]
+          },
+          "patterns_found": [
+            "public_sector_procurement_signals",
+            "infrastructure_investment",
+            "digital_transformation_government"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 324,
+              "elapsed_seconds": 3.8377671241760254
+            }
+          ],
+          "reasoning": "While the content is a general news aggregator and contains no direct procurement signals for the Basketball Federation itself, it provides high-value context on the broader BVI public sector environment. The specific mention of a '$100m loan' and 'water & sewerage' infrastructure spending indicates active government procurement cycles. Additionally, the BVITB (Tourist Board) transitioning to 'official corporate platforms' suggests a regional trend towards digital governance and platform consolidation, which could influence how non-profits like the Federation are expected to manage data and operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:49:43.749246",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-for-europe-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Country Manager Southern Europe (Adopt Parfums)",
+              "Cabin Crew (Ryanair)",
+              "Candidatura Spontanea (Kia Europe)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_job_aggregator",
+            "geographic_mismatch",
+            "irrelevant_sector_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 222,
+              "elapsed_seconds": 3.5552849769592285
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Europe' and 'Worldwide', not specific to the British Virgin Islands. The listings (Adopt Parfums, Kia Europe, Ryanair) are global commercial entities unrelated to the BVI Basketball Federation or regional procurement. There is zero signal of BVI-specific governance, technology investment, or federation activity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:49:51.425943",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-litigation-lawyer-5pqe%2B-the-british-virgin-islands-at-hydrogen-group-4340374751",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "AI/ML Engineer (Juno Beach, FL)",
+              "Senior Project Manager (San Mateo County, CA)",
+              "Senior Litigation Lawyer (British Virgin Islands)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "recruitment_agency_intermediary",
+            "geographic_mismatch",
+            "sector_mismatch",
+            "authentication_gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.3547699451446533
+            }
+          ],
+          "reasoning": "The content represents a recruitment agency (Hydrogen Group) listing technical roles (AI/ML Engineer, Project Manager) primarily in the United States (CA, FL), not the British Virgin Islands. The presence of a 'Senior Litigation Lawyer' role for BVI within a recruitment feed indicates legal services hiring, not sports federation procurement. The content is gated by authentication and serves as a generic job aggregator, providing no actionable intelligence regarding the BVI Basketball Federation's technology stack or governance."
+        }
+      ],
+      "total_input_tokens": 4989,
+      "total_output_tokens": 993,
+      "estimated_cost_usd": 0.029862
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British Virgin Islands Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:49:51.427516"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.255051",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:17.668699"
+}

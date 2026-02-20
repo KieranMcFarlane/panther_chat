@@ -1,0 +1,157 @@
+{
+  "entity_id": "rk_vojvodina",
+  "entity_name": "RK Vojvodina",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "fkvojvodina.rs",
+    "grokipedia.com",
+    "globalsportsarchive.com",
+    "seha-liga.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_vojvodina",
+      "entity_name": "RK Vojvodina",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://grokipedia.com",
+        "https://fkvojvodina.rs",
+        "https://seha-liga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Vojvodina may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:13:34.635789",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls blocking content",
+            "Tournament schedules (Men's/Women's EHF EURO)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 207,
+              "elapsed_seconds": 5.1634910106658936
+            }
+          ],
+          "reasoning": "The provided content is a general news feed from the European Handball Federation (EHF) regarding the Men's EHF EURO 2026, specifically focusing on Denmark, Croatia, and player awards. There is no mention of RK Vojvodina, nor are there any signals regarding procurement, technology investments, or organizational governance specific to the target entity. The content is largely blocked by cookie consent walls, further limiting visibility."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:13:37.536293",
+          "domain_explored": "https://fkvojvodina.rs",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:13:40.452656",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:13:47.442471",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics aggregation",
+            "Tournament navigation menus (UEFA, CONCACAF, CAF)",
+            "No entity-specific content (RK Vojvodina)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.1361987590789795
+            }
+          ],
+          "reasoning": "The scraped content consists of generic navigation links and tournament lists for global soccer competitions from globalsportsarchive.com. There is no mention of RK Vojvodina, handball, procurement signals, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:13:50.201269",
+          "domain_explored": "https://seha-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2828,
+      "total_output_tokens": 373,
+      "estimated_cost_usd": 0.014079000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Vojvodina may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:13:50.201564"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.353276",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:36.878722"
+}

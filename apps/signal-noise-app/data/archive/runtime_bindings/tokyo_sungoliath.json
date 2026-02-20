@@ -1,0 +1,200 @@
+{
+  "entity_id": "tokyo_sungoliath",
+  "entity_name": "Tokyo Sungoliath",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "suntory.com",
+    "league-one.jp",
+    "en.sports-tokyo-info.metro.tokyo.lg.jp",
+    "ultimaterugby.com",
+    "sungoliathfriends.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tokyo_sungoliath",
+      "entity_name": "Tokyo Sungoliath",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sungoliathfriends.jp",
+        "https://league-one.jp",
+        "https://ultimaterugby.com",
+        "https://suntory.com",
+        "https://en.sports-tokyo-info.metro.tokyo.lg.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tokyo Sungoliath may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:17:17.351104",
+          "domain_explored": "https://suntory.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Parent Company Context: Suntory Group owns Tokyo Sungoliath.",
+              "Corporate Philosophy: 'Yatte Minahare' (Pioneering Spirit).",
+              "Sustainability Focus: 'Sustained by Nature and Water' (Parent company ESG goals)."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Corporate Overview",
+            "Brand Portfolio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 255,
+              "elapsed_seconds": 2.690443992614746
+            }
+          ],
+          "reasoning": "The scraped content is from the Suntory Group global corporate website (suntory.com). While Suntory is the parent company of Tokyo Sungoliath, this content focuses on consumer beverage brands (Soft Drinks, Spirits, Beer, Wine) and high-level corporate philosophy. It contains no specific procurement signals, technology stacks, or operational data related to the Tokyo Sungoliath rugby franchise. This is a false positive in the search scope."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:17:28.123335",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External Ticketing Platform: https://ticketrugby.jp (League-wide vendor, not team-specific procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic League Content",
+            "Operational Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.5629260540008545
+            }
+          ],
+          "reasoning": "The content is a schedule of rugby matches (League One) scraped from the league's official website. While it confirms the existence of 'Tokyo SG' (Tokyo Sungoliath) as a participating team, it provides no information regarding the entity's internal procurement, technology stack, or governance. It is purely consumer-facing operational data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:17:44.659652",
+          "domain_explored": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tokyo Metropolitan Olympic and Paralympic Preparation Bureau",
+              "Sports volunteer information",
+              "Public facility usage (Budokan)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Government Bureau",
+            "Public Service Information",
+            "Generic Sports Directory"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 236,
+              "elapsed_seconds": 9.87017297744751
+            }
+          ],
+          "reasoning": "The content is from the Tokyo Metropolitan Government's 'Office for Sports Promotion' and 'Olympic and Paralympic Preparation Bureau'. It is a public information portal for general sports activities, facilities, and volunteerism in Tokyo. It lacks specific commercial procurement intent, vendor selection processes, or corporate technology stack details related to the Tokyo Sungoliath rugby franchise."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:17:57.664278",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Sports News Aggregation",
+            "Irrelevant Sporting Events"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 619,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.7914698123931885
+            }
+          ],
+          "reasoning": "The content provided is a news snippet regarding the HSBC SVNS (Singapore Sevens) rugby tournament involving Fiji, New Zealand, France, and Australia. This is generic sports news and has no connection to the Tokyo Sungoliath organization, its operations, or its procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:18:32.031791",
+          "domain_explored": "https://sungoliathfriends.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4817,
+      "total_output_tokens": 847,
+      "estimated_cost_usd": 0.027156
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tokyo Sungoliath may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:18:32.038681"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.273889",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:22:38.564987"
+}

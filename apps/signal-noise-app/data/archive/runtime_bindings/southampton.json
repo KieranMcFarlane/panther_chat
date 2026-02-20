@@ -1,0 +1,400 @@
+{
+  "entity_id": "southampton",
+  "entity_name": "Southampton",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "southamptonfc.com",
+    "southampton.ac.uk",
+    "southampton.gov.uk",
+    "southamptontownny.gov",
+    "tickets.southamptonfc.com",
+    "delhi.southampton.ac.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/jobs-in-southampton",
+      "https://uk.linkedin.com/jobs/career-jobs-southampton",
+      "https://uk.linkedin.com/jobs/%28-%29-full-time-jobs-southampton",
+      "https://bm.linkedin.com/jobs/jobs-in-southampton-parish",
+      "https://www.linkedin.com/jobs/university-of-southampton-delhi-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/companies-jobs-southampton",
+      "https://uk.linkedin.com/jobs/graduate-jobs-southampton",
+      "https://uk.linkedin.com/jobs/full-time-sales-jobs-southampton",
+      "https://uk.linkedin.com/jobs/banking-full-time-jobs-southampton",
+      "https://uk.linkedin.com/jobs/hospitality-jobs-jobs-southampton"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "southampton",
+      "entity_name": "Southampton",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.039999999999999994,
+        0.06
+      ],
+      "explored_domains": [
+        "https://southampton.gov.uk",
+        "https://delhi.southampton.ac.uk",
+        "https://uk.linkedin.com/jobs/jobs-in-southampton",
+        "https://uk.linkedin.com/jobs/career-jobs-southampton",
+        "https://southampton.ac.uk",
+        "https://tickets.southamptonfc.com",
+        "https://uk.linkedin.com/jobs/%28-%29-full-time-jobs-southampton",
+        "https://www.linkedin.com/jobs/university-of-southampton-delhi-jobs-worldwide",
+        "https://southamptonfc.com",
+        "https://bm.linkedin.com/jobs/jobs-in-southampton-parish",
+        "https://southamptontownny.gov"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Southampton may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:06:50.325000",
+          "domain_explored": "https://southamptonfc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:07:02.237120",
+          "domain_explored": "https://southampton.ac.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Learning Management System (LMS) - indicated by subdomain",
+              "Student Information System (SIS) - implied by fees/course structure",
+              "Payment Gateway Systems - implied by tuition fee processing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Master's Degrees (Digital Infrastructure requirement)",
+              "International Student Recruitment (Marketing Services potential)",
+              "Research Funding (Grant Management Systems)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Learning Platform",
+            "Student Information Systems (SIS)",
+            "International Student Recruitment",
+            "Research Funding Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 360,
+              "elapsed_seconds": 4.4027259349823
+            }
+          ],
+          "reasoning": "The content reveals a complex educational entity requiring robust backend systems. The explicit link to 'online.southampton.ac.uk' indicates a separate digital learning platform (likely Moodle, Canvas, or Blackboard) requiring hosting and maintenance. The heavy emphasis on 'tuition fees', 'funding', and 'international students' suggests the use of Student Information Systems (SIS) like SITS or Banner and potential procurement for recruitment/marketing services. While no direct RFP is visible, the operational scale implies significant software procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:07:17.124454",
+          "domain_explored": "https://southampton.gov.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:07:37.949289",
+          "domain_explored": "https://southamptontownny.gov",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:07:47.978583",
+          "domain_explored": "https://tickets.southamptonfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Secutix (Ticketing Platform)",
+              "Google Tag Manager",
+              "React.js",
+              "JavaScript"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Secutix Vendor Partnership",
+              "Digital Payment Processing Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform (Secutix/TnJS)",
+            "Google Tag Manager (GTM-N87RFZ)",
+            "React.js Application",
+            "Custom Theme Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 270,
+              "elapsed_seconds": 3.083717107772827
+            }
+          ],
+          "reasoning": "The content reveals the underlying technology stack for Southampton FC's ticketing operations. The presence of the Secutix 'TnJS' application indicates a partnership with a major ticketing vendor. While this is not a direct procurement signal for *new* business, it confirms the entity's active investment in digital sales infrastructure and analytics (GTM), which supports the hypothesis of a mature organization capable of procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:07:58.404713",
+          "domain_explored": "https://delhi.southampton.ac.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - Multi-region",
+              "Application Form Processing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Regional Scholarship Programs (Delhi Presidential, Future Talent)",
+              "Dedicated Regional Admissions Portal",
+              "Localised Web Infrastructure (delhi.southampton.ac.uk)"
+            ]
+          },
+          "patterns_found": [
+            "International Branch Campus (IBC) Operations",
+            "Regional Scholarship Management",
+            "Localised Application Processing",
+            "Multi-region Content Management (CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 286,
+              "elapsed_seconds": 2.5830800533294678
+            }
+          ],
+          "reasoning": "The content confirms the existence of a University of Southampton branch campus in Delhi. This implies procurement needs related to regional infrastructure, local marketing, and student recruitment systems specific to the Indian market. While it confirms the entity's expansion, it is primarily informational content rather than a direct signal of immediate active procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:08:10.289355",
+          "domain_explored": "https://uk.linkedin.com/jobs/jobs-in-southampton",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Night Care Assistant (Caremark Ltd)",
+              "Care Assistant (Caremark Ltd)",
+              "Online English Tutor (FindTutors)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gig Economy / Care Sector Dominance",
+            "Remote Tutoring Platforms",
+            "Generic Job Aggregation Noise"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1615,
+              "output_tokens": 273,
+              "elapsed_seconds": 4.847661972045898
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn Jobs represents a generic, unfiltered search result page for 'Southampton'. The listings are dominated by low-value individual care roles (Caremark), gig-economy babysitting (Wyndy), and online tutoring platforms (FindTutors). There is no presence of enterprise-level procurement signals, RFPs, or corporate technology investment roles that would indicate a specific procurement intent for the target entity 'Southampton' (presumably the City Council or University). The signal-to-noise ratio is too low to extract actionable intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:08:23.618481",
+          "domain_explored": "https://uk.linkedin.com/jobs/career-jobs-southampton",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "MSK Physiotherapist (Ascenti Physio)",
+              "Night Care Assistant (Caremark Ltd)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gated Content (Authentication Required)",
+            "Generic Job Aggregation",
+            "Care Sector Dominance (Caremark, Ascenti)",
+            "Geographic Noise (Fareham listings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1675,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.0344927310943604
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication walls and repetitive HTML for login modals. The visible job listings (MSK Physiotherapist, Night Care Assistant) are low-level operational roles in the care/health sectors, which do not indicate strategic procurement or technology investment decisions. The content is 'noisy' and lacks the specific technical keywords or seniority levels required to derive procurement intelligence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:08:34.049347",
+          "domain_explored": "https://uk.linkedin.com/jobs/%28-%29-full-time-jobs-southampton",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Night Care Assistant (Caremark Ltd)",
+              "Care Assistant (Caremark Ltd)",
+              "Receptionist (HM Prison Service - Newport)",
+              "Executive Assistant (Royal Naval Benevolent Trust - Portsmouth)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gig Economy / Care Sector Dominance",
+            "Geographic Noise (Isle of Wight/Portsmouth listings)",
+            "Generic Job Aggregation",
+            "Authentication Gating"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1740,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.298537015914917
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job aggregation page dominated by low-value care sector roles (Caremark Ltd) and irrelevant geographic listings (HM Prison Service in Newport/Isle of Wight, Royal Naval Benevolent Trust in Portsmouth). There are no signals of high-value procurement, technology investment, or strategic hiring within the target entity (Southampton). The content is gated by authentication, preventing deeper analysis without credentials."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:08:46.607750",
+          "domain_explored": "https://bm.linkedin.com/jobs/jobs-in-southampton-parish",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Remote Travel Advisor (Sweet Carolina Luxury Travels)",
+              "Investment Accountant (Martello Re)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Bermuda vs UK)",
+            "SMB/Remote Gig Economy Listings",
+            "Recruitment Agency Noise (Spa Staff.com)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1805,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.0882129669189453
+            }
+          ],
+          "reasoning": "The search results for 'Southampton Parish' refer to a location in Bermuda, not Southampton, UK. The listings are dominated by small business (SMB) travel agencies and local recruitment firms, which do not align with the procurement intelligence targets for the UK entity. This is a false positive in the search iteration."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:08:55.723315",
+          "domain_explored": "https://www.linkedin.com/jobs/university-of-southampton-delhi-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Admissions Officer",
+              "Lecturer in Business and Management"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for IBC operations",
+              "Investment in regional academic staffing"
+            ]
+          },
+          "patterns_found": [
+            "International Branch Campus (IBC) Expansion",
+            "Regional Recruitment (Admissions Officer)",
+            "Academic Staffing (Lecturer in Business and Management)",
+            "Geographic Specificity (Gurugram, Haryana, India)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1874,
+              "output_tokens": 286,
+              "elapsed_seconds": 3.5929689407348633
+            }
+          ],
+          "reasoning": "The content confirms active operational hiring for the University of Southampton's Delhi branch (specifically in Gurugram). While the roles listed (Admissions Officer, Lecturer) are operational rather than procurement-focused, they validate the entity's active growth and investment in its International Branch Campus (IBC). This supports the hypothesis of ongoing vendor needs for recruitment services, educational technology, and regional infrastructure."
+        }
+      ],
+      "total_input_tokens": 13147,
+      "total_output_tokens": 2210,
+      "estimated_cost_usd": 0.07259099999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Southampton may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:08:55.725345"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.119816",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:33:16.542385"
+}

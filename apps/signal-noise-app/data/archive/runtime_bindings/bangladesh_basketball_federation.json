@@ -1,0 +1,106 @@
+{
+  "entity_id": "bangladesh_basketball_federation",
+  "entity_name": "Bangladesh Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bangladeshbasketballfederation.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bangladesh_basketball_federation",
+      "entity_name": "Bangladesh Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://bangladeshbasketballfederation.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bangladesh Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:25:28.502347",
+          "domain_explored": "https://bangladeshbasketballfederation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webmail (Hosted Email)",
+              "Website CMS (Standard Web Presence)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Projects: Plans to build new courts and renovate existing facilities.",
+              "Program Procurement: Needs for school programs, community clinics, and regional leagues.",
+              "Training Services: Requirements for specialized training camps and referee workshops.",
+              "Partnership Opportunities: Open call for sponsors and stakeholders.",
+              "Contact Point: info@bangladeshbasketballfederation.com (+880 17 271 97 640)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Infrastructure Expansion",
+            "Digital Presence & Communication",
+            "Grassroots Program Development",
+            "Partnership Solicitation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 364,
+              "elapsed_seconds": 5.6206560134887695
+            }
+          ],
+          "reasoning": "The content is a high-level strategic overview from the General Secretary rather than a specific procurement notice. However, it explicitly outlines strategic goals that necessitate procurement, specifically 'Infrastructure and Facilities' (building/renovating courts) and 'Grassroots Development' (equipment, clinics). The presence of a 'webmail' link and a call for 'sponsors' indicates active administrative operations and a need for partner management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:25:34.129072",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1371,
+      "total_output_tokens": 364,
+      "estimated_cost_usd": 0.009573
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bangladesh Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:25:34.129933"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.251603",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:41.002602"
+}

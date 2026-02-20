@@ -1,0 +1,226 @@
+{
+  "entity_id": "al_merrikh",
+  "entity_name": "Al Merrikh",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "merrikhsc.com",
+    "sundownsfc.co.za",
+    "zanacofc.co.zm",
+    "sennferrero.com",
+    "enyimbafc.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_merrikh",
+      "entity_name": "Al Merrikh",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sundownsfc.co.za",
+        "https://enyimbafc.net",
+        "https://sennferrero.com",
+        "https://zanacofc.co.zm",
+        "https://merrikhsc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Merrikh may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:25:44.897157",
+          "domain_explored": "https://merrikhsc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "RSS.app (Trial expired - indicates content aggregation usage)",
+              "Instagram (Social Media Marketing)",
+              "E-commerce Platform (Shop section detected)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Board oversight of 'technical development' and 'marketing'",
+              "Active 'Shop the Latest' section requiring e-commerce support",
+              "Social media integration requiring community management tools"
+            ]
+          },
+          "patterns_found": [
+            "Governance Structure",
+            "Digital Commerce Indicators",
+            "Marketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.616662979125977
+            }
+          ],
+          "reasoning": "The content reveals a structured Board of Directors responsible for 'financial planning', 'technical development', and 'marketing', which implies a budget for professional services and software. The presence of a 'Shop' section and Instagram feed suggests active digital commerce and social media management operations, indicating potential procurement needs for e-commerce platforms, content creation tools, or digital marketing agencies."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:26:02.183485",
+          "domain_explored": "https://sundownsfc.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content belongs to Mamelodi Sundowns, not Al Merrikh."
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Domain",
+            "Competitor Entity",
+            "Navigation Structure Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 212,
+              "elapsed_seconds": 13.731066226959229
+            }
+          ],
+          "reasoning": "The content provided is from 'sundownsfc.co.za', which is the official website of Mamelodi Sundowns FC, a direct competitor of Al Merrikh. This data is irrelevant to the procurement intelligence of Al Merrikh. Analyzing a competitor's site navigation does not yield procurement signals for the target entity unless specifically looking for cross-organizational benchmarking, which is not the primary directive here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:26:18.415466",
+          "domain_explored": "https://zanacofc.co.zm",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure)",
+              "Social Media Integration"
+            ],
+            "job_postings": [
+              "Employment Opportunity at Zanaco FC (May 5, 2025)"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Deal with Zamchil Supreme Water and Ice Depot (Dec 1, 2025)",
+              "Corporate Sponsorship with Zanaco Bank PLC",
+              "Active hiring for administrative/technical roles"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Acquisition",
+            "Employment Opportunity Posting",
+            "Corporate Governance (Bank Ownership)",
+            "Digital Content Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 283,
+              "elapsed_seconds": 11.082522869110107
+            }
+          ],
+          "reasoning": "The content reveals Zanaco FC is a subsidiary of Zanaco Bank, indicating a corporate governance structure with formal procurement channels. The explicit 'Employment Opportunity' posting and recent 'Sponsorship Deal' (Dec 2025) demonstrate active vendor/partner engagement and administrative capacity, fitting the procurement signal criteria."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:26:28.089954",
+          "domain_explored": "https://sennferrero.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain (Legal Advisory)",
+            "Service Provider (Boutique Firm)",
+            "Academic/Educational Content",
+            "No Procurement Triggers"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 212,
+              "elapsed_seconds": 5.70241904258728
+            }
+          ],
+          "reasoning": "The scraped content identifies Senn Ferrero Asociados as a specialized Spanish law firm and consultancy for the sports and entertainment industry. The content highlights legal expertise, academic participation, and advisory services. There are no procurement signals, technology stacks, or purchasing intent relevant to Al Merrikh's operations. This entity is a potential service provider, not a source of procurement intelligence for the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:26:35.104254",
+          "domain_explored": "https://enyimbafc.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain (Competitor Entity)",
+            "Sports Content Focus",
+            "Fan Engagement Metrics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.256845235824585
+            }
+          ],
+          "reasoning": "The scraped content belongs to Enyimba FC, a direct competitor to Al Merrikh in the CAF Champions League context. The content is exclusively focused on match results, player interviews, and league standings (NPFL). There are no procurement signals, technology stacks, or corporate governance structures relevant to Al Merrikh's operations."
+        }
+      ],
+      "total_input_tokens": 7246,
+      "total_output_tokens": 1184,
+      "estimated_cost_usd": 0.039498000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Merrikh may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:26:35.106051"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.185076",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:49.930372"
+}

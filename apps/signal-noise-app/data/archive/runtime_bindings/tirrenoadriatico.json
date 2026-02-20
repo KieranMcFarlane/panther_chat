@@ -1,0 +1,156 @@
+{
+  "entity_id": "tirreno\u0096adriatico",
+  "entity_name": "Tirreno\u0096Adriatico",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "tirrenoadriatico.it",
+    "rcssportsandevents.it",
+    "velowire.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tirreno\u0096adriatico",
+      "entity_name": "Tirreno\u0096Adriatico",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://velowire.com",
+        "https://rcssportsandevents.it",
+        "https://tirrenoadriatico.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tirreno\u0096Adriatico may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:31:57.678859",
+          "domain_explored": "https://tirrenoadriatico.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Calendar Management Tools (implied by 'Sincronizza il calendario')",
+              "Video Streaming Platforms (YouTube/Vimeo hosting for 'Highlights')",
+              "Content Management System (CMS) for news and route updates"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Sponsorship Procurement: Listed 'Top Sponsor', 'Official Partners', 'Institutional Partners', 'Official Suppliers'",
+              "Media Procurement: High volume of video and photo production ('Best Foto', 'Top Video') suggests contracts with media agencies",
+              "Event Services: Route planning and logistics infrastructure for multi-stage event"
+            ]
+          },
+          "patterns_found": [
+            "Sponsor Ecosystem Identification",
+            "Event Management Operations",
+            "Media Production Workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 374,
+              "elapsed_seconds": 3.308748245239258
+            }
+          ],
+          "reasoning": "The content is primarily operational (race routes, results) and marketing-focused. However, the explicit listing of 'Official Suppliers' and 'Sponsors' (Cr\u00e9dit Agricole, TUDOR, Lidl-Trek, etc.) confirms an active vendor ecosystem. The 'Save the dates' and 'Sincronizza il calendario' features imply the use of event management and CRM tools, though specific technologies are not named. This confirms capability but requires deeper digging to find specific procurement signals (RFPs) or tech stack details."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:32:06.832439",
+          "domain_explored": "https://rcssportsandevents.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Content Consumption",
+            "External Domain Reference (Giro d'Italia)",
+            "Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 593,
+              "output_tokens": 166,
+              "elapsed_seconds": 1.950124979019165
+            }
+          ],
+          "reasoning": "The scraped content consists of historical sports commentary regarding cyclist Roberto Visentini and references the external domain 'giroditalia.it'. There are no signals of business operations, technology infrastructure, or procurement activities relevant to Tirreno-Adriatico on this specific page."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:32:20.120924",
+          "domain_explored": "https://velowire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OpenStreetMap",
+              "Google Earth",
+              "Google Maps"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Competitor Event Analysis",
+            "Map/Visualization Tool Usage (OpenStreetMap/Google Earth)",
+            "Editorial Content Consumption"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 245,
+              "elapsed_seconds": 5.263629913330078
+            }
+          ],
+          "reasoning": "The content is from a general cycling news website (velowire.com) covering various races (Tour de France, Vuelta a Espa\u00f1a, Tour Down Under). While it mentions mapping technologies (OpenStreetMap, Google Earth), these are editorial tools for race visualization, not specific procurement signals or technology stacks related to the target entity 'Tirreno-Adriatico'. There is no mention of the target entity, its governance, or its specific purchasing activities."
+        }
+      ],
+      "total_input_tokens": 3414,
+      "total_output_tokens": 785,
+      "estimated_cost_usd": 0.022017000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tirreno\u0096Adriatico may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:32:20.122472"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.395212",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:23.629149"
+}

@@ -1,0 +1,178 @@
+{
+  "entity_id": "djurg\u00e5rdens_if",
+  "entity_name": "Djurg\u00e5rdens IF",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "difhockey.se",
+    "difbasket.se",
+    "difbutiken.se",
+    "eliteprospects.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "djurg\u00e5rdens_if",
+      "entity_name": "Djurg\u00e5rdens IF",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.02
+      ],
+      "explored_domains": [
+        "https://difbasket.se",
+        "https://difhockey.se",
+        "https://eliteprospects.com",
+        "https://difbutiken.se"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Djurg\u00e5rdens IF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:54:49.372572",
+          "domain_explored": "https://difhockey.se",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:55:01.931641",
+          "domain_explored": "https://difbasket.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportAdmin (Membership & Team Management)",
+              "SportAdmin Mobile App (iOS/Android)",
+              "Entry.sportadmin.se (Payment/Registration Gateway)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Growth Plan: 'Stora ambitioner' requiring financial partners",
+              "Partnership Solicitation: Active search for sponsors and collaboration partners",
+              "Operational Reliance: Outsourced membership management to SportAdmin platform",
+              "Event Infrastructure: Requirements for venue access and equipment (Johannes skola)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Dependency (SportAdmin)",
+            "Growth Ambition & Expansion Strategy",
+            "Active Sponsorship/Partnership Acquisition",
+            "Event Management Needs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 352,
+              "elapsed_seconds": 4.64719295501709
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing, it reveals critical operational infrastructure (SportAdmin) and strategic growth goals (elite satsning, rebuilding teams). The explicit call for sponsors and partners to fund expansion indicates a procurement need for B2B services (marketing, sales tools) to support these efforts. The reliance on 'SportAdmin' for membership management confirms a SaaS procurement model."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:55:15.610612",
+          "domain_explored": "https://difbutiken.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify, WooCommerce, or similar given the 'variant' structure)",
+              "Payment Gateway (Tapster integration)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of product variants and inventory levels",
+              "Vendor relationship with Adidas (Kit supplier)",
+              "Vendor relationship with Tapster (Payment rings)",
+              "Vendor relationship with Defunc (Headphones)",
+              "Vendor relationship with Mondo (Collaboration)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Dependency",
+            "Merchandise Supply Chain Management",
+            "Inventory Liquidation Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 327,
+              "elapsed_seconds": 5.928833723068237
+            }
+          ],
+          "reasoning": "The content confirms active retail operations (Difbutiken) and a reliance on an e-commerce platform to handle sales, inventory variants, and campaigns. While this indicates a need for procurement in retail logistics and platform maintenance, the scraped content is purely frontend product data and lacks specific signals about *new* technology acquisition or backend vendor selection processes."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:55:25.806115",
+          "domain_explored": "https://eliteprospects.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "Global Hockey Data Aggregation",
+            "No Organizational Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.822782039642334
+            }
+          ],
+          "reasoning": "The scraped content from EliteProspects is a global transfer feed and video showcase platform. It contains no information regarding Djurg\u00e5rdens IF's internal operations, technology stack, or procurement activities. The data is strictly related to player movements and highlights for various international teams, none of which are Djurg\u00e5rdens IF in this specific snippet."
+        }
+      ],
+      "total_input_tokens": 4322,
+      "total_output_tokens": 863,
+      "estimated_cost_usd": 0.025911
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Djurg\u00e5rdens IF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:55:25.807230"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.173609",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:27.810417"
+}

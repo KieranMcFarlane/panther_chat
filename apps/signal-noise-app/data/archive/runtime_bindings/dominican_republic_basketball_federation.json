@@ -1,0 +1,274 @@
+{
+  "entity_id": "dominican_republic_basketball_federation",
+  "entity_name": "Dominican Republic Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cardchronicle.com",
+    "a.osmarks.net",
+    "bernews.com",
+    "basketnews.com",
+    "eurohoops.net",
+    "en-academic.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://do.linkedin.com/company/major-league-baseball/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dominican_republic_basketball_federation",
+      "entity_name": "Dominican Republic Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://do.linkedin.com/company/major-league-baseball/jobs",
+        "https://a.osmarks.net",
+        "https://bernews.com",
+        "https://cardchronicle.com",
+        "https://basketnews.com",
+        "https://eurohoops.net",
+        "https://en-academic.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dominican Republic Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:18:12.964339",
+          "domain_explored": "https://cardchronicle.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Entity_Match",
+            "Sports_News_Aggregation",
+            "Fan_Community_Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 191,
+              "elapsed_seconds": 7.563377857208252
+            }
+          ],
+          "reasoning": "The scraped content is from 'Card Chronicle' (cardchronicle.com), a sports blog and community site dedicated to the University of Louisville Cardinals athletics. While the keyword 'Basketball' is present, the content is strictly related to US college sports (NCAA), game recaps, and fan discussions. There is absolutely no connection to the Dominican Republic Basketball Federation (FEDOMBAL) or its procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:18:22.107945",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Offline_Content_Archive",
+            "Technical_Access_Error",
+            "Irrelevant_Hosting_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 476,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.3728668689727783
+            }
+          ],
+          "reasoning": "The target URL (a.osmarks.net) is serving a 'nojs' endpoint powered by Kiwix, indicating it is an offline archive or ZIM reader, not the official domain of the Dominican Republic Basketball Federation. The content is inaccessible and technically irrelevant to the entity's procurement operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:18:31.638146",
+          "domain_explored": "https://bernews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Geography",
+            "News_Aggregation",
+            "General_Interest_Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.4335758686065674
+            }
+          ],
+          "reasoning": "The scraped content is from Bernews, a Bermuda-based news outlet. The content focuses on local Bermuda events (weather, government agreements, ferry services) and general news. There is no connection to the Dominican Republic Basketball Federation, nor are there any procurement, technology, or business signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:18:41.571942",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Geography",
+            "Sports_Scores_Aggregation",
+            "Global_Basketball_News",
+            "Non-Commercial_Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 169,
+              "elapsed_seconds": 3.090891122817993
+            }
+          ],
+          "reasoning": "The content consists entirely of basketball game scores, schedules, and team match-ups (NBA, EuroLeague, etc.). There is no mention of the Dominican Republic Basketball Federation, procurement activities, or business operations. The entity is a global sports news outlet, not the target federation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:18:59.118868",
+          "domain_explored": "https://eurohoops.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Geography",
+            "Sports_Scores_Aggregation",
+            "Game_Recap_Content",
+            "Editorial_News_Media"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 631,
+              "output_tokens": 165,
+              "elapsed_seconds": 9.578329801559448
+            }
+          ],
+          "reasoning": "The content is a standard sports news article regarding a Greek basketball game (HEBA league) between Aris and Panathinaikos. The context is purely editorial and focused on European basketball, with no connection to the Dominican Republic Basketball Federation or its procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:19:10.444195",
+          "domain_explored": "https://en-academic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Dictionary_Aggregator",
+            "Static_Content_Archive",
+            "Irrelevant_Entity_Match",
+            "Generic_Language_Resource"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.641244888305664
+            }
+          ],
+          "reasoning": "The target URL (en-academic.com) is a generic academic dictionary and encyclopedia aggregator. It contains no information regarding the Dominican Republic Basketball Federation, its operations, or its procurement activities. The content is strictly linguistic and encyclopedic, serving as a reference tool rather than a source of business intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:19:16.436472",
+          "domain_explored": "https://do.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Entity_Match",
+            "Technical_Access_Error",
+            "Wrong_Sport_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 657,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.470410108566284
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'Forbidden' error, likely due to an incorrect URL structure attempting to access jobs via a generic path rather than a specific company handle. Furthermore, the target entity is 'Major League Baseball' (MLB), which is a distinct entity from the 'Dominican Republic Basketball Federation'. Even if accessible, MLB job postings are not direct procurement signals for the Federation."
+        }
+      ],
+      "total_input_tokens": 7691,
+      "total_output_tokens": 1235,
+      "estimated_cost_usd": 0.041597999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dominican Republic Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:19:16.437929"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.267155",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:13.030922"
+}

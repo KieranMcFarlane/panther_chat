@@ -1,0 +1,164 @@
+{
+  "entity_id": "croatian_football_league",
+  "entity_name": "Croatian Football League",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "football.fandom.com",
+    "shakhtar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hr.linkedin.com/jobs/view/football-live-data-collector-statistician-at-genius-sports-3969081800"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "croatian_football_league",
+      "entity_name": "Croatian Football League",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://hr.linkedin.com/jobs/view/football-live-data-collector-statistician-at-genius-sports-3969081800",
+        "https://shakhtar.com",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Croatian Football League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:06:24.831005",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "User-Generated Content Platform",
+            "Irrelevant League Focus (Premier League, La Liga)",
+            "Outdated Browser Recommendations (Firefox/IE)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.7064778804779053
+            }
+          ],
+          "reasoning": "The scraped content is from a generic football fandom wiki (Football Wikia), not the official Croatian Football League (HNL) website. It contains user-generated content, generic navigation links, and information about major leagues (Premier League, La Liga) rather than specific Croatian league procurement data, governance, or technology stacks. There is no signal of procurement intent or vendor activity relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:06:33.229412",
+          "domain_explored": "https://shakhtar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wrong Entity Identity",
+            "Language Mismatch (Ukrainian vs Croatian)",
+            "Irrelevant Domain (shakhtar.com)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.2134058475494385
+            }
+          ],
+          "reasoning": "The scraped content is from the official website of FC Shakhtar Donetsk, a Ukrainian football club, not the Croatian Football League. The content is in Ukrainian and relates to a specific club's operations (news, tickets, shop), which falls outside the scope of procurement intelligence for the Croatian league governing body."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:06:44.637675",
+          "domain_explored": "https://hr.linkedin.com/jobs/view/football-live-data-collector-statistician-at-genius-sports-3969081800",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smartphone-enabled data collection software",
+              "Live data streaming infrastructure"
+            ],
+            "job_postings": [
+              {
+                "role": "Football Live Data Collector (Statistician)",
+                "employer": "Genius Sports",
+                "location": "Runovi\u0107i, Split-Dalmatia, Croatia",
+                "focus": "Croatian Football League - HNL, Prva NL, Croatian Cup"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Partnership/Outsourcing",
+                "vendor": "Genius Sports",
+                "service": "Official data collection and technology provision",
+                "scope": "Match data for HNL, Prva NL, and Croatian Cup"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation",
+            "Data Collection Operations",
+            "League Rights Usage",
+            "Technology Deployment (Smartphone Software)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 395,
+              "elapsed_seconds": 4.403092861175537
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP from the League, it confirms the operational relationship between the Croatian Football League (HNL) and Genius Sports. It validates that Genius Sports is the official data partner collecting live data for HNL, Prva NL, and Croatian Cup. This indicates the League utilizes third-party data services and smartphone-enabled technology for match statistics, providing insight into their technology stack and vendor ecosystem."
+        }
+      ],
+      "total_input_tokens": 4267,
+      "total_output_tokens": 785,
+      "estimated_cost_usd": 0.024576
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Croatian Football League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:06:44.639469"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.195307",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:33:11.898691"
+}

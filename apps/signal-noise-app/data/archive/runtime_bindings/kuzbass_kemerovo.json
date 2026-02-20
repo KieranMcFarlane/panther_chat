@@ -1,0 +1,143 @@
+{
+  "entity_id": "kuzbass_kemerovo",
+  "entity_name": "Kuzbass Kemerovo",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "worldofvolley.com",
+    "volleybox.net",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kuzbass_kemerovo",
+      "entity_name": "Kuzbass Kemerovo",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://volleybox.net",
+        "https://www-old.cev.eu",
+        "https://sofascore.com",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kuzbass Kemerovo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:39:35.074701",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "sports_association_structure",
+            "event_scheduling_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.5641589164733887
+            }
+          ],
+          "reasoning": "The scraped content is from the Confederation Europ\u00e9enne de Volleyball (CEV), a European sports governing body. It contains navigation menus for volleyball tournaments (Champions League, EuroVolley), event schedules, and national federation links. There is absolutely no connection to 'Kuzbass Kemerovo' (a Russian coal region and volleyball club) or any procurement signals relevant to the target entity. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:39:40.254580",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregation",
+            "match_results_reporting",
+            "league_standings_updates",
+            "player_transfer_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 145,
+              "elapsed_seconds": 1.830225944519043
+            }
+          ],
+          "reasoning": "The content is entirely focused on international volleyball match results, league standings, and player transfers. There is no mention of Kuzbass Kemerovo, corporate governance, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:39:43.085599",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:39:46.132754",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2763,
+      "total_output_tokens": 346,
+      "estimated_cost_usd": 0.013479
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kuzbass Kemerovo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:39:46.134803"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320121",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:39:44.157121"
+}

@@ -1,0 +1,385 @@
+{
+  "entity_id": "mls",
+  "entity_name": "MLS",
+  "template_id": "tpl_tier_1_professional_leagues_v1",
+  "cluster_id": "tier_1_professional_leagues",
+  "discovered_domains": [
+    "mlssoccer.com",
+    "mlsnextpro.com",
+    "mlsstore.com",
+    "mlscorporation.com",
+    "tv.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/major-league-soccer/jobs",
+      "https://uk.linkedin.com/jobs/view/business-development-manager-at-mls-talent-4362965235",
+      "https://uk.linkedin.com/jobs/medico-legal-jobs",
+      "https://uk.linkedin.com/jobs/view/mls-solutions-analyst-at-pinsent-masons-4344894367",
+      "https://uk.linkedin.com/jobs/view/head-of-operations-mls-at-medical-law-services-4366333819",
+      "https://uk.linkedin.com/jobs/view/quality-auditor-%E2%80%93-medical-law-services-mls-at-medical-law-services-4360734446",
+      "https://uk.linkedin.com/jobs/sports-management-jobs-london"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mls",
+      "entity_name": "MLS",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/company/major-league-soccer/jobs",
+        "https://uk.linkedin.com/jobs/view/business-development-manager-at-mls-talent-4362965235",
+        "https://uk.linkedin.com/jobs/view/head-of-operations-mls-at-medical-law-services-4366333819",
+        "https://uk.linkedin.com/jobs/medico-legal-jobs",
+        "https://mlsstore.com",
+        "https://mlsnextpro.com",
+        "https://tv.apple.com",
+        "https://mlscorporation.com",
+        "https://uk.linkedin.com/jobs/view/mls-solutions-analyst-at-pinsent-masons-4344894367"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive-level AI & Data Architecture recruitment",
+        "IT Project Management leadership hiring",
+        "Media Asset & Platform management roles",
+        "Licensing & Business Operations expansion",
+        "Partner Solutions & Insights analytics focus"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MLS may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:21:57.676596",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports transfer activity",
+            "Player acquisition news",
+            "Content repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.3451430797576904
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news regarding player transfers (Timo Werner, Alex Freeman, Mateusz Bogusz) and club activities. There are no mentions of technology procurement, job postings, RFPs, or digital transformation initiatives relevant to the entity 'MLS' in a business or governance context."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:22:04.408778",
+          "domain_explored": "https://mlsnextpro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league operations",
+            "Schedule announcements",
+            "Personnel movements (coaches)",
+            "Team expansion (Connecticut United FC)",
+            "Content repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.879239320755005
+            }
+          ],
+          "reasoning": "The scraped content from mlssoccer.com is exclusively focused on league operations, game schedules, and sporting personnel changes. There are no mentions of technology vendors, infrastructure projects, or business procurement needs. The content is purely consumer-facing sports news."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:22:08.554218",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:22:11.516298",
+          "domain_explored": "https://mlscorporation.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:22:18.730422",
+          "domain_explored": "https://tv.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Apple TV app (Streaming Platform)",
+              "Apple TV 4K (Hardware)",
+              "iOS/macOS/tvOS (Software Ecosystem)",
+              "Multi-device DRM/Streaming Protocols"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Major Rights Deal: Exclusive global streaming rights for MLS matches starting 2026",
+              "Vendor Partnership: Apple is the primary distribution partner for live sports content",
+              "Investment Area: Digital broadcasting infrastructure and OTT (Over-The-Top) services",
+              "Budget Horizon: Long-term contract (2026+)"
+            ]
+          },
+          "patterns_found": [
+            "Exclusive media rights acquisition",
+            "Streaming infrastructure partnership",
+            "Future-proofing content strategy (2026 horizon)",
+            "Direct-to-consumer (DTC) digital distribution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 379,
+              "elapsed_seconds": 4.3259241580963135
+            }
+          ],
+          "reasoning": "While the page is a consumer-facing landing page, it contains critical procurement intelligence regarding a major 'Technology Investment' and 'Vendor Partnership' for MLS. The explicit mention of the 'Starting in 2026' deal to stream every match on Apple TV confirms a significant, long-term procurement contract for digital broadcasting rights and infrastructure. This moves the confidence from zero as it identifies a specific, high-value vendor relationship and a digital transformation strategy."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:22:27.087131",
+          "domain_explored": "https://www.linkedin.com/company/major-league-soccer/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI/ML Infrastructure",
+              "Data Architecture Platforms",
+              "Media Asset Management (MAM) Systems",
+              "Business Intelligence (BI) Tools",
+              "Project Management Software"
+            ],
+            "job_postings": [
+              "Senior Director, AI Data Architect (New York, NY)",
+              "Director, IT Projects (New York, NY)",
+              "Senior Manager, Media Assets & Platforms (Stamford, CT)",
+              "Senior Coordinator, Partner Solutions & Insights (New York, NY)"
+            ],
+            "procurement_indicators": [
+              "High-budget executive hiring ($200k+) signals strategic investment",
+              "Dedicated IT Project leadership suggests active vendor selection",
+              "Focus on 'Assets & Platforms' implies SaaS/PaaS evaluation",
+              "Partner Solutions role indicates CRM or data onboarding needs"
+            ]
+          },
+          "patterns_found": [
+            "Executive-level AI & Data Architecture recruitment",
+            "IT Project Management leadership hiring",
+            "Media Asset & Platform management roles",
+            "Licensing & Business Operations expansion",
+            "Partner Solutions & Insights analytics focus"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 444,
+              "elapsed_seconds": 4.988044023513794
+            }
+          ],
+          "reasoning": "The discovery of a 'Senior Director, AI Data Architect' role ($200k-$230k) is a definitive procurement signal for high-value AI infrastructure and data platforms. Additionally, the 'Director, IT Projects' and 'Senior Manager, Media Assets & Platforms' roles indicate active budget allocation for technology implementation and digital asset management systems. This moves beyond general operations into specific technology procurement intent."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:22:35.048835",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/business-development-manager-at-mls-talent-4362965235",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP S4/HANA",
+              "SAP EWM",
+              "SAP FICO"
+            ],
+            "job_postings": [
+              "Managing Consultant, SAP Order to Cash (Tata Consultancy Services)",
+              "Senior Managing SAP S4/HANA EWM Consultant (IBM)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False positive entity match",
+            "Generic job board noise",
+            "Unrelated industry consulting roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.4290146827697754
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'SAP Managing Consultant' roles. The companies listed (Tata Consultancy Services, IBM, Net2Source) are technology consulting firms, not MLS or its direct vendors. The URL suggests 'MLS Talent' is likely a recruiting agency acronym (e.g., 'Medical, Laboratory, Scientific') or a generic entity name, unrelated to Major League Soccer. There is no content linking these postings to the sports league or its procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:22:41.647285",
+          "domain_explored": "https://uk.linkedin.com/jobs/medico-legal-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Nurse Analyst - Medical Law Services (MLS) at 4COM",
+              "Nurse Analyst - Medical Law Services (MLS) at Medical Law Services"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False positive acronym match (MLS = Medical Law Services)",
+            "Healthcare/Legal sector noise",
+            "Unrelated job board scraping"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1701,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.95949125289917
+            }
+          ],
+          "reasoning": "The scraped content is a list of 'Medico Legal' jobs in the UK. The acronym 'MLS' appears in titles such as 'Nurse Analyst - Medical Law Services (MLS)', referring to 'Medical Law Services' or specific medical reporting divisions, not Major League Soccer. The entities listed (e.g., Aneurin Bevan University Health Board, 4COM) are healthcare/legal organizations unrelated to the sports league target."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:22:47.342216",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/mls-solutions-analyst-at-pinsent-masons-4344894367",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False positive acronym match (MLS = Managed Legal Services)",
+            "Legal sector job posting noise",
+            "Unrelated industry (Law Firm vs. Soccer League)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 198,
+              "elapsed_seconds": 1.8980088233947754
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Pinsent Masons', a multinational law firm. The acronym 'MLS' here stands for 'Managed Legal Services', not 'Major League Soccer'. The role involves legal solutions, contracting support, and property asset management within the legal sector, which is entirely unrelated to the procurement or operational activities of the soccer league entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T15:22:55.774771",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/head-of-operations-mls-at-medical-law-services-4366333819",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False positive acronym match (MLS = Medical Law Services)",
+            "Healthcare/Legal sector operations role",
+            "Unrelated industry (Solicitors/Legal Services vs. Soccer League)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1853,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.723751068115234
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a 'Head of Operations (MLS)' at 'Medical Law Services' (Fletchers Solicitors Ltd) in Liverpool. This is a false positive match where the acronym MLS refers to a specific legal department ('Medical Law Services'), not Major League Soccer. The content focuses on medical reporting and legal proceedings, which is irrelevant to sports procurement."
+        }
+      ],
+      "total_input_tokens": 12793,
+      "total_output_tokens": 2081,
+      "estimated_cost_usd": 0.069594
+    },
+    "procurement_signals": [
+      "Executive-level AI & Data Architecture recruitment",
+      "IT Project Management leadership hiring",
+      "Media Asset & Platform management roles",
+      "Licensing & Business Operations expansion",
+      "Partner Solutions & Insights analytics focus"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MLS may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:22:55.775315"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418912",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:16.220854"
+}

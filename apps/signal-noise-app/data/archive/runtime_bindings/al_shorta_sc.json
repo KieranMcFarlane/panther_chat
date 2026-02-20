@@ -1,0 +1,117 @@
+{
+  "entity_id": "al_shorta_sc",
+  "entity_name": "Al Shorta SC",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "alshortasc.com",
+    "footballdatabase.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_shorta_sc",
+      "entity_name": "Al Shorta SC",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://footballdatabase.com",
+        "https://alshortasc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Shorta SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:10:46.684985",
+          "domain_explored": "https://alshortasc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Sites (Hosting)",
+              "Google Analytics (Implied by cookie banner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'BUY NOW' buttons (Likely ticket sales or merchandise, not B2B procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Use of Google Sites for web hosting",
+            "Presence of generic 'BUY NOW' call-to-action buttons",
+            "Cookie consent banner (Google Analytics usage)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 254,
+              "elapsed_seconds": 6.341775894165039
+            }
+          ],
+          "reasoning": "The scraped content is the public-facing homepage of Al Shorta SC (Iraqi Police Club). It contains strictly operational data (match scores, standings, player stats) and standard website infrastructure elements (Google Sites footer, cookie banner). There are no job postings, RFPs, vendor lists, or technology stack details indicative of procurement intent or digital transformation projects."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:10:51.606177",
+          "domain_explored": "https://footballdatabase.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports ranking data",
+            "Irrelevant content (Global football rankings)",
+            "No entity-specific content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.0968401432037354
+            }
+          ],
+          "reasoning": "The scraped content from footballdatabase.com contains generic global football rankings and match results. There is no mention of 'Al Shorta SC', no procurement signals, and no technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2776,
+      "total_output_tokens": 407,
+      "estimated_cost_usd": 0.014433000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Shorta SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:10:51.606585"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233384",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:46.429260"
+}

@@ -1,0 +1,199 @@
+{
+  "entity_id": "f\u00fcchse_berlin",
+  "entity_name": "F\u00fcchse Berlin",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "fuechse-berlin-reinickendorf.de",
+    "fuechseshop.de",
+    "kieback-peter.com",
+    "visitberlin.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "f\u00fcchse_berlin",
+      "entity_name": "F\u00fcchse Berlin",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://fuechse-berlin-reinickendorf.de",
+        "https://visitberlin.de",
+        "https://kieback-peter.com",
+        "https://fuechseshop.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "F\u00fcchse Berlin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:55:06.187385",
+          "domain_explored": "https://fuechse-berlin-reinickendorf.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Marketing / Newsletter Tool (ESP)",
+              "Social Media Integration (Facebook, Instagram)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Software Partner Program (Vendor Category)",
+              "GDPR/Data Privacy Compliance (Datenschutzerkl\u00e4rung)",
+              "Digital Newsletter Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Engagement",
+            "Partner/Vendor Ecosystem",
+            "Data Privacy Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.5699541568756104
+            }
+          ],
+          "reasoning": "The content reveals a 'Software Partner' category and active use of digital marketing tools (Newsletter 'Fuchspost'). While no specific procurement RFP is visible, the explicit categorization of software partners indicates a vendor relationship structure, and the newsletter functionality suggests the use of Email Service Provider (ESP) or CRM tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:55:14.277208",
+          "domain_explored": "https://fuechseshop.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-Commerce Platform (Shopify, Magento, or Custom)",
+              "Email Marketing Tools (Newsletter mentions)",
+              "Payment Processing Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Sourcing (Trikots, Hoodies, Accessories)",
+              "Inventory Management for 'Schnapper der Woche'",
+              "Seasonal Procurement Cycles (New Kits 2025/2026)",
+              "Logistics and Fulfillment Services"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Operations",
+            "Digital Merchandising",
+            "Supply Chain Management",
+            "Marketing Automation (Newsletter)",
+            "Product Lifecycle Management (Seasonal Kits)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 342,
+              "elapsed_seconds": 4.940751075744629
+            }
+          ],
+          "reasoning": "The content confirms F\u00fcchse Berlin operates a dedicated e-commerce platform (F\u00fcchseshop) for merchandise. While this is a retail interface rather than a procurement portal, it indicates active procurement needs for inventory management (Trikots, Fanartikel), logistics, and potentially e-commerce platform maintenance. The mention of 'Teamwear', seasonal product launches (2025/2026), and newsletter marketing suggests underlying vendor relationships for manufacturing and digital marketing tools."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:55:21.156928",
+          "domain_explored": "https://kieback-peter.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smart Building Solutions",
+              "Mess-, Steuer- und Regelungstechnik (MSR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hauptsponsor (Main Sponsor) Agreement",
+              "Corporate Training/Internship Programs",
+              "Sustainability/Green Building Consulting"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Partnership Activation",
+            "Workforce Development Programs",
+            "Smart Building Technology Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.631814956665039
+            }
+          ],
+          "reasoning": "The content confirms Kieback&Peter as the 'Hauptsponsor' (Main Sponsor) of F\u00fcchse Berlin. This is a critical procurement signal as it indicates a high-value vendor relationship and potential for joint procurement or technology transfer. The specific mention of a player internship highlights a structured partnership involving HR and corporate development. While this confirms a vendor relationship, it does not explicitly show active procurement *by* F\u00fcchse Berlin for new goods/services in this specific snippet, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:55:26.962359",
+          "domain_explored": "https://visitberlin.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Tourism Content",
+            "Event Aggregation",
+            "Third-Party Advertising"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.5458600521087646
+            }
+          ],
+          "reasoning": "The content is entirely focused on general tourism, event listings (Berlinale, Fashion Week), and travel packages for the city of Berlin. There is no mention of F\u00fcchse Berlin, nor are there any procurement signals, technology stacks, or corporate governance details relevant to the target entity. This appears to be a scraped tourism portal with no direct relevance to the specific procurement intelligence of the handball club."
+        }
+      ],
+      "total_input_tokens": 5733,
+      "total_output_tokens": 1084,
+      "estimated_cost_usd": 0.033459
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "F\u00fcchse Berlin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:55:26.963806"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.346515",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:19:48.371224"
+}

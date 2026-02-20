@@ -1,0 +1,158 @@
+{
+  "entity_id": "chinese_taipei_volleyball_association",
+  "entity_name": "Chinese Taipei Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "zoominfo.com",
+    "asianvolleyball.net",
+    "ctusf-srr.com",
+    "oia.ntut.edu.tw"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_taipei_volleyball_association",
+      "entity_name": "Chinese Taipei Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ctusf-srr.com",
+        "https://asianvolleyball.net",
+        "https://oia.ntut.edu.tw",
+        "https://zoominfo.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Taipei Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:11:21.701785",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:11:24.747010",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:11:34.786146",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Event Scheduling",
+            "Regional Federation News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 878,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.3973429203033447
+            }
+          ],
+          "reasoning": "The content is a news release from the Asian Volleyball Confederation (AVC) regarding team qualifications for the 2026 AVC Cups. It focuses on the Philippines as the host nation and general sports scheduling. There is no mention of the Chinese Taipei Volleyball Association (CTVA), no procurement activities, and no technology signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:11:57.724419",
+          "domain_explored": "https://ctusf-srr.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Drive (Drive.google.com - used for subscription forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Research Publication",
+            "University Sports Federation Context",
+            "Google Drive Integration (Document Sharing)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 237,
+              "elapsed_seconds": 17.31301498413086
+            }
+          ],
+          "reasoning": "The scraped content belongs to the 'Chinese Taipei University Sports Federation' (CTUSF), which is a distinct entity from the target 'Chinese Taipei Volleyball Association' (CTVA). While both operate within the Taiwanese sports ecosystem, CTUSF focuses on university sports and academic research (journal publication). The content displays academic articles and administrative links with no procurement signals, vendor lists, or technology stacks relevant to the CTVA's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:12:02.000892",
+          "domain_explored": "https://oia.ntut.edu.tw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2344,
+      "total_output_tokens": 407,
+      "estimated_cost_usd": 0.013137
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Taipei Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:12:02.002042"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.336262",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:25.936252"
+}

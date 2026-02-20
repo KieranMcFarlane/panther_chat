@@ -1,0 +1,528 @@
+{
+  "entity_id": "spor_toto",
+  "entity_name": "Spor Toto",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "sportoto.gov.tr",
+    "sportotosk.org.tr",
+    "eurohandball.com",
+    "infront.sport",
+    "www-old.cev.eu",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-com-3270812401?trk=org-job-results",
+      "https://tr.linkedin.com/jobs/view/business-%C4%B1ntelligence-and-analytic-senior-specialist-at-nesine-com-2921611723?refId=jru8lij4opawOJjS2xciNA%3D%3D&trackingId=D8OpcSleSOLmtEnaEEOIaA%3D%3D&position=23&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://tr.linkedin.com/jobs/view/frontend-developer-react-remote-at-nesine-3336183645",
+      "https://tr.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-3270812401",
+      "https://my.linkedin.com/jobs/view/software-developer-backend-at-nesine-com-2389751766?refId=RTQ1hWSnXYiRFHHu8cfZjw%3D%3D&trackingId=YTK797Qa4zZaipVYNBZV4Q%3D%3D&trk=org-job-results",
+      "https://tr.linkedin.com/jobs/view/senior-frontend-developer-react-at-oley-com-4075607568",
+      "https://tr.linkedin.com/jobs/view/crm-specialist-senior-specialist-remote-at-nesine-com-3116285016?refId=CO5U24ffvg2yeevBPfgVHg%3D%3D&trackingId=nLYh68gyfwvyc7CNnR0BiA%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://tr.linkedin.com/jobs/view/software-developer-backend-remote-at-nesine-com-3270823521?refId=tP%2BOEZopcX791dlGiZkrlg%3D%3D&trackingId=aTrirENsTWmb8xAZyi72gA%3D%3D&position=16&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://tr.linkedin.com/jobs/view/senior-backend-developer-python-at-oley-com-4077149237"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "spor_toto",
+      "entity_name": "Spor Toto",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.3,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.3
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://tr.linkedin.com/jobs/view/business-%C4%B1ntelligence-and-analytic-senior-specialist-at-nesine-com-2921611723?refId=jru8lij4opawOJjS2xciNA%3D%3D&trackingId=D8OpcSleSOLmtEnaEEOIaA%3D%3D&position=23&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://eurohandball.com",
+        "https://tr.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-3270812401",
+        "https://tr.linkedin.com/jobs/view/frontend-developer-react-remote-at-nesine-3336183645",
+        "https://www.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-com-3270812401?trk=org-job-results",
+        "https://infront.sport",
+        "https://my.linkedin.com/jobs/view/software-developer-backend-at-nesine-com-2389751766?refId=RTQ1hWSnXYiRFHHu8cfZjw%3D%3D&trackingId=YTK797Qa4zZaipVYNBZV4Q%3D%3D&trk=org-job-results",
+        "https://sportotosk.org.tr",
+        "https://zoominfo.com",
+        "https://sportoto.gov.tr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Vendor Relationship",
+        "Digital Technology Investment",
+        "Mobile Application Development",
+        "iOS Ecosystem Procurement",
+        "Official Vendor Relationship Confirmation",
+        "Business Intelligence (BI) & Data Analytics Investment",
+        "Data Warehousing & ETL Procurement",
+        "Microsoft SQL Server Stack (SSIS, SSAS, SSRS)",
+        "Data Visualization Tools (Tableau)",
+        "Strategic Decision Support Hiring",
+        "Official Vendor Relationship Confirmation",
+        "Frontend Engineering Investment",
+        "Scalable Web Architecture",
+        "Micro-Frontend & Monorepo Strategy",
+        "React.js Ecosystem",
+        "Remote Workforce Model",
+        "Official Vendor Relationship Confirmation",
+        "Digital Technology Investment",
+        "Mobile Application Development",
+        "iOS Engineering Talent Acquisition",
+        "Official Vendor Relationship Confirmation",
+        "Backend Engineering Investment",
+        "High-Performance Scalable Architecture",
+        "Distributed Systems Procurement"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Spor Toto may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:24:00.303859",
+          "domain_explored": "https://sportoto.gov.tr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:24:10.957742",
+          "domain_explored": "https://sportotosk.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "6. Ola\u011fan\u00fcst\u00fc Genel Kurul \u0130lan\u0131 (6th Extraordinary General Assembly Announcement) - Internal governance, not procurement."
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Entity (Spor Toto SK)",
+            "Athletic Performance News",
+            "General Assembly Announcements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 242,
+              "elapsed_seconds": 2.8904998302459717
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Spor Toto Spor Kul\u00fcb\u00fc' (Spor Toto Sports Club), which is a distinct entity from the administrative procurement body 'Spor Toto Te\u015fkilat Ba\u015fkanl\u0131\u011f\u0131' (Spor Toto Organization). The content focuses exclusively on athletic achievements (Fencing, Cycling, Handball) and club governance (General Assembly meetings). There are no signals of IT procurement, RFPs, or technology investments relevant to the administrative organization."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:24:22.167804",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Content (EHF)",
+            "Tournament Results and News",
+            "Cookie Consent Walls",
+            "Event Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.418362855911255
+            }
+          ],
+          "reasoning": "The content is from the European Handball Federation (eurohandball.com), covering tournament results (EHF EURO), player awards (MVP), and future event schedules. There is no relationship to Spor Toto (Turkey), nor are there any procurement signals, technology stacks, or governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:24:33.474951",
+          "domain_explored": "https://infront.sport",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Marketing Agency Content",
+            "Sponsorship Portfolio",
+            "Media Rights Sales",
+            "Generic Corporate Blog"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.545301914215088
+            }
+          ],
+          "reasoning": "The content is from Infront, a sports marketing agency, and focuses on selling sponsorship and media rights. It contains no information regarding Spor Toto's internal procurement, technology stack, or governance. It is a vendor site, not the target entity's procurement data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:24:50.259661",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Content (CEV)",
+            "Tournament Results and Schedules",
+            "Navigation Structure for Competitions",
+            "Historical Website Footer (2011)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1527,
+              "output_tokens": 161,
+              "elapsed_seconds": 9.576425075531006
+            }
+          ],
+          "reasoning": "The content is exclusively focused on European volleyball (CEV) tournament structures, results, and federation navigation. It contains no corporate governance, financial, or procurement-related information relevant to Spor Toto."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:24:59.714866",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Data Provider Marketing Content",
+            "Sales Intelligence Platform Promotion",
+            "Generic Customer Testimonials",
+            "Product Feature Descriptions (AI, Copilot)",
+            "Lead Generation and GTM (Go-to-Market) Terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1580,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.8357906341552734
+            }
+          ],
+          "reasoning": "The content is the homepage of ZoomInfo, a B2B data and sales intelligence vendor. It consists entirely of marketing copy promoting ZoomInfo's own software (Copilot, AI platform) and generic customer testimonials. There is no specific information regarding Spor Toto's procurement activities, technology stack, or governance. This is a vendor site, not a target entity site."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:25:09.796843",
+          "domain_explored": "https://www.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-com-3270812401?trk=org-job-results",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "iOS",
+              "Swift",
+              "Objective-C",
+              "Git",
+              "Xcode",
+              "WebSocket",
+              "Unit Testing"
+            ],
+            "job_postings": [
+              "iOS Developer (Mid-Senior Level) - Remote"
+            ],
+            "procurement_indicators": [
+              "Official Dealer Status: Nesine.com acts as the primary digital interface/agent for Spor Toto.",
+              "Digital Transformation: Active recruitment for mobile app development suggests budget allocation for digital platforms.",
+              "Vendor Ecosystem: Investment in native iOS development implies reliance on the Apple ecosystem and related enterprise developer tools."
+            ]
+          },
+          "patterns_found": [
+            "Direct Vendor Relationship",
+            "Digital Technology Investment",
+            "Mobile Application Development",
+            "iOS Ecosystem Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 343,
+              "elapsed_seconds": 4.871885061264038
+            }
+          ],
+          "reasoning": "The content confirms Nesine.com as the official online dealer for Spor Toto. The job posting for an iOS Developer indicates active investment in mobile technology infrastructure, which implies procurement needs for development tools, cloud services, and potentially third-party vendor partnerships for app maintenance or feature development."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:25:21.586226",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/business-%C4%B1ntelligence-and-analytic-senior-specialist-at-nesine-com-2921611723?refId=jru8lij4opawOJjS2xciNA%3D%3D&trackingId=D8OpcSleSOLmtEnaEEOIaA%3D%3D&position=23&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft SQL Server (SSIS, SSAS, SSRS)",
+              "Tableau",
+              "ETL Tools",
+              "Data Warehousing",
+              "SQL"
+            ],
+            "job_postings": [
+              "Business Intelligence and Analytic Senior Specialist"
+            ],
+            "procurement_indicators": [
+              "Enterprise Software Licensing (Microsoft Stack)",
+              "Analytics Platform Investment",
+              "Data Infrastructure Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Official Vendor Relationship Confirmation",
+            "Business Intelligence (BI) & Data Analytics Investment",
+            "Data Warehousing & ETL Procurement",
+            "Microsoft SQL Server Stack (SSIS, SSAS, SSRS)",
+            "Data Visualization Tools (Tableau)",
+            "Strategic Decision Support Hiring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 360,
+              "elapsed_seconds": 3.307878017425537
+            }
+          ],
+          "reasoning": "The content explicitly confirms Nesine.com as the 'official online dealer' for Spor Toto, validating the direct vendor relationship established in Iteration 7. The job posting for a 'Business Intelligence and Analytic Senior Specialist' indicates significant procurement activity in the data technology sector, specifically for Data Warehousing, ETL tools (SSIS), and Visualization platforms (Tableau). This signals a strategic investment in data infrastructure to support betting operations."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:25:40.917355",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/frontend-developer-react-remote-at-nesine-3336183645",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "React (Hooks, Context API, Redux)",
+              "JavaScript (ES6+, OOP, MVVM)",
+              "Node.js & Socket.io",
+              "Webpack, Babel, Gulp, Grunt",
+              "Jest, Testing Library, ESLint",
+              "Storybook",
+              "Gitlab/Github",
+              "Micro Frontend Architecture",
+              "Monorepo"
+            ],
+            "job_postings": [
+              "Frontend Developer (React) - Remote"
+            ],
+            "procurement_indicators": [
+              "Vendor: Nesine.com (Official Dealer for Spor Toto)",
+              "Investment Area: High-performance responsive web/mobile apps",
+              "Scale: Millions of users/subscribers",
+              "Methodology: Agile/Scrum"
+            ]
+          },
+          "patterns_found": [
+            "Official Vendor Relationship Confirmation",
+            "Frontend Engineering Investment",
+            "Scalable Web Architecture",
+            "Micro-Frontend & Monorepo Strategy",
+            "React.js Ecosystem",
+            "Remote Workforce Model"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1841,
+              "output_tokens": 394,
+              "elapsed_seconds": 11.381329774856567
+            }
+          ],
+          "reasoning": "This job posting reinforces the strong procurement relationship between Spor Toto and Nesine.com (identified as the 'official online dealer'). It signals significant investment in frontend infrastructure, specifically targeting high-scale, high-performance web applications using modern React architectures. The requirement for 'micro frontend' and 'monorepo' knowledge indicates a complex, modular procurement strategy for their digital platforms."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:25:52.912789",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/ios-developer-mid-senior-level-remote-at-nesine-3270812401",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "iOS",
+              "Swift",
+              "Objective-C",
+              "Git",
+              "Xcode Instruments",
+              "WebSocket"
+            ],
+            "job_postings": [
+              {
+                "title": "iOS Developer (mid - senior Level)",
+                "company": "Nesine",
+                "relationship": "Official Online Dealer for Spor Toto",
+                "focus": "Native iOS Application Development, Performance Profiling"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in mobile user experience (UX)",
+              "Focus on app performance and battery efficiency",
+              "Expansion of digital platform capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Official Vendor Relationship Confirmation",
+            "Digital Technology Investment",
+            "Mobile Application Development",
+            "iOS Engineering Talent Acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1911,
+              "output_tokens": 348,
+              "elapsed_seconds": 3.4043171405792236
+            }
+          ],
+          "reasoning": "This job posting confirms Nesine's role as the official online dealer for Spor Toto. The recruitment of a Mid-Senior iOS Developer indicates active investment in mobile application infrastructure, specifically for iOS platforms. This is a direct procurement signal related to software development resources and digital platform maintenance."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:26:08.507858",
+          "domain_explored": "https://my.linkedin.com/jobs/view/software-developer-backend-at-nesine-com-2389751766?refId=RTQ1hWSnXYiRFHHu8cfZjw%3D%3D&trackingId=YTK797Qa4zZaipVYNBZV4Q%3D%3D&trk=org-job-results",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Asp.NET & Asp.NET Core",
+              "C#",
+              "Web API",
+              "REST & SOAP",
+              "Node.js",
+              "MsSQL",
+              "MongoDB (NoSQL)",
+              "RabbitMQ",
+              "Kafka",
+              "Docker",
+              "Kubernetes",
+              "Microservice Architectures"
+            ],
+            "job_postings": [
+              "Software Developer (Backend) - Remote"
+            ],
+            "procurement_indicators": [
+              "Investment in high-performance backend infrastructure",
+              "Adoption of distributed message bus technologies (Kafka/RabbitMQ)",
+              "Containerization and Orchestration (Docker/Kubernetes)",
+              "Migration towards Microservice architectures"
+            ]
+          },
+          "patterns_found": [
+            "Official Vendor Relationship Confirmation",
+            "Backend Engineering Investment",
+            "High-Performance Scalable Architecture",
+            "Distributed Systems Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2004,
+              "output_tokens": 360,
+              "elapsed_seconds": 3.572824001312256
+            }
+          ],
+          "reasoning": "This job posting reinforces the strong vendor relationship between Spor Toto and Nesine.com (official dealer). It highlights procurement signals related to backend scalability (Asp.NET Core, Node.js), data management (MsSQL, Mongo), and infrastructure technologies (Docker, Kubernetes, RabbitMQ, Kafka) required to support millions of users."
+        }
+      ],
+      "total_input_tokens": 16588,
+      "total_output_tokens": 2759,
+      "estimated_cost_usd": 0.09114900000000001
+    },
+    "procurement_signals": [
+      "Direct Vendor Relationship",
+      "Digital Technology Investment",
+      "Mobile Application Development",
+      "iOS Ecosystem Procurement",
+      "Official Vendor Relationship Confirmation",
+      "Business Intelligence (BI) & Data Analytics Investment",
+      "Data Warehousing & ETL Procurement",
+      "Microsoft SQL Server Stack (SSIS, SSAS, SSRS)",
+      "Data Visualization Tools (Tableau)",
+      "Strategic Decision Support Hiring",
+      "Official Vendor Relationship Confirmation",
+      "Frontend Engineering Investment",
+      "Scalable Web Architecture",
+      "Micro-Frontend & Monorepo Strategy",
+      "React.js Ecosystem",
+      "Remote Workforce Model",
+      "Official Vendor Relationship Confirmation",
+      "Digital Technology Investment",
+      "Mobile Application Development",
+      "iOS Engineering Talent Acquisition",
+      "Official Vendor Relationship Confirmation",
+      "Backend Engineering Investment",
+      "High-Performance Scalable Architecture",
+      "Distributed Systems Procurement"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Spor Toto may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:26:08.515534"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319247",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:35:59.596695"
+}

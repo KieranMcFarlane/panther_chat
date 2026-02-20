@@ -1,0 +1,185 @@
+{
+  "entity_id": "rk_vardar",
+  "entity_name": "RK Vardar",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "rkvardar.com.mk",
+    "members.ehf.eu",
+    "play.google.com",
+    "wikidata.org",
+    "billetterie.psg.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_vardar",
+      "entity_name": "RK Vardar",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://rkvardar.com.mk",
+        "https://members.ehf.eu",
+        "https://billetterie.psg.fr",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Vardar may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:25:14.328137",
+          "domain_explored": "https://rkvardar.com.mk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Shopify-like)",
+              "Social Media Integration (Facebook, Instagram, YouTube, Viber)",
+              "Video Streaming/Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Sponsor: Mozzart (Betting/Technology partner)",
+              "Merchandise Retail Operations (Fan Shop)",
+              "Ticket Sales for European League matches"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Acquisition (Mozzart)",
+            "E-commerce Integration (Fan Shop)",
+            "Digital Content Management (Video/Photo galleries)",
+            "Ticketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 302,
+              "elapsed_seconds": 3.8900527954101562
+            }
+          ],
+          "reasoning": "The content reveals a new major sponsorship deal with 'Mozzart' and the operation of an online 'Fan Shop' (vardarfanshop.com). While not a direct procurement tender, the acquisition of a new sponsor and the maintenance of an e-commerce platform indicate active commercial operations and potential vendor needs for marketing, merchandise, or platform maintenance. The site also shows active digital media management."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:25:21.876701",
+          "domain_explored": "https://members.ehf.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EHFamily.ID (App integration)",
+              "JavaScript Framework (indicated by {{}} template syntax)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Login Interface",
+            "Angular/React Template Syntax",
+            "External Federation Platform"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 900,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.767331838607788
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a generic login page for the European Handball Federation's 'EHFamily' portal. It contains no information regarding RK Vardar's specific operations, technology stack, or procurement activities. The presence of template syntax (e.g., {{validationError}}) indicates this is a client-side view with no embedded business intelligence relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:25:33.422525",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Gaming Content",
+            "Third-Party Application Store Interface",
+            "Irrelevant Keyword Matching (e.g., 'Top Football Manager', 'Club')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.7035608291625977
+            }
+          ],
+          "reasoning": "The scraped content is a generic listing of mobile games and applications from the Google Play Store. While titles like 'Top Football Manager 2026' or 'Head Ball 2' contain keywords relevant to sports management, these are consumer-facing entertainment products, not B2B procurement signals or internal tools used by RK Vardar. There is no evidence of RK Vardar's specific technology stack, governance, or purchasing intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:25:36.309611",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:25:39.160236",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3715,
+      "total_output_tokens": 730,
+      "estimated_cost_usd": 0.022095
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Vardar may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:25:39.160645"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359762",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:45.400294"
+}

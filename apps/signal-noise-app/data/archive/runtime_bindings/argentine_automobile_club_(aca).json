@@ -1,0 +1,202 @@
+{
+  "entity_id": "argentine_automobile_club_(aca)",
+  "entity_name": "Argentine Automobile Club (ACA)",
+  "template_id": "tpl_global_governing_federations_v1",
+  "cluster_id": "nat_motor_gov_body",
+  "discovered_domains": [
+    "ri.conicet.gov.ar",
+    "ediplomat.com",
+    "wiki.aaroads.com",
+    "researchgate.net",
+    "esim.holafly.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/actuary-actuary-actuarial-team-lead-at-aipso-4331930061"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_automobile_club_(aca)",
+      "entity_name": "Argentine Automobile Club (ACA)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ediplomat.com",
+        "https://www.linkedin.com/jobs/view/actuary-actuary-actuarial-team-lead-at-aipso-4331930061",
+        "https://researchgate.net",
+        "https://wiki.aaroads.com",
+        "https://esim.holafly.com",
+        "https://ri.conicet.gov.ar"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Automobile Club (ACA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:25:14.490359",
+          "domain_explored": "https://ri.conicet.gov.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:25:31.539724",
+          "domain_explored": "https://ediplomat.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:25:38.201522",
+          "domain_explored": "https://wiki.aaroads.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "encyclopedic_knowledge_base",
+            "us_centric_infrastructure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.1233062744140625
+            }
+          ],
+          "reasoning": "The content is from the AARoads Wiki, a collaborative encyclopedia focused on road transportation history and infrastructure primarily in the United States. It contains no information regarding the Argentine Automobile Club (ACA), its procurement activities, or its technology stack. The entity is unrelated to the target."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:26:11.756919",
+          "domain_explored": "https://researchgate.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:26:48.948887",
+          "domain_explored": "https://esim.holafly.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "eSIM",
+              "Trustpilot"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "b2c_product_landing_page",
+            "telecommunications_vendor",
+            "consumer_electronics",
+            "irrelevant_marketing_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 188,
+              "elapsed_seconds": 33.57389521598816
+            }
+          ],
+          "reasoning": "The content is scraped from Holafly, a B2C eSIM provider. It contains marketing copy for consumer travel data plans and Trustpilot reviews. There is absolutely no relation to the Argentine Automobile Club (ACA), its procurement activities, or its internal governance. This is a false positive in the scraping chain."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:26:56.305103",
+          "domain_explored": "https://www.linkedin.com/jobs/view/actuary-actuary-actuarial-team-lead-at-aipso-4331930061",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Excel",
+              "Statistical Software",
+              "Databases"
+            ],
+            "job_postings": [
+              "Actuary/Actuary & Actuarial Team Lead at AIPSO"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_entity",
+            "geographic_mismatch",
+            "insurance_sector_focus",
+            "job_posting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.194978952407837
+            }
+          ],
+          "reasoning": "The content is a job posting for AIPSO (Automobile Insurance Plan Service Office), a US-based insurance organization in Rhode Island. While it shares industry keywords ('Auto', 'Insurance'), it is not the Argentine Automobile Club (ACA). The geographic location (RI, USA) and the specific corporate entity (AIPSO) confirm this is irrelevant to the target entity's procurement activities."
+        }
+      ],
+      "total_input_tokens": 4482,
+      "total_output_tokens": 586,
+      "estimated_cost_usd": 0.022236
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Automobile Club (ACA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:26:56.306708"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.381150",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:39.522388"
+}

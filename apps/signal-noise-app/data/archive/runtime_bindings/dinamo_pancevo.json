@@ -1,0 +1,158 @@
+{
+  "entity_id": "dinamo_pancevo",
+  "entity_name": "Dinamo Pancevo",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "seha-liga.com",
+    "flashscore.com",
+    "playmakerstats.com",
+    "loft7761.serverloft.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dinamo_pancevo",
+      "entity_name": "Dinamo Pancevo",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://playmakerstats.com",
+        "https://flashscore.com",
+        "https://eurohandball.com",
+        "https://loft7761.serverloft.com",
+        "https://seha-liga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dinamo Pancevo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:30:56.816013",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "cookie_consent_walls",
+            "sports_news_coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 169,
+              "elapsed_seconds": 1.8707373142242432
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) website, covering tournament results (EHF EURO), player awards (MVP), and future championship schedules. There is absolutely no mention of 'Dinamo Pancevo', nor are there any procurement signals, job postings, or technology investment indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:31:18.181128",
+          "domain_explored": "https://seha-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:31:28.981087",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_content",
+            "sports_scores",
+            "cookie_consent_walls",
+            "generic_sports_aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 614,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.72739577293396
+            }
+          ],
+          "reasoning": "The content is exclusively related to sports scores, live results, and gambling addiction warnings. There is no corporate information, governance structure, or technology stack relevant to the entity Dinamo Pancevo's procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:32:02.223769",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:32:34.023267",
+          "domain_explored": "https://loft7761.serverloft.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1971,
+      "total_output_tokens": 318,
+      "estimated_cost_usd": 0.010683
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dinamo Pancevo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:32:34.024126"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.353118",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:23:54.923347"
+}

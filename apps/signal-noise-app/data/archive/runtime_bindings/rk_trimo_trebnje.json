@@ -1,0 +1,230 @@
+{
+  "entity_id": "rk_trimo_trebnje",
+  "entity_name": "RK Trimo Trebnje",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rktrimotrebnje.si",
+    "eurohandball.com",
+    "globalsportsarchive.com",
+    "rk-gorenje.com",
+    "old.eurohandball.com",
+    "rk-celje.si"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_trimo_trebnje",
+      "entity_name": "RK Trimo Trebnje",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rk-celje.si",
+        "https://old.eurohandball.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://rk-gorenje.com",
+        "https://rktrimotrebnje.si"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Trimo Trebnje may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:36:37.103443",
+          "domain_explored": "https://rktrimotrebnje.si",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "E-commerce Platform (Fan Shop)",
+              "Ticketing System (implied by 'Vstopnice... so v prodaji')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active search for sponsors/partners",
+              "Merchandise sales operations",
+              "Event management and ticketing"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship/Partnership Acquisition",
+            "E-commerce Capability (Fan Shop)",
+            "Digital Marketing (Social Media/Ticketing)",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 304,
+              "elapsed_seconds": 5.548633098602295
+            }
+          ],
+          "reasoning": "The content confirms RK Trimo Trebnje is actively seeking new partners ('Novo leto prina\u0161a nove partnerje') and operates an online Fan Shop, indicating a need for e-commerce and CRM solutions to manage supporters and merchandise. The presence of a structured website with dynamic news and ticket sales suggests an active digital presence, though specific technology vendors are not named. The 'Gymee' text appears to be placeholder content from a template."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:36:47.968430",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Cookie Consent Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 184,
+              "elapsed_seconds": 5.604621887207031
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) general news portal and focuses on tournament results (Denmark champions, Gidsel MVP) and future EHF event calendars. There is absolutely no mention of 'RK Trimo Trebnje', nor are there any procurement signals, job postings, or technology stack details relevant to the specific Slovenian handball club entity. This represents a false positive in the scraping iteration."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:36:59.008280",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Generic Sports Aggregation",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 182,
+              "elapsed_seconds": 4.141826152801514
+            }
+          ],
+          "reasoning": "The content provided is a generic sitemap or navigation list for global soccer competitions (UEFA, AFC, CONCACAF, etc.) found on globalsportsarchive.com. There is absolutely no mention of 'RK Trimo Trebnje', handball, procurement activities, or technology stacks specific to the target entity. This data is irrelevant to the objective of finding procurement signals for RK Trimo Trebnje."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:37:11.399722",
+          "domain_explored": "https://rk-gorenje.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms (Usage detected in 'PRIDRU\u017dI SE' link)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Entity",
+            "Irrelevant Content",
+            "Generic Marketing Messaging"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.1270687580108643
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'RK Gorenje Velenje', a distinct handball club and likely a competitor to RK Trimo Trebnje, rather than the target entity itself. The content consists of generic marketing copy regarding the 2025/26 season, youth academy promotions, and match results. There are no procurement signals, technology stacks, or governance patterns relevant to RK Trimo Trebnje present in this text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:37:28.029374",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Calendar Data",
+            "Navigation Artifacts",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1545,
+              "output_tokens": 170,
+              "elapsed_seconds": 12.688629865646362
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic calendar widgets and navigation menus from the 'old.eurohandball.com' domain. There is absolutely no mention of 'RK Trimo Trebnje', nor any procurement-related signals such as tenders, vendor lists, or technology stacks. The data represents structural noise rather than actionable intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:37:46.230644",
+          "domain_explored": "https://rk-celje.si",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 7274,
+      "total_output_tokens": 1045,
+      "estimated_cost_usd": 0.037497
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Trimo Trebnje may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:37:46.232302"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351597",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:29.226891"
+}

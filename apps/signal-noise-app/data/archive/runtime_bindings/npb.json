@@ -1,0 +1,335 @@
+{
+  "entity_id": "npb",
+  "entity_name": "NPB",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "village-npb.org",
+    "japan-baseball.jp",
+    "japanball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/npb-companies_employment-jobs-careers-activity-6910224899789742080-5LlH",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-4-days-on-4-days-at-npb-security-australia-3977510306",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-retail-loss-prevention-security-off-at-npb-security-australia-3977512110",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-construction-site-security-officers-at-npb-security-australia-3977508460",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-university-edu-at-npb-security-australia-4149396027",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-hospitals-at-npb-security-australia-4252982382",
+      "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-supervisors-experienced-h-at-npb-security-australia-3977509404"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "npb",
+      "entity_name": "NPB",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-4-days-on-4-days-at-npb-security-australia-3977510306",
+        "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-university-edu-at-npb-security-australia-4149396027",
+        "https://au.linkedin.com/jobs/view/wa-%E2%80%93-retail-loss-prevention-security-off-at-npb-security-australia-3977512110",
+        "https://japan-baseball.jp",
+        "https://www.linkedin.com/posts/npb-companies_employment-jobs-careers-activity-6910224899789742080-5LlH",
+        "https://au.linkedin.com/jobs/view/wa-%E2%80%93-construction-site-security-officers-at-npb-security-australia-3977508460",
+        "https://village-npb.org",
+        "https://japanball.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NPB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:10:31.854517",
+          "domain_explored": "https://village-npb.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions of 'Business Showcase' (Networking event, not procurement)",
+              "Mentions of 'Anchorage Park Playground' maintenance (Operations/Services)"
+            ]
+          },
+          "patterns_found": [
+            "Community engagement focus",
+            "Standard municipal governance structure",
+            "Recreation and event management operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.283173084259033
+            }
+          ],
+          "reasoning": "The content is the homepage of the Village of North Palm Beach, displaying general community news, event calendars, and civic alerts. While it confirms the entity is a municipality, it contains no specific procurement signals, RFPs, job postings, or technology stack information relevant to vendor analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:10:42.148895",
+          "domain_explored": "https://japan-baseball.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming (Netflix partnership mentioned)",
+              "Web Content Management (Standard event/news publishing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Agreements (Netflix, Lagzas)",
+              "Venue Procurement (Stadium rentals in Miyazaki, Nagoya, Okinawa)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (NPB vs. Samurai Japan)",
+            "Sports Federation Governance",
+            "Event Management Operations",
+            "Sponsorship/Partnership focus (Netflix, Lagzas)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 328,
+              "elapsed_seconds": 3.4728200435638428
+            }
+          ],
+          "reasoning": "The content analyzed belongs to the 'Samurai Japan' (Japan National Baseball Team) organization, which is distinct from NPB (Nippon Professional Baseball\u2014the league organization). While related, Samurai Japan is the national team entity managed by the Japanese Baseball Federation (Nippon Professional Baseball Organization is a separate legal entity often involved in league operations). The content focuses on match schedules, rosters, and media partnerships rather than league-level procurement, IT infrastructure, or vendor management for NPB. This indicates a drift away from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:10:45.020236",
+          "domain_explored": "https://japanball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:10:53.575998",
+          "domain_explored": "https://www.linkedin.com/posts/npb-companies_employment-jobs-careers-activity-6910224899789742080-5LlH",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)",
+              "Web Forms (Applicant tracking)"
+            ],
+            "job_postings": [
+              "Gate Screening Staff",
+              "Stage and Backstage Access Control Staff",
+              "Event Staff & Security"
+            ],
+            "procurement_indicators": [
+              "Seasonal labor procurement",
+              "Venue operations services"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (US-based Event Services vs. Japanese Baseball)",
+            "High-volume Seasonal Hiring",
+            "Manual Recruitment Processes (Phone/Forms)",
+            "Venue Management Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 268,
+              "elapsed_seconds": 5.299252986907959
+            }
+          ],
+          "reasoning": "The content confirms 'NPB Companies' is a US-based entity (St. Louis) specializing in event staffing and venue management, distinct from the Japanese NPB (Nippon Professional Baseball) organization. The operational focus is on manual, labor-intensive staffing rather than corporate technology procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:11:01.606648",
+          "domain_explored": "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-4-days-on-4-days-at-npb-security-australia-3977510306",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smart Phones",
+              "ISO 9001 Quality System"
+            ],
+            "job_postings": [
+              "Security Officers (Perth Metro, WA)"
+            ],
+            "procurement_indicators": [
+              "Telstra Business Award Winner",
+              "Australian Hotel Association Supplier Award Winner"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Security Services vs. Baseball Organization)",
+            "Labor-Intensive Operations",
+            "Manual Recruitment Processes",
+            "B2C Service Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.698012828826904
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'NPB Security Australia', a provider of security guard services. This is a distinct entity from 'NPB' (Nippon Professional Baseball), the Japanese baseball organization. The operational context (hiring guards, shift rosters) is irrelevant to the procurement intelligence goals for the baseball entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:11:09.339302",
+          "domain_explored": "https://au.linkedin.com/jobs/view/wa-%E2%80%93-retail-loss-prevention-security-off-at-npb-security-australia-3977512110",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Reporting System",
+              "Smart Phones"
+            ],
+            "job_postings": [
+              "WA \u2013 Retail/Loss Prevention Security Officer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Security Services vs. Baseball Organization)",
+            "Labor-Intensive Operations",
+            "Manual Recruitment Processes",
+            "Operational Technology (Digital Reporting)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1675,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.9284000396728516
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'NPB Security Australia', a provider of security guard and crowd control services. This entity is unrelated to 'NPB' (Nippon Professional Baseball), the Japanese baseball organization. While the posting mentions a 'Digital Reporting System' and 'Smart Phone' usage, this refers to operational tools for security guards, not enterprise procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:11:16.037671",
+          "domain_explored": "https://au.linkedin.com/jobs/view/wa-%E2%80%93-construction-site-security-officers-at-npb-security-australia-3977508460",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Reporting System",
+              "Smart Phones"
+            ],
+            "job_postings": [
+              "WA \u2013 Construction Site Security Officers"
+            ],
+            "procurement_indicators": [
+              "ISO 9001 Quality System Certification",
+              "Telstra Business Award Winner",
+              "Australian Hotel Association Supplier Award Winner"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Security Services vs. Baseball Organization)",
+            "Labor-Intensive Operations",
+            "Manual Recruitment Processes",
+            "Digital Reporting Requirements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1756,
+              "output_tokens": 300,
+              "elapsed_seconds": 3.0045900344848633
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Construction Site Security Officers' at 'NPB Security Australia'. This entity is a security services provider (ISO 9001 certified, workforce of 2000+) and is unrelated to 'NPB' (Nippon Professional Baseball), which is the target entity for this procurement intelligence task. The mention of a 'Digital Reporting System' and 'Smart Phone' usage indicates operational technology usage, but within the wrong industry context."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:11:22.949542",
+          "domain_explored": "https://au.linkedin.com/jobs/view/wa-%E2%80%93-security-officers-university-edu-at-npb-security-australia-4149396027",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Security Officers (University / Education)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Security Services vs. Baseball Organization)",
+            "Manual Recruitment Processes",
+            "Labor-Intensive Operations",
+            "High-volume Seasonal Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1837,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.263338088989258
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'NPB Security Australia', a physical security firm operating in Adelaide/Fremantle. This entity is unrelated to 'NPB' (Nippon Professional Baseball), the Japanese baseball organization. The content focuses on manual labor, guard licensing, and roster management, presenting no procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 11129,
+      "total_output_tokens": 1831,
+      "estimated_cost_usd": 0.060852
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NPB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:11:22.950903"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.414263",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:32.252653"
+}

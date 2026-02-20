@@ -1,0 +1,30 @@
+{
+  "entity": {
+    "id": "aston-villa-fc",
+    "name": "Aston Villa FC",
+    "timestamp": "2026-02-07T19:49:25.137616"
+  },
+  "key_intelligence": {
+    "linkedin_profiles": 18,
+    "decision_makers": 0,
+    "opportunities": 10,
+    "mutual_connections": 0,
+    "strong_mutuals": 0,
+    "linkedin_posts_analyzed": 0
+  },
+  "positioning": {
+    "strategy": "INNOVATION_PARTNER",
+    "approach": "Co-creation Mode",
+    "timing": "Within 1 week",
+    "channel": "LinkedIn respond + Email",
+    "expected_response_rate": "40%",
+    "urgency": "MEDIUM",
+    "rationale": "Seeking partners - collaborative approach works best"
+  },
+  "recommended_actions": [
+    "Position as INNOVATION_PARTNER",
+    "Engage via LinkedIn respond + Email",
+    "Timing: Within 1 week",
+    "Expected response rate: 40%"
+  ]
+}

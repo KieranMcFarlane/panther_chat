@@ -1,0 +1,518 @@
+{
+  "entity_id": "badminton_world_federation_(bwf)",
+  "entity_name": "Badminton World Federation (BWF)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "corporate.bwfbadminton.com",
+    "bwfbadminton.com",
+    "badmintonoceania.org",
+    "badminton.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/view/membership-data-performance-officer-at-badminton-australia-4345000851",
+      "https://nz.linkedin.com/jobs/view/event-manager-at-badminton-oceania-4181612472",
+      "https://my.linkedin.com/jobs/view/information-technology-specialist-at-badminton-world-federation-4325510932",
+      "https://my.linkedin.com/jobs/view/it-specialist-at-badminton-world-federation-4339110204",
+      "https://my.linkedin.com/jobs/view/digital-it-specialist-at-badminton-world-federation-4251365931",
+      "https://fr.linkedin.com/company/globalsportsjobs?trk=recent-update_content"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "badminton_world_federation_(bwf)",
+      "entity_name": "Badminton World Federation (BWF)",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.36,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.06,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.3,
+        0.36
+      ],
+      "explored_domains": [
+        "https://badminton.es",
+        "https://my.linkedin.com/jobs/view/it-specialist-at-badminton-world-federation-4339110204",
+        "https://my.linkedin.com/jobs/view/digital-it-specialist-at-badminton-world-federation-4251365931",
+        "https://corporate.bwfbadminton.com",
+        "https://au.linkedin.com/jobs/view/membership-data-performance-officer-at-badminton-australia-4345000851",
+        "https://bwfbadminton.com",
+        "https://nz.linkedin.com/jobs/view/event-manager-at-badminton-oceania-4181612472",
+        "https://badmintonoceania.org",
+        "https://my.linkedin.com/jobs/view/information-technology-specialist-at-badminton-world-federation-4325510932"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Partnership Architecture",
+        "Global Brand Sponsorship Portfolio",
+        "Official Supplier Categories",
+        "Data-Driven Membership Management",
+        "Performance Analytics Role",
+        "CRM & Database Administration",
+        "Stakeholder Reporting Requirements",
+        "BWF Strategic Alignment",
+        "Regional Confederation Procurement",
+        "Tournament Infrastructure Investment",
+        "Technical Official Management Systems",
+        "Para Badminton Integration Requirements",
+        "Direct Digital Infrastructure Procurement",
+        "Microsoft 365 Ecosystem Governance",
+        "Hardware Lifecycle Management",
+        "Cybersecurity Compliance (IG1-IG3)",
+        "Hybrid Network Infrastructure (Fortinet/EnGenius)",
+        "Internal Digital Transformation Support",
+        "Microsoft 365 Ecosystem Consolidation",
+        "Hardware Lifecycle Procurement",
+        "Hybrid Infrastructure Management (Fortinet/QNAP)",
+        "Digital Transformation Governance",
+        "Endpoint Management (Intune)",
+        "Hardware Infrastructure Procurement",
+        "Enterprise Asset Management (Jira)",
+        "Cybersecurity Compliance Procurement (IG1-IG3)",
+        "Tournament Scoring System Maintenance",
+        "Cloud Endpoint Management (Microsoft Intune)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Badminton World Federation (BWF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:37:19.327927",
+          "domain_explored": "https://corporate.bwfbadminton.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Learning Management Systems (LMS) - Inferred from education sub-domain",
+              "Content Management Systems (CMS) - Inferred from corporate site structure",
+              "Web Hosting / Infrastructure - Inferred from sub-domain usage"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sub-domain utilization (education.bwfbadminton.com, shuttletime.bwfbadminton.com) indicates potential vendor-hosted platforms",
+              "Governance section (corporate.bwfbadminton.com/about/governance/) suggests a structured decision-making body",
+              "Integrity section implies potential procurement for monitoring/compliance software"
+            ]
+          },
+          "patterns_found": [
+            "Sub-domain architecture indicates specialized platforms",
+            "Dedicated sub-domains for Education and Shuttle Time suggest reliance on external Learning Management Systems (LMS) or specialized hosting",
+            "Governance structure link indicates potential for statutory procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 449,
+              "elapsed_seconds": 4.8667566776275635
+            }
+          ],
+          "reasoning": "The content provides a structural overview of the BWF corporate site. While it does not contain explicit procurement signals like RFPs or job postings, the navigation structure reveals the use of distinct sub-domains (education.bwfbadminton.com, shuttletime.bwfbadminton.com). This architectural pattern strongly suggests the use of third-party platforms for education and grassroots programs, which implies ongoing vendor relationships or potential procurement needs for LMS, web hosting, or content management. The 'Integrity' section also hints at potential software needs for anti-doping or anti-corruption monitoring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:37:33.083539",
+          "domain_explored": "https://bwfbadminton.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcasting Infrastructure",
+              "Official Statistical Data Systems",
+              "Shuttle Time Technology"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Sponsorship renewals",
+              "Official Supplier contracts (e.g., Yonex, Victor)",
+              "Technical Partner requirements (e.g., STATS, ENET)",
+              "Event Hosting Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Architecture",
+            "Global Brand Sponsorship Portfolio",
+            "Official Supplier Categories"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 476,
+              "output_tokens": 255,
+              "elapsed_seconds": 5.1282031536102295
+            }
+          ],
+          "reasoning": "The content repetition of 'PARTNERS' indicates a dedicated section for commercial relationships. This is a strong procurement signal as it reveals the vendor categories BWF invests in (Broadcast, Sports Equipment, Logistics) and establishes the precedent for long-term contractual agreements."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:37:45.644159",
+          "domain_explored": "https://badmintonoceania.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem Confirmation: VICTOR brand presence in regional championships"
+            ]
+          },
+          "patterns_found": [
+            "Regional Confederation Content",
+            "Event-Specific Sponsorship Branding",
+            "Future-Dated Content (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 988,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.534412145614624
+            }
+          ],
+          "reasoning": "The scraped content belongs to Badminton Oceania, a regional confederation, not the BWF headquarters. While it confirms the VICTOR sponsorship ecosystem, it offers no direct procurement signals for the BWF entity itself. The content is purely informational regarding future events."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:37:57.832905",
+          "domain_explored": "https://badminton.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Aula Virtual (LMS)",
+              "E-commerce Platform (E-shop)",
+              "CMS (Standard web navigation)"
+            ],
+            "job_postings": [
+              "Ofertas Trabajo / Becas (General Link)"
+            ],
+            "procurement_indicators": [
+              "Erasmus + Projects (EU Funding)",
+              "Proyectos Uni\u00f3n Europea",
+              "Public Funding dependencies (Patrocinadores, Ayudas)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Scope (FESBA)",
+            "Regional Event Focus (Andalusian, Granollers)",
+            "Domestic Governance Structure (Estatutos, Secretar\u00eda General)",
+            "Localized Sponsorship (Copa Iberdrola)",
+            "Spanish Language Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.312018871307373
+            }
+          ],
+          "reasoning": "The content is from the Spanish Badminton Federation (FESBA), a distinct entity from the global Badminton World Federation (BWF). While it shows operational maturity (E-shop, Virtual Classroom, Erasmus+ projects), the procurement signals are localized to the Spanish national level and do not reflect BWF's global procurement strategy. The presence of 'BWF-BEC Coach Level' indicates a consumption relationship with BWF services, not a procurement signal for BWF itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:38:06.644269",
+          "domain_explored": "https://au.linkedin.com/jobs/view/membership-data-performance-officer-at-badminton-australia-4345000851",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems",
+              "Data Visualization Tools (e.g., Tableau, PowerBI)",
+              "Database Management Software",
+              "Microsoft Office Suite (Advanced Excel)"
+            ],
+            "job_postings": [
+              "Membership Data Performance Officer"
+            ],
+            "procurement_indicators": [
+              "Hiring for data capability indicates software procurement",
+              "Need for centralized member data management",
+              "Requirement for performance tracking tools"
+            ]
+          },
+          "patterns_found": [
+            "Data-Driven Membership Management",
+            "Performance Analytics Role",
+            "CRM & Database Administration",
+            "Stakeholder Reporting Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 685,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.264310836791992
+            }
+          ],
+          "reasoning": "The job title 'Membership Data Performance Officer' confirms a strategic shift towards data analytics and digital membership management. This role requires proficiency in database management and reporting, signaling immediate procurement needs for CRM software, data visualization tools, and potentially database hosting services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:38:20.051427",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/event-manager-at-badminton-oceania-4181612472",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Competition Management Systems",
+              "Technical Official Assignment Software",
+              "Web Content Management (CMS)"
+            ],
+            "job_postings": [
+              {
+                "title": "Event Manager",
+                "entity": "Badminton Oceania",
+                "location": "Auckland, New Zealand",
+                "focus": "Tournament Planning & Implementation",
+                "strategic_link": "Alignment with BWF strategies"
+              }
+            ],
+            "procurement_indicators": [
+              "Management of 15-20 tournaments per year",
+              "On-site attendance and training requirements",
+              "Development of competition structures in developing nations",
+              "Technical Officials pathway implementation",
+              "Website maintenance and updates"
+            ]
+          },
+          "patterns_found": [
+            "BWF Strategic Alignment",
+            "Regional Confederation Procurement",
+            "Tournament Infrastructure Investment",
+            "Technical Official Management Systems",
+            "Para Badminton Integration Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1717,
+              "output_tokens": 426,
+              "elapsed_seconds": 4.328401803970337
+            }
+          ],
+          "reasoning": "While this is a regional role (Badminton Oceania), the explicit alignment with BWF strategies and the management of BWF Grade 3 tournaments creates a direct procurement link. The role requires resources for 15-20 annual tournaments, implying significant procurement of event services, travel, and technology for competition management. The focus on 'developing countries' and 'Para Badminton' suggests specific needs for accessible infrastructure and specialized equipment."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:38:35.419739",
+          "domain_explored": "https://my.linkedin.com/jobs/view/information-technology-specialist-at-badminton-world-federation-4325510932",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365 (Entra ID, SharePoint, Teams, Exchange, OneDrive, Purview)",
+              "Microsoft Intune",
+              "Fortinet",
+              "EnGenius",
+              "QNAP",
+              "Synology"
+            ],
+            "job_postings": [
+              {
+                "role": "Information Technology Specialist",
+                "department": "Digital Technology",
+                "reports_to": "Leon Tolner (Head of Digital Technology)",
+                "location": "Kuala Lumpur, Malaysia",
+                "seniority": "Entry level",
+                "certifications_required": [
+                  "MS-102",
+                  "MD-102"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Hardware lifecycle management (procurement to retirement)",
+              "Microsoft 365 licensing and administration",
+              "Network equipment maintenance (Fortinet, EnGenius)",
+              "Cybersecurity policy implementation (MFA, Conditional Access)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Digital Infrastructure Procurement",
+            "Microsoft 365 Ecosystem Governance",
+            "Hardware Lifecycle Management",
+            "Cybersecurity Compliance (IG1-IG3)",
+            "Hybrid Network Infrastructure (Fortinet/EnGenius)",
+            "Internal Digital Transformation Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1790,
+              "output_tokens": 494,
+              "elapsed_seconds": 8.589057683944702
+            }
+          ],
+          "reasoning": "This is a direct procurement signal from the BWF Headquarters. The role explicitly includes 'procurement, setup, configuration' within the hardware lifecycle and involves the administration of enterprise software licenses (Microsoft 365, Intune). The requirement for specific certifications (MS-102, MD-102) indicates a structured investment in professional services and training. The mention of specific hardware brands (Fortinet, EnGenius, QNAP/Synology) confirms active vendor relationships."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:38:51.072037",
+          "domain_explored": "https://my.linkedin.com/jobs/view/it-specialist-at-badminton-world-federation-4339110204",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365 (Entra ID, SharePoint, Teams, Exchange, OneDrive, Purview)",
+              "Microsoft Intune",
+              "Fortinet (Network Security)",
+              "EnGenius (Networking)",
+              "QNAP / Synology (NAS/Storage)"
+            ],
+            "job_postings": [
+              {
+                "role": "IT Specialist",
+                "department": "Digital Technology",
+                "reports_to": "Leon Tolner (Head of Digital Technology)",
+                "location": "Kuala Lumpur, Malaysia",
+                "focus": "Microsoft 365 Management, Hardware Lifecycle, Endpoint Security"
+              }
+            ],
+            "procurement_indicators": [
+              "Hardware lifecycle management (procurement, setup, configuration, retirement)",
+              "Maintenance contracts for Fortinet, EnGenius, QNAP/Synology systems",
+              "Microsoft 365 Licensing and Governance implementation",
+              "Standardized device rollouts"
+            ]
+          },
+          "patterns_found": [
+            "Microsoft 365 Ecosystem Consolidation",
+            "Hardware Lifecycle Procurement",
+            "Hybrid Infrastructure Management (Fortinet/QNAP)",
+            "Digital Transformation Governance",
+            "Endpoint Management (Intune)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1861,
+              "output_tokens": 448,
+              "elapsed_seconds": 5.508220195770264
+            }
+          ],
+          "reasoning": "This job posting provides direct evidence of BWF's internal IT procurement and operational strategy. It confirms a heavy investment in the Microsoft 365 ecosystem (Entra ID, SharePoint, Intune) and reveals specific vendor dependencies for network and storage hardware (Fortinet, EnGenius, QNAP/Synology). The explicit mention of 'hardware lifecycle management' indicates recurring procurement needs for physical devices."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:39:02.576187",
+          "domain_explored": "https://my.linkedin.com/jobs/view/digital-it-specialist-at-badminton-world-federation-4251365931",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365 (MS-102, MD-102)",
+              "Microsoft Intune",
+              "Fortinet Firewalls",
+              "QNAP / Synology NAS",
+              "EnGenius Cloud Networking",
+              "Jira (Asset Management & Service Desk)",
+              "Tournament Scoring Systems"
+            ],
+            "job_postings": [
+              "Digital IT Specialist (Kuala Lumpur, Reports to Head of Digital Technology)"
+            ],
+            "procurement_indicators": [
+              "Direct responsibility for hardware procurement and server upgrades",
+              "Management of MDM/Endpoint services (Intune) indicating SaaS spend",
+              "Cybersecurity standard compliance (IG1, IG2, IG3) requiring tooling",
+              "On-site event data operations infrastructure investment"
+            ]
+          },
+          "patterns_found": [
+            "Hardware Infrastructure Procurement",
+            "Enterprise Asset Management (Jira)",
+            "Cybersecurity Compliance Procurement (IG1-IG3)",
+            "Tournament Scoring System Maintenance",
+            "Cloud Endpoint Management (Microsoft Intune)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1936,
+              "output_tokens": 454,
+              "elapsed_seconds": 5.1522581577301025
+            }
+          ],
+          "reasoning": "This job posting explicitly includes 'Oversee procurement of new hardware' as a key responsibility, confirming direct procurement activity. It reveals a specific technology stack (Fortinet, QNAP, Synology, EnGenius, Microsoft Intune) indicating ongoing vendor relationships and renewal cycles. The requirement for IG1-IG3 cybersecurity compliance suggests potential future procurement of security auditing or compliance tools. Additionally, the role involves maintaining scoring systems for international tournaments, pointing to specialized software or hardware procurement in the event management domain."
+        }
+      ],
+      "total_input_tokens": 12391,
+      "total_output_tokens": 3344,
+      "estimated_cost_usd": 0.087333
+    },
+    "procurement_signals": [
+      "Strategic Partnership Architecture",
+      "Global Brand Sponsorship Portfolio",
+      "Official Supplier Categories",
+      "Data-Driven Membership Management",
+      "Performance Analytics Role",
+      "CRM & Database Administration",
+      "Stakeholder Reporting Requirements",
+      "BWF Strategic Alignment",
+      "Regional Confederation Procurement",
+      "Tournament Infrastructure Investment",
+      "Technical Official Management Systems",
+      "Para Badminton Integration Requirements",
+      "Direct Digital Infrastructure Procurement",
+      "Microsoft 365 Ecosystem Governance",
+      "Hardware Lifecycle Management",
+      "Cybersecurity Compliance (IG1-IG3)",
+      "Hybrid Network Infrastructure (Fortinet/EnGenius)",
+      "Internal Digital Transformation Support",
+      "Microsoft 365 Ecosystem Consolidation",
+      "Hardware Lifecycle Procurement",
+      "Hybrid Infrastructure Management (Fortinet/QNAP)",
+      "Digital Transformation Governance",
+      "Endpoint Management (Intune)",
+      "Hardware Infrastructure Procurement",
+      "Enterprise Asset Management (Jira)",
+      "Cybersecurity Compliance Procurement (IG1-IG3)",
+      "Tournament Scoring System Maintenance",
+      "Cloud Endpoint Management (Microsoft Intune)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Badminton World Federation (BWF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:39:02.577239"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.450859",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:30.871542"
+}

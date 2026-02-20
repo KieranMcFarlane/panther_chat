@@ -1,0 +1,131 @@
+{
+  "entity_id": "young_boys",
+  "entity_name": "Young Boys",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "youngboys-reutlingen.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/full-time-nanny-wanted-for-3-young-boys-near-the-university-of-houston-throughout-school-year-at-wyndy-4346815293",
+      "https://www.linkedin.com/posts/allianz-partners_workwithus-allianzpartnerscareers-activity-7366386267963494402-Tt4L"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "young_boys",
+      "entity_name": "Young Boys",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://youngboys-reutlingen.de",
+        "https://www.linkedin.com/jobs/view/full-time-nanny-wanted-for-3-young-boys-near-the-university-of-houston-throughout-school-year-at-wyndy-4346815293",
+        "https://www.linkedin.com/posts/allianz-partners_workwithus-allianzpartnerscareers-activity-7366386267963494402-Tt4L"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Young Boys may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:12:27.129672",
+          "domain_explored": "https://youngboys-reutlingen.de",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:12:37.213849",
+          "domain_explored": "https://www.linkedin.com/jobs/view/full-time-nanny-wanted-for-3-young-boys-near-the-university-of-houston-throughout-school-year-at-wyndy-4346815293",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Full-time Nanny (Houston, TX)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Consumer Services Context",
+            "Geographic Mismatch (Houston, TX vs Reutlingen/CH)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 217,
+              "elapsed_seconds": 4.897392749786377
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job posting for a 'Full-time nanny' in Houston, TX, posted by 'Wyndy'. While the title contains the keywords 'Young Boys', it refers to children requiring childcare, not the Swiss sports club 'BSC Young Boys'. The context (Consumer Services, Houston location, Nanny role) is completely irrelevant to the procurement of business software, infrastructure, or sports management services for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:12:42.623808",
+          "domain_explored": "https://www.linkedin.com/posts/allianz-partners_workwithus-allianzpartnerscareers-activity-7366386267963494402-Tt4L",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Keyword Collision (\"young boys\" in transcript)",
+            "Consumer/HR Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.0543479919433594
+            }
+          ],
+          "reasoning": "The content is a generic employer branding post for Allianz Partners. The phrase 'young boys' appears only in the transcript of an employee testimonial regarding work-life balance ('mother of two young boys'). There is no connection to the target entity 'Young Boys' (the sports club) or any procurement-related activity."
+        }
+      ],
+      "total_input_tokens": 2911,
+      "total_output_tokens": 389,
+      "estimated_cost_usd": 0.014568
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Young Boys may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:12:42.626269"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.177381",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:42:45.826590"
+}

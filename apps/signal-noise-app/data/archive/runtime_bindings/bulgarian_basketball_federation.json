@@ -1,0 +1,141 @@
+{
+  "entity_id": "bulgarian_basketball_federation",
+  "entity_name": "Bulgarian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "iwbf-europe.org",
+    "bigbasketball.org",
+    "eige.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bulgarian_basketball_federation",
+      "entity_name": "Bulgarian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://bigbasketball.org",
+        "https://iwbf-europe.org",
+        "https://eige.europa.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bulgarian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:01:23.458947",
+          "domain_explored": "https://iwbf-europe.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:01:34.779052",
+          "domain_explored": "https://bigbasketball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Facebook, Instagram, YouTube)",
+              "Video Hosting/Embedding",
+              "CMS (implied by dynamic news/schedule)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Erasmus+ Project Funding (101133833)",
+              "Venue Rental/Booking (CSKA Basketball Hall, Triaditsa Sports Hall)",
+              "Event Organization Services (Sept 2024 event)",
+              "Video Production & Media Coverage"
+            ]
+          },
+          "patterns_found": [
+            "EU Funding Grant (Erasmus+)",
+            "Event Management & Logistics",
+            "Venue Procurement (CSKA & Triaditsa Halls)",
+            "Digital Content Production (Video/Social)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 326,
+              "elapsed_seconds": 3.7612388134002686
+            }
+          ],
+          "reasoning": "The content reveals the 'Basketball Inclusive Games' project, funded by the EU Erasmus+ program (Project ID: 101133833). While this is a specific event site rather than the Federation's main corporate portal, it indicates active participation in EU-funded projects which often require procurement of services (event management, venues, video production). The explicit mention of Sofia venues (CSKA, Triaditsa) confirms operational procurement activity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:01:53.627733",
+          "domain_explored": "https://eige.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Gender-responsive Public Procurement (Toolkit Publication)",
+              "Administrative data collection tools (Policy context)"
+            ]
+          },
+          "patterns_found": [
+            "EU Agency Governance",
+            "Gender Equality Policy",
+            "Public Procurement Toolkits (Non-Procurement Activity)",
+            "Administrative Data Standardization"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 263,
+              "elapsed_seconds": 14.50119400024414
+            }
+          ],
+          "reasoning": "The target entity is the Bulgarian Basketball Federation (BBF), a national sports governing body. The analyzed content belongs to the European Institute for Gender Equality (EIGE), an EU agency. While EIGE produces 'Gender-responsive Public Procurement' toolkits, these are policy guidelines for governments, not tenders for the BBF. There is no intersection between EIGE's mandate (gender equality policy) and BBF's operational procurement needs (sports equipment, event logistics)."
+        }
+      ],
+      "total_input_tokens": 2843,
+      "total_output_tokens": 589,
+      "estimated_cost_usd": 0.017364
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bulgarian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:01:53.629916"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.255264",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:43.819669"
+}

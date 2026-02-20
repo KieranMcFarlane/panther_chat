@@ -1,0 +1,178 @@
+{
+  "entity_id": "wolfdogs_nagoya",
+  "entity_name": "Wolfdogs Nagoya",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "svleague.jp",
+    "toyoda-gosei.com",
+    "ig-arena.jp",
+    "volleybox.net",
+    "en.volleyballworld.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wolfdogs_nagoya",
+      "entity_name": "Wolfdogs Nagoya",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ig-arena.jp",
+        "https://toyoda-gosei.com",
+        "https://svleague.jp",
+        "https://en.volleyballworld.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Wolfdogs Nagoya may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:36:00.755703",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard Navigation Structure",
+            "Content Categorization (Gender/League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 390,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.147731065750122
+            }
+          ],
+          "reasoning": "The provided content consists solely of navigation menu items and links (WOMEN, MEN, SV LEAGUE) with no descriptive text, technical specifications, or organizational data. There is no information regarding procurement activities, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:36:04.648742",
+          "domain_explored": "https://toyoda-gosei.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:36:14.168555",
+          "domain_explored": "https://ig-arena.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Be-Mail (bme.jp) - Email Marketing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External Newsletter Service Usage"
+            ]
+          },
+          "patterns_found": [
+            "Dynamic Content Loading (JavaScript)",
+            "Social Media Integration (X, YouTube, Instagram)",
+            "Newsletter Marketing (Be-Mail platform)",
+            "Standard FAQ/Inquiry Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 577,
+              "output_tokens": 240,
+              "elapsed_seconds": 4.3100669384002686
+            }
+          ],
+          "reasoning": "The scraped content primarily consists of loading indicators and standard social media links. The presence of 'Loading...' messages suggests the site relies heavily on client-side JavaScript to render content, which blocked the scraper from accessing substantive information. The only actionable data is the use of a third-party newsletter platform (Be-Mail), which is a low-value procurement signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:36:17.005781",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:36:24.667212",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Content Aggregation",
+            "Global Competition Scheduling",
+            "Official World Rankings Display",
+            "Streaming Service Integration (VolleyballTV)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 231,
+              "elapsed_seconds": 4.33611798286438
+            }
+          ],
+          "reasoning": "The scraped content from en.volleyballworld.com represents the official international federation platform (FIVB). It contains general sports news, global rankings, and broadcast schedules. While it establishes the broader ecosystem context, it contains zero specific information regarding 'Wolfdogs Nagoya's' internal operations, technology stack, or local procurement activities. It is a content destination rather than a source of organizational intelligence for the specific target entity."
+        }
+      ],
+      "total_input_tokens": 2488,
+      "total_output_tokens": 620,
+      "estimated_cost_usd": 0.016764
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Wolfdogs Nagoya may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:36:24.668655"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322863",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:02.086636"
+}

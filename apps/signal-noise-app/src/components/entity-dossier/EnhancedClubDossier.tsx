@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { 
+import {
   Brain,
   DollarSign,
   BarChart3,
@@ -33,19 +33,22 @@ import {
   Eye,
   Link2,
   Network,
-  UserCheck
+  UserCheck,
+  MessageSquare
 } from "lucide-react"
 
 import { Entity, formatValue, getEntityPriority } from './types'
-import { 
-  EnhancedClubDossier, 
-  DigitalTransformationPanel, 
-  AIReasonerFeedback, 
+import {
+  EnhancedClubDossier,
+  DigitalTransformationPanel,
+  AIReasonerFeedback,
   StrategicOpportunities,
   RecentNews,
   LeagueContext,
-  KeyDecisionMaker 
+  KeyDecisionMaker
 } from './types'
+import { OutreachStrategyPanel } from './OutreachStrategyPanel'
+import { HypothesisStatesPanel } from './HypothesisStatesPanel'
 
 interface EnhancedClubDossierProps {
   entity: Entity
@@ -55,7 +58,7 @@ interface EnhancedClubDossierProps {
 
 export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: EnhancedClubDossierProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  
+
   // Debug log to track tab changes
   useEffect(() => {
     console.log('Active tab changed to:', activeTab)
@@ -64,19 +67,30 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const [isLoadingIntelligence, setIsLoadingIntelligence] = useState(false)
   const [connectionAnalysis, setConnectionAnalysis] = useState<any>(null)
   const [isInitialized, setIsInitialized] = useState(false)
+  const [hypotheses, setHypotheses] = useState<any[]>([])
+  const [signals, setSignals] = useState<any[]>([])
   
   const props = entity.properties
   const priority = parseInt(String(getEntityPriority(entity))) || 0
 
   useEffect(() => {
     if (!entity) return
-    
+
     // If we have dossier data from the API, use it directly
     if (dossier && Object.keys(dossier).length > 0) {
       // Map the API response structure to the expected EnhancedClubDossier format
       const mappedDossier = mapApiDossierToEnhancedDossier(dossier)
       setEnhancedData(mappedDossier)
       setConnectionAnalysis(dossier.linkedin_connection_analysis)
+
+      // Extract hypotheses and signals from dossier
+      if (dossier.hypotheses) {
+        setHypotheses(dossier.hypotheses)
+      }
+      if (dossier.signals) {
+        setSignals(dossier.signals)
+      }
+
       setIsInitialized(true)
     } else {
       // Otherwise generate it locally from entity properties
@@ -859,16 +873,23 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         className="space-y-6"
         defaultValue="overview"
       >
-        <TabsList className="grid w-full grid-cols-9 h-auto p-1 bg-gray-100 rounded-lg">
-          <TabsTrigger 
-            value="overview" 
+        <TabsList className="grid w-full grid-cols-11 h-auto p-1 bg-gray-100 rounded-lg">
+          <TabsTrigger
+            value="overview"
             className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
           >
             <Eye className="h-4 w-4" />
             Overview
           </TabsTrigger>
-          <TabsTrigger 
-            value="digital" 
+          <TabsTrigger
+            value="procurement"
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Activity className="h-4 w-4" />
+            Procurement
+          </TabsTrigger>
+          <TabsTrigger
+            value="digital"
             className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
           >
             <Zap className="h-4 w-4" />
@@ -916,12 +937,19 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
             <Trophy className="h-4 w-4" />
             League
           </TabsTrigger>
-          <TabsTrigger 
-            value="contact" 
+          <TabsTrigger
+            value="contact"
             className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
           >
             <Mail className="h-4 w-4" />
             Contact
+          </TabsTrigger>
+          <TabsTrigger
+            value="outreach"
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <MessageSquare className="h-4 w-4" />
+            Outreach
           </TabsTrigger>
         </TabsList>
 
@@ -1049,6 +1077,26 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               </Card>
             </div>
           </div>
+        </TabsContent>
+
+        {/* Procurement Readiness Tab - NEW */}
+        <TabsContent
+          value="procurement"
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="h-5 w-5 text-blue-600" />
+              <h3 className="text-lg font-semibold text-slate-800">Procurement Signal Classification</h3>
+            </div>
+            <p className="text-sm text-slate-600 mb-4">
+              Real-time hypothesis states from the temporal sports procurement prediction engine.
+              Categories with higher activity scores indicate active procurement cycles.
+            </p>
+          </div>
+
+          <HypothesisStatesPanel entityId={entity.id} />
         </TabsContent>
 
         {/* Digital Transformation Tab */}
@@ -1875,6 +1923,21 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
               </Card>
             </div>
           </div>
+        </TabsContent>
+
+        {/* Outreach Strategy Tab */}
+        <TabsContent value="outreach" className="space-y-4">
+          <OutreachStrategyPanel
+            entity={entity}
+            dossier={dossier || null}
+            hypotheses={hypotheses}
+            signals={signals}
+            linkedInData={enhancedData?.linkedInProfile || null}
+            onApproveOutreach={(strategy) => {
+              console.log('Outreach strategy approved:', strategy)
+              // TODO: Implement approval logic (save to database, trigger workflow, etc.)
+            }}
+          />
         </TabsContent>
       </Tabs>
     </div>

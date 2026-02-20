@@ -1,0 +1,181 @@
+{
+  "entity_id": "eritrean_volleyball_federation",
+  "entity_name": "Eritrean Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "newfanzoneblog.wordpress.com",
+    "business.osunstate.gov.ng",
+    "africansportsmonthly.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://et.linkedin.com/jobs/view/assistant-project-control-officer-at-unhcr-the-un-refugee-agency-3765629399",
+      "https://et.linkedin.com/jobs/view/head-of-sub-office-p5-at-unhcr-the-un-refugee-agency-3739495025"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eritrean_volleyball_federation",
+      "entity_name": "Eritrean Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://et.linkedin.com/jobs/view/head-of-sub-office-p5-at-unhcr-the-un-refugee-agency-3739495025",
+        "https://business.osunstate.gov.ng",
+        "https://newfanzoneblog.wordpress.com",
+        "https://africansportsmonthly.com",
+        "https://et.linkedin.com/jobs/view/assistant-project-control-officer-at-unhcr-the-un-refugee-agency-3765629399"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eritrean Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:08:53.703988",
+          "domain_explored": "https://newfanzoneblog.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Nigeria vs Eritrea)",
+            "Sport Mismatch (Basketball vs Volleyball)",
+            "General Political Commentary"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1283,
+              "output_tokens": 164,
+              "elapsed_seconds": 1.830838918685913
+            }
+          ],
+          "reasoning": "The content provided is exclusively about the Nigeria Basketball Federation (NBBF) and Senator Orji Uzoh Kalu. It contains zero references to the Eritrean Volleyball Federation, Eritrea, or volleyball. Therefore, it holds no procurement intelligence value for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:08:58.663074",
+          "domain_explored": "https://business.osunstate.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:09:01.744976",
+          "domain_explored": "https://africansportsmonthly.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:09:08.571457",
+          "domain_explored": "https://et.linkedin.com/jobs/view/assistant-project-control-officer-at-unhcr-the-un-refugee-agency-3765629399",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Project Control Officer at UNHCR (Ethiopia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (UNHCR vs Eritrean Volleyball Federation)",
+            "Geographic Mismatch (Ethiopia vs Eritrea)",
+            "Sector Mismatch (Refugee Relief vs Sports Federation)",
+            "Expired Job Posting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.3288159370422363
+            }
+          ],
+          "reasoning": "The content is a job posting for UNHCR (The UN Refugee Agency) located in Ethiopia. This represents a complete mismatch with the target entity (Eritrean Volleyball Federation) in terms of organization, sector, and location. There are no procurement signals relevant to the Eritrean Volleyball Federation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:09:14.428279",
+          "domain_explored": "https://et.linkedin.com/jobs/view/head-of-sub-office-p5-at-unhcr-the-un-refugee-agency-3739495025",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Sub-Office P5 at UNHCR"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (UNHCR vs Eritrean Volleyball Federation)",
+            "Geographic Mismatch (Ethiopia vs Eritrea)",
+            "Sector Mismatch (Refugee Relief/Humanitarian Aid vs Sports Federation)",
+            "Job Posting (Administrative/Management role)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1591,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.2662782669067383
+            }
+          ],
+          "reasoning": "The content is a job description for a 'Head of Sub-Office P5' at UNHCR in Ethiopia. This is completely unrelated to the Eritrean Volleyball Federation. There is no intersection in entity, geography, or sector that would provide procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 4381,
+      "total_output_tokens": 580,
+      "estimated_cost_usd": 0.021843
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eritrean Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:09:14.429801"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339565",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:00.763105"
+}

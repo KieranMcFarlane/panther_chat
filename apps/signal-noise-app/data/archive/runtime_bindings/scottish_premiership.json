@@ -1,0 +1,216 @@
+{
+  "entity_id": "scottish_premiership",
+  "entity_name": "Scottish Premiership",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "scottishfa.co.uk",
+    "plzsoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/company/futboljobs.com?trk=recent-update_see-all",
+      "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+      "https://hk.linkedin.com/company/futboljobs.com?trk=similar-pages_result-card_full-click"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "scottish_premiership",
+      "entity_name": "Scottish Premiership",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://hk.linkedin.com/company/futboljobs.com?trk=similar-pages_result-card_full-click",
+        "https://scottishfa.co.uk",
+        "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+        "https://plzsoccer.com",
+        "https://ie.linkedin.com/company/futboljobs.com?trk=recent-update_see-all"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Scottish Premiership may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:50:34.109047",
+          "domain_explored": "https://scottishfa.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Executive Appointment: Andrew McKinlay appointed as Vice President (Governance change, but low procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Governance updates (Executive appointments)",
+            "Operational activity (Team logistics/travel)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.1396992206573486
+            }
+          ],
+          "reasoning": "The content provided is strictly sports news regarding youth squads and executive governance (Vice President appointment). There are no signals related to technology procurement, RFPs, or digital transformation initiatives. The content is repetitive and lacks commercial intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:50:48.418332",
+          "domain_explored": "https://plzsoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PayPal",
+              "Stripe"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Charity donation processing (Maggie\u2019s Cancer Care)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Payments Infrastructure (PayPal, Stripe)",
+            "Charity Partnership Management",
+            "Marketing/Promotional Activity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 216,
+              "elapsed_seconds": 7.240447998046875
+            }
+          ],
+          "reasoning": "The content is a prize draw promotion hosted by PLZ Soccer, a media outlet. While it confirms the use of payment gateways (Stripe, PayPal), this is standard e-commerce functionality for a media company and does not indicate a specific, new procurement intent or enterprise-level digital transformation project by the Scottish Premiership entity itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:51:34.112206",
+          "domain_explored": "https://ie.linkedin.com/company/futboljobs.com?trk=recent-update_see-all",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (Custom Job Board)",
+              "Social Recruitment (LinkedIn integration)",
+              "Video Hosting (for highlights)"
+            ],
+            "job_postings": [
+              "Professional Footballer (Midfielder) - Uzbekistan 1st Division (Example of market activity)"
+            ],
+            "procurement_indicators": [
+              "Usage of specialized staffing platforms for talent acquisition",
+              "Contractual services (Agent/Player representation)",
+              "International recruitment logistics"
+            ]
+          },
+          "patterns_found": [
+            "Global Talent Acquisition Platforms",
+            "Contractual Negotiation & Transfer Market Activity",
+            "Niche Sports HR Technology"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 345,
+              "elapsed_seconds": 41.0516140460968
+            }
+          ],
+          "reasoning": "While the source is a third-party job board (Futboljobs.com) and not a direct procurement page for the Scottish Premiership, it serves as a valid signal for 'Staffing & Recruiting' procurement needs. The content highlights active recruitment for professional clubs (e.g., Uzbekistan 1st Division), indicating that Scottish Premiership clubs likely utilize similar channels or platforms for acquiring talent and back-office staff. It confirms the 'Staffing and Recruiting' category as a relevant procurement vector."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:52:18.074502",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 26 column 2 (char 1466)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:52:51.996669",
+          "domain_explored": "https://hk.linkedin.com/company/futboljobs.com?trk=similar-pages_result-card_full-click",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (HR/Tech)",
+              "Digital Networking Tools"
+            ],
+            "job_postings": [
+              "Midfielder (No. 10) - Uzbekistan 1st Division (Example of platform capability)"
+            ],
+            "procurement_indicators": [
+              "Talent Acquisition Services",
+              "Contractual Facilitation",
+              "Industry Education/Courses (B2B)"
+            ]
+          },
+          "patterns_found": [
+            "Global Talent Acquisition Platforms",
+            "Contractual Negotiation & Transfer Market Activity",
+            "Niche Sports HR Technology"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 350,
+              "elapsed_seconds": 29.729389190673828
+            }
+          ],
+          "reasoning": "The content confirms FutbolJobs as a specialized B2B platform within the football industry ecosystem, focusing on HR services (staffing, recruiting) and contractual facilitation. While not a direct procurement source for the Scottish Premiership itself, it represents a category of 'Niche Sports HR Technology' that clubs and leagues utilize for talent procurement. The platform facilitates the 'procurement' of human capital (players, staff) and mentions 'tools, information... courses' indicating potential B2B service procurement. This aligns with the 'Talent Acquisition' pattern but remains a weak signal for direct operational procurement (goods/services) of the league entity."
+        }
+      ],
+      "total_input_tokens": 5846,
+      "total_output_tokens": 1105,
+      "estimated_cost_usd": 0.034113000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Scottish Premiership may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:52:51.997525"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418721",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:03.486992"
+}

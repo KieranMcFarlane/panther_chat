@@ -1,0 +1,133 @@
+{
+  "entity_id": "petro_de_luanda",
+  "entity_name": "Petro de Luanda",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "bb_developing_market",
+  "discovered_domains": [
+    "petroatletico.co.ao",
+    "bal.nba.com",
+    "luanda.gov.ao"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "petro_de_luanda",
+      "entity_name": "Petro de Luanda",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bal.nba.com",
+        "https://petroatletico.co.ao",
+        "https://luanda.gov.ao"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Petro de Luanda may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:27:06.513841",
+          "domain_explored": "https://petroatletico.co.ao",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Player transfer announcements",
+            "Match results reporting",
+            "Fan engagement content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.6491079330444336
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news (basketball and football), specifically regarding player transfers (Javion Blake) and match results (Provincial championship, BAL). There is absolutely no information regarding corporate procurement, technology infrastructure, or business operations associated with the corporate entity 'Petro de Luanda'. This appears to be the sports club's news feed, which is distinct from the oil & gas procurement entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:27:39.288423",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:27:49.271588",
+          "domain_explored": "https://luanda.gov.ao",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Programa de Infra-estruturas Integradas de Luanda (PIIL) - Civil construction",
+              "Programa de Forma\u00e7\u00e3o (Education) - Public sector training"
+            ]
+          },
+          "patterns_found": [
+            "Public municipal governance content",
+            "Infrastructure project updates (PIIL)",
+            "Civic engagement campaigns (cleanliness, environment)",
+            "Educational sector administration",
+            "General news aggregation (sports, condolences)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 342,
+              "elapsed_seconds": 5.189125061035156
+            }
+          ],
+          "reasoning": "The content is sourced from 'luanda.gov.ao', which represents the Government Provincial of Luanda (GPL). While the entity mentions infrastructure projects (Rua da Kianda) and educational programs, these are public sector civil works and social services, not corporate procurement signals relevant to 'Petro de Luanda' (which implies an oil/energy corporate entity). The mention of footballer Eduardo Camavinga and 'Petro de Luanda' in the user prompt likely refers to the sports club 'Petro de Luanda' (Petro Atl\u00e9tico), but this government site contains no signals related to sports club procurement, sponsorship, or corporate oil & gas supply chains. It is strictly provincial government news."
+        }
+      ],
+      "total_input_tokens": 2791,
+      "total_output_tokens": 555,
+      "estimated_cost_usd": 0.016698
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Petro de Luanda may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:27:49.273266"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216292",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:45.439919"
+}

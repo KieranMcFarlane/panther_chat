@@ -1,0 +1,186 @@
+{
+  "entity_id": "lions_de_gen\u00e8ve",
+  "entity_name": "Lions de Gen\u00e8ve",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "lionsdegeneve.ch",
+    "foxesbasketball.ch",
+    "veron-grauer.ch",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lions_de_gen\u00e8ve",
+      "entity_name": "Lions de Gen\u00e8ve",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://foxesbasketball.ch",
+        "https://zoominfo.com",
+        "https://lionsdegeneve.ch",
+        "https://veron-grauer.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lions de Gen\u00e8ve may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:00:59.502173",
+          "domain_explored": "https://lionsdegeneve.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Unknown Vendor)",
+              "Email Marketing Tool (Newsletter functionality)",
+              "Web CMS (Dynamic content updates)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Functional requirement for online ticketing systems",
+              "Functional requirement for fan engagement/CRM tools",
+              "Requirement for real-time data integration (league standings)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing System",
+            "Email Marketing / Newsletter Platform",
+            "Real-time Web Analytics Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 321,
+              "elapsed_seconds": 8.558683156967163
+            }
+          ],
+          "reasoning": "The scraped content is the homepage marketing layer. While it lacks explicit procurement documents (RFPs), it reveals functional requirements for the club's digital infrastructure. Specifically, the calls to action for 'r\u00e9servez vos billets' (ticketing) and 'Inscris-toi \u00c0 notre newsletters' (CRM/Marketing) indicate active software usage or potential procurement needs for these platforms. The mention of 'classement en temps r\u00e9el' suggests an integration with a data provider or dynamic web content management system."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:01:12.504454",
+          "domain_explored": "https://foxesbasketball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Billetterie)",
+              "E-commerce Platform (Boutique)",
+              "Email Marketing Tools (Newsletter)",
+              "Event Registration System (Camps)"
+            ],
+            "job_postings": [
+              "Youth Coaches (U6 to U20) - 2025-2026 Season",
+              "Volunteer recruitment (Team heroes)"
+            ],
+            "procurement_indicators": [
+              "Active management of Early-Bird subscription offers",
+              "Organization of paid training camps (Foxes Camps)",
+              "B2B 'Foxes Night' event organization (Networking/Gastronomy)",
+              "Sponsorship activation (La Mobili\u00e8re partnership)",
+              "Merchandise retail operations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing System (Billetterie)",
+            "E-commerce / Online Boutique",
+            "Email Marketing / Newsletter Platform",
+            "Event Management Software (Camps & Events)",
+            "Volunteer Management System",
+            "Sponsorship / B2B Partnership Platform"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 395,
+              "elapsed_seconds": 5.814497947692871
+            }
+          ],
+          "reasoning": "The content confirms the active use of digital infrastructure necessary for operations (ticketing, e-commerce, newsletter). While no explicit RFP is found, the complexity of managing 'Early Bird' offers, specific camp registrations, and B2B partnership invitations suggests a reliance on CRM and automation tools. The presence of a specific 'Top Scorer' partner program indicates active sponsorship management."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:01:20.595460",
+          "domain_explored": "https://veron-grauer.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'Appel d'offre' (Tender) won by Veron Grauer for Fondation HBM Emma Kammacher (Irrelevant to Lions de Gen\u00e8ve)"
+            ]
+          },
+          "patterns_found": [
+            "Moving & Logistics Services",
+            "Corporate Social Responsibility (CSR)",
+            "Employee Events",
+            "Client Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.592864990234375
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'DGM Veron Grauer SA', a moving and logistics company, and is completely unrelated to 'Lions de Gen\u00e8ve' (a basketball club). There are no shared procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:01:23.649035",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4238,
+      "total_output_tokens": 915,
+      "estimated_cost_usd": 0.026438999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lions de Gen\u00e8ve may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:01:23.649842"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227904",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:20.849963"
+}

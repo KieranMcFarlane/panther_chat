@@ -1,0 +1,171 @@
+{
+  "entity_id": "ssc_napoli",
+  "entity_name": "SSC Napoli",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "sscnapoli.it",
+    "sscnapoli.ticketone.it",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-28-of-the-year-activity-7351144068594171906-JvYG"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ssc_napoli",
+      "entity_name": "SSC Napoli",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://sscnapoli.it",
+        "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-28-of-the-year-activity-7351144068594171906-JvYG",
+        "https://sscnapoli.ticketone.it"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SSC Napoli may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:51:29.581328",
+          "domain_explored": "https://sscnapoli.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations (Sales for Napoli-Roma match)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Team Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.059483051300049
+            }
+          ],
+          "reasoning": "The scraped content is highly repetitive and consists solely of frontend UI elements for match schedules (dates, countdown timers, video links) and standard news headlines (awards, ticket sales, player transfers). There are no underlying technical indicators, job postings, or governance signals present in this specific text segment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:51:32.400609",
+          "domain_explored": "https://sscnapoli.ticketone.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:51:41.304732",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Content",
+            "Consumer App Store Interface",
+            "Irrelevant Keywords (Candy Crush, PUBG, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 163,
+              "elapsed_seconds": 5.50778603553772
+            }
+          ],
+          "reasoning": "The scraped content is a generic list of mobile games from the Google Play Store (e.g., Candy Crush Saga, PUBG MOBILE). It contains no information regarding SSC Napoli's corporate operations, technology stack, or procurement activities. This is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:52:11.110334",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-28-of-the-year-activity-7351144068594171906-JvYG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Head of Business Operations",
+                "entity": "SSC Napoli",
+                "action": "Appointment",
+                "executive": "Tommaso Bianchini"
+              }
+            ],
+            "procurement_indicators": [
+              "New executive leadership in Business Operations implies potential review of existing service contracts and vendors.",
+              "Strategic pivot likely following administrative changes."
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Change",
+            "Business Operations Restructuring",
+            "Strategic Hiring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 274,
+              "elapsed_seconds": 26.390406131744385
+            }
+          ],
+          "reasoning": "The content confirms a significant governance change with Tommaso Bianchini taking over business operations at SSC Napoli. While not a direct procurement signal, leadership changes in business operations often precede shifts in vendor partnerships, technology stack updates, and strategic sourcing initiatives."
+        }
+      ],
+      "total_input_tokens": 4281,
+      "total_output_tokens": 616,
+      "estimated_cost_usd": 0.022083
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SSC Napoli may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:52:11.111234"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.129156",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:31.263820"
+}

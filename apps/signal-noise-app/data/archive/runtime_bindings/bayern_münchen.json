@@ -1,0 +1,244 @@
+{
+  "entity_id": "bayern_m\u00fcnchen",
+  "entity_name": "Bayern M\u00fcnchen",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "fcbayern.com",
+    "allianz-arena.com",
+    "bundesliga.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/fc-bayern-m%C3%BCnchen-jobs-worldwide",
+      "https://www.linkedin.com/posts/fcbayern_bayern-munich-jobs-employment-in-new-york-activity-6904406838864154624-Tey4",
+      "https://www.linkedin.com/jobs/dfb-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bayern_m\u00fcnchen",
+      "entity_name": "Bayern M\u00fcnchen",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/fc-bayern-m%C3%BCnchen-jobs-worldwide",
+        "https://www.linkedin.com/posts/fcbayern_bayern-munich-jobs-employment-in-new-york-activity-6904406838864154624-Tey4",
+        "https://fcbayern.com",
+        "https://bundesliga.com",
+        "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+        "https://allianz-arena.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "backend_development_role",
+        "finance_accounting_role",
+        "digital_media_expansion",
+        "direct_employment_hiring"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bayern M\u00fcnchen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:13:22.236242",
+          "domain_explored": "https://fcbayern.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:13:49.135884",
+          "domain_explored": "https://allianz-arena.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:13:54.169100",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "transfer_window_coverage",
+            "league-level_aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 524,
+              "output_tokens": 161,
+              "elapsed_seconds": 1.9958810806274414
+            }
+          ],
+          "reasoning": "The scraped content from bundesliga.com focuses on the 'January transfer window' and player comings and goings. This relates to sporting operations (player acquisition), not corporate procurement (vendor acquisition/RFPs). The content is league-level news rather than entity-specific procurement intelligence for Bayern M\u00fcnchen."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:14:02.560366",
+          "domain_explored": "https://www.linkedin.com/jobs/fc-bayern-m%C3%BCnchen-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Backend Development Frameworks",
+              "API Management",
+              "Cloud Infrastructure (implied by backend role)",
+              "Social Media Management Platforms"
+            ],
+            "job_postings": [
+              "Software-Entwickler Backend (m|w|d)",
+              "Buchhalter (m|w|d)",
+              "Praktikant Club Medien - Fotografie",
+              "Praktikant Club Medien - Social Media",
+              "Trainer - FC Bayern Campus Training"
+            ],
+            "procurement_indicators": [
+              "Internal Digital Transformation (Backend Dev hiring)",
+              "Financial Governance Capacity (Accountant hiring)",
+              "Content Creation Supply Chain (Photography Intern)"
+            ]
+          },
+          "patterns_found": [
+            "backend_development_role",
+            "finance_accounting_role",
+            "digital_media_expansion",
+            "direct_employment_hiring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 376,
+              "elapsed_seconds": 4.837780952453613
+            }
+          ],
+          "reasoning": "The discovery of a 'Software-Entwickler Backend' (Backend Software Developer) posting is a direct procurement signal indicating active investment in internal technology infrastructure. This suggests a build-over-buy strategy for digital platforms and implies future procurement needs for cloud infrastructure, API management tools, and development frameworks. The 'Buchhalter' (Accountant) role confirms active financial operations, a prerequisite for procurement processing."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:14:09.648111",
+          "domain_explored": "https://www.linkedin.com/posts/fcbayern_bayern-munich-jobs-employment-in-new-york-activity-6904406838864154624-Tey4",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Platforms",
+              "Content Management Systems (CMS)",
+              "Digital Analytics Tools"
+            ],
+            "job_postings": [
+              "Content Manager (LATAM focus) - New York"
+            ],
+            "procurement_indicators": [
+              "Regional budget allocation for Americas marketing",
+              "Investment in digital channel infrastructure",
+              "Vendor need for content localization/distribution"
+            ]
+          },
+          "patterns_found": [
+            "regional_expansion_latam",
+            "digital_channel_optimization",
+            "marketing_governance_structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.6686298847198486
+            }
+          ],
+          "reasoning": "The post indicates a strategic expansion into the LATAM market via a New York-based role. While this is a hiring event, the requirement to 'optimize digital channels' and manage 'content strategy' suggests a downstream need for regionalized marketing tools, social media management platforms, and content localization services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:14:19.558441",
+          "domain_explored": "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Gestionnaire financier(e) (Universit\u00e9 de Caen - Irrelevant)",
+              "DFB\u5149\u5b66\u9540\u819c\u52a9\u7406\u5de5\u7a0b\u5e08 (Qingdao Federation - Irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch_dfb",
+            "irrelevant_search_results",
+            "acronym_collision"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 248,
+              "elapsed_seconds": 6.485442161560059
+            }
+          ],
+          "reasoning": "The search query 'DFB' (Deutscher Fu\u00dfball-Bund) returns results for the German Football Association, not FC Bayern M\u00fcnchen. While DFB is the governing body for Bayern's league, procurement signals for the DFB do not directly indicate procurement intent for Bayern M\u00fcnchen as a commercial entity. Furthermore, the scraped results are polluted with irrelevant 'DFB' acronyms (e.g., optical engineering, financial management roles in other organizations), rendering the data noisy and irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5117,
+      "total_output_tokens": 1058,
+      "estimated_cost_usd": 0.031221
+    },
+    "procurement_signals": [
+      "backend_development_role",
+      "finance_accounting_role",
+      "digital_media_expansion",
+      "direct_employment_hiring"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bayern M\u00fcnchen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:14:19.559160"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.124372",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:22.132320"
+}

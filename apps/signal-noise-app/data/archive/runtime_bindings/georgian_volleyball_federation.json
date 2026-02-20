@@ -1,0 +1,375 @@
+{
+  "entity_id": "georgian_volleyball_federation",
+  "entity_name": "Georgian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "inside.cev.eu",
+    "lentopallo.fi",
+    "worldofvolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/26-27-season-volleyball-coach-at-575-volleyball-4362343981",
+      "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-inside-higher-ed-4346236365",
+      "https://ge.linkedin.com/jobs/view/%F0%9F%8F%90-head-volleyball-coach-international-%E2%80%93-girls-team-%E2%80%93-georgia-country-at-kartvela-4257885305",
+      "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-georgia-state-university-4329010226",
+      "https://www.linkedin.com/jobs/view/head-coach-women-s-volleyball-at-cartersville-bartow-county-chamber-of-commerce-4317800907",
+      "https://www.linkedin.com/jobs/view/head-coach-girls-volleyball-s871-at-cobb-county-school-district-4355315258",
+      "https://www.linkedin.com/jobs/view/manager-volleyball-at-inside-higher-ed-4358904608"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "georgian_volleyball_federation",
+      "entity_name": "Georgian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://ge.linkedin.com/jobs/view/%F0%9F%8F%90-head-volleyball-coach-international-%E2%80%93-girls-team-%E2%80%93-georgia-country-at-kartvela-4257885305",
+        "https://www.linkedin.com/jobs/view/26-27-season-volleyball-coach-at-575-volleyball-4362343981",
+        "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-georgia-state-university-4329010226",
+        "https://lentopallo.fi",
+        "https://inside.cev.eu",
+        "https://www.linkedin.com/jobs/view/head-coach-women-s-volleyball-at-cartersville-bartow-county-chamber-of-commerce-4317800907",
+        "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-inside-higher-ed-4346236365",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Georgian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:26:24.034521",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Member Federation Link: GEO (Georgian Volleyball Federation) - Confirms organizational existence but no active procurement data found in this snippet."
+            ]
+          },
+          "patterns_found": [
+            "General sports federation navigation structure",
+            "Historical event listings (2019-2022)",
+            "External partner links (FIVB, AVC, etc.)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.176422119140625
+            }
+          ],
+          "reasoning": "The content provided is a navigation menu and event listing from the Confederation Europeenne de Volleyball (CEV), the European governing body. While the Georgian Volleyball Federation (GEO) is listed as a member nation link, the content itself describes pan-European tournaments, historical events (e.g., Munich 2022), and general site structure. There are no specific signals regarding Georgian procurement activities, technology investments, or job postings within this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:26:34.505916",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "OSCG establishes Strength and Conditioning Team (Indicates capability building, but external to target entity)"
+            ]
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Federation development activities",
+            "Event bidding processes (EuroVolley 2028)",
+            "Scouting and player development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 268,
+              "elapsed_seconds": 3.992133855819702
+            }
+          ],
+          "reasoning": "The content provided is a list of general news headlines and articles from the CEV (Confederation of European Volleyball) 'Inside' platform. While it mentions organizational activities like 'establishing Strength and Conditioning Teams' and 'bids to host events', these are related to other federations (Montenegro, Azerbaijan) and general sports development. There are no specific procurement signals, technology tenders, or vendor requests related to the Georgian Volleyball Federation in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:26:46.386893",
+          "domain_explored": "https://lentopallo.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Newsletter subscription forms (potential CRM usage)",
+              "Ticketing platforms (implied by 'Lipunmyynti' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership structures (Maajoukkueiden yhteisty\u00f6kumppanit)",
+              "Safety/Compliance service procurement (V\u00e4est\u00f6liitto partnership)"
+            ]
+          },
+          "patterns_found": [
+            "Generic sports federation homepage structure",
+            "Event marketing and ticket sales (Power Cup, EuroVolley)",
+            "Newsletter subscription forms (Mailchimp/Custom)",
+            "Corporate social responsibility (CSR) campaigns (Oomi, Et Ole Yksin)",
+            "Whistleblowing/Compliance tool links (ILMO-palvelu)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 329,
+              "elapsed_seconds": 3.7365379333496094
+            }
+          ],
+          "reasoning": "The content is from the Finnish Volleyball Federation (Suomen Lentopalloliitto), not the Georgian Volleyball Federation. While it provides a template for federation activities (events, partnerships, compliance), it contains zero specific procurement signals, technology stack details, or governance information relevant to the target entity (Georgia). The analysis is stalled because the source material is for the wrong entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:26:59.538896",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship naming rights (e.g., Vodafone Sultanlar Ligi, Credem Banca) - indicates commercial partnerships but not direct procurement signals for the target entity."
+            ]
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Sponsorship visibility (Vodafone, Credem Banca, HDI)",
+            "Transfer market activity ('Done deals')",
+            "High-volume content publishing (daily match reports)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 256,
+              "elapsed_seconds": 6.697926759719849
+            }
+          ],
+          "reasoning": "The content provided is a standard sports news feed focused on match results, standings, and player transfers. While it lists sponsors (which indicates a commercial ecosystem), it contains no information regarding the Georgian Volleyball Federation's internal operations, technology stack, or procurement needs. The entity of interest (GVF) is not mentioned in the text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:27:09.819740",
+          "domain_explored": "https://www.linkedin.com/jobs/view/26-27-season-volleyball-coach-at-575-volleyball-4362343981",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "26-27 Season Volleyball Coach",
+                "entity": "575 Volleyball",
+                "location": "Atlanta, GA",
+                "type": "Part-time"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity targeting (US-based club vs Georgian Federation)",
+            "Standard sports coaching job description",
+            "LinkedIn recruiting platform interface elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.977942943572998
+            }
+          ],
+          "reasoning": "The content is a job posting for '575 Volleyball', a juniors program in Atlanta, Georgia (USA). This is completely unrelated to the target entity, the Georgian Volleyball Federation (GVF). There are no procurement signals, technology stacks, or governance patterns relevant to the GVF in this text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:27:17.190139",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-inside-higher-ed-4346236365",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Staff Assistant - Education Coordinator",
+              "11/04/2025 JOB FAIR POSITIONS",
+              "Steam Fireman",
+              "Steam Fireman I"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity targeting (Fitchburg State University vs Georgian Federation)",
+            "Generic job aggregation page structure",
+            "Geographic mismatch (Fitchburg, MA, USA)",
+            "Misaligned job roles (Steam Fireman, Education Coordinator)",
+            "LinkedIn recruiting platform interface elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 311,
+              "elapsed_seconds": 2.764522075653076
+            }
+          ],
+          "reasoning": "The content provided is a LinkedIn job search results page for Fitchburg State University in Massachusetts, USA. The roles listed (Steam Fireman, Education Coordinator) and the entity itself are completely unrelated to the Georgian Volleyball Federation. The URL title 'Head Coach Volleyball' appears to be the entry point, but the scraped content reveals a list of irrelevant support and maintenance roles. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:27:30.475201",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/%F0%9F%8F%90-head-volleyball-coach-international-%E2%80%93-girls-team-%E2%80%93-georgia-country-at-kartvela-4257885305",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiting",
+              "Facebook (Social Media/Brand)"
+            ],
+            "job_postings": [
+              "Head Volleyball Coach (International) \u2013 Girls Team \u2013 Georgia (Country) at Kartvela"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private club recruitment (Kartvela)",
+            "Youth sports development focus",
+            "International talent acquisition",
+            "Social media integration (Facebook) for branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1808,
+              "output_tokens": 242,
+              "elapsed_seconds": 4.647703647613525
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Kartvela', a private volleyball club in Tbilisi, not the Georgian Volleyball Federation. While it confirms activity in the Georgian volleyball ecosystem, it represents a club-level operational hire (coaching staff) rather than a federation-level procurement signal, technology investment, or governance process."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:27:39.042651",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-coach-volleyball-at-georgia-state-university-4329010226",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach, Volleyball - Georgia State University (Atlanta, GA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity targeting (Georgia State University vs Georgian Volleyball Federation)",
+            "Geographic mismatch (Atlanta, GA, USA vs Tbilisi, Georgia)",
+            "NCAA Division I Athletics recruitment",
+            "University HR system structure (Workday/PeopleSoft style)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1878,
+              "output_tokens": 245,
+              "elapsed_seconds": 2.957573175430298
+            }
+          ],
+          "reasoning": "The job posting is for Georgia State University (GSU) in Atlanta, USA, not the Georgian Volleyball Federation in the country of Georgia. While it contains relevant keywords like 'Head Coach' and 'Volleyball', the entity context is completely incorrect. GSU is an academic institution governed by NCAA rules, whereas the target entity is a national sports federation."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:27:57.132632",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-coach-women-s-volleyball-at-cartersville-bartow-county-chamber-of-commerce-4317800907",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach - Women's Volleyball (Georgia Highlands College)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic mismatch (Cartersville, GA, USA vs Tbilisi, Georgia)",
+            "Entity mismatch (Georgia Highlands College vs Georgian Volleyball Federation)",
+            "NJCAA (National Junior College Athletic Association) compliance requirements",
+            "Standard collegiate athletic program structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1978,
+              "output_tokens": 238,
+              "elapsed_seconds": 10.201090097427368
+            }
+          ],
+          "reasoning": "The content describes a Head Coach position for Georgia Highlands College (a US state college in Georgia, USA), not the Georgian Volleyball Federation (the national governing body in Tbilisi, Georgia). The mention of 'Cartersville, GA' and 'NJCAA' confirms this is unrelated to the target entity's procurement activities."
+        }
+      ],
+      "total_input_tokens": 14814,
+      "total_output_tokens": 2388,
+      "estimated_cost_usd": 0.080262
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Georgian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:27:57.133905"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341307",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:23.383258"
+}

@@ -1,0 +1,159 @@
+{
+  "entity_id": "danish_baseball_federation",
+  "entity_name": "Danish Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball.dk",
+    "zoominfo.com",
+    "baseball-reference.com",
+    "tugasku.sch.id",
+    "static.wbsc.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "danish_baseball_federation",
+      "entity_name": "Danish Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://baseball.dk",
+        "https://baseball-reference.com",
+        "https://tugasku.sch.id",
+        "https://zoominfo.com",
+        "https://static.wbsc.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Danish Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:06:47.764698",
+          "domain_explored": "https://baseball.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational travel/logistics (Coaches traveling to Aarhus)"
+            ]
+          },
+          "patterns_found": [
+            "Grassroots Sports Development",
+            "Coaching Resource Allocation",
+            "Geographic Dispersion (Copenhagen, Odense, Aarhus)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 662,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.641819953918457
+            }
+          ],
+          "reasoning": "The content describes operational sports activities (coaching clinics, Little League preparation). While this confirms the entity's operational scope and geographic reach, it contains no digital infrastructure, administrative hiring, or purchasing signals relevant to technology procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:06:51.025907",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:06:54.238918",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:07:02.051636",
+          "domain_explored": "https://tugasku.sch.id",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational Institution Context",
+            "Geographic Irrelevance (Indonesia vs Denmark)",
+            "Language Mismatch (Indonesian vs Danish/English)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.2353367805480957
+            }
+          ],
+          "reasoning": "The scraped content is from 'tugasku.sch.id', which is an Indonesian educational website (sch.id domain is specific to Indonesian schools). The content is entirely in Indonesian and focuses on student admissions (SPMB) and character building. There is absolutely no connection to the Danish Baseball Federation, Danish sports governance, or relevant procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:07:04.839620",
+          "domain_explored": "https://static.wbsc.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2139,
+      "total_output_tokens": 382,
+      "estimated_cost_usd": 0.012147
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Danish Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:07:04.840411"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.313813",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:23.231797"
+}

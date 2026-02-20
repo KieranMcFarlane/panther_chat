@@ -1,0 +1,276 @@
+{
+  "entity_id": "rugby_lyons",
+  "entity_name": "Rugby Lyons",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rugbylyons.it",
+    "legaitalianarugby.com",
+    "rugby-lyons-piacenza-1963.wheree.com",
+    "federugby.it",
+    "grokipedia.com",
+    "commons.wikimedia.org",
+    "oldglorydc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_lyons",
+      "entity_name": "Rugby Lyons",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legaitalianarugby.com",
+        "https://commons.wikimedia.org",
+        "https://rugby-lyons-piacenza-1963.wheree.com",
+        "https://grokipedia.com",
+        "https://federugby.it",
+        "https://rugbylyons.it",
+        "https://oldglorydc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Lyons may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:33:22.041609",
+          "domain_explored": "https://rugbylyons.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Partnership: Emilbanca (Title Sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Operations",
+            "Team Roster Management",
+            "Sponsorship Display (Emilbanca)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.5429320335388184
+            }
+          ],
+          "reasoning": "The scraped content consists of sports news updates, match results, and team player rosters. While the presence of a sponsor (Emilbanca) indicates commercial activity, there are no explicit signals regarding procurement of technology, infrastructure, or business services in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:33:36.787997",
+          "domain_explored": "https://legaitalianarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (Watch Now)",
+              "League Management Systems (LMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Sponsorship Deal: Soladria (Title Sponsor of Serie A Elite)",
+              "Media Production & Distribution: 'Palinsesto TV' (TV Schedule) indicates centralized broadcasting contracts",
+              "League Membership: Sitav Rugby Lyons is a franchisee/participant in the league structure"
+            ]
+          },
+          "patterns_found": [
+            "League Operations & Governance",
+            "Broadcasting & Media Rights",
+            "Sponsorship Ecosystem",
+            "Competitive Performance Data"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 319,
+              "elapsed_seconds": 5.359462022781372
+            }
+          ],
+          "reasoning": "The content is from the Italian Rugby League (L.I.R.E) website, not the direct Rugby Lyons domain. However, it confirms Lyons' participation in the 'Serie A Elite' and reveals the league's centralized procurement structure. The league manages media rights ('Palinsesto TV'), sponsorship ('Soladria'), and digital infrastructure, which Lyons utilizes. This shifts the procurement target from direct buying to participation in league-vendor agreements."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:33:45.818572",
+          "domain_explored": "https://rugby-lyons-piacenza-1963.wheree.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Facility Maintenance Needs (implied by 'well-maintained grounds')",
+              "Event Organization Services (implied by 'annual rugby festival')"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Sports Operations",
+            "Facility Management",
+            "Community Engagement",
+            "Event Hosting (Rugby Festival)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.835163116455078
+            }
+          ],
+          "reasoning": "The scraped content is a generic business listing (Wheree.com) providing basic directory information (address, phone, category) and high-level descriptions of facilities. It confirms the entity operates as an amateur sports club but contains no technical infrastructure details, corporate governance data, or procurement signals (RFPs, vendors, tech stack). The content is purely descriptive of consumer-facing services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:33:58.500258",
+          "domain_explored": "https://federugby.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem: Mentions of IVECO, SIA-MPL, Arredissima as team sponsors.",
+              "Digital Infrastructure: Confirmation of live streaming capabilities on Federugby.it."
+            ]
+          },
+          "patterns_found": [
+            "Sports League Operations",
+            "Match Reporting & Statistics",
+            "Sponsorship Visibility (IVECO, SIA-MPL, Arredissima)",
+            "Digital Broadcasting (Federugby.it streaming)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 262,
+              "elapsed_seconds": 5.10542106628418
+            }
+          ],
+          "reasoning": "The content is purely operational sports journalism, detailing match results, player statistics, and league standings for the Serie A Elite Femminile. While it confirms the existence of a digital platform (Federugby.it) and active sponsorships, it contains no actionable procurement signals, technology implementation details, or strategic vendor partnerships relevant to the target entity (Rugby Lyons)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:34:04.156939",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:34:17.595238",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "User-Generated Content Platform",
+            "Non-Profit Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 164,
+              "elapsed_seconds": 7.43427300453186
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage and navigation structure of Wikimedia Commons, a media file repository. It contains no specific information regarding 'Rugby Lyons', its procurement activities, technology stack, or governance. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:34:28.008849",
+          "domain_explored": "https://oldglorydc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SeatGeek (Ticketing Platform implied by venue name)",
+              "CMS (Content Management System for news/schedule)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Kit Supplier Partnership (Macron)",
+              "Venue Rental Agreement (George Mason Stadium)"
+            ]
+          },
+          "patterns_found": [
+            "Competitor Entity Operations",
+            "League Schedule Management",
+            "Merchandising (Macron)",
+            "Venue Management (George Mason University)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.260350942611694
+            }
+          ],
+          "reasoning": "The scraped content is from Old Glory DC, a distinct professional rugby entity based in Washington D.C., and not Rugby Lyons (Piacenza, Italy). While the content reveals operational patterns relevant to professional rugby teams (ticketing, venue partnerships, merchandise), it provides zero intelligence regarding the target entity, Rugby Lyons. This indicates a drift in the discovery process away from the target."
+        }
+      ],
+      "total_input_tokens": 8952,
+      "total_output_tokens": 1435,
+      "estimated_cost_usd": 0.048381
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Lyons may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:34:28.013724"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281790",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:24:37.436169"
+}

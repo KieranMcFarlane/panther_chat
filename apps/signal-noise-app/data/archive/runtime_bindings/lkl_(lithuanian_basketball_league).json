@@ -1,0 +1,129 @@
+{
+  "entity_id": "lkl_(lithuanian_basketball_league)",
+  "entity_name": "LKL (Lithuanian Basketball League)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "worthpoint.com",
+    "northschool.org.uk",
+    "geltonajuoda.lt",
+    "refugees.lt"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lkl_(lithuanian_basketball_league)",
+      "entity_name": "LKL (Lithuanian Basketball League)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://refugees.lt",
+        "https://worthpoint.com",
+        "https://northschool.org.uk",
+        "https://geltonajuoda.lt"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LKL (Lithuanian Basketball League) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:45:59.145398",
+          "domain_explored": "https://worthpoint.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:46:01.917484",
+          "domain_explored": "https://northschool.org.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:46:10.367609",
+          "domain_explored": "https://geltonajuoda.lt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity identified as Fan/Archive site (\u0160iauli\u0173 team specific)",
+              "No commercial intent detected"
+            ]
+          },
+          "patterns_found": [
+            "Fan/Archive Content Site",
+            "Historical Data Aggregation",
+            "Cookie Consent Banner"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 224,
+              "elapsed_seconds": 5.296461820602417
+            }
+          ],
+          "reasoning": "The content is from 'GeltonaJuoda.lt', a fan-made archival project for the '\u0160iauli\u0173' basketball team (1994-2026). It focuses on historical statistics, photos, and records. While it relates to Lithuanian basketball, it is an external fan site and not an official LKL procurement channel or vendor ecosystem. No procurement signals, job postings, or technology stack investments relevant to LKL operations were found."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:46:13.498434",
+          "domain_explored": "https://refugees.lt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1425,
+      "total_output_tokens": 224,
+      "estimated_cost_usd": 0.007635
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LKL (Lithuanian Basketball League) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:46:13.498788"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416556",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:50.184106"
+}

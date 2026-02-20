@@ -1,0 +1,132 @@
+{
+  "entity_id": "fia_asia-pacific",
+  "entity_name": "FIA Asia-Pacific",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "api.fia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sg.linkedin.com/jobs/view/223063798?trkInfo=searchKeywordString%3ACity%2BSenior%2BManager%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A6%2CMSRPsearchId%3A3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&refId=3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&trk=jobs_jserp_job_listing_text"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_asia-pacific",
+      "entity_name": "FIA Asia-Pacific",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://api.fia.com",
+        "https://sg.linkedin.com/jobs/view/223063798?trkInfo=searchKeywordString%3ACity%2BSenior%2BManager%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A6%2CMSRPsearchId%3A3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&refId=3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&trk=jobs_jserp_job_listing_text"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Asia-Pacific may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:33:35.089728",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Procurement Portal",
+                "source": "Navigation Menu",
+                "details": "Link to 'Invitation to Tender' found under Administration section."
+              },
+              {
+                "type": "Vendor Management",
+                "source": "Navigation Menu",
+                "details": "Dedicated section for 'FIA Partners and suppliers'."
+              },
+              {
+                "type": "Compliance",
+                "source": "Navigation Menu",
+                "details": "Reference to 'Data Privacy Notice' and 'Ethics and Compliance Hotline'."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Explicit Procurement Portal Link",
+            "Vendor Management Terminology",
+            "Global Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 388,
+              "elapsed_seconds": 4.603792190551758
+            }
+          ],
+          "reasoning": "The content provides the main navigation structure for the FIA (F\u00e9d\u00e9ration Internationale de l'Automobile). While it does not contain specific job postings or active RFPs in this snippet, it explicitly lists 'Invitation to Tender' and 'FIA Partners and suppliers' under the 'About FIA' > 'Organisation' > 'Administration' section. This confirms the existence of a formal procurement function and validates the entity structure for future targeting. The presence of 'Data Privacy Notice' also suggests regulatory compliance requirements for vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:33:44.551048",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/223063798?trkInfo=searchKeywordString%3ACity%2BSenior%2BManager%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A6%2CMSRPsearchId%3A3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&refId=3988c6b9-651d-46b3-8773-77959e297de2_1476880215081&trk=jobs_jserp_job_listing_text",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Manager, Feasibility & Investment Analysis (AP) - Hilton Worldwide"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (F&IA vs FIA)",
+            "Hospitality Sector Context",
+            "Investment Analysis Function"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.7028961181640625
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for Hilton Worldwide (Hospitality sector) for a 'Feasibility & Investment Analysis (F&IA)' role. This is a false positive match for the acronym 'FIA'. The entity 'FIA Asia-Pacific' in the user context refers to the governing body for motor sport (F\u00e9d\u00e9ration Internationale de l'Automobile), whereas this content refers to Hilton's internal finance team. There is no relevance to the target entity's procurement."
+        }
+      ],
+      "total_input_tokens": 2844,
+      "total_output_tokens": 614,
+      "estimated_cost_usd": 0.017742
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Asia-Pacific may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:33:44.552563"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.378491",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:40.523681"
+}

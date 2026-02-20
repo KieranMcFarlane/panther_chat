@@ -1,0 +1,230 @@
+{
+  "entity_id": "feyenoord",
+  "entity_name": "Feyenoord",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "feyenoord.com",
+    "eredivisie.eu",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/feyenoord-rotterdam-n.v.-jobs-worldwide",
+      "https://nl.linkedin.com/jobs/feyenoord-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "feyenoord",
+      "entity_name": "Feyenoord",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://nl.linkedin.com/jobs/feyenoord-jobs",
+        "https://eredivisie.eu",
+        "https://www.linkedin.com/jobs/feyenoord-rotterdam-n.v.-jobs-worldwide",
+        "https://feyenoord.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Feyenoord may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:51:25.135349",
+          "domain_explored": "https://feyenoord.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Feyenoord One (Streaming Platform)",
+              "Ticketshop (E-commerce)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High-volume ticketing operations",
+            "Content streaming platform (Feyenoord One)",
+            "Standard sports club news cycle"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.294173002243042
+            }
+          ],
+          "reasoning": "The scraped content is limited to the homepage news feed and match schedule. While it confirms the existence of a streaming platform ('Feyenoord One') and ticketing infrastructure, it contains no explicit procurement signals, technology vendor names, or strategic investment announcements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:51:30.413740",
+          "domain_explored": "https://eredivisie.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Eredivisie sticker collection (League-level commercial procurement, not Feyenoord specific)"
+            ]
+          },
+          "patterns_found": [
+            "League-level marketing initiatives (Sticker collection)",
+            "General sports news cycle",
+            "Award ceremonies (Player of the Month)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.3506600856781006
+            }
+          ],
+          "reasoning": "The content is sourced from the Eredivisie (league) website, not Feyenoord's specific domain. While it mentions a 'Rotterdam derby' involving Feyenoord, the content focuses on league-wide awards, general commercial growth, and league schedules. There are no direct procurement signals, technology stacks, or vendor partnerships specific to Feyenoord's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:51:37.685123",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic mobile gaming storefront",
+            "Consumer entertainment content",
+            "Irrelevant search results (Candy Crush, PUBG, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.7487549781799316
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com represents a generic list of mobile applications and games (e.g., Candy Crush, PUBG Mobile, Minecraft). There is no content related to Feyenoord, its business operations, or its procurement activities. This is a 'false positive' result likely triggered by the presence of 'EA SPORTS FC\u2122 Mobile Soccer' in the list, which is a consumer product, not a B2B procurement signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:51:46.492256",
+          "domain_explored": "https://www.linkedin.com/jobs/feyenoord-rotterdam-n.v.-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "HR-medewerker (HR Employee)",
+              "Beveiliger (Security Guard)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for HR support (indicates internal growth)",
+              "Security staffing procurement (operational vendor/employee need)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing (Security & HR)",
+            "LinkedIn Talent Acquisition Pipeline",
+            "Recurring Operational Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1036,
+              "output_tokens": 254,
+              "elapsed_seconds": 5.601372957229614
+            }
+          ],
+          "reasoning": "While the page confirms active recruitment, the specific roles listed (HR-medewerker, Beveiliger) are operational support functions rather than strategic procurement or technical implementation signals. However, the existence of a structured hiring pipeline confirms organizational activity and potential for future technical roles."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:51:55.142683",
+          "domain_explored": "https://nl.linkedin.com/jobs/feyenoord-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "Data Analytics Tools (implied by 'Data Intern')"
+            ],
+            "job_postings": [
+              "Data Intern (at Beyond Sports, partner entity)",
+              "35 Total Vacancies (unspecified titles in snippet)"
+            ],
+            "procurement_indicators": [
+              "HR & Staffing procurement",
+              "Data Analytics capability building"
+            ]
+          },
+          "patterns_found": [
+            "High-volume recruitment activity (35 vacancies)",
+            "Data Analytics focus (Data Intern role)",
+            "Sports Technology ecosystem (Beyond Sports)",
+            "Talent Acquisition Pipeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 300,
+              "elapsed_seconds": 5.055768966674805
+            }
+          ],
+          "reasoning": "The content confirms active recruitment with 35 open vacancies. While the specific 'Data Intern' role is listed under a partner entity (Beyond Sports) rather than Feyenoord directly, the high volume of vacancies indicates organizational growth and potential investment in human capital and associated HR/procurement tools. The presence of a data-focused role suggests ongoing digital transformation efforts."
+        }
+      ],
+      "total_input_tokens": 6864,
+      "total_output_tokens": 1165,
+      "estimated_cost_usd": 0.038067000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Feyenoord may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:51:55.143540"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.133189",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:26.557289"
+}

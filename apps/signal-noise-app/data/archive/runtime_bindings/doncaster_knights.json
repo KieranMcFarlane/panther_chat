@@ -1,0 +1,143 @@
+{
+  "entity_id": "doncaster_knights",
+  "entity_name": "Doncaster Knights",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "knightsforum.co.uk",
+    "gladiatorrugby.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/doncaster-racecourse-and-exhibition-centre_arena-racing-company-careers-activity-7196856289937768448-TU8t"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "doncaster_knights",
+      "entity_name": "Doncaster Knights",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://gladiatorrugby.co.uk",
+        "https://www.linkedin.com/posts/doncaster-racecourse-and-exhibition-centre_arena-racing-company-careers-activity-7196856289937768448-TU8t",
+        "https://knightsforum.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Doncaster Knights may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:06:52.906427",
+          "domain_explored": "https://knightsforum.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ProBoards (Forum Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_disclaimer",
+            "cookie_consent_management",
+            "unofficial_community_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 758,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.6059272289276123
+            }
+          ],
+          "reasoning": "The content is a generic cookie policy and disclaimer for the ProBoards hosting platform, explicitly stating the forum is unofficial and not associated with the entity. It contains no data regarding Doncaster Knights' internal operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:07:10.186308",
+          "domain_explored": "https://gladiatorrugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:07:22.923693",
+          "domain_explored": "https://www.linkedin.com/posts/doncaster-racecourse-and-exhibition-centre_arena-racing-company-careers-activity-7196856289937768448-TU8t",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Financial Controller",
+                "entity": "Doncaster Racecourse and Exhibition Centre",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "signal": "Recruitment",
+                "details": "Hiring for finance leadership at a neighboring venue",
+                "relevance": "None"
+              }
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "venue_management_hiring",
+            "recruitment_agency_engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 274,
+              "elapsed_seconds": 7.1978700160980225
+            }
+          ],
+          "reasoning": "The scraped content originates from 'Doncaster Racecourse and Exhibition Centre', a distinct entity from the target 'Doncaster Knights' (rugby club). While both operate in Doncaster, there is no shared ownership or procurement signal linking the Racecourse's hiring for a Financial Controller to the Rugby Club's operations. This is irrelevant noise."
+        }
+      ],
+      "total_input_tokens": 2224,
+      "total_output_tokens": 446,
+      "estimated_cost_usd": 0.013361999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Doncaster Knights may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:07:22.925237"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.279246",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:27:52.297936"
+}

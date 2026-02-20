@@ -1,0 +1,192 @@
+{
+  "entity_id": "pfaff_motorsports",
+  "entity_name": "Pfaff Motorsports",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "pfaffmotorsports.com",
+    "pfaffauto.com",
+    "tomotorsports.com",
+    "carrera-toys.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pfaff_motorsports",
+      "entity_name": "Pfaff Motorsports",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://tomotorsports.com",
+        "https://pfaffauto.com",
+        "https://carrera-toys.com",
+        "https://pfaffmotorsports.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pfaff Motorsports may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:39:23.938156",
+          "domain_explored": "https://pfaffmotorsports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Partnerships: TireRack.com, WeatherTech, Motul",
+              "Event Logistics: High-frequency travel and equipment transport across North America (Daytona, Sebring, Laguna Seca, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Schedule Visibility",
+            "Brand Heritage Display",
+            "Sponsorship Ecosystem (TireRack.com, WeatherTech)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 223,
+              "elapsed_seconds": 9.266923904418945
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of repetitive accolades and the 2025 race schedule. While this confirms the entity is active and operational, it contains zero technical infrastructure details, hiring information, or explicit purchasing signals. It is purely marketing/operational data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:39:34.736754",
+          "domain_explored": "https://pfaffauto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Collision Repair Procurement (OEM parts, paint, equipment)",
+              "Restoration & Customization Sourcing (Specialized parts, aftermarket performance)",
+              "Fleet/Leasing Management (Inventory management systems)",
+              "Facilities Maintenance (15 locations across Canada)"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Operational Structure (Leasing, Collision, Restoration, Racing)",
+            "Scale Indicators (15 Dealerships, 12 Brands)",
+            "Customer Experience Focus (Transparent shopping, streamlined experience)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 344,
+              "elapsed_seconds": 3.8907017707824707
+            }
+          ],
+          "reasoning": "The content confirms Pfaff Motorsports is part of a larger entity (Pfaff Automotive Partners) with significant scale (15 locations, 12 brands). While the specific text is largely marketing copy, the explicit mention of distinct business units\u2014specifically 'Manufacturer-certified collision repair' and 'Customization, restoration, and specialized maintenance'\u2014implies a supply chain for automotive parts, repair equipment, and industrial tools. This moves the hypothesis from 'purely racing team' to 'automotive group with service operations', increasing the likelihood of B2B procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:39:42.917140",
+          "domain_explored": "https://tomotorsports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WooCommerce (Inferred from 'product-category' URL structure)",
+              "Podbean (Podcast hosting)",
+              "Apple Podcasts"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Management (High SKU count of diecast models)",
+              "Fulfillment Logistics (Flat rate shipping implies 3PL or carrier contracts)"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Retail Operations",
+            "Merchandise Licensing",
+            "Flat-Rate Logistics Model"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1491,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.2059590816497803
+            }
+          ],
+          "reasoning": "The content represents a B2C e-commerce storefront (TO Motorsports) selling diecast models and team apparel. While it confirms Pfaff Motorsports has a merchandise licensing program, it provides zero insight into B2B procurement, enterprise technology stacks, or organizational governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:39:57.651180",
+          "domain_explored": "https://carrera-toys.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing Agreements: Presence of Formula 1, Red Bull, Porsche, Audi, and Disney/Pixar brands indicates licensing procurement for toy production."
+            ]
+          },
+          "patterns_found": [
+            "Consumer E-Commerce Navigation",
+            "B2C Product Catalog Structure",
+            "Licensing Partnerships (F1, Red Bull, Porsche, Audi, Nintendo)",
+            "Customer Loyalty Program (VIP Club)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 255,
+              "elapsed_seconds": 9.553820848464966
+            }
+          ],
+          "reasoning": "The scraped content from carrera-toys.com is exclusively focused on consumer retail operations (toy sales, slot cars, RC vehicles). While there are licensing indicators (Porsche, Audi), these relate to toy manufacturing, not the motorsports procurement operations of Pfaff. There are no signals of corporate procurement, enterprise technology stacks, or B2B vendor relationships relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5804,
+      "total_output_tokens": 1063,
+      "estimated_cost_usd": 0.033357
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pfaff Motorsports may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:39:57.653450"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367548",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:38.624838"
+}

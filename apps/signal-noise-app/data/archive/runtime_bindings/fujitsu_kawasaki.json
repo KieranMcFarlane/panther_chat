@@ -1,0 +1,287 @@
+{
+  "entity_id": "fujitsu_kawasaki",
+  "entity_name": "Fujitsu Kawasaki",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "fujitsu.com",
+    "global.fujitsu",
+    "global.kawasaki.com",
+    "svleague.jp",
+    "acnnewswire.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/%E3%80%90%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%80%91%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88%E3%82%A8%E3%83%B3%E3%83%89%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%81%AEgdc%E5%85%B1%E6%A5%AD%E3%83%BB%E3%82%A2%E3%82%B8%E3%83%A3%E3%82%A4%E3%83%AB%E3%82%92%E6%8E%A8%E9%80%B2%E3%81%99%E3%82%8B%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-at-fujitsu-limited%EF%BC%88japan%EF%BC%89-3760655925"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fujitsu_kawasaki",
+      "entity_name": "Fujitsu Kawasaki",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://global.fujitsu",
+        "https://acnnewswire.com",
+        "https://svleague.jp",
+        "https://fujitsu.com",
+        "https://de.linkedin.com/jobs/view/%E3%80%90%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%80%91%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88%E3%82%A8%E3%83%B3%E3%83%89%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%81%AEgdc%E5%85%B1%E6%A5%AD%E3%83%BB%E3%82%A2%E3%82%B8%E3%83%A3%E3%82%A4%E3%83%AB%E3%82%92%E6%8E%A8%E9%80%B2%E3%81%99%E3%82%8B%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-at-fujitsu-limited%EF%BC%88japan%EF%BC%89-3760655925",
+        "https://global.kawasaki.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Posting: Technical Leadership",
+        "Technology Stack: Frontend & Cloud",
+        "Operational Structure: Global Delivery Centers (GDC)",
+        "Methodology: Agile & Scrum",
+        "Location: Fujitsu Kawasaki Tower"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fujitsu Kawasaki may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:57:21.738591",
+          "domain_explored": "https://fujitsu.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft 365 Copilot",
+              "Quantum Computing",
+              "Biometric Authentication",
+              "Blockchain",
+              "Digital Product Passports",
+              "AI (Trusted AI)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Lockheed Martin partnership for dual-use technology",
+              "Company split agreement with Fujitsu Japan Limited",
+              "New Executive Officer Appointments and Management Structure",
+              "FY 2025 Financial Results Disclosure",
+              "Biometric authentication service implementation for SMBC Nikko Securities"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Technology Partnerships (Lockheed Martin)",
+            "Digital Transformation Case Studies (Microsoft 365 Copilot)",
+            "Corporate Restructuring (Company Split)",
+            "Executive Management Changes",
+            "Quantum Computing R&D Roadmap"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 388,
+              "elapsed_seconds": 3.789417028427124
+            }
+          ],
+          "reasoning": "The content reveals significant organizational changes (Management Structure, Company Split) and strategic technology investments (Quantum, AI, Sovereign Platforms). While these are high-level corporate signals rather than specific local RFPs for 'Fujitsu Kawasaki', the restructuring and new management often precede shifts in procurement strategy and vendor selection. The partnership with Lockheed Martin and adoption of Copilot indicate active technology procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:57:34.495689",
+          "domain_explored": "https://global.fujitsu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Fujitsu Technology Park (Kawasaki): Research & Manufacturing Facilities",
+              "Fujitsu Uvance Kawasaki Tower: Experience Center",
+              "Fujitsu Development Center (Kawasaki)",
+              "Fujitsu Cross Culture Center (Kawasaki)",
+              "Fujitsu Nakahara Building (Kawasaki)",
+              "Global Network: Americas, Asia Pacific, Europe"
+            ]
+          },
+          "patterns_found": [
+            "Global Infrastructure Presence",
+            "R&D and Manufacturing Hubs",
+            "Regional Subsidiary Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 313,
+              "elapsed_seconds": 4.651901960372925
+            }
+          ],
+          "reasoning": "The content provides a comprehensive overview of Fujitsu's global physical footprint, specifically confirming the location and nature of the Kawasaki entity (Fujitsu Technology Park). While it establishes the scale of operations (R&D, Manufacturing, Uvance Experience Center), it is a static directory page and lacks active procurement signals such as tenders, technology investments, or partnership announcements. It confirms the entity's existence and capability but does not show immediate buying intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:57:45.457622",
+          "domain_explored": "https://global.kawasaki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Liquefied Hydrogen Carrier",
+              "LPG/NH3 Carrier",
+              "Automated Wind Turbine Maintenance (BladeRobots)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract Signed: 40,000 m3 Liquefied Hydrogen Carrier",
+              "Strategic Partnership: BladeRobots",
+              "Sponsorship Agreement: Ayaka Furue"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Kawasaki Heavy Industries vs. Fujitsu)",
+            "Heavy Industry & Manufacturing Focus",
+            "Marine & Energy Sector Contracts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.619450092315674
+            }
+          ],
+          "reasoning": "The scraped content is from 'global.kawasaki.com', which is the corporate website for Kawasaki Heavy Industries (KHI), a distinct entity from Fujitsu. The content focuses on shipbuilding, hydrogen energy, and heavy machinery. There are no procurement signals relevant to Fujitsu Kawasaki."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:57:59.084088",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sports League vs. Technology Corp)",
+            "Non-Commercial Content (Sports Rosters/Schedules)",
+            "Irrelevant Domain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 568,
+              "output_tokens": 188,
+              "elapsed_seconds": 6.108544111251831
+            }
+          ],
+          "reasoning": "The scraped content from 'svleague.jp' corresponds to a sports league website (likely V.League, based on the URL structure and 'WOMEN/MEN' navigation links), not Fujitsu Kawasaki. There is absolutely no correlation between this content and the procurement activities of a Fujitsu subsidiary. This represents a significant drift from the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:59:03.201163",
+          "domain_explored": "https://acnnewswire.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:59:14.664923",
+          "domain_explored": "https://de.linkedin.com/jobs/view/%E3%80%90%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%80%91%E3%83%95%E3%83%AD%E3%83%B3%E3%83%88%E3%82%A8%E3%83%B3%E3%83%89%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E9%96%8B%E7%99%BA%E3%81%AEgdc%E5%85%B1%E6%A5%AD%E3%83%BB%E3%82%A2%E3%82%B8%E3%83%A3%E3%82%A4%E3%83%AB%E3%82%92%E6%8E%A8%E9%80%B2%E3%81%99%E3%82%8B%E3%83%AA%E3%83%BC%E3%83%80%E3%83%BC-at-fujitsu-limited%EF%BC%88japan%EF%BC%89-3760655925",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Java",
+              "JavaScript",
+              "C#",
+              "React",
+              "Angular",
+              "Vue.js",
+              "Ruby",
+              "Python",
+              "Objective-C",
+              "Swift",
+              "Cloud Native"
+            ],
+            "job_postings": [
+              "Leader: Frontend Application Development (GDC/Agile)",
+              "Scrum Master",
+              "Location: Fujitsu Kawasaki Tower (Kawasaki, Kanagawa)"
+            ],
+            "procurement_indicators": [
+              "Hiring for DX Business Expansion",
+              "Collaboration with Global Delivery Centers (Malaysia/Philippines)",
+              "Focus on Manufacturing, Transportation, and Insurance sectors",
+              "Requirement for Agile/Scrum certification"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Technical Leadership",
+            "Technology Stack: Frontend & Cloud",
+            "Operational Structure: Global Delivery Centers (GDC)",
+            "Methodology: Agile & Scrum",
+            "Location: Fujitsu Kawasaki Tower"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1745,
+              "output_tokens": 409,
+              "elapsed_seconds": 5.797250747680664
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a technical leader at Fujitsu Limited (Japan) based in Kawasaki. It confirms the entity's presence at 'Fujitsu Kawasaki Tower' and explicitly details the technology stack (Java, JavaScript, C#, React, Angular, Vue.js) and operational model (Agile/Scrum, GDC collaboration with Malaysia/Philippines). This provides strong evidence of procurement intent for frontend development resources and cloud infrastructure support."
+        }
+      ],
+      "total_input_tokens": 6570,
+      "total_output_tokens": 1550,
+      "estimated_cost_usd": 0.04296
+    },
+    "procurement_signals": [
+      "Job Posting: Technical Leadership",
+      "Technology Stack: Frontend & Cloud",
+      "Operational Structure: Global Delivery Centers (GDC)",
+      "Methodology: Agile & Scrum",
+      "Location: Fujitsu Kawasaki Tower"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fujitsu Kawasaki may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:59:14.667784"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324050",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:07:28.841041"
+}

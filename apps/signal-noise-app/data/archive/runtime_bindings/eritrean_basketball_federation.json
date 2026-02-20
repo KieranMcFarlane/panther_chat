@@ -1,0 +1,133 @@
+{
+  "entity_id": "eritrean_basketball_federation",
+  "entity_name": "Eritrean Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "shabait.com",
+    "business.osunstate.gov.ng",
+    "ca.okfn.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eritrean_basketball_federation",
+      "entity_name": "Eritrean Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ca.okfn.org",
+        "https://shabait.com",
+        "https://business.osunstate.gov.ng"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eritrean Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:10:06.147459",
+          "domain_explored": "https://shabait.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General government news aggregation",
+            "Focus on medical, education, and water sectors",
+            "Absence of sports or basketball-specific content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.8992931842803955
+            }
+          ],
+          "reasoning": "The scraped content from Shabait.com is a general news feed covering the Eritrean Medical Association, Ministry of Education, and presidential interviews. There are zero mentions of basketball, the Eritrean Basketball Federation, or related sports procurement activities. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:10:11.734479",
+          "domain_explored": "https://business.osunstate.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:10:21.021111",
+          "domain_explored": "https://ca.okfn.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube",
+              "WordPress"
+            ],
+            "job_postings": [
+              "Call for volunteers (2016)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event management and volunteer coordination",
+            "Open data advocacy and non-profit activities",
+            "Historical content (2016)",
+            "Geographic mismatch (Canada/Montreal vs Eritrea)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.271793842315674
+            }
+          ],
+          "reasoning": "The content is from the Open Knowledge Foundation Canada chapter (ca.okfn.org) and focuses on the 2016 #OKFestMTL event in Montreal. It is entirely unrelated to the Eritrean Basketball Federation, sports procurement, or Eritrean governance. The content is outdated (2016) and geographically irrelevant."
+        }
+      ],
+      "total_input_tokens": 2820,
+      "total_output_tokens": 395,
+      "estimated_cost_usd": 0.014385
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eritrean Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:10:21.021697"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.268301",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:33.117840"
+}

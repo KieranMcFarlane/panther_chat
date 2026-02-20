@@ -1,0 +1,266 @@
+{
+  "entity_id": "intercontinental_gt_challenge",
+  "entity_name": "Intercontinental GT Challenge",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "intercontinentalgtchallenge.com",
+    "gt-world-challenge-europe.com",
+    "gt-world-challenge-america.com",
+    "gt-world-challenge.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "intercontinental_gt_challenge",
+      "entity_name": "Intercontinental GT Challenge",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://gt-world-challenge.com",
+        "https://gt-world-challenge-america.com",
+        "https://gt-world-challenge-europe.com",
+        "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254",
+        "https://intercontinentalgtchallenge.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Intercontinental GT Challenge may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:49:08.390966",
+          "domain_explored": "https://intercontinentalgtchallenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android)",
+              "CRM (Sign-up forms/Newsletter)",
+              "Streaming/Video Platforms (Cinematic Highlights)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Contracts: AWS (Indianapolis 8 Hour), CrowdStrike (Spa 24h), Meguiar's (Bathurst)",
+              "Digital Platform Vendor: Official #GTWorld APP provider",
+              "Marketing Services: 'Eco-friendly fan' initiatives imply sustainability consulting procurement"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Digital Asset Management",
+            "Fan Engagement Platforms"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.317805051803589
+            }
+          ],
+          "reasoning": "The content reveals a reliance on major commercial sponsors (AWS, CrowdStrike, Meguiar's, RAVENOL) and the use of a dedicated mobile application (#GTWorld APP). While no direct RFPs are visible, the presence of these sponsors indicates a structured procurement process for marketing and technology partnerships. The 'Eco-friendly fan' and 'Sign up' CTIs suggest investment in CRM and marketing automation tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:49:15.809067",
+          "domain_explored": "https://gt-world-challenge-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (iOS/Android)",
+              "CRM (Email Marketing/Sign-up forms)",
+              "Streaming Platforms (Live Qualifying/Race feeds)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [
+              "SRO GT Academy (Career opportunities/Driver training)"
+            ],
+            "procurement_indicators": [
+              "VIP Packages & Hospitality Services (Sourcing required)",
+              "Event Ticketing Platforms",
+              "Concert Production (Headliner booking for 24h Spa)",
+              "Team Partnerships (Aston Martin, BMW, Porsche supply chains)",
+              "Sponsorship Activation (CrowdStrike, AWS)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Event Management Services",
+            "Mobile App Development",
+            "Ticketing Platforms",
+            "Digital Marketing (CRM)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 369,
+              "elapsed_seconds": 3.8850371837615967
+            }
+          ],
+          "reasoning": "The content confirms the series is actively operational and expanding into 2026, necessitating ongoing procurement for event logistics, VIP experiences, and digital infrastructure. While specific RFPs are not listed, the scale of operations (Test Days, 24 Hours of Spa, multiple teams) implies a continuous need for vendor services. The presence of a dedicated mobile app and 'Sign up' CRM functionality indicates established digital procurement channels."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:49:26.100891",
+          "domain_explored": "https://gt-world-challenge-america.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AWS (Cloud/Sponsorship)",
+              "Mobile App (iOS/Android)",
+              "Email Marketing Platform (Newsletter signup)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "VIP Packages Sales (Hospitality Vendor potential)",
+              "Official Mobile App maintenance/development",
+              "Ticketing Platform management",
+              "Broadcast partnership (FS1)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Event Ticketing Platforms",
+            "Mobile App Development",
+            "Digital Marketing & CRM"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 326,
+              "elapsed_seconds": 6.52464485168457
+            }
+          ],
+          "reasoning": "The content confirms the series is actively operational ('powered by AWS', 'FS1 to Televise') and engaging in direct sales activities ('Tickets On Sale Now', 'VIP Packages'). The presence of a dedicated mobile app ('#GTWorld APP') and newsletter sign-ups indicates established digital infrastructure requiring ongoing maintenance and potential procurement for upgrades. While no explicit RFPs are visible, the operational scale (Indianapolis 8 Hour, multiple tracks) implies vendor needs for event services, broadcast production, and technology support."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:49:32.921366",
+          "domain_explored": "https://gt-world-challenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AWS (Amazon Web Services) - Title Sponsor & Infrastructure"
+            ],
+            "job_postings": [
+              "Global Chief Marketing Officer (Paul Hembery appointed Dec 2025)"
+            ],
+            "procurement_indicators": [
+              "Expansion of SRO GT Academy (Global talent competition)",
+              "Global series management across 4 continents (30 events)",
+              "Awards event management (Venice hosted 2025 Awards)"
+            ]
+          },
+          "patterns_found": [
+            "Global Series Coordination",
+            "Executive Leadership Procurement",
+            "Talent Development Programs",
+            "Cloud Infrastructure Sponsorship (AWS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 345,
+              "elapsed_seconds": 3.0138046741485596
+            }
+          ],
+          "reasoning": "The content confirms the global scale of the GT World Challenge series and highlights specific organizational changes that imply procurement activity. The appointment of a 'Global Chief Marketing Officer' suggests an upcoming review of marketing agencies and technology stacks. The expansion of the 'SRO GT Academy' into a global format indicates procurement needs for training platforms, travel management, and educational services. The continued emphasis on 'Powered by AWS' reinforces the use of cloud infrastructure, likely requiring ongoing management and support services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:49:41.120900",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MYOB (Accounting Software)",
+              "General Accounting Software (ERP/Financial Systems)"
+            ],
+            "job_postings": [
+              {
+                "role": "Accountant",
+                "entity": "Craft-Bamboo Racing",
+                "location": "Hong Kong",
+                "seniority": "Mid-Senior level",
+                "relevance": "Direct involvement in financial operations, vendor liaison, and system implementation."
+              }
+            ],
+            "procurement_indicators": [
+              "Requirement for 'new system implementations' indicates active IT procurement.",
+              "Liaison with 'suppliers and all invoicing parties' indicates active vendor management.",
+              "Responsibility for 'project business case development' suggests involvement in capital expenditure decisions.",
+              "Need for 'streamlining processes' suggests potential BPR or consulting services procurement."
+            ]
+          },
+          "patterns_found": [
+            "Financial System Upgrades",
+            "Vendor Management Operations",
+            "Project-Based Budgeting",
+            "Operational Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 458,
+              "elapsed_seconds": 4.441839933395386
+            }
+          ],
+          "reasoning": "While this is a job posting for a competitor team (Craft-Bamboo Racing) rather than the series organizer, it provides high-fidelity intelligence on the procurement and operational ecosystem of a key Intercontinental GT Challenge participant. The role explicitly requires 'new system implementations' and 'MYOB experience,' signaling active procurement of financial software. It also highlights the need for robust vendor management and project-based budgeting, which are characteristic procurement patterns within the series' high-cost operational environment."
+        }
+      ],
+      "total_input_tokens": 7360,
+      "total_output_tokens": 1804,
+      "estimated_cost_usd": 0.04914
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Intercontinental GT Challenge may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:49:41.122403"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376002",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:26.378356"
+}

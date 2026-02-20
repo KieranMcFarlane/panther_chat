@@ -1,0 +1,417 @@
+{
+  "entity_id": "moneygram_haas_f1_team",
+  "entity_name": "MoneyGram Haas F1 Team",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "haasf1team.com",
+    "haasf1team.tricorp.com",
+    "blog.moneygram.com",
+    "formula1.com",
+    "icmarkets.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/moneygram-haas-f1-team-jobs",
+      "https://uk.linkedin.com/jobs/view/stores-inventory-manager-at-haas-f1-team-4343742681",
+      "https://uk.linkedin.com/jobs/view/garage-and-infrastructure-technician-at-haas-f1-team-4345224945",
+      "https://uk.linkedin.com/jobs/view/software-developer-in-test-at-haas-f1-team-4345720283",
+      "https://uk.linkedin.com/jobs/haas-f1-team-jobs-greater-oxford-area",
+      "https://uk.linkedin.com/jobs/view/rts-sub-assembly-technician-at-moneygram-haas-f1-team-4334091149"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "moneygram_haas_f1_team",
+      "entity_name": "MoneyGram Haas F1 Team",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.14
+      ],
+      "explored_domains": [
+        "https://haasf1team.com",
+        "https://uk.linkedin.com/jobs/view/garage-and-infrastructure-technician-at-haas-f1-team-4345224945",
+        "https://uk.linkedin.com/jobs/view/stores-inventory-manager-at-haas-f1-team-4343742681",
+        "https://icmarkets.com",
+        "https://uk.linkedin.com/jobs/haas-f1-team-jobs-greater-oxford-area",
+        "https://haasf1team.tricorp.com",
+        "https://uk.linkedin.com/jobs/moneygram-haas-f1-team-jobs",
+        "https://uk.linkedin.com/jobs/view/software-developer-in-test-at-haas-f1-team-4345720283",
+        "https://blog.moneygram.com",
+        "https://formula1.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Partnership Expansion",
+        "Official Technology Partner Designation",
+        "Multi-Year Contracting",
+        "Infrastructure Investment (Networking)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MoneyGram Haas F1 Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:18:01.757991",
+          "domain_explored": "https://haasf1team.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "RUCKUS Networks (Networking/Wi-Fi)",
+              "Haas+ (Fan Engagement Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RUCKUS Networks: Official Networking Partner (Infrastructure)",
+              "Fix Network: Multi-Year Partnership (Commercial/Services)"
+            ]
+          },
+          "patterns_found": [
+            "Partnership Expansion",
+            "Official Technology Partner Designation",
+            "Multi-Year Contracting",
+            "Infrastructure Investment (Networking)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.5366969108581543
+            }
+          ],
+          "reasoning": "The content explicitly announces the expansion of a partnership with RUCKUS Networks to become the 'Official Networking Partner.' This is a direct procurement signal indicating investment in network infrastructure and IT services. The mention of a 'Multi-Year Partnership' with Fix Network further confirms active vendor management and long-term contracting activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:18:12.398474",
+          "domain_explored": "https://haasf1team.tricorp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Category: Uniforms & Workwear (Vendor: Tricorp)",
+              "Category: Fan Merchandise (Vendor: Tricorp)",
+              "Criteria: Sustainability & High-Performance Materials",
+              "Procurement Type: Partnership/Contracting"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain Management",
+            "Vendor Case Studies",
+            "Merchandising Procurement",
+            "Uniform/Workwear Contracting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.55216908454895
+            }
+          ],
+          "reasoning": "The content is a case study from a vendor (Tricorp) describing a past or ongoing partnership to supply teamwear and fanwear. While it confirms procurement activity in the 'Uniforms & Merchandise' category, the text is in Dutch and appears to be a vendor testimonial rather than an active RFP or technology investment signal. It provides evidence of the vendor selection criteria (premium quality, sustainability) but offers low value for technology stack analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:18:22.445534",
+          "domain_explored": "https://blog.moneygram.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Payflo (Cash Payment Solutions)",
+              "Cash-in/Cash-out Systems"
+            ],
+            "job_postings": [
+              "Chief Technology Officer (Luke Tuttle - Appointed Feb 2025)"
+            ],
+            "procurement_indicators": [
+              "New CTO Appointment (Likely tech stack audit)",
+              "CEO 'Re-founder Mindset' (Implies restructuring and new vendor sourcing)",
+              "Launch of new payment solutions (Requires R&D and tech procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Transition",
+            "Strategic Partnership Activation",
+            "Fintech Product Innovation",
+            "Corporate Strategy Shift ('Re-founder Mindset')"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 325,
+              "elapsed_seconds": 3.921207904815674
+            }
+          ],
+          "reasoning": "The content is from the MoneyGram corporate blog, not the Haas F1 Team directly. While it confirms the active partnership and marketing activation, the procurement signals are indirect. The strongest signal is the appointment of a new CTO (Luke Tuttle) and the CEO's 're-founder mindset' strategy, which implies upcoming technology stack reviews and potential vendor changes. The Payflo solution indicates a willingness to procure innovative payment tech."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:18:32.894689",
+          "domain_explored": "https://formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Coverage",
+            "Driver Market Analysis",
+            "Regulatory Updates (2026 Rules)",
+            "Race Statistics and Standings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.2955658435821533
+            }
+          ],
+          "reasoning": "The content provided is from the general Formula 1 homepage and focuses on sport-wide news, driver standings, and 2026 regulations. While it mentions 'teams' generally, it contains no specific procurement signals, vendor partnerships, or technology stack details related to the MoneyGram Haas F1 Team specifically. The content is too broad to derive actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:18:41.882297",
+          "domain_explored": "https://icmarkets.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Trading Platforms (Multi-asset)",
+              "Audio/Video Production (Podcast infrastructure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Procurement (Financial Services)",
+              "Content Partnership Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Official Partnership Designation (FX Trading)",
+            "Content Marketing Collaboration (Podcast Production)",
+            "B2B Affiliate/Referral Structures"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.9055817127227783
+            }
+          ],
+          "reasoning": "The content confirms IC Markets as the 'Official FX Trading Partner' of the Haas F1 Team. While this is a partnership signal rather than a direct procurement signal, it indicates the team's commercial procurement strategy involves financial services sector activation. The mention of a collaborative podcast ('uncut conversations') suggests investment in joint content production resources."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:18:51.802418",
+          "domain_explored": "https://uk.linkedin.com/jobs/moneygram-haas-f1-team-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Null Search Result",
+            "Geographic Scope Limitation (UK)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 675,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.3878140449523926
+            }
+          ],
+          "reasoning": "The search query for 'Moneygram Haas F1 Team jobs' within the United Kingdom returned zero matches. This indicates either a lack of open roles in this specific region, a reliance on different job boards (e.g., F1.com careers, US-based boards), or that the team utilizes different naming conventions in job postings. No procurement signals were extracted."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:19:04.396036",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/stores-inventory-manager-at-haas-f1-team-4343742681",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Unrelated Industry Listings",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.5599257946014404
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn jobs search results page for 'Stock Manager' roles in the United States. It lists positions for unrelated companies such as '31 Talent', 'Worldwide Flight Services', 'Balmain', and 'King's Hawaiian'. There is no mention of MoneyGram Haas F1 Team, nor does the content contain the specific job description for the 'Stores Inventory Manager' role suggested by the URL. The content provides zero procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:19:16.207883",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/garage-and-infrastructure-technician-at-haas-f1-team-4345224945",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Sign-In Gate / Content Obstruction",
+            "Irrelevant Search Results (Real Estate/Property Management)",
+            "Target Role Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1751,
+              "output_tokens": 209,
+              "elapsed_seconds": 4.351384162902832
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Property Asset Manager' roles, not the specific 'Garage and Infrastructure Technician' role targeted in the URL. The content is obstructed by repeated sign-in prompts and lists unrelated jobs (e.g., Bluecrest Living, Berman). There is no accessible content regarding Haas F1 Team's infrastructure, technology, or procurement activities."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:19:34.638466",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/software-developer-in-test-at-haas-f1-team-4345720283",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sign-In Gate / Content Obstruction",
+            "Generic Job Aggregation",
+            "Search Result Divergence (Unrelated Industry Listings)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1825,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.7752180099487305
+            }
+          ],
+          "reasoning": "The content is entirely blocked by a LinkedIn authentication wall ('Sign in to set job alerts'). The visible text consists of repeated UI prompts and generic job listings for unrelated entities (Givaudan, Van Drunen Farms) under a 'Development Technologist' search query, rather than the specific 'Software Developer in Test' role targeted in the URL. There is no accessible information regarding Haas F1 Team's procurement or technology stack."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T10:19:46.223467",
+          "domain_explored": "https://uk.linkedin.com/jobs/haas-f1-team-jobs-greater-oxford-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Simulator Control Systems",
+              "QA Automation Frameworks (implied by SDET role)",
+              "Inventory Management Systems"
+            ],
+            "job_postings": [
+              "Simulator Controls & Systems Engineer",
+              "Stores Operator",
+              "Software Developer in Test",
+              "Heritage Systems Engineer"
+            ],
+            "procurement_indicators": [
+              "Technical Staffing (Banbury, UK)",
+              "Supply Chain/Logistics Operations",
+              "Software Testing Infrastructure Investment"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment (Technical Operations)",
+            "Infrastructure & Hardware Engineering",
+            "Software Quality Assurance (QA)",
+            "Supply Chain & Logistics Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1854,
+              "output_tokens": 315,
+              "elapsed_seconds": 7.659869909286499
+            }
+          ],
+          "reasoning": "While the page is a job aggregation list and lacks deep procurement detail, it confirms active hiring in technical domains that imply vendor needs. Specifically, the 'Software Developer in Test' role suggests an investment in QA tooling, and 'Stores Operator' implies active supply chain/procurement operations at the Banbury facility."
+        }
+      ],
+      "total_input_tokens": 15092,
+      "total_output_tokens": 2427,
+      "estimated_cost_usd": 0.081681
+    },
+    "procurement_signals": [
+      "Partnership Expansion",
+      "Official Technology Partner Designation",
+      "Multi-Year Contracting",
+      "Infrastructure Investment (Networking)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MoneyGram Haas F1 Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:19:46.224825"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364097",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:17.494226"
+}

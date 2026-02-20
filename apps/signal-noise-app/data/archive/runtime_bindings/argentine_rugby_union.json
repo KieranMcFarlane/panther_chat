@@ -1,0 +1,195 @@
+{
+  "entity_id": "argentine_rugby_union",
+  "entity_name": "Argentine Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "wikidata.org",
+    "klaslundstrom.com",
+    "arg.news.o-abroad.com",
+    "buenosairesherald.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_rugby_union",
+      "entity_name": "Argentine Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://buenosairesherald.com",
+        "https://grokipedia.com",
+        "https://klaslundstrom.com",
+        "https://arg.news.o-abroad.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:41:49.900336",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:41:57.668931",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "irrelevant_knowledge_base"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.42851185798645
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a general-purpose knowledge base. It contains no information regarding the 'Argentine Rugby Union' (UAR), its specific vendors, internal governance, or procurement activities. The content describes platform features (SPARQL, WikiProjects) and general community news, which are irrelevant to the specific entity being investigated."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:42:07.913762",
+          "domain_explored": "https://klaslundstrom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "personal_portfolio",
+            "journalistic_content",
+            "political_commentary",
+            "irrelevant_subject_matter"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.94382905960083
+            }
+          ],
+          "reasoning": "The scraped content represents the personal portfolio/blog of Klas Lundstr\u00f6m, a journalist and author. While there is a link titled 'RUGBY IN ARGENTINA', the surrounding content (e.g., 'The Water War', 'Henry Kissinger', 'Paraguay') indicates this is geopolitical reporting or literary non-fiction rather than corporate procurement or official union business. There are no signals of technology acquisition, RFPs, or governance structures relevant to the Argentine Rugby Union."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:42:18.628088",
+          "domain_explored": "https://arg.news.o-abroad.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_aggregator",
+            "irrelevant_local_crime_news",
+            "sports_news",
+            "political_news",
+            "scraped_content_replication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 164,
+              "elapsed_seconds": 5.657088041305542
+            }
+          ],
+          "reasoning": "The content provided is a general news feed covering crime, politics, sports, and economy in Argentina. There is no mention of the Argentine Rugby Union (UAR), nor are there any procurement signals, RFPs, or technology stack details relevant to the entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:42:35.720429",
+          "domain_explored": "https://buenosairesherald.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_content",
+            "political_analysis",
+            "macroeconomic_policy",
+            "irrelevant_business_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 867,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.6148951053619385
+            }
+          ],
+          "reasoning": "The content is a general news article from the Buenos Aires Herald discussing national labor reforms and political reactions from business chambers. It lacks specific mentions of the Argentine Rugby Union (UAR), specific procurement activities, or technology investments relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5157,
+      "total_output_tokens": 731,
+      "estimated_cost_usd": 0.026436
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:42:36.072436"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.285024",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:17.721340"
+}

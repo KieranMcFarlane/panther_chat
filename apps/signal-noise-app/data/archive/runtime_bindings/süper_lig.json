@@ -1,0 +1,305 @@
+{
+  "entity_id": "s\u00fcper_lig",
+  "entity_name": "S\u00fcper Lig",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "passo.com.tr",
+    "footballhistory.org",
+    "flashscoreusa.com",
+    "fanatiz.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+      "https://in.linkedin.com/company/futboljobs.com",
+      "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "s\u00fcper_lig",
+      "entity_name": "S\u00fcper Lig",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://fanatiz.com",
+        "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view",
+        "https://in.linkedin.com/company/futboljobs.com",
+        "https://flashscoreusa.com",
+        "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+        "https://footballhistory.org",
+        "https://passo.com.tr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "S\u00fcper Lig may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:22:06.462914",
+          "domain_explored": "https://passo.com.tr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:22:12.268268",
+          "domain_explored": "https://footballhistory.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "historical_encyclopedia",
+            "no_commercial_entities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.614607095718384
+            }
+          ],
+          "reasoning": "The scraped content from FootballHistory.org is a historical encyclopedia entry about the origins of soccer (Mesoamerican, Chinese, Roman influences) and the codification of rules in English public schools. It contains no information regarding the Turkish S\u00fcper Lig, modern football administration, or commercial procurement activities. The content is purely educational/historical and lacks commercial intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:22:17.480577",
+          "domain_explored": "https://flashscoreusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_aggregation_platform",
+            "live_score_feed",
+            "ad_heavy_content",
+            "non_commercial_domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 457,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.15960693359375
+            }
+          ],
+          "reasoning": "The scraped content represents a sports data aggregation site (FlashScore) focused on live scores and results. It contains no information regarding the S\u00fcper Lig's internal operations, technology procurement, or vendor partnerships. The content is purely informational for fans and bettors."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:22:26.154086",
+          "domain_explored": "https://fanatiz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Streaming",
+              "CTV (Connected TV)",
+              "iOS/Android Mobile Apps",
+              "Web Browser Streaming",
+              "VOD (Video on Demand)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Fanatiz (OTT Platform Partner)",
+              "Vendor: beIN SPORTS (Content Aggregator)",
+              "Service: Global Digital Content Distribution",
+              "Service: Geo-compliance and Rights Management"
+            ]
+          },
+          "patterns_found": [
+            "ott_streaming_platform",
+            "content_distribution_partnership",
+            "geo_restriction_management",
+            "multi_device_support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 319,
+              "elapsed_seconds": 4.968867778778076
+            }
+          ],
+          "reasoning": "The content confirms that Fanatiz is a licensed OTT streaming partner that distributes S\u00fcper Lig content (via beIN SPORTS integration mentioned in the text). While this is a B2C platform page, it confirms a commercial vendor relationship (Fanatiz) in the broadcasting supply chain. It indicates the league's content is being monetized through global digital distribution partnerships, which is a procurement signal regarding media rights and technology vendors."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:22:34.901268",
+          "domain_explored": "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform",
+              "Job Board Software"
+            ],
+            "job_postings": [
+              "Forward Wanted - Chinese Super League",
+              "Footballers Wanted - Saudi Pro League"
+            ],
+            "procurement_indicators": [
+              "Talent Acquisition Channel",
+              "HR Service Provider",
+              "Contract Negotiation Platform"
+            ]
+          },
+          "patterns_found": [
+            "staffing_and_recruiting_platform",
+            "talent_acquisition_marketplace",
+            "b2b_service_provider",
+            "sector_specific_networking"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 310,
+              "elapsed_seconds": 4.788478136062622
+            }
+          ],
+          "reasoning": "The content describes FutbolJobs, a specialized staffing and recruiting platform for the football industry. While this is not a direct procurement signal from S\u00fcper Lig itself, it represents a 'Vendor/Partner' entity type. S\u00fcper Lig clubs (the entities within the scope) utilize such platforms to procure talent (players, staff). This indicates the *method* of procurement for human capital within the league's ecosystem, validating the 'Staffing and Recruiting' focus area, though it lacks specific technology stack or RFP data."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:22:42.167451",
+          "domain_explored": "https://in.linkedin.com/company/futboljobs.com",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform",
+              "Social Networking"
+            ],
+            "job_postings": [
+              "Striker (9) - Chinese Super League",
+              "Centre Forward - Saudi Pro League (1st Division)"
+            ],
+            "procurement_indicators": [
+              "Talent Acquisition Marketplace",
+              "Contract Negotiation Facilitation",
+              "Salary Benchmarking Data"
+            ]
+          },
+          "patterns_found": [
+            "staffing_and_recruiting_platform",
+            "talent_acquisition_marketplace",
+            "b2b_service_provider",
+            "contract_negotiation_hub"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.2547028064727783
+            }
+          ],
+          "reasoning": "The content confirms FutbolJobs is a specialized B2B platform connecting football entities (clubs, agents) with talent (coaches, players). While not a direct procurement vendor for IT or infrastructure, it operates as a marketplace for 'human capital' procurement. The platform facilitates contract negotiations and salary benchmarking (e.g., Chinese Super League salary details), which are relevant to the 'Governance Patterns' and 'Procurement Signals' focus areas regarding how S\u00fcper Lig clubs acquire talent."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:22:49.700290",
+          "domain_explored": "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Sporting Director",
+                "entity": "Adana Demirspor",
+                "status": "Vacant / Executive Search",
+                "context": "Muhammed T\u00fcrkmen left his position; 'on the lookout for a new role' implies the club is seeking a replacement."
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Executive Search",
+                "entity": "Adana Demirspor",
+                "trigger": "Departure of Sporting Director",
+                "potential_vendors": [
+                  "Executive Recruitment Firms",
+                  "Headhunters"
+                ]
+              }
+            ]
+          },
+          "patterns_found": [
+            "executive_turnover",
+            "sporting_director_vacancy",
+            "strategic_restructuring_signal"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 346,
+              "elapsed_seconds": 4.150867938995361
+            }
+          ],
+          "reasoning": "The content explicitly mentions a leadership change within the target entity's ecosystem (Adana Demirspor, a S\u00fcper Lig side). The departure of a Sporting Director (Muhammed T\u00fcrkmen) creates a vacancy that often triggers procurement cycles for recruitment agencies, executive search firms, and potentially new scouting software or analytics tools adopted by the incoming executive."
+        }
+      ],
+      "total_input_tokens": 8097,
+      "total_output_tokens": 1638,
+      "estimated_cost_usd": 0.048861
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "S\u00fcper Lig may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:22:49.702097"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418836",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:49.573272"
+}

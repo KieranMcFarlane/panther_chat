@@ -1,0 +1,170 @@
+{
+  "entity_id": "strade_bianche",
+  "entity_name": "Strade Bianche",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "strade-bianche.it",
+    "gfstradebianche.it",
+    "stradebianchedelsale.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "strade_bianche",
+      "entity_name": "Strade Bianche",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://stradebianchedelsale.com",
+        "https://gfstradebianche.it",
+        "https://strade-bianche.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Strade Bianche may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:02:54.483402",
+          "domain_explored": "https://strade-bianche.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms",
+              "Content Management System (CMS)",
+              "Calendar Integration Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship & Partnership Management (Official Suppliers/Partners listed)",
+              "Media Production Procurement (High volume of 'Best Of' and Highlight videos)",
+              "Event Management Services (Cross-promotion of 9+ major cycling events)",
+              "Digital Infrastructure (Calendar sync, website hosting for multiple event domains)"
+            ]
+          },
+          "patterns_found": [
+            "Event Portfolio Expansion",
+            "Sponsor Ecosystem Management",
+            "Digital Content Production",
+            "Cross-Event Promotion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 337,
+              "elapsed_seconds": 4.140048980712891
+            }
+          ],
+          "reasoning": "The content confirms Strade Bianche operates within a larger ecosystem of events (Tirreno Adriatico, Giro d'Italia, etc.) managed by the same entity (likely RCS Sport). The presence of 'Official Suppliers', 'Institutional Partners', and 'Top Sponsors' indicates a structured vendor relationship model. The heavy focus on video highlights and photo galleries suggests ongoing procurement for media production and digital asset management services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:03:07.026405",
+          "domain_explored": "https://gfstradebianche.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "GetPica (Digital Photography Services)",
+              "CMS (WordPress/Custom - inferred from site structure)",
+              "CRM (Newsletter subscription forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Procurement (Jerseys, Medals for 2026)",
+              "Catering Services (Pasta Party)",
+              "Digital Photography Services (GetPica partnership)",
+              "Sponsorship Management (Title, Official, Local, Institutional Partners)",
+              "Event Logistics (Route setup, Medical assistance, Timing)"
+            ]
+          },
+          "patterns_found": [
+            "Event Portfolio Expansion",
+            "Participant Experience Management",
+            "Sponsor Ecosystem Management",
+            "Digital Content Distribution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 334,
+              "elapsed_seconds": 5.146852254867554
+            }
+          ],
+          "reasoning": "The content confirms the operational scale of the Gran Fondo (8,500+ participants) and highlights specific vendor-dependent activities such as merchandise production (Jerseys/Medals), food services (Pasta Party), and digital photography (GetPica). While no direct RFPs are visible, the scale of operations and the 'Sold Out' status for 2026 indicate a healthy budget for event services and logistics."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:03:20.311652",
+          "domain_explored": "https://stradebianchedelsale.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Endu (join.endu.net) - Registration/Ticketing Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Registration Management (SaaS subscription)",
+              "Event Format Expansion (Social Ride + Gravel Race)",
+              "Hospitality & Catering Procurement (Vouchers for beer/food mentioned)"
+            ]
+          },
+          "patterns_found": [
+            "Event Portfolio Expansion",
+            "Participant Experience Management",
+            "Third-Party Registration Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.095381021499634
+            }
+          ],
+          "reasoning": "The content reveals a rebranding/expansion of the event portfolio ('ex Strade Bianche del Sale' to 'Gravel del Sale') and the introduction of a 'Social Ride' format, indicating active event management. The presence of a direct 'ISCRIVITI ORA' link to 'join.endu.net' confirms the use of a third-party SaaS registration platform (Endu), which is a key procurement signal for event technology services."
+        }
+      ],
+      "total_input_tokens": 4226,
+      "total_output_tokens": 942,
+      "estimated_cost_usd": 0.026808
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Strade Bianche may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:03:20.313496"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.393524",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:33.597860"
+}

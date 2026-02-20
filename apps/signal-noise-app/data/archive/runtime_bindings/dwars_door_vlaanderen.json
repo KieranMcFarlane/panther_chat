@@ -1,0 +1,239 @@
+{
+  "entity_id": "dwars_door_vlaanderen",
+  "entity_name": "Dwars door Vlaanderen",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "dwarsdoorvlaanderencyclo.be",
+    "rondevanvlaanderen.be",
+    "cyclinginflanders.cc"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/content-creator-at-artes-group-4308455159?position=4&pageNum=0&refId=zrFFmxijwL5mGw%2BLWqcXyg%3D%3D&trackingId=uFGpYbAEc7DAYZoQQWxqoQ%3D%3D",
+      "https://be.linkedin.com/jobs/view/freelance-content-creator-at-artes-group-4308455159"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dwars_door_vlaanderen",
+      "entity_name": "Dwars door Vlaanderen",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://cyclinginflanders.cc",
+        "https://rondevanvlaanderen.be",
+        "https://be.linkedin.com/jobs/view/content-creator-at-artes-group-4308455159?position=4&pageNum=0&refId=zrFFmxijwL5mGw%2BLWqcXyg%3D%3D&trackingId=uFGpYbAEc7DAYZoQQWxqoQ%3D%3D",
+        "https://dwarsdoorvlaanderencyclo.be",
+        "https://be.linkedin.com/jobs/view/freelance-content-creator-at-artes-group-4308455159"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dwars door Vlaanderen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:13:49.841443",
+          "domain_explored": "https://dwarsdoorvlaanderencyclo.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Manager (Script detected)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Manager (Generic)",
+            "GDPR Compliance Text",
+            "Multi-language Support (Nederlands, Fran\u00e7ais, English)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.0815539360046387
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of a generic Cookie Consent Manager (likely a script like Cookiebot or OneTrust) and repetitive GDPR compliance text. There is no substantive information regarding internal technology stacks, job postings, or specific vendor partnerships beyond the generic reference to '{vendor_count}' vendors which is part of the standard script text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:14:00.592919",
+          "domain_explored": "https://rondevanvlaanderen.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship Opportunity",
+                "source": "rondevanvlaanderen.be",
+                "description": "Call for partners/sponsors for RVV 2026.",
+                "relevance": "Low (Wrong Entity)"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Ronde van Vlaanderen vs Dwars door Vlaanderen)",
+            "Sponsorship/Partnership CTAs",
+            "Event Countdown Timers",
+            "Generic Marketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.3550891876220703
+            }
+          ],
+          "reasoning": "The scraped content is from 'rondevanvlaanderen.be' (Tour of Flanders), which is a distinct entity from the target 'Dwars door Vlaanderen'. While both are organized by Flanders Classics, the content focuses on VIP hospitality and general race information for 2026 rather than specific procurement signals for Dwars door Vlaanderen. The 'Partner' section refers to sponsorship, not vendor procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:14:11.557160",
+          "domain_explored": "https://cyclinginflanders.cc",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Strava (Integration/Club)",
+              "Social Media Widgets (Facebook, Twitter, LinkedIn, WhatsApp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outbound Link: VISITFLANDERS (Tourism Partner)",
+              "Outbound Link: FlandersByBike (Tourism Partner)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Tourism Board vs Event Organizer)",
+            "Consumer-Facing Content (Route Guides, Travel Tips)",
+            "Event Calendar (Spectator/Participant Focus)",
+            "Affiliate/Outbound Links (VisitFlanders, FlandersByBike)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.313539743423462
+            }
+          ],
+          "reasoning": "The scraped content from 'cyclinginflanders.cc' identifies the entity as a regional tourism authority (likely Toerisme Vlaanderen/Visit Flanders) rather than the organizers of 'Dwars door Vlaanderen'. The content focuses on promoting cycling routes, bikepacking, and general tourism (hotels, beer, trips) rather than the procurement or operational needs of a specific cycling event organization. While it lists events, it does so from a visitor perspective, not an organizer procurement perspective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:14:29.182145",
+          "domain_explored": "https://be.linkedin.com/jobs/view/content-creator-at-artes-group-4308455159?position=4&pageNum=0&refId=zrFFmxijwL5mGw%2BLWqcXyg%3D%3D&trackingId=uFGpYbAEc7DAYZoQQWxqoQ%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Content Creator",
+                "entity": "Artes Group",
+                "type": "Temporary / Freelance",
+                "focus": "Employer Branding, Gen Z Campaign, Photography/Video"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Artes Group vs Dwars door Vlaanderen)",
+            "Contextual Phrase Usage ('Dwars door Vlaanderen' used as geographic description, not entity name)",
+            "Construction Industry Focus (Artes Group)",
+            "Recruitment Marketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 288,
+              "elapsed_seconds": 9.457045078277588
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Artes Group', a construction company, and not the cycling event 'Dwars door Vlaanderen'. Although the phrase 'Dwars door Vlaanderen' appears in the text, it is used descriptively to describe traveling across the Flemish region to construction sites, rather than indicating the target entity. There is no procurement signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:14:42.132013",
+          "domain_explored": "https://be.linkedin.com/jobs/view/freelance-content-creator-at-artes-group-4308455159",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Freelance Content Creator",
+                "company": "Artes Group",
+                "location": "Ghent Metropolitan Area",
+                "focus": "Employer Branding, Gen Z Campaign"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Artes Group vs Dwars door Vlaanderen)",
+            "Contextual Phrase Usage ('Dwars door Vlaanderen' used as geographic description, not entity name)",
+            "Construction Industry Focus (Artes Group)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1673,
+              "output_tokens": 301,
+              "elapsed_seconds": 2.9910876750946045
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Freelance Content Creator' at Artes Group, a construction company. While the phrase 'Dwars door Vlaanderen' appears in the text, it is used as a directional description ('Je trekt Vlaanderen rond... Dwars door Vlaanderen') rather than referencing the specific cycling event entity 'Dwars door Vlaanderen'. The content is entirely related to employer branding for a construction firm and does not contain procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 7517,
+      "total_output_tokens": 1380,
+      "estimated_cost_usd": 0.043251
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dwars door Vlaanderen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:14:42.136352"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.399902",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:42:55.370518"
+}

@@ -1,0 +1,173 @@
+{
+  "entity_id": "bermuda_rugby_football_union",
+  "entity_name": "Bermuda Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "islandstats.com",
+    "bernews.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://bm.linkedin.com/jobs/view/rugby-operations-director-at-expertise-group-3776607220"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bermuda_rugby_football_union",
+      "entity_name": "Bermuda Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://islandstats.com",
+        "https://zoominfo.com",
+        "https://bm.linkedin.com/jobs/view/rugby-operations-director-at-expertise-group-3776607220",
+        "https://bernews.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Senior Leadership Hiring (Operations Director)",
+        "Operational Expansion Strategy",
+        "Data Reporting Requirements",
+        "Fundraising & Sponsorship Activities",
+        "Digital Platform Usage (LinkedIn Recruiting)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bermuda Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:45:19.703563",
+          "domain_explored": "https://islandstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:45:25.550409",
+          "domain_explored": "https://bernews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "High volume of non-relevant content (weather, crime, general business)",
+            "No specific entity targeting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.319697856903076
+            }
+          ],
+          "reasoning": "The provided content is a general homepage dump from Bernews. While it contains categories like 'Business' and 'Technology', the specific articles listed (Clarien Bank acquisition, Big Brothers Big Sisters awards, Weather) are unrelated to the Bermuda Rugby Football Union. There are no direct mentions of the Union, their specific vendors, or their procurement activities in this text snippet."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:45:28.597735",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:45:36.891920",
+          "domain_explored": "https://bm.linkedin.com/jobs/view/rugby-operations-director-at-expertise-group-3776607220",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruiting)",
+              "Data Reporting Tools (Implied by KPI requirements)"
+            ],
+            "job_postings": [
+              {
+                "role": "Rugby Operations Director",
+                "posted": "2 years ago",
+                "recruiter": "Expertise Group",
+                "focus": "Participation growth, Fundraising, Data reporting, Women's rugby development"
+              }
+            ],
+            "procurement_indicators": [
+              "Organizational Transformation & Growth",
+              "Need for Stakeholder Reporting Systems",
+              "Grant & Funding Application Infrastructure",
+              "Coaching & Education Program Management"
+            ]
+          },
+          "patterns_found": [
+            "Senior Leadership Hiring (Operations Director)",
+            "Operational Expansion Strategy",
+            "Data Reporting Requirements",
+            "Fundraising & Sponsorship Activities",
+            "Digital Platform Usage (LinkedIn Recruiting)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 378,
+              "elapsed_seconds": 4.794921875
+            }
+          ],
+          "reasoning": "The discovery of a 'Rugby Operations Director' role posted 2 years ago is a strong procurement signal. It indicates a phase of organizational growth and structural investment. The specific requirement to 'Report participation and performance data' and 'support business operations' suggests a need for data management tools, CRM systems, or administrative software to handle the increased scope of operations."
+        }
+      ],
+      "total_input_tokens": 2888,
+      "total_output_tokens": 577,
+      "estimated_cost_usd": 0.017319
+    },
+    "procurement_signals": [
+      "Senior Leadership Hiring (Operations Director)",
+      "Operational Expansion Strategy",
+      "Data Reporting Requirements",
+      "Fundraising & Sponsorship Activities",
+      "Digital Platform Usage (LinkedIn Recruiting)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bermuda Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:45:36.896657"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.286687",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:39.100173"
+}

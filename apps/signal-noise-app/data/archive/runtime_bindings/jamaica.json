@@ -1,0 +1,403 @@
+{
+  "entity_id": "jamaica",
+  "entity_name": "Jamaica",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "visitjamaica.com",
+    "supportjamaica.gov.jm",
+    "enterjamaica.gov.jm",
+    "mfaft.gov.jm",
+    "jamaicatax.gov.jm",
+    "pica.gov.jm"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/jobs-in-jamaica",
+      "https://jm.linkedin.com/jobs/jamaica-jobs",
+      "https://jm.linkedin.com/jobs/career-jobs",
+      "https://jm.linkedin.com/jobs/proven-jobs",
+      "https://jm.linkedin.com/jobs",
+      "https://jm.linkedin.com/jobs/international-jobs",
+      "https://jm.linkedin.com/jobs/types-of-jobs",
+      "https://jm.linkedin.com/jobs/private-jobs",
+      "https://jm.linkedin.com/jobs/english-jobs",
+      "https://jm.linkedin.com/jobs/jobs-in-kingston"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jamaica",
+      "entity_name": "Jamaica",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://supportjamaica.gov.jm",
+        "https://pica.gov.jm",
+        "https://mfaft.gov.jm",
+        "https://jm.linkedin.com/jobs/jamaica-jobs",
+        "https://enterjamaica.gov.jm",
+        "https://jamaicatax.gov.jm",
+        "https://www.linkedin.com/jobs/jobs-in-jamaica",
+        "https://jm.linkedin.com/jobs/career-jobs",
+        "https://jm.linkedin.com/jobs",
+        "https://jm.linkedin.com/jobs/proven-jobs",
+        "https://visitjamaica.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Service Delivery Platforms",
+        "System Outage & Restoration Cycles",
+        "Revenue Management Infrastructure",
+        "Online Payment Gateways",
+        "Inter-agency System Integration (e-VRC)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jamaica may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:51:48.892846",
+          "domain_explored": "https://visitjamaica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing content structure",
+            "Tourism product categorization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 381,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.39385724067688
+            }
+          ],
+          "reasoning": "The content provided is a navigation menu and page header for 'Things to Do' on the consumer-facing tourism site (visitjamaica.com). It lists general categories of tourist activities (Attractions, Beaches, Dining, etc.) but contains no technical infrastructure details, procurement notices, or administrative information relevant to B2G procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:52:06.863704",
+          "domain_explored": "https://supportjamaica.gov.jm",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:52:20.036123",
+          "domain_explored": "https://enterjamaica.gov.jm",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:52:30.704565",
+          "domain_explored": "https://mfaft.gov.jm",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Document Management Systems (DMS)",
+              "Consular Management Software",
+              "Global Communication Networks"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global network of 19 diplomatic missions requiring connectivity and hardware",
+              "Consular services suggesting potential for Visa processing systems or CRM",
+              "Diaspora engagement indicating need for digital outreach platforms",
+              "Reference to 'National-Visa-Policy.pdf' indicating document workflow infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Global Network Infrastructure",
+            "Consular Service Delivery",
+            "Diaspora Engagement Platforms",
+            "PDF Document Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 325,
+              "elapsed_seconds": 4.779371023178101
+            }
+          ],
+          "reasoning": "While the homepage content is primarily informational, the scale of operations (19 missions, 90+ honorary consuls, 400 staff) indicates a significant requirement for enterprise software to manage logistics, communications, and consular services. The presence of a specific 'National Visa Policy' PDF suggests a workflow that likely requires digitization or specialized processing tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:52:46.441187",
+          "domain_explored": "https://jamaicatax.gov.jm",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Payment Gateways",
+              "Driver's Licence Validation System (e-VRC)",
+              "Revenue Management Systems",
+              "Customer Relationship Management (CRM) - (Customer Care Centre)",
+              "Document Management Systems (Forms, TCC)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "System restoration announcements (Driver's Licence Validation System)",
+              "Operation of Revenue Service Centres (RSC)",
+              "Online service delivery infrastructure (Direct Banking, Web Pay)",
+              "Public outreach and education campaigns (Newsletters, Audio)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery Platforms",
+            "System Outage & Restoration Cycles",
+            "Revenue Management Infrastructure",
+            "Online Payment Gateways",
+            "Inter-agency System Integration (e-VRC)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 373,
+              "elapsed_seconds": 6.608120918273926
+            }
+          ],
+          "reasoning": "The content reveals a high-volume operational agency (Tax Administration Jamaica) managing critical digital infrastructure (e-VRC, Tax Portal). The explicit mention of system restoration and online service disruptions indicates active maintenance and potential procurement for system support, upgrades, or disaster recovery vendors. The breadth of tax categories and forms suggests a need for robust document management and processing systems."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:53:08.052985",
+          "domain_explored": "https://pica.gov.jm",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:53:34.141866",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-jamaica",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform",
+              "ATS (Applicant Tracking Systems) - inferred from 'Be an early applicant' UI patterns"
+            ],
+            "job_postings": [
+              "Teller - Liguanea (Sagicor Group)",
+              "Branch Administration Assistant - KBC Contract (Sagicor Group)",
+              "Personal Banking Officer - Montego Bay (Sagicor Group)",
+              "Captain (Ocean / Oc\u00e9an - Maritime/Logistics)"
+            ],
+            "procurement_indicators": [
+              "Staffing Augmentation: High frequency of contract roles suggests reliance on contingent workforce providers.",
+              "Facilities Management: Branch-specific hiring (Liguanea, Dominica Drive, Up Park Camp) signals potential facility upkeep and operational procurement.",
+              "Logistics/Maritime: Presence of maritime roles (Captain) indicates activity in the shipping/logistics procurement sector."
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Recruitment Volume",
+            "Financial Services Expansion",
+            "Contractual Employment Structures",
+            "Geographic Distribution (Kingston vs Montego Bay)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 451,
+              "elapsed_seconds": 21.636493682861328
+            }
+          ],
+          "reasoning": "While the content is a job board and not a direct government procurement portal, it reveals significant private sector procurement activity, specifically within the Financial Services sector (Sagicor). The high volume of 'Contract' roles and 'Branch Administration' hiring indicates operational scaling and potential investment in branch infrastructure and staffing support services. This provides a proxy for economic activity and B2B service demand, though it lacks direct government RFPs or tech stack details."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:54:05.192174",
+          "domain_explored": "https://jm.linkedin.com/jobs/jamaica-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Direct Care Personnel - Braverhood (Jamaica, NY)",
+              "Customer Care Representative - Hillside Honda (Jamaica, NY)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Disambiguation Error",
+            "Authentication Gate Content",
+            "Private Sector Service Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1654,
+              "output_tokens": 217,
+              "elapsed_seconds": 24.398269176483154
+            }
+          ],
+          "reasoning": "The scraped content is exclusively for jobs located in 'Jamaica, NY' (United States), not the country of Jamaica. The content is largely blocked by an authentication wall (login prompts), and the visible roles (Direct Care, Customer Service) are low-level private sector positions with no relevance to national public procurement or government technology stacks."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T08:54:49.639071",
+          "domain_explored": "https://jm.linkedin.com/jobs/career-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Client Success Expert (Remote) - INFUSE"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Disambiguation Error",
+            "Authentication Gate Content",
+            "Private Sector Service Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 186,
+              "elapsed_seconds": 27.503708124160767
+            }
+          ],
+          "reasoning": "The scraped content confirms a geographic disambiguation error where the query intended for Jamaica (jm.linkedin.com) returned results for the United States. The content is generic, hidden behind an authentication gate, and relates to private sector client success roles rather than public sector procurement or governance."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T08:54:55.049815",
+          "domain_explored": "https://jm.linkedin.com/jobs/proven-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Platform Access Denial",
+            "Content Unavailability"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 795,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.677438259124756
+            }
+          ],
+          "reasoning": "The target URL returned a rate-limiting error (HTTP 429 equivalent) rather than actual job listings or content. This indicates a technical barrier to data extraction rather than a valid source of procurement intelligence. No signals regarding technology stacks, job postings, or governance patterns can be derived from this response."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T08:55:07.222100",
+          "domain_explored": "https://jm.linkedin.com/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate / Walled Garden",
+            "Geographic Disambiguation Error",
+            "Generic Content Categorization",
+            "Platform Access Denial"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1813,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.884082794189453
+            }
+          ],
+          "reasoning": "The content represents LinkedIn's global authentication wall and generic job category taxonomy. Critically, the href URLs reveal a geographic misalignment (targeting 'hanoi-capital-region' despite the 'jm' subdomain), indicating the scraper is not successfully localizing content to Jamaica. No specific Jamaican procurement signals, government RFPs, or local technology stacks are visible behind the login gate."
+        }
+      ],
+      "total_input_tokens": 10914,
+      "total_output_tokens": 2101,
+      "estimated_cost_usd": 0.06425700000000001
+    },
+    "procurement_signals": [
+      "Digital Service Delivery Platforms",
+      "System Outage & Restoration Cycles",
+      "Revenue Management Infrastructure",
+      "Online Payment Gateways",
+      "Inter-agency System Integration (e-VRC)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jamaica may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:55:07.223685"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.295248",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:34.078011"
+}

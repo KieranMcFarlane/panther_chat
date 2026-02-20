@@ -1,0 +1,128 @@
+{
+  "entity_id": "armenian_football_federation",
+  "entity_name": "Armenian Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "zoominfo.com",
+    "sportaran.com",
+    "primeminister.am"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "armenian_football_federation",
+      "entity_name": "Armenian Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportaran.com",
+        "https://primeminister.am",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Armenian Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:29:39.793113",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:29:47.762122",
+          "domain_explored": "https://sportaran.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Focus on match results and athlete performance",
+            "Historical sports reporting (2025-2026 dates)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.1536481380462646
+            }
+          ],
+          "reasoning": "The scraped content from Sportaran.com is a sports news feed covering general athletics, football (soccer), and MMA results. While it mentions the 'Armenia national futsal team' and 'Armenian Football Federation' implicitly through team coverage, it contains no corporate governance data, technology infrastructure details, or procurement signals (RFPs, vendor selection, etc.). It is a media outlet, not a source for B2B procurement intelligence regarding the Federation's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:29:58.242811",
+          "domain_explored": "https://primeminister.am",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Government diplomatic news aggregation",
+            "High-level political visits (Germany, USA, Vatican)",
+            "Strategic policy announcements (Science sector 2026-2030)",
+            "General governance reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.1762118339538574
+            }
+          ],
+          "reasoning": "The content is entirely focused on the Prime Minister's diplomatic activities, foreign visits, and high-level government policy (e.g., Science sector strategy). There is absolutely no mention of the Armenian Football Federation, sports procurement, technology tenders, or relevant vendor partnerships. The entity context is completely disconnected from the source material."
+        }
+      ],
+      "total_input_tokens": 2843,
+      "total_output_tokens": 429,
+      "estimated_cost_usd": 0.014964
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Armenian Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:29:58.247978"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.201577",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:38.893107"
+}

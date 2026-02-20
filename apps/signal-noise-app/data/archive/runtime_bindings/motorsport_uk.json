@@ -1,0 +1,346 @@
+{
+  "entity_id": "motorsport_uk",
+  "entity_name": "Motorsport UK",
+  "template_id": "tpl_global_governing_federations_v1",
+  "cluster_id": "nat_motor_gov_body",
+  "discovered_domains": [
+    "motorsportuk.org",
+    "motorsportuk.tv",
+    "motorsport-timing.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/motorsport-jobs",
+      "https://uk.linkedin.com/jobs/view/member-services-and-medical-administrator-at-motorsport-uk-4351471560",
+      "https://uk.linkedin.com/jobs/view/marketing-executive-at-motorsport-uk-4348903201",
+      "https://www.linkedin.com/posts/sport-positive_careers-motorsport-uk-the-beating-heart-activity-7385962989352439808-kE_t",
+      "https://www.linkedin.com/showcase/mia-motorsport-careers-and-courses/"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "motorsport_uk",
+      "entity_name": "Motorsport UK",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/marketing-executive-at-motorsport-uk-4348903201",
+        "https://uk.linkedin.com/jobs/view/member-services-and-medical-administrator-at-motorsport-uk-4351471560",
+        "https://www.linkedin.com/posts/sport-positive_careers-motorsport-uk-the-beating-heart-activity-7385962989352439808-kE_t",
+        "https://www.linkedin.com/showcase/mia-motorsport-careers-and-courses/",
+        "https://motorsport-timing.co.uk",
+        "https://motorsportuk.tv",
+        "https://motorsportuk.org",
+        "https://uk.linkedin.com/jobs/motorsport-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Hiring (Sustainability)",
+        "ESG & Compliance Governance",
+        "Strategic Initiative Implementation",
+        "Location: Bicester Motion (HQ)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Motorsport UK may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:13:44.889373",
+          "domain_explored": "https://motorsportuk.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Email Marketing Platform (Newsletter)",
+              "Digital Publishing Platform (Revolution magazine)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Magazine Production (Revolution)",
+              "Event Organization Services (Night of Champions)",
+              "Community Management Tools"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Management",
+            "Community Engagement",
+            "Event Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 272,
+              "elapsed_seconds": 6.447013854980469
+            }
+          ],
+          "reasoning": "The content confirms active digital operations (digital magazine 'Revolution', newsletter signup) and event management ('Night of Champions'). While no direct procurement signals are present, the reliance on digital content platforms and event organization indicates a need for supporting software and services. The 'Powered by passion' footer repetition suggests a templated or dynamic CMS environment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:14:05.526377",
+          "domain_explored": "https://motorsportuk.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platform (OTT)",
+              "Mobile Application (Motorsport UK App)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "High-frequency content production suggests vendor reliance on editing software, hosting, and camera equipment",
+              "Cross-platform distribution (Web + App) indicates potential API integration or third-party platform management needs"
+            ]
+          },
+          "patterns_found": [
+            "OTT Platform Management",
+            "Content Production Pipeline",
+            "Digital Asset Management",
+            "Mobile Application Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 310,
+              "elapsed_seconds": 16.650853157043457
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated digital media channel (Motorsport UK TV) with a high volume of weekly content production. The explicit mention of the 'Motorsport UK App' indicates a mobile/digital ecosystem that requires ongoing development and maintenance. While this confirms digital capabilities, specific procurement intent (RFPs/Tenders) is not visible in this content list, only the operational output."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:14:13.810473",
+          "domain_explored": "https://motorsport-timing.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Vendor Identification: Motorsport Timing UK is a potential vendor for timing/scoring data services."
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Service Provider",
+            "Event Operations",
+            "Timing and Scoring Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 238,
+              "elapsed_seconds": 2.5690622329711914
+            }
+          ],
+          "reasoning": "The analyzed content belongs to 'Motorsport Timing UK' (motorsport-timing.co.uk), a distinct entity that provides timing, results, and live scoring services to events like the Hunts Kart Racing Club. While this indicates the operational ecosystem Motorsport UK operates within, it is an external vendor/service provider site, not a corporate channel for Motorsport UK procurement. There are no signals of Motorsport UK purchasing intent, technology stack, or governance here."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:14:20.760492",
+          "domain_explored": "https://uk.linkedin.com/jobs/motorsport-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Communications Executive (Williams Racing)",
+              "Hospitality and Events Executive (Williams Racing)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Third-Party Employer Listings",
+            "Authentication Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.796854019165039
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the 'Motorsport' sector, not specific content from Motorsport UK. The listings (e.g., Williams Racing) are from third-party entities. The content is blocked behind an authentication wall ('Sign in to set job alerts'), providing no actionable procurement intelligence regarding Motorsport UK's internal operations or vendor needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:14:27.590013",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/member-services-and-medical-administrator-at-motorsport-uk-4351471560",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Scraping Mismatch",
+            "Healthcare Sector Content",
+            "Unrelated Entity (The Princess Grace Hospital)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.5880651473999023
+            }
+          ],
+          "reasoning": "The provided content is completely unrelated to Motorsport UK. The scraper appears to have captured a page for 'The Princess Grace Hospital' or 'Lister Fertility Clinic' (Healthcare sector) instead of the target URL 'Member Services and Medical Administrator at Motorsport UK'. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:14:47.205027",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/marketing-executive-at-motorsport-uk-4348903201",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Scraping Error / Content Mismatch",
+            "Unrelated Entity (McColl's Retail Group)",
+            "Geographic Mismatch (United States)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 681,
+              "output_tokens": 175,
+              "elapsed_seconds": 15.487818956375122
+            }
+          ],
+          "reasoning": "The scraped content does not correspond to the target URL (Marketing Executive at Motorsport UK). Instead, it displays an error page for 'McColl's Retail Group' in the United States. This indicates a failed scrape or a redirect to an irrelevant entity, providing zero value for UK motorsport procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:14:57.427041",
+          "domain_explored": "https://www.linkedin.com/posts/sport-positive_careers-motorsport-uk-the-beating-heart-activity-7385962989352439808-kE_t",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Carbon Accounting Suites (Potential)",
+              "ESG Reporting Platforms (Potential)"
+            ],
+            "job_postings": [
+              "Sustainability Manager (Full-Time, Bicester Motion)"
+            ],
+            "procurement_indicators": [
+              "Creation of new governance function (Sustainability)",
+              "Cross-organizational initiative implementation",
+              "Inclusion strategy integration",
+              "Budget allocation for FTE in sustainability"
+            ]
+          },
+          "patterns_found": [
+            "Executive Hiring (Sustainability)",
+            "ESG & Compliance Governance",
+            "Strategic Initiative Implementation",
+            "Location: Bicester Motion (HQ)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1715,
+              "output_tokens": 281,
+              "elapsed_seconds": 7.246686935424805
+            }
+          ],
+          "reasoning": "The content confirms a direct hiring intent for a 'Sustainability Manager' role at Motorsport UK's HQ. This is a strong procurement signal indicating investment in ESG governance, which typically requires vendor engagement for carbon accounting, auditing, and sustainability consulting."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:15:04.603552",
+          "domain_explored": "https://www.linkedin.com/showcase/mia-motorsport-careers-and-courses/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External Event Organization",
+              "Industry-wide Recruitment Initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Third-Party Industry Association",
+            "Event Management (External)",
+            "Recruitment Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1779,
+              "output_tokens": 255,
+              "elapsed_seconds": 4.23567008972168
+            }
+          ],
+          "reasoning": "The content analyzed belongs to the 'Motorsport Industry Association (MIA)', specifically their 'Motorsport & Automotive Jobs Fair'. While MIA operates within the same ecosystem as Motorsport UK, they are a distinct, separate legal entity (a third-party industry association). The content focuses on organizing a career fair for the broader industry, not on the internal procurement, technology stack, or hiring needs of Motorsport UK specifically. Therefore, this does not constitute a direct procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 11461,
+      "total_output_tokens": 1939,
+      "estimated_cost_usd": 0.063468
+    },
+    "procurement_signals": [
+      "Executive Hiring (Sustainability)",
+      "ESG & Compliance Governance",
+      "Strategic Initiative Implementation",
+      "Location: Bicester Motion (HQ)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Motorsport UK may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:15:04.605402"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.381048",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:27.387915"
+}

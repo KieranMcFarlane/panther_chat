@@ -1,0 +1,241 @@
+{
+  "entity_id": "confederation_of_african_cycling_(cac)",
+  "entity_name": "Confederation of African Cycling (CAC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "teamafricarising.org",
+    "cyclingsa.com",
+    "teamsa.co.za",
+    "kenyanews.go.ke",
+    "madeinrwanda.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "confederation_of_african_cycling_(cac)",
+      "entity_name": "Confederation of African Cycling (CAC)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cyclingsa.com",
+        "https://madeinrwanda.eu",
+        "https://kenyanews.go.ke",
+        "https://teamsa.co.za",
+        "https://teamafricarising.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Confederation of African Cycling (CAC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:18:06.733050",
+          "domain_explored": "https://teamafricarising.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zwift (Virtual Training)",
+              "Wahoo (Fitness Hardware)",
+              "Virtual Performance Center (VPC) Platform",
+              "Social Media Management Tools",
+              "Podcast Hosting (Spotify, Amazon, Apple)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Expansion of Virtual Performance Center (VPC) targeting 1,000 riders",
+              "Legacy projects post-Kigali25 World Championships",
+              "Partnership with UCI World Cycling Centers",
+              "Procurement of training equipment and infrastructure for clubs/federations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Infrastructure Expansion",
+            "Virtual Training Integration",
+            "Partnership-Driven Procurement",
+            "Media & Broadcasting Capabilities"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 395,
+              "elapsed_seconds": 4.981823921203613
+            }
+          ],
+          "reasoning": "While Team Africa Rising (TAR) is a distinct non-profit entity from the Confederation of African Cycling (CAC), they function as a key operational partner and service provider for the ecosystem. The content reveals active investment in 'Virtual Performance Center' (VPC) technology and digital infrastructure (Zwift, Wahoo) following the 2025 World Championships. This indicates a regional trend towards digital procurement that CAC likely supports or utilizes. The mention of 'legacy projects' and 'continent-wide expansion' suggests ongoing procurement cycles for training platforms and event management services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:18:24.189448",
+          "domain_explored": "https://cyclingsa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android implied)",
+              "Membership Management Portal",
+              "Digital Licensing/Digi-Card System",
+              "Event Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Initiative: #GrowCycling (Focus on financial sustainability and partnerships)",
+              "Digital Transformation: Shift to digital membership cards and mobile app management",
+              "Vendor Dependency: Reliance on 'partnerships' to deliver strategic vision"
+            ]
+          },
+          "patterns_found": [
+            "Digital Membership Ecosystem",
+            "Mobile-First Strategy",
+            "Strategic Partnership Framework (#GrowCycling)",
+            "Event Management Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 368,
+              "elapsed_seconds": 3.9990479946136475
+            }
+          ],
+          "reasoning": "While this content is from Cycling South Africa (a federation member of CAC) and not the CAC directly, it provides high-value proxy intelligence. The explicit '#GrowCycling' strategy focusing on 'financial sustainability' and 'harnessing partnerships' indicates a procurement environment open to vendor engagement. The deployment of a 'Membership Portal' and 'Digi-Card' system confirms active investment in digital infrastructure, likely requiring software vendors, app developers, and database management services relevant to the broader continental ecosystem."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:18:38.864930",
+          "domain_explored": "https://teamsa.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Athletes 365+ Platform",
+              "Athlete Health online Portal"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Olympic Solidarity Funding",
+              "Funders and Partners Section"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (SASCOC vs CAC)",
+            "General Sports News Aggregation",
+            "Athlete Service Portals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 237,
+              "elapsed_seconds": 4.972815036773682
+            }
+          ],
+          "reasoning": "The scraped content is from SASCOC (South African Sports Confederation and Olympic Committee), not the Confederation of African Cycling (CAC). While SASCOC is a member of CAC, this specific page focuses on general multi-sport news (Netball, Rugby) and athlete services rather than CAC-specific procurement or cycling governance. The content does not contain procurement signals relevant to the CAC entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:19:12.541052",
+          "domain_explored": "https://kenyanews.go.ke",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Government News Aggregation",
+            "Irrelevant Civic Content (Youth/Bursary/Health)",
+            "No Sports/Cycling Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.7467567920684814
+            }
+          ],
+          "reasoning": "The scraped content from kenyanews.go.ke is a general news aggregator focused on local government initiatives (Youth Council, Bursaries, Sanitation). There is no mention of the Confederation of African Cycling (CAC), sports governance, or related procurement activities. The entity context is a mismatch for the target procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:19:21.166383",
+          "domain_explored": "https://madeinrwanda.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Climate Tech (General context)",
+              "Drone Delivery (Zipline - General context)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tour du Rwanda 2026 Edition Planning",
+              "2025 World Championship Cycling Hosting",
+              "African Cycling Excellence Awards (Kigali 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Hosting (World Championships 2025)",
+            "High-Profile Sports Event Logistics (Tour du Rwanda)",
+            "National Sports Infrastructure Development",
+            "Government-Led Tech Acceleration Context"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 314,
+              "elapsed_seconds": 3.87441086769104
+            }
+          ],
+          "reasoning": "While the source is a general news aggregator ('Made in Rwanda') rather than a direct procurement portal, it provides strong contextual evidence of Rwanda's role as the operational hub for African cycling. The confirmation of the 2025 World Championship hosting and the annual Tour du Rwanda indicates significant upcoming procurement needs for event management, timing systems, and infrastructure. However, the lack of specific vendor calls or technical specifications keeps this a weak signal."
+        }
+      ],
+      "total_input_tokens": 7373,
+      "total_output_tokens": 1498,
+      "estimated_cost_usd": 0.044589000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Confederation of African Cycling (CAC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:19:21.168519"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.413350",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:59.775246"
+}

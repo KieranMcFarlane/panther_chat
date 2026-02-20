@@ -1,0 +1,215 @@
+{
+  "entity_id": "kioene_padova",
+  "entity_name": "Kioene Padova",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "pallavolopadova.com",
+    "legavolley.it",
+    "en.volleyballworld.com",
+    "volleytimes.com",
+    "lubevolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kioene_padova",
+      "entity_name": "Kioene Padova",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://en.volleyballworld.com",
+        "https://volleytimes.com",
+        "https://pallavolopadova.com",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kioene Padova may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:29:07.077161",
+          "domain_explored": "https://pallavolopadova.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop online)",
+              "WhatsApp Business (Canale WhatsApp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail operations (Merchandise sales)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce retail presence (Shop online)",
+            "Digital marketing engagement (Newsletter signup, WhatsApp channel)",
+            "Content management system usage (Website structure)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.040107011795044
+            }
+          ],
+          "reasoning": "The scraped content is from the sports team 'Pallavolo Padova' (sponsored by Kioene). While Kioene is the title sponsor, this content focuses on match results, tickets, and merchandise retail. There are no direct procurement signals, technology stack details, or corporate governance information relevant to Kioene Padova's internal business operations or B2B procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:29:35.830548",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity verification: Sonepar Padova is active in the top-tier league (SuperLega)"
+            ]
+          },
+          "patterns_found": [
+            "League governance structure (SuperLega, A2, A3)",
+            "Sponsorship inventory (Title sponsors: Credem Banca, Del Monte)",
+            "Team naming rights (Sonepar Padova)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 221,
+              "elapsed_seconds": 20.832643270492554
+            }
+          ],
+          "reasoning": "The content is the navigation menu of the Italian Volleyball Federation (Lega Pallavolo Serie A). While it lists 'Sonepar Padova' (the parent entity of Kioene Padova) as a participating team, it provides no specific information regarding Kioene's internal procurement, technology stack, or operational decision-making. It is a high-level sports directory."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:29:47.835617",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports results reporting",
+            "Global federation governance",
+            "OTT streaming service promotion (VolleyballTV)",
+            "World ranking data management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.73173713684082
+            }
+          ],
+          "reasoning": "The content is scraped from the global federation's news and results hub (VolleyballWorld). It focuses on match outcomes (Scandicci vs. Chieri), world rankings, and streaming schedules. While it confirms the ecosystem in which Kioene Padova operates, it contains no specific signals regarding Kioene Padova's internal procurement, technology stack, or operational decisions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:29:58.457654",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism and results aggregation",
+            "League match reporting (Italy, France, Poland)",
+            "Player transfer news and roster updates",
+            "Generic content management (WordPress-style structure implied by layout)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1548,
+              "output_tokens": 213,
+              "elapsed_seconds": 4.326694965362549
+            }
+          ],
+          "reasoning": "The scraped content from Volleytimes.com is a sports news feed containing match results, transfer rumors, and league standings. While it mentions 'Padova' in the context of match results, it provides no information regarding the entity 'Kioene Padova's' internal operations, procurement needs, technology stack, or governance. It is purely external market noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:30:11.302020",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism and match reporting",
+            "Team roster management (Player quotes: Balaso, Orduna, Cormio)",
+            "Strategic partnerships (Triennial agreement mentioned)",
+            "Fan engagement (Fan club 'Predators' travel logistics)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.4969820976257324
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports news, match results (Lube vs. Verona/Leuven), and player interviews. While there is a mention of a 'triennial agreement' regarding talent discovery, this refers to a sports partnership rather than a procurement signal for Kioene Padova. The entity 'Lube' (Lube Volley) is a different volleyball franchise (based in Civitanova) than the target entity 'Kioene Padova'."
+        }
+      ],
+      "total_input_tokens": 7434,
+      "total_output_tokens": 1105,
+      "estimated_cost_usd": 0.038876999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kioene Padova may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:30:11.305500"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.329236",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:38.631407"
+}

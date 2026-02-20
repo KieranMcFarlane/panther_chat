@@ -1,0 +1,499 @@
+{
+  "entity_id": "north_korean_football_association",
+  "entity_name": "North Korean Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "leonid7.fortunecity.ws",
+    "hrnkinsider.org",
+    "gettyimages.com",
+    "nkeconwatch.com",
+    "scispace.com",
+    "theguardian.com",
+    "macaubusiness.com",
+    "swissinfo.ch"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/jobs-in-football",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+      "https://uk.linkedin.com/company/football-careers",
+      "https://www.linkedin.com/jobs/kings-league-jobs-worldwide",
+      "https://www.linkedin.com/jobs/chelsea-football-club-jobs-worldwide",
+      "https://www.linkedin.com/jobs/all-india-football-federation-jobs-worldwide",
+      "https://au.linkedin.com/jobs/view/referee-and-match-review-officer-at-eastern-suburbs-football-association-esfa-4365897288",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-chelsea-football-club-activity-7420084092941168640-Adam"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "north_korean_football_association",
+      "entity_name": "North Korean Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://theguardian.com",
+        "https://leonid7.fortunecity.ws",
+        "https://scispace.com",
+        "https://hrnkinsider.org",
+        "https://nkeconwatch.com",
+        "https://gettyimages.com",
+        "https://www.linkedin.com/company/jobs-in-football",
+        "https://www.linkedin.com/jobs/kings-league-jobs-worldwide",
+        "https://macaubusiness.com",
+        "https://swissinfo.ch",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+        "https://uk.linkedin.com/company/football-careers",
+        "https://www.linkedin.com/jobs/chelsea-football-club-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "North Korean Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:40:40.154142",
+          "domain_explored": "https://leonid7.fortunecity.ws",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static HTML",
+              "Fortunecity Hosting",
+              "Narod.Ru (Mirror)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic/Research Portal",
+            "Outdated Web Infrastructure (Fortunecity/Tripod)",
+            "General DPRK Analysis (Non-Sporting)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 218,
+              "elapsed_seconds": 8.495776891708374
+            }
+          ],
+          "reasoning": "The content is a personal academic portal maintained by Leonid Petrov (ANU) focusing on North Korean studies, history, and general economic reform. It contains no specific information regarding the North Korean Football Association, its procurement activities, or its technology stack. The site is an archival host (Fortunecity) with no relevance to modern sporting governance procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:41:05.629494",
+          "domain_explored": "https://hrnkinsider.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:41:16.661490",
+          "domain_explored": "https://gettyimages.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Akamai (CDN)",
+              "Cloudflare (WAF/DNS)",
+              "Google Analytics",
+              "Tealium iQ (Tag Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing of media rights (External)",
+              "Royalty-free imagery marketplace"
+            ]
+          },
+          "patterns_found": [
+            "Stock Imagery Aggregator",
+            "Commercial Licensing Model",
+            "High-Traffic E-commerce Platform"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 456,
+              "output_tokens": 257,
+              "elapsed_seconds": 4.54532265663147
+            }
+          ],
+          "reasoning": "The target URL is a global stock media marketplace (Getty Images). This is a third-party content host, not the official domain of the North Korean Football Association. The presence of North Korean football content here indicates media availability for purchase by external parties, not procurement activity or technology investment by the association itself. It is a 'dead end' for internal procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:41:29.212964",
+          "domain_explored": "https://nkeconwatch.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Macroeconomic Analysis",
+            "Agricultural Policy Monitoring",
+            "Sanctions & Political Economy",
+            "State Control Mechanisms"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 199,
+              "elapsed_seconds": 4.749267101287842
+            }
+          ],
+          "reasoning": "The content is a specialized economic analysis blog focusing on broad macroeconomic trends, agriculture, and political policy within North Korea. It discusses state crackdowns on alcohol and central planning meetings, which provides context on the operating environment but contains zero signals regarding the Football Association's specific procurement, technology acquisition, or operational governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:41:41.984888",
+          "domain_explored": "https://scispace.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI Models",
+              "Python Library",
+              "LaTeX",
+              "Google Scholar Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SaaS Research Platform",
+            "Academic Productivity Tools",
+            "Generic AI Aggregation",
+            "B2C Marketing Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 210,
+              "elapsed_seconds": 6.603618144989014
+            }
+          ],
+          "reasoning": "The scraped content represents the landing page of SciSpace, a commercial SaaS platform for academic research automation. There is no content linking this service to the North Korean Football Association, nor does it contain specific procurement signals (RFPs, vendor lists) relevant to the target entity. It is a generic product page."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:41:51.752643",
+          "domain_explored": "https://theguardian.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "US Legal/Political Affairs",
+            "Entertainment Industry Coverage",
+            "High-Volume Media Feed"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.6520349979400635
+            }
+          ],
+          "reasoning": "The content provided is a scraped list of general news headlines from The Guardian, covering topics such as the Epstein case, US immigration, and the Grammy Awards. There is absolutely no content related to North Korea, football (soccer), sports governance, or procurement activities. The domain is a major international news outlet, making it irrelevant for specific intelligence on the North Korean Football Association's internal purchasing or technology stack."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:42:11.076264",
+          "domain_explored": "https://macaubusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional News Aggregation",
+            "Macau Gaming Industry Focus",
+            "General Financial Reporting",
+            "Geographic Irrelevance (Macau vs DPRK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 184,
+              "elapsed_seconds": 12.171434164047241
+            }
+          ],
+          "reasoning": "The scraped content is the homepage of Macau Business, a regional news portal focused on Macau's gaming and finance sectors. There is no mention of the North Korean Football Association, DPRK sports procurement, or related technology stacks. The content is strictly commercial news regarding Macau casinos and international affairs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:42:24.998995",
+          "domain_explored": "https://swissinfo.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Swiss Public Broadcasting (SRG SSR)",
+            "Regional Focus (Switzerland/Spanish Speakers)",
+            "Carbon Tax & Climate Policy Reporting",
+            "Disaster Reporting (Crans-Montana Fire)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1692,
+              "output_tokens": 201,
+              "elapsed_seconds": 4.298187017440796
+            }
+          ],
+          "reasoning": "The content is from swissinfo.ch, the international service of the Swiss Broadcasting Corporation. It focuses on general news, climate policy, and local Swiss events (voting, fires) for a Spanish-speaking audience. There is no connection to the North Korean Football Association, sports governance, or procurement activities."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:42:34.169178",
+          "domain_explored": "https://www.linkedin.com/company/jobs-in-football",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Platform)",
+              "External Link Redirect (jobsinfootball.com)"
+            ],
+            "job_postings": [
+              "Football Artificial Intelligence Officer (Al Ain FC) - Irrelevant to Target"
+            ],
+            "procurement_indicators": [
+              "Global Talent Acquisition",
+              "Sports Marketing Trends (Puma/Pel\u00e9 case study)",
+              "Media Broadcasting Roles"
+            ]
+          },
+          "patterns_found": [
+            "General Industry Aggregator",
+            "Global Recruitment Board",
+            "Third-Party Content Platform",
+            "No DPRK Entity Specificity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1753,
+              "output_tokens": 281,
+              "elapsed_seconds": 4.887510061264038
+            }
+          ],
+          "reasoning": "The target URL is a generic recruitment platform for the global football industry (Jobs In Football). While it contains procurement signals (job postings), these are for global entities (e.g., Al Ain FC) and are not specific to the North Korean Football Association. The content acts as a noise generator rather than a source of specific intelligence for the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:42:45.292492",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Assistant Ev\u00e9nementiel H/F - FFF - F\u00e9d\u00e9ration Fran\u00e7aise de Football",
+              "Assistant administratif et \u00e9v\u00e9nementiel H/F - FFF - F\u00e9d\u00e9ration Fran\u00e7aise de Football"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Europe Focus)",
+            "Third-Party Content Platform",
+            "Walled Garden Content (Sign-in Required)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1827,
+              "output_tokens": 287,
+              "elapsed_seconds": 4.38800311088562
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered for 'Football' roles within 'Europe'. While it lists legitimate football entities (e.g., F\u00e9d\u00e9ration Fran\u00e7aise de Football), these are recruitment opportunities for European organizations, not procurement signals for the North Korean Football Association. The content is blocked behind authentication walls and is geographically scoped to Europe, making it irrelevant to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:42:54.487165",
+          "domain_explored": "https://uk.linkedin.com/company/football-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate Platform)",
+              "Standard Web Hosting (www.footballcareers.com)"
+            ],
+            "job_postings": [
+              "Network Manager (Football Data & Analysis) at Empire (London) - Example listing only"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Recruitment Agency",
+            "B2B Service Provider Model",
+            "Global Job Aggregation",
+            "Geographic Irrelevance (Glasgow/Scotland Focus)",
+            "Generic Industry Services (CV Writing/Headhunting)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1884,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.892789363861084
+            }
+          ],
+          "reasoning": "The scraped content represents 'Football Careers,' a private recruitment agency based in Glasgow, Scotland. It is a third-party service provider offering generic HR solutions (CV writing, headhunting) to the global football industry. There is no direct connection, governance link, or procurement activity specific to the North Korean Football Association. The entity is a commercial intermediary, not the target association or a direct vendor signal."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T04:43:05.858214",
+          "domain_explored": "https://www.linkedin.com/jobs/kings-league-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Commercial Director - Kings League USA",
+              "Marketing Director - Kings League USA"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Kings League vs North Korean FA)",
+            "Geographic Irrelevance (USA/New York Focus)",
+            "Third-Party Job Aggregation Platform",
+            "Private Sector Commercial Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1941,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.8506431579589844
+            }
+          ],
+          "reasoning": "The content pertains exclusively to the 'Kings League' (a seven-a-side football league founded by Gerard Piqu\u00e9/Kosmos), focusing on commercial and marketing roles in New York. There is no semantic or organizational connection to the North Korean Football Association. The platform is a generic job board (LinkedIn) requiring login, offering no procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T04:43:28.680369",
+          "domain_explored": "https://www.linkedin.com/jobs/chelsea-football-club-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of People Partnering",
+              "Marketing Executive - CFCW",
+              "Schools Education Coordinator",
+              "People Partner",
+              "Accounts Payable Clerk"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Chelsea FC vs North Korean FA)",
+            "Geographic Irrelevance (Cobham/London, UK vs Pyongyang, NK)",
+            "Third-Party Job Aggregation Platform",
+            "Standard Corporate Recruitment (HR, Finance, Marketing)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2012,
+              "output_tokens": 271,
+              "elapsed_seconds": 17.471203088760376
+            }
+          ],
+          "reasoning": "The scraped content exclusively lists job openings for Chelsea Football Club, a Premier League entity based in the United Kingdom. There is no semantic or operational connection to the North Korean Football Association. The roles (People Partner, Accounts Payable, Marketing Executive) and locations (Cobham, London) confirm this is irrelevant data for the target entity's procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 19224,
+      "total_output_tokens": 2844,
+      "estimated_cost_usd": 0.100332
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "North Korean Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:43:28.684263"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.207772",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:37:50.109924"
+}

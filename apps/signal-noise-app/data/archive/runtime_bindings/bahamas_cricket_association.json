@@ -1,0 +1,162 @@
+{
+  "entity_id": "bahamas_cricket_association",
+  "entity_name": "Bahamas Cricket Association",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "bahamas.gov.bs",
+    "icc-cricket.com",
+    "inlandrevenue.finance.gov.bs",
+    "tribune242.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahamas_cricket_association",
+      "entity_name": "Bahamas Cricket Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tribune242.com",
+        "https://inlandrevenue.finance.gov.bs",
+        "https://icc-cricket.com",
+        "https://bahamas.gov.bs"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahamas Cricket Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:59:24.806531",
+          "domain_explored": "https://bahamas.gov.bs",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:59:33.447307",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news coverage",
+            "Tournament event logistics (ICC T20 World Cup)",
+            "Generic media content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 183,
+              "elapsed_seconds": 5.559684991836548
+            }
+          ],
+          "reasoning": "The scraped content is from the ICC's global news portal covering the 2026 T20 World Cup. It focuses on match results, team analysis (Afghanistan, Australia, Pakistan), and broadcast schedules. There is no mention of the Bahamas Cricket Association, nor are there any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:59:49.094405",
+          "domain_explored": "https://inlandrevenue.finance.gov.bs",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Government tax authority domain",
+            "Public service announcements (VAT, Business Licenses)",
+            "Citizen-facing service portals",
+            "Generic government web navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 193,
+              "elapsed_seconds": 9.21413278579712
+            }
+          ],
+          "reasoning": "The scraped content is from the Bahamas Department of Inland Revenue (inlandrevenue.finance.gov.bs). This is a government tax agency website, not the Bahamas Cricket Association. The content focuses on VAT registration, tax compliance, and business licenses. There is no relevance to cricket, sports management, or association procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:59:56.447121",
+          "domain_explored": "https://tribune242.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic Classifieds section (Low relevance)"
+            ]
+          },
+          "patterns_found": [
+            "General news media layout (Local News, Sports, Business, Opinion sections)",
+            "Public sector general interest stories (PMH hospital adjustments, GB Power acquisition)",
+            "Classifieds section (Generic advertisements, not specific BCA procurement)",
+            "Sports coverage (BLTA, High School sports, but no specific Cricket Association procurement signals)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.580660104751587
+            }
+          ],
+          "reasoning": "The content represents the homepage of a national newspaper (The Tribune). While it contains a 'Business' section and 'Classifieds', the specific content snippets provided focus on general news, politics, and healthcare. There is no mention of the Bahamas Cricket Association, nor are there specific RFPs, tenders, or technology investments related to the entity in the provided text. The presence of generic classifieds is a weak signal for specific entity procurement."
+        }
+      ],
+      "total_input_tokens": 4345,
+      "total_output_tokens": 666,
+      "estimated_cost_usd": 0.023025
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahamas Cricket Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:59:56.448358"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299984",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:48.668885"
+}

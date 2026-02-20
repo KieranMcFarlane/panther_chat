@@ -1,0 +1,156 @@
+{
+  "entity_id": "andorran_rugby_federation",
+  "entity_name": "Andorran Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "a.osmarks.net",
+    "autofactoria.lu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/sports-management-worldwide_smwwproud-ehcforum25-sportscareers-activity-7389829835654627328-n8_s"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "andorran_rugby_federation",
+      "entity_name": "Andorran Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/sports-management-worldwide_smwwproud-ehcforum25-sportscareers-activity-7389829835654627328-n8_s",
+        "https://a.osmarks.net",
+        "https://autofactoria.lu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Andorran Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:11:03.026861",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Content Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "static_content_delivery",
+            "offline_reader_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 423,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.938829183578491
+            }
+          ],
+          "reasoning": "The target URL (a.osmarks.net) is serving content via Kiwix, an offline reader utility, rather than the official domain of the Andorran Rugby Federation. The content provided is a generic UI shell for browsing offline Wikipedia/Zim files and contains zero information regarding the Federation's operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:11:19.088939",
+          "domain_explored": "https://autofactoria.lu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Automotive CMS",
+              "Inventory Slider",
+              "Finance Calculator"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "automotive_retail_interface",
+            "b2c_sales_portal",
+            "inventory_management_display",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.1439521312713623
+            }
+          ],
+          "reasoning": "The content is from a Luxembourg-based automotive dealership group (Autofactoria) selling consumer vehicles. It is a B2C platform with no relevance to the Andorran Rugby Federation's operations or procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:11:29.198875",
+          "domain_explored": "https://www.linkedin.com/posts/sports-management-worldwide_smwwproud-ehcforum25-sportscareers-activity-7389829835654627328-n8_s",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Firstbeat (Athlete Performance Monitoring)",
+              "TrackMan (Sports Radar/Swing Analysis)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Andorra FC Scouting Activity (Barcelona Football Tryout)"
+            ]
+          },
+          "patterns_found": [
+            "generic_industry_news",
+            "b2c_event_marketing",
+            "unrelated_vendor_promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 262,
+              "elapsed_seconds": 4.325170993804932
+            }
+          ],
+          "reasoning": "The scraped content consists of generic LinkedIn feed posts from Sports Management Worldwide, Firstbeat Technologies, and Football Forward. While one post mentions 'Andorra FC' in the context of a scouting tryout, this is a B2C player recruitment event, not a Federation procurement signal. The content is focused on general sports industry networking, athlete performance tracking, and commercial tryouts, with no governance, RFP, or technology investment signals specific to the Andorran Rugby Federation."
+        }
+      ],
+      "total_input_tokens": 3299,
+      "total_output_tokens": 614,
+      "estimated_cost_usd": 0.019107
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Andorran Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:11:29.200609"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.284946",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:17.471495"
+}

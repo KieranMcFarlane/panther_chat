@@ -1,0 +1,142 @@
+{
+  "entity_id": "international-canoe-federation",
+  "entity_name": "International Canoe Federation",
+  "timestamp": "2026-02-07T12:35:48.491649",
+  "phases": {
+    "post_signals": {
+      "posts_analyzed": 0,
+      "signals_detected": {},
+      "opportunities": 5,
+      "high_confidence_opps": 0,
+      "opportunity_types": {
+        "RFP_SIGNAL": 1,
+        "BUDGET_INDICATOR": 2,
+        "TECHNOLOGY_NEED": 2
+      },
+      "top_opportunities": [
+        {
+          "type": "RFP_SIGNAL",
+          "confidence": 0.7,
+          "context": "es de 2024Spectator Sports](https://fr.linkedin.com/company/paris-2024-olympic-and-paralympic-games-"
+        },
+        {
+          "type": "BUDGET_INDICATOR",
+          "confidence": 0.7,
+          "context": "onal about growth.\nNot just organisational growth or professional milestones, but personal growth,  "
+        },
+        {
+          "type": "TECHNOLOGY_NEED",
+          "confidence": 0.7,
+          "context": "l be closed from December 19th at 4:30pm Eastern Time until January 5th to give our staff some much "
+        }
+      ]
+    },
+    "mutual_connections": {
+      "entities_checked": 0,
+      "total_connections": 0,
+      "strong_connections": 0,
+      "medium_connections": 0,
+      "top_connections": []
+    },
+    "strategic_positioning": {
+      "positioning_strategy": {
+        "strategy": "SOLUTION_PROVIDER",
+        "approach": "Response Mode",
+        "timing": "Within 24 hours",
+        "channel": "Email + LinkedIn + Phone",
+        "expected_response_rate": "60%",
+        "urgency": "HIGH",
+        "rationale": "Active procurement detected - immediate RFP response required"
+      },
+      "outreach_recommendations": {
+        "template_type": "RFP_RESPONSE",
+        "subject": "International Canoe Federation [RFP Topic] Response",
+        "body_template": "Hi [Name],\n\nSaw your RFP for [system/topic].\n\nYellow Panther helped [Similar Federation] achieve:\n\u2022 [Metric 1 - e.g., 40% increase in engagement]\n\u2022 [Metric 2 - e.g., 35% reduction in admin costs]\n\u2022 [Metric 3 - e.g., \u00a32M revenue increase]\n\nOur platform maps directly to your requirements. Full RFP response attached.\n\nCan we schedule a 30-minute call this week?\n\nBest,\n[Your Name]",
+        "key_talking_points": [
+          "Relevant case study from similar federation",
+          "Specific ROI metrics",
+          "Phased implementation approach",
+          "Quick wins in Phase 1"
+        ]
+      },
+      "signal_analysis": {
+        "signals": {},
+        "opportunities": {
+          "RFP_SIGNAL": 1,
+          "BUDGET_INDICATOR": 2,
+          "TECHNOLOGY_NEED": 2
+        },
+        "mutual_connection_count": 0
+      }
+    }
+  },
+  "linkedin_posts": [],
+  "opportunities": [
+    {
+      "opportunity_type": "RFP_SIGNAL",
+      "pattern_matched": "bid",
+      "context": "es de 2024Spectator Sports](https://fr.linkedin.com/company/paris-2024-olympic-and-paralympic-games-bid?trk=similar-pages)\nParis 2024 - Comit\u00e9 d'organisation des Jeux Olympiques et Paralympiques de 2024Spectator Sports\nParis 2024 - Comit\u00e9 d'organisation des Jeux Olympiques et Paralympiques de 2024\nS",
+      "source_url": "https://ch.linkedin.com/company/internationalcanoefederation",
+      "entity_name": "International Canoe Federation",
+      "detected_at": "2026-02-07T12:36:10.268545+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "BUDGET_INDICATOR",
+      "pattern_matched": "investing in",
+      "context": "onal about growth.\nNot just organisational growth or professional milestones, but personal growth,  investing in my own learning, stretching myself, and getting involved in projects I genuinely care about.\nThis is me after a full day at work, getting the kids to bed, then jumping on a call withCanoe",
+      "source_url": "https://nz.linkedin.com/company/canoe-racing-new-zealand",
+      "entity_name": "International Canoe Federation",
+      "detected_at": "2026-02-07T12:36:13.954999+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "TECHNOLOGY_NEED",
+      "pattern_matched": "need",
+      "context": "l be closed from December 19th at 4:30pm Eastern Time until January 5th to give our staff some much needed time to celebrate with those they care about over the holiday season.\nSee you in 2026!5LikeCommentShareJoin now to see what you are missingFind people you know at Canoe Kayak CanadaBrowse recom",
+      "source_url": "https://ca.linkedin.com/company/canoe-kayak-canada",
+      "entity_name": "International Canoe Federation",
+      "detected_at": "2026-02-07T12:36:17.304246+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "BUDGET_INDICATOR",
+      "pattern_matched": "funding",
+      "context": "ERSITY OF TORONTOResearch Services\nGOVERNING COUNCIL OF THE UNIVERSITY OF TORONTO\nResearch Services\nFunding\nCanoe Kayak Canada2 total roundsLast RoundGrantSep 19, 2025External Crunchbase Link for last round of fundingUS$ 217.1KInvestorsGovernment of CanadaSee more info oncrunchbase\n[Canoe Kayak Cana",
+      "source_url": "https://ca.linkedin.com/company/canoe-kayak-canada",
+      "entity_name": "International Canoe Federation",
+      "detected_at": "2026-02-07T12:36:17.304708+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "TECHNOLOGY_NEED",
+      "pattern_matched": "need",
+      "context": "ganizing events and coaching summer camps, all with a view to inspire more paddlers with additional needs to get involved with the sport, and with volunteering \ud83d\udea3\u2026more131 CommentLikeCommentShareCanoeing Ireland853 followers3moReport this postMeet our new Performance and Pathway Director \u2013 Michael Bla",
+      "source_url": "https://ie.linkedin.com/company/canoeingireland",
+      "entity_name": "International Canoe Federation",
+      "detected_at": "2026-02-07T12:36:21.124939+00:00",
+      "confidence": 0.7
+    }
+  ],
+  "mutual_connections": {},
+  "positioning": {
+    "strategy": "SOLUTION_PROVIDER",
+    "approach": "Response Mode",
+    "timing": "Within 24 hours",
+    "channel": "Email + LinkedIn + Phone",
+    "expected_response_rate": "60%",
+    "urgency": "HIGH",
+    "rationale": "Active procurement detected - immediate RFP response required"
+  },
+  "outreach": {
+    "template_type": "RFP_RESPONSE",
+    "subject": "International Canoe Federation [RFP Topic] Response",
+    "body_template": "Hi [Name],\n\nSaw your RFP for [system/topic].\n\nYellow Panther helped [Similar Federation] achieve:\n\u2022 [Metric 1 - e.g., 40% increase in engagement]\n\u2022 [Metric 2 - e.g., 35% reduction in admin costs]\n\u2022 [Metric 3 - e.g., \u00a32M revenue increase]\n\nOur platform maps directly to your requirements. Full RFP response attached.\n\nCan we schedule a 30-minute call this week?\n\nBest,\n[Your Name]",
+    "key_talking_points": [
+      "Relevant case study from similar federation",
+      "Specific ROI metrics",
+      "Phased implementation approach",
+      "Quick wins in Phase 1"
+    ]
+  }
+}

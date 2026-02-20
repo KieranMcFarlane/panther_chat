@@ -182,6 +182,9 @@ class GraphitiService:
         # Graph name
         self.graph_name = "sports_intelligence"
 
+        # Initialization flag
+        self.initialized = False
+
         logger.info(f"🔗 Initializing GraphitiService (Supabase: {self.use_supabase})")
 
     async def initialize(self) -> bool:
@@ -200,17 +203,21 @@ class GraphitiService:
                 )
                 self.driver.verify_connectivity()
                 logger.info("✅ FalkorDB connection established")
+                self.initialized = True
             elif self.use_supabase:
                 logger.info("✅ Using Supabase for temporal tracking")
+                self.initialized = True
             else:
                 logger.warning("⚠️  No database connection available")
+                self.initialized = True  # Still mark as initialized for limited functionality
 
             return True
 
         except Exception as e:
             logger.error(f"❌ Failed to initialize GraphitiService: {e}")
             # Still return True if Supabase is available
-            return self.use_supabase
+            self.initialized = self.use_supabase
+            return self.initialized
 
     async def _build_temporal_indices(self):
         """Build indices for temporal queries (No-op for Supabase)"""
@@ -1166,6 +1173,257 @@ class GraphitiService:
             'time_bounds': {'from': from_time, 'to': to_time},
             'source': 'falkordb'
         }
+
+    # =============================================================================
+    # Semantic + Temporal Episode Clustering
+    # =============================================================================
+
+    CLUSTER_WINDOW_DAYS = 45
+    SEMANTIC_SIMILARITY_THRESHOLD = 0.78
+
+    async def find_or_create_episode(
+        self,
+        entity_id: str,
+        entity_name: str,
+        episode_type: str,
+        description: str,
+        signal_date: str,
+        signal_confidence: float,
+        source: str = "discovery",
+        url: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Find or create an episode using semantic + temporal clustering.
+
+        Compresses signals into episodes using THREE conditions:
+        1. Time window: abs(date_diff) < 45 days
+        2. Semantic similarity: embedding_similarity > 0.78
+        3. Category match: same episode_type
+
+        Otherwise: Create new episode
+
+        Args:
+            entity_id: Entity identifier
+            entity_name: Human-readable entity name
+            episode_type: Type of episode (RFP_DETECTED, CRM_ANALYTICS, etc.)
+            description: Description of the signal/episode
+            signal_date: ISO timestamp of when the signal occurred
+            signal_confidence: Confidence score (0-1)
+            source: Source of the signal
+            url: Source URL
+            metadata: Additional metadata
+
+        Returns:
+            Dict with episode_id, created (bool), and merged (bool) flags
+        """
+        if not self.initialized:
+            await self.initialize()
+
+        signal_dt = datetime.fromisoformat(signal_date.replace('Z', '+00:00'))
+        window_start = signal_dt - timedelta(days=self.CLUSTER_WINDOW_DAYS)
+        window_end = signal_dt + timedelta(days=self.CLUSTER_WINDOW_DAYS)
+
+        logger.debug(f"Looking for episodes within {self.CLUSTER_WINDOW_DAYS} days of {signal_date[:10]}")
+
+        # Query existing episodes within time window and same type
+        candidates = await self.query_episodes(
+            entities=[entity_name],
+            episode_types=[episode_type],
+            from_time=window_start.isoformat(),
+            to_time=window_end.isoformat(),
+            limit=20
+        )
+
+        # Find matching episode using semantic similarity
+        best_match = None
+        best_similarity = 0.0
+
+        for candidate in candidates.get('episodes', []):
+            candidate_description = candidate.get('description', '')
+            candidate_date = candidate.get('timestamp', '')
+
+            # Skip if candidate has no description
+            if not candidate_description:
+                continue
+
+            # Calculate semantic similarity
+            similarity = await self._calculate_semantic_similarity(
+                description,
+                candidate_description
+            )
+
+            if similarity > best_similarity and similarity >= self.SEMANTIC_SIMILARITY_THRESHOLD:
+                best_match = candidate
+                best_similarity = similarity
+
+        if best_match:
+            # Merge into existing episode
+            episode_id = best_match.get('episode_id')
+            logger.info(f"🔄 Merging signal into existing episode {episode_id} (similarity: {best_similarity:.2f})")
+
+            # Update episode metadata to include this signal
+            await self._merge_signal_to_episode(
+                episode_id=episode_id,
+                signal_date=signal_date,
+                signal_confidence=signal_confidence,
+                source=source,
+                url=url
+            )
+
+            return {
+                'episode_id': episode_id,
+                'created': False,
+                'merged': True,
+                'similarity': best_similarity
+            }
+
+        # No match found - create new episode
+        logger.info(f"✨ Creating new episode for {entity_name} (type: {episode_type})")
+
+        result = await self.add_discovery_episode(
+            entity_id=entity_id,
+            entity_name=entity_name,
+            entity_type="ORG",
+            episode_type=episode_type,
+            description=description,
+            source=source,
+            url=url,
+            confidence=signal_confidence,
+            evidence_date=signal_date,
+            metadata=metadata
+        )
+
+        return {
+            'episode_id': result.get('episode_id'),
+            'created': True,
+            'merged': False
+        }
+
+    async def _calculate_semantic_similarity(
+        self,
+        text1: str,
+        text2: str
+    ) -> float:
+        """
+        Calculate semantic similarity between two texts using embeddings.
+
+        Uses Claude embeddings to capture meaning, allowing
+        "Hiring Head of CRM" to cluster with procurement signals
+        but NOT with "stadium sponsorship" even if same day.
+
+        Args:
+            text1: First text
+            text2: Second text
+
+        Returns:
+            Cosine similarity score (0-1)
+        """
+        try:
+            from claude_client import ClaudeClient
+
+            claude = ClaudeClient()
+
+            # Generate embeddings
+            embedding1 = await claude.get_embedding(text1)
+            embedding2 = await claude.get_embedding(text2)
+
+            if not embedding1 or not embedding2:
+                logger.warning("Failed to generate embeddings for similarity calculation")
+                return 0.0
+
+            # Calculate cosine similarity
+            similarity = self._cosine_similarity(embedding1, embedding2)
+            return similarity
+
+        except Exception as e:
+            logger.warning(f"Error calculating semantic similarity: {e}")
+            return 0.0
+
+    def _cosine_similarity(self, vec1: List[float], vec2: List[float]) -> float:
+        """Calculate cosine similarity between two vectors"""
+        import math
+
+        dot_product = sum(a * b for a, b in zip(vec1, vec2))
+        magnitude1 = math.sqrt(sum(a * a for a in vec1))
+        magnitude2 = math.sqrt(sum(b * b for b in vec2))
+
+        if magnitude1 == 0 or magnitude2 == 0:
+            return 0.0
+
+        return dot_product / (magnitude1 * magnitude2)
+
+    async def _merge_signal_to_episode(
+        self,
+        episode_id: str,
+        signal_date: str,
+        signal_confidence: float,
+        source: str,
+        url: Optional[str] = None
+    ) -> bool:
+        """
+        Merge a new signal into an existing episode.
+
+        Updates the episode's metadata to include the new signal
+        and potentially updates confidence score.
+
+        Args:
+            episode_id: Episode identifier
+            signal_date: Date of the signal
+            signal_confidence: Confidence score
+            source: Source of signal
+            url: Source URL
+
+        Returns:
+            True if merge successful
+        """
+        if not self.driver:
+            return False
+
+        try:
+            with self.driver.session() as session:
+                # Add signal to episode's signal list in metadata
+                result = session.run("""
+                    MATCH (ep:Episode {episode_id: $episode_id})
+                    RETURN ep
+                """, episode_id=episode_id)
+
+                episode = result.single()
+
+                if not episode:
+                    logger.warning(f"Episode {episode_id} not found for merging")
+                    return False
+
+                episode_node = episode.get('ep')
+                metadata = episode_node.get('metadata', {})
+                signals = metadata.get('signals', [])
+
+                # Add new signal
+                signals.append({
+                    'date': signal_date,
+                    'confidence': signal_confidence,
+                    'source': source,
+                    'url': url
+                })
+
+                # Update metadata
+                metadata['signals'] = signals
+                metadata['signal_count'] = len(signals)
+                metadata['last_updated'] = datetime.now(timezone.utc).isoformat()
+
+                # Update episode
+                session.run("""
+                    MATCH (ep:Episode {episode_id: $episode_id})
+                    SET ep.metadata = $metadata
+                    RETURN ep
+                """, episode_id=episode_id, metadata=metadata)
+
+                logger.debug(f"Merged signal into episode {episode_id}")
+                return True
+
+        except Exception as e:
+            logger.warning(f"Error merging signal to episode: {e}")
+            return False
 
     async def get_entity_state_at_time(
         self,

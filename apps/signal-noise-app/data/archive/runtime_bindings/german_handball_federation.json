@@ -1,0 +1,243 @@
+{
+  "entity_id": "german_handball_federation",
+  "entity_name": "German Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "deutschland.de",
+    "sportfive.com",
+    "eurohandball.com",
+    "madeby.tickaroo.com",
+    "eu.puma.com",
+    "atlasschuhe.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_handball_federation",
+      "entity_name": "German Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://atlasschuhe.de",
+        "https://eurohandball.com",
+        "https://sportfive.com",
+        "https://eu.puma.com",
+        "https://deutschland.de",
+        "https://madeby.tickaroo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:00:07.261013",
+          "domain_explored": "https://deutschland.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "cultural_promotion",
+            "design_education"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.7394540309906006
+            }
+          ],
+          "reasoning": "The scraped content is from deutschland.de, a general cultural and lifestyle portal. The text focuses on 'World Design Capital 2026', 'Studying design', and 'Berlin Fashion Week'. There is absolutely no mention of the German Handball Federation (DHB), sports procurement, or related governance/technology signals. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:00:17.059569",
+          "domain_explored": "https://sportfive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity identified as external marketing agency (Sportfive)"
+            ]
+          },
+          "patterns_found": [
+            "marketing_agency",
+            "cookie_consent_walls",
+            "brand_promotion",
+            "vendor_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.5667030811309814
+            }
+          ],
+          "reasoning": "The scraped content identifies 'Sportfive' as a sports marketing agency ('Leaders In Sports Marketing', 'Working With The Bravest Brands'). This is a vendor/partner entity, not the procurement arm of the German Handball Federation. The content is focused on brand promotion and lacks procurement signals, job postings, or governance information relevant to the Federation's internal purchasing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:00:27.189725",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_coverage",
+            "cookie_consent_walls",
+            "event_scheduling",
+            "governing_body_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.405242919921875
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports results (EHF EURO), tournament schedules, and general federation news. There is a high frequency of cookie consent walls blocking access to deeper content. The entity is the European Handball Federation (EHF), not the German Handball Federation (DHB), and the content lacks any procurement, job posting, or technology investment signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:00:36.380920",
+          "domain_explored": "https://madeby.tickaroo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "404_error",
+            "broken_link",
+            "infrastructure_failure",
+            "dead_end"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 635,
+              "output_tokens": 141,
+              "elapsed_seconds": 2.238308906555176
+            }
+          ],
+          "reasoning": "The URL returned a 404 error page for GitHub Pages, indicating the link is dead or the content has been moved/deleted. There is no content available to analyze for procurement signals, technology stacks, or governance patterns."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:00:46.522007",
+          "domain_explored": "https://eu.puma.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_catalog",
+            "consumer_marketing",
+            "product_promotion",
+            "b2c_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.6277120113372803
+            }
+          ],
+          "reasoning": "The content is exclusively focused on direct-to-consumer product sales (Valentine's Day gifts, Speedcat, Suede shoes) and brand marketing (PUMA x McLaren). There are no signals regarding B2B procurement, vendor selection, or internal technology infrastructure relevant to the German Handball Federation."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:01:11.927549",
+          "domain_explored": "https://atlasschuhe.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_catalog",
+            "product_navigation",
+            "b2c_focus",
+            "safety_equipment_manufacturer"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 202,
+              "elapsed_seconds": 17.0687038898468
+            }
+          ],
+          "reasoning": "The scraped content represents the website of 'Atlas Schuhe', a manufacturer of safety shoes and workwear. The content is entirely product-focused (series like MAX, FAST, BOA) and consumer-facing (online shop, login, language selection). There are no signals indicating a relationship with the German Handball Federation, nor are there procurement signals (RFPs, job postings, tech stack info) relevant to the federation's governance or operations."
+        }
+      ],
+      "total_input_tokens": 7948,
+      "total_output_tokens": 1078,
+      "estimated_cost_usd": 0.040014
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:01:11.929714"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361690",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:54.094896"
+}

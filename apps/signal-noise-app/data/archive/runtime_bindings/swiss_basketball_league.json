@@ -1,0 +1,133 @@
+{
+  "entity_id": "swiss_basketball_league",
+  "entity_name": "Swiss Basketball League",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "swiss.basketball",
+    "vtb-league.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "swiss_basketball_league",
+      "entity_name": "Swiss Basketball League",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://vtb-league.com",
+        "https://swiss.basketball",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Swiss Basketball League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:19:21.563720",
+          "domain_explored": "https://swiss.basketball",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:19:31.138033",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content belongs to VTB League, not Swiss Basketball League."
+            ]
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "language_mismatch",
+            "content_replication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.051910877227783
+            }
+          ],
+          "reasoning": "The scraped content is from 'vtb-league.com', which is the VTB United League (a Russian/Eastern European basketball league), not the Swiss Basketball League. The content is entirely in Russian and lists Russian teams (e.g., CSKA Moscow, Zenit). This is irrelevant to the target entity procurement analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:19:40.348335",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "open_source_repository",
+            "knowledge_base"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.2698349952697754
+            }
+          ],
+          "reasoning": "The scraped content is from Wikidata, a general-purpose open knowledge base, not the official Swiss Basketball League entity. While the Swiss Basketball League may have an entry (entity) within this database, the page content itself describes the platform's infrastructure (SPARQL, Wikibase), community events, and general data management. It does not contain specific procurement signals, vendor partnerships, or technology stack details unique to the Swiss Basketball League's operations."
+        }
+      ],
+      "total_input_tokens": 2821,
+      "total_output_tokens": 406,
+      "estimated_cost_usd": 0.014553
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Swiss Basketball League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:19:40.350719"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.240709",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:17.122832"
+}

@@ -1,0 +1,167 @@
+{
+  "entity_id": "estudiantes_de_bah\u00eda_blanca",
+  "entity_name": "Estudiantes de Bah\u00eda Blanca",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "clubestudiantesbb.com",
+    "caestudiantes.com.ar",
+    "es.scribd.com",
+    "normas.gba.gob.ar"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "estudiantes_de_bah\u00eda_blanca",
+      "entity_name": "Estudiantes de Bah\u00eda Blanca",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://es.scribd.com",
+        "https://clubestudiantesbb.com",
+        "https://normas.gba.gob.ar",
+        "https://caestudiantes.com.ar"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Estudiantes de Bah\u00eda Blanca may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:35:22.807353",
+          "domain_explored": "https://clubestudiantesbb.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 22 column 9 (char 1437)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:35:41.833770",
+          "domain_explored": "https://caestudiantes.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Facebook, Instagram, YouTube)",
+              "Content Management System (CMS)",
+              "Streaming/Multimedia Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Change: 'Se designaron los cargos para los integrantes de la nueva Comisi\u00f3n Directiva' (Dec 2025)",
+              "Digital Presence: 'VER PRODUCTOS' link suggests active merchandising or ticketing operations",
+              "Marketing: Social media follower counts imply active digital marketing spend"
+            ]
+          },
+          "patterns_found": [
+            "Social Media Integration (Facebook/Instagram)",
+            "Multimedia Content Management",
+            "E-commerce Link ('VER PRODUCTOS')",
+            "Administrative Restructuring (New Commission)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 341,
+              "elapsed_seconds": 7.424793004989624
+            }
+          ],
+          "reasoning": "The content is primarily sports news (pre-season, matches) and general announcements. However, the presence of social media metrics, a 'Multimedia' section, and a 'Ver Productos' (See Products) link indicates the use of digital platforms for engagement and potential e-commerce. The mention of a 'New Commission' suggests a governance reset which often precedes new vendor evaluations, though no direct RFPs are visible."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:35:49.474522",
+          "domain_explored": "https://es.scribd.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Content",
+            "Navigation Menus",
+            "Category Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.7331509590148926
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the generic homepage UI for Scribd (navigation menus, category lists, and marketing slogans). There is no mention of 'Estudiantes de Bah\u00eda Blanca', no specific documents, and no procurement-related signals. This is a false positive in the crawling process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:35:55.560219",
+          "domain_explored": "https://normas.gba.gob.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Government Search Interface",
+            "Legislative Metadata Filters",
+            "Generic Navigation Elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 627,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.382517099380493
+            }
+          ],
+          "reasoning": "The content is scraped from 'normas.gba.gob.ar', which is the legislative search portal for the Province of Buenos Aires (a government entity), not 'Estudiantes de Bah\u00eda Blanca' (the basketball club). The text consists solely of UI dropdowns for legal document types (Ley, Decreto, Resoluci\u00f3n) and search buttons. There is no content related to the club's operations, procurement, or technology stack."
+        }
+      ],
+      "total_input_tokens": 3473,
+      "total_output_tokens": 687,
+      "estimated_cost_usd": 0.020724
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Estudiantes de Bah\u00eda Blanca may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:35:55.564216"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.218571",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:22.359772"
+}

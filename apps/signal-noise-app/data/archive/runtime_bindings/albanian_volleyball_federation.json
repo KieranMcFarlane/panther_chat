@@ -1,0 +1,156 @@
+{
+  "entity_id": "albanian_volleyball_federation",
+  "entity_name": "Albanian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "inside.cev.eu",
+    "balkanvolleyball.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "albanian_volleyball_federation",
+      "entity_name": "Albanian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://balkanvolleyball.org",
+        "https://www-old.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Albanian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:07:52.227746",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General European sports navigation",
+            "Historical event listings (2021, 2022)",
+            "Generic footer links (Privacy Policy, Webmaster)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 193,
+              "elapsed_seconds": 4.325222730636597
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event index from the Confederation Europ\u00e9enne de Volleyball (CEV), the continental governing body. While it establishes the broader ecosystem, it contains zero specific information regarding the Albanian Volleyball Federation's internal operations, technology stack, or procurement activities. It is irrelevant to the specific entity analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:07:59.088231",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEV Solidarity Fund Applications (Open as of Feb 2026)",
+              "EuroVolley 2028 Bidding Process (Montenegro/OSCG example)",
+              "Scouting service procurement (Azerbaijan example)"
+            ]
+          },
+          "patterns_found": [
+            "CEV Solidarity Fund (Funding/Grant mechanism)",
+            "Federation Development Activities",
+            "Scouting and Talent Identification Programs",
+            "Event Bidding (EuroVolley 2028)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 270,
+              "elapsed_seconds": 3.801985025405884
+            }
+          ],
+          "reasoning": "The content reveals the 'CEV Solidarity Fund', a direct procurement and funding vehicle for National Federations (including Albania). While the specific page lists general news, the existence of this fund indicates a clear pathway for the Albanian Volleyball Federation to access financial resources for development projects, technology, or events. This shifts the focus from direct purchasing to grant-based procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:08:06.728819",
+          "domain_explored": "https://balkanvolleyball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Livestreaming Platforms (U18 Zonal Qualifiers)",
+              "Event Management Software (implied by General Assembly coordination)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "BVA Technical Commission Meetings (Standardization/Procurement signals)",
+              "Hosting Bids for Major Events (EuroVolley 2028)",
+              "General Assembly Logistics (Travel/Hotel/Services)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance Activity (BVA General Assembly)",
+            "Event Hosting & Bidding Cycles (EuroVolley 2028)",
+            "Zonal Qualifier Organization (U18 Championships)",
+            "Strategic Meetings (Technical Commission, Paris)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 317,
+              "elapsed_seconds": 4.193043947219849
+            }
+          ],
+          "reasoning": "While the content is primarily news and results, it confirms active participation in regional governance (BVA) which drives technical standards and procurement for events. The mention of 'Technical Commission meetings' and 'Zonal Qualifiers' implies a need for standardized software, scoring systems, and streaming services (Livestream mentions) that the Albanian Federation must adopt to remain compliant."
+        }
+      ],
+      "total_input_tokens": 4272,
+      "total_output_tokens": 780,
+      "estimated_cost_usd": 0.024516
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Albanian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:08:06.730689"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.330656",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:44:58.820320"
+}

@@ -1,0 +1,283 @@
+{
+  "entity_id": "nrl",
+  "entity_name": "NRL",
+  "template_id": "tpl_tier_1_professional_leagues_v1",
+  "cluster_id": "tier_1_professional_leagues",
+  "discovered_domains": [
+    "playrugbyleague.com",
+    "nrlshop.com",
+    "watchnrl.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/nrl_nrlcareers-jobs-jobpostings-activity-7422312314135121921-2uUI",
+      "https://au.linkedin.com/jobs/nrl-jobs",
+      "https://www.linkedin.com/posts/nrl_nrljobs-jobs-jobpostings-activity-7421916772402003968-LyVj",
+      "https://www.linkedin.com/posts/nrl_nrlrail-jobs-jobpostings-activity-7422622801423060992-DogU"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nrl",
+      "entity_name": "NRL",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://playrugbyleague.com",
+        "https://www.linkedin.com/posts/nrl_nrljobs-jobs-jobpostings-activity-7421916772402003968-LyVj",
+        "https://www.linkedin.com/posts/nrl_nrlrail-jobs-jobpostings-activity-7422622801423060992-DogU",
+        "https://nrlshop.com",
+        "https://watchnrl.com",
+        "https://www.linkedin.com/posts/nrl_nrlcareers-jobs-jobpostings-activity-7422312314135121921-2uUI",
+        "https://au.linkedin.com/jobs/nrl-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NRL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:32:51.081667",
+          "domain_explored": "https://playrugbyleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "NRL MyLeague App (Mobile Application)",
+              "Learning Management System (LMS) - implied by 'Find a Course'",
+              "Content Management System (CMS) - implied by site structure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Product Development (MyLeague App maintenance/updates)",
+              "Education Platform Management",
+              "Club Administration Software"
+            ]
+          },
+          "patterns_found": [
+            "Digital Engagement Platform",
+            "Participant Management System",
+            "Education & Training Delivery"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 310,
+              "elapsed_seconds": 10.007739067077637
+            }
+          ],
+          "reasoning": "The content highlights the 'NRL MyLeague App' as a central tool for players, supporters, and volunteers, indicating an existing investment in mobile technology and participant management. Additionally, the 'Find a Course' and 'Club Rugby League' sections suggest a reliance on Learning Management Systems (LMS) and administrative portals. While this confirms capability and infrastructure, it does not explicitly signal immediate new procurement (RFP) activity, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:33:04.008452",
+          "domain_explored": "https://nrlshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/ and class naming conventions)",
+              "E-commerce Analytics"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Sourcing (Apparel manufacturing)",
+              "Warehousing & Fulfillment Services",
+              "Logistics & Shipping Partners",
+              "Payment Gateway Providers"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Merchandise Supply Chain",
+            "Inventory Management",
+            "Direct-to-Consumer (DTC) Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.9392077922821045
+            }
+          ],
+          "reasoning": "The content reveals a high-volume e-commerce operation (NRL Shop) with specific inventory data (2026 All Stars range). While this is a consumer-facing page, the existence of a digital store implies backend procurement for logistics, warehousing, and payment processing. The presence of '2026' stock indicates long-term supply chain planning."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:33:16.324091",
+          "domain_explored": "https://watchnrl.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:33:27.115486",
+          "domain_explored": "https://www.linkedin.com/posts/nrl_nrlcareers-jobs-jobpostings-activity-7422312314135121921-2uUI",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Branch Administrator (Wigan, UK)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Recruitment Agency vs. Sports League)",
+            "General Administration Hiring",
+            "UK/Wigan Location Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.9353957176208496
+            }
+          ],
+          "reasoning": "The scraped content refers to 'NRL' (National Recruitment Ltd), a UK-based recruitment agency located in Wigan, rather than the National Rugby League (Australia). This is a false positive match for the target entity. The content discusses hiring for a Branch Administrator role, which is an internal operational function for the agency and not a procurement signal for the sports league."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:33:46.401509",
+          "domain_explored": "https://au.linkedin.com/jobs/nrl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "National Integrity and Compliance Manager (Touch Football Australia)",
+              "General Manager - Operations (Touch Football Australia)"
+            ],
+            "procurement_indicators": [
+              "Governance & Compliance Hiring (Partner Entity)",
+              "Operational Leadership Hiring (Partner Entity)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Touch Football Australia vs NRL)",
+            "Generic Job Board Interface (Sign-in Walls)",
+            "Indirect Association (Affiliate Sports Bodies)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 318,
+              "elapsed_seconds": 12.578917264938354
+            }
+          ],
+          "reasoning": "The scraped content from the LinkedIn Jobs URL for 'NRL' primarily lists positions for 'Touch Football Australia' (e.g., National Integrity and Compliance Manager, GM Operations). While Touch Football Australia is a strategic partner of the NRL, their hiring is a separate procurement entity. The content is largely obscured by LinkedIn's authentication walls ('Sign in to set job alerts'), preventing access to actual NRL-specific job descriptions or technology requirements. Therefore, this does not provide direct procurement signals for the NRL entity itself."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:33:55.321693",
+          "domain_explored": "https://www.linkedin.com/posts/nrl_nrljobs-jobs-jobpostings-activity-7421916772402003968-LyVj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Recruitment Agency vs. Sports League)",
+            "Recruitment Services (Not Internal Hiring)",
+            "Global/UK Context (Engineering focus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1636,
+              "output_tokens": 195,
+              "elapsed_seconds": 4.58319616317749
+            }
+          ],
+          "reasoning": "The content is from a recruitment agency (NRL) promoting their services to place candidates into external roles, rather than the National Rugby League (NRL) procuring services or hiring for internal operations. The focus on 'engineering' and 'permanent positions' for external employers confirms this is a B2C service offering, not a procurement signal for the sports entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:34:03.282926",
+          "domain_explored": "https://www.linkedin.com/posts/nrl_nrlrail-jobs-jobpostings-activity-7422622801423060992-DogU",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Grinding Supervisor Managers",
+              "TR80 Grinding Operatives",
+              "Controllers of Site Safety",
+              "PTS Labourers"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Rail Recruitment Agency vs. Sports League)",
+            "Geographic Irrelevance (UK/Scotland vs. Australia/Pacific)",
+            "Operational Context (Manual Labor/Track Maintenance vs. Corporate Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1715,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.666951894760132
+            }
+          ],
+          "reasoning": "The content is a job posting for 'NRL', a UK-based rail recruitment agency (NRL.co.uk), seeking manual labor roles (Grinding Operatives, PTS Labourers) for railway projects. This is a complete entity mismatch with the target 'NRL' (National Rugby League). The context is operational staffing, not procurement or technology."
+        }
+      ],
+      "total_input_tokens": 9158,
+      "total_output_tokens": 1539,
+      "estimated_cost_usd": 0.050559
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NRL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:34:03.284393"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.448957",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:58:11.170414"
+}

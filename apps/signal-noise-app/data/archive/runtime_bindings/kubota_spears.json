@@ -1,0 +1,225 @@
+{
+  "entity_id": "kubota_spears",
+  "entity_name": "Kubota Spears",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "kubota-spears.com",
+    "city.funabashi.lg.jp",
+    "league-one.jp",
+    "svleague.jp",
+    "en.rugby-japan.jp",
+    "kubota.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kubota_spears",
+      "entity_name": "Kubota Spears",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://en.rugby-japan.jp",
+        "https://svleague.jp",
+        "https://city.funabashi.lg.jp",
+        "https://kubota.com",
+        "https://kubota-spears.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kubota Spears may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:36:27.587707",
+          "domain_explored": "https://kubota-spears.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:36:35.726752",
+          "domain_explored": "https://city.funabashi.lg.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:36:44.109565",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ticketrugby.jp (Ticketing platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Scheduling",
+            "Ticketing Platform Integration (ticketrugby.jp)",
+            "Team Abbreviations (e.g., Kubota Spears -> '\uff33\u611b\u77e5' or similar abbreviation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 226,
+              "elapsed_seconds": 3.4173901081085205
+            }
+          ],
+          "reasoning": "The scraped content from league-one.jp is a sports schedule (Rugby League One) containing match times, venues, and ticket links. While 'Kubota Spears' (likely represented as '\uff33\u611b\u77e5' or similar in the raw text) is a participating entity, this page is purely informational for fans. It does not contain corporate governance data, technology stacks, or procurement signals (RFPs, job postings) relevant to B2B vendor analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:36:51.961048",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Navigation Structure",
+            "Gender-based Segmentation (Men/Women)",
+            "Multi-League Hosting (V.League, SV.League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 514,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.387091875076294
+            }
+          ],
+          "reasoning": "The scraped content consists of navigation elements and menu links for a sports league portal (svleague.jp). It contains no information regarding Kubota Spears' internal operations, technology stack, or procurement activities. The content is purely structural and relates to league scheduling and categorization."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:36:59.767998",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)",
+              "Fan Club Management Platform (japanrugby-sakuraclub.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized League Services (Reliance on JRFU for digital infrastructure rather than individual team procurement)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Integration (Online Shop)",
+            "Digital Content Platform (Japan Rugby TV)",
+            "Fan Engagement Ecosystem (Sakura Club)",
+            "Multi-language Content Strategy (English/Japanese)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 809,
+              "output_tokens": 312,
+              "elapsed_seconds": 3.5261569023132324
+            }
+          ],
+          "reasoning": "The content analyzed is from the Japan Rugby Football Union's top-level marketing site. While it confirms the existence of digital properties (Shop, TV, Fan Club) that Kubota Spears participates in as a member entity, it does not contain specific procurement signals, vendor selection criteria, or technology stack details unique to Kubota Spears. It establishes the ecosystem context but offers no actionable intelligence regarding Kubota's specific procurement operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:37:08.264553",
+          "domain_explored": "https://kubota.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI (Automatic Watering Control)",
+              "Smart Agriculture Solutions",
+              "Water Treatment Infrastructure",
+              "Industrial Machinery"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CES 2026 Exhibition (Tech Scouting/Marketing)",
+              "R&D in Smart Agriculture",
+              "ESG/Sustainability Reporting (Consulting/Software)",
+              "Global Infrastructure Projects"
+            ]
+          },
+          "patterns_found": [
+            "Global Corporate Navigation",
+            "Innovation & R&D Hub (CES 2026)",
+            "Sustainability & ESG Reporting",
+            "Smart Agriculture Technology",
+            "Infrastructure Solutions (Water/Environment)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.1307339668273926
+            }
+          ],
+          "reasoning": "While the content is high-level corporate branding, it confirms Kubota's active investment in 'Smart Agriculture' (AI, automation) and 'Innovation' (CES 2026). This signals a procurement need for advanced technology vendors (AI, IoT, Analytics) to support these strategic pillars, even if specific RFPs are not listed on the homepage."
+        }
+      ],
+      "total_input_tokens": 4334,
+      "total_output_tokens": 1013,
+      "estimated_cost_usd": 0.028197
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kubota Spears may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:37:08.266362"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.274206",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:26.494351"
+}

@@ -1,0 +1,198 @@
+{
+  "entity_id": "corvette_racing_by_pratt_miller_motorsports",
+  "entity_name": "Corvette Racing by Pratt Miller Motorsports",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "corvetteracing.com",
+    "prattmiller.com",
+    "tsm-models.com",
+    "news.chevrolet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "corvette_racing_by_pratt_miller_motorsports",
+      "entity_name": "Corvette Racing by Pratt Miller Motorsports",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://news.chevrolet.com",
+        "https://prattmiller.com",
+        "https://corvetteracing.com",
+        "https://tsm-models.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Corvette Racing by Pratt Miller Motorsports may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:41:21.152872",
+          "domain_explored": "https://corvetteracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Content Management (CMS) - for site updates/FAQs",
+              "CRM - for managing racing team sales and support"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sales of Z06 GT3.R directly to racing teams (B2B transaction)",
+              "Logistics/Transportation procurement for chassis movement (Bowling Green to New Hudson) and global event shipping",
+              "Web maintenance for 'Team Site' portals and schedule updates"
+            ]
+          },
+          "patterns_found": [
+            "Customer Support Operations",
+            "Supply Chain Logistics",
+            "B2B Sales Model"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 316,
+              "elapsed_seconds": 2.685833215713501
+            }
+          ],
+          "reasoning": "While the content is primarily marketing material, it reveals a B2B sales model for the Z06 GT3.R, indicating a need for customer relationship management (CRM) tools to handle racing team clients. The explicit mention of 'FAQ' and 'Team Site' links suggests a digital ecosystem requiring web hosting and maintenance. The logistics of moving chassis between Bowling Green, KY, and New Hudson, MI, and cars to global tracks, implies ongoing procurement of logistics and transportation services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:41:31.155310",
+          "domain_explored": "https://prattmiller.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PM-FlexTire (Simulation Tool)",
+              "GPS-based path following",
+              "AI & Autonomous Systems",
+              "Connected Systems & IoT",
+              "Electrification Tech"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Defense Contracting (DoD Partnerships)",
+              "Product Development Outsourcing",
+              "Vehicle Prototyping & Testing",
+              "Robotics Platform Manufacturing"
+            ]
+          },
+          "patterns_found": [
+            "Engineering Services Procurement",
+            "R&D Investment",
+            "Supply Chain Integration",
+            "Simulation & Testing Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 284,
+              "elapsed_seconds": 2.766515016555786
+            }
+          ],
+          "reasoning": "The content confirms Pratt Miller operates as a high-end engineering and manufacturing firm (B2B), implying significant procurement needs for raw materials, specialized software (simulation), and defense/motorsport components. However, the page is marketing-focused, listing capabilities rather than explicit purchasing needs or vendor calls."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:41:40.915379",
+          "domain_explored": "https://tsm-models.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing Agreement Evidence: TSM Models manufactures 'Chevrolet Corvette Z06 GT3.R #3 Corvette Racing by Pratt Miller Motorsports' replicas, implying an existing licensing contract."
+            ]
+          },
+          "patterns_found": [
+            "Merchandising Operations",
+            "Third-Party Licensing",
+            "Consumer E-commerce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.840146064758301
+            }
+          ],
+          "reasoning": "The target entity (Corvette Racing) appears here only as the subject of a die-cast model product sold by a third-party vendor (TSM Models). This indicates a licensing or merchandising relationship rather than direct procurement activity by Corvette Racing. The content is a consumer catalog (B2C), not a B2B procurement signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:41:49.296639",
+          "domain_explored": "https://news.chevrolet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Marketing Messaging",
+            "Brand Awareness Content",
+            "Media Relations Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.428820848464966
+            }
+          ],
+          "reasoning": "The scraped content is a consumer-facing news portal (Chevrolet Pressroom) focused on EV marketing and media relations. It contains no technical specifications, supply chain data, or procurement signals relevant to the operational needs of Corvette Racing by Pratt Miller Motorsports."
+        }
+      ],
+      "total_input_tokens": 5765,
+      "total_output_tokens": 990,
+      "estimated_cost_usd": 0.032145
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Corvette Racing by Pratt Miller Motorsports may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:41:49.298118"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366996",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:12.485561"
+}

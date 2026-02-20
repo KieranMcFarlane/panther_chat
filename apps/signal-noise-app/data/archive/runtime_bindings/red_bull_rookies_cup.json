@@ -1,0 +1,81 @@
+{
+  "entity_id": "red_bull_rookies_cup",
+  "entity_name": "Red Bull Rookies Cup",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "redbull.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "red_bull_rookies_cup",
+      "entity_name": "Red Bull Rookies Cup",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://redbull.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Red Bull Rookies Cup may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:12:59.883440",
+          "domain_explored": "https://redbull.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Product Marketing",
+            "High-Volume Content Repetition",
+            "Brand Hierarchy Navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.129685163497925
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on Formula One driver news (Max Verstappen) and consumer product navigation (Energy Drinks). There are no mentions of the Red Bull Rookies Cup, nor are there any signals regarding B2B procurement, job postings, or technology infrastructure specific to the racing series operations."
+        }
+      ],
+      "total_input_tokens": 1359,
+      "total_output_tokens": 171,
+      "estimated_cost_usd": 0.006642
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Red Bull Rookies Cup may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:12:59.885393"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374864",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:51.333421"
+}

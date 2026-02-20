@@ -1,0 +1,214 @@
+{
+  "entity_id": "fim_north_america",
+  "entity_name": "FIM North America",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fim-northamerica.com",
+    "fim-moto.com",
+    "americanmotorcyclist.com",
+    "motoparkracing.com",
+    "arenacrossusa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_north_america",
+      "entity_name": "FIM North America",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://arenacrossusa.com",
+        "https://motoparkracing.com",
+        "https://americanmotorcyclist.com",
+        "https://fim-northamerica.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM North America may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:53:01.058781",
+          "domain_explored": "https://fim-northamerica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Insurance procurement for 'FIM Event License' (Paddock coverage)",
+              "Event management services for 'Continental Championship events'",
+              "Administrative tools for license issuance (managed by member federations)"
+            ]
+          },
+          "patterns_found": [
+            "Federated Governance Model",
+            "Event-Based Operations",
+            "Insurance/Compliance Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 282,
+              "elapsed_seconds": 3.174276113510132
+            }
+          ],
+          "reasoning": "The content confirms FIM North America operates as a lightweight governing body (CONU) coordinating national federations (AMA, CMA, BMF) rather than a large enterprise with direct procurement authority. However, the specific mention of 'comprehensive insurance coverage' for the new FIM Event License indicates a clear procurement category (Insurance/Risk Management) managed at the parent FIM level but applicable to NA operations. The expansion of 'AMA Arenacross' suggests potential event-related vendor needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:53:17.116687",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Safety & Homologation requirements (potential for safety gear procurement)",
+              "Technical Commission updates (potential for technical consulting)",
+              "Sustainability Commission (potential for environmental consulting)"
+            ]
+          },
+          "patterns_found": [
+            "Global Governing Body Structure",
+            "Regulatory/Compliance Focus",
+            "Multi-Discipline Event Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 277,
+              "elapsed_seconds": 12.240814924240112
+            }
+          ],
+          "reasoning": "The content analyzed is from the global FIM (F\u00e9d\u00e9ration Internationale de Motocyclisme) website, not the specific 'FIM North America' entity targeted in the prompt. While this establishes the parent organization's focus on regulations, safety, and event management, it does not provide specific procurement signals, technology stacks, or job postings for the North American subsidiary. The focus is on global sporting codes and commissions rather than regional business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:53:20.029128",
+          "domain_explored": "https://americanmotorcyclist.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:53:31.164913",
+          "domain_explored": "https://motoparkracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify/WooCommerce indicators via 'Buy Now' and SKU structures)",
+              "Event Management System (Scheduling logic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Merchandising (Apparel sales)",
+              "Facility Maintenance (Track operations)",
+              "Hospitality Procurement (Hotel/Bunkhouse supplies)"
+            ]
+          },
+          "patterns_found": [
+            "B2C Operational Focus",
+            "Direct-to-Consumer E-commerce",
+            "Event-Based Revenue Model",
+            "Hospitality Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 284,
+              "elapsed_seconds": 6.699396133422852
+            }
+          ],
+          "reasoning": "The analyzed content (motoparkracing.com) identifies the entity as a motocross training facility and track venue (B2C). It focuses on consumer-facing operations such as ticket sales, merchandise, camping, and coaching. There is no connection to 'FIM North America' governance, insurance procurement, or enterprise-level supply chains. This represents a distinct entity operating downstream in the value chain."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:53:41.894789",
+          "domain_explored": "https://arenacrossusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ProPro Lites (Static Overlay/Sponsorship Tech)",
+              "Custom Schedule Widget (JavaScript/Event Data Feed)",
+              "Ticketing Platform Integration (Implied via 'Tickets' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement: Contracts with Ford Idaho Center, Blue Arena, International Centre, etc.",
+              "Digital Services: Maintenance of schedule widgets and live timing results.",
+              "Sponsorship Activation: Management of 'Official Sponsors' and 'Presented By' inventory."
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Venue Procurement",
+            "Digital Infrastructure (Scheduling Widgets)",
+            "Sponsorship & Rights Management",
+            "Multi-Entity Governance (FIM North America, AMA, AX Promotions)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 370,
+              "elapsed_seconds": 5.954800128936768
+            }
+          ],
+          "reasoning": "The content confirms FIM North America's operational involvement in the 'Arenacross' series through the 'FIM North America Arenacross - Schedule Widget'. While the site is primarily B2C (fan-facing), the operational scale (multi-state/Canada tour) implies underlying procurement for venue rentals, ticketing platforms, and digital infrastructure. The explicit mention of 'AX Promotions' and 'AMA' alongside FIM North America validates the complex governance model requiring vendor coordination."
+        }
+      ],
+      "total_input_tokens": 5800,
+      "total_output_tokens": 1213,
+      "estimated_cost_usd": 0.035595
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM North America may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:53:41.923180"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380486",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:49.601576"
+}

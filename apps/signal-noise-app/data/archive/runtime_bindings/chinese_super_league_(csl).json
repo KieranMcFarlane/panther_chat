@@ -1,0 +1,188 @@
+{
+  "entity_id": "chinese_super_league_(csl)",
+  "entity_name": "Chinese Super League (CSL)",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "my-soccer.com",
+    "kickalgor.com",
+    "aljazeera.com",
+    "tandfonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_super_league_(csl)",
+      "entity_name": "Chinese Super League (CSL)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://aljazeera.com",
+        "https://tandfonline.com",
+        "https://kickalgor.com",
+        "https://my-soccer.com",
+        "https://hr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Super League (CSL) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:50:27.984082",
+          "domain_explored": "https://my-soccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:50:40.229626",
+          "domain_explored": "https://kickalgor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ELO Rating Algorithm",
+              "Data Visualization (Rankings Tables)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global football league and club ratings (ELO system)",
+            "Regional categorization (AFC, CAF, CONCACAF, CONMEBOL, OFC)",
+            "Data aggregation and ranking algorithms"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.622150897979736
+            }
+          ],
+          "reasoning": "The scraped content from 'kickalgor.com' is a global football ranking dashboard. While it lists Asian leagues (AFC), the Chinese Super League (CSL) is not visible in the provided top 5 snippets for Asia (Saudi Arabia, Japan, South Korea, UAE, Qatar are listed). The site is a data analytics/rating platform, not a procurement portal or the official CSL entity. No procurement signals, job postings, or technology vendor information related to the CSL's internal operations was found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:50:55.642065",
+          "domain_explored": "https://aljazeera.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geopolitical conflict reporting",
+            "Humanitarian crisis coverage",
+            "General global news aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 175,
+              "elapsed_seconds": 11.829947233200073
+            }
+          ],
+          "reasoning": "The content provided is a live news feed from Al Jazeera focusing on geopolitical conflicts (Gaza, Pakistan, Iran) and general international affairs. There is absolutely no mention of the Chinese Super League (CSL), football, sports procurement, or related technology stacks. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:50:58.432117",
+          "domain_explored": "https://tandfonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:51:05.458897",
+          "domain_explored": "https://hr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (Custom)",
+              "Social Media (LinkedIn for distribution)"
+            ],
+            "job_postings": [
+              "Saudi Pro League (1st Division) - Centre Forward, Box-to-Box Midfielder (\u20ac350k/season)",
+              "Japan J6 League - Player recruitment"
+            ],
+            "procurement_indicators": [
+              "Outsourced recruitment services",
+              "Regional talent mobility indicators"
+            ]
+          },
+          "patterns_found": [
+            "Global football job aggregation",
+            "Direct recruitment feeds for Asian leagues (Saudi Pro League, Japan)",
+            "Platform-based talent acquisition",
+            "Contractual value signaling (\u20ac350k salary example)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.042976140975952
+            }
+          ],
+          "reasoning": "While this is a third-party job board (Futboljobs) and not a direct CSL procurement page, it functions as a discovery channel for active recruitment signals within the target region (Asia). The content confirms active hiring for Asian leagues (Saudi, Japan), validating the platform's utility for finding similar CSL opportunities. It provides indirect intelligence on the regional labor market and salary benchmarks."
+        }
+      ],
+      "total_input_tokens": 4404,
+      "total_output_tokens": 742,
+      "estimated_cost_usd": 0.024342
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Super League (CSL) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:51:05.460164"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419551",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:25.794512"
+}

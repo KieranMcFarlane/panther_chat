@@ -1,0 +1,112 @@
+{
+  "entity_id": "international_tennis_federation_(itf)",
+  "entity_name": "International Tennis Federation (ITF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "itftennis.com",
+    "itf-academy.com",
+    "better-internet-for-kids.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_tennis_federation_(itf)",
+      "entity_name": "International Tennis Federation (ITF)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://itf-academy.com",
+        "https://itftennis.com",
+        "https://better-internet-for-kids.europa.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Tennis Federation (ITF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:24:52.392730",
+          "domain_explored": "https://itftennis.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:24:55.156367",
+          "domain_explored": "https://itf-academy.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:25:03.553797",
+          "domain_explored": "https://better-internet-for-kids.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "European Commission copyright",
+            "EU strategy references (BIK+)",
+            "Public awareness campaigns (Safer Internet Day)",
+            "Hybrid event formats (Safer Internet Forum)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.882448196411133
+            }
+          ],
+          "reasoning": "The content analyzed belongs to the 'Better Internet for Kids' (BIK) initiative, which is an official European Commission portal (copyright notice, EU strategy references). This is completely unrelated to the International Tennis Federation (ITF). There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 1430,
+      "total_output_tokens": 197,
+      "estimated_cost_usd": 0.007245000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Tennis Federation (ITF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:25:03.555722"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463769",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:47.246836"
+}

@@ -1,0 +1,145 @@
+{
+  "entity_id": "burkina_faso_basketball_federation",
+  "entity_name": "Burkina Faso Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "hotmart.com",
+    "dailytrust.com",
+    "gidisports.blogspot.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "burkina_faso_basketball_federation",
+      "entity_name": "Burkina Faso Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://dailytrust.com",
+        "https://gidisports.blogspot.com",
+        "https://hotmart.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Burkina Faso Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:49:01.007794",
+          "domain_explored": "https://hotmart.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "marketing_landing_page",
+            "language_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 170,
+              "elapsed_seconds": 4.7734739780426025
+            }
+          ],
+          "reasoning": "The scraped content is from Hotmart, a Brazilian digital products platform (Portuguese language). It is a generic marketing landing page for creating and selling online courses, completely unrelated to the Burkina Faso Basketball Federation. There are no procurement signals, governance patterns, or relevant technology stacks for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:49:11.340045",
+          "domain_explored": "https://dailytrust.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "general_news_aggregator",
+            "geographic_mismatch",
+            "entity_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.1386680603027344
+            }
+          ],
+          "reasoning": "The content is from a Nigerian general news site (Daily Trust) covering politics, security, and finance. There is absolutely no mention of the Burkina Faso Basketball Federation, sports governance, or related procurement activities. The geographic context (Nigeria) and subject matter (Politics/Boko Haram) are irrelevant to the target entity in Burkina Faso."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:49:30.813965",
+          "domain_explored": "https://gidisports.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "geographic_mismatch",
+            "sport_news_aggregator",
+            "outdated_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 182,
+              "elapsed_seconds": 14.090414047241211
+            }
+          ],
+          "reasoning": "The content is a sports news blog (Gidi Sports) focused on Nigerian football (NPFL, NFF) and general sports news from 2015. It contains no governance, procurement, or administrative information regarding the Burkina Faso Basketball Federation. The geographic focus (Nigeria) and the nature of the content (historical match results) contradict the procurement hypothesis."
+        }
+      ],
+      "total_input_tokens": 4228,
+      "total_output_tokens": 532,
+      "estimated_cost_usd": 0.020664000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Burkina Faso Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:49:30.816533"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.257417",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:05.756661"
+}

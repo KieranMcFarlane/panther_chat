@@ -1,0 +1,152 @@
+{
+  "entity_id": "melbourne_boomers",
+  "entity_name": "Melbourne Boomers",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "wnbl.com.au",
+    "melbourneboomers.memberlink.net.au",
+    "austadiums.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "melbourne_boomers",
+      "entity_name": "Melbourne Boomers",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://austadiums.com",
+        "https://melbourneboomers.memberlink.net.au",
+        "https://wnbl.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Melbourne Boomers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:32:45.139517",
+          "domain_explored": "https://wnbl.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "General sports news (scores, standings, MVP voting)",
+            "No specific entity mentions (Melbourne Boomers)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.5770068168640137
+            }
+          ],
+          "reasoning": "The scraped content is from the main WNBL homepage and consists solely of league-wide news, game results, and standings for other teams (Perth Lynx, Bendigo Spirit, Geelong, etc.). There is no mention of the Melbourne Boomers, nor any procurement signals, job postings, or technology updates specific to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:32:56.906022",
+          "domain_explored": "https://melbourneboomers.memberlink.net.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Memberlink (Membership Management Platform)",
+              "ASP.NET (Detected from URL structure: .aspx)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Memberlink (Active contract for membership/ticketing)",
+              "Capability: Digital Auto-renewal workflows",
+              "Capability: Online account management (Self-service)"
+            ]
+          },
+          "patterns_found": [
+            "Membership Management System",
+            "Auto-renewal payment processing",
+            "Secondary member account management",
+            "Ticketing/Transaction history"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 899,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.197102785110474
+            }
+          ],
+          "reasoning": "The content reveals the Melbourne Boomers' member-facing portal. While it does not show active procurement tenders, it exposes the underlying technology stack ('Memberlink') and functional capabilities (auto-renewals, secondary accounts, order history). Identifying the current vendor is a critical step in procurement intelligence for potential contract displacement or upsell opportunities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:33:06.823969",
+          "domain_explored": "https://austadiums.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level event aggregation",
+            "Generic stadium directory listings",
+            "Ticketing hub for multiple venues",
+            "Sports news aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.2629008293151855
+            }
+          ],
+          "reasoning": "The analyzed content is from Austadiums, a third-party aggregator for stadium news and sports events. While it lists 'WNBL' and specific Melbourne venues (e.g., John Cain Arena), it does not contain content specific to the Melbourne Boomers organization. There are no procurement signals, vendor lists, or technology stacks attributable to the Boomers themselves."
+        }
+      ],
+      "total_input_tokens": 3733,
+      "total_output_tokens": 662,
+      "estimated_cost_usd": 0.021129000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Melbourne Boomers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:33:06.825760"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233777",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:24:32.019853"
+}

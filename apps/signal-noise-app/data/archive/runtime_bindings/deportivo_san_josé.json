@@ -1,0 +1,191 @@
+{
+  "entity_id": "deportivo_san_jos\u00e9",
+  "entity_name": "Deportivo San Jos\u00e9",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "colsanjose.edu.co",
+    "colegiosanjose.org",
+    "gvsanjose.com",
+    "clubdeportivosjv.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "deportivo_san_jos\u00e9",
+      "entity_name": "Deportivo San Jos\u00e9",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://gvsanjose.com",
+        "https://clubdeportivosjv.com",
+        "https://colsanjose.edu.co",
+        "https://colegiosanjose.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Deportivo San Jos\u00e9 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:17:27.333372",
+          "domain_explored": "https://colsanjose.edu.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic content placeholders",
+            "Future-dated content (2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 412,
+              "output_tokens": 137,
+              "elapsed_seconds": 2.1965579986572266
+            }
+          ],
+          "reasoning": "The provided text consists of repetitive UI artifacts ('Sigue leyendo') and future-dated entries (31/01/2026) with no descriptive content. There is no information regarding technology stack, job postings, or procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:17:43.403988",
+          "domain_explored": "https://colegiosanjose.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions of 'digitalizaci\u00f3n al servicio de la educaci\u00f3n' (Digitalization at service of education) - General strategy, not specific procurement.",
+              "Mentions of 'Innovaci\u00f3n pedag\u00f3gica' (Pedagogical innovation) - Educational focus."
+            ]
+          },
+          "patterns_found": [
+            "Wrong Entity Context (Valladolid, Spain vs. Colombia)",
+            "Educational Pedagogy Focus (Jesuit Model)",
+            "Student Recruitment Content (Admissions/Visits)",
+            "Future-dated Content (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 288,
+              "elapsed_seconds": 6.014420986175537
+            }
+          ],
+          "reasoning": "The scraped content from 'colegiosanjose.org' identifies the entity as 'Colegio San Jos\u00e9' in Valladolid, Spain (references to 'Valladolid', 'PAU' - Spanish university access exams). This contradicts the target entity 'Deportivo San Jos\u00e9' (likely Colombian based on the previous URL 'colsanjose.edu.co'). The content is focused on pedagogy, values, and student admissions rather than sports club procurement or technology operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:17:56.391802",
+          "domain_explored": "https://gvsanjose.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Todotix (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sports Club vs. Educational Institution)",
+            "Consumer-Facing E-commerce (Ticket Sales)",
+            "Geographic Mismatch (Oruro, Bolivia vs. Colombia)",
+            "Third-Party Ticketing Integration (Todotix)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 626,
+              "output_tokens": 233,
+              "elapsed_seconds": 5.387337923049927
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Club Deportivo San Jos\u00e9' (Oruro, Bolivia), a football (soccer) club, rather than the target 'Deportivo San Jos\u00e9' educational institution in Colombia. The content focuses on ticket sales ('Comprar Entradas') and fan sentiment, which are consumer activities rather than institutional procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:18:09.430154",
+          "domain_explored": "https://clubdeportivosjv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "Payment Gateway (implied by course pricing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Insurance Policy Management (Cambio en las P\u00f3lizas de Seguro)",
+              "Event Organization (IV Open de Taekwondo 2025)",
+              "Sports Equipment Procurement (implied by course delivery)",
+              "Psychological Services (Mental health support for athletes)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Entity Match (Club Deportivo San Jos\u00e9 de Las Vegas)",
+            "B2C Service Operations (Course Sales, Pricing)",
+            "Administrative Operations (Insurance Policies, Event Management)",
+            "Geographic Alignment (Medell\u00edn, Colombia)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 347,
+              "elapsed_seconds": 5.613882064819336
+            }
+          ],
+          "reasoning": "The content confirms the correct entity: 'Club Deportivo Corporaci\u00f3n Educativa San Jos\u00e9 de Las Vegas' in Medell\u00edn. While the site is consumer-facing (selling courses like Taekwondo and Skating), it reveals organizational complexity requiring B2B support. Specifically, the management of 'P\u00f3lizas de Seguro' (Insurance Policies) and the coordination of national/international tournaments indicate a need for risk management, event logistics, and financial administration vendors."
+        }
+      ],
+      "total_input_tokens": 3974,
+      "total_output_tokens": 1005,
+      "estimated_cost_usd": 0.026997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Deportivo San Jos\u00e9 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:18:09.431722"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.235735",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:43.757685"
+}

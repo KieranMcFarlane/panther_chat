@@ -1,0 +1,225 @@
+{
+  "entity_id": "belogorie_belgorod",
+  "entity_name": "Belogorie Belgorod",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "belogorievolley.ru",
+    "www-old.cev.eu",
+    "grokipedia.com",
+    "globalsportsarchive.com",
+    "volleymob.com",
+    "volleytimes.com",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belogorie_belgorod",
+      "entity_name": "Belogorie Belgorod",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://volleymob.com",
+        "https://globalsportsarchive.com",
+        "https://grokipedia.com",
+        "https://belogorievolley.ru",
+        "https://volleytimes.com",
+        "https://sofascore.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belogorie Belgorod may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:19:02.807096",
+          "domain_explored": "https://belogorievolley.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "General Sponsor: Metalloinvest (https://www.metalloinvest.com/)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Sponsorship Visibility",
+            "Ticket Sales Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.616928815841675
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news, match results, player birthdays, and game schedules. While the presence of a 'Buy ticket' (\u041a\u0443\u043f\u0438\u0442\u044c \u0431\u0438\u043b\u0435\u0442) link indicates e-commerce capability, the content provides no signals regarding enterprise procurement, technology stack implementation, or digital transformation initiatives."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:19:08.550751",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Governing Body Operations",
+            "Tournament Listings",
+            "Historical Event Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.2917919158935547
+            }
+          ],
+          "reasoning": "The content analyzed is from the Confederation Europ\u00e9enne de Volleyball (CEV) website, specifically a navigation menu and event listing page. While Belogorie Belgorod competes in CEV tournaments, this page contains no specific information regarding Belogorie's internal operations, technology stack, or procurement activities. It is purely contextual information about the league ecosystem."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:19:11.365400",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:19:20.917451",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Statistics Aggregation",
+            "Generic Tournament Listings",
+            "Global Sports Database Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 181,
+              "elapsed_seconds": 5.898934841156006
+            }
+          ],
+          "reasoning": "The scraped content consists of generic navigation links and tournament listings for global soccer (UEFA, AFC, CONCACAF, etc.) found on globalsportsarchive.com. There is no mention of 'Belogorie', 'Belgorod', or Volleyball. The content is purely informational sports data with no corporate, governance, or procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:19:50.590225",
+          "domain_explored": "https://volleymob.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by RSS feed structure)",
+              "Vimeo (Video Hosting)",
+              "Facebook Social Plugin"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "US Collegiate Sports Coverage",
+            "Editorial Content Aggregation",
+            "Social Media Syndication"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 232,
+              "elapsed_seconds": 26.29314112663269
+            }
+          ],
+          "reasoning": "The scraped content from 'volleymob.com' is a US-based media outlet focusing on NCAA (college) volleyball, specifically mentioning teams like Illinois, Nebraska, and Oregon. This is geographically and organizationally irrelevant to 'Belogorie Belgorod', a professional volleyball club based in Russia. The content represents editorial news and rankings, not the internal operations or procurement signals of the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:19:53.588062",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:19:56.338625",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5782,
+      "total_output_tokens": 788,
+      "estimated_cost_usd": 0.029166
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belogorie Belgorod may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:19:56.339732"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319760",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:36.564940"
+}

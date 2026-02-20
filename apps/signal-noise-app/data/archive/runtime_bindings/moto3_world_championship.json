@@ -1,0 +1,259 @@
+{
+  "entity_id": "moto3_world_championship",
+  "entity_name": "Moto3 World Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "fim-moto.com",
+    "motogp.com",
+    "press.ktm.com",
+    "cfmoto.com",
+    "levelup-mta.com",
+    "dunlop-moto.com",
+    "mlavracing.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "moto3_world_championship",
+      "entity_name": "Moto3 World Championship",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://levelup-mta.com",
+        "https://press.ktm.com",
+        "https://dunlop-moto.com",
+        "https://cfmoto.com",
+        "https://motogp.com",
+        "https://mlavracing.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Moto3 World Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:26:13.746900",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Homologation Tracking Systems",
+              "Anti-doping Management Systems",
+              "Digital Document Management (Press/Regulations)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Publication of 2026 Moto3 World Championship Regulations (Signal: Compliance Vendor Engagement)",
+              "Update on Circuit Racing homologated helmets (Signal: Safety Equipment Procurement)",
+              "International Sustainability Commission activities (Signal: ESG/Consulting Requirements)"
+            ]
+          },
+          "patterns_found": [
+            "Annual Regulatory Cycle (2026 Updates)",
+            "Safety & Homologation Compliance",
+            "Sustainability & Alternative Energy Initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 326,
+              "elapsed_seconds": 21.93198323249817
+            }
+          ],
+          "reasoning": "The content confirms the FIM is in an active update cycle for the 2026 season, specifically releasing new regulations for Moto3, Moto2, and MotoGP. This indicates a procurement readiness for compliance-related services and safety equipment. The explicit mention of 'innovation in emerging technologies and alternative energies' suggests future RFPs in the sustainability sector, though no specific active tenders are listed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:26:23.930897",
+          "domain_explored": "https://motogp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VideoPass (OTT Platform)",
+              "Video Streaming Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Agreements (Castrol, BK8)",
+              "Event Entertainment Procurement (The Script, PAWSA, DOLLA)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Media Content",
+            "B2C Marketing Focus",
+            "Sponsorship Activation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 219,
+              "elapsed_seconds": 3.176605224609375
+            }
+          ],
+          "reasoning": "The content is exclusively focused on B2C media consumption (VideoPass subscriptions), team sponsorships (liveries, Castrol, BK8), and entertainment (concerts). There are no signals regarding the procurement of enterprise software, operational services, or B2B vendor management relevant to Moto3 operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:26:33.816885",
+          "domain_explored": "https://press.ktm.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Press Center Platform (Hosted Digital Asset Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media Asset Management (MAM) Usage",
+            "Brand Protection & Copyright Enforcement",
+            "B2C Marketing Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.7867419719696045
+            }
+          ],
+          "reasoning": "The content is strictly the Terms and Conditions for the KTM Press Center. It governs the usage of media assets (photos, videos) for journalists. While it confirms KTM uses a digital asset management system, it contains no information regarding procurement cycles, vendor selection, or operational supply chain management for the Moto3 championship. It is a legal document for media consumption, not a procurement signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:26:47.711265",
+          "domain_explored": "https://cfmoto.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:27:06.459154",
+          "domain_explored": "https://levelup-mta.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:27:16.145838",
+          "domain_explored": "https://dunlop-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Marketing Focus",
+            "Regional Localization Strategy",
+            "Consumer Product Cataloging"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.3860251903533936
+            }
+          ],
+          "reasoning": "The scraped content is exclusively a language/country selector for a consumer-facing website (Dunlop Moto). It indicates a focus on regional B2C sales and marketing localization rather than corporate procurement, governance, or championship-level operations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:27:27.690647",
+          "domain_explored": "https://mlavracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VROOM MEDIA (Web Design/Development Vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational scaling across 4 distinct racing series (Moto3, JuniorGP, ETC, BTC)",
+              "Requirement for technical support equipment (mechanics, technicians, machines)",
+              "Active management of B2B sponsor relationships",
+              "Merchandising supply chain management (Teamwear production)"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Series Operational Expansion",
+            "Technical Infrastructure Scaling",
+            "Vendor Ecosystem (Sponsors/Suppliers)",
+            "Digital Asset Management (Merchandising)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1618,
+              "output_tokens": 334,
+              "elapsed_seconds": 4.358970880508423
+            }
+          ],
+          "reasoning": "The content reveals a team (MLav Racing) operating within the Moto3 World Championship ecosystem. While primarily a team site, the explicit mention of scaling operations across multiple championships (Moto3, JuniorGP, British Talent Cup) and the need to support 'mechanics and technicians' indicates underlying procurement needs for technical equipment, parts, and logistical services. The presence of a 'Sponsors' section and branded merchandise suggests an active B2B partnership and vendor ecosystem."
+        }
+      ],
+      "total_input_tokens": 7432,
+      "total_output_tokens": 1249,
+      "estimated_cost_usd": 0.041031
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Moto3 World Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:27:27.692664"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374483",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:23:36.597256"
+}

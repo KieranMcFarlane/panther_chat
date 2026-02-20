@@ -1,0 +1,245 @@
+{
+  "entity_id": "sudam\u00e9rica_rugby",
+  "entity_name": "Sudam\u00e9rica Rugby",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "sudamerica.rugby",
+    "rugbyworldcup.com",
+    "superrugbyamericas.com",
+    "americasrugbynews.com",
+    "rugbyarchive.net",
+    "rugbyamericasnorth.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sudam\u00e9rica_rugby",
+      "entity_name": "Sudam\u00e9rica Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://rugbyarchive.net",
+        "https://superrugbyamericas.com",
+        "https://rugbyworldcup.com",
+        "https://sudamerica.rugby",
+        "https://rugbyamericasnorth.com",
+        "https://americasrugbynews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sudam\u00e9rica Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:44:50.906204",
+          "domain_explored": "https://sudamerica.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Potential LMS (Learning Management Systems) for educational modules",
+              "Sports Performance Analytics Software"
+            ],
+            "job_postings": [
+              "High Performance Coaching Staff (implied operational need)"
+            ],
+            "procurement_indicators": [
+              "Investment in High Performance Academy infrastructure and operations",
+              "Educational program development"
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Training Programs",
+            "Academy Operations",
+            "Educational Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 459,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.879164934158325
+            }
+          ],
+          "reasoning": "The content explicitly mentions the 'Academia SAR de Alto Rendimiento' (SAR High Performance Academy). While the text snippet is brief, the operation of a high-performance sports academy implies ongoing procurement needs for specialized services (coaching, sports science), facilities, and potentially educational technology (LMS) for 'forming towards the future'. However, the snippet lacks specific technical details or explicit RFP language, resulting in a weak signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:44:58.122942",
+          "domain_explored": "https://rugbyworldcup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Sponsorship Activity (Mitsubishi Estate, LIQUI MOLY)",
+              "Infrastructure Planning (Australian Venues for RWC 2027)"
+            ]
+          },
+          "patterns_found": [
+            "Global Event Sponsorship",
+            "Venue Infrastructure Announcements",
+            "Commercial Partnership Agreements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.09601092338562
+            }
+          ],
+          "reasoning": "The scraped content is from the global Rugby World Cup site (rugbyworldcup.com) and focuses on high-level sponsorships (Mitsubishi Estate, LIQUI MOLY) and venue announcements for the 2027/2029 tournaments hosted in Australia. While this indicates a healthy ecosystem for World Rugby, it does not contain specific procurement signals, technology stacks, or RFPs relevant to the regional operations of Sudam\u00e9rica Rugby. The content is too high-level and geographically distinct (Australia focus) to infer actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:45:06.592242",
+          "domain_explored": "https://superrugbyamericas.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fantasy Gaming Platform",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of interactive fan engagement platform (Fantasy Rugby)",
+              "League operations and fixture management",
+              "Cross-border team logistics (player transfers between Argentina, Brazil, South Africa)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Development (Fantasy Gaming)",
+            "League Management & Operations",
+            "Franchise/Team Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 280,
+              "elapsed_seconds": 5.021876811981201
+            }
+          ],
+          "reasoning": "The content reveals the launch of 'S\u00faper Rugby Am\u00e9ricas Fantasy', a digital product requiring software development or vendor procurement for gaming platforms. It also confirms ongoing operational management of the league (fixture planning, team rosters), which necessitates administrative software and logistical services. While not a direct RFP, this indicates active investment in digital engagement tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:45:24.101311",
+          "domain_explored": "https://americasrugbynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Management Requirements",
+              "Team Travel & Logistics Coordination"
+            ]
+          },
+          "patterns_found": [
+            "Sports Event Scheduling",
+            "Team Logistics Planning",
+            "Venue Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 767,
+              "output_tokens": 203,
+              "elapsed_seconds": 12.55577802658081
+            }
+          ],
+          "reasoning": "The content is a news article detailing the 2026 match schedule for Argentina (Los Pumas). While this implies operational activity (venue management, travel logistics), it is a journalistic report rather than a direct signal of procurement intent, technology adoption, or organizational hiring by Sudam\u00e9rica Rugby. It lacks specific vendor needs or investment signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:45:27.660133",
+          "domain_explored": "https://rugbyarchive.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:45:47.488180",
+          "domain_explored": "https://rugbyamericasnorth.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of Inaugural Youth Leadership Academy (Requires educational content/tech vendors)",
+              "Management of 60-Match Schedule (Requires event management software/logistics)",
+              "Hurricane Relief Fund Management (Requires financial services/CRM)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Leadership Academy Operations",
+            "Large-Scale Event Logistics (60-Match Schedule)",
+            "Regional Crisis Management & Relief Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 241,
+              "elapsed_seconds": 16.512512922286987
+            }
+          ],
+          "reasoning": "The content reveals operational capabilities and program launches (Youth Leadership Academy) that require vendor support (training platforms, logistics). However, the content is primarily news/results focused with no explicit procurement intent or technology stack details."
+        }
+      ],
+      "total_input_tokens": 5685,
+      "total_output_tokens": 1292,
+      "estimated_cost_usd": 0.036435
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sudam\u00e9rica Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:45:47.489503"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.284128",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:42.669030"
+}

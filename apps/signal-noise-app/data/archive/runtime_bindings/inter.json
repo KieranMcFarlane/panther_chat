@@ -1,0 +1,389 @@
+{
+  "entity_id": "inter",
+  "entity_name": "Inter",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "inter.it",
+    "intermiamicf.com",
+    "fcinter.fi",
+    "apps.apple.com",
+    "acmilan.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+      "https://www.linkedin.com/jobs/view/security-personnel-chicago-80006-at-inter-con-security-4352622317",
+      "https://www.linkedin.com/company/inter-american-development-bank/jobs",
+      "https://www.linkedin.com/jobs/view/lead-specialist-53031-at-inter-con-security-4136147611",
+      "https://www.linkedin.com/jobs/view/security-officer-detroit-mi-68451-at-inter-con-security-4210737583",
+      "https://www.linkedin.com/jobs/view/patrol-specialist-1-47464-at-inter-con-security-4136145845",
+      "https://www.linkedin.com/jobs/view/officer-43193-at-inter-con-security-4136152020",
+      "https://www.linkedin.com/jobs/view/security-officer-oh-69623-at-inter-con-security-4136146662"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "inter",
+      "entity_name": "Inter",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/inter-american-development-bank/jobs",
+        "https://intermiamicf.com",
+        "https://www.linkedin.com/jobs/view/security-officer-detroit-mi-68451-at-inter-con-security-4210737583",
+        "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+        "https://www.linkedin.com/jobs/view/security-personnel-chicago-80006-at-inter-con-security-4352622317",
+        "https://acmilan.com",
+        "https://inter.it",
+        "https://apps.apple.com",
+        "https://www.linkedin.com/jobs/view/lead-specialist-53031-at-inter-con-security-4136147611",
+        "https://fcinter.fi"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Inter may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:41:39.878342",
+          "domain_explored": "https://inter.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is exclusively sports journalism (match results, player transfers, awards)",
+            "No corporate governance, technology, or vendor management content detected",
+            "Standard news feed structure (RSS-like) without procurement signals"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.2070870399475098
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match results (Cremonese-Inter), player transfers (Yanis Massolin), and team updates. There are no signals regarding technology investments, job postings, or corporate procurement activities. The source page appears to be the general news/sports section of the website rather than a corporate or institutional section."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:41:47.363074",
+          "domain_explored": "https://intermiamicf.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism focus (player transfers, ticket sales)",
+            "Repetitive content structure (RSS feed scraping artifact)",
+            "Consumer-facing announcements (B2C)",
+            "No corporate governance or vendor management content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 247,
+              "elapsed_seconds": 4.20069694519043
+            }
+          ],
+          "reasoning": "The scraped content from intermiamicf.com is exclusively focused on sports operations (player signings, match tickets) and is identical in structure to the previous iteration (inter.it). The content is consumer-facing and repetitive, indicating a standard news feed without any embedded corporate procurement, technology infrastructure, or job posting signals. The entity context (Inter Miami CF) differs from the initial entity (Inter Milan), but the lack of procurement signals remains consistent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:41:54.113678",
+          "domain_explored": "https://fcinter.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Tiketti (Ticketing Platform)",
+              "Ruutu+ (Streaming Service)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Outsourced Media Broadcasting"
+            ]
+          },
+          "patterns_found": [
+            "B2C Ticket Sales (Tiketti integration)",
+            "Media Rights Partnership (Ruutu+ streaming)",
+            "Repetitive Marketing Content (HTML scraping artifacts)",
+            "Stadium Operations (Veritas Stadion)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 255,
+              "elapsed_seconds": 3.5929417610168457
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing sports marketing (ticket sales, streaming subscriptions). While it reveals vendor relationships (Tiketti for ticketing, Ruutu for media), these are established operational partnerships rather than active procurement signals or RFPs. The repetitive nature of the text indicates a low-quality scrape of a promotional page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:42:09.407950",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iOS App Store",
+              "Roblox",
+              "Pok\u00e9mon TCG Pocket",
+              "Genshin Impact"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Mobile Application Storefront",
+            "Consumer Gaming & Entertainment Content",
+            "Editorial Content Curation",
+            "HTML Scraping Artifacts (Repetitive Blocks)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 243,
+              "elapsed_seconds": 12.011130809783936
+            }
+          ],
+          "reasoning": "The content is clearly scraped from the Apple App Store 'Today' tab. It consists exclusively of consumer-facing app recommendations, game updates (Roblox, Pokemon, Genshin Impact), and editorial features. There is absolutely no corporate information, governance structure, or procurement intent related to the entity 'Inter'. The URL context (apps.apple.com) confirms this is a platform-hosted page, not a corporate asset."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:42:12.537474",
+          "domain_explored": "https://acmilan.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:42:23.135132",
+          "domain_explored": "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Graphic Designer",
+              "Director, Video Production",
+              "Academy Performance Coach",
+              "Talent Acquisition Lead",
+              "Assistant Athletic Trainer (Academy)"
+            ],
+            "procurement_indicators": [
+              "Talent Acquisition Lead: Indicates internal HR scaling, but not necessarily procurement function."
+            ]
+          },
+          "patterns_found": [
+            "Sports Operations Hiring (Coaching, Medical, Performance)",
+            "Creative & Media Hiring (Graphic Design, Video Production)",
+            "HR/Internal Recruitment (Talent Acquisition Lead)",
+            "Geographic Focus (Fort Lauderdale, Miami, Coral Gables, FL)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 324,
+              "elapsed_seconds": 7.191290855407715
+            }
+          ],
+          "reasoning": "The scraped content lists active job openings for Inter Miami CF. While this indicates organizational growth and hiring activity, the roles identified (Graphic Designer, Performance Coach, Athletic Trainer, Video Production) are operational or sports-side functions. There are no explicit procurement, technology, or corporate governance roles visible in this snippet that would signal specific vendor management or technology acquisition intent."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:42:30.964958",
+          "domain_explored": "https://www.linkedin.com/jobs/view/security-personnel-chicago-80006-at-inter-con-security-4352622317",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Security Personnel (Inter-Con Security Systems)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Inter-Con Security vs Inter)",
+            "Blue Collar Recruitment (Security Officers)",
+            "Physical Security Services (Manned Guarding)",
+            "Consumer-facing Job Description"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 237,
+              "elapsed_seconds": 4.416589021682739
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Inter-Con Security Systems, Inc.', a US-based physical security contractor founded in 1973. This is a distinct entity from 'Inter' (the target football club) or 'Inter Miami CF'. The content focuses on hiring unarmed security officers for physical patrols and infrastructure protection, which is a labor supply function rather than a corporate procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:42:37.029472",
+          "domain_explored": "https://www.linkedin.com/company/inter-american-development-bank/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Manager's Office Support Consultant",
+              "Research Department - Research Fellow",
+              "Human Resources Associate - Talent Acquisition Recruiter",
+              "Consultor\u00eda de Soporte Local de TI (IT Support)",
+              "Advisor / Senior Advisor - Executive Communications"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Inter-American Development Bank vs Inter)",
+            "International Development Sector",
+            "Multi-regional Hiring (Latin America & Caribbean focus)",
+            "Repetitive Job Board Structure (LinkedIn Scraping Artifacts)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1815,
+              "output_tokens": 298,
+              "elapsed_seconds": 2.6800050735473633
+            }
+          ],
+          "reasoning": "The scraped content corresponds to the Inter-American Development Bank (IDB), an international financial organization, which is a distinct entity from the target 'Inter' (presumably the football club or related corporate entity). The content focuses on development economics, research fellows, and regional HR recruitment, which are irrelevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:42:43.991719",
+          "domain_explored": "https://www.linkedin.com/jobs/view/lead-specialist-53031-at-inter-con-security-4136147611",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Lead Specialist (53031)",
+              "Security Officer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Inter-Con Security vs Inter)",
+            "Physical Security Services (Manned Guarding)",
+            "Blue Collar Recruitment (Security Officers/Leads)",
+            "Government & Commercial Defense Contracting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1897,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.414997100830078
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Inter-Con Security Systems, Inc.', a physical security contractor founded in 1973. This entity is entirely distinct from 'Inter' (the football club) or 'Inter Miami'. The content focuses on hiring security officers and describes physical security services (manned guarding), which contradicts the hypothesis of finding corporate procurement or digital transformation signals for the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:42:50.679910",
+          "domain_explored": "https://www.linkedin.com/jobs/view/security-officer-detroit-mi-68451-at-inter-con-security-4210737583",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Security Officer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Inter-Con Security Systems, Inc. vs Inter)",
+            "Physical Security Services (Manned Guarding)",
+            "Blue Collar Recruitment (Security Officers)",
+            "Government & Commercial Defense Contracting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1979,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.2133030891418457
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Inter-Con Security Systems, Inc.', a US-based physical security contractor. This is a distinct legal entity from 'Inter' (the football club) or 'Inter Miami'. The content focuses on manned guarding and personnel recruitment, which falls outside the scope of corporate procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 14939,
+      "total_output_tokens": 2289,
+      "estimated_cost_usd": 0.079152
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Inter may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:42:50.682511"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.127785",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:40:10.095967"
+}

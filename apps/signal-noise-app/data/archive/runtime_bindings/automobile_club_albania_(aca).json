@@ -1,0 +1,255 @@
+{
+  "entity_id": "automobile_club_albania_(aca)",
+  "entity_name": "Automobile Club Albania (ACA)",
+  "template_id": "tpl_global_governing_federations_v1",
+  "cluster_id": "nat_motor_gov_body",
+  "discovered_domains": [
+    "fiaregion1.com",
+    "easst.co.uk",
+    "canevarally.com",
+    "cez-motorsport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://al.linkedin.com/jobs/view/call-center-operator-at-automobile-club-albania-3886272087"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "automobile_club_albania_(aca)",
+      "entity_name": "Automobile Club Albania (ACA)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1
+      ],
+      "explored_domains": [
+        "https://cez-motorsport.com",
+        "https://easst.co.uk",
+        "https://al.linkedin.com/jobs/view/call-center-operator-at-automobile-club-albania-3886272087",
+        "https://fiaregion1.com",
+        "https://canevarally.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Service Delivery Infrastructure",
+        "Omnichannel Communication Systems",
+        "Vendor/Supply Chain Coordination",
+        "CRM/Database Management",
+        "Roadside Assistance Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Automobile Club Albania (ACA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:13:54.701780",
+          "domain_explored": "https://fiaregion1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ADAS (Advanced Driver Assistance Systems)",
+              "DCAS (Driver Control Assist Systems)",
+              "Vehicle Automation Technologies"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Potential future need for compliance tools related to EU Package Travel Directive",
+              "Interest in automotive safety data (ADAS/DCAS studies) for educational purposes"
+            ]
+          },
+          "patterns_found": [
+            "FIA Regional Policy Advocacy",
+            "EU Regulatory Compliance Monitoring",
+            "Road Safety Research (ADAS/DCAS)",
+            "Consumer Protection (Travel Directive)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.2424612045288086
+            }
+          ],
+          "reasoning": "The content is sourced from the FIA Region I (Europe) Bureau and focuses on high-level EU policy, automotive safety research (ADAS, DCAS, Euro NCAP), and consumer protection directives. While ACA is an FIA member, this content reflects the regulatory environment rather than specific procurement activities, technology investments, or vendor selection processes by the Automobile Club of Albania."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:14:02.733206",
+          "domain_explored": "https://easst.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership for Road Safety Georgia implementing 30km/h limits (Engineering/Infrastructure)",
+              "Automobile Club of Moldova (ACM) launching youth training modules (Education/Training procurement)",
+              "BIHAMK engagement with EBRD for sustainable mobility investments (Institutional partnerships)",
+              "ITF and EASST supporting Ukraine National Road Safety Strategy (Consulting/Strategy services)"
+            ]
+          },
+          "patterns_found": [
+            "Regional NGO Partnership Network",
+            "FIA Regional Alignment",
+            "Capacity Building & Training Programs",
+            "Tactical Urbanism & Engineering Projects",
+            "International Donor Collaboration (EBRD, ITF, UN)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 348,
+              "elapsed_seconds": 5.050574779510498
+            }
+          ],
+          "reasoning": "The content confirms EASST as a key regional partner for FIA clubs in Eastern Europe and Central Asia. While no direct procurement for ACA is listed, the site reveals a network of partner clubs (like BIHAMK, ACM) implementing road safety, engineering, and governance projects funded by international bodies (EBRD, UN). This signals a potential pathway for ACA to access funding or technical assistance programs for similar initiatives, justifying a weak signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:14:08.672022",
+          "domain_explored": "https://canevarally.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "FIA World Rally Championship (WRC) Coverage",
+            "Motorsport Event Logistics",
+            "Technical Regulations & Itineraries"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 740,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.361967086791992
+            }
+          ],
+          "reasoning": "The content is a technical guide for the WRC Rallye Monte-Carlo 2026. While it relates to the broader FIA ecosystem, it focuses on sporting regulations and event logistics rather than the administrative, operational, or procurement functions of the Automobile Club of Albania (ACA). There are no signals of vendor selection, technology acquisition, or business operations relevant to ACA."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:14:21.173726",
+          "domain_explored": "https://cez-motorsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - inferred from site structure",
+              "Results Database System (implied by 'Results search' functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership in FIA Central European Zone (Statutory obligation)",
+              "Participation in CEZ Championships (Requires licensing/tech compliance)",
+              "Administrative outsourcing to ACCR (Autoklub of the Czech Republic)"
+            ]
+          },
+          "patterns_found": [
+            "FIA Zone Membership & Governance",
+            "Regional Sporting Calendar Management",
+            "Centralized Secretariat Operations (ACCR Prague)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 333,
+              "elapsed_seconds": 9.558496952056885
+            }
+          ],
+          "reasoning": "The content confirms Automobile Club Albania (ACA) is a statutory member of the FIA Central European Zone (CEZ). While the page is informational regarding sporting regulations and events, the governance structure (Zone Board composed of Presidents/Secretaries General) and the reliance on a centralized Secretariat (ACCR) for administrative functions indicate a dependency on shared regional services. This implies ACA participates in regional procurement or utilizes platforms managed by the Zone Secretariat."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:14:29.156342",
+          "domain_explored": "https://al.linkedin.com/jobs/view/call-center-operator-at-automobile-club-albania-3886272087",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Omnichannel Communication Platforms (WhatsApp, Viber, Messenger integration)",
+              "Customer Relationship Management (CRM) / Ticketing Systems",
+              "Operational Databases (Logbook/Case management)",
+              "VoIP/Telephony Systems"
+            ],
+            "job_postings": [
+              "Call Center Operator / Customer Service (Tirana) - Focus on roadside assistance coordination and vendor management."
+            ],
+            "procurement_indicators": [
+              "Investment in digital service channels (messaging apps)",
+              "Requirement for database management and logging tools",
+              "Dependence on a network of third-party service providers (towing, medical, legal) suggesting B2B partnership management needs",
+              "Hardware requirements (PCs, printers, fixed/mobile phones) indicating office equipment procurement."
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery Infrastructure",
+            "Omnichannel Communication Systems",
+            "Vendor/Supply Chain Coordination",
+            "CRM/Database Management",
+            "Roadside Assistance Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 418,
+              "elapsed_seconds": 4.422047853469849
+            }
+          ],
+          "reasoning": "This is a direct procurement signal. The job description for a Call Center Operator explicitly details the technology stack required to manage operations (CRM, databases, omnichannel tools) and the operational workflow involving third-party vendors (towing, medical, legal). It confirms ACA is actively investing in service delivery infrastructure and requires software to manage these interactions."
+        }
+      ],
+      "total_input_tokens": 6649,
+      "total_output_tokens": 1588,
+      "estimated_cost_usd": 0.043767
+    },
+    "procurement_signals": [
+      "Digital Service Delivery Infrastructure",
+      "Omnichannel Communication Systems",
+      "Vendor/Supply Chain Coordination",
+      "CRM/Database Management",
+      "Roadside Assistance Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Automobile Club Albania (ACA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:14:29.157128"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380838",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:57.263717"
+}

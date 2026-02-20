@@ -1,0 +1,388 @@
+{
+  "entity_id": "bpl",
+  "entity_name": "BPL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "bplt20.com.bd",
+    "tigercricket.com.bd",
+    "p.eagate.573.jp",
+    "bpllimited.com",
+    "bplmedicaltechnologies.com",
+    "bklynlibrary.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/bpl-jobs",
+      "https://bs.linkedin.com/jobs/view/senior-mechanical-technician-bpl-bahamas-bs-at-w%C3%A4rtsil%C3%A4-1824600102?refId=1d900b0a-3c3e-41d0-9297-2a8c168ef784&trk=public_jobs_topcard_title",
+      "https://uk.linkedin.com/jobs/brookfield-asset-management-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bpl",
+      "entity_name": "BPL",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://p.eagate.573.jp",
+        "https://uk.linkedin.com/jobs/bpl-jobs",
+        "https://uk.linkedin.com/jobs/brookfield-asset-management-jobs",
+        "https://bplmedicaltechnologies.com",
+        "https://bklynlibrary.org",
+        "https://bpllimited.com",
+        "https://bs.linkedin.com/jobs/view/senior-mechanical-technician-bpl-bahamas-bs-at-w%C3%A4rtsil%C3%A4-1824600102?refId=1d900b0a-3c3e-41d0-9297-2a8c168ef784&trk=public_jobs_topcard_title",
+        "https://bplt20.com.bd",
+        "https://tigercricket.com.bd"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BPL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:23:25.508705",
+          "domain_explored": "https://bplt20.com.bd",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live TV Production Equipment",
+              "Broadcasting Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RFQ General Guideline - LIVE TV Production (Home Series 2024-27) - Dated Oct 6, 2023"
+            ]
+          },
+          "patterns_found": [
+            "RFQ Publication",
+            "Media Production Outsourcing",
+            "Long-term Contracting (3-year cycle)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.151914119720459
+            }
+          ],
+          "reasoning": "The content contains a specific procurement signal: an 'RFQ General Guideline - LIVE TV Production (Home Series 2024-27)'. This indicates an active intent to outsource media production services for a 3-year cycle. While the rest of the content is sports data (scores, standings), this specific document confirms procurement activity in the media/broadcast technology domain."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:23:35.883531",
+          "domain_explored": "https://tigercricket.com.bd",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Enlistment Cancellation Notice (Dec 2024)",
+              "MoU with Bangladesh Tourism Board",
+              "Consortiums & Media Rights Holder structure"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Enlistment Cancellation",
+            "Strategic Partnerships (MoU)",
+            "Event Management (League Ceremonies)",
+            "Sponsorship Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 293,
+              "elapsed_seconds": 2.972039222717285
+            }
+          ],
+          "reasoning": "The target entity is BPL (Bangladesh Premier League), but the analyzed content is from the Bangladesh Cricket Board (BCB) website (tigercricket.com.bd). While BCB is the governing body, the content focuses on general elections, tourism partnerships, and domestic leagues (Dhaka Premier Division). The 'Vendor Enlistment Cancellation' indicates active procurement processes, but it is for BCB, not specifically the BPL franchise or central league procurement. The content is relevant to the broader cricket ecosystem but does not directly signal procurement intent for the specific BPL entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:23:48.406151",
+          "domain_explored": "https://p.eagate.573.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "e-amusement App",
+              "KONAMI ID"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Support Portal",
+            "User Account Management",
+            "Gaming Infrastructure (Konami/e-amusement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1193,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.887186288833618
+            }
+          ],
+          "reasoning": "The content is entirely focused on end-user support for Konami's 'e-amusement' gaming service (pass registration, app downloads, news, and troubleshooting). It is a consumer-facing portal with no corporate governance, procurement, or B2B technology signals relevant to BPL."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:24:03.838652",
+          "domain_explored": "https://bpllimited.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WhatsApp Business API",
+              "Reliance Digital Platform (Affiliate/Distribution)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Customer Care Email (customercare@bpl.in)",
+              "Toll-Free Support (18008891047)"
+            ]
+          },
+          "patterns_found": [
+            "Consumer Electronics Retail",
+            "Third-Party Distribution (Reliance Digital)",
+            "Customer Support Operations (B2C)",
+            "Product Catalog Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 274,
+              "elapsed_seconds": 5.226223945617676
+            }
+          ],
+          "reasoning": "The content confirms the entity is BPL Limited, a consumer electronics and home appliances manufacturer. The site functions as a product catalog and customer support portal. The presence of deep links to 'reliancedigital.in' indicates a reliance on third-party retail partners rather than direct procurement infrastructure development. There are no signals of B2B procurement, RFPs, or enterprise technology investments relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:24:17.067253",
+          "domain_explored": "https://bplmedicaltechnologies.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "BPL iCare OT (Proprietary OT Charting Software)",
+              "Digital X-Ray Solutions (FPD C-Arm)",
+              "Patient Monitoring Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Business Enquiry Forms (Sales Inbound)",
+              "Warranty Registration (Product Support)",
+              "Service Enquiry (Maintenance)"
+            ]
+          },
+          "patterns_found": [
+            "Product Portfolio Showcase",
+            "B2C/B2B Sales Channels",
+            "Service & Support Operations",
+            "Strategic Partnerships (MoU)",
+            "Digital Product Launch (Software)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 324,
+              "elapsed_seconds": 5.620741844177246
+            }
+          ],
+          "reasoning": "The entity 'BPL Medical Technologies' is a manufacturer and vendor of medical devices (X-Rays, Monitors, Ventilators). The content focuses on product sales, service requests, and clinical testimonials. While there is a mention of 'Business Enquiry' and 'Demo Request', these are lead generation for their sales, not procurement signals indicating they are seeking vendors to fulfill their own operational needs. The 'Strategic Partnership' with Panacea and 'MoU' with SRIHER are product/collaboration agreements, not vendor procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:24:26.702496",
+          "domain_explored": "https://bklynlibrary.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Bibliographic Metadata Systems",
+              "Digital Catalog Interface"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Public Library Catalog",
+            "B2C Content Distribution",
+            "Digital Asset Management (Bibliographic)",
+            "Community Services (Reading Lists)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.7990400791168213
+            }
+          ],
+          "reasoning": "The content represents a digital library catalog (Brooklyn Public Library) displaying reading lists and book metadata. It is a consumer-facing resource for library patrons, not a corporate entity 'BPL' involved in commercial procurement, supply chain management, or enterprise vendor selection."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:24:45.938218",
+          "domain_explored": "https://uk.linkedin.com/jobs/bpl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Payment Acceptance Systems",
+              "Merchant Onboarding Platforms"
+            ],
+            "job_postings": [
+              "Payment Acceptance - Financial Planning & Analysis VP - BPL (Barclays)",
+              "Director - Merchant Onboarding and Integration - BPL (Barclays)",
+              "Finance & HR Technical Lead - Payments Enterprise Technology - BPL (Barclays)"
+            ],
+            "procurement_indicators": [
+              "Active Hiring for Financial Planning (Barclays)",
+              "Active Hiring for Technical Leadership (Barclays)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Barclays vs. BPL)",
+            "Internal Acronym Usage (BPL = Business & Private Banking)",
+            "Financial Services Context",
+            "Job Aggregator Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1662,
+              "output_tokens": 366,
+              "elapsed_seconds": 9.493103981018066
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn is a generic search result page for the term 'BPL'. The results are dominated by Barclays (specifically their 'Business & Private Banking' or 'Payment Acceptance' divisions), which uses 'BPL' as an internal acronym. Other results (Kedrion Biopharma) are unrelated entities. There is no evidence connecting these results to the target entity 'BPL' (Bangladesh Premier League or related procurement targets). This represents 'search noise' where the acronym matches but the entity context is entirely different."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:24:57.713426",
+          "domain_explored": "https://bs.linkedin.com/jobs/view/senior-mechanical-technician-bpl-bahamas-bs-at-w%C3%A4rtsil%C3%A4-1824600102?refId=1d900b0a-3c3e-41d0-9297-2a8c168ef784&trk=public_jobs_topcard_title",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Industrial Machinery",
+              "Power Plant Maintenance Systems"
+            ],
+            "job_postings": [
+              "Senior Mechanical Technician (W\u00e4rtsil\u00e4 / BPL Bahamas)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Maintenance Services",
+              "O&M Contracting"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Bahamas Power & Light vs. BPL Cricket)",
+            "Operational Maintenance (O&M) Outsourcing",
+            "Energy Sector Context",
+            "Vendor-Managed Services (W\u00e4rtsil\u00e4)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1760,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.568108081817627
+            }
+          ],
+          "reasoning": "The content refers to 'BPL' as Bahamas Power & Light, an energy utility provider, not the target entity (BPL Cricket/BPL T20). The listing is for a W\u00e4rtsil\u00e4 employee assigned to a client site, indicating an outsourced operational model rather than direct procurement activity by the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T05:25:19.723568",
+          "domain_explored": "https://uk.linkedin.com/jobs/brookfield-asset-management-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Associate, Capital Markets",
+              "Vice President"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Brookfield vs. BPL)",
+            "Financial Services Context (Asset Management)",
+            "Capital Markets Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1827,
+              "output_tokens": 198,
+              "elapsed_seconds": 15.082844018936157
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job listing page for 'Brookfield Asset Management'. This is a distinct entity from the target 'BPL' (Bangladesh Premier League). The content focuses on financial roles (Associate, VP) within the asset management sector, which contradicts the sports/event management context of the target entity."
+        }
+      ],
+      "total_input_tokens": 13867,
+      "total_output_tokens": 2308,
+      "estimated_cost_usd": 0.076221
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BPL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:25:19.725273"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417462",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:23.849480"
+}

@@ -1,0 +1,226 @@
+{
+  "entity_id": "chinese_basketball_association",
+  "entity_name": "Chinese Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "asia-basket.com",
+    "advantest.com",
+    "proballers.com",
+    "zoominfo.com",
+    "basketball-reference.com",
+    "basketball.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_basketball_association",
+      "entity_name": "Chinese Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://basketball.fandom.com",
+        "https://asia-basket.com",
+        "https://basketball-reference.com",
+        "https://proballers.com",
+        "https://advantest.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:33:03.090700",
+          "domain_explored": "https://asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content (Player transfers/game results)",
+            "Geographic noise (Multiple Asian leagues mentioned, not specific to CBA operations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.097934007644653
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com consists entirely of sports news regarding player transfers, game results, and performance awards for various Asian leagues (Philippines, South Korea, UAE, etc.). There is no mention of the Chinese Basketball Association's (CBA) business operations, technology needs, or procurement activities. The content is sports-focused, not business/IT-focused."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:33:12.509230",
+          "domain_explored": "https://advantest.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Semiconductor Test Equipment",
+              "SoC Test Systems",
+              "AI Device Testing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship Deal",
+                "details": "Advantest sponsors CBA 2025-2026 season as Official Supplier",
+                "source_date": "2025/12/10"
+              },
+              {
+                "type": "Partnership",
+                "details": "Partnership with semiconductor firm suggests CBA's openness to tech-sector collaborations",
+                "source_date": "2025/12/10"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sponsorship Agreement",
+            "Official Supplier Designation",
+            "Cross-Industry Partnership (Semiconductor & Sports)",
+            "Brand Visibility on League Assets"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 377,
+              "elapsed_seconds": 3.7112839221954346
+            }
+          ],
+          "reasoning": "The content confirms a direct commercial relationship between Advantest and the CBA. Advantest is listed as an 'Official Supplier' for the 2025-2026 season. While this is a sponsorship (revenue for CBA) rather than direct procurement (spending by CBA), it establishes a verified vendor relationship and indicates the CBA engages with high-tech international partners. It also suggests potential procurement needs related to fulfilling sponsorship deliverables (e.g., technology integration, event services)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:33:15.519390",
+          "domain_explored": "https://proballers.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:33:18.547819",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:33:29.235784",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Marketing Manager, Content & Creative",
+                "entity": "Sports Reference (Website Owner)",
+                "relevance": "None - Not CBA related"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Statistical Database Content",
+            "Historical Records",
+            "Consumer-facing Subscription Models (Stathead)",
+            "Job Posting (Internal to website owner, not CBA)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 272,
+              "elapsed_seconds": 7.089631080627441
+            }
+          ],
+          "reasoning": "The scraped content is from Basketball Reference, a third-party statistical database. While it explicitly mentions 'China's CBA' as a data source for player stats, this indicates data aggregation rather than a procurement or vendor relationship with the CBA entity itself. The job posting found is for the website's parent company (Sports Reference), not the CBA. No signals of CBA procurement, technology stack, or governance were found."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:33:35.136604",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-Generated Content Platform (Fandom/Wiki)",
+            "General Basketball Scope (NBA/WNBA focus)",
+            "Lack of Corporate Governance Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.5127601623535156
+            }
+          ],
+          "reasoning": "The scraped content represents the main page of a community-maintained wiki (Fandom). It focuses on general basketball history, NBA/WNBA statistics, and community rules. There is no mention of the Chinese Basketball Association (CBA), nor are there any signals regarding corporate procurement, vendor partnerships, or technology stacks specific to the CBA entity."
+        }
+      ],
+      "total_input_tokens": 5874,
+      "total_output_tokens": 1037,
+      "estimated_cost_usd": 0.033177
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:33:35.224466"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.263107",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:37.879650"
+}

@@ -1,0 +1,269 @@
+{
+  "entity_id": "club_am\u00e9rica",
+  "entity_name": "Club Am\u00e9rica",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "clubamerica.com.mx",
+    "us.ameshop.com",
+    "azulcrema.com.mx",
+    "play.google.com",
+    "leaguescup.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/marketing-manager-events-leagues-at-pioneer-sports-entertainment-4286832478"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "club_am\u00e9rica",
+      "entity_name": "Club Am\u00e9rica",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://azulcrema.com.mx",
+        "https://leaguescup.com",
+        "https://www.linkedin.com/jobs/view/marketing-manager-events-leagues-at-pioneer-sports-entertainment-4286832478",
+        "https://clubamerica.com.mx",
+        "https://us.ameshop.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Ticketing & CRM Integration",
+        "Interactive Seat Mapping Technology",
+        "Direct-to-Consumer (DTC) E-commerce Strategy",
+        "Customer Data Capture (PII Collection)",
+        "Dynamic Content Management (CMS)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Club Am\u00e9rica may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:53:36.134358",
+          "domain_explored": "https://clubamerica.com.mx",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing/CRM Platforms (implied by 'Abono Varonil' sales)",
+              "Event Management Software (for 'Golden Clash' logistics)",
+              "Merchandise E-commerce (implied by new kit launches)"
+            ],
+            "job_postings": [
+              "Director Deportivo (Vacant/Transitioning)"
+            ],
+            "procurement_indicators": [
+              "Apparel Supply Contract: Adidas partnership renewal for 2025/26 kits",
+              "Event Services: 'Golden Clash' at Razorback Stadium (USA venue procurement)",
+              "Sports Analytics/Scouting: Implied need due to change in Sports Director leadership"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Renewal (Adidas)",
+            "Executive Leadership Transition (Sports Director)",
+            "International Expansion (Golden Clash/USA)",
+            "Ticketing & Subscription Management (Abonos)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 376,
+              "elapsed_seconds": 5.772328853607178
+            }
+          ],
+          "reasoning": "The content reveals a major vendor partnership renewal with Adidas for the 2025/26 season, indicating active procurement cycles for sports apparel and merchandise. Additionally, the departure of the Sports Director suggests an upcoming search for recruitment software or executive search services. The 'Golden Clash' event in Arkansas and the push for 'Abonos' (season tickets) signal a need for international event management tools and CRM/ticketing platform capabilities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:53:50.621973",
+          "domain_explored": "https://us.ameshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (E-commerce Platform)",
+              "Klaviyo (Email Marketing Automation)",
+              "Shopify Payments (Payment Gateway)",
+              "Cloudflare (CDN/Security)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Pro Standard (Apparel partner)",
+              "Vendor: Adidas (Primary kit supplier)",
+              "Vendor: Ame Shop USA (In-house logistics/branding)",
+              "Category: Sports Merchandise & Licensing",
+              "Category: E-commerce Infrastructure SaaS"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Utilization (Shopify)",
+            "Multi-vendor Merchandising Strategy (Adidas, Pro Standard)",
+            "Direct-to-Consumer (DTC) Logistics",
+            "Digital Marketing Automation (Klaviyo)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 355,
+              "elapsed_seconds": 7.216363906860352
+            }
+          ],
+          "reasoning": "The content represents the operational output of procurement decisions (the store itself) rather than the intent to procure. However, the presence of specific third-party vendors (Pro Standard) alongside the primary partner (Adidas) indicates an active procurement category for 'Lifestyle & Apparel Licensing'. The technical architecture reveals a reliance on SaaS e-commerce platforms (Shopify) and marketing tools (Klaviyo), suggesting ongoing SaaS procurement cycles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:54:05.906668",
+          "domain_explored": "https://azulcrema.com.mx",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Interactive Seat Mapping (Ticketing UI)",
+              "CRM / Marketing Automation (Email capture, 'Newsletter')",
+              "Content Management System (CMS) for 'Exclusive Content'",
+              "E-commerce Payment Gateway",
+              "Digital Rights Management (DRM) for wallpapers/content"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RFP for Ticketing Platform Provider (Interactive Maps)",
+              "CRM Data Management & Compliance (Privacy Policy handling)",
+              "Digital Asset Management (Wallpapers, Postales)",
+              "Merchandise Integration (Discount logic with Ameshop)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing & CRM Integration",
+            "Interactive Seat Mapping Technology",
+            "Direct-to-Consumer (DTC) E-commerce Strategy",
+            "Customer Data Capture (PII Collection)",
+            "Dynamic Content Management (CMS)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 382,
+              "elapsed_seconds": 4.871714115142822
+            }
+          ],
+          "reasoning": "The content reveals a sophisticated digital procurement stack focused on fan engagement and revenue operations. The 'Abono' (Season Ticket) platform utilizes interactive mapping for seat selection, requires robust CRM for data capture (PII), and integrates with payment gateways. The mention of 'exclusive content' downloads and 'digital' tickets indicates a procurement need for secure digital asset management (DAM) and access control systems."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:54:32.191136",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content (Gaming)",
+            "Platform Noise (Google Play Store)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 168,
+              "elapsed_seconds": 19.449673891067505
+            }
+          ],
+          "reasoning": "The scraped content is a generic listing of video games from the Google Play Store interface (e.g., Arknights, Genshin Impact, Mobile Legends). There is no mention of Club Am\u00e9rica, Televisa, or any sports management/procurement activities. This represents a false positive in the scraping process or a complete lack of relevance to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:54:41.900338",
+          "domain_explored": "https://leaguescup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tournament Marketing Content",
+            "Generic League Announcements",
+            "Non-Specific Vendor Agnostic Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.597054958343506
+            }
+          ],
+          "reasoning": "The content is a recap of the 'Leagues Cup 2025' tournament hosted on the league's official website. While Club Am\u00e9rica participates in this tournament, the content focuses on general league results, formats, and marketing assets (videos, anthems). It lacks specific procurement signals, technology implementation details, or vendor partnerships attributable directly to Club Am\u00e9rica's internal operations or purchasing decisions."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:54:53.676926",
+          "domain_explored": "https://www.linkedin.com/jobs/view/marketing-manager-events-leagues-at-pioneer-sports-entertainment-4286832478",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 29 column 9 (char 1712)"
+        }
+      ],
+      "total_input_tokens": 7378,
+      "total_output_tokens": 1480,
+      "estimated_cost_usd": 0.044334
+    },
+    "procurement_signals": [
+      "Digital Ticketing & CRM Integration",
+      "Interactive Seat Mapping Technology",
+      "Direct-to-Consumer (DTC) E-commerce Strategy",
+      "Customer Data Capture (PII Collection)",
+      "Dynamic Content Management (CMS)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Club Am\u00e9rica may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:54:53.677339"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.131666",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:40:16.454396"
+}

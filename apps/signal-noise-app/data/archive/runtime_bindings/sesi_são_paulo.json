@@ -1,0 +1,220 @@
+{
+  "entity_id": "sesi_s\u00e3o_paulo",
+  "entity_name": "Sesi S\u00e3o Paulo",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "sesisp.org.br",
+    "dutchculture.nl",
+    "transparencia.sesisp.org.br",
+    "autonomiaerenda.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/sesi-s%C3%A3o-paulo-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sesi_s\u00e3o_paulo",
+      "entity_name": "Sesi S\u00e3o Paulo",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://autonomiaerenda.com.br",
+        "https://sesisp.org.br",
+        "https://transparencia.sesisp.org.br",
+        "https://www.linkedin.com/jobs/sesi-s%C3%A3o-paulo-jobs-worldwide",
+        "https://dutchculture.nl"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Technology Partnership",
+        "Custom Platform Development",
+        "Digital Transformation in Education"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sesi S\u00e3o Paulo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:24:53.869750",
+          "domain_explored": "https://sesisp.org.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Microsoft Azure (Inferred from partnership)",
+              "Educational Platforms (LMS/CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Microsoft for AI development",
+              "Development of 'Plataforma educacional de IA'",
+              "Focus on teaching personalization technology"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Technology Partnership",
+            "Custom Platform Development",
+            "Digital Transformation in Education"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 252,
+              "elapsed_seconds": 5.016002655029297
+            }
+          ],
+          "reasoning": "The content explicitly confirms a strategic partnership with Microsoft to develop a proprietary AI platform for educational personalization. This is a strong procurement signal indicating investment in advanced technology infrastructure, cloud services (Azure), and AI development resources."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:25:03.373843",
+          "domain_explored": "https://dutchculture.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cultural Exchange Programs",
+            "Funding Guides",
+            "Artist Residencies",
+            "Event Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.760847806930542
+            }
+          ],
+          "reasoning": "The content provided is from 'DutchCulture,' a platform for international cultural cooperation based in Amsterdam. This is entirely unrelated to 'Sesi S\u00e3o Paulo,' a Brazilian industrial social services organization. There is no overlap in geography, sector, or procurement intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:25:06.993291",
+          "domain_explored": "https://transparencia.sesisp.org.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:25:15.203961",
+          "domain_explored": "https://autonomiaerenda.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of 'Aux\u00edlio-refei\u00e7\u00e3o' (food aid) programs indicating financial/admin software needs",
+              "Coordination of '0 mil Vagas' (thousands of vacancies) across multiple states",
+              "Partnership with major enterprise (Petrobras) requiring compliance reporting"
+            ]
+          },
+          "patterns_found": [
+            "Social Impact Program Management",
+            "Vocational Education Partnerships",
+            "Petrobras CSR Initiative",
+            "Student Aid Management (Aux\u00edlio-refei\u00e7\u00e3o)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 294,
+              "elapsed_seconds": 3.757009983062744
+            }
+          ],
+          "reasoning": "The content reveals that Sesi S\u00e3o Paulo is a key operational partner in the 'Programa Autonomia e Renda Petrobras', a major social initiative. While this is an educational program rather than a direct procurement of technology, it indicates operational complexity involving student management, logistics (food aid), and multi-state coordination. This suggests a need for robust administrative platforms, though no specific RFPs are listed on this page."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:25:21.772077",
+          "domain_explored": "https://www.linkedin.com/jobs/sesi-s%C3%A3o-paulo-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full Stack Development",
+              "Solution Architecture"
+            ],
+            "job_postings": [
+              "Desenvolvedor full stack (Narwal Sistemas)",
+              "Arquiteto de Solu\u00e7\u00e3o (Narwal Sistemas)",
+              "Coordenador de Rela\u00e7\u00f5es Trabalhista e Sindicais (Quant Service)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Search Results",
+            "Third-Party Vendor Hiring (Narwal Sistemas)",
+            "Unrelated Industry Hiring (Quant Service)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1304,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.380383014678955
+            }
+          ],
+          "reasoning": "The search results for 'Sesi S\u00e3o Paulo' returned job postings from third-party companies (Narwal Sistemas, Quant Service) that are not direct hires by Sesi S\u00e3o Paulo. While Narwal Sistemas is a known technology vendor in the region, their hiring for 'Full Stack' and 'Solution Architect' roles indicates internal growth or general market demand, not a specific procurement signal or RFP from the target entity. These results do not provide direct intelligence into Sesi S\u00e3o Paulo's current procurement needs or technology stack."
+        }
+      ],
+      "total_input_tokens": 5553,
+      "total_output_tokens": 1005,
+      "estimated_cost_usd": 0.031734
+    },
+    "procurement_signals": [
+      "Strategic Technology Partnership",
+      "Custom Platform Development",
+      "Digital Transformation in Education"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sesi S\u00e3o Paulo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:25:21.773392"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320391",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:34:59.314145"
+}

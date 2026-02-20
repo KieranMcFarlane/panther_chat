@@ -1,0 +1,298 @@
+{
+  "entity_id": "estonian_baseball_association",
+  "entity_name": "Estonian Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball.ee",
+    "grokipedia.com",
+    "wbsceurope.org",
+    "iwgwomenandsport.org",
+    "ci.desoto.tx.us",
+    "elizabethton.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ee.linkedin.com/jobs/view/us-sports-trader-service-provider-contract-at-genius-sports-4194878751",
+      "https://ee.linkedin.com/jobs/view/group-facilities-manager-at-genius-sports-724157774"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "estonian_baseball_association",
+      "entity_name": "Estonian Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://iwgwomenandsport.org",
+        "https://ee.linkedin.com/jobs/view/group-facilities-manager-at-genius-sports-724157774",
+        "https://ci.desoto.tx.us",
+        "https://grokipedia.com",
+        "https://baseball.ee",
+        "https://elizabethton.org",
+        "https://ee.linkedin.com/jobs/view/us-sports-trader-service-provider-contract-at-genius-sports-4194878751",
+        "https://wbsceurope.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Estonian Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:10:05.329908",
+          "domain_explored": "https://baseball.ee",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (Drupal/WordPress - implied by 'Lisastauno' and structure)",
+              "Web Analytics (Google Analytics - implied standard)",
+              "Social Media Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Funding acknowledgement: Eesti Kultuurkapital (Endowment for Culture)",
+              "Operational expenses: International travel for youth teams (Little League Qualifier in Poland, Vilnius Cup)",
+              "Infrastructure usage: Kostivere Baseball Field (J\u00f5el\u00e4htme municipality)",
+              "Event hosting: Estonian Baseball Open 2024"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Logistics",
+            "Public Funding (Cultural Endowment)",
+            "International Travel & Competition",
+            "Youth Development Programs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.2631328105926514
+            }
+          ],
+          "reasoning": "The content reveals active operations including international travel (Poland, Lithuania, Finland), youth development (Kiili Pantrid), and reliance on public funding (Eesti Kultuurkapital). While no direct RFPs are visible, the scale of operations (travel, equipment, event hosting) implies a need for logistics, travel services, and sports equipment procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:10:08.355805",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:10:11.466826",
+          "domain_explored": "https://wbsceurope.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:10:17.476370",
+          "domain_explored": "https://iwgwomenandsport.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Advocacy Network",
+            "Gender Equity Initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.345667839050293
+            }
+          ],
+          "reasoning": "The content is from the International Working Group (IWG) on Women and Sport, a global advocacy organization. While the Estonian Baseball Association may share values regarding gender equity, this page is purely informational/mission-focused and contains no specific signals regarding the Estonian entity's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:10:23.268855",
+          "domain_explored": "https://ci.desoto.tx.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Municipal Governance",
+            "Public Works Operations",
+            "Civic Appointments"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.032839059829712
+            }
+          ],
+          "reasoning": "The content is clearly from the City of DeSoto, Texas (ci.desoto.tx.us), a municipal government entity. This is completely unrelated to the Estonian Baseball Association, which is a non-profit sports organization in Estonia. There is no overlap in geography, sector, or organizational function."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:10:31.465469",
+          "domain_explored": "https://elizabethton.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "municipalonlinepayments.com",
+              "smartgovcommunity.com"
+            ],
+            "job_postings": [
+              "Human Resources / Risk Management"
+            ],
+            "procurement_indicators": [
+              "Water Resources AMI Project",
+              "Contractors Building Permits"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance",
+            "Public Works Operations",
+            "Civic Appointments"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 219,
+              "elapsed_seconds": 4.433997869491577
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the City of Elizabethton, TN, a municipal government entity. It contains no information regarding the Estonian Baseball Association, sports associations, or Estonia. The procurement signals found (AMI projects, building permits) are irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:10:38.250952",
+          "domain_explored": "https://ee.linkedin.com/jobs/view/us-sports-trader-service-provider-contract-at-genius-sports-4194878751",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "In-house developed software solutions",
+              "Live data monitoring platforms"
+            ],
+            "job_postings": [
+              "US Sports Trader (Service Provider contract) - Genius Sports"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Data & Analytics",
+            "Part-time/Contract Labor",
+            "On-site Operations (\u00dclemiste City)",
+            "US Sports Market Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.458395004272461
+            }
+          ],
+          "reasoning": "The content is a job posting for a US Sports Trader role at Genius Sports, a sports data company. While it mentions 'Baseball' knowledge as a requirement, this is a functional requirement for a data trading/monitoring role, not a procurement signal for the Estonian Baseball Association. The entity (EBA) is not mentioned, and the context is commercial employment rather than association governance or vendor sourcing."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:10:52.626474",
+          "domain_explored": "https://ee.linkedin.com/jobs/view/group-facilities-manager-at-genius-sports-724157774",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Group Facilities Manager at Genius Sports (Tallinn, Estonia)"
+            ],
+            "procurement_indicators": [
+              "Facilities Service Desk Management",
+              "Global Office Supply Chain",
+              "Legislative Compliance for Property"
+            ]
+          },
+          "patterns_found": [
+            "Global Facilities Management",
+            "Corporate Real Estate Operations",
+            "Vendor/Supplier Management (Internal)",
+            "Sports Data & Technology Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1689,
+              "output_tokens": 267,
+              "elapsed_seconds": 11.01355504989624
+            }
+          ],
+          "reasoning": "The content describes a job opening for a 'Group Facilities Manager' at Genius Sports, a global sports data company. While the role involves managing suppliers and facilities, it is an operational role within a private sector technology company (Genius Sports), not the Estonian Baseball Association. There is no connection to the target entity or public procurement signals relevant to the Estonian Baseball Association."
+        }
+      ],
+      "total_input_tokens": 9231,
+      "total_output_tokens": 1397,
+      "estimated_cost_usd": 0.048648
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Estonian Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:10:52.627837"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314411",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:54.734507"
+}

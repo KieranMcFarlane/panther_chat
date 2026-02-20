@@ -1,0 +1,199 @@
+{
+  "entity_id": "jota_sport",
+  "entity_name": "Jota Sport",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "jotasport.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/formula-careers_work-experience-sport-sciencehuman-performance-activity-7077538450215686144-glKW",
+      "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7191354917767241729-oYAf"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jota_sport",
+      "entity_name": "Jota Sport",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://jotasport.com",
+        "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7191354917767241729-oYAf",
+        "https://www.linkedin.com/posts/formula-careers_work-experience-sport-sciencehuman-performance-activity-7077538450215686144-glKW"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialized Engineering Recruitment",
+        "LMDh Program Expansion",
+        "Simulation & HIL Infrastructure",
+        "Proprietary Tool Development"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jota Sport may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:24:55.928374",
+          "domain_explored": "https://jotasport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMDh (Le Mans Daytona h) technology platform",
+              "Precision Engineering tools (implied by division name)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "2025 LMDh Program Launch",
+              "JOTA Advanced Engineering Division",
+              "Active Partnership Acquisition (Global Brands)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Expansion (LMDh Program)",
+            "Advanced Engineering Division",
+            "Global Partnership Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.911376237869263
+            }
+          ],
+          "reasoning": "The content confirms Jota Sport is undergoing a significant operational scale-up with its '2025 LMDh program' and the existence of 'JOTA Advanced Engineering'. While no specific RFPs are listed, the shift to the top-tier LMDh category and the expansion of engineering services strongly indicate upcoming procurement needs for high-performance technical components, engineering software, and infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:24:58.951855",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:25:05.777040",
+          "domain_explored": "https://www.linkedin.com/posts/formula-careers_work-experience-sport-sciencehuman-performance-activity-7077538450215686144-glKW",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Athlete Monitoring Software",
+              "Biometric Data Tools"
+            ],
+            "job_postings": [
+              "Work Experience: Sport Science / Human Performance",
+              "Work Experience: Pit Stop Training"
+            ],
+            "procurement_indicators": [
+              "Investment in Human Performance infrastructure",
+              "Data-driven athlete monitoring initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Human Performance Investment",
+            "Operational Training (Pit Stop)",
+            "Talent Pipeline Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.432197093963623
+            }
+          ],
+          "reasoning": "The content confirms Jota Sport is actively investing in 'Human Performance' and 'Athlete Monitoring' capabilities via a work experience program. While this is a recruitment activity, the specific focus on data-driven sport science and physical training for pit crews indicates a procurement need for specialized software (athlete monitoring) and biometric hardware, validating the 'Advanced Engineering' capability hypothesis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:25:24.768021",
+          "domain_explored": "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7191354917767241729-oYAf",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MATLAB",
+              "Simulink",
+              "HIL (Hardware-in-the-Loop)",
+              "DIL (Driver-in-the-Loop)",
+              "BBW (Brake-by-Wire)"
+            ],
+            "job_postings": [
+              "Controls Engineer \u2013 WEC LMDh Porsche 963"
+            ],
+            "procurement_indicators": [
+              "HIL/DIL Integration requirements",
+              "Internal tool development needs",
+              "Data analysis software procurement"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Engineering Recruitment",
+            "LMDh Program Expansion",
+            "Simulation & HIL Infrastructure",
+            "Proprietary Tool Development"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 301,
+              "elapsed_seconds": 15.680824041366577
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Controls Engineer \u2013 WEC LMDh Porsche 963'. This confirms active recruitment for their LMDh program and explicitly identifies the technology stack required for vehicle development (MATLAB, Simulink, HIL/DIL). The requirement to 'Develop tools to improve efficiency' indicates internal software development needs, often requiring procurement of specific SDKs or libraries."
+        }
+      ],
+      "total_input_tokens": 4358,
+      "total_output_tokens": 853,
+      "estimated_cost_usd": 0.025869000000000003
+    },
+    "procurement_signals": [
+      "Specialized Engineering Recruitment",
+      "LMDh Program Expansion",
+      "Simulation & HIL Infrastructure",
+      "Proprietary Tool Development"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jota Sport may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:25:24.770209"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.370431",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:42.722882"
+}

@@ -1,0 +1,196 @@
+{
+  "entity_id": "international_padel_federation_(fip)",
+  "entity_name": "International Padel Federation (FIP)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "padelfip.com",
+    "ilovepadel.eu",
+    "ltapadel.org.uk",
+    "padelfederation.ie"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_padel_federation_(fip)",
+      "entity_name": "International Padel Federation (FIP)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ltapadel.org.uk",
+        "https://padelfederation.ie",
+        "https://ilovepadel.eu",
+        "https://padelfip.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Padel Federation (FIP) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:16:45.831869",
+          "domain_explored": "https://padelfip.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Scoring System (Implied)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Tournament Management (Ongoing operations)",
+              "Digital Broadcasting (Live streaming/Scoreboards)"
+            ]
+          },
+          "patterns_found": [
+            "High-frequency content publishing",
+            "Global event coordination (France, Chile, Qatar, Spain)",
+            "Real-time data requirements (Live Scores)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.6218361854553223
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news results, tournament schedules, and live score updates for the 'Cupra FIP Tour' and 'Hexagon Cup'. While this confirms the entity is active and operating globally, it contains no explicit information regarding technology vendors, hiring needs, infrastructure investments, or governance structures necessary to build a procurement intelligence profile."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:16:56.732958",
+          "domain_explored": "https://ilovepadel.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content is from a commercial vendor (ILovePadel.eu), not the target (FIP).",
+              "Sales Signals: Vendor is selling 'Shooter Padel Rackets', 'Just Ten Padel Rackets', and 'Court Protection Systems'.",
+              "Service Signals: Vendor is booking 'Bee-Padel' and 'Barcelona Padel Camps' (B2C services)."
+            ]
+          },
+          "patterns_found": [
+            "Commercial retail and B2C service focus",
+            "Third-party vendor ecosystem (Academies, Brands)",
+            "Affiliate/Referral business model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 292,
+              "elapsed_seconds": 3.895915985107422
+            }
+          ],
+          "reasoning": "The content analyzed is from 'ILovePadel.eu', a commercial entity and retailer, not the International Padel Federation (FIP). While the page mentions 'innovative court solutions' and 'club upgrades', these are sales offers *from* a vendor *to* the market, not procurement requests *from* the FIP. There is no signal of FIP purchasing intent, technology stack adoption, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:17:02.378999",
+          "domain_explored": "https://ltapadel.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions 'FIP Bronze' (Event participation, not procurement)",
+              "Mentions 'LTA Padel Performance Competition Calendar' (Local scheduling)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Scope (LTA - UK)",
+            "B2C/Participation Focus (Find a court, Coaching, Kids)",
+            "Content Aggregation (News feeds)",
+            "Local Governance (LTA Competitions)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 279,
+              "elapsed_seconds": 2.607801914215088
+            }
+          ],
+          "reasoning": "The content is from the Lawn Tennis Association (LTA), the governing body for tennis and padel in the UK. While it mentions FIP events (e.g., 'FIP Bronze in Doha'), it does so as a news aggregator reporting on external events. The site's primary function is B2C participation (finding courts, beginner tips) and local competition management. There are no signals of centralized procurement, technology stack management, or administrative governance relevant to the International Padel Federation (FIP)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:17:12.077656",
+          "domain_explored": "https://padelfederation.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by /wp-content/ paths)",
+              "PDF Document Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal (Cupra - Official Sponsor)",
+              "Administrative Services (Tournament sanction, Calendar service, Coach training)"
+            ]
+          },
+          "patterns_found": [
+            "National Governing Body Scope (NGB)",
+            "Affiliate Relationship to FIP",
+            "B2C Participation Focus (Registration, Rankings, News)",
+            "Sponsorship Ecosystem (Cupra)",
+            "Administrative Document Management (PDF Criteria)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.578963994979858
+            }
+          ],
+          "reasoning": "The content confirms that Padel Federation of Ireland (PFI) is a National Governing Body (NGB) and an affiliate/member of the target entity (International Padel Federation - FIP). As a downstream member, PFI follows FIP standards rather than procuring services for the FIP itself. The site focuses on local administration, national team selection, and B2C engagement (rankings, tournaments) with no signals of international procurement activity or high-level technology investment relevant to the FIP headquarters."
+        }
+      ],
+      "total_input_tokens": 5830,
+      "total_output_tokens": 1151,
+      "estimated_cost_usd": 0.034754999999999994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Padel Federation (FIP) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:17:12.078211"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.461036",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:16.868428"
+}

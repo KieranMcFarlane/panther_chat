@@ -1,0 +1,281 @@
+{
+  "entity_id": "desportivo_de_maputo",
+  "entity_name": "Desportivo de Maputo",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "desportivo.co.mz",
+    "wikidata.org",
+    "tribuna.com",
+    "mozabanco.co.mz",
+    "cafonline.com",
+    "whoscored.com",
+    "transfermarkt.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "desportivo_de_maputo",
+      "entity_name": "Desportivo de Maputo",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://whoscored.com",
+        "https://transfermarkt.co.uk",
+        "https://tribuna.com",
+        "https://cafonline.com",
+        "https://mozabanco.co.mz",
+        "https://desportivo.co.mz",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Desportivo de Maputo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:06:17.456057",
+          "domain_explored": "https://desportivo.co.mz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPIP (CMS)",
+              "PHP (implied by .php3 extensions)",
+              "JavaScript (minimal usage for popups)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising/Kit Supply (Official jersey sales)",
+              "Legal/IP Services (Trademark registration via IPI)",
+              "Facility Booking (Stadium usage)",
+              "Digital Platform Needs (Legacy website structure)"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Web Infrastructure (SPIP CMS)",
+            "Merchandising Operations",
+            "Intellectual Property Management",
+            "Facility Management (Zimpeto Stadium)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1178,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.2610208988189697
+            }
+          ],
+          "reasoning": "The website is running on a legacy CMS (SPIP), indicating a potential need for digital transformation or platform migration. The presence of active merchandising (jersey sales) and IP registration (ventoinha logo) suggests administrative maturity and potential procurement for marketing or legal services. However, the content is dated (2011), limiting immediate procurement confidence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:06:26.981578",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Content",
+            "Irrelevant Domain Context",
+            "No Entity-Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.334665060043335
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a global open-data repository. It contains no information regarding 'Desportivo de Maputo', its procurement activities, technology stack, or governance. The content describes Wikidata's features, community events, and general statistics, which are irrelevant to the specific procurement intelligence task for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:06:36.836971",
+          "domain_explored": "https://tribuna.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Global Sports News Aggregation",
+            "User-Generated Content (Comments/Blogs)",
+            "Fantasy Sports Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.8898983001708984
+            }
+          ],
+          "reasoning": "The content from tribuna.com is a global sports news aggregator focusing on European football (Premier League, Serie A, etc.) and fantasy sports statistics. There is absolutely no mention of Desportivo de Maputo, Mozambican football, or organizational operations that would indicate procurement intent. The entity context is completely absent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:06:46.748598",
+          "domain_explored": "https://mozabanco.co.mz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "HTTP 404 Error",
+            "Broken Link / Dead End",
+            "Domain Mismatch (Financial Services vs. Sports Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 527,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.7487590312957764
+            }
+          ],
+          "reasoning": "The target URL (mozabanco.co.mz) returned a 404 Not Found error, indicating the resource is unavailable or the link is invalid. Furthermore, the domain belongs to a financial institution (Banco Oportunidade de Mo\u00e7ambique), which is a distinct entity from Desportivo de Maputo. There is no content to analyze for procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:06:56.985435",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Navigation Elements",
+            "Macro-Level Federation Content",
+            "Absence of Entity-Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1118,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.773282051086426
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage navigation structure of the Confederation of African Football (CAF). It contains high-level links to competitions (AFCON, Champions League) and general media sections, but lacks any specific mention, partnership, or operational detail regarding 'Desportivo de Maputo'. This is purely contextual noise for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:07:09.260905",
+          "domain_explored": "https://whoscored.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Statistics Aggregation",
+            "Generic User Interface Elements (Navigation/Auth)",
+            "Irrelevant League Data (Premier League, LaLiga, etc.)",
+            "Betting/Odds Integration",
+            "Absence of Entity-Specific Context (Desportivo de Maputo)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 228,
+              "elapsed_seconds": 5.639232873916626
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive global sports statistics, navigation menus, and betting odds for major European leagues (Premier League, LaLiga, Serie A). There is no mention of Desportivo de Maputo, Mozambican football, or specific procurement activities. The domain is a generic sports statistics platform and does not serve as a source for entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:07:18.608871",
+          "domain_explored": "https://transfermarkt.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Aggregation",
+            "Macro-Level Market Data (Transfer Values)",
+            "Generic League Coverage (Premier League, Championship)",
+            "Entity Irrelevance (Desportivo de Maputo not mentioned)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1677,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.693330764770508
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt focuses exclusively on European football (Premier League, Championship, Scottish Premiership) and high-profile transfer rumors involving major clubs (e.g., Nottingham Forest, Liverpool). There is no mention of Desportivo de Maputo, Mozambican football, or specific procurement activities related to the target entity. The content represents generic sports data aggregation rather than entity-specific business intelligence."
+        }
+      ],
+      "total_input_tokens": 8984,
+      "total_output_tokens": 1488,
+      "estimated_cost_usd": 0.049271999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Desportivo de Maputo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:07:18.610934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230597",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:13.097344"
+}

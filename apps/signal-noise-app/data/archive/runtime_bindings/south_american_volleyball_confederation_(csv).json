@@ -1,0 +1,170 @@
+{
+  "entity_id": "south_american_volleyball_confederation_(csv)",
+  "entity_name": "South American Volleyball Confederation (CSV)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "norceca.net",
+    "zoominfo.com",
+    "playthegame.org",
+    "asianvolleyball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_american_volleyball_confederation_(csv)",
+      "entity_name": "South American Volleyball Confederation (CSV)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://playthegame.org",
+        "https://asianvolleyball.net",
+        "https://norceca.net",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South American Volleyball Confederation (CSV) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:58:20.847927",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Schedule (2026-2030)",
+              "Branding Kit Guidelines",
+              "Constitution and Governance Documents"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (NORCECA vs CSV)",
+            "Static Web Structure",
+            "Governance Documentation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 238,
+              "elapsed_seconds": 8.826892137527466
+            }
+          ],
+          "reasoning": "The scraped content originates from the North, Central America and Caribbean Volleyball Confederation (NORCECA), not the target entity, the South American Volleyball Confederation (CSV). While the content reveals governance structures and event hosting schedules relevant to the volleyball ecosystem, it does not contain specific procurement signals, technology stacks, or RFPs for the CSV. The content is primarily administrative and historical."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:58:25.228904",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:58:32.609985",
+          "domain_explored": "https://playthegame.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Editor and International Relations Manager",
+                "entity": "Play the Game",
+                "date": "09.12.2025",
+                "relevance": "Low - Target entity mismatch"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Play the Game vs CSV)",
+            "Investigative Journalism Focus",
+            "Sports Governance Research",
+            "Generic Content Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.8986990451812744
+            }
+          ],
+          "reasoning": "The scraped content is from 'Play the Game', an independent organization focused on sports journalism and governance research. While it mentions sports bodies (like FIVB, FIFA, SAFA), it does not contain specific procurement signals, technology stacks, or vendor partnership information regarding the target entity, the South American Volleyball Confederation (CSV). The content is editorial and research-based rather than operational or commercial."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:58:39.596082",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (AVC vs CSV)",
+            "Content Duplication/Repetition",
+            "Sports News Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 955,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.0052099227905273
+            }
+          ],
+          "reasoning": "The scraped content is from the Asian Volleyball Confederation (AVC), not the South American Volleyball Confederation (CSV). This represents a fundamental entity mismatch. The content consists of repetitive sports news regarding team qualifications for the 2026 Cups and contains no technology, procurement, or governance data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3774,
+      "total_output_tokens": 694,
+      "estimated_cost_usd": 0.021732
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South American Volleyball Confederation (CSV) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:58:39.596749"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.330244",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:20.701869"
+}

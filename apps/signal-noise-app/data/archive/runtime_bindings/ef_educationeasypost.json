@@ -1,0 +1,329 @@
+{
+  "entity_id": "ef_education\u0096easypost",
+  "entity_name": "EF Education\u0096EasyPost",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "uci_protour_women",
+  "discovered_domains": [
+    "efprocycling.com",
+    "teamefcoaching.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/easypost-jobs",
+      "https://www.linkedin.com/company/ef-education-first/jobs",
+      "https://www.linkedin.com/jobs/view/customer-success-manager-at-easypost-4366643765",
+      "https://www.linkedin.com/jobs/view/software-engineer-iii-at-easypost-4365391850",
+      "https://www.linkedin.com/jobs/view/senior-technical-recruiter-contract-at-easypost-4365175269",
+      "https://www.linkedin.com/jobs/view/product-manager-iii-at-easypost-4365352063",
+      "https://www.linkedin.com/jobs/ef-education-first-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/software-engineer-at-easypost-4342656554",
+      "https://www.linkedin.com/jobs/view/sales-development-representative-ii-at-easypost-4365603612"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ef_education\u0096easypost",
+      "entity_name": "EF Education\u0096EasyPost",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.039999999999999994,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.06,
+        0.039999999999999994,
+        0.039999999999999994,
+        0.039999999999999994,
+        0.039999999999999994
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/ef-education-first/jobs",
+        "https://www.linkedin.com/jobs/view/customer-success-manager-at-easypost-4366643765",
+        "https://efprocycling.com",
+        "https://www.linkedin.com/jobs/easypost-jobs",
+        "https://www.linkedin.com/jobs/view/software-engineer-iii-at-easypost-4365391850",
+        "https://teamefcoaching.com",
+        "https://www.linkedin.com/jobs/view/senior-technical-recruiter-contract-at-easypost-4365175269"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Partnership Search",
+        "Corporate Restructuring / M&A Intent",
+        "High-Value Procurement (Title Sponsorship)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "EF Education\u0096EasyPost may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:16:35.210808",
+          "domain_explored": "https://efprocycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Strategic Partnership / Sponsorship",
+                "source": "Homepage Hero Article",
+                "description": "EF Education-EasyPost is actively seeking a strategic partner to help the team grow, signaling a major procurement opportunity for potential sponsors or partners.",
+                "url": "https://efprocycling.com/culture/ef-launches-search-for-strategic-partner-to-build-worlds-best-cycling-team/"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Search",
+            "Corporate Restructuring / M&A Intent",
+            "High-Value Procurement (Title Sponsorship)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 296,
+              "elapsed_seconds": 6.032059192657471
+            }
+          ],
+          "reasoning": "The homepage explicitly features a primary article titled 'EF launches search for strategic partner in bid to become world\u2019s best cycling team'. This is a direct signal of high-level procurement activity (seeking a major sponsor or equity partner) and indicates an active RFP or search process for a strategic relationship."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:16:47.694613",
+          "domain_explored": "https://teamefcoaching.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking/Scheduling Software (implied)",
+              "Payment Gateway (implied)",
+              "Video Conferencing (for consultations)",
+              "CMS (for content/marketing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of direct-to-consumer digital platform",
+              "Requirement for scalable customer management tools",
+              "Need for secure payment processing infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Launch",
+            "Consumer Service Expansion",
+            "IP Monetization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 286,
+              "elapsed_seconds": 5.658634185791016
+            }
+          ],
+          "reasoning": "The content reveals 'Team EF Coaching,' a new B2C service offering training and nutrition plans to the public. This signals a shift from pure sports team operations to a digital service provider model. While not a direct procurement signal for the race team, it indicates the need for supporting infrastructure (booking systems, payment processing, content delivery) to support this new revenue stream."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:16:56.571157",
+          "domain_explored": "https://www.linkedin.com/jobs/easypost-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Logistics API platforms",
+              "Salesforce (implied by SDR/CSM roles)",
+              "CRM software"
+            ],
+            "job_postings": [
+              "Customer Success Manager (Lehi, UT)",
+              "Sales Development Representative (Lehi, UT)",
+              "Sales Development Representative II (Lehi, UT)"
+            ],
+            "procurement_indicators": [
+              "Sales Team Expansion (EasyPost Corp)",
+              "Customer Success Hiring (EasyPost Corp)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Vendor/Sponsor Confusion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.554421901702881
+            }
+          ],
+          "reasoning": "The scraped content refers to 'EasyPost' (a logistics API company based in Lehi, UT), not 'EF Education\u2013EasyPost' (the WorldTour cycling team). While EasyPost is the title sponsor of the team, job postings for EasyPost's internal software sales and customer success teams do not constitute direct procurement signals for the cycling team's operations. This is a false positive on the entity name."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:17:25.982646",
+          "domain_explored": "https://www.linkedin.com/company/ef-education-first/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Parent company vs Subsidiary",
+              "Technical Constraint: LinkedIn scraping restriction"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Scope Creep",
+            "Data Access Failure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 524,
+              "output_tokens": 247,
+              "elapsed_seconds": 26.87319302558899
+            }
+          ],
+          "reasoning": "The target URL (EF Education First) refers to the parent education company, not the specific cycling team entity (EF Education\u2013EasyPost). While related, the procurement signals for a global education conglomerate (language schools, study abroad) differ significantly from those of a professional cycling team (sports equipment, travel logistics, performance tech). The 'Forbidden' error message further indicates a technical blockage preventing data retrieval, resulting in a negative confidence delta due to lack of relevant signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:17:36.292796",
+          "domain_explored": "https://www.linkedin.com/jobs/view/customer-success-manager-at-easypost-4366643765",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "Zendesk",
+              "REST API"
+            ],
+            "job_postings": [
+              "Customer Success Manager (Lehi, UT)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Vendor/Sponsor Confusion",
+            "Scope Creep"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 194,
+              "elapsed_seconds": 6.331587076187134
+            }
+          ],
+          "reasoning": "The job posting is for EasyPost (the logistics software company), not EF Education\u2013EasyPost (the cycling team). While EasyPost is a sponsor, this hiring activity indicates internal HR operations for the vendor, not procurement activity by the cycling team. The entity mismatch invalidates the procurement signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:17:47.343824",
+          "domain_explored": "https://www.linkedin.com/jobs/view/software-engineer-iii-at-easypost-4365391850",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "REST API",
+              "Front-end/Back-end development"
+            ],
+            "job_postings": [
+              "Software Engineer III"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Vendor/Sponsor Confusion",
+            "Scope Creep"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1622,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.962470054626465
+            }
+          ],
+          "reasoning": "The job posting is for EasyPost (the logistics software company), not EF Education\u2013EasyPost (the cycling team). While EasyPost is the team's title sponsor, their internal engineering hiring is a vendor operational activity, not a procurement signal for the team itself. This continues the pattern of confusion between the two entities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:17:55.915855",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-technical-recruiter-contract-at-easypost-4365175269",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Lever (ATS)",
+              "REST API"
+            ],
+            "job_postings": [
+              "Senior Technical Recruiter (Contract)"
+            ],
+            "procurement_indicators": [
+              "Contract Staffing",
+              "HR Services"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Vendor/Sponsor Confusion",
+            "Scope Creep"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1681,
+              "output_tokens": 216,
+              "elapsed_seconds": 4.855638027191162
+            }
+          ],
+          "reasoning": "The job posting is for 'EasyPost' (the shipping/logistics software company), not 'EF Education\u2013EasyPost' (the cycling team). While EasyPost is the title sponsor of the team, this is an internal HR procurement signal for the vendor company, not the cycling team's procurement operations. This continues the pattern of confusion between the two entities."
+        }
+      ],
+      "total_input_tokens": 9638,
+      "total_output_tokens": 1714,
+      "estimated_cost_usd": 0.054624
+    },
+    "procurement_signals": [
+      "Strategic Partnership Search",
+      "Corporate Restructuring / M&A Intent",
+      "High-Value Procurement (Title Sponsorship)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "EF Education\u0096EasyPost may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:17:55.917337"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.381305",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:55.685953"
+}

@@ -1,0 +1,224 @@
+{
+  "entity_id": "kolstad_handball",
+  "entity_name": "Kolstad Handball",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "kolstad-handball.no",
+    "old.eurohandball.com",
+    "grokipedia.com",
+    "handball-planet.com",
+    "history.eurohandball.com",
+    "fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kolstad_handball",
+      "entity_name": "Kolstad Handball",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://old.eurohandball.com",
+        "https://kolstad-handball.no",
+        "https://grokipedia.com",
+        "https://handball-planet.com",
+        "https://fcbarcelona.com",
+        "https://history.eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kolstad Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:42:41.257448",
+          "domain_explored": "https://kolstad-handball.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Link to 'Samarbeidspartnere' (Partners) section detected, suggesting a structured vendor/sponsor ecosystem exists, but requires further scraping to analyze."
+            ]
+          },
+          "patterns_found": [
+            "Standard Navigation Structure",
+            "Partnership Section Presence"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 402,
+              "output_tokens": 213,
+              "elapsed_seconds": 12.91074013710022
+            }
+          ],
+          "reasoning": "The provided content consists solely of navigation elements and links (Aktuelt, Arkiv, Samarbeidspartnere) without any descriptive text, news items, or specific partner details. While the 'Samarbeidspartnere' (Partners) link indicates a section exists, the content itself contains no analyzable data regarding procurement, technology, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:42:50.050684",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Calendar Structure",
+            "Third-Party Domain (old.eurohandball.com)",
+            "Absence of Entity-Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.1184890270233154
+            }
+          ],
+          "reasoning": "The content provided is a raw HTML dump of a generic calendar widget from the European Handball Federation (EHF) website. It contains no information regarding Kolstad Handball, its procurement activities, technology stack, or governance. The data is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:42:56.003999",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:43:07.256593",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports News Aggregation",
+            "High Volume of Transfer/Rumor Content",
+            "Focus on International Competitions (EHF EURO)",
+            "Absence of Entity-Specific Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 194,
+              "elapsed_seconds": 4.458554029464722
+            }
+          ],
+          "reasoning": "The scraped content from handball-planet.com is a generic sports news feed focusing on international tournaments (EHF EURO 2026), awards, and player transfers. There is no mention of 'Kolstad Handball', nor are there any signals regarding procurement, technology investments, or organizational governance specific to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:43:17.809406",
+          "domain_explored": "https://history.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Competition Selector Interface",
+            "Third-Party Domain (history.eurohandball.com)",
+            "Absence of Entity-Specific Data",
+            "Footer Credits (EOS Data)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 856,
+              "output_tokens": 177,
+              "elapsed_seconds": 3.6882760524749756
+            }
+          ],
+          "reasoning": "The content is a generic interface for the European Handball Federation's historical competition database. It contains no specific information regarding Kolstad Handball, nor does it contain procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:43:28.140170",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FC Barcelona vs Kolstad Handball)",
+            "Generic Sports Navigation (Tickets, Store, Teams)",
+            "Fan Engagement Focus (Culers, Newsletter, Draws)",
+            "Standard E-commerce Indicators (Shop, Merchandise)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.8934249877929688
+            }
+          ],
+          "reasoning": "The scraped content is exclusively from FC Barcelona (fcbarcelona.com), a different entity than the target Kolstad Handball. The content focuses on consumer-facing operations (ticketing, merchandise, fan news) rather than B2B procurement or governance signals relevant to Kolstad."
+        }
+      ],
+      "total_input_tokens": 5750,
+      "total_output_tokens": 938,
+      "estimated_cost_usd": 0.03132
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kolstad Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:43:28.142516"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.355441",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:49.200963"
+}

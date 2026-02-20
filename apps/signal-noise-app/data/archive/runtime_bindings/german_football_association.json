@@ -1,0 +1,314 @@
+{
+  "entity_id": "german_football_association",
+  "entity_name": "German Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "portal.dfbnet.org",
+    "warubi-sports.com",
+    "football.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/hadisotudeh_praktikum-spieldatenerhebung-wmd-jobs-activity-7287872900294959105-U2GE",
+      "https://fr.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7288193846251810816-Vqys"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_football_association",
+      "entity_name": "German Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://fr.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7288193846251810816-Vqys",
+        "https://www.linkedin.com/posts/hadisotudeh_praktikum-spieldatenerhebung-wmd-jobs-activity-7287872900294959105-U2GE",
+        "https://inside.fifa.com",
+        "https://warubi-sports.com",
+        "https://portal.dfbnet.org",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Legacy Modernization Initiative",
+        "IT Specialist Recruitment",
+        "SaaS Platform Ecosystem",
+        "Vendor Partnership Display",
+        "Talent Acquisition Signal",
+        "Data Acquisition Operations",
+        "Flexible Work Policy",
+        "Talent Acquisition Signal",
+        "Performance Analytics Investment",
+        "Data-Driven Operations",
+        "Third-Party Recruitment Channel"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:02:58.860234",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding for stadium refurbishment (Burundi)",
+              "FIFA Women's Champions Cup organizational requirements"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Repetition",
+            "Global Governance Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.638719081878662
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA (global governing body), not the German Football Association (DFB). The content focuses on high-level strategic news regarding the Women's Champions Cup and stadium refurbishment in Burundi. There is no mention of DFB-specific procurement, technology stacks, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:03:06.905822",
+          "domain_explored": "https://portal.dfbnet.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DFBnet (Proprietary Portal)",
+              "Pass Online (Module undergoing redesign)",
+              "Schiedsrichteransetzung (Referee Assignment SaaS)",
+              "DFBnet Finanz (Financial Module)",
+              "Mobile Apps (iOS/Android implied by 'Ergebnismeldung mobil')"
+            ],
+            "job_postings": [
+              "IT-Spezialist*innen (via DFB-Jobb\u00f6rse link)"
+            ],
+            "procurement_indicators": [
+              "UI/UX Redesign Project (Pass Online)",
+              "Module Modernization (Schiedsrichteransetzung)",
+              "Sponsor/Vendor Ecosystem (Adidas, Coca Cola, Ergo)",
+              "Training/Support Infrastructure (Videoschulungen, Webschulungen)"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Modernization Initiative",
+            "IT Specialist Recruitment",
+            "SaaS Platform Ecosystem",
+            "Vendor Partnership Display"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 387,
+              "elapsed_seconds": 4.323453903198242
+            }
+          ],
+          "reasoning": "The content confirms active digital transformation efforts within the DFB's internal portal (DFBnet). Explicit signals include a 'Redesign' of 'Pass Online' and 'Modernized' referee assignment modules, indicating active development or vendor engagement. The presence of a 'DFB-Jobb\u00f6rse' specifically seeking 'IT-Spezialist*innen' confirms hiring intent for technical capabilities. The extensive list of modules (Finanz, Spielplanung, etc.) reveals a complex software stack likely requiring external maintenance and procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:03:12.732019",
+          "domain_explored": "https://warubi-sports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Third-Party Service Provider",
+            "B2C/B2B Business Model",
+            "Content Repetition"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 183,
+              "elapsed_seconds": 1.931875228881836
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'WARUBI Sports', a private agency and alliance founded in 2017. While they mention partnerships with federations, they are a distinct commercial entity focused on player pathways, education, and events, not the governing body itself. There is no evidence of procurement activity by the German Football Association (DFB) on this page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:03:21.443161",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mozilla Firefox",
+              "Google Chrome",
+              "Internet Explorer",
+              "Discord"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Crowdsourced Content",
+            "Consumer-Facing Platform",
+            "Global Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 203,
+              "elapsed_seconds": 5.196667909622192
+            }
+          ],
+          "reasoning": "The scraped content represents a fan-maintained encyclopedia (Fandom/Wikia) rather than the official German Football Association (DFB). It contains general football information, match schedules, and community guidelines, but lacks any authority regarding DFB's internal procurement, vendor selection, or technology infrastructure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:03:34.764953",
+          "domain_explored": "https://www.linkedin.com/posts/hadisotudeh_praktikum-spieldatenerhebung-wmd-jobs-activity-7287872900294959105-U2GE",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Acquisition Platforms",
+              "Match Analysis Systems"
+            ],
+            "job_postings": [
+              "Role: Football Data Intern / Working Student",
+              "Department: Data Acquisition (National Teams & Competitions)",
+              "Location: Frankfurt (Hybrid)",
+              "Duration: 6 Months (Start: 15.03.2025)",
+              "Languages: German, English"
+            ],
+            "procurement_indicators": [
+              "Expansion of data acquisition capabilities",
+              "Support for youth development and coaching education departments",
+              "Operational budget allocation for personnel"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition Signal",
+            "Data Acquisition Operations",
+            "Flexible Work Policy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 295,
+              "elapsed_seconds": 9.825301170349121
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'Data Acquisition' team, indicating operational needs and potential future tool procurement. The role supports national teams and professional competitions, validating the entity's focus on data infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:03:40.951098",
+          "domain_explored": "https://fr.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7288193846251810816-Vqys",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Software",
+              "Data Visualization Tools",
+              "Video Analysis Systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Game data analyst / Analista de datos del juego",
+                "department": "Sports Science / Performance Analysis",
+                "source": "Futboljobs.com (LinkedIn)"
+              }
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in data analytics",
+              "Potential requirement for external data provider licenses",
+              "Investment in technical infrastructure for scouting/match analysis"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition Signal",
+            "Performance Analytics Investment",
+            "Data-Driven Operations",
+            "Third-Party Recruitment Channel"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1632,
+              "output_tokens": 353,
+              "elapsed_seconds": 2.701432943344116
+            }
+          ],
+          "reasoning": "The content is a verified job posting for a 'Game data analyst' role at the German Football Association (DFB), distributed via a specialized sports job board (Futboljobs). This confirms the DFB's active recruitment efforts to build internal capabilities in sports performance analytics. This role typically requires software procurement (analysis tools) and data vendor contracts, signaling direct and indirect procurement intent."
+        }
+      ],
+      "total_input_tokens": 8924,
+      "total_output_tokens": 1625,
+      "estimated_cost_usd": 0.051147
+    },
+    "procurement_signals": [
+      "Legacy Modernization Initiative",
+      "IT Specialist Recruitment",
+      "SaaS Platform Ecosystem",
+      "Vendor Partnership Display",
+      "Talent Acquisition Signal",
+      "Data Acquisition Operations",
+      "Flexible Work Policy",
+      "Talent Acquisition Signal",
+      "Performance Analytics Investment",
+      "Data-Driven Operations",
+      "Third-Party Recruitment Channel"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:03:40.952553"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205031",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:32.576827"
+}

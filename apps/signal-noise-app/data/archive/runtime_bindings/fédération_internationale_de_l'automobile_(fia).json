@@ -1,0 +1,397 @@
+{
+  "entity_id": "f\u00e9d\u00e9ration_internationale_de_l'automobile_(fia)",
+  "entity_name": "F\u00e9d\u00e9ration Internationale de l'Automobile (FIA)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "api.fia.com",
+    "fiafoundation.org",
+    "fiaformulae.com",
+    "activityreport2023.fia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/federation-internationale-de-l-automobile_fia-careers-activity-7263130560212918274-aAOi",
+      "https://www.linkedin.com/posts/global-south-opportunities_jobs-roadsafety-fia-activity-7414208164293660672-HHuN",
+      "https://be.linkedin.com/jobs/view/membership-events-officer-at-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-fia-region-i-3903544990",
+      "https://www.linkedin.com/posts/f-d-ration-internationale-de-l-automobile-fia-region-i_hiring-jobsinbrussels-vacancy-activity-7186274267087478785--SVx"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_l'automobile_(fia)",
+      "entity_name": "F\u00e9d\u00e9ration Internationale de l'Automobile (FIA)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.16,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.16
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/federation-internationale-de-l-automobile_fia-careers-activity-7263130560212918274-aAOi",
+        "https://activityreport2023.fia.com",
+        "https://be.linkedin.com/jobs/view/membership-events-officer-at-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-fia-region-i-3903544990",
+        "https://www.linkedin.com/posts/f-d-ration-internationale-de-l-automobile-fia-region-i_hiring-jobsinbrussels-vacancy-activity-7186274267087478785--SVx",
+        "https://www.linkedin.com/posts/global-south-opportunities_jobs-roadsafety-fia-activity-7414208164293660672-HHuN",
+        "https://fiaformulae.com",
+        "https://fiafoundation.org",
+        "https://api.fia.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Dedicated Procurement Portal",
+        "Structured Vendor Engagement",
+        "Governance Compliance",
+        "Digital E-Library Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de l'Automobile (FIA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:35:51.076356",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "API Gateway (api.fia.com)",
+              "Content Management System (CMS)",
+              "Document Management System (E-LIBRARY)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Invitation to Tender (Direct RFP/Tender link)",
+              "Partners and suppliers (Vendor management portal)",
+              "Data Privacy Notice (Compliance requirement for vendors)"
+            ]
+          },
+          "patterns_found": [
+            "Dedicated Procurement Portal",
+            "Structured Vendor Engagement",
+            "Governance Compliance",
+            "Digital E-Library Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 322,
+              "elapsed_seconds": 4.102392196655273
+            }
+          ],
+          "reasoning": "The scraped content from the FIA API subdomain reveals a dedicated navigation structure for procurement activities, specifically the 'Invitation to Tender' section. This is a direct procurement signal indicating a formal channel for vendor acquisition. Additionally, the presence of 'Data Privacy Notice' and 'FIA Partners and suppliers' links suggests active vendor management and compliance governance. The 'E-LIBRARY' link indicates a digital content management system, potentially relevant for ECM or document management procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:35:59.210390",
+          "domain_explored": "https://fiafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Funding Programme",
+              "Advocacy Support"
+            ]
+          },
+          "patterns_found": [
+            "Non-profit/Charitable Mission",
+            "Grant-making/Advocacy",
+            "Road Safety Policy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1067,
+              "output_tokens": 198,
+              "elapsed_seconds": 3.738590955734253
+            }
+          ],
+          "reasoning": "The content analyzed is from the FIA Foundation (a separate registered charity in the UK), not the F\u00e9d\u00e9ration Internationale de l'Automobile (FIA). The text focuses exclusively on road safety advocacy, 'Vision Zero', and grant funding programs. There are no signals of commercial procurement, vendor management, or corporate technology acquisition relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:36:05.585181",
+          "domain_explored": "https://fiaformulae.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Infosys (AI Stats Centre)",
+              "Amazon Prime Video (Streaming Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hankook (Official Tire Partner)",
+              "Jaguar TCS Racing",
+              "Porsche"
+            ]
+          },
+          "patterns_found": [
+            "Sports Entertainment Content",
+            "Sponsorship Ecosystem",
+            "Consumer-Facing Digital Properties"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.3113291263580322
+            }
+          ],
+          "reasoning": "The content is exclusively focused on Formula E race results, driver standings, and entertainment media (e.g., Amazon Prime series). While it mentions technology partners like Infosys, these are established sponsorships rather than active procurement signals. The entity is a sports promoter (FIA Formula E Championship), distinct from the governing body's administrative procurement function."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:36:16.586070",
+          "domain_explored": "https://activityreport2023.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Big Data Analytics",
+              "Smart City Technologies",
+              "Digital Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic focus on 'Innovation' and 'Knowledge' transfer",
+              "Visual references to 'Big Data connection technology'",
+              "Annual reporting cycle (indicative of upcoming budget planning)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Pillar Emphasis (Knowledge, EDI, Innovation)",
+            "Digital Transformation Signals (Smart City/Big Data imagery)",
+            "Sustainability & EV Focus (Environmental imagery)",
+            "Annual Reporting Context (Budget Review Cycle)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 351,
+              "elapsed_seconds": 8.108177900314331
+            }
+          ],
+          "reasoning": "The content represents the FIA's 2023 Activity Report, explicitly highlighting 'Knowledge', 'EDI' (Equality, Diversity, Inclusion), and 'Innovation' as key themes. While the text is largely high-level and repetitive (likely due to scraping artifacts), the inclusion of 'Smart city', 'big data connection technology', and 'Innovation' themes suggests an organizational focus on digital transformation. This indicates potential procurement intent for consulting, technology services, and data infrastructure, even if no specific RFPs are listed in this snippet."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:36:23.277476",
+          "domain_explored": "https://www.linkedin.com/posts/federation-internationale-de-l-automobile_fia-careers-activity-7263130560212918274-aAOi",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate Marketing/Recruitment)",
+              "Dedicated Careers Portal (careers.fia.com - likely ATS)"
+            ],
+            "job_postings": [
+              "Senior Structural Engineer",
+              "Championships Manager \u2013 Formula Regional & Formula 4"
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion (Hiring in Geneva)",
+              "Technical Operations (Engineering roles imply CAD/CAE tool usage)",
+              "Sport Management (Championship roles imply timing/scoring or management software)"
+            ]
+          },
+          "patterns_found": [
+            "HR Infrastructure Investment",
+            "Dedicated Careers Subdomain",
+            "Geneva HQ Operations",
+            "Technical & Operational Hiring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 352,
+              "elapsed_seconds": 3.349764823913574
+            }
+          ],
+          "reasoning": "While this specific content is a recruitment post for operational roles (Structural Engineer, Championships Manager) rather than direct procurement solicitations, it confirms the existence of a dedicated, structured HR infrastructure (careers.fia.com). This indicates organizational maturity and budget allocation for internal growth, which correlates with procurement capability. The roles are technical and operational, suggesting potential future needs for engineering software or championship management tools."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:36:31.052265",
+          "domain_explored": "https://www.linkedin.com/posts/global-south-opportunities_jobs-roadsafety-fia-activity-7414208164293660672-HHuN",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Remote Collaboration Platforms",
+              "Project Management Software (implied by 'programme delivery')"
+            ],
+            "job_postings": [
+              {
+                "role": "SM4A4L Coordinator",
+                "department": "Region II (Asia-Pacific)",
+                "contract_type": "Fixed-term (12 months)",
+                "funding_entity": "UNITAR"
+              }
+            ],
+            "procurement_indicators": [
+              "Active program execution in Asia-Pacific",
+              "Reliance on external partnerships (UNITAR, CIFAL)",
+              "Budget allocation for stakeholder management and training"
+            ]
+          },
+          "patterns_found": [
+            "Programmatic Service Procurement",
+            "Regional Grant Execution (Asia-Pacific)",
+            "Partnership Ecosystem Management (UNITAR/CIFAL)",
+            "Remote-First Operations Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 364,
+              "elapsed_seconds": 4.575930833816528
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, it confirms the FIA is actively executing funded programs requiring external coordination. The role is funded via UNITAR, indicating a flow of grant/program funds that require management. The 'Fully Remote' nature confirms investment in digital collaboration tools. This signals active operational spend in the Region II (Asia-Pacific) sector, specifically for Road Safety initiatives."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:36:39.049988",
+          "domain_explored": "https://be.linkedin.com/jobs/view/membership-events-officer-at-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-fia-region-i-3903544990",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "Online Registration Platforms",
+              "Digital Survey Tools",
+              "Webinar Platforms"
+            ],
+            "job_postings": [
+              {
+                "role": "Membership & Events Officer",
+                "location": "Brussels, Belgium",
+                "department": "Region I (Europe, Middle East, Africa)",
+                "contract_type": "1-year contract (Full-time)",
+                "salary_range": "2,200 EUR - 3,000 EUR (Gross)",
+                "procurement_relevance": "Responsible for supplier negotiations, expense tracking, and financial reporting for events."
+              }
+            ],
+            "procurement_indicators": [
+              "Supplier Negotiation Authority",
+              "Event Logistics Procurement",
+              "Financial Reporting & Expense Tracking",
+              "Digital Tool Deployment for Members"
+            ]
+          },
+          "patterns_found": [
+            "Direct Vendor Management (Supplier Negotiations)",
+            "Event Procurement Lifecycle (Logistics/Services)",
+            "Digital Infrastructure Maintenance (CMS/Website)",
+            "Regional Operations (Brussels/EMEA)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1771,
+              "output_tokens": 439,
+              "elapsed_seconds": 4.672766923904419
+            }
+          ],
+          "reasoning": "The job posting for a Membership & Events Officer at FIA Region I reveals direct procurement responsibilities, specifically 'supplier negotiations' and 'financial oversight for events.' This confirms that regional offices have decentralized procurement authority for event logistics and services. It also indicates the use of CMS platforms and digital tools for member capacity building, signaling potential technology procurement needs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:36:59.787909",
+          "domain_explored": "https://www.linkedin.com/posts/f-d-ration-internationale-de-l-automobile-fia-region-i_hiring-jobsinbrussels-vacancy-activity-7186274267087478785--SVx",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform",
+              "Event Management Software (Implied)"
+            ],
+            "job_postings": [
+              {
+                "title": "Membership & Events Officer",
+                "location": "Brussels (Region I)",
+                "focus": "Project management, member relations, event organization"
+              }
+            ],
+            "procurement_indicators": [
+              "Regional Event Spend",
+              "Membership CRM Maintenance",
+              "Operational Services Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Regional Event Operations",
+            "Stakeholder Management Infrastructure",
+            "Brussels Regional Hub Presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1868,
+              "output_tokens": 320,
+              "elapsed_seconds": 17.419291019439697
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Membership & Events Officer' at FIA Region I (Europe/Middle East). While primarily an HR signal, the role confirms ongoing operational expenditure for event management and membership services. It reinforces the pattern of decentralized regional procurement (Brussels vs. Geneva HQ) and indicates a need for event logistics and communication tools, though it lacks specific technical procurement intent."
+        }
+      ],
+      "total_input_tokens": 12357,
+      "total_output_tokens": 2587,
+      "estimated_cost_usd": 0.075876
+    },
+    "procurement_signals": [
+      "Dedicated Procurement Portal",
+      "Structured Vendor Engagement",
+      "Governance Compliance",
+      "Digital E-Library Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de l'Automobile (FIA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:36:59.789347"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.459698",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:02.085631"
+}

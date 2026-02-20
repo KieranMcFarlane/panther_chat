@@ -1,0 +1,287 @@
+{
+  "entity_id": "top_14",
+  "entity_name": "Top 14",
+  "template_id": "tpl_rugby_governance_ecosystem_v1",
+  "cluster_id": "rugby_league_admin",
+  "discovered_domains": [
+    "top14.lnr.fr",
+    "top14.fr",
+    "top14rugbytv.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/pulse/top-14-lucrative-work-from-home-freelance-jobs-2024-raymond-kubode-njcqc",
+      "https://pe.linkedin.com/posts/felipe-moreno-p%C3%A9rez-712a4017_top-14-jobs-of-the-future-careers-in-high-activity-7018988778841063425-aALH",
+      "https://www.linkedin.com/posts/maheshma_remotework-jobsearch-careeradvice-activity-7326780675057942528-K8bW",
+      "https://www.linkedin.com/pulse/fastest-growing-jobs-2026-beyond-ginitalent-recruitment-staffing-qufbf"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "top_14",
+      "entity_name": "Top 14",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://pe.linkedin.com/posts/felipe-moreno-p%C3%A9rez-712a4017_top-14-jobs-of-the-future-careers-in-high-activity-7018988778841063425-aALH",
+        "https://top14rugbytv.com",
+        "https://top14.lnr.fr",
+        "https://www.linkedin.com/posts/maheshma_remotework-jobsearch-careeradvice-activity-7326780675057942528-K8bW",
+        "https://top14.fr",
+        "https://www.linkedin.com/pulse/fastest-growing-jobs-2026-beyond-ginitalent-recruitment-staffing-qufbf",
+        "https://www.linkedin.com/pulse/top-14-lucrative-work-from-home-freelance-jobs-2024-raymond-kubode-njcqc"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Top 14 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:02:13.105196",
+          "domain_explored": "https://top14.lnr.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MyRugby (Fan Engagement Platform)",
+              "Web Analytics / Data Visualization (Statistics Dashboard)",
+              "CRM / Membership Management (Account creation, ticketing benefits)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with 'iad' (Real Estate Group) for fan promotions",
+              "Investment in 'Paris La D\u00e9fense Arena' infrastructure/events",
+              "Digital content management for match replays and exclusives"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform (MyRugby)",
+            "Data Analytics & Statistics Visualization",
+            "Digital Ticketing & Membership Services",
+            "Partnership Ecosystem (iad)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 332,
+              "elapsed_seconds": 2.733027696609497
+            }
+          ],
+          "reasoning": "The content reveals a structured digital ecosystem centered around the 'MyRugby' platform, indicating a reliance on third-party partnerships (iad) and internal data analytics capabilities. The presence of detailed statistics dashboards and a membership value proposition ('VIVEZ LE TOP 14 AUTREMENT') suggests an active investment in CRM and fan experience technologies, though no direct procurement intent (RFP) is visible in this specific snapshot."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:02:23.643310",
+          "domain_explored": "https://top14.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Game Promotion (Minibluff)",
+            "Player Welfare & Health Incident Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 186,
+              "elapsed_seconds": 7.351143836975098
+            }
+          ],
+          "reasoning": "The content provided is a standard RSS feed of sports news articles covering match results, player injuries (Uini Atonio), and game promotions. There are no explicit mentions of technology procurement, vendor selection, or digital transformation initiatives within these headlines. The 'Minibluff' game is a consumer-facing promotion, not an enterprise procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:02:29.680179",
+          "domain_explored": "https://top14rugbytv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Heavy reliance/SPA architecture)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering Dependency",
+            "Content Delivery Network (CDN) Usage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 493,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.8346309661865234
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'JavaScript disabled' error message, meaning the site is a Single Page Application (SPA) or relies heavily on client-side rendering. The scraper failed to extract the actual DOM content (text, links, job postings, or vendor information). Therefore, no procurement signals are visible in this dataset."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:02:36.234944",
+          "domain_explored": "https://www.linkedin.com/pulse/top-14-lucrative-work-from-home-freelance-jobs-2024-raymond-kubode-njcqc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Freelance Job Aggregation",
+            "Generic Digital Marketing Trends"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.0649678707122803
+            }
+          ],
+          "reasoning": "The content is a generic article about 'Top 14' freelance jobs (e.g., Google Merchant Expert, Pinterest Manager) and is completely unrelated to the Top 14 French Rugby Union competition managed by the LNR. The entity match is purely coincidental (the number 14), and there are no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:02:42.474548",
+          "domain_explored": "https://pe.linkedin.com/posts/felipe-moreno-p%C3%A9rez-712a4017_top-14-jobs-of-the-future-careers-in-high-activity-7018988778841063425-aALH",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Generic Career Advice Content",
+            "Keyword Collision ('Top 14' used as a listicle number)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.8482980728149414
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn post about '14 jobs of the future' (Software developer, Blockchain, AI, etc.). The term 'Top 14' in the title refers to the quantity of jobs listed, not the French rugby league (Ligue Nationale de Rugby). There is no relation to the entity Top 14 or its procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:02:48.183951",
+          "domain_explored": "https://www.linkedin.com/posts/maheshma_remotework-jobsearch-careeradvice-activity-7326780675057942528-K8bW",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Generic Career Advice Content",
+            "Keyword Collision ('Top 14' used as a listicle number)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 170,
+              "elapsed_seconds": 1.8037869930267334
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn article listing 'Top 14 remote job boards' for career advice. The term 'Top 14' is used as a quantitative listicle header, not as a reference to the Top 14 French rugby union organization. There is no relation to the target entity or its procurement activities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:02:55.068561",
+          "domain_explored": "https://www.linkedin.com/pulse/fastest-growing-jobs-2026-beyond-ginitalent-recruitment-staffing-qufbf",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "OpenAI",
+              "Zapier",
+              "n8n",
+              "Airtable",
+              "Notion",
+              "Jesy.ai"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Generic Career Advice Content",
+            "Keyword Collision ('Top 14' used as a listicle number)",
+            "Recruitment Agency Marketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1759,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.3031013011932373
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn Pulse article about future job trends (AI Collaboration, Workflow Architects) published by a recruitment agency (Gini Talent). The phrase 'Top 14' does not appear in the text, but the URL structure and content format match the previous iterations of 'Top X' listicles that have been consistently rejected as irrelevant to the Top 14 rugby entity. There is no connection to the LNR (Ligue Nationale de Rugby) or its procurement activities."
+        }
+      ],
+      "total_input_tokens": 9829,
+      "total_output_tokens": 1479,
+      "estimated_cost_usd": 0.051671999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Top 14 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:02:55.070106"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449227",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:28.276015"
+}

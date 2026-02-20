@@ -1,0 +1,36 @@
+{
+  "template_id": "tier_1_club_centralized_procurement",
+  "entity_name": "Arsenal FC",
+  "entity_domain": "arsenal.com",
+  "expanded_at": "2026-01-28T15:08:29.199561",
+  "signals_collected": 3,
+  "signal_examples": [
+    {
+      "source": "official_site",
+      "keyword": "digital",
+      "count": 1,
+      "url": "https://arsenal.com"
+    },
+    {
+      "source": "news",
+      "keyword": "new",
+      "count": 13,
+      "url": "https://arsenal.com/news"
+    },
+    {
+      "source": "news",
+      "keyword": "partner",
+      "count": 1,
+      "url": "https://arsenal.com/news"
+    }
+  ],
+  "confidence_boost": 0.15,
+  "metadata": {
+    "original_confidence": 0.7,
+    "channels_scraped": [
+      "official_site",
+      "news"
+    ],
+    "total_content_scraped": 16000
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "entity_id": "perth_wildcats",
+  "entity_name": "Perth Wildcats",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "wildcats.com.au",
+    "catsgear.com.au",
+    "basketball.australiabasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "perth_wildcats",
+      "entity_name": "Perth Wildcats",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://wildcats.com.au",
+        "https://catsgear.com.au",
+        "https://basketball.australiabasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Perth Wildcats may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:48:10.958652",
+          "domain_explored": "https://wildcats.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Automation (Newsletter Signup Form)",
+              "CMS (Content Management System for news articles)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship retention (DrinkWise, Tyrepower)",
+              "Merchandising (Multicultural Game Uniforms)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Social Responsibility (CSR) Campaigns",
+            "Sponsorship Activation (DrinkWise, Tyrepower)",
+            "Fan Engagement (Multicultural stories, Mental Health Game)",
+            "Newsletter Capture (Standard Marketing Automation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 286,
+              "elapsed_seconds": 3.4474780559539795
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of sports news, match reports, and marketing copy related to community initiatives (Pink Week, Multicultural Game). While the presence of a 'Subscribe' form indicates the use of basic marketing technology, there are no explicit procurement signals such as RFPs, job postings, technology upgrades, or strategic vendor partnerships mentioned in the text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:48:20.887440",
+          "domain_explored": "https://catsgear.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (E-commerce Platform)",
+              "Shopify Payments (Inferred)",
+              "Loyalty/Rewards System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory (Jerseys, Foam Hands)",
+              "Shipping/Logistics Services (Free shipping >$150)",
+              "Payment Gateway Processing"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Loyalty Program (Cats Gear Rewards)",
+            "Membership Integration (Wildcats Members)",
+            "Inventory Management (2025/26 Season Stock)",
+            "Logistics/Shipping (Domestic >$150)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 299,
+              "elapsed_seconds": 6.068624019622803
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce channel (Cats Gear) utilizing Shopify. The presence of a loyalty program ('Cats Gear Rewards') and specific member discount integration indicates a functional CRM requirement. The listing of 2025/26 stock signals active merchandise procurement cycles, but the site itself is a retail outlet rather than a source for B2B procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:48:27.960543",
+          "domain_explored": "https://basketball.australiabasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "NBL Game Recaps",
+            "Player Performance Tracking",
+            "Transfer/Rumor Speculation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.829814910888672
+            }
+          ],
+          "reasoning": "The content is scraped from a general basketball news aggregator (australiabasket.com) focusing on game results, player statistics, and league-wide transfers. It contains no specific information regarding the Perth Wildcats' internal operations, technology stack, or procurement activities. The entity 'Perth Wildcats' is not mentioned in the provided text, and the content is strictly related to on-court performance."
+        }
+      ],
+      "total_input_tokens": 4265,
+      "total_output_tokens": 786,
+      "estimated_cost_usd": 0.024585000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Perth Wildcats may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:48:27.961659"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.212323",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:00.125920"
+}

@@ -1,0 +1,252 @@
+{
+  "entity_id": "cape_verde_basketball_federation",
+  "entity_name": "Cape Verde Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "basket-in-africa.blogspot.com",
+    "s3.us-east-2.amazonaws.com",
+    "gocards.com",
+    "interbasket.net",
+    "afrobasket.com",
+    "linguee.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cape_verde_basketball_federation",
+      "entity_name": "Cape Verde Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://linguee.com.br",
+        "https://interbasket.net",
+        "https://afrobasket.com",
+        "https://s3.us-east-2.amazonaws.com",
+        "https://basket-in-africa.blogspot.com",
+        "https://gocards.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cape Verde Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:44:26.223946",
+          "domain_explored": "https://basket-in-africa.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports journalism",
+            "Regional federation updates (Uganda, Zimbabwe, Nigeria)",
+            "Historical event reporting (2018)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.3619329929351807
+            }
+          ],
+          "reasoning": "The provided content is a general sports news blog post from 2018 covering basketball results and administrative changes in Uganda, Zimbabwe, and Nigeria. There is absolutely no mention of the Cape Verde Basketball Federation, nor are there any procurement signals, technology investments, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:44:32.678263",
+          "domain_explored": "https://s3.us-east-2.amazonaws.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic vendor marketing content",
+            "Irrelevant technical documentation",
+            "Lack of entity-specific context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.0246551036834717
+            }
+          ],
+          "reasoning": "The provided content is the generic product landing page for Amazon S3 (Simple Storage Service) hosted on AWS servers. It contains no information regarding the Cape Verde Basketball Federation, its specific technology stack, procurement activities, or governance. The content describes general cloud storage benefits (scalability, durability) and unrelated case studies (Salesforce, Ancestry, BBC, NASCAR). There is zero signal linking this content to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:44:40.563979",
+          "domain_explored": "https://gocards.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Ticketing)",
+              "Sidearm (CMS inferred from 'gocards.com' structure common in NCAA)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (University of Louisville vs Cape Verde)",
+            "Generic Sports Portal Navigation",
+            "Ticketmaster Integration",
+            "Mobile App Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 206,
+              "elapsed_seconds": 4.378094911575317
+            }
+          ],
+          "reasoning": "The content is clearly from the University of Louisville Athletics ('gocards.com', 'Cardinals', 'ACC') and has no relation to the Cape Verde Basketball Federation. It contains standard sports team website elements (news, ticket sales, app downloads) but for the wrong entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:44:49.472381",
+          "domain_explored": "https://interbasket.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Sports Content (NFL/American Football)",
+            "Generic Fan Engagement Materials (Prop Bets Sheets)",
+            "Entity Mismatch (US Sports Teams vs Cape Verde Federation)",
+            "SEO-Driven Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.850338935852051
+            }
+          ],
+          "reasoning": "The scraped content from interbasket.net is exclusively focused on American Football (Super Bowl LX) and general NBA statistics. There is absolutely no mention of the Cape Verde Basketball Federation, African basketball governance, or federation-level procurement activities. The content consists of printable fan templates and sports data lists, which are irrelevant to the B2B procurement intelligence objective."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:45:03.833257",
+          "domain_explored": "https://afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Subscription Database Platform",
+              "Content Management System (CMS) for sports news"
+            ],
+            "job_postings": [
+              "Indirect: 'Job Market' branding suggests a dedicated section for sports employment opportunities"
+            ],
+            "procurement_indicators": [
+              "Player Transfer Agreements (Ivan Almeida to GTK)",
+              "Regional Vendor Presence (Hoops Agents, Job Market)",
+              "Data Services Subscription ($0.58/day database access)"
+            ]
+          },
+          "patterns_found": [
+            "Entity-Specific Player Movement (Cape Verde)",
+            "Regional Ecosystem Monitoring (Africa)",
+            "Vendor Advertising (Job Market/Hoops Agents)",
+            "Database Subscription Model"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 345,
+              "elapsed_seconds": 9.341283798217773
+            }
+          ],
+          "reasoning": "While the content is primarily sports journalism, the specific mention of 'Ivan Almeida... agreed terms with GTK - Cape Verde' confirms the site tracks the Cape Verde basketball ecosystem. The presence of 'Job Market' and 'Hoops Agents' advertisements indicates a commercial platform where federations and clubs often list vacancies or procure services. The site also offers a subscription database, suggesting a digital infrastructure that the Federation might utilize or list services on."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:45:11.906244",
+          "domain_explored": "https://linguee.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Translation Tool Interface",
+            "UI Navigation Elements",
+            "Linguistic Service Marketing (DeepL/Linguee)",
+            "Absence of Entity-Specific Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.540666103363037
+            }
+          ],
+          "reasoning": "The content provided is raw HTML/text from the Linguee.com.br homepage, a generic dictionary and translation service. It contains no references to the Cape Verde Basketball Federation, sports governance, or procurement activities. The text is entirely composed of user interface elements (language selectors, search buttons) and marketing copy for the translation tool."
+        }
+      ],
+      "total_input_tokens": 9097,
+      "total_output_tokens": 1363,
+      "estimated_cost_usd": 0.047736
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cape Verde Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:45:11.907831"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.257987",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:27:52.464929"
+}

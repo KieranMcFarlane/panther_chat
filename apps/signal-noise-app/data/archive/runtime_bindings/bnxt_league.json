@@ -1,0 +1,132 @@
+{
+  "entity_id": "bnxt_league",
+  "entity_name": "BNXT League",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "bnxtleague.com",
+    "bnxt.tv",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bnxt_league",
+      "entity_name": "BNXT League",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bnxtleague.com",
+        "https://bnxt.tv",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BNXT League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:08:46.124648",
+          "domain_explored": "https://bnxtleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js",
+              "JavaScript"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Modern Web Architecture Investment"
+            ]
+          },
+          "patterns_found": [
+            "Vue.js Frontend Framework",
+            "Single Page Application (SPA) Architecture",
+            "Client-Side Rendering Dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 381,
+              "output_tokens": 227,
+              "elapsed_seconds": 2.9744937419891357
+            }
+          ],
+          "reasoning": "The scraped content reveals a critical technical dependency: the application is built using 'bnx-vue' (a Vue.js application). This confirms the organization utilizes a modern JavaScript stack. While this is not a direct procurement signal like an RFP, it identifies the underlying technology stack, which is essential for understanding future vendor requirements (e.g., Vue.js developers) or integration capabilities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:08:56.160188",
+          "domain_explored": "https://bnxt.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering (CSR) Dependency",
+            "JavaScript Obfuscation/Minification",
+            "Empty DOM State"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 440,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.5974578857421875
+            }
+          ],
+          "reasoning": "The scraped content from bnxt.tv consists solely of a 'Please enable JavaScript' message. This indicates the site is a heavy Single Page Application (SPA) where content is rendered dynamically in the browser. Since the scraper cannot execute JavaScript, no procurement signals, job postings, or technology stack details are visible in the raw HTML response."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:08:59.500085",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 821,
+      "total_output_tokens": 407,
+      "estimated_cost_usd": 0.008568
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BNXT League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:08:59.500422"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.240792",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:51.265228"
+}

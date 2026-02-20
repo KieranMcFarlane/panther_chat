@@ -1,0 +1,104 @@
+{
+  "entity_id": "austrian_basketball_federation",
+  "entity_name": "Austrian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "fiba3x3.com",
+    "wada-ama.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_basketball_federation",
+      "entity_name": "Austrian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fiba3x3.com",
+        "https://wada-ama.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:19:30.476418",
+          "domain_explored": "https://fiba3x3.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:19:43.955592",
+          "domain_explored": "https://wada-ama.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ADEL (Anti-Doping Education and Learning Platform)",
+              "ADAMS (Anti-Doping Administration & Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Upcoming 2027 World Anti-Doping Code implementation (requires compliance updates)",
+              "Regional Symposium - Europe (Mar 2026) - Potential networking/vendor discovery event",
+              "Stakeholder consultation for Technical Documents (Opportunity for consultation/response)"
+            ]
+          },
+          "patterns_found": [
+            "Regulatory Compliance Updates (2027 Code)",
+            "Digital Platform Utilization (ADEL, ADAMS)",
+            "Regional Governance (Europe Symposium)",
+            "Stakeholder Consultations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 336,
+              "elapsed_seconds": 8.167402029037476
+            }
+          ],
+          "reasoning": "While this is the World Anti-Doping Agency (WADA) site and not the Austrian Basketball Federation directly, it provides critical context for the Federation's mandatory compliance environment. The reference to the 'Regional Symposium - Europe' (March 2026) and the upcoming '2027 Code' indicates a near-term requirement for the Federation to update governance frameworks and potentially procure training or compliance tools to align with new WADA standards."
+        }
+      ],
+      "total_input_tokens": 1392,
+      "total_output_tokens": 336,
+      "estimated_cost_usd": 0.009216
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:19:43.956277"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.249263",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:03.999028"
+}

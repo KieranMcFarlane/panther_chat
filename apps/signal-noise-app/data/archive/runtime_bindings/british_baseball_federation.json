@@ -1,0 +1,204 @@
+{
+  "entity_id": "british_baseball_federation",
+  "entity_name": "British Baseball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "britishbaseball.org.uk",
+    "stats.britishbaseball.org.uk",
+    "baseballsoftballuk.com",
+    "britishsoftball.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_baseball_federation",
+      "entity_name": "British Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://stats.britishbaseball.org.uk",
+        "https://britishsoftball.org",
+        "https://britishbaseball.org.uk",
+        "https://baseballsoftballuk.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "National Development Agency Operations",
+        "Venue & Facility Management",
+        "Education & Training Pathways",
+        "Safeguarding & Compliance Training",
+        "Strategic Partnerships"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:40:32.423611",
+          "domain_explored": "https://britishbaseball.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop/WooCommerce)",
+              "Content Management System (CMS)",
+              "Membership/Registration Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of 'Coaching Playbook' (Digital product/educational material)",
+              "Active 'GB Fan Gear' shop (Retail/Inventory needs)",
+              "Open '2026 Club Registration' (Administrative software usage)",
+              "Partnership with 'Smarter Performance' (Outsourced services)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Development",
+            "E-commerce Operations",
+            "Event Management & Registration",
+            "Strategic Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 349,
+              "elapsed_seconds": 3.4552669525146484
+            }
+          ],
+          "reasoning": "The content reveals active digital operations and new product launches. The 'Coaching Playbook' indicates a need for digital publishing tools or Learning Management Systems (LMS). The 'GB Fan Gear' section confirms active e-commerce operations, suggesting potential procurement for payment gateways, inventory management, or print-on-demand services. The '2026 Club Registration' implies the use of, or need for, membership management software. The mention of 'Smarter Performance' suggests an existing vendor relationship or partnership."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:40:35.450055",
+          "domain_explored": "https://stats.britishbaseball.org.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:40:44.718709",
+          "domain_explored": "https://baseballsoftballuk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Management Systems (implied by 'Make a booking')",
+              "Learning Management Systems (LMS) (for 'Coaching Playbook' and 'Safe On Base' courses)",
+              "Email Marketing Platforms (implied by 'Join the mailing list')"
+            ],
+            "job_postings": [
+              "Female Athlete Lead (Katy Gould) - indicates specialized staffing structure"
+            ],
+            "procurement_indicators": [
+              "Launch of new education pathway ('Coaching Playbook')",
+              "Operation of Farnham Park complex (Facility Management procurement)",
+              "Safeguarding course delivery (Training services/Software)",
+              "UK Sport PLx Innovation Award involvement (Grant funding/Innovation projects)"
+            ]
+          },
+          "patterns_found": [
+            "National Development Agency Operations",
+            "Venue & Facility Management",
+            "Education & Training Pathways",
+            "Safeguarding & Compliance Training",
+            "Strategic Partnerships"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1172,
+              "output_tokens": 411,
+              "elapsed_seconds": 5.710981845855713
+            }
+          ],
+          "reasoning": "The content reveals that BaseballSoftballUK (BSUK) is the strategic development agency for both British Baseball and Softball Federations. The presence of a dedicated facility (Farnham Park), a new 'Coaching Playbook' education pathway, and safeguarding training courses indicates significant operational complexity. These factors require robust Learning Management Systems (LMS), facility management software, and CRM tools to handle bookings, education, and compliance, generating strong procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:40:52.606183",
+          "domain_explored": "https://britishsoftball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach - GB U-15 Women's Fastpitch Team (Alan Le Marquand)",
+              "Head Coach - GB U-16 Men's Team (Natalie Hull)",
+              "Head Coach - GB U-18 Men's Team (Alan LeMarquand)",
+              "Female Athlete Lead (Katy Gould)"
+            ],
+            "procurement_indicators": [
+              "Sports Science & Medical Services (Female Health Programme)",
+              "Innovation Program Management (UK Sport PLx Innovation Award nomination)",
+              "Event Logistics (Trials in Cardiff)",
+              "Governance Operations (2026 AGM)"
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Sports Operations",
+            "Medical & Science Commission Activities",
+            "National Team Management Logistics",
+            "Governance & AGM Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 352,
+              "elapsed_seconds": 4.185098886489868
+            }
+          ],
+          "reasoning": "While the content focuses on sports management (coaching appointments, squad announcements) rather than direct procurement, the reference to the 'BaseballSoftballUK Medical & Science Commission' and the 'Female Health Programme' indicates investment in specialized sports science services. The AGM announcement confirms active governance. This confirms the entity's operational scope but offers weak signals for immediate technology or service procurement."
+        }
+      ],
+      "total_input_tokens": 4038,
+      "total_output_tokens": 1112,
+      "estimated_cost_usd": 0.028794
+    },
+    "procurement_signals": [
+      "National Development Agency Operations",
+      "Venue & Facility Management",
+      "Education & Training Pathways",
+      "Safeguarding & Compliance Training",
+      "Strategic Partnerships"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:40:52.607840"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312293",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:39:55.188250"
+}

@@ -1,0 +1,459 @@
+{
+  "entity_id": "nacional",
+  "entity_name": "Nacional",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "nacional.uy",
+    "atlnacional.com.co",
+    "cdnacional.pt",
+    "clubnacional.com.py",
+    "tiendaverde.com.co",
+    "tienda.nacional.uy"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/centro-cuesta-nacional-jobs-worldwide?f_C=9437104&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/jobs-in-worldwide",
+      "https://in.linkedin.com/jobs/director-nacional-jobs-pune",
+      "https://ie.linkedin.com/jobs/search?keywords=Eaton&location=Rep%C3%BAblica+Dominicana&geoId=105057336&trk=public_jobs_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0",
+      "https://www.linkedin.com/posts/centro-nacional-de-analisis-genomico_jobs-hiring-cnag-activity-7422579372039229440-MlKy",
+      "https://www.linkedin.com/jobs/csn-companhia-sider%C3%BArgica-nacional-jobs-worldwide",
+      "https://www.linkedin.com/jobs/uni%C3%A3o-qu%C3%ADmica-farmac%C3%AAutica-nacional-jobs-worldwide",
+      "https://www.linkedin.com/jobs/human-resources-jobs-czech-republic",
+      "https://www.linkedin.com/company/newlinkglobal/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nacional",
+      "entity_name": "Nacional",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://clubnacional.com.py",
+        "https://nacional.uy",
+        "https://ie.linkedin.com/jobs/search?keywords=Eaton&location=Rep%C3%BAblica+Dominicana&geoId=105057336&trk=public_jobs_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0",
+        "https://cdnacional.pt",
+        "https://atlnacional.com.co",
+        "https://www.linkedin.com/posts/centro-nacional-de-analisis-genomico_jobs-hiring-cnag-activity-7422579372039229440-MlKy",
+        "https://www.linkedin.com/jobs/jobs-in-worldwide",
+        "https://tiendaverde.com.co",
+        "https://www.linkedin.com/jobs/centro-cuesta-nacional-jobs-worldwide?f_C=9437104&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://tienda.nacional.uy",
+        "https://in.linkedin.com/jobs/director-nacional-jobs-pune"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Corporate recruitment activity",
+        "Active hiring for 'Marcas y Planning' (Brand & Planning) roles",
+        "HR management roles (Analista Gesti\u00f3n Humana)",
+        "Corporate structure presence (Corporativo)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nacional may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:16:13.014195",
+          "domain_explored": "https://nacional.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Social media feed integration",
+            "Generic content management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.180067777633667
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match results, and social media posts regarding Club Nacional de Football's athletic performance (e.g., 'Campe\u00f3n Uruguayo 2025', 'Pretemporada 2026'). There is no mention of business operations, technology infrastructure, job openings, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:16:25.982655",
+          "domain_explored": "https://atlnacional.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (Merchandise sales)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public-Private Partnership (Alcald\u00eda de Medell\u00edn agreement)"
+            ]
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "E-commerce integration (Ticketing/Merchandise)",
+            "Generic content management",
+            "Social responsibility reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 284,
+              "elapsed_seconds": 8.204647779464722
+            }
+          ],
+          "reasoning": "The content analyzed is from the official website of Atl\u00e9tico Nacional (atlnacional.com.co), a Colombian football club. This entity is distinct from the Uruguayan entity (Nacional.uy) analyzed in the previous iteration. While the site shows operational activity (e.g., 'Sede Deportiva de Guarne', 'Tienda Verde'), it is exclusively focused on sports management, match results, and fan engagement. There are no signals of corporate procurement, B2B technology investments, or job postings relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:16:36.495790",
+          "domain_explored": "https://cdnacional.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Generic content management",
+            "Youth academy scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 641,
+              "output_tokens": 144,
+              "elapsed_seconds": 4.000042915344238
+            }
+          ],
+          "reasoning": "The content is a standard sports club update regarding youth team (Benjamins) match schedules for the weekend. It contains no information regarding technology acquisition, vendor selection, or organizational procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:16:48.988323",
+          "domain_explored": "https://clubnacional.com.py",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Match results and league standings",
+            "Generic content management",
+            "Ticketing/Match scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 180,
+              "elapsed_seconds": 7.758018970489502
+            }
+          ],
+          "reasoning": "The scraped content from clubnacional.com.py is exclusively focused on sports news, match results, league standings, and game schedules. There are no sections, links, or text related to corporate operations, job openings, or vendor procurement. This entity is a football club, and the public-facing content is fan-centric."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:16:57.657203",
+          "domain_explored": "https://tiendaverde.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify, VTEX, or Magento based on URL structure)",
+              "Product Information Management (PIM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce product listings",
+            "Inventory management (SKU tracking)",
+            "Consumer retail interface",
+            "Brand partnership (Nike)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1557,
+              "output_tokens": 210,
+              "elapsed_seconds": 4.1297407150268555
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from a consumer-facing e-commerce storefront (Tienda Verde). It displays retail products (jerseys, footwear), pricing, and discounts. There are no corporate governance signals, procurement opportunities, or enterprise technology stack indicators present."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:17:07.935049",
+          "domain_explored": "https://tienda.nacional.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Payment Gateway: 'Pago Despu\u00e9s' (Buy Now, Pay Later integration)",
+              "Inventory System: SKU management (e.g., '2498')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce product listings",
+            "Inventory management (SKU tracking)",
+            "Consumer retail interface",
+            "Third-party payment integration (BNPL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 220,
+              "elapsed_seconds": 6.74190616607666
+            }
+          ],
+          "reasoning": "The content is exclusively scraped data from a consumer-facing e-commerce storefront (tienda.nacional.uy). It displays retail products (jerseys, footwear), pricing, and payment options. There is no information regarding the entity's internal procurement operations, vendor selection processes, or corporate governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:17:14.801885",
+          "domain_explored": "https://www.linkedin.com/jobs/centro-cuesta-nacional-jobs-worldwide?f_C=9437104&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform",
+              "Corporate HRIS (implied by 'Analista Gesti\u00f3n Humana')"
+            ],
+            "job_postings": [
+              "Corporativo - Asistente Marcas y Planning",
+              "Corporativo - Analista Gesti\u00f3n Humana (Rotativo)"
+            ],
+            "procurement_indicators": [
+              "Active hiring cycle (Budget availability)",
+              "Brand Management function (Potential marketing software procurement)",
+              "Human Resources function (Potential HRIS/Payroll procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate recruitment activity",
+            "Active hiring for 'Marcas y Planning' (Brand & Planning) roles",
+            "HR management roles (Analista Gesti\u00f3n Humana)",
+            "Corporate structure presence (Corporativo)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.32473087310791
+            }
+          ],
+          "reasoning": "The content confirms 'Centro Cuesta Nacional' is an active corporate entity with a structured hiring process. The presence of specific roles like 'Asistente Marcas y Planning' and 'Analista Gesti\u00f3n Humana' indicates organizational departments that typically engage in procurement for software, services, and HR tools. This shifts the entity from a generic sports team search to a validated corporate target."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:17:30.481052",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation feed",
+            "Irrelevant employer entities (Banco Popular, PicPay, City of Littleton)",
+            "No mention of 'Nacional' or 'Centro Cuesta Nacional'"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1756,
+              "output_tokens": 201,
+              "elapsed_seconds": 11.834836959838867
+            }
+          ],
+          "reasoning": "The provided content is a generic list of worldwide job postings on LinkedIn. None of the visible entries relate to the target entity 'Nacional' (specifically Centro Cuesta Nacional, identified in Iteration 7). The entities listed (Banco Popular, PicPay, Emaar, etc.) are unrelated to the target, indicating this URL is a broad aggregator page rather than a specific company page."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:17:38.510914",
+          "domain_explored": "https://in.linkedin.com/jobs/director-nacional-jobs-pune",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Regional Head",
+                "company": "Vedantu",
+                "location": "Pune, India"
+              },
+              {
+                "title": "Territory Manager - Salaried",
+                "company": "HDB Financial Services Ltd.",
+                "location": "Pune, India"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation feed",
+            "Irrelevant employer entities (Vedantu, HDB Financial Services)",
+            "Geographic mismatch (Pune, India vs Uruguay/Colombia targets)",
+            "Keyword matching on 'Nacional' as a generic job title (Director Nacional) rather than the specific entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1830,
+              "output_tokens": 311,
+              "elapsed_seconds": 4.406753063201904
+            }
+          ],
+          "reasoning": "The search results interpret 'Nacional' as a generic Spanish term for 'National' (e.g., 'Director Nacional') within job titles based in Pune, India. The employers listed (Vedantu, HDB Financial Services) are unrelated to the target entity 'Nacional' (likely Club Nacional or Centro Cuesta Nacional). This indicates a false positive signal in the search query."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:17:45.675590",
+          "domain_explored": "https://ie.linkedin.com/jobs/search?keywords=Eaton&location=Rep%C3%BAblica+Dominicana&geoId=105057336&trk=public_jobs_jobs-search-bar_search-submit&redirect=false&position=1&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "EHS Assistant",
+              "T\u00e9cnico de Proceso - 1er turno"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity mismatch (Eaton vs Nacional)",
+            "Geographic mismatch (Dominican Republic vs Uruguay/Colombia)",
+            "Industrial manufacturing recruitment (EHS, Process Technicians)",
+            "Login-gated content aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1937,
+              "output_tokens": 238,
+              "elapsed_seconds": 2.9845898151397705
+            }
+          ],
+          "reasoning": "The scraped content is a job listing feed for 'Eaton', a power management company, located in the Dominican Republic. This is completely irrelevant to the target entity 'Nacional' (specifically Centro Cuesta Nacional, the Uruguayan retailer identified in Iteration 7). The content provides no procurement signals, technology stack information, or governance patterns related to the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T16:18:02.090729",
+          "domain_explored": "https://www.linkedin.com/posts/centro-nacional-de-analisis-genomico_jobs-hiring-cnag-activity-7422579372039229440-MlKy",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Genomics sequencing platforms",
+              "Bioinformatics software"
+            ],
+            "job_postings": [
+              "Head of Finance",
+              "Accounting Manager",
+              "People Officer",
+              "Bioinformatics Postdoctoral Fellow",
+              "Biorepository Technician"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity mismatch (CNAG vs Centro Cuesta Nacional)",
+            "Scientific research recruitment (Genomics/Bioinformatics)",
+            "Geographic mismatch (Spain vs Uruguay/Colombia targets)",
+            "Public sector research center hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2029,
+              "output_tokens": 289,
+              "elapsed_seconds": 13.160612106323242
+            }
+          ],
+          "reasoning": "The content is from the 'Centro Nacional de An\u00e1lisis Gen\u00f3mico' (CNAG), a genomic research center based in Barcelona (indicated by the .eu domain and Spanish context). This is a distinct entity from 'Centro Cuesta Nacional' (the retail group in Uruguay/Colombia) or the sports clubs previously filtered. The roles (Bioinformatics, Genomics) are irrelevant to the retail procurement target."
+        }
+      ],
+      "total_input_tokens": 17308,
+      "total_output_tokens": 2587,
+      "estimated_cost_usd": 0.090729
+    },
+    "procurement_signals": [
+      "Corporate recruitment activity",
+      "Active hiring for 'Marcas y Planning' (Brand & Planning) roles",
+      "HR management roles (Analista Gesti\u00f3n Humana)",
+      "Corporate structure presence (Corporativo)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nacional may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:18:02.092429"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.190026",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:52.932530"
+}

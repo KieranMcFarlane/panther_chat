@@ -1,0 +1,190 @@
+{
+  "entity_id": "world_bowls",
+  "entity_name": "World Bowls",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "worldbowls.com",
+    "worldbowlsseries.com",
+    "worldbowlsltd.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_bowls",
+      "entity_name": "World Bowls",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://worldbowlsseries.com",
+        "https://worldbowls.com",
+        "https://worldbowlsltd.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Strategic Commercial Partnership",
+        "Digital Asset Commercialization",
+        "Global Event Expansion",
+        "Marketing & Branding Activity",
+        "Dedicated Procurement Portal",
+        "Formal Governance Structure",
+        "Commercial Partnership Ecosystem",
+        "Insurance & Risk Management Procurement",
+        "Strategic Planning Framework"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Bowls may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:40:38.765661",
+          "domain_explored": "https://worldbowls.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from 'Divanshu Verma' author structure and common CMS patterns)",
+              "Generic Web CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEO Update: Reflecting on 2025 (Indicates strategic review cycle)",
+              "World Bowls AGM (Indicates governance and potential budget approval season)",
+              "New World Bowls Series rankings (Indicates data management/IT needs)"
+            ]
+          },
+          "patterns_found": [
+            "Content Management System (CMS) presence",
+            "Governance activity (AGM)",
+            "Digital media engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.0346932411193848
+            }
+          ],
+          "reasoning": "The content confirms World Bowls is an active International Federation with a digital presence (WordPress/CMS). The mention of an AGM and CEO updates indicates organizational maturity and governance cycles, which are precursors to procurement, though no direct tenders or tech stack details are visible in this specific snippet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:40:50.337717",
+          "domain_explored": "https://worldbowlsseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - WordPress (implied by structure/author)",
+              "Digital Asset Management (for commercialization)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Tier 5 Ventures (Commercial Rights/Event Management)",
+              "Initiative: World Bowls Series (WBS) - Global event calendar",
+              "Initiative: Bowls World Cup 2025 - Branding/Logo launch",
+              "Goal: Commercialize assets for member benefit"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Commercial Partnership",
+            "Digital Asset Commercialization",
+            "Global Event Expansion",
+            "Marketing & Branding Activity"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 313,
+              "elapsed_seconds": 3.0638298988342285
+            }
+          ],
+          "reasoning": "The content reveals a major strategic shift from pure governance to active commercialization through the 'World Bowls Series' (WBS). The explicit partnership with 'Tier 5 Ventures' to build and commercialize assets is a direct procurement signal, indicating a requirement for event management software, marketing services, and digital infrastructure to support a global calendar of events."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:41:01.405198",
+          "domain_explored": "https://worldbowlsltd.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy HTML/CSS (Static Site)",
+              "Email Obfuscation (Cloudflare/cdn-cgi)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tender documents page (tenderdocs.html)",
+              "Commercial Partner listings (Warilla Bowls, Aceit, AeroBowls)",
+              "Corporate Insurance Partner (Winter & Co / Jack High)",
+              "Strategic Plan documentation (boardstrategicplan.html)",
+              "Governance documentation (Memorandum, Articles, Regulations)"
+            ]
+          },
+          "patterns_found": [
+            "Dedicated Procurement Portal",
+            "Formal Governance Structure",
+            "Commercial Partnership Ecosystem",
+            "Insurance & Risk Management Procurement",
+            "Strategic Planning Framework"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 342,
+              "elapsed_seconds": 3.673114061355591
+            }
+          ],
+          "reasoning": "The discovery of a dedicated 'Tender documents' link provides the strongest possible signal of active procurement processes. Additionally, the site reveals a mature governance structure (Board, Articles, Regulations) and established commercial partnerships (Warilla Bowls, Aceit, AeroBowls), indicating a budget and vendor management capability. The presence of specific insurance partners (Winter & Co) confirms active procurement in the risk category."
+        }
+      ],
+      "total_input_tokens": 4222,
+      "total_output_tokens": 929,
+      "estimated_cost_usd": 0.026601
+    },
+    "procurement_signals": [
+      "Strategic Commercial Partnership",
+      "Digital Asset Commercialization",
+      "Global Event Expansion",
+      "Marketing & Branding Activity",
+      "Dedicated Procurement Portal",
+      "Formal Governance Structure",
+      "Commercial Partnership Ecosystem",
+      "Insurance & Risk Management Procurement",
+      "Strategic Planning Framework"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Bowls may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:41:01.405968"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458947",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:40.280909"
+}

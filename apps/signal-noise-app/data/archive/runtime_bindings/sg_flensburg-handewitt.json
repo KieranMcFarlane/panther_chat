@@ -1,0 +1,215 @@
+{
+  "entity_id": "sg_flensburg-handewitt",
+  "entity_name": "SG Flensburg-Handewitt",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "sg-flensburg-handewitt.de",
+    "eurohandball.com",
+    "flensburger-foerde.de",
+    "zoominfo.com",
+    "billetterie.psg.fr",
+    "scandinavian-park.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sg_flensburg-handewitt",
+      "entity_name": "SG Flensburg-Handewitt",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://flensburger-foerde.de",
+        "https://eurohandball.com",
+        "https://billetterie.psg.fr",
+        "https://sg-flensburg-handewitt.de",
+        "https://zoominfo.com",
+        "https://scandinavian-park.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SG Flensburg-Handewitt may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:20:52.210771",
+          "domain_explored": "https://sg-flensburg-handewitt.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership",
+                "details": "New partner acquisition: Casino Schleswig-Holstein",
+                "source": "Homepage News Ticker"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Acquisition",
+            "Partnership Expansion",
+            "Brand Visibility"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.5837888717651367
+            }
+          ],
+          "reasoning": "The content explicitly mentions a new partner ('Casino Schleswig-Holstein'), indicating active business development and partnership management. While this is not direct procurement of *technology*, it signals an active commercial department capable of closing vendor deals, which is a weak signal for general procurement capability."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:21:00.084815",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News",
+            "Event Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.0839951038360596
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com). It focuses on macro-level event results (Denmark, Croatia), tournament schedules (EHF EURO 2026), and generic league listings. There is no mention of the specific entity 'SG Flensburg-Handewitt', nor are there any localized procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:21:07.146846",
+          "domain_explored": "https://flensburger-foerde.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Destination Marketing Content",
+            "General Interest Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.262968063354492
+            }
+          ],
+          "reasoning": "The content scraped from 'flensburger-foerde.de' is a regional tourism board website promoting vacation destinations, beaches, and local attractions. While SG Flensburg-Handewitt is a major entity in the region, this specific page contains no information regarding the club's internal operations, procurement needs, or technology stack. It is purely promotional content for the Flensburger F\u00f6rde region."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:21:10.082590",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:21:13.114399",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:21:23.638518",
+          "domain_explored": "https://scandinavian-park.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Vacancies (General)"
+            ],
+            "procurement_indicators": [
+              "Partnership Confirmation: SG Flensburg-Handewitt x ScandiPark",
+              "Location: Handewitt (Shared geographic location)",
+              "Business Sector: Border Retail / Duty-Free"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Partnership",
+            "Regional Business Ecosystem",
+            "Cross-Border Commerce"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 284,
+              "elapsed_seconds": 5.9195051193237305
+            }
+          ],
+          "reasoning": "The content confirms a specific, named partnership between SG Flensburg-Handewitt and ScandiPark ('Successful partnership: SG Flensburg-Handewitt and ScandiPark'). While the page itself is a retail border shop (B2C) and not a direct procurement source, the existence of this partnership indicates a commercial relationship. ScandiPark is a major regional entity in Handewitt, suggesting potential for vendor co-marketing, hospitality, or supply chain relationships that could influence SG Flensburg's procurement or sponsorship decisions."
+        }
+      ],
+      "total_input_tokens": 5774,
+      "total_output_tokens": 872,
+      "estimated_cost_usd": 0.030402
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SG Flensburg-Handewitt may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:21:23.640086"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345918",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:16.549274"
+}

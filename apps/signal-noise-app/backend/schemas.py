@@ -476,6 +476,71 @@ class ConfidenceBand(str, Enum):
     ACTIONABLE = "ACTIONABLE"      # >0.80 + gate: Sales trigger
 
 
+# =============================================================================
+# TEMPORAL SPORTS PROCUREMENT PREDICTION ENGINE SCHEMA
+# =============================================================================
+
+class SignalClass(str, Enum):
+    """Signal classification for predictive intelligence
+
+    Classifies signals into three tiers based on procurement maturity:
+    - CAPABILITY: Early indicators (job hires, tech adoption) - digital capability exists
+    - PROCUREMENT_INDICATOR: Active evaluation phase (tender searches, RFP drafts)
+    - VALIDATED_RFP: Confirmed RFP/tender with direct evidence
+
+    This enables the Ralph Loop to function as a classification engine rather
+    than a binary gatekeeper, providing richer predictive intelligence.
+    """
+    CAPABILITY = "CAPABILITY"
+    PROCUREMENT_INDICATOR = "PROCUREMENT_INDICATOR"
+    VALIDATED_RFP = "VALIDATED_RFP"
+
+
+@dataclass
+class TierValidationRules:
+    """
+    Validation rules per signal tier
+
+    Defines evidence and confidence thresholds for each signal class.
+    Different tiers have different validation requirements to optimize
+    for early detection while maintaining accuracy.
+
+    Storage modes:
+    - immediate: Store immediately (VALIDATED_RFP)
+    - clustered: Store in batches (CAPABILITY)
+    - validated: Store only after cross-check (PROCUREMENT_INDICATOR)
+    """
+    signal_class: SignalClass
+    min_evidence: int
+    min_confidence: float
+    storage_mode: str  # "immediate", "clustered", "validated"
+
+
+@dataclass
+class HypothesisState:
+    """
+    Aggregated state at hypothesis level (NOT signal level)
+
+    This is a critical architectural decision: we aggregate at the hypothesis
+    level, not the signal level. A hypothesis represents a claim about an
+    entity's procurement readiness in a specific category.
+
+    The hypothesis state tracks:
+    - maturity_score: Accumulated from CAPABILITY signals (digital capability)
+    - activity_score: Accumulated from PROCUREMENT_INDICATOR signals (evaluation activity)
+    - state: MONITOR/WARM/ENGAGE/LIVE based on score thresholds
+
+    This enables the Ralph Loop to provide classification rather than binary
+    accept/reject decisions, supporting predictive intelligence.
+    """
+    entity_id: str
+    category: str
+    maturity_score: float = 0.0     # From CAPABILITY signals
+    activity_score: float = 0.0     # From PROCUREMENT_INDICATOR
+    state: str = "MONITOR"           # MONITOR/WARM/ENGAGE/LIVE
+    last_updated: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+
 @dataclass
 class Hypothesis:
     """

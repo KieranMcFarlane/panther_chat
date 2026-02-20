@@ -1,0 +1,247 @@
+{
+  "entity_id": "uae_tour",
+  "entity_name": "UAE Tour",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "event_organizers",
+  "discovered_domains": [
+    "theuaetour.com",
+    "theuaetourwomen.com",
+    "rrcdr.gov.ae",
+    "play.google.com",
+    "rcssportsandevents.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://np.linkedin.com/jobs/view/travel-consultant-at-census-travel-tourism-llc-4245414455"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uae_tour",
+      "entity_name": "UAE Tour",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://rrcdr.gov.ae",
+        "https://theuaetourwomen.com",
+        "https://rcssportsandevents.it",
+        "https://np.linkedin.com/jobs/view/travel-consultant-at-census-travel-tourism-llc-4245414455",
+        "https://theuaetour.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UAE Tour may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:22:06.470976",
+          "domain_explored": "https://theuaetour.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android implied)",
+              "Live Streaming Infrastructure",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official App maintenance and development",
+              "Live streaming and content delivery services",
+              "Route planning and logistics services",
+              "Sponsorship activation platforms"
+            ]
+          },
+          "patterns_found": [
+            "Digital Platform Engagement",
+            "Sponsorship Integration",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 293,
+              "elapsed_seconds": 2.6155478954315186
+            }
+          ],
+          "reasoning": "The content confirms the existence of a digital ecosystem (Official App) and active event operations for the 2026 edition. While no direct RFPs are listed, the reliance on a mobile app for live content, rankings, and video streaming indicates a need for mobile development and streaming services. The listing of government and semi-government sponsors (Abu Dhabi Ports, Dubai Stage, Palms Sports) suggests a structured vendor ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:22:16.810257",
+          "domain_explored": "https://theuaetourwomen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android implied)",
+              "Live Streaming Infrastructure",
+              "Digital Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official App Development & Maintenance contract",
+              "Title Sponsorship agreements (Al Masaood, TeamLab Phenomena, Modon)",
+              "Venue rental/usage agreements (Dubai Police Academy, Hamdan Bin Mohammed Smart University, Jebel Hafeet)",
+              "Route planning & logistics services"
+            ]
+          },
+          "patterns_found": [
+            "Mobile Application Development",
+            "Sponsorship Procurement (Title Sponsors)",
+            "Venue & Infrastructure Procurement",
+            "Media Asset Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 329,
+              "elapsed_seconds": 3.6597330570220947
+            }
+          ],
+          "reasoning": "The content confirms active operations for the 2026 edition, specifically highlighting the procurement of digital services via an 'Official App' for fan engagement. It also lists specific title sponsors (Al Masaood, TeamLab, Modon) and venues (Dubai Police Academy, Smart University), indicating a mature sponsorship and venue procurement ecosystem. However, direct RFPs or tech stack details are not present."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:22:34.665733",
+          "domain_explored": "https://rrcdr.gov.ae",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:22:41.289837",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Gaming App Storefront",
+            "Generic Platform Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.3572869300842285
+            }
+          ],
+          "reasoning": "The scraped content is a generic listing of video games (e.g., Arknights, Clash of Clans) from the Google Play Store. It contains no references to the 'UAE Tour', cycling events, or organizational procurement activities. This is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:22:59.969075",
+          "domain_explored": "https://rcssportsandevents.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Sports Content",
+            "Irrelevant News Aggregation",
+            "External Link Redirection (Giro d'Italia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 716,
+              "output_tokens": 155,
+              "elapsed_seconds": 10.42932915687561
+            }
+          ],
+          "reasoning": "The content provided is historical sports journalism regarding Roberto Visentini and the Giro d'Italia, with no connection to the UAE Tour entity. It contains no procurement signals, technology stacks, or operational data relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:23:15.407532",
+          "domain_explored": "https://np.linkedin.com/jobs/view/travel-consultant-at-census-travel-tourism-llc-4245414455",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Generic Tourism CRM",
+              "Booking Systems"
+            ],
+            "job_postings": [
+              "Travel Consultant (Sales Focus)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Census Travel & Tourism LLC)",
+            "B2B Travel Sales Operations",
+            "Generic CRM Usage",
+            "Geographic Mismatch (Nepal-based role)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1603,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.543181896209717
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Travel Consultant' at Census Travel & Tourism LLC, a travel agency based in Kathmandu, Nepal. While the role involves selling Dubai tour packages, the entity is a reseller/agency (B2B client), not the organizer or governing body of the 'UAE Tour' cycling event. The mention of 'tourism CRM or booking systems' is generic sales technology, not event procurement infrastructure."
+        }
+      ],
+      "total_input_tokens": 6564,
+      "total_output_tokens": 1168,
+      "estimated_cost_usd": 0.037212
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UAE Tour may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:23:15.410356"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.387990",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:26.155771"
+}

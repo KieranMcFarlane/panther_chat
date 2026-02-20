@@ -1,0 +1,244 @@
+{
+  "entity_id": "eintracht_frankfurt",
+  "entity_name": "Eintracht Frankfurt",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "eintracht.de",
+    "bundesliga.com",
+    "sporting.pt",
+    "loucity.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/eintracht-frankfurt-jobs-worldwide",
+      "https://www.linkedin.com/jobs/information-technology-jobs-frankfurt"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eintracht_frankfurt",
+      "entity_name": "Eintracht Frankfurt",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://loucity.com",
+        "https://www.linkedin.com/jobs/information-technology-jobs-frankfurt",
+        "https://bundesliga.com",
+        "https://eintracht.de",
+        "https://www.linkedin.com/jobs/eintracht-frankfurt-jobs-worldwide",
+        "https://sporting.pt"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eintracht Frankfurt may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:34:54.994320",
+          "domain_explored": "https://eintracht.de",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:35:02.253482",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_league_content",
+            "transfer_window_coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 497,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.5461668968200684
+            }
+          ],
+          "reasoning": "The provided content is a generic league-level update regarding the Bundesliga transfer window. It lacks specific details regarding Eintracht Frankfurt's internal operations, technology stack, or procurement activities. It does not contain actionable intelligence for B2B procurement targeting the club specifically."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:35:08.198584",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Ticketing Operations: 'Comprar Bilhetes', 'Faz-te s\u00f3cio' (Membership acquisition)",
+              "Competitor Match Operations: Extensive schedule of youth and senior teams across multiple sports (Football, Hockey, Basketball, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "competitor_content",
+            "ticketing_operations",
+            "sports_agenda"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 251,
+              "elapsed_seconds": 2.7960197925567627
+            }
+          ],
+          "reasoning": "The scraped content is from Sporting CP (sporting.pt), a direct competitor of Eintracht Frankfurt in the European football landscape. While the site contains operational data (ticketing, match schedules), it provides zero procurement intelligence regarding the target entity, Eintracht Frankfurt. The content is irrelevant to the specific objective of gathering signals for the target."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:35:21.324886",
+          "domain_explored": "https://loucity.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LouSoccerStore.com (E-commerce platform)",
+              "Social Media Integration (X, Instagram, TikTok, YouTube, Bluesky)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "USL Premier League Application (Strategic expansion)",
+              "Facility Investment (Lynn Family Stadium)"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "competitor_content",
+            "ticketing_operations",
+            "merchandising_ecommerce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 234,
+              "elapsed_seconds": 9.990746021270752
+            }
+          ],
+          "reasoning": "The content is from LouCity (Louisville City FC), a USL Championship team, not Eintracht Frankfurt. While the site displays operational capabilities (ticketing, e-commerce, league application), it represents a competitor entity and provides no procurement intelligence for the target organization."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:35:28.883826",
+          "domain_explored": "https://www.linkedin.com/jobs/eintracht-frankfurt-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IT Infrastructure",
+              "End-user Computing"
+            ],
+            "job_postings": [
+              "Mitarbeiter IT-Support (m/w/d) - Frankfurt am Main, Hesse, Germany (Posted 3 weeks ago)"
+            ],
+            "procurement_indicators": [
+              "IT Staffing Expansion",
+              "Infrastructure Maintenance Needs"
+            ]
+          },
+          "patterns_found": [
+            "it_hiring",
+            "infrastructure_support",
+            "entity_match_confirmed"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.480217218399048
+            }
+          ],
+          "reasoning": "The content confirms active recruitment within the IT department (Mitarbeiter IT-Support). While this is an operational role rather than a strategic procurement or leadership position, it indicates active investment in internal IT infrastructure and headcount, which is a leading indicator of technology consumption and maintenance."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:35:35.541871",
+          "domain_explored": "https://www.linkedin.com/jobs/information-technology-jobs-frankfurt",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "2nd-Level-Support / IT-Support at MEXAA-IT GmbH",
+              "(Junior) IT-Service & Support Specialist at Swissport",
+              "IT Admin at Castle Connect UG"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "generic_market_noise",
+            "location_based_search_results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.7387988567352295
+            }
+          ],
+          "reasoning": "The content provided is a generic list of IT jobs in Frankfurt from entities such as MEXAA-IT, Swissport, juunit GmbH, and Castle Connect. There is no mention of 'Eintracht Frankfurt', 'Eintracht', or 'SGE'. This represents market noise rather than specific procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 6486,
+      "total_output_tokens": 1085,
+      "estimated_cost_usd": 0.035733
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eintracht Frankfurt may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:35:35.543898"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.125313",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:46.915066"
+}

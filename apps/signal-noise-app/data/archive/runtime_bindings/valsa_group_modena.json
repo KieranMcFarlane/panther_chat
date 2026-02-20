@@ -1,0 +1,243 @@
+{
+  "entity_id": "valsa_group_modena",
+  "entity_name": "Valsa Group Modena",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "legavolley.it",
+    "www-old.cev.eu",
+    "en.volleyballworld.com",
+    "worldofvolley.com",
+    "lubevolley.it",
+    "volleytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "valsa_group_modena",
+      "entity_name": "Valsa Group Modena",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://legavolley.it",
+        "https://en.volleyballworld.com",
+        "https://volleytimes.com",
+        "https://worldofvolley.com",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Valsa Group Modena may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:30:38.540757",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Analysis: Identification of peer entities (e.g., Itas Trentino, Sir Susa Perugia) suggests a benchmarking group for enterprise software solutions.",
+              "Sponsorship Context: Presence of 'Credem Banca' and 'Del Monte' as league sponsors indicates potential financial sector partners."
+            ]
+          },
+          "patterns_found": [
+            "League Membership Confirmation",
+            "Sponsorship Ecosystem Analysis"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.8590657711029053
+            }
+          ],
+          "reasoning": "The content is a navigation menu from the Italian Volleyball League (Lega Pallavolo Serie A). While it confirms Valsa Group Modena's participation in the top-tier 'SuperLega', it contains no information regarding internal operations, technology stacks, or procurement activities. It is purely structural/competitive data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:30:49.754876",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Federation Navigation",
+            "Historical Event Listings",
+            "Outdated Web Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.455545902252197
+            }
+          ],
+          "reasoning": "The content provided is a navigation dump from the 'www-old' subdomain of the European Volleyball Confederation (CEV). It lists historical events (EuroVolley 2021, Snow Volleyball 2020), general competition categories, and standard footer links. There is no mention of Valsa Group Modena, nor are there any procurement signals, technology stacks, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:30:58.767180",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Standings",
+            "Global Sports Media Navigation",
+            "Generic Competition Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.43074107170105
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports league standings (Superlega, World Rankings), match results, and generic navigation elements for a global sports media platform (VolleyballWorld). There is no presence of corporate governance, vendor procurement, or technology implementation specific to Valsa Group Modena. The entity appears only as a participant within the league context, not as a subject of business analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:31:09.203514",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Match Results",
+            "League Standings Updates",
+            "Player Transfer Confirmations",
+            "Generic Sports Media Navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 207,
+              "elapsed_seconds": 4.143290281295776
+            }
+          ],
+          "reasoning": "The content provided is a standard sports news aggregator feed (WorldofVolley) containing match results, league standings, and player transfer news for various volleyball leagues (Brazil, Italy, Poland, Turkey, etc.). There is no mention of Valsa Group Modena, nor are there any signals regarding corporate procurement, job postings, or technology investments. The content is strictly focused on athletic competition outcomes."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:31:22.320505",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership Agreement (Sports/Talent): 'Lube alla scoperta dei talenti catalani. Cormio: La loro visita rientra in un accordo triennale!'"
+            ]
+          },
+          "patterns_found": [
+            "Generic Sports Match Reporting",
+            "Team Performance Updates",
+            "Fan Engagement Content",
+            "Partnership Agreements (Non-Procurement)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.500930070877075
+            }
+          ],
+          "reasoning": "The scraped content from lubevolley.it is exclusively focused on sports journalism\u2014reporting match results (e.g., 'Verona - Civitanova'), player interviews, and fan club activities. While there is a mention of a 'triennial agreement' regarding talent discovery, this refers to a sports partnership rather than a B2B procurement signal or technology investment relevant to Valsa Group Modena. No corporate governance, ERP, or vendor selection information was present."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:31:33.571606",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Match Reporting",
+            "League Standings Updates",
+            "Player Transfer Confirmations",
+            "Multimedia Gallery Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.974536895751953
+            }
+          ],
+          "reasoning": "The scraped content from Volleytimes.com is a news feed consisting entirely of sports match results, league standings, and player transfer announcements. There is no presence of corporate governance, procurement documentation, technology infrastructure details, or job postings related to Valsa Group Modena. The entity 'Modena' appears only as a reference to the volleyball team (Modena Volley) in a transfer article, not the corporate entity."
+        }
+      ],
+      "total_input_tokens": 8884,
+      "total_output_tokens": 1309,
+      "estimated_cost_usd": 0.046286999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Valsa Group Modena may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:31:33.573632"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.316529",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:54.409741"
+}

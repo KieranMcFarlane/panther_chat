@@ -1,0 +1,213 @@
+{
+  "entity_id": "antwerp_giants",
+  "entity_name": "Antwerp Giants",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "antwerpgiants.be",
+    "grokipedia.com",
+    "lotto-arena.be",
+    "bnxtleague.com",
+    "euroleaguebasketball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "antwerp_giants",
+      "entity_name": "Antwerp Giants",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://bnxtleague.com",
+        "https://lotto-arena.be",
+        "https://grokipedia.com",
+        "https://euroleaguebasketball.net",
+        "https://antwerpgiants.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Antwerp Giants may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:45:44.255637",
+          "domain_explored": "https://antwerpgiants.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (implied by 'TICKETS' link)",
+              "Social Media Management (Facebook, Twitter/X, Instagram, YouTube)",
+              "CMS (implied by news feed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal: Hubo Limburg United (Naming rights partner)",
+              "Sponsorship Deal: Circus Daily (Event title sponsor)",
+              "Venue Partnership: AFAS Dome (Stadium naming rights/infrastructure)",
+              "Merchandising/Procurement: 'Windrose Giants Antwerp' (Rebranding/Kit procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Integration",
+            "Event Ticketing",
+            "Venue Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 299,
+              "elapsed_seconds": 4.214319944381714
+            }
+          ],
+          "reasoning": "The content is primarily sports news and game results, but it reveals key vendor partnerships (sponsors) and venue infrastructure. The presence of 'Hubo Limburg United' and 'Circus Daily' indicates active sponsorship contracts. The mention of 'AFAS Dome' and 'TICKETS' implies the use of ticketing software and venue management services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:45:48.778056",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:46:15.221374",
+          "domain_explored": "https://lotto-arena.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "be\u2022at tickets (Ticketing Platform)"
+            ],
+            "job_postings": [
+              "Finance Operations Officer",
+              "Marketing Project Lead \u2013 Premium & B2B",
+              "Premium Contact Specialist"
+            ],
+            "procurement_indicators": [
+              "Expansion of Premium/B2B department",
+              "Financial operations structuring",
+              "Venue management for 'Windrose Giants Antwerp'"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Finance & Marketing)",
+            "Premium & B2B Focus",
+            "Venue Operations",
+            "Ticketing Integration (be\u2022at tickets)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 301,
+              "elapsed_seconds": 18.386070728302002
+            }
+          ],
+          "reasoning": "The content confirms the operational entity behind the venue (Lotto Arena) which hosts the Antwerp Giants. The discovery of specific job openings ('Finance Operations Officer', 'Marketing Project Lead \u2013 Premium & B2B') indicates active organizational development and investment in commercial capabilities. While not a direct RFP, these roles signal budget allocation and potential future tool requirements for CRM and Financial systems."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:46:21.310443",
+          "domain_explored": "https://bnxtleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js (inferred from 'bnx-vue')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Framework (Vue.js)",
+            "Client-Side Rendering"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 501,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.542638063430786
+            }
+          ],
+          "reasoning": "The target URL (bnxtleague.com) is a Single Page Application (SPA) built with Vue.js. The scraped content only contains the generic 'enable JavaScript' placeholder message and no actual data, links, or text. Therefore, no procurement signals, job postings, or technology stack details can be extracted from this specific scrape."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:46:33.446381",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Leadership Change (New CEO Chus Bueno)",
+              "Media Rights Expansion (Serie A Unipol streaming)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Governance",
+            "Media Rights Management",
+            "Sponsorship Branding (BKT, Motorola, etc.)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 197,
+              "elapsed_seconds": 6.188960075378418
+            }
+          ],
+          "reasoning": "The content is focused on league-wide governance (CEO appointment), game highlights, and media rights. While this confirms the ecosystem Antwerp Giants operates in, it does not provide specific procurement signals, technology stacks, or operational requirements for the specific Belgian entity."
+        }
+      ],
+      "total_input_tokens": 4806,
+      "total_output_tokens": 972,
+      "estimated_cost_usd": 0.028998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Antwerp Giants may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:46:33.450158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228133",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:40.614180"
+}

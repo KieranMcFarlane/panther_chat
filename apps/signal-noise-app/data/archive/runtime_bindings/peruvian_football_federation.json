@@ -1,0 +1,237 @@
+{
+  "entity_id": "peruvian_football_federation",
+  "entity_name": "Peruvian Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "investors.geniussports.com",
+    "zoominfo.com",
+    "prnewswire.com",
+    "inside.fifa.com",
+    "sportspro.com",
+    "mbpschool.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "peruvian_football_federation",
+      "entity_name": "Peruvian Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportspro.com",
+        "https://mbpschool.com",
+        "https://inside.fifa.com",
+        "https://prnewswire.com",
+        "https://zoominfo.com",
+        "https://investors.geniussports.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Peruvian Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:13:17.644456",
+          "domain_explored": "https://investors.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI",
+              "Computer Vision",
+              "Big Data",
+              "Augmented Broadcasts",
+              "Automated Officiating Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports technology vendor landscape",
+            "Data and broadcast partnership models"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 225,
+              "elapsed_seconds": 11.04778003692627
+            }
+          ],
+          "reasoning": "The content is a generic corporate overview of Genius Sports, a vendor in the sports technology space. It describes their capabilities (data, broadcast, AI) and lists global partners (NFL, NBA, etc.), but it contains zero specific information regarding the Peruvian Football Federation (FPF). There are no direct signals of procurement, intent, or current technology usage by the FPF in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:13:20.647096",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:13:27.322472",
+          "domain_explored": "https://prnewswire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-enhanced content platform",
+              "SEO tools",
+              "Media monitoring"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global news distribution platform",
+            "AI-driven content creation tools",
+            "General corporate communications"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.604351043701172
+            }
+          ],
+          "reasoning": "The content is the homepage of PR Newswire, a general news distribution service. It describes the platform's capabilities (press release distribution, media monitoring) and features unrelated news stories (OpenTable, Home Depot). There is no specific mention of the Peruvian Football Federation (FPF), no RFPs related to Peruvian football, and no specific procurement signals from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:13:33.111003",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward program funding for stadium refurbishment (Global context, not FPF specific)"
+            ]
+          },
+          "patterns_found": [
+            "Global sports governance news",
+            "Women's football development initiatives",
+            "FIFA Forward funding program (infrastructure)",
+            "General sports journalism content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 257,
+              "elapsed_seconds": 2.9034268856048584
+            }
+          ],
+          "reasoning": "The scraped content from inside.fifa.com consists of global sports news, updates on the FIFA Women's Champions Cup, and general FIFA governance topics. While it mentions funding programs (FIFA Forward) for infrastructure, there are no specific procurement signals, technology vendor requirements, or decision-making structures relevant to the Peruvian Football Federation (FPF). The content is related to the global governing body rather than the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:13:39.801248",
+          "domain_explored": "https://sportspro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered premium streaming",
+              "Athlete biometric data platforms",
+              "Shared reality (VR/AR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports technology trend forecasting",
+            "AI-powered streaming and analytics",
+            "Wearable data integration",
+            "General industry innovation (non-specific)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 861,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.6010968685150146
+            }
+          ],
+          "reasoning": "The content represents high-level industry trend forecasting for the year 2026. While it identifies relevant technologies (AI, streaming, data platforms), it lacks specific actionable intelligence regarding the Peruvian Football Federation's current procurement status, budget cycles, or active vendor searches. It is market noise rather than a signal of intent for this specific entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:13:49.422694",
+          "domain_explored": "https://mbpschool.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-party educational services (MBP School)",
+            "B2C marketing funnel (lead generation forms)",
+            "Generic training curriculum (Scouting, High Performance)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.8800747394561768
+            }
+          ],
+          "reasoning": "The scraped content is from a third-party commercial football school (MBP School) targeting individual coaches and players for education. It contains no information regarding the Peruvian Football Federation's internal operations, technology stack, or procurement activities. It is a vendor site, not a source of intelligence on the FPF itself."
+        }
+      ],
+      "total_input_tokens": 6777,
+      "total_output_tokens": 1135,
+      "estimated_cost_usd": 0.037356
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Peruvian Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:13:49.423554"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.210414",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:53.269356"
+}

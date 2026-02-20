@@ -1,0 +1,185 @@
+{
+  "entity_id": "hbc_nantes",
+  "entity_name": "HBC Nantes",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "hbcnantes.com",
+    "ehfcl.eurohandball.com",
+    "grokipedia.com",
+    "handball-planet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hbc_nantes",
+      "entity_name": "HBC Nantes",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://handball-planet.com",
+        "https://hbcnantes.com",
+        "https://ehfcl.eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HBC Nantes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:26:30.407996",
+          "domain_explored": "https://hbcnantes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              {
+                "category": "Ticketing",
+                "indicator": "Subdomain delegation",
+                "value": "billetterie.hbcnantes.com"
+              },
+              {
+                "category": "E-commerce",
+                "indicator": "Subdomain delegation",
+                "value": "boutique.hbcnantes.com"
+              },
+              {
+                "category": "Payment Systems",
+                "indicator": "Operational process",
+                "value": "Cashless payment system"
+              }
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Infrastructure",
+                "details": "H Arena management and Cashless solutions imply vendor contracts for venue management."
+              },
+              {
+                "type": "Governance",
+                "details": "Presence of 'Fonds de dotation et RSE' indicates structured CSR procurement policies."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Dedicated Ticketing Subdomain",
+            "Dedicated E-commerce Subdomain",
+            "Cashless Payment Infrastructure",
+            "RSE (CSR) Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 404,
+              "elapsed_seconds": 4.319835186004639
+            }
+          ],
+          "reasoning": "The content is primarily site navigation (sitemap) rather than news or job postings. However, the structure reveals specific technology deployments (subdomains for ticketing and shop) and operational infrastructure (Cashless, RSE foundation) which serve as baseline procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:26:41.078312",
+          "domain_explored": "https://ehfcl.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "Sports Federation Domain",
+            "Generic E-commerce Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 181,
+              "elapsed_seconds": 7.277710914611816
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) domain (ehfcl.eurohandball.com), not the target entity HBC Nantes. The text contains sports news, match results, and generic EHF sponsorship links. There are no specific procurement signals, technology stacks, or governance patterns related to HBC Nantes' operations. This source is irrelevant to the objective."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:26:43.930664",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:26:53.297159",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Global Tournament Coverage",
+            "Player Transfer News",
+            "Generic Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 167,
+              "elapsed_seconds": 6.114455938339233
+            }
+          ],
+          "reasoning": "The content is exclusively focused on global handball news (EHF EURO 2026, player transfers, awards). It lacks any local context regarding HBC Nantes, organizational operations, or procurement activities. It is a general sports media outlet, not a source for entity-specific intelligence."
+        }
+      ],
+      "total_input_tokens": 4247,
+      "total_output_tokens": 752,
+      "estimated_cost_usd": 0.024021
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HBC Nantes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:26:53.298711"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349799",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:09.269619"
+}

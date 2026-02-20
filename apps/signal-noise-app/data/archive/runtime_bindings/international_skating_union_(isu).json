@@ -1,0 +1,391 @@
+{
+  "entity_id": "international_skating_union_(isu)",
+  "entity_name": "International Skating Union (ISU)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "isu-skating.com",
+    "play.google.com",
+    "info.skatecanada.ca"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/legal-affairs-specialist-at-u-s-figure-skating-4366186989",
+      "https://ch.linkedin.com/jobs/view/administrative-assistant-figure-skating-at-international-skating-union-4316233903",
+      "https://www.linkedin.com/jobs/view/content-producer-commercial-division-at-u-s-figure-skating-4343563039",
+      "https://ch.linkedin.com/jobs/view/head-of-development-member-relations-at-international-skating-union-4312239751",
+      "https://ch.linkedin.com/jobs/view/head-of-athlete-welfare-sustainability-at-international-skating-union-4312253637",
+      "https://ch.linkedin.com/jobs/view/commercial-manager-at-international-skating-union-4079788651",
+      "https://ch.linkedin.com/jobs/view/executive-assistant-at-international-skating-union-4130114252",
+      "https://ch.linkedin.com/jobs/view/safeguarding-officer-anti-doping-education-coordinator-100%25-at-multi-personnel-3528185193"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_skating_union_(isu)",
+      "entity_name": "International Skating Union (ISU)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.16,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.16
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://isu-skating.com",
+        "https://www.linkedin.com/jobs/view/legal-affairs-specialist-at-u-s-figure-skating-4366186989",
+        "https://ch.linkedin.com/jobs/view/head-of-athlete-welfare-sustainability-at-international-skating-union-4312253637",
+        "https://info.skatecanada.ca",
+        "https://www.linkedin.com/jobs/view/content-producer-commercial-division-at-u-s-figure-skating-4343563039",
+        "https://ch.linkedin.com/jobs/view/administrative-assistant-figure-skating-at-international-skating-union-4316233903",
+        "https://ch.linkedin.com/jobs/view/head-of-development-member-relations-at-international-skating-union-4312239751"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Development & Fund Allocation",
+        "Member Governance & Data Monitoring",
+        "Global Education & Training Programs",
+        "Partnership Management (IOC/Olympic Solidarity)",
+        "Entity Match (ISU)",
+        "Digital Platform Procurement (Injury Tracking)",
+        "Medical & Compliance Vendor Management",
+        "Global Education Program Implementation",
+        "Strategic Leadership (Head of)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Skating Union (ISU) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:08:31.917991",
+          "domain_explored": "https://isu-skating.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Olympic Cycle Content Focus",
+            "Standard CMS Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.7117221355438232
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of the homepage header navigation and a list of 'Top Stories' related to the Milano Cortina 2026 Olympics. The text is highly repetitive (likely due to scraping artifacts) and contains only public-facing news links. There are no explicit references to procurement, vendor selection, technology stacks, or organizational hiring. The presence of date stamps in 2026 suggests the site is in an active content publishing cycle, but this is standard operations, not a procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:08:41.025548",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Consumer Platform Noise",
+            "Korean Language Localization",
+            "Mobile Gaming Ecosystem"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.97328519821167
+            }
+          ],
+          "reasoning": "The provided content is a raw HTML dump from the Google Play Store (or a similar app marketplace interface), localized in Korean. It lists consumer mobile games (e.g., 'Cookie Run', 'Clash of Clans', 'Genshin Impact') and platform UI elements (Windows, Phone, TV icons). There is absolutely no content related to the International Skating Union (ISU), sports governance, or enterprise procurement. This represents a complete failure of the scraping context or URL targeting."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:08:51.127912",
+          "domain_explored": "https://info.skatecanada.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Joomla (inferred from URL structure: /index.php/en-ca/component/)",
+              "Membership Management Portal (members.skatecanada.ca)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Member-Facing Content",
+            "Policy/Governance Documentation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1033,
+              "output_tokens": 257,
+              "elapsed_seconds": 2.708796977996826
+            }
+          ],
+          "reasoning": "The scraped content is from 'Skate Canada' (info.skatecanada.ca), which is a distinct legal entity and the national governing body for skating in Canada, separate from the 'International Skating Union' (ISU) based in Switzerland. While ISU is the international parent, Skate Canada operates its own procurement and IT systems. The content focuses on internal definitions, rules, and member management portals for Canadian skaters, offering no direct insight into ISU's procurement cycles, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:09:00.106878",
+          "domain_explored": "https://www.linkedin.com/jobs/view/legal-affairs-specialist-at-u-s-figure-skating-4366186989",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office 365",
+              "Case Management Systems (implied custom/specialized)",
+              "Document Control Systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Legal Affairs Specialist",
+                "entity": "U.S. Figure Skating",
+                "location": "Colorado Springs, CO",
+                "salary": "$70,000 - $105,000",
+                "focus": "Vendor contracts, governance, compliance, case management"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor contract negotiation and drafting",
+              "Management of outside counsel",
+              "Requirement for scalable and efficient systems/workflows",
+              "Cross-divisional support including IT and Finance"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (USFS vs ISU)",
+            "Contract Management & Vendor Negotiation",
+            "Legal & Governance Compliance",
+            "Case Management System Requirements",
+            "Cross-Functional Collaboration (IT/Finance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 442,
+              "elapsed_seconds": 4.273104906082153
+            }
+          ],
+          "reasoning": "While the job posting is for U.S. Figure Skating (a member of ISU) and not the ISU directly, the role explicitly references compliance with ISU rules. More importantly, the 'Legal Affairs Specialist' role involves drafting/negotiating vendor contracts and managing document control systems. This indicates a procurement function (vendor management) and a need for technology (case management/document control) that is often relevant to the broader ecosystem. It provides weak signals about the administrative and technological standards used by ISU member federations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:09:16.252982",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/administrative-assistant-figure-skating-at-international-skating-union-4316233903",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Database Management Systems (Custom/Proprietary)"
+            ],
+            "job_postings": [
+              {
+                "title": "Administrative Assistant \u2013 Figure Skating Department",
+                "location": "Lausanne, Switzerland",
+                "type": "Temporary (6 months)",
+                "department": "Figure Skating"
+              }
+            ],
+            "procurement_indicators": [
+              "Database Management (Officials/Members)",
+              "Travel & Logistics Coordination",
+              "Registration Systems Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "Entity Match (ISU)",
+            "Database & CRM Operations",
+            "Logistics & Travel Coordination",
+            "Administrative Procurement Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.8829710483551025
+            }
+          ],
+          "reasoning": "The content confirms the target entity (ISU) and describes an administrative role with direct involvement in data management and logistics. While the role is support-focused, the explicit mention of managing databases (competitions, officials) and coordinating with the Travel Department indicates underlying operational tools and vendor relationships that constitute procurement ecosystem activity, warranting a weak signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:09:25.197293",
+          "domain_explored": "https://www.linkedin.com/jobs/view/content-producer-commercial-division-at-u-s-figure-skating-4343563039",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Lawyer - JustAnswer",
+              "Homewood Suites Lawton - Night Auditor - Aimbridge Hospitality",
+              "Consumer Electronics Technician - JustAnswer",
+              "LPN, License Practical Nurse - White Glove Community Care"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (USFS vs ISU)",
+            "Platform Noise (LinkedIn Job Listings)",
+            "Irrelevant Content (Healthcare, Hospitality, Legal Services)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 327,
+              "elapsed_seconds": 3.5713601112365723
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page rather than the specific job posting for 'Content Producer, Commercial Division' at U.S. Figure Skating. The visible listings are for unrelated entities (JustAnswer, Aimbridge Hospitality, White Glove Community Care) and industries (Legal, Hospitality, Healthcare). Furthermore, the target entity is U.S. Figure Skating (USFS), a member federation of the ISU, not the ISU itself. While USFS procurement activities can be a proxy signal, the lack of specific content regarding the 'Content Producer' role prevents any meaningful analysis of procurement intent or technology stacks."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:09:38.322682",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/head-of-development-member-relations-at-international-skating-union-4312239751",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Monitoring & Governance Tools",
+              "Learning Management Systems (LMS)",
+              "Member Relationship Management (MRM) Software"
+            ],
+            "job_postings": [
+              "Head of Development & Member Relations"
+            ],
+            "procurement_indicators": [
+              "Administration of Development Funds (Disbursement & Auditing)",
+              "Requirement for tools to monitor Member Governance and collect global data",
+              "Creation and implementation of education and training programs",
+              "Collaboration with IOC and public bodies for funding/partnerships"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Development & Fund Allocation",
+            "Member Governance & Data Monitoring",
+            "Global Education & Training Programs",
+            "Partnership Management (IOC/Olympic Solidarity)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1750,
+              "output_tokens": 392,
+              "elapsed_seconds": 5.747000694274902
+            }
+          ],
+          "reasoning": "This is a high-value procurement signal. The 'Head of Development & Member Relations' role is responsible for distributing 'Development Funds' and implementing a 'bold global development strategy.' The explicit requirement to 'oversee tools to monitor progress, collect data and keep regularly updated information' indicates a need for data management, reporting, and governance software. Additionally, the focus on 'education, training, and mentoring programs' suggests potential procurement of Learning Management Systems (LMS) or educational content platforms."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:09:51.088135",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/head-of-athlete-welfare-sustainability-at-international-skating-union-4312253637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Injury Tracking Platform (SaaS)",
+              "Athlete Management Systems (AMS)",
+              "Data Analytics (Medical/Performance)"
+            ],
+            "job_postings": [
+              "Head of Athlete Welfare & Sustainability"
+            ],
+            "procurement_indicators": [
+              "Responsible for a global injury tracking platform (Software procurement/implementation)",
+              "Develop and deliver global athlete education initiatives (Training/Content vendor procurement)",
+              "Oversee application of Event Medical Guidelines (Compliance/Consulting services)",
+              "Career Transition Support programs (Outplacement/Education services)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Match (ISU)",
+            "Digital Platform Procurement (Injury Tracking)",
+            "Medical & Compliance Vendor Management",
+            "Global Education Program Implementation",
+            "Strategic Leadership (Head of)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1829,
+              "output_tokens": 385,
+              "elapsed_seconds": 4.937233924865723
+            }
+          ],
+          "reasoning": "This is a high-level leadership role (Head of) that explicitly mandates the oversight of a 'global injury tracking platform' and the delivery of 'global athlete education initiatives.' These are direct procurement signals indicating a need for software vendors (SaaS for injury tracking) and content/training service providers. The role also involves updating medical guidelines, which implies engagement with medical consultants and compliance experts."
+        }
+      ],
+      "total_input_tokens": 12180,
+      "total_output_tokens": 2571,
+      "estimated_cost_usd": 0.075105
+    },
+    "procurement_signals": [
+      "Strategic Development & Fund Allocation",
+      "Member Governance & Data Monitoring",
+      "Global Education & Training Programs",
+      "Partnership Management (IOC/Olympic Solidarity)",
+      "Entity Match (ISU)",
+      "Digital Platform Procurement (Injury Tracking)",
+      "Medical & Compliance Vendor Management",
+      "Global Education Program Implementation",
+      "Strategic Leadership (Head of)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Skating Union (ISU) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:09:51.089780"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.462213",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:54:04.439510"
+}

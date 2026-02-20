@@ -1,0 +1,249 @@
+{
+  "entity_id": "german_volleyball_federation",
+  "entity_name": "German Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleyball-verband.de",
+    "www-old.cev.eu",
+    "rocketreach.co",
+    "schwuleliga.de",
+    "en.volleyballworld.com",
+    "fitline.com",
+    "sponsorship.sportbusiness.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_volleyball_federation",
+      "entity_name": "German Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://fitline.com",
+        "https://volleyball-verband.de",
+        "https://sponsorship.sportbusiness.com",
+        "https://en.volleyballworld.com",
+        "https://schwuleliga.de",
+        "https://rocketreach.co"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:40:40.428330",
+          "domain_explored": "https://volleyball-verband.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom eLearning Portal (elearning.volleyball-verband.de)",
+              "E-commerce Platform (shop.volleyball-verband.de)",
+              "Ticketing System (dvv-ligen.de)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Maintenance of sub-domain infrastructure",
+              "SaaS licensing for educational content",
+              "Digital ticketing operations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ecosystem Presence",
+            "E-commerce Infrastructure",
+            "SaaS Learning Platform"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 433,
+              "output_tokens": 253,
+              "elapsed_seconds": 3.3967931270599365
+            }
+          ],
+          "reasoning": "The navigation menu reveals a diversified digital stack including a dedicated eLearning portal and an e-commerce shop. While this does not indicate immediate *new* procurement, it confirms the existence of complex vendor relationships (hosting, maintenance, licensing) that are subject to renewal and review."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:40:48.450315",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy HTML Structure",
+              "Static Event Calendars"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Multi-sport event coordination (Munich 2022)",
+              "Continental Cup organization"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Outdated Infrastructure",
+            "Event Listing Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.614419937133789
+            }
+          ],
+          "reasoning": "The content is sourced from the European Volleyball Confederation (CEV) website, not the German Volleyball Federation (DVV). While DVV is a member nation, this page represents the governing body's European-level operations and event history, not specific German procurement activities. The site also appears to be an archived version ('www-old'), indicating it is not an active source for current signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:40:51.388466",
+          "domain_explored": "https://rocketreach.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:41:02.422772",
+          "domain_explored": "https://schwuleliga.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Migration Notice",
+            "External Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 595,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.1607003211975098
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Schwule Liga' (Gay League), a distinct community sports organization. The content indicates a migration to 'queerleague.de'. There is no material, organizational, or technological connection to the German Volleyball Federation (DVV). This represents a false positive in the discovery chain."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:41:10.410219",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Global Sports News Aggregation",
+            "External Entity Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.1659398078918457
+            }
+          ],
+          "reasoning": "The content is strictly focused on international sports news, match results (Superlega), and global rankings (FIVB). It pertains to 'VolleyballWorld', the global governing body's media arm, rather than the German Volleyball Federation (DVV). There are no signals regarding German domestic procurement, technology stacks, or administrative operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:41:15.280501",
+          "domain_explored": "https://fitline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:41:21.658179",
+          "domain_explored": "https://sponsorship.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Global Sports News Aggregation",
+            "External Entity Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.510390043258667
+            }
+          ],
+          "reasoning": "The content is a news aggregation feed from 'SportBusiness Sponsorship' focusing on global high-level sponsorship deals (e.g., NBA, Formula 1, Manchester City). It contains no specific information regarding the German Volleyball Federation's internal procurement, technology stack, or vendor partnerships. The domain is an external industry publication, not a source of intelligence for the target entity's specific buying signals."
+        }
+      ],
+      "total_input_tokens": 5585,
+      "total_output_tokens": 1024,
+      "estimated_cost_usd": 0.032115
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:41:21.661832"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341408",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:06.001987"
+}

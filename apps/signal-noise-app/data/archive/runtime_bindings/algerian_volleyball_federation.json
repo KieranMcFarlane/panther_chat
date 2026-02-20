@@ -1,0 +1,226 @@
+{
+  "entity_id": "algerian_volleyball_federation",
+  "entity_name": "Algerian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "zoominfo.com",
+    "wikidata.org",
+    "finixsports.wordpress.com",
+    "newfanzoneblog.wordpress.com",
+    "wikiwand.com",
+    "a.osmarks.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "algerian_volleyball_federation",
+      "entity_name": "Algerian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://finixsports.wordpress.com",
+        "https://a.osmarks.net",
+        "https://wikiwand.com",
+        "https://newfanzoneblog.wordpress.com",
+        "https://zoominfo.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Algerian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:54:51.660342",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Content",
+            "Third-Party Sales Platform",
+            "Irrelevant Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 193,
+              "elapsed_seconds": 4.060184001922607
+            }
+          ],
+          "reasoning": "The provided content is a direct scrape of ZoomInfo's own marketing homepage. It contains generic sales copy, testimonials from unrelated companies (Seismic, McGriff), and product feature descriptions. There is absolutely no mention of the Algerian Volleyball Federation, no specific contact data for the federation, and no signals of their internal procurement activities or technology stack. This is noise, not intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:55:01.164561",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "User Contribution/Community Guidelines",
+            "Technical Documentation (SPARQL, Wikibase)",
+            "Event Announcements (WikidataCon)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.4944827556610107
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a global open-data platform. It contains no specific information regarding the 'Algerian Volleyball Federation'. The text focuses on community contributions, technical documentation for the Wikidata platform itself, and general project news. There are zero procurement signals, technology stack details, or governance patterns specific to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:55:06.479037",
+          "domain_explored": "https://finixsports.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:55:12.593742",
+          "domain_explored": "https://newfanzoneblog.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Nigeria Basketball Federation)",
+            "Irrelevant Geography (Nigeria/Abuja)",
+            "Generic Political Commentary",
+            "Content Duplication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.3595876693725586
+            }
+          ],
+          "reasoning": "The content provided is entirely focused on the Nigeria Basketball Federation (NBBF) and Nigerian political figures (Senator Orji Uzoh Kalu). There is absolutely no mention of the Algerian Volleyball Federation, Algeria, or volleyball. The content discusses general sports funding and grassroots programs in Nigeria, which does not translate to procurement intelligence for the target entity in Algeria."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:55:25.667408",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "Third-Party Content Aggregator",
+            "Irrelevant Marketing Copy",
+            "No Entity-Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1557,
+              "output_tokens": 180,
+              "elapsed_seconds": 8.733382225036621
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic marketing copy and feature descriptions for Wikiwand, a third-party Wikipedia interface wrapper. There is no mention of the Algerian Volleyball Federation, no procurement signals, and no relevant entity data. The content is purely promotional for the Wikiwand browser extension."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:55:37.436319",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Content Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "Third-Party Content Aggregator (Kiwix)",
+            "Technical Error Message (NoJS)",
+            "Lack of Entity Specific Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 667,
+              "output_tokens": 216,
+              "elapsed_seconds": 4.805945158004761
+            }
+          ],
+          "reasoning": "The scraped content indicates that the URL is a personal or generic subdomain ('a.osmarks.net') serving content via the Kiwix offline reader. The visible text is purely technical (JavaScript requirement) and platform attribution ('Powered by Kiwix'). There is absolutely no mention of the Algerian Volleyball Federation, sports governance, or procurement activities. This is a technical dead end."
+        }
+      ],
+      "total_input_tokens": 6414,
+      "total_output_tokens": 1006,
+      "estimated_cost_usd": 0.034332
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Algerian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:55:37.438252"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331290",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:45.718653"
+}

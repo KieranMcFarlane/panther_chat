@@ -1,0 +1,149 @@
+{
+  "entity_id": "aruba_volleyball_association",
+  "entity_name": "Aruba Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "norceca.net",
+    "caymancompass.com",
+    "online.flipbuilder.com",
+    "archive.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aruba_volleyball_association",
+      "entity_name": "Aruba Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://norceca.net",
+        "https://archive.org",
+        "https://online.flipbuilder.com",
+        "https://caymancompass.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aruba Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:41:47.453512",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Documentation (Standard for governance/reporting)",
+              "Web Content Management (Static HTML structure observed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Compliance: Requirement for adherence to NORCECA Constitution and good governance practices (oversight by VP Mushtaque Mohammed).",
+              "Event Infrastructure: Indirect need for event management services/logistics based on 'Hosting Schedule' and 'Competition' calendars.",
+              "Marketing Assets: Availability of official 'Branding Kit' suggests centralized procurement or usage guidelines for promotional materials.",
+              "Administrative Cycles: Strategic planning indicated by '2024-2028' Board and Committee structures."
+            ]
+          },
+          "patterns_found": [
+            "Governance Oversight",
+            "Strategic Planning Cycles",
+            "Event Hosting Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 384,
+              "elapsed_seconds": 3.871354818344116
+            }
+          ],
+          "reasoning": "The content confirms the entity operates within a structured governance framework (NORCECA/FIVB) requiring adherence to 'good governance practices' and specific constitutional updates. The presence of 'Branding Kits' and 'Hosting Schedules' indicates a need for compliant marketing materials and event management capabilities. However, the content is primarily news and administrative; no direct procurement intent (RFPs, tech stack) is explicitly visible yet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:41:50.326829",
+          "domain_explored": "https://caymancompass.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:41:53.140195",
+          "domain_explored": "https://online.flipbuilder.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:41:58.635503",
+          "domain_explored": "https://archive.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Dependency",
+            "Client-Side Rendering"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 494,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.188498020172119
+            }
+          ],
+          "reasoning": "The provided content is a generic browser compatibility message indicating the site relies heavily on JavaScript to render content. The raw text snippet contains no semantic data regarding procurement, governance, or technology stacks specific to the Aruba Volleyball Association."
+        }
+      ],
+      "total_input_tokens": 1857,
+      "total_output_tokens": 531,
+      "estimated_cost_usd": 0.013536
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aruba Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:41:58.640997"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.332053",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:58.896656"
+}

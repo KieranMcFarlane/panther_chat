@@ -1,0 +1,202 @@
+{
+  "entity_id": "instituto_de_c\u00f3rdoba",
+  "entity_name": "Instituto de C\u00f3rdoba",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "copaargentina.org",
+    "flamengo.com.br",
+    "clubgodoycruz.com.ar",
+    "commons.wikimedia.org",
+    "analisisdigital.com.ar"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "instituto_de_c\u00f3rdoba",
+      "entity_name": "Instituto de C\u00f3rdoba",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://analisisdigital.com.ar",
+        "https://commons.wikimedia.org",
+        "https://flamengo.com.br",
+        "https://copaargentina.org",
+        "https://clubgodoycruz.com.ar"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Instituto de C\u00f3rdoba may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:27:50.415748",
+          "domain_explored": "https://copaargentina.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:28:00.640872",
+          "domain_explored": "https://flamengo.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_entertainment_content",
+            "betting_affiliate_links",
+            "event_scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 470,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.905316114425659
+            }
+          ],
+          "reasoning": "The content is exclusively related to Clube de Regatas do Flamengo, a Brazilian sports club. It details a football match schedule (Campeonato Brasileiro 2026) and includes betting affiliate links ('Aposte Agora'). There is absolutely no connection to 'Instituto de C\u00f3rdoba', nor are there any procurement, governance, or technology signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:28:12.520548",
+          "domain_explored": "https://clubgodoycruz.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Central de Datos (Data Center/Analytics Dashboard)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Tender/RFP",
+                "description": "Licitaci\u00f3n abierta para la concesi\u00f3n de la cantina del club (Open tender for club canteen concession)"
+              }
+            ]
+          },
+          "patterns_found": [
+            "procurement_rfp",
+            "facility_management_concession",
+            "sports_entertainment_content",
+            "membership_management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 278,
+              "elapsed_seconds": 4.44543194770813
+            }
+          ],
+          "reasoning": "While the site is primarily focused on sports news and general club information, it contains a specific procurement signal: 'Licitaci\u00f3n abierta para la concesi\u00f3n de la cantina del club' (Open tender for the concession of the club canteen). This indicates active vendor sourcing for facility services. Additionally, the 'Central de Datos' section suggests some level of data infrastructure, though technical details are not exposed in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:28:21.224992",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MediaWiki"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_media_repository",
+            "non_profit_organization",
+            "crowdsourced_content",
+            "educational_resource"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.6001040935516357
+            }
+          ],
+          "reasoning": "The content is the landing page of Wikimedia Commons, a generic media repository. It contains no information regarding 'Instituto de C\u00f3rdoba', nor does it contain procurement signals, vendor solicitations, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:28:29.192290",
+          "domain_explored": "https://analisisdigital.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "regional_news_aggregation",
+            "crime_and_accident_reporting",
+            "political_analysis",
+            "cultural_event_listings",
+            "sports_news_coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.4527039527893066
+            }
+          ],
+          "reasoning": "The content from 'analisisdigital.com.ar' is a regional news portal focused on general current events in Entre R\u00edos, Argentina. The scraped text includes headlines about judicial corruption cases, traffic accidents, local sports (soccer, volleyball), and community events. There is no presence of corporate governance, RFPs, technology procurement, or business strategy relevant to 'Instituto de C\u00f3rdoba'."
+        }
+      ],
+      "total_input_tokens": 4923,
+      "total_output_tokens": 828,
+      "estimated_cost_usd": 0.027188999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Instituto de C\u00f3rdoba may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:28:29.193923"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.219814",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:27.646205"
+}

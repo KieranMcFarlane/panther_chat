@@ -1,0 +1,45 @@
+{
+  "entity_id": "mks_b?dzin",
+  "entity_name": "MKS B?dzin",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mks_b?dzin",
+      "entity_name": "MKS B?dzin",
+      "total_iterations": 15,
+      "completed_iterations": 0,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0
+      ],
+      "explored_domains": [],
+      "explored_channels": {},
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MKS B?dzin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [],
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "estimated_cost_usd": 0.0
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MKS B?dzin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:28:37.998994"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328108",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:13.107943"
+}

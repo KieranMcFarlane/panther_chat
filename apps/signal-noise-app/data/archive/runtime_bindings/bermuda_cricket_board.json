@@ -1,0 +1,119 @@
+{
+  "entity_id": "bermuda_cricket_board",
+  "entity_name": "Bermuda Cricket Board",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "cricketbermuda.com",
+    "bermudacricketboard.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bermuda_cricket_board",
+      "entity_name": "Bermuda Cricket Board",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://bermudacricketboard.com",
+        "https://cricketbermuda.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Strategic Governance Renewal",
+        "Major Event Hosting Capabilities",
+        "Sports Technology Investment",
+        "Digital Registration Processes"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bermuda Cricket Board may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:49:23.896516",
+          "domain_explored": "https://cricketbermuda.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Performance Video Analysis Software",
+              "Data Analytics Platforms",
+              "CRM / Registration Management Systems"
+            ],
+            "job_postings": [
+              "Performance Video Analyst (Sampath Seshadri)",
+              "Executive Team Roles (Governance/Leadership)"
+            ],
+            "procurement_indicators": [
+              "2022 \u2013 2026 Strategic Plan (Active)",
+              "Hosting Rights for 2027 & 2028 North American Cricket Cup (Infrastructure/Service Needs)",
+              "Annual General Meeting (Nov 2025) - New Executive Team implies new vendor reviews",
+              "Digital Transformation: Online Player Registration (2025 Senior Men, Women, Youth Leagues)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Governance Renewal",
+            "Major Event Hosting Capabilities",
+            "Sports Technology Investment",
+            "Digital Registration Processes"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 349,
+              "elapsed_seconds": 5.199045896530151
+            }
+          ],
+          "reasoning": "The content reveals a highly active procurement phase driven by a new executive team and the securing of major international events (2027/2028 Cricket Cup). The explicit focus on 'Cricket Analytics' and the presence of multiple digital registration forms indicate immediate needs for performance analysis software and CRM/Registration platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:49:31.223489",
+          "domain_explored": "https://bermudacricketboard.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 349,
+      "estimated_cost_usd": 0.009318
+    },
+    "procurement_signals": [
+      "Strategic Governance Renewal",
+      "Major Event Hosting Capabilities",
+      "Sports Technology Investment",
+      "Digital Registration Processes"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bermuda Cricket Board may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:49:31.223968"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300391",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:19:14.677988"
+}

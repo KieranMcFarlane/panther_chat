@@ -1,0 +1,85 @@
+{
+  "entity_id": "eswatini_basketball_association",
+  "entity_name": "Eswatini Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "fliphtml5.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eswatini_basketball_association",
+      "entity_name": "Eswatini Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fliphtml5.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eswatini Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:56:59.082874",
+          "domain_explored": "https://fliphtml5.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FlipHTML5 (Flipbook Maker)",
+              "ChatGPT (Integration)",
+              "Pexels & Pixabay (Integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic SaaS Marketing Content",
+            "Product Feature Listing",
+            "Irrelevant Vendor Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 234,
+              "elapsed_seconds": 2.4240920543670654
+            }
+          ],
+          "reasoning": "The scraped content originates from 'fliphtml5.com', a generic software vendor providing flipbook creation tools. The text is purely marketing copy describing product features (AI integration, templates, file conversion). There is absolutely no mention of the 'Eswatini Basketball Association', no specific organizational context, and no procurement signals relevant to the target entity. This represents a false positive in the scraping process (noise)."
+        }
+      ],
+      "total_input_tokens": 1365,
+      "total_output_tokens": 234,
+      "estimated_cost_usd": 0.007605
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eswatini Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:56:59.083761"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.268818",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:02.235656"
+}

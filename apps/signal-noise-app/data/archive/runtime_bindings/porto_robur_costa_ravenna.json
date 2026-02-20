@@ -1,0 +1,258 @@
+{
+  "entity_id": "porto_robur_costa_ravenna",
+  "entity_name": "Porto Robur Costa Ravenna",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "portoroburcosta2030.it",
+    "volleybox.net",
+    "zoominfo.com",
+    "legavolley.it",
+    "pallavolopadova.com",
+    "cisternavolley.it",
+    "bettingexpert.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "porto_robur_costa_ravenna",
+      "entity_name": "Porto Robur Costa Ravenna",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://portoroburcosta2030.it",
+        "https://bettingexpert.com",
+        "https://pallavolopadova.com",
+        "https://cisternavolley.it",
+        "https://zoominfo.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Porto Robur Costa Ravenna may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:58:29.114186",
+          "domain_explored": "https://portoroburcosta2030.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Publishing Platforms (for PRC Magazine)",
+              "Ticketing Systems (Acquista i biglietti)",
+              "Social Media Integration (Instagram feed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of PRC Magazine (Content Procurement/Design)",
+              "Management of multi-tier team operations (Serie A2 + Youth Academy)",
+              "Ticketing operations management"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Production",
+            "Fan Engagement Platforms",
+            "Youth Sports Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 291,
+              "elapsed_seconds": 4.008892059326172
+            }
+          ],
+          "reasoning": "The content reveals the launch of 'PRC Magazine', a new house organ for fans and partners, indicating an investment in content creation and distribution channels (likely PDF/Digital publishing tools). The site also manages complex schedules for Serie A2, youth teams (Serie B, U12-U19), and ticketing, suggesting a need for robust CRM or club management software to handle operations, though specific vendors are not named."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:58:31.975532",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:58:34.943485",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:58:42.420159",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "League Management Platform (Custom/Proprietary)",
+              "Video Check System (Refereeing tool)",
+              "Digital Archive Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized 'Video Check System' usage",
+              "Sponsorship integration (Credem Banca, Del Monte, etc.)",
+              "Document management and 'Cartelle Stampa' distribution"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Structure",
+            "Centralized Digital Platforms",
+            "Sponsorship Ecosystem",
+            "Standardized Data Management (Stats/Archives)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 296,
+              "elapsed_seconds": 4.068946838378906
+            }
+          ],
+          "reasoning": "The content represents the official Lega Pallavolo Serie A website. While it confirms the entity operates within a structured league ecosystem with centralized digital services (stats, media, archives), it is primarily informational. It confirms the existence of the league structure but does not explicitly reveal procurement intent or specific technology investments beyond the standard league platform."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:59:34.832532",
+          "domain_explored": "https://pallavolopadova.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom E-commerce Platform",
+              "Newsletter Subscription Tool"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Shop Operations (Kit Gara 25_26)",
+              "Outlet Store Management"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Merchandising",
+            "Direct-to-Consumer (DTC) Retail",
+            "Newsletter Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 237,
+              "elapsed_seconds": 45.36247491836548
+            }
+          ],
+          "reasoning": "The content analyzed is from Pallavolo Padova, a distinct entity from the target Porto Robur Costa Ravenna. While the site confirms standard sports industry capabilities like online merchandising shops and newsletter marketing, it provides zero specific intelligence regarding Porto Robur's procurement needs, technology stack, or governance. The data is irrelevant to the specific target profile."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:00:12.617453",
+          "domain_explored": "https://cisternavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Reporting",
+            "Match Recaps",
+            "Roster Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 146,
+              "elapsed_seconds": 34.17168378829956
+            }
+          ],
+          "reasoning": "The content provided is standard sports journalism (match recaps, player interviews, and standings) for Cisterna Volley. It contains no information regarding technology stacks, procurement needs, or business operations relevant to Porto Robur Costa Ravenna."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:00:19.497598",
+          "domain_explored": "https://bettingexpert.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Betting Content",
+            "Gambling Affiliate Marketing",
+            "General Sports News (Tennis/Football)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1610,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.851581335067749
+            }
+          ],
+          "reasoning": "The content is entirely focused on sports betting, gambling tips, and affiliate marketing for bookmakers (e.g., 'Top Betting Free Bets', 'Become a Tipster'). There is no connection to the target entity (Porto Robur Costa Ravenna), professional volleyball operations, or B2B procurement activities."
+        }
+      ],
+      "total_input_tokens": 7527,
+      "total_output_tokens": 1134,
+      "estimated_cost_usd": 0.039591
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Porto Robur Costa Ravenna may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:00:19.504477"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.329066",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:19.713120"
+}

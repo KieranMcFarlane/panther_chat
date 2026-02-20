@@ -1,0 +1,214 @@
+{
+  "entity_id": "nigerian_handball_federation",
+  "entity_name": "Nigerian Handball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "naijatrends.ng",
+    "etd.aau.edu.et",
+    "muckrack.com",
+    "theeagleonline.com.ng",
+    "firstzealmediacastblog.wordpress.com",
+    "thenationonlineng.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nigerian_handball_federation",
+      "entity_name": "Nigerian Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://naijatrends.ng",
+        "https://theeagleonline.com.ng",
+        "https://muckrack.com",
+        "https://etd.aau.edu.et",
+        "https://firstzealmediacastblog.wordpress.com",
+        "https://thenationonlineng.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nigerian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:33:40.771503",
+          "domain_explored": "https://naijatrends.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Links (Facebook, Instagram, TikTok, Twitter, YouTube)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic News Portal Structure",
+            "Social Media Integration",
+            "User Account Management UI"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.397066116333008
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the website's navigation menu, header elements, and a generic article snippet about 'Youth Entrepreneurship.' There is no mention of the Nigerian Handball Federation, specific procurement calls, vendor partnerships, or technology implementations related to the federation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:33:59.816958",
+          "domain_explored": "https://etd.aau.edu.et",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DSpace (Inferred - standard for AAU-ETD)",
+              "SPSS Version 30 (Statistical Analysis Software mentioned in thesis)",
+              "Unicel DxH800 Beckman-Coulter (Lab equipment mentioned in thesis)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Institutional Repository Structure",
+            "Academic Research Metadata",
+            "Thesis and Dissertation Archiving",
+            "Scholarly Submission Guidelines"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.984611749649048
+            }
+          ],
+          "reasoning": "The content is exclusively from the Addis Ababa University (AAU) Institutional Repository (ETD). It contains academic theses, dissertations, and research submissions from Ethiopia. There is absolutely no connection, relevance, or content related to the Nigerian Handball Federation, Nigerian sports governance, or local procurement activities. This is a geographic and topical mismatch."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:34:02.728406",
+          "domain_explored": "https://muckrack.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:34:08.724793",
+          "domain_explored": "https://theeagleonline.com.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Event Reporting",
+            "Prize Monetization Structure",
+            "Generic News Portal Layout"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 912,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.456979990005493
+            }
+          ],
+          "reasoning": "The content focuses exclusively on the Lagos City Marathon prize purse and event logistics. There is no mention of the Nigerian Handball Federation, procurement processes, or technology acquisition. The entity context does not match the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:34:18.883988",
+          "domain_explored": "https://firstzealmediacastblog.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress.com"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports News Aggregation",
+            "Irrelevant Football Transfer News",
+            "WordPress CMS Hosting",
+            "Broad Topic Taxonomy (Non-Specific)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 216,
+              "elapsed_seconds": 6.717059135437012
+            }
+          ],
+          "reasoning": "The source is a generic sports news blog (First Zealmediacast Blog) hosted on WordPress.com. While 'HANDBALL' appears in the site's broad topic taxonomy, the visible content is dominated by European football transfer news and general sports reporting. There is no specific content related to the Nigerian Handball Federation, nor are there any signals of procurement, vendor selection, or official organizational activity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:34:21.715905",
+          "domain_explored": "https://thenationonlineng.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5236,
+      "total_output_tokens": 810,
+      "estimated_cost_usd": 0.027858
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nigerian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:34:21.716621"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362422",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:41.469048"
+}

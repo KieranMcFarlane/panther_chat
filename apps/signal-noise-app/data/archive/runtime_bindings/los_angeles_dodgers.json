@@ -1,0 +1,322 @@
+{
+  "entity_id": "los_angeles_dodgers",
+  "entity_name": "Los Angeles Dodgers",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "dodgersnation.com",
+    "mlbshop.com",
+    "dodgers.race-mlb.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs-worldwide",
+      "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs",
+      "https://www.linkedin.com/jobs/view/affiliate-development-associate-at-los-angeles-dodgers-4307912563",
+      "https://www.linkedin.com/jobs/view/community-relations-intern-at-los-angeles-dodgers-4324642846",
+      "https://www.linkedin.com/jobs/view/global-partnerships-fellow-at-los-angeles-dodgers-4324802648",
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/view/inside-sales-representative-at-los-angeles-dodgers-4327289142"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "los_angeles_dodgers",
+      "entity_name": "Los Angeles Dodgers",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.13999999999999999,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.13999999999999999,
+        0.13999999999999999,
+        0.13999999999999999
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs-worldwide",
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/view/community-relations-intern-at-los-angeles-dodgers-4324642846",
+        "https://dodgers.race-mlb.com",
+        "https://www.linkedin.com/jobs/view/affiliate-development-associate-at-los-angeles-dodgers-4307912563",
+        "https://dodgersnation.com",
+        "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs",
+        "https://www.linkedin.com/jobs/view/global-partnerships-fellow-at-los-angeles-dodgers-4324802648"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Postings",
+        "Quantitative Analysis Hiring",
+        "Digital Media Production Hiring",
+        "Community & Government Affairs Hiring",
+        "Government & Community Affairs Hiring",
+        "Development/Fundraising Roles",
+        "Administrative Support Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Los Angeles Dodgers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:20:21.300107",
+          "domain_explored": "https://dodgersnation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Content",
+            "Player Management Strategy"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 446,
+              "output_tokens": 136,
+              "elapsed_seconds": 3.8898868560791016
+            }
+          ],
+          "reasoning": "The content is strictly sports journalism regarding player workload management (Shohei Ohtani) and the World Baseball Classic. It contains no references to business operations, technology infrastructure, hiring, or vendor spending."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:20:24.075910",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:20:27.287153",
+          "domain_explored": "https://dodgers.race-mlb.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:20:37.998103",
+          "domain_explored": "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Statistical Analysis Software (e.g., R, Python, SQL)",
+              "Video Editing & Production Software",
+              "Digital Asset Management Systems"
+            ],
+            "job_postings": [
+              "Junior Quantitative Analyst",
+              "Production & Storytelling Associate",
+              "Development Associates",
+              "Programs Associates",
+              "Assistant, Government & Community Affairs"
+            ],
+            "procurement_indicators": [
+              "Expansion of Data Analytics Capabilities",
+              "Investment in Content Creation Workflows",
+              "Organizational Growth in Community Relations"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings",
+            "Quantitative Analysis Hiring",
+            "Digital Media Production Hiring",
+            "Community & Government Affairs Hiring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 340,
+              "elapsed_seconds": 7.333088159561157
+            }
+          ],
+          "reasoning": "The content provides a direct list of active job openings, which are high-fidelity procurement signals indicating organizational investment and resource allocation. Specifically, the 'Junior Quantitative Analyst' role signals investment in data infrastructure/analytics tools, and 'Production & Storytelling Associate' indicates investment in digital media software and workflows."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:20:46.091774",
+          "domain_explored": "https://www.linkedin.com/jobs/los-angeles-dodgers-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant, Government & Community Affairs",
+              "Development Associates"
+            ],
+            "procurement_indicators": [
+              "Expansion of Government Affairs function",
+              "Investment in Development/Fundraising operations"
+            ]
+          },
+          "patterns_found": [
+            "Government & Community Affairs Hiring",
+            "Development/Fundraising Roles",
+            "Administrative Support Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.661874055862427
+            }
+          ],
+          "reasoning": "The scraped content reveals active recruitment for 'Assistant, Government & Community Affairs' and 'Development Associates'. These roles indicate organizational investment in stakeholder management and fundraising capabilities. While not direct IT procurement, these hires often precede budget allocation for CRM systems, donor management software, or community engagement platforms."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:20:52.948972",
+          "domain_explored": "https://www.linkedin.com/jobs/view/affiliate-development-associate-at-los-angeles-dodgers-4307912563",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "UltiPro (HRIS)",
+              "Microsoft Excel",
+              "Video Capture/Logging Systems",
+              "Bullpen/Batting Cage Analytics Technology"
+            ],
+            "job_postings": [
+              "Affiliate Development Associate (Baseball Operations - Video)"
+            ],
+            "procurement_indicators": [
+              "Investment in Minor League Video Infrastructure",
+              "Procurement of Sports Analytics Hardware",
+              "Standardized Tech Stack across Affiliates (OK, AZ, MI, CA, DR)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Technology Procurement",
+            "Video Analysis Infrastructure",
+            "Minor League Operations Support",
+            "HRIS Usage (UltiPro)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.313547134399414
+            }
+          ],
+          "reasoning": "While this is an entry-level operational role, it confirms the procurement and deployment of specific sports technology hardware (video capture systems, bullpen/batting cage tech) and software (video logging, data compilation platforms) across their minor league affiliates. It also confirms the use of UltiPro for HR management."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:20:59.395975",
+          "domain_explored": "https://www.linkedin.com/jobs/view/community-relations-intern-at-los-angeles-dodgers-4324642846",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Irrelevant Entity (Sony Music Entertainment)",
+            "Content Scraping Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.3843917846679688
+            }
+          ],
+          "reasoning": "The scraped content is entirely composed of LinkedIn authentication prompts and job listings for Sony Music Entertainment, not the Los Angeles Dodgers. The URL suggests a Dodgers job listing, but the visible content is unrelated noise. There is no procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:21:06.154150",
+          "domain_explored": "https://www.linkedin.com/jobs/view/global-partnerships-fellow-at-los-angeles-dodgers-4324802648",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Contract Administrator (Munie Greencare Professionals)",
+              "Accountant (Munie Greencare Professionals)",
+              "Controller (Munie Greencare Professionals)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Munie Greencare Professionals)",
+            "Content Scraping Noise",
+            "Broken Link/Redirect Loop"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.86169171333313
+            }
+          ],
+          "reasoning": "The URL targeted a 'Global Partnerships Fellow' role for the Dodgers, but the scraped content displays job listings for 'Munie Greencare Professionals' (a landscaping company in Illinois). This indicates a broken link, a redirect error, or a scraping failure where the page content did not match the URL metadata. There is no procurement signal for the Dodgers in this content."
+        }
+      ],
+      "total_input_tokens": 8296,
+      "total_output_tokens": 1416,
+      "estimated_cost_usd": 0.046128
+    },
+    "procurement_signals": [
+      "Job Postings",
+      "Quantitative Analysis Hiring",
+      "Digital Media Production Hiring",
+      "Community & Government Affairs Hiring",
+      "Government & Community Affairs Hiring",
+      "Development/Fundraising Roles",
+      "Administrative Support Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Los Angeles Dodgers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:21:06.155588"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307136",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:21.644300"
+}

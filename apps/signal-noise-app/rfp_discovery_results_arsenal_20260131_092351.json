@@ -1,0 +1,19 @@
+{
+  "entity_id": "arsenal",
+  "entity_name": "Arsenal",
+  "categories_searched": [
+    "CRM"
+  ],
+  "duration_seconds": 101.478118,
+  "validated_signals": [],
+  "rejected_candidates": 0,
+  "discovery_summary": {
+    "CRM": {
+      "iterations": 30,
+      "final_confidence": 0.2,
+      "validated_count": 0,
+      "rejected_count": 0,
+      "temporal_multiplier": 1.0
+    }
+  }
+}

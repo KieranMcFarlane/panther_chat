@@ -1,0 +1,81 @@
+{
+  "entity_id": "burkina_faso_volleyball_federation",
+  "entity_name": "Burkina Faso Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "triptap.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "burkina_faso_volleyball_federation",
+      "entity_name": "Burkina Faso Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://triptap.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Burkina Faso Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:32:18.643089",
+          "domain_explored": "https://triptap.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "b2c_consumer_platform",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 154,
+              "elapsed_seconds": 3.4799790382385254
+            }
+          ],
+          "reasoning": "The scraped content from 'triptap.com' is a B2C travel booking platform offering custom itineraries, hotels, and flights. It is entirely unrelated to the Burkina Faso Volleyball Federation, sports governance, or public procurement. There is no signal of relevance to the target entity."
+        }
+      ],
+      "total_input_tokens": 1366,
+      "total_output_tokens": 154,
+      "estimated_cost_usd": 0.0064080000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Burkina Faso Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:32:18.644360"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335247",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:35.261025"
+}

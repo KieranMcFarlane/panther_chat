@@ -1,0 +1,359 @@
+{
+  "entity_id": "fia_world_endurance_championship_(wec)",
+  "entity_name": "FIA World Endurance Championship (WEC)",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "fiawec.com",
+    "toyotagazooracing.com",
+    "press.fiawec.com",
+    "competition.totalenergies.com",
+    "teampenske.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/performance-engineer-at-ford-motor-company-4364916514",
+      "https://uk.linkedin.com/jobs/view/race-team-co-ordinator-at-garage-59-group-ltd-4315920430",
+      "https://www.linkedin.com/posts/sara-mariani_fia-launches-careershift-with-wec-activity-7259590410711273473-z1Ia"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_world_endurance_championship_(wec)",
+      "entity_name": "FIA World Endurance Championship (WEC)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://competition.totalenergies.com",
+        "https://toyotagazooracing.com",
+        "https://press.fiawec.com",
+        "https://uk.linkedin.com/jobs/view/performance-engineer-at-ford-motor-company-4364916514",
+        "https://uk.linkedin.com/jobs/view/race-team-co-ordinator-at-garage-59-group-ltd-4315920430",
+        "https://teampenske.com",
+        "https://fiawec.com",
+        "https://www.linkedin.com/posts/sara-mariani_fia-launches-careershift-with-wec-activity-7259590410711273473-z1Ia"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA World Endurance Championship (WEC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:59:17.506943",
+          "domain_explored": "https://fiawec.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Content Hosting)",
+              "Social Media Platforms (Instagram, Facebook, X/Twitter)",
+              "Ticketing Platforms (Implied via 'Tickets' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of 'Beyond the Track' docuseries (Signal: Digital Content Production/Agency procurement)",
+              "Active sponsorship inventory (Akkodis, TotalEnergies, Rolex, Bapco Energies)",
+              "Hospitality and Ticketing operations for 2025/2026 seasons"
+            ]
+          },
+          "patterns_found": [
+            "Content Production Investment",
+            "Sponsorship/Partnership Structure",
+            "Event Operations & Ticketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 305,
+              "elapsed_seconds": 5.527913808822632
+            }
+          ],
+          "reasoning": "The content reveals a significant investment in digital content marketing (the 'Beyond the Track' docuseries) and confirms active sponsorship agreements (Akkodis, TotalEnergies, Rolex, Bapco Energies). While no direct RFPs are visible, the launch of a new media series indicates procurement needs for production, hosting (YouTube), and potentially analytics for content performance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:59:26.914698",
+          "domain_explored": "https://toyotagazooracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Marketing Content",
+            "Mission Statement Repetition",
+            "Series Navigation (WRC, WEC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 195,
+              "elapsed_seconds": 6.104826927185059
+            }
+          ],
+          "reasoning": "The content provided is scraped from 'toyotagazooracing.com', which is the official site of a competitor/team (Toyota Gazoo Racing), not the governing body (FIA WEC). The text consists of repetitive marketing slogans ('pushing the limits', 'ever-better cars') and navigation elements. It contains zero procurement signals, technology infrastructure details, or governance information relevant to the FIA WEC organization itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:59:33.700984",
+          "domain_explored": "https://press.fiawec.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom Web Application (indicated by /private/ and /Member/ routing)",
+              "PDF Document Management (Media Guide hosting)",
+              "Email Communication Infrastructure (media@fiawec.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized IT Infrastructure for multi-series management",
+              "Digital workflow tools for media accreditation",
+              "Asset hosting and delivery requirements"
+            ]
+          },
+          "patterns_found": [
+            "Centralized User Management System",
+            "Multi-Championship Platform Architecture",
+            "Digital Asset Management (PDF Hosting)",
+            "Workflow Automation (Accreditation & Submissions)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 346,
+              "elapsed_seconds": 3.8473589420318604
+            }
+          ],
+          "reasoning": "The content reveals a custom-built, centralized media management platform that handles user accounts, accreditation workflows, and digital assets across multiple related series (WEC, ELMS, LMC, ALMS). While there are no explicit procurement requests, the existence of this specific 'Press Area' infrastructure indicates investment in software development, hosting, and maintenance. The presence of specific administrative contacts and structured workflows suggests a reliance on B2B services for platform support."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:59:40.001710",
+          "domain_explored": "https://competition.totalenergies.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Marketing Content",
+            "Sponsorship Portfolio Display",
+            "Product Promotion (Fuels/Lubricants)",
+            "General PR News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.1818900108337402
+            }
+          ],
+          "reasoning": "The analyzed content is from 'TotalEnergies Comp\u00e9tition', a marketing site dedicated to showcasing the sponsor's involvement in motorsport (Formula E, WEC, MotoGP). The content focuses on brand excellence, fuel products (HVO100), and driver quotes. While it mentions WEC, it does so from the perspective of a sponsor/partner listing their assets, not as the organizing body (FIA/ACO) procuring services. There are no signals of RFPs, technology procurement, or operational decision-making relevant to the WEC organizing entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:59:46.475189",
+          "domain_explored": "https://teampenske.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Retention: Discount Tire extends partnership (B2B marketing, not procurement)",
+              "Partnership Stability: Long-term anchor partner structure indicates low vendor churn in sponsorship category"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Renewal Announcements",
+            "Driver Personnel Changes",
+            "Race Performance Reports",
+            "Anniversary Marketing Campaigns",
+            "Hall of Fame Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 282,
+              "elapsed_seconds": 2.8347158432006836
+            }
+          ],
+          "reasoning": "The content is exclusively focused on Team Penske's operational and marketing activities (NASCAR, INDYCAR, IMSA). While it mentions 'Porsche Penske Motorsport' which competes in WEC-related categories (IMSA), the content serves a sports news/entertainment function rather than a procurement or business operations function. There are no signals of technology acquisition, vendor selection, or infrastructure investment relevant to the FIA WEC entity itself."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:59:53.754205",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/performance-engineer-at-ford-motor-company-4364916514",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Bosch WinDarab",
+              "Motec i2",
+              "Atlas",
+              "Pi Cosworth",
+              "High-Fidelity Simulators"
+            ],
+            "job_postings": [
+              "Performance Engineer (LMDh Focus) - Ford Motor Company"
+            ],
+            "procurement_indicators": [
+              "Investment in LMDh vehicle development programs",
+              "Requirement for advanced data acquisition and analysis tools",
+              "Utilization of high-fidelity simulators for race strategy",
+              "Integration needs between Aerodynamics, Vehicle Dynamics, and Powertrain groups"
+            ]
+          },
+          "patterns_found": [
+            "LMDh Program Procurement",
+            "Specialized Data Acquisition Software",
+            "High-Fidelity Simulation Infrastructure",
+            "Cross-Disciplinary Tool Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 403,
+              "elapsed_seconds": 3.4189059734344482
+            }
+          ],
+          "reasoning": "While this is a job posting for Ford (a competitor/entrant) rather than the WEC organizer, it provides high-value intelligence regarding the procurement ecosystem of the championship. The role specifically references the 'FIA World Endurance Championship (WEC)' and the 'LMDh entry,' confirming active investment in this category. The description reveals specific technology stacks (Bosch WinDarab, Motec i2, Atlas, Pi Cosworth) that are standard for the series, indicating potential procurement targets for other teams or technical partners entering the series. It signals a healthy, competitive vendor market for performance engineering tools."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:00:10.766288",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/race-team-co-ordinator-at-garage-59-group-ltd-4315920430",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Team Management Tools"
+            ],
+            "job_postings": [
+              "Race Team Co-ordinator (Garage 59 Group Ltd)"
+            ],
+            "procurement_indicators": [
+              "Global Logistics & Freight Procurement",
+              "Facility Relocation (Northampton 2026)",
+              "Travel & Accommodation Sourcing",
+              "Hospitality & Catering Vendors",
+              "Kit Inventory Procurement"
+            ]
+          },
+          "patterns_found": [
+            "WEC Program Expansion (2026 Entry)",
+            "Global Logistics & Freight Coordination",
+            "Facility Relocation & Infrastructure Build",
+            "Supplier & Vendor Liaison",
+            "Hospitality & Partner Activation Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 319,
+              "elapsed_seconds": 13.230552911758423
+            }
+          ],
+          "reasoning": "While this is a team-level operational role rather than a central championship procurement role, it confirms significant supply chain activity. The expansion into WEC requires procuring global logistics, freight services, travel, accommodation, and facility infrastructure. The role specifically mentions liaising with suppliers and managing partner activations, indicating B2B vendor engagement."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:00:18.273017",
+          "domain_explored": "https://www.linkedin.com/posts/sara-mariani_fia-launches-careershift-with-wec-activity-7259590410711273473-z1Ia",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Program Coordinator (Youth Engagement)",
+              "D&I Officer",
+              "Educational Workshop Facilitators"
+            ],
+            "procurement_indicators": [
+              "Vendor requirement for educational workshop materials",
+              "Logistics and tour management services at BIC",
+              "Partnership management with local federations (Bahrain Motor Federation)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Engagement Program Development",
+            "Educational Workshop Procurement",
+            "Operational Collaboration (FIA/WEC/Promoters)",
+            "Diversity & Inclusion (D&I) Initiative Execution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1798,
+              "output_tokens": 320,
+              "elapsed_seconds": 4.0992608070373535
+            }
+          ],
+          "reasoning": "While this content is primarily a PR announcement, it confirms the procurement and setup of operational infrastructure for a new youth program ('CareerShift'). The mention of workshops, tours, and hands-on activities implies the procurement of educational materials, staffing services, and logistical support at the Bahrain International Circuit. It signals investment in D&I and community engagement programs, which often require third-party vendors for execution."
+        }
+      ],
+      "total_input_tokens": 12533,
+      "total_output_tokens": 2402,
+      "estimated_cost_usd": 0.073629
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA World Endurance Championship (WEC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:00:18.274666"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372686",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:12.079041"
+}

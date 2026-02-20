@@ -1,0 +1,318 @@
+{
+  "entity_id": "mogliano_rugby",
+  "entity_name": "Mogliano Rugby",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rugbymogliano.it",
+    "zoominfo.com",
+    "behance.net",
+    "acerbis.com",
+    "consorzioinmeta.it",
+    "rugbysandona.it",
+    "zebreparma.it",
+    "wikiwand.com",
+    "rocketreach.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mogliano_rugby",
+      "entity_name": "Mogliano Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://rugbymogliano.it",
+        "https://acerbis.com",
+        "https://wikiwand.com",
+        "https://consorzioinmeta.it",
+        "https://behance.net",
+        "https://zebreparma.it",
+        "https://rugbysandona.it",
+        "https://zoominfo.com",
+        "https://rocketreach.co"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Consortium Governance Structure",
+        "Corporate Social Responsibility (CSR) Procurement",
+        "Strategic Growth Roadmap",
+        "Vendor Partnership Solicitation"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mogliano Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:48:42.054699",
+          "domain_explored": "https://rugbymogliano.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop)",
+              "Digital Ticketing System",
+              "Email Marketing Tool (Newsletter)",
+              "Video Streaming Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Shop Implementation/Maintenance",
+              "Ticketing System Operations",
+              "Sponsorship Partnership Management (Consorzio IN META)",
+              "Merchandising Supply Chain (Mad Sport partnership)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Commerce Infrastructure",
+            "Ticketing Platform",
+            "Newsletter Marketing",
+            "Streaming Services",
+            "Sponsorship Consortium (B2B Network)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.245203971862793
+            }
+          ],
+          "reasoning": "The content reveals a transition to digital engagement channels. The explicit links to 'SHOP ON LINE' and 'BIGLIETTERIA' (Ticketing) indicate active procurement or maintenance of e-commerce and event management software. The presence of a newsletter signup and streaming services suggests a marketing technology stack. The 'Consorzio IN META' indicates a structured B2B network for sponsorship, which is a procurement channel."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:49:14.831115",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:49:19.148501",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:49:28.071569",
+          "domain_explored": "https://acerbis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "E-commerce Navigation Structure",
+            "Product Catalog Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.196298837661743
+            }
+          ],
+          "reasoning": "The scraped content is from 'acerbis.com', a manufacturer of motorcycle protective gear and apparel. This domain is completely unrelated to 'Mogliano Rugby', which is a sports club. The content represents product search filters and marketing copy for motorbike parts, providing zero intelligence regarding the rugby club's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:49:39.968403",
+          "domain_explored": "https://consorzioinmeta.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (CMS)",
+              "S-mannix Digital Agency (Web Vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active solicitation for 'Consorziati' (Member Companies)",
+              "Growth from 100 to 200 target members indicates budget expansion",
+              "Strategic projects: 'Nuova Squadra Femminile', 'Sport per la comunit\u00e0', 'Pi\u00f9 inclusivit\u00e0'",
+              "Vendor attribution: S-mannix Digital Agency (potential procurement channel)"
+            ]
+          },
+          "patterns_found": [
+            "Consortium Governance Structure",
+            "Corporate Social Responsibility (CSR) Procurement",
+            "Strategic Growth Roadmap",
+            "Vendor Partnership Solicitation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 328,
+              "elapsed_seconds": 4.419826030731201
+            }
+          ],
+          "reasoning": "The content reveals 'Consorzio IN META', a dedicated consortium for corporate sponsorship and B2B networking related to Mogliano Rugby. It explicitly targets businesses ('Imprese') to support the club financially in exchange for visibility and networking. This is a direct procurement signal for B2B services, sponsorship contracts, and corporate partnership opportunities. The roadmap (2022-2026) indicates active scaling and investment phases."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:49:49.844353",
+          "domain_explored": "https://rugbysandona.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam Injection",
+            "Irrelevant Content (Gambling)",
+            "Compromised Website Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.166620969772339
+            }
+          ],
+          "reasoning": "The scraped content from rugbysandona.it is heavily compromised by SEO spam injection. The text is dominated by promotional articles for 'LeoVegas' (an online casino), which is irrelevant to the procurement analysis of Mogliano Rugby. This indicates either a hacked website, a parked domain, or a low-quality content farm. No legitimate procurement, governance, or technology stack signals were found for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:50:05.083580",
+          "domain_explored": "https://zebreparma.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Merchandising)",
+              "Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Procurement (Top/Silver/Bronze tiers)",
+              "Matchday Operations (Stadio Sergio Lanfranchi)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Content",
+            "Professional Sports Team Operations",
+            "Ticketing & Merchandising E-commerce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 269,
+              "elapsed_seconds": 10.290283203125
+            }
+          ],
+          "reasoning": "The scraped content is from Zebre Parma (zebreparma.it), a professional United Rugby Championship franchise, which is a distinct entity from the target, Mogliano Rugby. While the content reveals standard sports industry procurement signals (e.g., 'Acquista il biglietto', 'Merchandising', Sponsorship tiers), these are not attributable to Mogliano. The content serves as a competitor/landscape reference but does not advance the specific procurement intelligence for Mogliano Rugby."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:50:22.965703",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Content",
+            "Irrelevant Historical Data",
+            "UI/UX Feature Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1660,
+              "output_tokens": 166,
+              "elapsed_seconds": 14.226732969284058
+            }
+          ],
+          "reasoning": "The scraped content consists of generic interface text and example articles (e.g., Abraham Lincoln, Usain Bolt) from the Wikiwand platform. There is absolutely no mention of Mogliano Rugby, its procurement activities, technology stack, or governance structure. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:50:26.306033",
+          "domain_explored": "https://rocketreach.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 9153,
+      "total_output_tokens": 1454,
+      "estimated_cost_usd": 0.049269
+    },
+    "procurement_signals": [
+      "Consortium Governance Structure",
+      "Corporate Social Responsibility (CSR) Procurement",
+      "Strategic Growth Roadmap",
+      "Vendor Partnership Solicitation"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mogliano Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:50:26.308662"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281468",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:50.054699"
+}

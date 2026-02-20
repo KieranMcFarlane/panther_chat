@@ -1,0 +1,337 @@
+{
+  "entity_id": "a-league",
+  "entity_name": "A-League",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "aleagues.com.au",
+    "ultimatealeague.com",
+    "footballaustralia.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/view/club-licensing-bodies-at-football-australia-4362343183",
+      "https://au.linkedin.com/jobs/view/fifa-licensed-football-agent-football-scout-australia-at-quorum-sports-4168490144",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-football-australia-activity-7340649512853508096-60Qx",
+      "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "a-league",
+      "entity_name": "A-League",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.18
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/club-licensing-bodies-at-football-australia-4362343183",
+        "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-football-australia-activity-7340649512853508096-60Qx",
+        "https://ultimatealeague.com",
+        "https://footballaustralia.com.au",
+        "https://aleagues.com.au",
+        "https://au.linkedin.com/jobs/view/fifa-licensed-football-agent-football-scout-australia-at-quorum-sports-4168490144"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Club Licensing Compliance",
+        "Financial Auditing & Governance",
+        "Infrastructure Benchmarking",
+        "Legal & Regulatory Frameworks",
+        "Ticketing & Membership Operations",
+        "CRM & Sales Technology Stack",
+        "Premium Hospitality Sales",
+        "Sports Franchise Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "A-League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:07:12.342310",
+          "domain_explored": "https://aleagues.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Opta (Sports Data/Analytics)",
+              "Video Streaming Platforms (implied by 'Visit Site' functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of Opta data for 'Team of the Week' (Vendor Partnership)",
+              "Sponsored content modules (Liberty, Isuzu UTE) indicating active marketing contracts"
+            ]
+          },
+          "patterns_found": [
+            "Data Analytics Partnership",
+            "Sponsored Content Integration",
+            "Fan Engagement Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 257,
+              "elapsed_seconds": 3.8429150581359863
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing (news and scores), it reveals a specific technology vendor relationship. The explicit mention of 'Opta' as the provider for the 'Team of the Week' feature confirms an active contract for sports data analytics and content services. This indicates a procurement category for data licensing and analytics tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:07:27.601626",
+          "domain_explored": "https://ultimatealeague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Existing Venue Sponsorships: Kayo Stadium, GO Media Stadium, CommBank Stadium",
+              "Existing League Sponsorships: HBF Park, Coopers Stadium"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Naming Rights",
+            "Broadcast Infrastructure",
+            "Venue Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 205,
+              "elapsed_seconds": 11.037904977798462
+            }
+          ],
+          "reasoning": "The content is purely sports data (match results, standings, and schedules) for the 2025-26 season. While venue names (e.g., Kayo Stadium, CommBank Stadium) indicate existing sponsorship deals, there is no explicit information regarding procurement activities, technology stack, or new vendor partnerships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:07:35.087532",
+          "domain_explored": "https://footballaustralia.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Growing Football Fund (Grant Program)",
+              "CEO Appointment (Governance)",
+              "Official Appointments (Operational)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Naming Rights",
+            "Governance Operations",
+            "Merchandising E-commerce"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.373734951019287
+            }
+          ],
+          "reasoning": "The content is focused on operational news (match appointments), sports results (Futsalroos), and standard e-commerce (Jersey sales). While the 'Growing Football Fund' indicates financial activity, it is a grant program rather than a procurement signal for technology or services. No specific RFPs, technology stack details, or job postings were found."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:07:43.583767",
+          "domain_explored": "https://au.linkedin.com/jobs/view/club-licensing-bodies-at-football-australia-4362343183",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Auditing Systems",
+              "Compliance Management Platforms",
+              "Stadium Infrastructure Tech"
+            ],
+            "job_postings": [
+              "Members of FA First Instance Body (FIB)",
+              "Members of FA Appeals and Entry Control Body (A&ECB)"
+            ],
+            "procurement_indicators": [
+              "Mandatory Club Licensing Criteria (Financial, Infrastructure, Legal)",
+              "Requirement for clubs to settle liabilities and prove financial capability",
+              "Need for independent auditing and governance documentation",
+              "AFC Club Competition entry requirements driving technology/service upgrades"
+            ]
+          },
+          "patterns_found": [
+            "Club Licensing Compliance",
+            "Financial Auditing & Governance",
+            "Infrastructure Benchmarking",
+            "Legal & Regulatory Frameworks"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 394,
+              "elapsed_seconds": 4.920328140258789
+            }
+          ],
+          "reasoning": "This content provides strong evidence of a formalized procurement and compliance structure. The 'Club Licensing' framework explicitly mandates minimum standards for A-League clubs across five pillars: Sporting, Infrastructure, Personnel & Administration, Legal, and Financial. This creates a direct procurement signal: clubs *must* procure specific services, technologies, and facilities (e.g., financial auditing software, stadium infrastructure, administrative tools) to meet these 'Financial' and 'Infrastructure' criteria to remain eligible for the A-League."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:07:50.244789",
+          "domain_explored": "https://au.linkedin.com/jobs/view/fifa-licensed-football-agent-football-scout-australia-at-quorum-sports-4168490144",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "FIFA Licensed Football Agent/Football Scout"
+            ],
+            "procurement_indicators": [
+              "Contract Negotiation Services",
+              "Talent Acquisition (Players)"
+            ]
+          },
+          "patterns_found": [
+            "Player Transfer & Contract Negotiation",
+            "Talent Scouting Operations",
+            "Sports Agency Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.3503100872039795
+            }
+          ],
+          "reasoning": "While this job posting is from a third-party agency (Quorum Sports) rather than the A-League central organization, it explicitly confirms active procurement activity within the A-League ecosystem. The role involves 'negotiating contracts' and 'player transfers' for an 'ever-expanding roster of clients in the A-League'. This indicates a secondary market of procurement services (player acquisition) and validates the league's active operational status."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:08:08.185870",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-football-australia-activity-7340649512853508096-60Qx",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach \u2013 U17 Men\u2019s National Team"
+            ],
+            "procurement_indicators": [
+              "Investment in High-Performance Pathways",
+              "Compliance Requirements (AFC/FFA Licences)"
+            ]
+          },
+          "patterns_found": [
+            "Elite Technical Staff Recruitment",
+            "National Team Operations",
+            "Coaching Certification Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1682,
+              "output_tokens": 258,
+              "elapsed_seconds": 14.512480020523071
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a high-profile role (Head Coach - U17 Men's National Team) within the Football Australia ecosystem. While this is primarily an HR signal, it indicates active investment in the technical operations layer. Procurement relevance is derived from the operational requirements of national teams, which often necessitate vendor support for travel, training camps, and performance analysis software, though this specific post focuses on human capital."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:08:18.713223",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "HubSpot",
+              "Microsoft CRM",
+              "Ticketmaster",
+              "Archtics"
+            ],
+            "job_postings": [
+              "Account Executive - Ticketing & Membership (Auckland FC)"
+            ],
+            "procurement_indicators": [
+              "Requirement for CRM system proficiency",
+              "Implementation of ticketing software for new stadium operations",
+              "Procurement of premium hospitality packages and event suites",
+              "Infrastructure setup for debut A-League season"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing & Membership Operations",
+            "CRM & Sales Technology Stack",
+            "Premium Hospitality Sales",
+            "Sports Franchise Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1748,
+              "output_tokens": 336,
+              "elapsed_seconds": 5.336747884750366
+            }
+          ],
+          "reasoning": "The job posting for an Account Executive at Auckland FC (an A-League expansion club backed by Bill Foley) provides explicit evidence of the technology stack and operational requirements. It confirms the use of specific CRM systems (Salesforce, HubSpot, Microsoft CRM) and ticketing software (Ticketmaster, Archtics). It also signals active procurement for sales infrastructure and premium hospitality services to support the new club's debut season."
+        }
+      ],
+      "total_input_tokens": 10741,
+      "total_output_tokens": 1909,
+      "estimated_cost_usd": 0.060858
+    },
+    "procurement_signals": [
+      "Club Licensing Compliance",
+      "Financial Auditing & Governance",
+      "Infrastructure Benchmarking",
+      "Legal & Regulatory Frameworks",
+      "Ticketing & Membership Operations",
+      "CRM & Sales Technology Stack",
+      "Premium Hospitality Sales",
+      "Sports Franchise Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "A-League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:08:18.715205"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419464",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:12:51.767097"
+}

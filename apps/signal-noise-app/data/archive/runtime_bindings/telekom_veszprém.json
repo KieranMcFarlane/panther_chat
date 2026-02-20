@@ -1,0 +1,181 @@
+{
+  "entity_id": "telekom_veszpr\u00e9m",
+  "entity_name": "Telekom Veszpr\u00e9m",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "handballveszprem.hu",
+    "oneveszpremarena.hu",
+    "eurohandball.com",
+    "seha-liga.com",
+    "mkbvp.inweb.hu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "telekom_veszpr\u00e9m",
+      "entity_name": "Telekom Veszpr\u00e9m",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mkbvp.inweb.hu",
+        "https://eurohandball.com",
+        "https://handballveszprem.hu",
+        "https://oneveszpremarena.hu",
+        "https://seha-liga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Telekom Veszpr\u00e9m may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:35:12.678721",
+          "domain_explored": "https://handballveszprem.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership: Telekom Veszpr\u00e9m (implied entity connection) -> Veszpr\u00e9m Handball Team Zrt"
+            ]
+          },
+          "patterns_found": [
+            "Sports club domain (handballveszprem.hu)",
+            "Sponsorship naming rights (One Veszpr\u00e9m Ar\u00e9na, K&H Liga)",
+            "Fan engagement content (Match schedules, Webshop, Tickets)",
+            "TAO (Sports Support) references"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 267,
+              "elapsed_seconds": 5.771333932876587
+            }
+          ],
+          "reasoning": "The analyzed content belongs to 'Veszpr\u00e9m Handball Team Zrt' (a professional sports club), not 'Telekom Veszpr\u00e9m' (the telecommunications entity). While Telekom is likely a sponsor (indicated by the 'Telekom' name often associated with the club and the 'One Veszpr\u00e9m' arena naming), this specific page contains no procurement signals, technology stack information, or governance data relevant to Telekom's IT or business operations. It is strictly sports/fan-facing content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:35:30.533437",
+          "domain_explored": "https://oneveszpremarena.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue rental capabilities",
+              "Event equipment inventory (LED walls, sound systems)"
+            ]
+          },
+          "patterns_found": [
+            "Venue rental interface",
+            "B2C/B2B service request form",
+            "Event management terminology (Catering, VIP room, LED wall rental)",
+            "Hungarian language form fields"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 224,
+              "elapsed_seconds": 14.19136905670166
+            }
+          ],
+          "reasoning": "The content represents a venue booking form for 'One Veszpr\u00e9m Ar\u00e9na' (a sports/event arena). It lists rental options for spaces (Arena, Conference room, VIP room) and technical equipment (Sound, Lighting, LED walls). This is a service offering/rental interface, not a procurement signal or corporate technology stack indicator for Telekom Veszpr\u00e9m."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:35:37.076767",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism content",
+            "Tournament results (EHF EURO 2026)",
+            "Cookie consent walls",
+            "Generic federation navigation (Quick Links)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.2795088291168213
+            }
+          ],
+          "reasoning": "The content is entirely focused on European handball federation news, match results, and tournament schedules. There is no connection to Telekom Veszpr\u00e9m, corporate governance, or procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:35:39.878409",
+          "domain_explored": "https://seha-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:35:42.861550",
+          "domain_explored": "https://mkbvp.inweb.hu",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4271,
+      "total_output_tokens": 644,
+      "estimated_cost_usd": 0.022473
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Telekom Veszpr\u00e9m may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:35:42.862520"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.355079",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:57.116419"
+}

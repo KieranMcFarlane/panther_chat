@@ -1,0 +1,219 @@
+{
+  "entity_id": "cambodian_rugby_federation",
+  "entity_name": "Cambodian Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "file.irasia.com",
+    "assets.globalpartnership.org",
+    "creators.spotify.com",
+    "kengadaffi.blogspot.com",
+    "open.spotify.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/childfund-rugby?trk=public_jobs_topcard-org-name"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cambodian_rugby_federation",
+      "entity_name": "Cambodian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/company/childfund-rugby?trk=public_jobs_topcard-org-name",
+        "https://kengadaffi.blogspot.com",
+        "https://file.irasia.com",
+        "https://creators.spotify.com",
+        "https://open.spotify.com",
+        "https://assets.globalpartnership.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cambodian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:53:17.596709",
+          "domain_explored": "https://file.irasia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Document Hosting",
+            "Irrelevant Domain Context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 364,
+              "output_tokens": 185,
+              "elapsed_seconds": 5.122811794281006
+            }
+          ],
+          "reasoning": "The provided content is truncated to the first 4000 characters and originates from a generic file hosting domain (file.irasia.com) without specific text provided. Without the actual document content or a specific URL pointing to a Cambodian Rugby Federation document, it is impossible to identify procurement signals, technology stacks, or governance patterns. The analysis cannot proceed on a blank or generic placeholder."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:53:20.945117",
+          "domain_explored": "https://assets.globalpartnership.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:53:26.502580",
+          "domain_explored": "https://creators.spotify.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spotify for Creators",
+              "Spotify Partner Program"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Landing Page",
+            "B2C Creator Platform",
+            "Irrelevant Domain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.6675257682800293
+            }
+          ],
+          "reasoning": "The content is scraped from Spotify's public-facing creator marketing page. It promotes tools for podcasters (monetization, analytics, uploads) and is entirely unrelated to the Cambodian Rugby Federation or government/NGO procurement processes. There is no signal of organizational intent or technology investment relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:53:29.590983",
+          "domain_explored": "https://kengadaffi.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:53:37.067246",
+          "domain_explored": "https://open.spotify.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2C Music Streaming Interface",
+            "Entertainment Content Lists (Songs, Artists, Albums)",
+            "Standard UI Elements (Search, Library, Premium)",
+            "Irrelevant Domain Context (Consumer Media)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 186,
+              "elapsed_seconds": 4.5945329666137695
+            }
+          ],
+          "reasoning": "The scraped content represents the standard homepage of Spotify (open.spotify.com), displaying trending songs, popular artists, and featured charts. This is a consumer-facing entertainment platform with no relevance to the Cambodian Rugby Federation or B2B procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:53:48.937447",
+          "domain_explored": "https://uk.linkedin.com/company/childfund-rugby?trk=public_jobs_topcard-org-name",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Analytics (implied by 'turn evidence into influence')",
+              "CRM/Marketing Automation (implied by 'supporter engagement' and 'qualified leads')",
+              "Content Management Systems (implied by 'Digital and Communications strategy')"
+            ],
+            "job_postings": [
+              "Senior Digital and Communications Lead (Global/Remote)"
+            ],
+            "procurement_indicators": [
+              "Investment in digital strategy and communications infrastructure",
+              "Focus on 'commercial performance' alongside social impact",
+              "Need to measure and report on impact data ('Pass It Back Impact Lab')"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Model",
+            "Digital Transformation Hiring",
+            "Global Sport for Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 386,
+              "elapsed_seconds": 8.027660131454468
+            }
+          ],
+          "reasoning": "While this page is for 'ChildFund Rugby' and not the 'Cambodian Rugby Federation' directly, it represents a highly relevant strategic partner and potential funding channel operating in the same ecosystem. The 'Pass It Back' program is active in Asia, and the hiring of a Senior Digital and Communications Lead indicates a shift towards digital-first operations, data-driven impact measurement, and professionalized marketing\u2014functions that often require third-party tools and vendor support. This signals a potential pathway for procurement influence or shared technology adoption."
+        }
+      ],
+      "total_input_tokens": 4911,
+      "total_output_tokens": 951,
+      "estimated_cost_usd": 0.028998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cambodian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:53:48.938249"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.288705",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:49.567916"
+}

@@ -1,0 +1,146 @@
+{
+  "entity_id": "international_weightlifting_federation_(iwf)",
+  "entity_name": "International Weightlifting Federation (IWF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "forde2025.no",
+    "weightliftingevents.gr",
+    "sportanddev.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_weightlifting_federation_(iwf)",
+      "entity_name": "International Weightlifting Federation (IWF)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://sportanddev.org",
+        "https://forde2025.no",
+        "https://weightliftingevents.gr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Event Management & Ticketing Infrastructure",
+        "Live Streaming & Digital Broadcasting",
+        "Local Organizing Committee (LOC) Procurement"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Weightlifting Federation (IWF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:43:19.531616",
+          "domain_explored": "https://forde2025.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms (implied by 'Kj\u00f8p billettar')",
+              "Live Streaming Infrastructure (implied by 'Live-stream' link)",
+              "Event Management Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Upcoming Major Event: IWF World Championships 2025 (F\u00f8rde)",
+              "Requirement for Ticket Sales Systems",
+              "Requirement for Digital Broadcasting/Streaming Services",
+              "Cultural Program Procurement (Event production)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Ticketing Infrastructure",
+            "Live Streaming & Digital Broadcasting",
+            "Local Organizing Committee (LOC) Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 580,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.214547157287598
+            }
+          ],
+          "reasoning": "The content confirms the 'IWF VM i vektl\u00f8fting' (World Weightlifting Championships) scheduled for October 2025 in F\u00f8rde, Norway. The presence of specific navigation links for 'Kj\u00f8p billettar' (Ticketing), 'Live-stream', and 'Kulturprogram' indicates active procurement or deployment of event management software, streaming platforms, and cultural production services. This represents a direct procurement signal for the IWF ecosystem via the Local Organizing Committee."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:43:22.421536",
+          "domain_explored": "https://weightliftingevents.gr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:43:28.876758",
+          "domain_explored": "https://sportanddev.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General sector listings (unrelated to IWF specific procurement)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sector News Aggregation",
+            "Educational Platform (MOOCs)",
+            "Third-Party Job Boards"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 227,
+              "elapsed_seconds": 2.995429277420044
+            }
+          ],
+          "reasoning": "The content analyzed is from 'sportanddev.org', a platform for 'Sport for Development' (SDP). While it lists 'Jobs and Opportunities', these are community-submitted listings for the broader development sector (e.g., NGOs, Commonwealth), not specific procurement signals or tenders from the International Weightlifting Federation (IWF). The site acts as a news aggregator and educational hub, not a source for IWF's specific technology procurement or governance patterns."
+        }
+      ],
+      "total_input_tokens": 2041,
+      "total_output_tokens": 558,
+      "estimated_cost_usd": 0.014493
+    },
+    "procurement_signals": [
+      "Event Management & Ticketing Infrastructure",
+      "Live Streaming & Digital Broadcasting",
+      "Local Organizing Committee (LOC) Procurement"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Weightlifting Federation (IWF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:43:28.878777"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.464212",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:12.342468"
+}

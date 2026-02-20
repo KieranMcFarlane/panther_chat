@@ -1,0 +1,333 @@
+{
+  "entity_id": "world_triathlon",
+  "entity_name": "World Triathlon",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "triathlon.org",
+    "worldtriathlonstore.com",
+    "triathlonlive.tv",
+    "ironman.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/global-partnership-services-internship-at-the-ironman-group-4345274927",
+      "https://www.linkedin.com/jobs/view/staff-accountant-at-the-ironman-group-4363531588",
+      "https://www.linkedin.com/jobs/view/vip-services-operations-internship-at-the-ironman-group-4344155339",
+      "https://ie.linkedin.com/jobs/view/operations-executive-irl-uk-m-f-d-at-the-ironman-group-2376165369?trk=public_post_main-feed-card_feed-job-posting-content"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_triathlon",
+      "entity_name": "World Triathlon",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/global-partnership-services-internship-at-the-ironman-group-4345274927",
+        "https://ie.linkedin.com/jobs/view/operations-executive-irl-uk-m-f-d-at-the-ironman-group-2376165369?trk=public_post_main-feed-card_feed-job-posting-content",
+        "https://ironman.com",
+        "https://www.linkedin.com/jobs/view/vip-services-operations-internship-at-the-ironman-group-4344155339",
+        "https://triathlonlive.tv",
+        "https://triathlon.org",
+        "https://worldtriathlonstore.com",
+        "https://www.linkedin.com/jobs/view/staff-accountant-at-the-ironman-group-4363531588"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Authority",
+        "Event Logistics Sourcing",
+        "Vendor Management",
+        "Budgetary Responsibility",
+        "Local Stakeholder Liaison"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Triathlon may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:10:01.699154",
+          "domain_explored": "https://triathlon.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Registration Management (Implicit): Mention of 'Registration... is now open' for the 2026 Winter World Championships suggests the use of an event registration platform, though no specific vendor is named."
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "News Aggregation",
+            "Event Promotion"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.9369399547576904
+            }
+          ],
+          "reasoning": "The provided content is a repetitive list of news headlines and blog posts (e.g., 'Monday Morning Mix', athlete stories) with no underlying technical infrastructure, job postings, or strategic documentation visible. The text appears to be a scraped list of article links rather than substantive content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:10:10.342201",
+          "domain_explored": "https://worldtriathlonstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (E-commerce platform)",
+              "Omius.io (Vendor site)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Apparel manufacturing procurement (WTCF Wollongong, Colorwave collections)",
+              "Event logistics/Onsite retail management (WTCS events)",
+              "Vendor partnership for cooling technology (Omius)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Merchandise Licensing",
+            "Event-based Logistics",
+            "Vendor Partnership (Omius)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 288,
+              "elapsed_seconds": 5.251694202423096
+            }
+          ],
+          "reasoning": "The content confirms World Triathlon utilizes a dedicated e-commerce platform (Shopify) for merchandise sales, indicating a procurement channel for retail operations. The presence of specific vendor links (Omius) and event-specific collections (Wollongong 2025) reveals a supply chain for apparel manufacturing and event logistics. While this is retail-focused rather than corporate procurement, it establishes active vendor relationships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:10:14.243421",
+          "domain_explored": "https://triathlonlive.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:10:18.259072",
+          "domain_explored": "https://ironman.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:10:26.319776",
+          "domain_explored": "https://www.linkedin.com/jobs/view/global-partnership-services-internship-at-the-ironman-group-4345274927",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Partnership Automation Tools (implied need)",
+              "CRM Systems (Salesforce/HubSpot potential)",
+              "Digital Asset Management (for event recaps/benefits)"
+            ],
+            "job_postings": [
+              "Global Partnership Services Internship (Tampa, FL)"
+            ],
+            "procurement_indicators": [
+              "Manual execution of partner obligations (inefficiency signal)",
+              "Cross-departmental coordination requirements",
+              "Contract management workflows"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Fulfillment Operations",
+            "Contract Management Support",
+            "Partnership Services Structure",
+            "Event Logistics Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 325,
+              "elapsed_seconds": 3.462999105453491
+            }
+          ],
+          "reasoning": "While this is a job posting for an internship rather than a direct procurement role, it reveals the operational structure of The IRONMAN Group's 'Global Partnership Services' department. The description highlights the need for tools to manage 'contractual obligations,' 'sponsorship benefits,' and 'event recaps,' indicating a potential procurement need for Partnership Automation or CRM software to streamline these manual processes."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:11:04.707542",
+          "domain_explored": "https://www.linkedin.com/jobs/view/staff-accountant-at-the-ironman-group-4363531588",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Excel (Pivot tables, lookups, formulas)",
+              "General Ledger Software (Implied)"
+            ],
+            "job_postings": [
+              "Staff Accountant"
+            ],
+            "procurement_indicators": [
+              "CapEx (Capital Expenditure) wage recording",
+              "Accruals for unbilled vendor services (Legal, Marketing, Health Insurance)",
+              "Bank reconciliation and cash movement tracking"
+            ]
+          },
+          "patterns_found": [
+            "Financial Operations Structure",
+            "Capital Expenditure (CapEx) Tracking",
+            "Vendor Accruals (Legal & Marketing)",
+            "General Ledger Maintenance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 291,
+              "elapsed_seconds": 34.10024881362915
+            }
+          ],
+          "reasoning": "While this is a finance role rather than a direct procurement role, the responsibilities explicitly mention tracking 'monthly capex wages' and accruing 'legal and marketing expenses.' This indicates a structured environment where vendor spend and capital investments are tracked, which supports the procurement hypothesis regarding vendor management and budget cycles."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:11:11.515184",
+          "domain_explored": "https://www.linkedin.com/jobs/view/vip-services-operations-internship-at-the-ironman-group-4344155339",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Access Control / Credentialing Systems",
+              "Survey/Feedback Platforms",
+              "Social Media Management Tools",
+              "CRM (for VIP inbox management)"
+            ],
+            "job_postings": [
+              "VIP Services / Operations Internship (The IRONMAN Group / World Triathlon Corporation)"
+            ],
+            "procurement_indicators": [
+              "Procurement of physical access credentials (badges, passes, RFID)",
+              "Procurement of VIP hospitality goods and services",
+              "Software tools for survey management and feedback analysis",
+              "Marketing/Design procurement for VIP Informational Guides"
+            ]
+          },
+          "patterns_found": [
+            "VIP Experience Management",
+            "Event Access Control Systems",
+            "Customer Feedback Loops",
+            "Digital Communication Channels"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 364,
+              "elapsed_seconds": 3.1725361347198486
+            }
+          ],
+          "reasoning": "While this is an internship posting (lower immediate commercial value), it reveals specific operational workflows that require procurement support. The role explicitly mentions 'creating and submitting access credentials' (indicating ID/Access Control software or hardware needs) and managing 'VIP Informational Guides' (Digital Asset Management or Print procurement). It also highlights the vendor ecosystem for 'VIP Experiences' (hospitality vendors)."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:11:18.460132",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/operations-executive-irl-uk-m-f-d-at-the-ironman-group-2376165369?trk=public_post_main-feed-card_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Executive IRL / UK (m/f/d)"
+            ],
+            "procurement_indicators": [
+              "Supplier sourcing and management",
+              "Logistics management (medical, equipment, race supplies)",
+              "Budget management for key event areas",
+              "Venue management (start lines, finish lines, compounds)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Authority",
+            "Event Logistics Sourcing",
+            "Vendor Management",
+            "Budgetary Responsibility",
+            "Local Stakeholder Liaison"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1749,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.5558829307556152
+            }
+          ],
+          "reasoning": "The job description explicitly lists 'Supplier sourcing and management' and 'Budget management' as key responsibilities. This confirms direct procurement activity within the operations function for the Ireland/UK region, specifically for event logistics, equipment, and services."
+        }
+      ],
+      "total_input_tokens": 9294,
+      "total_output_tokens": 1736,
+      "estimated_cost_usd": 0.053922
+    },
+    "procurement_signals": [
+      "Direct Procurement Authority",
+      "Event Logistics Sourcing",
+      "Vendor Management",
+      "Budgetary Responsibility",
+      "Local Stakeholder Liaison"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Triathlon may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:11:18.460918"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463893",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:13.428417"
+}

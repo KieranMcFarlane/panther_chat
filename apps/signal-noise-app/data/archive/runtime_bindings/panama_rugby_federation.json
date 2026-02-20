@@ -1,0 +1,233 @@
+{
+  "entity_id": "panama_rugby_federation",
+  "entity_name": "Panama Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "uprpanama.com",
+    "grokipedia.com",
+    "asiarugby.com",
+    "americasrugbynews.com",
+    "acodepa.org",
+    "panamsports.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://pa.linkedin.com/jobs/view/hr-manager-6-months-ftc-at-fanatics-4010869960"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "panama_rugby_federation",
+      "entity_name": "Panama Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://pa.linkedin.com/jobs/view/hr-manager-6-months-ftc-at-fanatics-4010869960",
+        "https://uprpanama.com",
+        "https://grokipedia.com",
+        "https://asiarugby.com",
+        "https://acodepa.org",
+        "https://panamsports.org",
+        "https://americasrugbynews.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Panama Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:07:34.391860",
+          "domain_explored": "https://uprpanama.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Operational Event Reporting",
+            "Grassroots Sports Activity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 492,
+              "output_tokens": 167,
+              "elapsed_seconds": 1.5727081298828125
+            }
+          ],
+          "reasoning": "The content is a standard sports news update regarding a training day in Capira involving local teams (Vikingos, Titanes, Guerreros). It focuses on athletic preparation and league logistics. There are no mentions of technology acquisition, job vacancies, organizational restructuring, or vendor partnerships that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:07:37.058779",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:07:39.681482",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:07:46.506408",
+          "domain_explored": "https://americasrugbynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Event Scheduling",
+            "Regional Rugby News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 712,
+              "output_tokens": 151,
+              "elapsed_seconds": 2.452272891998291
+            }
+          ],
+          "reasoning": "The content analyzed is a sports news article regarding Argentina's 2026 rugby fixtures. It contains no information regarding the Panama Rugby Federation, its internal operations, technology stack, or procurement activities. The entity is irrelevant to the target subject."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:09:21.573336",
+          "domain_explored": "https://acodepa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Sports Governance",
+            "Olympic Movement Affiliation",
+            "Multi-Sport Coordination"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 217,
+              "elapsed_seconds": 91.44669103622437
+            }
+          ],
+          "reasoning": "The scraped content represents ACODEPA (Asociaci\u00f3n de Confederaciones Deportivas Panamericanas), a regional governing body for Pan-American sports confederations. While the Panama Rugby Federation likely falls under this umbrella (via Sudam\u00e9rica Rugby or World Rugby), this page serves as a high-level directory and governance overview. It contains no specific procurement signals, vendor solicitations, or technology stack details related to the Panama Rugby Federation's specific operations or purchasing needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:09:54.371374",
+          "domain_explored": "https://panamsports.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:10:02.483524",
+          "domain_explored": "https://pa.linkedin.com/jobs/view/hr-manager-6-months-ftc-at-fanatics-4010869960",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Oracle HRIS",
+              "ADP Payroll"
+            ],
+            "job_postings": [
+              {
+                "title": "HR Manager (6 months FTC)",
+                "entity": "Fanatics",
+                "location": "Panama",
+                "relevance": "False Positive - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": [
+              "Implementation of new HR and Payroll systems",
+              "Compensation and benefits analysis for multiple territories"
+            ]
+          },
+          "patterns_found": [
+            "Global HR Operations",
+            "HRIS Implementation (Oracle/ADP)",
+            "Multi-territory Compensation Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 309,
+              "elapsed_seconds": 4.301307201385498
+            }
+          ],
+          "reasoning": "While the content contains strong procurement signals regarding HR technology (Oracle, ADP) and regional compensation strategies, the hiring entity is 'Fanatics', a global merchandise company, not the 'Panama Rugby Federation'. The geographic match (Panama) is correct, but the entity match is incorrect. This represents a false positive in the search results and does not advance the intelligence gathering for the target federation."
+        }
+      ],
+      "total_input_tokens": 4303,
+      "total_output_tokens": 844,
+      "estimated_cost_usd": 0.025569
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Panama Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:10:02.486273"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291310",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:27.731788"
+}

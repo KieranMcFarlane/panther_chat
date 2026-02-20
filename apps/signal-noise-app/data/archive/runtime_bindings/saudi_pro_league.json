@@ -1,0 +1,206 @@
+{
+  "entity_id": "saudi_pro_league",
+  "entity_name": "Saudi Pro League",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "apps.apple.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/alahli-club-company/jobs/",
+      "https://ie.linkedin.com/jobs/view/technical-success-manager-saudi-pro-league-spl-at-stats-perform-4212359207"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "saudi_pro_league",
+      "entity_name": "Saudi Pro League",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/company/alahli-club-company/jobs/",
+        "https://ie.linkedin.com/jobs/view/technical-success-manager-saudi-pro-league-spl-at-stats-perform-4212359207",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Vendor Partnership (Stats Perform)",
+        "Performance Analysis Software Procurement",
+        "Technical Service Delivery & Training",
+        "Data-Driven Football Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Saudi Pro League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:37:06.908747",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer App Store Content",
+            "Gaming and Entertainment Marketing",
+            "General Mobile Trends"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.7889580726623535
+            }
+          ],
+          "reasoning": "The scraped content consists of generic Apple App Store editorial listings (games, apps, and trending items). There is absolutely no mention of the Saudi Pro League, its vendors, or its internal business operations. This data is irrelevant to the procurement intelligence objective."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:37:13.771968",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Mobile Gaming Trends",
+            "General App Store Entertainment Content",
+            "Global Digital Marketing Campaigns"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.1380279064178467
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Google Play Store homepage and app listings. It consists of consumer-facing games (Candy Crush, PUBG, etc.), entertainment apps, and general digital marketing promotions. There is no connection to the Saudi Pro League's internal operations, technology procurement, or business governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:37:20.255069",
+          "domain_explored": "https://www.linkedin.com/company/alahli-club-company/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sports Nutritionist Trainee - Al-Ahli Club Company (Jeddah)"
+            ],
+            "procurement_indicators": [
+              "Investment in Academy/Player Performance Infrastructure",
+              "Requirement for Nutritional Supplements and Dietary Planning Services"
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Performance Hiring",
+            "Specialized Nutritional Support",
+            "Academy/Trainee Development Programs",
+            "Jeddah Regional Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.2782599925994873
+            }
+          ],
+          "reasoning": "While the target entity is the Saudi Pro League (SPL), the scraped content is from Al-Ahli Club Company (an SPL participant). The listing for a 'Sports Nutritionist Trainee' indicates active procurement in the category of sports performance services and nutritional supplies. This reflects the broader ecosystem's investment in player development, which is relevant to SPL intelligence, albeit indirect."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:37:29.333011",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/technical-success-manager-saudi-pro-league-spl-at-stats-perform-4212359207",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Stats Perform Team Performance Software",
+              "Data Analytics & Reporting Tools",
+              "APIs and Data Feeds",
+              "AI and Machine Learning Platforms"
+            ],
+            "job_postings": [
+              "Technical Success Manager - Saudi Pro League (SPL) at Stats Perform"
+            ],
+            "procurement_indicators": [
+              "Strategic Customer Management: Dedicated 'Technical Success Manager' assigned to SPL.",
+              "Software Licensing: Confirmed use of Stats Perform products by SPL Football Development Dept.",
+              "Service Level Agreement (SLA): Requirements for time-critical data reports and post-game analysis.",
+              "Training & Enablement: Mandate for training SPL staff and club coaches on procured software.",
+              "Vendor Location: Strategic partnership involves travel to Riyadh HQ."
+            ]
+          },
+          "patterns_found": [
+            "Strategic Vendor Partnership (Stats Perform)",
+            "Performance Analysis Software Procurement",
+            "Technical Service Delivery & Training",
+            "Data-Driven Football Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 414,
+              "elapsed_seconds": 5.662301063537598
+            }
+          ],
+          "reasoning": "This content provides direct evidence of a major strategic procurement contract between the Saudi Pro League (SPL) and Stats Perform. The job description confirms the SPL is licensing 'Team Performance software suites' and requires dedicated technical support for their Football Development Department and club analysts. This signals a mature procurement category for sports performance data and analytics."
+        }
+      ],
+      "total_input_tokens": 5779,
+      "total_output_tokens": 1015,
+      "estimated_cost_usd": 0.032562
+    },
+    "procurement_signals": [
+      "Strategic Vendor Partnership (Stats Perform)",
+      "Performance Analysis Software Procurement",
+      "Technical Service Delivery & Training",
+      "Data-Driven Football Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Saudi Pro League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:37:29.333656"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419225",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:36.099057"
+}

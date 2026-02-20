@@ -1,0 +1,290 @@
+{
+  "entity_id": "rhein-neckar_l\u00f6wen",
+  "entity_name": "Rhein-Neckar L\u00f6wen",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "rhein-neckar-loewen.de",
+    "die-jungloewen.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/mitarbeiter-in-m-w-d-f%C3%BCr-vertrieb-und-sponsoring-at-rhein-neckar-l%C3%B6wen-3738330453",
+      "https://de.linkedin.com/jobs/view/content-creator-m-w-d-at-rhein-neckar-l%C3%B6wen-3791929846",
+      "https://de.linkedin.com/posts/rnloewen_rheinneckarl%C3%B6wen-jobs-contentcreator-activity-7371452378614759424-1Hiy"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rhein-neckar_l\u00f6wen",
+      "entity_name": "Rhein-Neckar L\u00f6wen",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.22
+      ],
+      "explored_domains": [
+        "https://de.linkedin.com/jobs/view/content-creator-m-w-d-at-rhein-neckar-l%C3%B6wen-3791929846",
+        "https://de.linkedin.com/posts/rnloewen_rheinneckarl%C3%B6wen-jobs-contentcreator-activity-7371452378614759424-1Hiy",
+        "https://rhein-neckar-loewen.de",
+        "https://de.linkedin.com/jobs/view/mitarbeiter-in-m-w-d-f%C3%BCr-vertrieb-und-sponsoring-at-rhein-neckar-l%C3%B6wen-3738330453",
+        "https://die-jungloewen.de"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Sales Force Expansion",
+        "Sponsorship Portfolio Management",
+        "Market Analysis Requirement",
+        "Reporting & Controlling Tools",
+        "Social Media Strategy Execution",
+        "Adobe Creative Cloud Requirement",
+        "External Vendor Coordination",
+        "Analytics & KPI Monitoring",
+        "Live Production Infrastructure",
+        "In-house Content Production Expansion",
+        "Social Media Marketing Investment",
+        "Recruitment Funnel Usage",
+        "Direct Hiring Contact (jobs@rhein-neckar-loewen.de)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rhein-Neckar L\u00f6wen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:31:59.262390",
+          "domain_explored": "https://rhein-neckar-loewen.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SAP Arena (Venue Infrastructure)",
+              "Google reCAPTCHA (Security)",
+              "Custom Ticketing Shop (tickets.rhein-neckar-loewen.de)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active ticketing operations implies a contract with a ticketing provider.",
+              "Use of Google services implies a cloud/infrastructure agreement.",
+              "Newsletter signup implies usage of a CRM or Email Marketing Tool (specific tool not visible in snippet, but functionality is active)."
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage",
+            "Google Infrastructure Integration",
+            "CRM/Marketing Automation (Newsletter)",
+            "Venue Management (SAP Arena)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 306,
+              "elapsed_seconds": 5.1803669929504395
+            }
+          ],
+          "reasoning": "The content confirms the active use of specific third-party SaaS platforms (Ticketing, Google reCAPTCHA) and infrastructure (SAP Arena). While this does not indicate *new* procurement, it validates the technology stack and identifies existing vendor relationships that are subject to renewal or lifecycle management."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:32:10.380149",
+          "domain_explored": "https://die-jungloewen.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Portal (Custom or 3rd party host)",
+              "Instagram Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Jugendzertifikat 2026 (Compliance/Service procurement for youth standards)",
+              "Video production equipment/software for highlights and interviews"
+            ]
+          },
+          "patterns_found": [
+            "Video Content Management",
+            "Social Media Integration (Instagram)",
+            "Youth Development Certification"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.6701009273529053
+            }
+          ],
+          "reasoning": "The content is scraped from the youth academy (Jungl\u00f6wen) sub-site. While it confirms the organization's investment in youth development (Jugendzertifikat 2026) and content production (Videoportal, Interviews), it does not reveal enterprise-level procurement needs. The presence of a video portal indicates a need for video hosting/streaming infrastructure, but this is likely a consumer/SMB solution rather than a major procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:32:30.557613",
+          "domain_explored": "https://de.linkedin.com/jobs/view/mitarbeiter-in-m-w-d-f%C3%BCr-vertrieb-und-sponsoring-at-rhein-neckar-l%C3%B6wen-3738330453",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Implied by Reporting requirements)",
+              "Sales Automation Tools",
+              "Market Analysis Software"
+            ],
+            "job_postings": [
+              "Mitarbeiter*in (m/w/d) f\u00fcr Vertrieb und Sponsoring (Full-time, Mannheim)"
+            ],
+            "procurement_indicators": [
+              "Headcount Growth in Sales",
+              "Budget for 'Eigenvermarktung' (In-house marketing)",
+              "Need for Market/Industry Analysis tools",
+              "Hospitality and Event Management Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Sales Force Expansion",
+            "Sponsorship Portfolio Management",
+            "Market Analysis Requirement",
+            "Reporting & Controlling Tools"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 312,
+              "elapsed_seconds": 14.819334745407104
+            }
+          ],
+          "reasoning": "The job posting for 'Mitarbeiter*in f\u00fcr Vertrieb und Sponsoring' is a direct procurement signal indicating active investment in sales capabilities. The requirement for 'Reporting and Controlling' suggests a need for CRM or sales analytics tools to support the new hire and the 'Konzeptionelle Vorbereitung' implies potential needs for market research data or business intelligence tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:32:39.152412",
+          "domain_explored": "https://de.linkedin.com/jobs/view/content-creator-m-w-d-at-rhein-neckar-l%C3%B6wen-3791929846",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud (Photoshop, Premiere, etc.)",
+              "Social Media Platforms (Instagram, TikTok implied)",
+              "Analytics/Monitoring Tools"
+            ],
+            "job_postings": [
+              "Content Creator (m/w/d) - Social Media Focus"
+            ],
+            "procurement_indicators": [
+              "Coordination of external service providers (Vendor Management)",
+              "Software licensing for creative suites",
+              "Potential procurement of analytics/dashboard tools"
+            ]
+          },
+          "patterns_found": [
+            "Social Media Strategy Execution",
+            "Adobe Creative Cloud Requirement",
+            "External Vendor Coordination",
+            "Analytics & KPI Monitoring",
+            "Live Production Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 340,
+              "elapsed_seconds": 3.662419080734253
+            }
+          ],
+          "reasoning": "The job posting for a Content Creator explicitly confirms the organization's investment in digital brand infrastructure. It reveals a dependency on specific software (Adobe Creative Cloud) and a workflow involving the coordination of external service providers (Dienstleister), which is a direct procurement signal. The requirement for analytics and KPI monitoring suggests the use of social media management tools (e.g., Swix, Hootsuite) or native analytics platforms."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:33:13.154263",
+          "domain_explored": "https://de.linkedin.com/posts/rnloewen_rheinneckarl%C3%B6wen-jobs-contentcreator-activity-7371452378614759424-1Hiy",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiting / Jobs",
+              "Social Media Platforms (implied: Instagram, Facebook/X, LinkedIn)",
+              "Content Creation Tools (implied: Video Editing, Graphic Design)"
+            ],
+            "job_postings": [
+              {
+                "title": "Content Creator (m/w/d) f\u00fcr Text, Bild & Video",
+                "status": "Active",
+                "contact": "jobs@rhein-neckar-loewen.de",
+                "focus": "Storytelling, Photos, Videos, Social Media Formats"
+              }
+            ],
+            "procurement_indicators": [
+              "Headcount Expansion (Marketing/Media)",
+              "Internal Resource Development",
+              "Employer Branding Investment"
+            ]
+          },
+          "patterns_found": [
+            "In-house Content Production Expansion",
+            "Social Media Marketing Investment",
+            "Recruitment Funnel Usage",
+            "Direct Hiring Contact (jobs@rhein-neckar-loewen.de)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1632,
+              "output_tokens": 399,
+              "elapsed_seconds": 24.943377017974854
+            }
+          ],
+          "reasoning": "This LinkedIn post confirms the active recruitment for a Content Creator role, reinforcing the signal identified in Iteration 4. It highlights a strategic shift towards building internal capacity for multimedia (Text, Image, Video) and social media formats. The use of a dedicated recruitment email address and the call for network sharing indicates an active hiring phase, which is a direct procurement signal for human capital and likely associated software tools (Adobe Creative Cloud, Social Media Management tools)."
+        }
+      ],
+      "total_input_tokens": 7457,
+      "total_output_tokens": 1629,
+      "estimated_cost_usd": 0.046806
+    },
+    "procurement_signals": [
+      "Sales Force Expansion",
+      "Sponsorship Portfolio Management",
+      "Market Analysis Requirement",
+      "Reporting & Controlling Tools",
+      "Social Media Strategy Execution",
+      "Adobe Creative Cloud Requirement",
+      "External Vendor Coordination",
+      "Analytics & KPI Monitoring",
+      "Live Production Infrastructure",
+      "In-house Content Production Expansion",
+      "Social Media Marketing Investment",
+      "Recruitment Funnel Usage",
+      "Direct Hiring Contact (jobs@rhein-neckar-loewen.de)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rhein-Neckar L\u00f6wen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:33:13.155024"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349147",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:08.224227"
+}

@@ -1,0 +1,344 @@
+{
+  "entity_id": "paris\u0096nice",
+  "entity_name": "Paris\u0096Nice",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "paris-nice.fr",
+    "cyclingnews.com",
+    "sporeo-shop.com",
+    "procyclingstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?currentJobId=2978870660&geoId=105015875&keywords=business%20development&location=France",
+      "https://www.linkedin.com/jobs/view/bi-developer-supply-analytics-bangkok-based-relocation-provided-at-agoda-4334622051",
+      "https://mt.linkedin.com/jobs/view/associate-director-director-performance-marketing-at-agoda-4245945701",
+      "https://sg.linkedin.com/jobs/view/specialist-event-marketing-bangkok-based-relocation-provided-at-agoda-4299768337",
+      "https://www.linkedin.com/jobs/marketing-specialist-jobs/?currentJobId=3484472440&originalSubdomain=id",
+      "https://ge.linkedin.com/jobs/view/director-of-marketing-innovation-and-strategy-%E2%80%93-bangkok-based-relocation-provided-at-agoda-4043185116"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris\u0096nice",
+      "entity_name": "Paris\u0096Nice",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sporeo-shop.com",
+        "https://sg.linkedin.com/jobs/view/specialist-event-marketing-bangkok-based-relocation-provided-at-agoda-4299768337",
+        "https://paris-nice.fr",
+        "https://www.linkedin.com/jobs/search/?currentJobId=2978870660&geoId=105015875&keywords=business%20development&location=France",
+        "https://www.linkedin.com/jobs/view/bi-developer-supply-analytics-bangkok-based-relocation-provided-at-agoda-4334622051",
+        "https://procyclingstats.com",
+        "https://mt.linkedin.com/jobs/view/associate-director-director-performance-marketing-at-agoda-4245945701",
+        "https://www.linkedin.com/jobs/marketing-specialist-jobs/?currentJobId=3484472440&originalSubdomain=id",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris\u0096Nice may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:13:13.357410",
+          "domain_explored": "https://paris-nice.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Hosting/Streaming)",
+              "Timeto (Event Management/Registration Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement: Shift to 'Riviera stadium' for 2026 finale due to municipal elections",
+              "Media Rights: Outsourced video delivery to Dailymotion",
+              "Event Tech: Third-party platform (Timeto) used for 'Paris-Nice Challenge' logistics"
+            ]
+          },
+          "patterns_found": [
+            "Digital Media Outsourcing",
+            "Event Operations Partnerships",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 308,
+              "elapsed_seconds": 3.484683036804199
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing (race results, routes), it reveals specific vendor dependencies used for digital operations. The use of Dailymotion for video hosting and Timeto for event management (challenge routes) indicates active procurement or partnership contracts in the digital media and event tech space. Additionally, the mention of 'Riviera stadium' and 'municipal elections' implies logistical and venue procurement activities for the 2026 edition."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:13:18.526384",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Coverage",
+            "Race Results Reporting",
+            "Equipment Technology Journalism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.197556972503662
+            }
+          ],
+          "reasoning": "The content provided is a list of general cycling news headlines and articles from Cyclingnews.com regarding race results (Cyclo-cross World Championships, Cadel Evans Great Ocean Road Race) and general rider/equipment news. There is no mention of the entity 'Paris\u2013Nice', its organizers, or any specific procurement activities, job postings, or organizational governance related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:13:25.034063",
+          "domain_explored": "https://sporeo-shop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Santini (Apparel manufacturing for Paris-Roubaix)",
+              "Vendor: Sporeo (Merchandise distribution/Retail partner)"
+            ]
+          },
+          "patterns_found": [
+            "Merchandise Retail Operations",
+            "E-commerce Product Listings",
+            "Third-Party Vendor Ecosystem (Santini)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 270,
+              "elapsed_seconds": 2.979017972946167
+            }
+          ],
+          "reasoning": "The content analyzed is from 'sporeo-shop.com', a third-party online retailer. While it lists merchandise for events organized by the same parent company as Paris-Nice (e.g., Tour de France, Paris-Roubaix), it contains no specific signals regarding Paris-Nice's direct procurement activities, technology stack, or governance. The mention of 'Santini' confirms a vendor relationship for apparel, but this is a known category (Event Operations) and does not provide new intelligence on *Paris-Nice's* specific procurement intent or decision-making structure."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:13:27.838085",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:13:33.838541",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=2978870660&geoId=105015875&keywords=business%20development&location=France",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Unrelated Industry Listings (TikTok, PSG)",
+            "Login-Gated Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.179969072341919
+            }
+          ],
+          "reasoning": "The scraped content represents a generic search results page for 'Business Development' jobs in France, not specific content related to the entity 'Paris-Nice'. The visible listings (TikTok, Paris Saint-Germain) are unrelated to the target entity. The content is largely repetitive login prompts and UI elements, offering no insight into Paris-Nice's procurement, governance, or technology stack."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:13:40.505426",
+          "domain_explored": "https://www.linkedin.com/jobs/view/bi-developer-supply-analytics-bangkok-based-relocation-provided-at-agoda-4334622051",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Warehousing",
+              "Business Intelligence (BI)"
+            ],
+            "job_postings": [
+              "BI Developer (Supply Analytics) - Agoda"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity (Agoda/Booking Holdings)",
+            "Geographic Mismatch (Bangkok, Thailand)",
+            "Functional Mismatch (Hospitality/Travel Tech vs. Sports Event Mgmt)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1636,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.1331570148468018
+            }
+          ],
+          "reasoning": "The content is a job posting for Agoda, a subsidiary of Booking Holdings operating in the online travel agency sector. The role is based in Bangkok, Thailand, and focuses on 'Supply Analytics' for hotel/accommodation partners. There is no connection to the target entity 'Paris\u2013Nice' (a French cycling race organizer) or the sports event management industry. This represents a false positive in search results."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:13:46.331544",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/associate-director-director-performance-marketing-at-agoda-4245945701",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity (Agoda/Booking Holdings)",
+            "Geographic Mismatch (Malta)",
+            "Functional Mismatch (Travel/Tech vs. Sports Event Mgmt)",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1721,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.280729055404663
+            }
+          ],
+          "reasoning": "The content is a job posting for Agoda, a subsidiary of Booking Holdings operating in the online travel industry. The role is based in Malta and focuses on pricing strategy and performance marketing for travel accommodations. There is no connection to the entity 'Paris-Nice' (a French cycling race), nor does it reveal procurement signals relevant to sports event management or cycling operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:13:54.974291",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/specialist-event-marketing-bangkok-based-relocation-provided-at-agoda-4299768337",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Specialist, Event Marketing",
+                "entity": "Agoda",
+                "location": "Bangkok, Thailand / Singapore",
+                "department": "B2B Marketing"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity (Agoda/Booking Holdings)",
+            "Geographic Mismatch (Singapore/Bangkok vs. France)",
+            "Functional Mismatch (Online Travel Agency vs. Sports Event Management)",
+            "B2B Partner Marketing (Hospitality Sector)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1803,
+              "output_tokens": 311,
+              "elapsed_seconds": 2.7803571224212646
+            }
+          ],
+          "reasoning": "The content describes a job opening for an Event Marketing Specialist at Agoda, an online travel booking platform and subsidiary of Booking Holdings. The role is based in Bangkok (with Singapore listing context) and focuses on B2B events for hotel partners. This is entirely unrelated to the entity 'Paris-Nice' (a French professional cycling stage race) and offers no procurement signals relevant to sports event management, cycling operations, or the specific organizational structure of Amaury Sport Organisation (ASO)."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:14:02.364923",
+          "domain_explored": "https://www.linkedin.com/jobs/marketing-specialist-jobs/?currentJobId=3484472440&originalSubdomain=id",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Digital Associate- Brand Marketing (Lavazza Group)",
+              "Global Marketing Operations Associate (Netflix)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Login-Gated Content",
+            "Geographic Mismatch (United States vs. France)",
+            "Generic Job Aggregation",
+            "Unrelated Industry Listings (Lavazza, Netflix)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1891,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.0130257606506348
+            }
+          ],
+          "reasoning": "The scraped content represents a generic, login-gated job search results page for 'Marketing Specialist' roles in the United States. It lists roles for entities like Lavazza and Netflix, which are unrelated to Paris-Nice. The geographic focus (US) and the lack of specific content related to the target entity (Paris-Nice) or its organizers (ASO) indicate this path yields no relevant procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 12822,
+      "total_output_tokens": 1961,
+      "estimated_cost_usd": 0.067881
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris\u0096Nice may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:14:02.367541"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.395078",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:30:26.012722"
+}

@@ -1,0 +1,534 @@
+{
+  "entity_id": "rennes",
+  "entity_name": "Rennes",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "tourisme-rennes.com",
+    "staderennais.com",
+    "metropole.rennes.fr",
+    "rennes.us",
+    "univ-rennes.fr",
+    "brittanytourism.com",
+    "rennes-sb.com",
+    "informatics-europe.org",
+    "rennes.aeroport.fr",
+    "cparici.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/open-jobs-rennes?trk=guest_job_search_related_jserp_link",
+      "https://www.linkedin.com/jobs/software-engineer-jobs-rennes?trk=public_jobs_related_jserp_link",
+      "https://www.linkedin.com/jobs/sciences-po-rennes-junior-conseil-jobs-worldwide",
+      "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+      "https://be.linkedin.com/jobs/view/fsqr-manager-at-what-s-cooking-rennes-sas-4366180929",
+      "https://www.linkedin.com/jobs/olmix-jobs-worldwide",
+      "https://au.linkedin.com/jobs/view/expired-france-%E2%80%93-phd-in-subsurface-heat-transport-modeling-at-university-of-rennes-at-phdfinder-4351842287",
+      "https://www.linkedin.com/jobs/rsm-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/sekoia.io-jobs-worldwide",
+      "https://www.linkedin.com/jobs/wewise-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rennes",
+      "entity_name": "Rennes",
+      "total_iterations": 15,
+      "completed_iterations": 15,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+        "https://cparici.com",
+        "https://rennes.us",
+        "https://www.linkedin.com/jobs/sciences-po-rennes-junior-conseil-jobs-worldwide",
+        "https://be.linkedin.com/jobs/view/fsqr-manager-at-what-s-cooking-rennes-sas-4366180929",
+        "https://univ-rennes.fr",
+        "https://tourisme-rennes.com",
+        "https://rennes.aeroport.fr",
+        "https://rennes-sb.com",
+        "https://www.linkedin.com/jobs/open-jobs-rennes?trk=guest_job_search_related_jserp_link",
+        "https://www.linkedin.com/jobs/software-engineer-jobs-rennes?trk=public_jobs_related_jserp_link",
+        "https://brittanytourism.com",
+        "https://staderennais.com",
+        "https://metropole.rennes.fr",
+        "https://informatics-europe.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rennes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:44:42.856889",
+          "domain_explored": "https://tourisme-rennes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing content marketing",
+            "Local business promotion",
+            "Event tourism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.0990540981292725
+            }
+          ],
+          "reasoning": "The scraped content is from the official tourism website (tourisme-rennes.com) and focuses entirely on consumer engagement, event listings (festivals, Valentine's Day), and local business promotion (cheese workshops). There is no mention of internal government operations, technology procurement, or vendor selection processes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:44:49.924363",
+          "domain_explored": "https://staderennais.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship activities (Klub Affaires Koesio, Samsic)",
+              "Retail operations (Boutique/Soldes)"
+            ]
+          },
+          "patterns_found": [
+            "Sports entertainment content",
+            "Ticketing operations",
+            "Fan engagement",
+            "Retail/B2C operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.6445088386535645
+            }
+          ],
+          "reasoning": "The analyzed content is from the official website of Stade Rennais F.C. (a football club). It focuses exclusively on sports news, match results, player transfers (Mercato), ticketing (Billetterie), and fan club activities. While the club is a major entity in Rennes, this specific content is consumer-facing (B2C) and operational, lacking corporate governance, strategic planning, or procurement signals relevant to the city's general administrative purchasing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:45:13.074158",
+          "domain_explored": "https://metropole.rennes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sub-domain architecture (demarches.metropole.rennes.fr, transport.metropole.rennes.fr)",
+              "Digital reporting tools (Cit\u00e9 Zen)",
+              "Content Management System (likely custom or enterprise CMS given the structure)"
+            ],
+            "job_postings": [
+              "Dedicated recruitment portal detected (recrutement.rennesmetropole.fr)"
+            ],
+            "procurement_indicators": [
+              "Digital transformation spending (Transport network, Citizen apps)",
+              "Administrative digitization (demarches.metropole.rennes.fr)",
+              "Public works/Infrastructure management (Travaux/Works mapping)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Governance",
+            "Digital Service Ecosystem",
+            "Citizen Engagement Platforms",
+            "Sub-domain Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 381,
+              "elapsed_seconds": 11.84597396850586
+            }
+          ],
+          "reasoning": "The content represents the main navigation of the Rennes M\u00e9tropole public administration. While it does not contain explicit procurement notices (RFPs) in this specific snippet, it reveals a complex, decentralized digital architecture requiring significant vendor management. The presence of dedicated sub-domains for recruitment, transport (STAR), citizen reporting (Cit\u00e9 Zen), and administrative procedures indicates a mature digital transformation strategy with ongoing needs for software maintenance, development, and integration services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:45:18.238991",
+          "domain_explored": "https://rennes.us",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:45:27.307809",
+          "domain_explored": "https://univ-rennes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webinar Platforms",
+              "CMS (Content Management System)",
+              "Distance Learning Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Large-scale event logistics (Open Days 2026)",
+              "Remote training infrastructure (Master Gestion de l'Environnement)",
+              "Scientific expedition logistics (Morocco trip)"
+            ]
+          },
+          "patterns_found": [
+            "Academic Event Management",
+            "Distance Learning Infrastructure",
+            "Scientific Research Operations",
+            "Student Recruitment Marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 295,
+              "elapsed_seconds": 3.8177618980407715
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing (news/events), the scale of operations (multi-campus open days, distance learning webinars, international research expeditions) implies an underlying procurement need for event management platforms, webinar software, and travel/logistics services. It confirms the entity as a major educational organization with operational complexity, but lacks explicit procurement signals like RFPs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:45:36.896246",
+          "domain_explored": "https://brittanytourism.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Destination Marketing",
+            "B2C Travel Content Aggregation",
+            "Newsletter Marketing Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 180,
+              "elapsed_seconds": 4.324005842208862
+            }
+          ],
+          "reasoning": "The content is purely promotional, focusing on travel itineraries, cultural highlights, and tourism marketing for the broader Brittany region. While it confirms the tourism sector's activity, it lacks specific procurement signals such as vendor calls, technology infrastructure needs, or B2B service requirements relevant to Rennes city procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:45:51.034455",
+          "domain_explored": "https://rennes-sb.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMS (Learning Management Systems)",
+              "CRM (Student Relationship Management)",
+              "Marketing Automation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Custom corporate training programs (Formations sur mesure)",
+              "Executive education offerings",
+              "Digital Marketing specialization (implies software needs)"
+            ]
+          },
+          "patterns_found": [
+            "Higher Education Program Management",
+            "Executive Education (ExEd) & Custom Training",
+            "International Student Recruitment",
+            "Digital Marketing Curriculum (MSc)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1628,
+              "output_tokens": 317,
+              "elapsed_seconds": 6.48595404624939
+            }
+          ],
+          "reasoning": "The content represents Rennes School of Business, a major educational entity in Rennes. While primarily a student recruitment page, the presence of 'Formations sur mesure' (Custom Training) and 'Formations courtes & Certifiantes' indicates B2B service capabilities. Educational institutions of this size typically procure CRM systems, Learning Management Systems (LMS), and marketing automation tools, warranting a weak signal for potential B2B procurement or partnership opportunities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:46:02.148278",
+          "domain_explored": "https://informatics-europe.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Association Navigation",
+            "Educational Policy & Research",
+            "Event Management (Summits/Webinars)",
+            "Higher Education Data Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1688,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.9866769313812256
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation menu of 'Informatics Europe', a non-profit association. While it lists categories like 'Higher Education Data' and 'Job Platform', the content itself is purely structural navigation and does not contain specific procurement signals, technology stacks, or active opportunities related to the target entity 'Rennes'. The entity 'Rennes' is not mentioned in the provided text."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:46:11.063277",
+          "domain_explored": "https://rennes.aeroport.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Destination Marketing",
+            "Event Promotion (Travel Salon)",
+            "Commercial Flight Operations",
+            "Passenger Service Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.4403369426727295
+            }
+          ],
+          "reasoning": "The content is entirely consumer-facing, focusing on promoting travel destinations, flight bookings, and airport events (Salon des voyages). There are no indicators of B2B procurement activities, technology infrastructure spending, or governance signals relevant to the analysis objective."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T09:46:17.047583",
+          "domain_explored": "https://cparici.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T09:46:36.332281",
+          "domain_explored": "https://www.linkedin.com/jobs/open-jobs-rennes?trk=guest_job_search_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Platform Access Restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 869,
+              "output_tokens": 134,
+              "elapsed_seconds": 16.87523102760315
+            }
+          ],
+          "reasoning": "The scraped content indicates a rate-limiting error from LinkedIn rather than actual job listing data. No procurement signals, technology stacks, or hiring patterns can be extracted from the error message."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T09:46:40.621109",
+          "domain_explored": "https://www.linkedin.com/jobs/software-engineer-jobs-rennes?trk=public_jobs_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Platform Access Restriction",
+            "High-Frequency Request Blocking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 932,
+              "output_tokens": 166,
+              "elapsed_seconds": 1.8305659294128418
+            }
+          ],
+          "reasoning": "The target URL returned a rate-limiting error (429 Too Many Requests) rather than actual job listing content. This prevents the extraction of procurement signals, technology stacks, or hiring needs. The content is purely a system error message, offering no insight into the Rennes market."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T09:46:56.536462",
+          "domain_explored": "https://www.linkedin.com/jobs/sciences-po-rennes-junior-conseil-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Platform Access Restriction",
+            "High-Frequency Request Blocking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1000,
+              "output_tokens": 146,
+              "elapsed_seconds": 13.490561962127686
+            }
+          ],
+          "reasoning": "The content indicates a technical restriction (rate limiting) preventing access to the LinkedIn page. No actual data regarding 'Sciences Po Rennes Junior Conseil' or procurement activities could be retrieved."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T09:47:04.789496",
+          "domain_explored": "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Laboratory technician in microbiology",
+              "Spontaneous application - Data & AI team",
+              "Spontaneous application - Bioinformatics team",
+              "Bioinformatician, Protein Engineer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevance to Target Entity",
+            "Biotechnology Sector Operations",
+            "Geographic Mismatch (Suresnes vs Rennes)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2032,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.1887800693511963
+            }
+          ],
+          "reasoning": "The content pertains to 'Phagos', a biotechnology company located in Suresnes (\u00cele-de-France), which is geographically distinct from the target entity, Rennes (Brittany). While the listings indicate active recruitment in Data & AI and Bioinformatics, this represents internal hiring for a private sector entity outside the target scope, rather than procurement signals for Rennes."
+        },
+        {
+          "iteration_number": 15,
+          "timestamp": "2026-02-02T09:47:22.293944",
+          "domain_explored": "https://be.linkedin.com/jobs/view/fsqr-manager-at-what-s-cooking-rennes-sas-4366180929",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "FSQR Manager (Food Safety Quality Regulatory) at What's Cooking Rennes SAS"
+            ],
+            "procurement_indicators": [
+              "HACCP, GMP, BRC, IFS standards compliance",
+              "Agroalimentaire industry focus"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Marche-en-Famenne, Belgium vs Rennes, France)",
+            "Food Manufacturing Operations",
+            "Quality Assurance & Compliance (HACCP, BRC, IFS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 15,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2102,
+              "output_tokens": 276,
+              "elapsed_seconds": 11.91844129562378
+            }
+          ],
+          "reasoning": "The entity 'What's Cooking Rennes SAS' is a false positive for the target entity Rennes (the city in France). The job posting explicitly lists the location as 'Marche-en-Famenne, Walloon Region, Belgium'. While the company name contains 'Rennes', it refers to a specific private legal entity operating a Belgian food production site, not the public sector or economic ecosystem of the French city of Rennes. This is irrelevant to the procurement intelligence of the target city."
+        }
+      ],
+      "total_input_tokens": 19296,
+      "total_output_tokens": 2934,
+      "estimated_cost_usd": 0.101898
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rennes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:47:22.295268"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.278388",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:17.073577"
+}

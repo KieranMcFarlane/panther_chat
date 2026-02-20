@@ -1,0 +1,180 @@
+{
+  "entity_id": "ef_education\u0096oatly",
+  "entity_name": "EF Education\u0096Oatly",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "efprocycling.com",
+    "investors.oatly.com",
+    "letourfemmes.fr",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ef_education\u0096oatly",
+      "entity_name": "EF Education\u0096Oatly",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://efprocycling.com",
+        "https://letourfemmes.fr",
+        "https://investors.oatly.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Strategic Partnership Search",
+        "Corporate Partnership Procurement",
+        "High-Level Growth Initiative"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "EF Education\u0096Oatly may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:19:26.378946",
+          "domain_explored": "https://efprocycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Search / RFP",
+                "source": "efprocycling.com Homepage",
+                "description": "Active search for a strategic partner to support the team's growth ambitions.",
+                "url": "/culture/ef-launches-search-for-strategic-partner-to-build-worlds-best-cycling-team/"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Search",
+            "Corporate Partnership Procurement",
+            "High-Level Growth Initiative"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.9097979068756104
+            }
+          ],
+          "reasoning": "The homepage explicitly features a primary call-to-action titled 'EF launches search for strategic partner in bid to become world\u2019s best cycling team'. This is a direct procurement signal indicating an active search for a major corporate partner or sponsor, which constitutes a significant vendor acquisition or partnership deal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:19:36.666502",
+          "domain_explored": "https://investors.oatly.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LSEG (London Stock Exchange Group) - Financial Data Provider"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Supply Chain Operations (40+ countries)",
+              "Sustainability Reporting Requirements (ESG Procurement)",
+              "Innovation/R&D Focus (Production Technology)",
+              "Investor Relations Infrastructure (Financial Services)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Procurement",
+            "Supply Chain Capacity Expansion",
+            "Sustainability Compliance Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 303,
+              "elapsed_seconds": 4.256683826446533
+            }
+          ],
+          "reasoning": "The content confirms Oatly's status as a large-scale multinational entity (40+ countries) with a focus on innovation and sustainability. While the specific page is an investor relations portal lacking direct RFPs, the explicit mention of 'Sustainability Report' and global retail/food service distribution implies complex procurement needs for logistics, production materials, and ESG consulting services. The 'Event Calendar' indicates a structured corporate governance cycle."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:19:45.989474",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Scheduling",
+            "Sports Rankings",
+            "Competitor Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.4048120975494385
+            }
+          ],
+          "reasoning": "The content from letourfemmes.fr is focused on race results, future routes (2026/2027), and general event news. While it lists team sponsors (e.g., Visma, FDJ-Suez, Zwift), this is operational context for the race rather than a procurement signal from the target entity (EF Education\u2013Oatly). There is no actionable intelligence regarding EF Education\u2013Oatly's specific procurement needs, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:19:51.648558",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4236,
+      "total_output_tokens": 755,
+      "estimated_cost_usd": 0.024033
+    },
+    "procurement_signals": [
+      "Strategic Partnership Search",
+      "Corporate Partnership Procurement",
+      "High-Level Growth Initiative"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "EF Education\u0096Oatly may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:19:51.650856"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384723",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:51.936041"
+}

@@ -1,0 +1,88 @@
+{
+  "entity_id": "wayne_taylor_racing",
+  "entity_name": "Wayne Taylor Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "waynetaylorracing.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wayne_taylor_racing",
+      "entity_name": "Wayne Taylor Racing",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://waynetaylorracing.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Wayne Taylor Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:09:23.070144",
+          "domain_explored": "https://waynetaylorracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System) - inferred from URL structure /news/ and /gallery/",
+              "E-commerce Platform - inferred from external link to wtrgear.com"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Operations (wtrgear.com)",
+              "Partner/Sponsor Management (Team Partners section)",
+              "Digital Asset Management (Photo Gallery)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations (External Domain)",
+            "Sponsorship/Partner Ecosystem",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1220,
+              "output_tokens": 279,
+              "elapsed_seconds": 3.372943162918091
+            }
+          ],
+          "reasoning": "The content confirms active e-commerce operations via 'wtrgear.com' and a structured 'Team Partners' section, indicating a need for e-commerce platforms and partner management tools. While no direct procurement requests are visible, the operational complexity (managing two race teams, GTP and GTD, plus merchandise) implies underlying software and service needs."
+        }
+      ],
+      "total_input_tokens": 1220,
+      "total_output_tokens": 279,
+      "estimated_cost_usd": 0.007845000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Wayne Taylor Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:09:23.082326"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367083",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:32.804735"
+}

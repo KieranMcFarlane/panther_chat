@@ -1,0 +1,273 @@
+{
+  "entity_id": "russian_premier_league_(rpl)",
+  "entity_name": "Russian Premier League (RPL)",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "russian-sports.ru",
+    "play.google.com",
+    "footballhistory.org",
+    "sportbusiness.com",
+    "forumsportrussia.ru",
+    "sportmonks.com",
+    "sportspro.com",
+    "teammelli.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "russian_premier_league_(rpl)",
+      "entity_name": "Russian Premier League (RPL)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://sportspro.com",
+        "https://forumsportrussia.ru",
+        "https://russian-sports.ru",
+        "https://sportmonks.com",
+        "https://footballhistory.org",
+        "https://sportbusiness.com",
+        "https://teammelli.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Russian Premier League (RPL) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:42:57.020051",
+          "domain_explored": "https://russian-sports.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic content scraping",
+            "Irrelevance to target entity (RPL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 194,
+              "elapsed_seconds": 5.0552918910980225
+            }
+          ],
+          "reasoning": "The provided content is a generic 'About Us' or landing page text for a general sports news portal ('Russian Sports' / '\u0420\u043e\u0441\u0441\u0438\u0439\u0441\u043a\u0438\u0439 \u0441\u043f\u043e\u0440\u0442'). It discusses the history of sports in Russia, national pride, and general categories like MMA and esports. It contains no specific information regarding the Russian Premier League (RPL), its procurement activities, technology stack, or governance structure. This is irrelevant noise for the specific entity analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:43:05.107024",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic mobile app marketplace listings",
+            "Consumer gaming content (Candy Crush, PUBG, etc.)",
+            "Irrelevance to B2B procurement or corporate governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.564476251602173
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Google Play Store homepage, listing consumer mobile games and apps. There is no connection to the Russian Premier League (RPL), nor any signals regarding B2B procurement, technology infrastructure, or organizational decision-making."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:43:12.040945",
+          "domain_explored": "https://footballhistory.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic historical content",
+            "Educational/Encyclopedic material",
+            "No corporate governance data",
+            "No technical infrastructure indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.711560010910034
+            }
+          ],
+          "reasoning": "The content is purely historical and educational, covering the origins of football (Mesoamerican, Chinese, Roman) and its evolution in England. It contains no information regarding the Russian Premier League (RPL), modern business operations, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:43:26.317287",
+          "domain_explored": "https://sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports industry news aggregation",
+            "Focus on Western leagues (NFL, F1, MLB, UEFA)",
+            "General media rights and sponsorship reporting",
+            "No specific mentions of Russian Premier League (RPL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 221,
+              "elapsed_seconds": 10.915606021881104
+            }
+          ],
+          "reasoning": "The content is a global sports business news feed covering major international entities (NFL, Formula 1, UEFA, MLB). While it discusses industry trends like media rights and sponsorship, there is zero specific mention of the Russian Premier League (RPL), its vendors, or its specific procurement activities. The content is high-level industry analysis rather than operational procurement data for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:43:29.412246",
+          "domain_explored": "https://forumsportrussia.ru",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:43:32.414974",
+          "domain_explored": "https://sportmonks.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:43:38.695230",
+          "domain_explored": "https://sportspro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered streaming",
+              "Data analytics platforms",
+              "Shared reality (VR/AR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports industry trend forecasting",
+            "Speculative technology journalism (Future-gazing)",
+            "Consumer-facing media technology focus",
+            "Irrelevance to Russian Premier League (RPL) specific operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 948,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.0671160221099854
+            }
+          ],
+          "reasoning": "The content is a speculative 'predictions' article for 2026 from a global sports media outlet (SportsPro). It discusses general industry trends like AI streaming and athlete data platforms. While it mentions technology relevant to the sports sector, it lacks specific actionable intelligence regarding the Russian Premier League's current procurement activities, vendor selection, or governance structure. It is market noise, not a procurement signal."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:43:50.886749",
+          "domain_explored": "https://teammelli.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "National team fan site content",
+            "Match reports and sports journalism",
+            "FIFA/AFC ranking tables",
+            "Irrelevant geographic focus (Iran vs. Russia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1701,
+              "output_tokens": 175,
+              "elapsed_seconds": 6.671442985534668
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the Iranian national football and futsal teams ('Team Melli'), including match reports, rankings, and player statistics. It contains no information regarding the Russian Premier League (RPL), its corporate structure, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 8415,
+      "total_output_tokens": 1198,
+      "estimated_cost_usd": 0.043215
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Russian Premier League (RPL) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:43:50.888740"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419643",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:40:14.193506"
+}

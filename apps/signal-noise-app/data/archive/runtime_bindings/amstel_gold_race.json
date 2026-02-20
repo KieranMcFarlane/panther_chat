@@ -1,0 +1,217 @@
+{
+  "entity_id": "amstel_gold_race",
+  "entity_name": "Amstel Gold Race",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "amstel.nl",
+    "amstelgoldrace.nl",
+    "cyclingnews.com",
+    "sportivebreaks.com",
+    "sportive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "amstel_gold_race",
+      "entity_name": "Amstel Gold Race",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://amstelgoldrace.nl",
+        "https://sportivebreaks.com",
+        "https://amstel.nl",
+        "https://sportive.com",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Amstel Gold Race may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:59:20.660059",
+          "domain_explored": "https://amstel.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "B2B procurement outsourced to Heineken Horeca platform (heinekenhoreca.nl)"
+            ]
+          },
+          "patterns_found": [
+            "Brand Marketing Content",
+            "B2C Product Catalog",
+            "Horeca (Hospitality) Cross-linking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 225,
+              "elapsed_seconds": 2.756150007247925
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material describing various Amstel beer products (Pilsener, 0.0%, Blond, Ros\u00e9, etc.). There are no technology stacks, job postings, or procurement signals present. The link to 'Voor ondernemers' redirects to the general Heineken Horeca portal, indicating that Amstel relies on the parent company's infrastructure for B2B procurement rather than maintaining a separate procurement stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:59:32.210031",
+          "domain_explored": "https://amstelgoldrace.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership/Sponsorship acquisition (Downloadable brochure available)",
+              "Hospitality procurement (VIP formulas and networking events)",
+              "Event services procurement (Race organization for 2026)",
+              "Strategic consulting (Leadership succession/change management)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship/Partnership Acquisition",
+            "Hospitality & Event Management",
+            "Leadership Transition (Governance)",
+            "B2C Ticketing/Registration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 327,
+              "elapsed_seconds": 3.9034531116485596
+            }
+          ],
+          "reasoning": "The content reveals a dedicated B2B focus with a 'Word onze partner' (Become our partner) section, offering a downloadable partner brochure and contact for business collaborations. This indicates active procurement for sponsorship and partnership services. Additionally, the repeated 'VIP/Hospitality' calls to action suggest procurement of event management and catering services. The leadership change (Tom Dumoulin replacing Leo van Vliet) signals a governance shift which often precedes strategic vendor reviews. However, no specific RFPs or tech stack details are visible."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:59:42.412541",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Race Results Reporting",
+            "General Cycling Industry News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.9865689277648926
+            }
+          ],
+          "reasoning": "The provided content is a list of general cycling news headlines and articles from Cyclingnews.com regarding various races (Cyclo-cross World Championships, Cadel Evans Great Ocean Road Race) and general team tech. There is no mention of the Amstel Gold Race entity, its organizers, or any specific procurement activities (RFPs, hiring, vendor selection) related to the event."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:59:52.481167",
+          "domain_explored": "https://sportivebreaks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Travel & Tourism Services",
+            "Event Hospitality Packages",
+            "Official Partnership Status (Team Visma | Lease a Bike)",
+            "ABTA/ATOL Compliance (Travel Regulation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 228,
+              "elapsed_seconds": 4.481406211853027
+            }
+          ],
+          "reasoning": "The scraped content is from 'Sportive Breaks', a third-party travel agency specializing in cycling events (Etape du Tour, Mallorca 312). While they mention partnerships with cycling teams (Team Visma) and events (Giro d'Italia), this content is purely commercial B2C sales copy for travel packages. It does not contain information regarding Amstel Gold Race's internal procurement, technology stack, or governance. The entity context is incorrect for the target analysis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:00:03.743788",
+          "domain_explored": "https://sportive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ad space availability ('Over 1 million page views each year.Get in touch.')"
+            ]
+          },
+          "patterns_found": [
+            "B2C Media & Publishing",
+            "Event Calendar & Listings",
+            "General Cycling News Aggregation",
+            "Audience Monetization (Ad Space)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 266,
+              "elapsed_seconds": 3.8679370880126953
+            }
+          ],
+          "reasoning": "The content analyzed is from a general cycling media and news outlet (Sportive.com). While it mentions 'Amstel Gold' in a user report, it is a retrospective consumer review ('Thanks to an understanding wife I have been able to ride some great sportives over the years: the Amstel Gold (best...)'). This does not represent an official communication from the Amstel Gold Race organization. The site functions as a content aggregator for event listings and gear reviews, offering no insight into the procurement, governance, or technology stack of the target entity."
+        }
+      ],
+      "total_input_tokens": 7294,
+      "total_output_tokens": 1227,
+      "estimated_cost_usd": 0.040287
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Amstel Gold Race may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:00:03.745261"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.400803",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:07:34.680363"
+}

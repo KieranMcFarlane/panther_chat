@@ -1,0 +1,312 @@
+{
+  "entity_id": "football_kenya_federation",
+  "entity_name": "Football Kenya Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "footballkenya.org",
+    "inside.fifa.com",
+    "cafonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/opened-career_footballjobs-sportsmanagement-careeropportunities-activity-7383528199399366656-MWZ8",
+      "https://www.linkedin.com/posts/myjobmag-kenya_jobsinkenya-hiringalert-opportunities-activity-7401915086476337152-h4p8",
+      "https://ke.linkedin.com/jobs/view/director-of-fundraising-at-football-foundation-3663331706"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "football_kenya_federation",
+      "entity_name": "Football Kenya Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://ke.linkedin.com/jobs/view/director-of-fundraising-at-football-foundation-3663331706",
+        "https://footballkenya.org",
+        "https://www.linkedin.com/posts/opened-career_footballjobs-sportsmanagement-careeropportunities-activity-7383528199399366656-MWZ8",
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://www.linkedin.com/posts/myjobmag-kenya_jobsinkenya-hiringalert-opportunities-activity-7401915086476337152-h4p8"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Mass recruitment drive (11 positions)",
+        "C-level and Director-level hiring (CFO, Commercial Director)",
+        "Specialized functional roles (Integrity, Safeguarding, Grassroots)",
+        "Explicit deadline for applications (October 2025)",
+        "Use of external recruitment platforms (LinkedIn/OpenedCareer)",
+        "Mass recruitment aggregator post",
+        "Direct link to detailed job board",
+        "Broad functional scope (implied by aggregator volume)",
+        "Hashtag optimization for visibility (#jobsinkenya, #hiringalert)",
+        "Strategic partnership with Ministry of Sports, Culture and Heritage",
+        "Explicit mention of Football Kenya Federation (FKF) governance",
+        "Infrastructure procurement intent (20,000 grass pitches by 2030)",
+        "Income generation and fundraising targets",
+        "Multi-stakeholder collaboration (Government, FKF, Sports Kenya)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Football Kenya Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:16:38.178768",
+          "domain_explored": "https://footballkenya.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:16:46.078836",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news content",
+            "FIFA Forward program mentions",
+            "Generic navigation elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 194,
+              "elapsed_seconds": 4.51075005531311
+            }
+          ],
+          "reasoning": "The content provided is from FIFA's global news portal (inside.fifa.com) and focuses on high-level international events (FIFA Women's Champions Cup) and general FIFA initiatives (FIFA Forward). There is no specific mention of Football Kenya Federation (FKF), no local procurement opportunities, and no technology stack details relevant to the target entity. This represents a distraction from the specific entity analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:16:52.694753",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation elements",
+            "Repetitive 'Show more' and 'See all' UI artifacts",
+            "High-level competition categories (AFCON, Champions League)",
+            "Absence of corporate governance or tender sections"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 997,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.5420479774475098
+            }
+          ],
+          "reasoning": "The content provided is purely navigational structure and UI noise from the Confederation of African Football (CAF) website. It lists competition categories (AFCON, Champions League) and media sections but contains no corporate information, procurement notices, or technology stack details relevant to the Football Kenya Federation entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:17:01.806503",
+          "domain_explored": "https://www.linkedin.com/posts/opened-career_footballjobs-sportsmanagement-careeropportunities-activity-7383528199399366656-MWZ8",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment/Sourcing)",
+              "OpenedCareer (Job Aggregator/ATS)"
+            ],
+            "job_postings": [
+              "Chief Finance Officer (CFO)",
+              "Commercial Director",
+              "Chief Security Officer (CSO)",
+              "Integrity Officer",
+              "Legal Officer",
+              "Events Officer",
+              "Leagues & Competitions Officer",
+              "National Grassroots Football Coordinator",
+              "Branch Liaison Officer",
+              "Secretary",
+              "Safeguarding Officer"
+            ],
+            "procurement_indicators": [
+              "Organizational restructuring/expansion",
+              "Budget allocation for senior leadership salaries",
+              "Potential procurement of financial management systems (under new CFO)",
+              "Potential procurement of commercial/sponsorship platforms (under new Commercial Director)",
+              "Compliance and integrity framework implementation"
+            ]
+          },
+          "patterns_found": [
+            "Mass recruitment drive (11 positions)",
+            "C-level and Director-level hiring (CFO, Commercial Director)",
+            "Specialized functional roles (Integrity, Safeguarding, Grassroots)",
+            "Explicit deadline for applications (October 2025)",
+            "Use of external recruitment platforms (LinkedIn/OpenedCareer)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 475,
+              "elapsed_seconds": 5.735061883926392
+            }
+          ],
+          "reasoning": "The content provides definitive evidence of active procurement of human capital. The recruitment of 11 key positions, including C-Suite roles (CFO, Commercial Director) and specialized functional officers (Integrity, Safeguarding), indicates a significant organizational restructuring or expansion. This directly signals procurement activity in the form of HR services, recruitment platform licensing, and onboarding tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:17:09.516140",
+          "domain_explored": "https://www.linkedin.com/posts/myjobmag-kenya_jobsinkenya-hiringalert-opportunities-activity-7401915086476337152-h4p8",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)",
+              "MyJobMag (Job Aggregator)",
+              "Shortened URL tracking (lnkd.in)"
+            ],
+            "job_postings": [
+              "Ongoing Recruitment at Football Kenya Federation (Aggregator Link)"
+            ],
+            "procurement_indicators": [
+              "Use of third-party recruitment platforms",
+              "Active talent acquisition campaigns"
+            ]
+          },
+          "patterns_found": [
+            "Mass recruitment aggregator post",
+            "Direct link to detailed job board",
+            "Broad functional scope (implied by aggregator volume)",
+            "Hashtag optimization for visibility (#jobsinkenya, #hiringalert)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.220484256744385
+            }
+          ],
+          "reasoning": "This content confirms active recruitment efforts via a major job aggregator (MyJobMag). While the specific roles are not listed in the snippet, the existence of a dedicated 'Ongoing Recruitment' campaign with a direct deep link indicates a structured hiring phase. This validates the procurement signal for HR services and potential onboarding tools, reinforcing the signals found in Iteration 4."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:17:15.990571",
+          "domain_explored": "https://ke.linkedin.com/jobs/view/director-of-fundraising-at-football-foundation-3663331706",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              {
+                "title": "Director of Fundraising",
+                "entity": "Football Foundation / Magoma Safaris",
+                "seniority": "Director-level",
+                "focus": "Income generation, stakeholder management, grassroots infrastructure"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Infrastructure Program",
+                "description": "Goal to revolutionize/develop 20,000 grass pitches across Kenya by 2030",
+                "partners": [
+                  "Football Kenya Federation",
+                  "Ministry of Sports, Culture and Heritage",
+                  "Sports Kenya"
+                ]
+              },
+              {
+                "type": "Service Procurement",
+                "description": "Pitch advisory services starting Nov 2023",
+                "status": "Active/Planned"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic partnership with Ministry of Sports, Culture and Heritage",
+            "Explicit mention of Football Kenya Federation (FKF) governance",
+            "Infrastructure procurement intent (20,000 grass pitches by 2030)",
+            "Income generation and fundraising targets",
+            "Multi-stakeholder collaboration (Government, FKF, Sports Kenya)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1698,
+              "output_tokens": 482,
+              "elapsed_seconds": 3.1566269397735596
+            }
+          ],
+          "reasoning": "This content provides direct evidence of a large-scale infrastructure program ('Football Foundation') governed by FKF and the Kenyan Government. The specific target of developing 20,000 pitches by 2030 indicates significant upcoming procurement needs for construction, maintenance, and facility management services. The hiring of a Director of Fundraising confirms active resource mobilization for these projects."
+        }
+      ],
+      "total_input_tokens": 7240,
+      "total_output_tokens": 1657,
+      "estimated_cost_usd": 0.046575
+    },
+    "procurement_signals": [
+      "Mass recruitment drive (11 positions)",
+      "C-level and Director-level hiring (CFO, Commercial Director)",
+      "Specialized functional roles (Integrity, Safeguarding, Grassroots)",
+      "Explicit deadline for applications (October 2025)",
+      "Use of external recruitment platforms (LinkedIn/OpenedCareer)",
+      "Mass recruitment aggregator post",
+      "Direct link to detailed job board",
+      "Broad functional scope (implied by aggregator volume)",
+      "Hashtag optimization for visibility (#jobsinkenya, #hiringalert)",
+      "Strategic partnership with Ministry of Sports, Culture and Heritage",
+      "Explicit mention of Football Kenya Federation (FKF) governance",
+      "Infrastructure procurement intent (20,000 grass pitches by 2030)",
+      "Income generation and fundraising targets",
+      "Multi-stakeholder collaboration (Government, FKF, Sports Kenya)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Football Kenya Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:17:15.992289"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205830",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:21.021855"
+}

@@ -1,0 +1,188 @@
+{
+  "entity_id": "guinea-bissau_volleyball_federation",
+  "entity_name": "Guinea-Bissau Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "playmakerstats.com",
+    "gambianoc.gm",
+    "isg-2025.com",
+    "finixsports.wordpress.com",
+    "technogym.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guinea-bissau_volleyball_federation",
+      "entity_name": "Guinea-Bissau Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://finixsports.wordpress.com",
+        "https://playmakerstats.com",
+        "https://technogym.com",
+        "https://gambianoc.gm",
+        "https://isg-2025.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guinea-Bissau Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:18:40.829796",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:18:52.119576",
+          "domain_explored": "https://gambianoc.gm",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "GNOC Secures $50,000 Grant for Renovation (Gambia)",
+              "Maiden Athletes Forum scheduled at Paradise Suits Hotel (Gambia)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Gambia vs Guinea-Bissau)",
+            "Regional Context (West Africa)",
+            "Olympic Committee Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.4441280364990234
+            }
+          ],
+          "reasoning": "The scraped content is from the Gambia National Olympic Committee (GNOC), not the Guinea-Bissau Volleyball Federation. While it mentions 'Volley Ball' as a sport under the GNOC umbrella, it represents a different country and a multi-sport governing body rather than the specific target entity. There are no direct procurement signals for Guinea-Bissau here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:19:20.016591",
+          "domain_explored": "https://isg-2025.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DAZN (Streaming Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Saudi Arabia/Bahrain vs Guinea-Bissau)",
+            "Event Coverage (ISG 2025 / Riyadh 2025)",
+            "Streaming Integration (DAZN)",
+            "Regional Irrelevance (West Africa vs Middle East/North Africa)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 216,
+              "elapsed_seconds": 16.503301858901978
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 2025 Islamic Solidarity Games in Riyadh, featuring Saudi Arabia, Bahrain, Algeria, and Tunisia. There is absolutely no mention of Guinea-Bissau, West Africa, or Volleyball (the content focuses on Handball, Camel Racing, and Athletics). This source is irrelevant to the Guinea-Bissau Volleyball Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:19:29.163201",
+          "domain_explored": "https://finixsports.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:19:41.017231",
+          "domain_explored": "https://technogym.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Technogym Ecosystem (Digital/Wellness platform)",
+              "Technogym MyRun (Connected equipment)",
+              "Technogym Checkup (Biometric assessment)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Identification (Technogym as potential supplier for athletic training equipment)",
+              "Budgetary Indicators (High-end equipment pricing: $3,690 - $9,670+)",
+              "Partnership Model (Technogym Business Solutions for facilities)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Technogym vs Guinea-Bissau Volleyball Federation)",
+            "B2C E-commerce Focus (Product Catalog/Pricing)",
+            "Global Brand Marketing (Milano Cortina 2026, Awards)",
+            "Generic Content (FAQs, Definitions)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 372,
+              "elapsed_seconds": 4.623640775680542
+            }
+          ],
+          "reasoning": "The scraped content is from the official website of Technogym, a global fitness equipment manufacturer. It is a commercial vendor site displaying product catalogs (treadmills, bikes), pricing, and marketing materials. There is no content linking this specific page to the Guinea-Bissau Volleyball Federation, nor are there specific procurement signals (like an RFP or a local partnership announcement) relevant to the target entity within this text. It represents a potential vendor category rather than a specific procurement signal for the client."
+        }
+      ],
+      "total_input_tokens": 4382,
+      "total_output_tokens": 809,
+      "estimated_cost_usd": 0.025280999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guinea-Bissau Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:19:41.019324"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.342937",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:55:51.669849"
+}

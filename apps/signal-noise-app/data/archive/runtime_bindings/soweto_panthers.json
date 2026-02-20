@@ -1,0 +1,84 @@
+{
+  "entity_id": "soweto_panthers",
+  "entity_name": "Soweto Panthers",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "jhbballacademy.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "soweto_panthers",
+      "entity_name": "Soweto Panthers",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://jhbballacademy.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Soweto Panthers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:39:10.543879",
+          "domain_explored": "https://jhbballacademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Executive Link: Mlungisi Ngwenya (Director at JHB Academy, Former Coach at Soweto Panthers)",
+              "Historical Data: Confirmation of Soweto Panthers' PBL Championship victory under current leadership"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Overlap",
+            "Historical Affiliation",
+            "Operational Context"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 269,
+              "elapsed_seconds": 2.533752202987671
+            }
+          ],
+          "reasoning": "The content identifies Mlungisi 'Florsh' Ngwenya as a Director of the Johannesburg Basketball Academy. The bio explicitly states he won a PBL championship 'with the Soweto Panthers'. This establishes a direct executive link between the target entity (Soweto Panthers) and the source entity (JHB Basketball Academy). While this is not a direct procurement signal for the Panthers, it provides high-value context on executive leadership capabilities and potential shared resources or vendor networks."
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 269,
+      "estimated_cost_usd": 0.008109000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Soweto Panthers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:39:10.545723"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230124",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:34.953424"
+}

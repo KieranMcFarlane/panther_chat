@@ -1,0 +1,193 @@
+{
+  "entity_id": "swiss_ice_hockey_federation",
+  "entity_name": "Swiss Ice Hockey Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "internationalhockey.fandom.com",
+    "apps.apple.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/senior-manager-finance-w-m-d-%40-swiss-ice-hockey-federation-at-lionstep-4085992037"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "swiss_ice_hockey_federation",
+      "entity_name": "Swiss Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://apps.apple.com",
+        "https://internationalhockey.fandom.com",
+        "https://ch.linkedin.com/jobs/view/senior-manager-finance-w-m-d-%40-swiss-ice-hockey-federation-at-lionstep-4085992037"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Swiss GAAP FER Compliance Requirement",
+        "Digital Transformation of Finance Function",
+        "Strategic Reporting & KPI Implementation",
+        "Risk Management System Implementation",
+        "Operational Procurement Responsibility (AR/AP)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Swiss Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:04:22.251157",
+          "domain_explored": "https://internationalhockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Structure",
+            "Historical Data Aggregation",
+            "User-Generated Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 172,
+              "elapsed_seconds": 1.9734489917755127
+            }
+          ],
+          "reasoning": "The source is a general hockey wiki (International Hockey Wiki) containing historical encyclopedic data, league structures, and member lists. It lacks specific operational details regarding the Swiss Ice Hockey Federation's internal procurement, technology stack, or governance. The mention of Switzerland is merely as a member of the IIHF."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:04:25.635698",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:04:34.294762",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Application Storefront",
+            "Gaming/Entertainment Content",
+            "Generic Platform Navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.20686411857605
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Google Play Store homepage, listing consumer mobile games and apps. There is no connection to the Swiss Ice Hockey Federation, nor are there any enterprise procurement signals, technology stack disclosures, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:04:50.517498",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/senior-manager-finance-w-m-d-%40-swiss-ice-hockey-federation-at-lionstep-4085992037",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Swiss GAAP FER (Accounting Standard)",
+              "ERP / Financial Management Systems (Implicit)",
+              "BI & Reporting Tools (KPI systems)",
+              "Risk Management Software"
+            ],
+            "job_postings": [
+              {
+                "title": "Senior Manager Finance (w/m/d)",
+                "recruiter": "LIONSTEP",
+                "location": "Glattbrugg, Switzerland",
+                "salary": "Up to 130,000 CHF",
+                "team_size": "2 People",
+                "focus": "Digitalization of Finance, Reporting, Risk Management"
+              }
+            ],
+            "procurement_indicators": [
+              "System Implementation: 'Aufbau eines passenden Reporting- und Kennzahlensystems' (Building a suitable reporting and key figure system)",
+              "Modernization Mandate: 'Entwickelst Du das Finanzwesen zu einem modernen und aussagekr\u00e4ftigen F\u00fchrungsinstrument weiter' (Developing finance into a modern management tool)",
+              "Risk Management Procurement: 'Implementierst Du ein ad\u00e4quates Risikomanagement' (Implementing adequate risk management)",
+              "Operational Procurement: Responsibility for 'Debitoren-, Kreditoren- und Anlagenbuchhaltung' implies oversight of operational vendor spend."
+            ]
+          },
+          "patterns_found": [
+            "Swiss GAAP FER Compliance Requirement",
+            "Digital Transformation of Finance Function",
+            "Strategic Reporting & KPI Implementation",
+            "Risk Management System Implementation",
+            "Operational Procurement Responsibility (AR/AP)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 531,
+              "elapsed_seconds": 5.930422067642212
+            }
+          ],
+          "reasoning": "The job description for a Senior Manager Finance explicitly outlines a mandate to modernize the financial infrastructure ('develop finance into a modern management instrument') and implement new systems for reporting and risk management. This indicates a clear procurement intent for financial software, ERP systems, and potentially BI tools. The mention of 'Swiss GAAP FER' suggests specific compliance tooling needs."
+        }
+      ],
+      "total_input_tokens": 4328,
+      "total_output_tokens": 869,
+      "estimated_cost_usd": 0.026019
+    },
+    "procurement_signals": [
+      "Swiss GAAP FER Compliance Requirement",
+      "Digital Transformation of Finance Function",
+      "Strategic Reporting & KPI Implementation",
+      "Risk Management System Implementation",
+      "Operational Procurement Responsibility (AR/AP)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Swiss Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:04:50.518926"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.306868",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:53:13.998637"
+}

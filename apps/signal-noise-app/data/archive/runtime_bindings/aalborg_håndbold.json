@@ -1,0 +1,310 @@
+{
+  "entity_id": "aalborg_h\u00e5ndbold",
+  "entity_name": "Aalborg H\u00e5ndbold",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "aalborghaandbold.dk",
+    "eurohandball.com",
+    "apps.apple.com",
+    "zoominfo.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://dk.linkedin.com/jobs/view/salgskonsulent-at-career-a-jks-company-4087140555",
+      "https://dk.linkedin.com/jobs/view/merchandiseansvarlig-at-career-a-jks-company-4087143407"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aalborg_h\u00e5ndbold",
+      "entity_name": "Aalborg H\u00e5ndbold",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://aalborghaandbold.dk",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://dk.linkedin.com/jobs/view/salgskonsulent-at-career-a-jks-company-4087140555",
+        "https://dk.linkedin.com/jobs/view/merchandiseansvarlig-at-career-a-jks-company-4087143407",
+        "https://zoominfo.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "B2B Sales Expansion",
+        "Recruitment Process Outsourcing (RPO)",
+        "Sponsorship/Partnership Focus",
+        "Regional Business Development (Nordjylland)",
+        "Direct Procurement Responsibility",
+        "Vendor Management & Negotiation",
+        "E-commerce & Retail Operations",
+        "Inventory & Supply Chain Planning",
+        "Recruitment Process Outsourcing (RPO)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aalborg H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:40:19.203644",
+          "domain_explored": "https://aalborghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Procurement Cycle: Indication of new kit inventory for the 2025/26 season (Home, Away, Goalkeeper, Pre-game jerseys)."
+            ]
+          },
+          "patterns_found": [
+            "Merchandise Sales Cycle (Kit refresh 2025/26)",
+            "Ticketing Operations (Standard 'K\u00d8B BILLET' CTAs)",
+            "Sports Performance Focus (Elite Academy & Player Stats)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.63675594329834
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (news, ticket sales, merchandise) and sports performance updates. There are no explicit procurement signals, technology stack disclosures, or strategic governance indicators present in this specific text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:40:26.192312",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OneTrust (Cookie Consent - inferred from 'Privacy Preferences' link text)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Management (OneTrust)",
+            "Event Calendar Navigation",
+            "Sports News Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.669562816619873
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) general news and events portal, not the specific domain of Aalborg H\u00e5ndbold. While it mentions the Danish national team and EHF Champions League (which Aalborg may qualify for), it contains no specific procurement signals, technology stack details, or organizational governance data regarding the club Aalborg H\u00e5ndbold. The only technical signal is a generic 'Privacy Preferences' link (likely OneTrust), which is a site-wide implementation, not a specific procurement action by the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:40:31.539743",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer App Storefront Content",
+            "Gaming & Entertainment Marketing",
+            "Black History Month Promotions",
+            "Seasonal App Recommendations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.429978847503662
+            }
+          ],
+          "reasoning": "The content provided is scraped from the Apple App Store homepage (apps.apple.com). It consists entirely of consumer-facing application descriptions, game updates (e.g., Roblox, Pok\u00e9mon TCG Pocket), and editorial recommendations. There is no content related to Aalborg H\u00e5ndbold, corporate procurement, enterprise software, or business operations. This is irrelevant noise for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:40:34.529410",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:40:45.402659",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Global Competition Indexing",
+            "Content Farm Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 154,
+              "elapsed_seconds": 7.1488401889801025
+            }
+          ],
+          "reasoning": "The content is a generic index of global soccer competitions (UEFA, CONCACAF, AFC, etc.) and has no relation to Aalborg H\u00e5ndbold, a Danish handball club. It contains no proprietary data, vendor selection, or technology stack information relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:41:00.576595",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/salgskonsulent-at-career-a-jks-company-4087140555",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment Platform)"
+            ],
+            "job_postings": [
+              {
+                "title": "Salgskonsulent",
+                "entity": "Aalborg H\u00e5ndbold",
+                "recruiter": "Career | a JKS Company",
+                "focus": "B2B Sales, Sponsorship, Event Experience",
+                "status": "Newly created position / 1 year ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor Engagement: Utilizing external agency (Career/JKS) for talent acquisition.",
+              "Commercial Investment: Creating a new sales role to drive revenue and business growth.",
+              "Operational Tools: Requirement for personal vehicle (procurement of mobility/transport allowance)."
+            ]
+          },
+          "patterns_found": [
+            "B2B Sales Expansion",
+            "Recruitment Process Outsourcing (RPO)",
+            "Sponsorship/Partnership Focus",
+            "Regional Business Development (Nordjylland)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 378,
+              "elapsed_seconds": 11.962192296981812
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Salgskonsulent' (Sales Consultant) specifically on behalf of Aalborg H\u00e5ndbold. This is a strong procurement signal indicating active investment in commercial growth and B2B partnership acquisition. The use of an external recruitment agency (Career/JKS) suggests a need for specialized talent acquisition capabilities or a lack of internal HR bandwidth for this role."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:41:12.033273",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/merchandiseansvarlig-at-career-a-jks-company-4087143407",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Webshop platforms (implied by 'online salg')",
+              "POS/Inventory Management Systems (implied by 'afstemme kassen' and 'salgstal')"
+            ],
+            "job_postings": [
+              {
+                "role": "Merchandiseansvarlig",
+                "type": "Fuldtid (Full-time)",
+                "recruiter": "Career | a JKS Company",
+                "focus": "Merchandise, Procurement, E-commerce, Retail Strategy"
+              }
+            ],
+            "procurement_indicators": [
+              "Active hiring for purchasing authority ('ansvar for indk\u00f8b')",
+              "Vendor negotiation requirements ('forhandle med leverand\u00f8rer')",
+              "Supply chain management ('udvikle og drive merchandiseforretningen')",
+              "Budgetary responsibility ('salgsstrategier, indk\u00f8b, priss\u00e6tning')"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Responsibility",
+            "Vendor Management & Negotiation",
+            "E-commerce & Retail Operations",
+            "Inventory & Supply Chain Planning",
+            "Recruitment Process Outsourcing (RPO)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 412,
+              "elapsed_seconds": 8.06594705581665
+            }
+          ],
+          "reasoning": "This job posting is a direct procurement signal. It explicitly seeks a 'Merchandiseansvarlig' (Merchandise Manager) with specific responsibilities for 'indk\u00f8b' (purchasing/buying), 'priss\u00e6tning' (pricing), and 'forhandling med leverand\u00f8rer' (negotiating with suppliers). It confirms Aalborg H\u00e5ndbold is investing in their merchandising supply chain and requires personnel to manage vendor relationships and procurement strategy."
+        }
+      ],
+      "total_input_tokens": 9128,
+      "total_output_tokens": 1614,
+      "estimated_cost_usd": 0.051594
+    },
+    "procurement_signals": [
+      "B2B Sales Expansion",
+      "Recruitment Process Outsourcing (RPO)",
+      "Sponsorship/Partnership Focus",
+      "Regional Business Development (Nordjylland)",
+      "Direct Procurement Responsibility",
+      "Vendor Management & Negotiation",
+      "E-commerce & Retail Operations",
+      "Inventory & Supply Chain Planning",
+      "Recruitment Process Outsourcing (RPO)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aalborg H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:41:12.034058"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351788",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:51.574168"
+}

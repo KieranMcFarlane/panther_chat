@@ -1,0 +1,123 @@
+{
+  "entity_id": "al-gharafa",
+  "entity_name": "Al-Gharafa",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "algharafa.qa",
+    "al-gharafa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-gharafa",
+      "entity_name": "Al-Gharafa",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://algharafa.qa",
+        "https://al-gharafa.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Gharafa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:09:37.775420",
+          "domain_explored": "https://algharafa.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management (Implied via 'Champions Shirt' sales)",
+              "Ticketing System (Implied via 'Buy your ticket' link)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Operations",
+            "Fan Engagement (Merchandising)",
+            "Event Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.857241153717041
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, match results, player updates, and merchandise sales (jerseys). There are no explicit mentions of IT procurement, job vacancies, or technology infrastructure upgrades in this specific dataset."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:09:49.866459",
+          "domain_explored": "https://al-gharafa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET (inferred from .aspx links)",
+              "Legacy Web Design (e-turn)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Site Design Credit: e-turn ([email protected])",
+              "Copyright: 2008 (Indicates legacy systems)",
+              "Download Center Link (Potential document repository)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Operations",
+            "Legacy Web Infrastructure",
+            "Content Management (News/Updates)",
+            "Sponsorship/Partnership Display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 277,
+              "elapsed_seconds": 4.662633895874023
+            }
+          ],
+          "reasoning": "The scraped content is primarily sports news (match results, player training) and legacy site navigation. While there is a mention of a 'Download Center' and a site design credit, there are no explicit signals of active procurement, RFPs, or new technology investments. The presence of gambling links suggests potential site compromise or low-quality ad traffic, but does not indicate B2B procurement intent."
+        }
+      ],
+      "total_input_tokens": 2755,
+      "total_output_tokens": 467,
+      "estimated_cost_usd": 0.015269999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Gharafa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:09:49.867820"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358796",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:43.188981"
+}

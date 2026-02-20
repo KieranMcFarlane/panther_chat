@@ -1,0 +1,80 @@
+{
+  "entity_id": "asian_handball_federation_(ahf)",
+  "entity_name": "Asian Handball Federation (AHF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "asianhandball.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asian_handball_federation_(ahf)",
+      "entity_name": "Asian Handball Federation (AHF)",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://asianhandball.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asian Handball Federation (AHF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:25:44.433959",
+          "domain_explored": "https://asianhandball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Sports Federation Governance"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 488,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.1923868656158447
+            }
+          ],
+          "reasoning": "The content is a standard sports news report regarding the results of the 22nd Asian Men\u2019s Handball Championship. It focuses on athletic outcomes (Bahrain winning) and event logistics (location in Kuwait). There is no mention of vendors, technology acquisition, job vacancies, or organizational structural changes that would indicate procurement activity."
+        }
+      ],
+      "total_input_tokens": 488,
+      "total_output_tokens": 169,
+      "estimated_cost_usd": 0.003999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asian Handball Federation (AHF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:25:44.435356"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.360648",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:23:32.198035"
+}

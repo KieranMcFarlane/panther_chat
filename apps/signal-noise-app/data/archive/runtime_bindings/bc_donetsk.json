@@ -1,0 +1,213 @@
+{
+  "entity_id": "bc_donetsk",
+  "entity_name": "BC Donetsk",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "vtb-league.com",
+    "bckiev.com.ua",
+    "euroleaguebasketball.net",
+    "admin.euroleague.net",
+    "grokipedia.com",
+    "behance.net",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bc_donetsk",
+      "entity_name": "BC Donetsk",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bckiev.com.ua",
+        "https://commons.wikimedia.org",
+        "https://admin.euroleague.net",
+        "https://grokipedia.com",
+        "https://behance.net",
+        "https://euroleaguebasketball.net",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BC Donetsk may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:57:11.299738",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Ecosystem",
+            "Team Roster Navigation",
+            "Sponsorship Branding (WINLINE, BETSITI)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.8222758769989014
+            }
+          ],
+          "reasoning": "The content is exclusively the navigation menu and team roster for the VTB United League (vtb-league.com). It lists basketball teams (e.g., CSKA Moscow, Zenit) and generic site sections (News, Stats, Media). There is no mention of 'BC Donetsk', nor are there any procurement signals, job postings, or technology stack indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:57:34.411712",
+          "domain_explored": "https://bckiev.com.ua",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:57:45.201110",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (EuroLeague TV)",
+              "Digital Content Management (Highlights/Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Executive Appointment (Chus Bueno as CEO)",
+              "Media Rights Acquisition (Serie A Unipol)"
+            ]
+          },
+          "patterns_found": [
+            "Sports League Ecosystem",
+            "Sponsorship Branding (BKT, Motorola, WINLINE)",
+            "Media Rights Management (Streaming)",
+            "Executive Leadership News (CEO)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 253,
+              "elapsed_seconds": 3.5225799083709717
+            }
+          ],
+          "reasoning": "The content is from the Euroleague Basketball main governing body site, focusing on league-wide news, highlights, and executive appointments. It lacks specific procurement signals, technology stacks, or vendor partnerships relevant to the specific entity 'BC Donetsk'. This is a top-level ecosystem page, not a team or club procurement portal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:57:59.235218",
+          "domain_explored": "https://admin.euroleague.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:58:04.869603",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:58:11.412651",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:58:20.719233",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MediaWiki"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "User-Generated Content",
+            "Non-Profit Ecosystem",
+            "Public Domain Licensing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.1965839862823486
+            }
+          ],
+          "reasoning": "The content is the generic landing page of Wikimedia Commons, a media repository. It contains no specific information about 'BC Donetsk', its operations, or its procurement activities. It is a broad, unrelated platform used for hosting images, not a source for corporate intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 4367,
+      "total_output_tokens": 612,
+      "estimated_cost_usd": 0.022281000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BC Donetsk may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:58:20.720329"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228622",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:39.439978"
+}

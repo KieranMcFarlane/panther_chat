@@ -1,0 +1,262 @@
+{
+  "entity_id": "volley_lugano",
+  "entity_name": "Volley Lugano",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "volleylugano.ch",
+    "volleyball.ch",
+    "www-old.cev.eu",
+    "women.volleybox.net",
+    "threads.com",
+    "beachvolleylugano.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volley_lugano",
+      "entity_name": "Volley Lugano",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://beachvolleylugano.com",
+        "https://www-old.cev.eu",
+        "https://threads.com",
+        "https://volleylugano.ch",
+        "https://women.volleybox.net",
+        "https://volleyball.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volley Lugano may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:51:49.118081",
+          "domain_explored": "https://volleylugano.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Victoria Sports (External E-commerce/Shop Platform)",
+              "Social Media Integration (Instagram/Facebook links implied)",
+              "Website CMS (Standard navigation structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Victoria Sports for online shop",
+              "Sponsor management (Rivopharm, La Mobiliare)",
+              "Annual registration drive ('Iscrizioni 25/26')",
+              "Loyalty program management ('Carta vantaggio')"
+            ]
+          },
+          "patterns_found": [
+            "External E-commerce Platform Usage",
+            "Sponsorship Ecosystem",
+            "Membership Registration Cycles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 334,
+              "elapsed_seconds": 6.209965944290161
+            }
+          ],
+          "reasoning": "The content reveals a reliance on a third-party e-commerce platform (Victoria Sports) for merchandise, indicating a potential procurement relationship or partnership. The 'Iscrizioni 25/26' (Registrations) and 'Carta vantaggio' (Loyalty Card) sections suggest active administrative and customer management processes, likely requiring CRM or database management tools. While no direct RFP is visible, the operational complexity (LNA team, Academy, Youth sectors) implies a need for backend software solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:51:57.137787",
+          "domain_explored": "https://volleyball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online-Trainingsplaner (Federation provided tool)",
+              "Volleyball.SwissMade (Educational Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Anzeigenmarkt (Classifieds for staff/players - Federation level)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Governance",
+            "Grassroots Support Tools",
+            "Political Advocacy (SRG Initiative)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 255,
+              "elapsed_seconds": 3.4425082206726074
+            }
+          ],
+          "reasoning": "The content analyzed is from 'Swiss Volley' (volleyball.ch), the national governing body, not the specific entity 'Volley Lugano'. While the site lists tools like 'Club Management' courses and 'Online-Trainingsplaner', these are member services provided by the federation to clubs, not direct procurement activities by Volley Lugano. There is no evidence of Lugano-specific purchasing intent, technology stack adoption, or job postings."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:52:12.492375",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Governing Body Content Aggregation",
+            "Historical Event Scheduling",
+            "Generic Federation Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 196,
+              "elapsed_seconds": 11.19030499458313
+            }
+          ],
+          "reasoning": "The content is scraped from the Confederation Europ\u00e9enne de Volleyball (CEV) website, a continental governing body. It lists historical events, generic navigation links, and international match results. There is no specific content related to 'Volley Lugano', nor are there procurement signals, technology stacks, or job postings relevant to the target entity. This is irrelevant noise for the specific entity analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:52:21.126242",
+          "domain_explored": "https://women.volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Volleybox Platform (Third-party)",
+              "Forum Software (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Sports Aggregator",
+            "Global Player Transfer Database",
+            "User-Generated Content (UGC) Ecosystem",
+            "Generic Forum Architecture"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 235,
+              "elapsed_seconds": 3.709773063659668
+            }
+          ],
+          "reasoning": "The content is from Volleybox, a third-party database for volleyball transfers and rankings, not the official Volley Lugano entity. While it contains data relevant to the sports industry (transfers, rumors), it provides no specific information regarding Volley Lugano's internal procurement operations, technology stack, or governance. It is a noise source in the context of B2B procurement intelligence for the specific target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:52:33.895335",
+          "domain_explored": "https://threads.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Social Media Feed",
+            "Irrelevent User-Generated Content",
+            "Consumer Entertainment Topics",
+            "Lack of Corporate Governance Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 184,
+              "elapsed_seconds": 4.688425779342651
+            }
+          ],
+          "reasoning": "The provided content is a scraped dump of a generic social media feed (Threads.net) containing entertainment news, random user affirmations, and unrelated crime discussions. There is absolutely no content related to Volley Lugano, sports management, or organizational procurement activities. This is entirely irrelevant noise."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:53:18.711361",
+          "domain_explored": "https://beachvolleylugano.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dink App (Booking/CRM)",
+              "MySQL / mysqli",
+              "PHP"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor reliance for membership management (Dink)",
+              "Infrastructure stress signals (Database connection errors)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party SaaS Dependency (Dink App)",
+            "Infrastructure Scalability Issues (DB Connection Limits)",
+            "Digital-First Operations (Mobile Booking)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 265,
+              "elapsed_seconds": 37.23058319091797
+            }
+          ],
+          "reasoning": "The content reveals a critical dependency on the 'Dink' app for core operations (course registration and court booking), indicating a procurement relationship with a software vendor. Furthermore, the exposed database errors ('max_user_connections') highlight underlying infrastructure limitations and potential technical debt, suggesting a future need for hosting upgrades or database optimization services."
+        }
+      ],
+      "total_input_tokens": 8903,
+      "total_output_tokens": 1469,
+      "estimated_cost_usd": 0.048743999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volley Lugano may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:53:18.713813"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326932",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:14.771018"
+}

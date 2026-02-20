@@ -1,0 +1,170 @@
+{
+  "entity_id": "bc_rytas",
+  "entity_name": "BC Rytas",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "zoominfo.com",
+    "puentehillssubaru.com",
+    "centroasuncionns.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lt.linkedin.com/jobs/view/marketingo-projekt%C5%B3-vadovas-%C4%97-at-bc-rytas-vilnius-3993400626"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bc_rytas",
+      "entity_name": "BC Rytas",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://puentehillssubaru.com",
+        "https://zoominfo.com",
+        "https://lt.linkedin.com/jobs/view/marketingo-projekt%C5%B3-vadovas-%C4%97-at-bc-rytas-vilnius-3993400626",
+        "https://centroasuncionns.es"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Sponsorship Management Role",
+        "Marketing Agency Experience Requirement",
+        "Project Coordination & Fulfillment",
+        "Hybrid Work Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BC Rytas may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:23:17.479657",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:23:20.334378",
+          "domain_explored": "https://puentehillssubaru.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:23:28.346500",
+          "domain_explored": "https://centroasuncionns.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Language Mismatch (Spanish/Catalan vs Lithuanian/English)",
+            "Educational Sector Context",
+            "Generic Document Repository Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 498,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.946913957595825
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Centro Asunci\u00f3n Nuestra Se\u00f1ora', an educational institution located in Spain (evidenced by the .es domain and Spanish/Catalan language text). BC Rytas is a Lithuanian professional basketball club. There is no logical connection, shared geography, or shared business sector between these two entities to suggest procurement relevance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:23:35.964488",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/marketingo-projekt%C5%B3-vadovas-%C4%97-at-bc-rytas-vilnius-3993400626",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Project Management Tools (implied by 'Project planning, coordination')",
+              "Collaboration Software (implied by 'Hybrid work' model)"
+            ],
+            "job_postings": [
+              {
+                "title": "Marketingo projekt\u0173 vadovas(-\u0117)",
+                "focus": "Sponsor communication, project implementation, obligation fulfillment",
+                "requirements": "Agency experience preferred, project management skills",
+                "salary": "1500 EUR (net)"
+              }
+            ],
+            "procurement_indicators": [
+              "Active search for personnel to manage sponsor relationships",
+              "Requirement for 'agency experience' implies reliance on 3rd party marketing vendors",
+              "Role involves 'execution of taken obligations' suggesting contract fulfillment management",
+              "Budget allocation for marketing personnel (1500 EUR/mo + benefits)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Management Role",
+            "Marketing Agency Experience Requirement",
+            "Project Coordination & Fulfillment",
+            "Hybrid Work Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 415,
+              "elapsed_seconds": 4.287369012832642
+            }
+          ],
+          "reasoning": "The job posting for a 'Marketingo projekt\u0173 vadovas(-\u0117)' (Marketing Project Manager) explicitly focuses on sponsor relations and project fulfillment. The requirement for agency experience suggests BC Rytas relies on external partners for execution. This role acts as a bridge between the club and its vendors/partners, indicating active procurement and management of marketing services."
+        }
+      ],
+      "total_input_tokens": 1990,
+      "total_output_tokens": 605,
+      "estimated_cost_usd": 0.015045
+    },
+    "procurement_signals": [
+      "Sponsorship Management Role",
+      "Marketing Agency Experience Requirement",
+      "Project Coordination & Fulfillment",
+      "Hybrid Work Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BC Rytas may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:23:35.965232"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.213600",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:57.593225"
+}

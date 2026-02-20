@@ -1,0 +1,230 @@
+{
+  "entity_id": "nepal_rugby_association",
+  "entity_name": "Nepal Rugby Association",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "asiarugby.com",
+    "nocnepal.org.np",
+    "grokipedia.com",
+    "nepalrugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://np.linkedin.com/jobs/view/head-coach-at-nepal-rugby-association-3470042457",
+      "https://np.linkedin.com/jobs/view/development-manager-at-nepal-rugby-association-3522841692"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nepal_rugby_association",
+      "entity_name": "Nepal Rugby Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://nepalrugby.com",
+        "https://np.linkedin.com/jobs/view/head-coach-at-nepal-rugby-association-3470042457",
+        "https://np.linkedin.com/jobs/view/development-manager-at-nepal-rugby-association-3522841692",
+        "https://grokipedia.com",
+        "https://asiarugby.com",
+        "https://nocnepal.org.np"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nepal Rugby Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:35:42.713173",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:35:46.413322",
+          "domain_explored": "https://nocnepal.org.np",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:35:49.681339",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:35:55.385624",
+          "domain_explored": "https://nepalrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "React (Likely)",
+              "JavaScript-heavy stack"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering (JavaScript required)",
+            "SPA (Single Page Application) architecture"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 458,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.2812209129333496
+            }
+          ],
+          "reasoning": "The target URL (nepalrugby.com) renders content dynamically via JavaScript. The provided text ('You need to enable JavaScript to run this app.') indicates that the raw HTML response is empty of semantic data, job postings, or procurement signals. Without executing JavaScript, no procurement intelligence can be gathered from this source."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:36:03.897064",
+          "domain_explored": "https://np.linkedin.com/jobs/view/head-coach-at-nepal-rugby-association-3470042457",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruiting/Talent Acquisition)"
+            ],
+            "job_postings": [
+              {
+                "title": "Head Coach",
+                "department": "National Teams / Rugby Operations",
+                "contract_type": "Full-time (1 Year Tenure)",
+                "status": "Closed (Posted ~2 years ago)",
+                "contact": "bijayakhadka@nepalrugby.com"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget allocation for expatriate or high-level technical staff",
+              "Investment in 'Coach Development' and 'Workshops' (Potential for training material procurement)",
+              "Provision of 'Accommodation' suggests a per-diem or logistics procurement component",
+              "Direct hiring via email indicates low digital maturity in HR processes (potential for HRIS/ATS procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Human Resource Procurement",
+            "Service-based Contracting",
+            "Operational Email Discovery",
+            "LinkedIn Recruiting Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 387,
+              "elapsed_seconds": 5.091676235198975
+            }
+          ],
+          "reasoning": "While this is not a technology or goods procurement, it is a direct procurement signal for services (Head Coach). It confirms the organization is actively hiring and investing in technical capacity building. The discovery of the direct email address (bijayakhadka@nepalrugby.com) is a valuable lead for vendor outreach, as it bypasses generic web forms."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:36:10.805284",
+          "domain_explored": "https://np.linkedin.com/jobs/view/development-manager-at-nepal-rugby-association-3522841692",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Reporting Systems (Quarterly)",
+              "Email (Gmail usage for operations)",
+              "Potential CRM/Database (for volunteer/player pathways)"
+            ],
+            "job_postings": [
+              {
+                "role": "Development Manager",
+                "type": "Full-time",
+                "tenure": "2 years",
+                "reporting_line": "General Manager",
+                "key_procurement_trigger": "Source funding, Establish partnerships, Monitor activity"
+              }
+            ],
+            "procurement_indicators": [
+              "Active search for funding sources (Grant writing/Donor management)",
+              "Need for volunteer management systems",
+              "Requirement for structured player pathway tools",
+              "Partnership establishment (Vendor sourcing)"
+            ],
+            "contacts": [
+              "bijayakhadka@nepalrugby.com",
+              "govindaghimire39@gmail.com"
+            ]
+          },
+          "patterns_found": [
+            "Human Resource Procurement",
+            "Operational Email Discovery",
+            "Funding & Partnership Strategy",
+            "Quarterly Reporting Cadence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1578,
+              "output_tokens": 441,
+              "elapsed_seconds": 3.3418729305267334
+            }
+          ],
+          "reasoning": "The job posting confirms active procurement of human capital (Development Manager) and reveals operational processes that drive technology and service procurement. Specifically, the requirement to 'Source funding' and 'Establish partnerships' indicates a need for CRM/Grant management tools, while the 'quarterly reporting system' suggests data collection/analytics needs. The discovery of a secondary operational email (govindaghimire39@gmail.com) expands the attack surface for vendor outreach."
+        }
+      ],
+      "total_input_tokens": 3548,
+      "total_output_tokens": 1019,
+      "estimated_cost_usd": 0.025929
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nepal Rugby Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:36:10.806008"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291156",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:25:48.075214"
+}

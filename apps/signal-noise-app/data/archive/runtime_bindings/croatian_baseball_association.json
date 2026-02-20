@@ -1,0 +1,264 @@
+{
+  "entity_id": "croatian_baseball_association",
+  "entity_name": "Croatian Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball-cro.hr",
+    "baseball-reference.com",
+    "wbsceurope.org",
+    "wikidata.org",
+    "iwgwomenandsport.org",
+    "pepperdinewaves.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "croatian_baseball_association",
+      "entity_name": "Croatian Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://baseball-reference.com",
+        "https://iwgwomenandsport.org",
+        "https://pepperdinewaves.com",
+        "https://wbsceurope.org",
+        "https://baseball-cro.hr",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Croatian Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:49:21.234430",
+          "domain_explored": "https://baseball-cro.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WBSC Event Management System",
+              "Live Scoring Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of WBSC subdomain (croatiabaseball.wbsc.org)",
+              "Real-time scorekeeping infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Platform Dependency",
+            "Real-time Data Integration",
+            "Standardized Federation Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 539,
+              "output_tokens": 243,
+              "elapsed_seconds": 4.230165004730225
+            }
+          ],
+          "reasoning": "The content reveals a dependency on the WBSC (World Baseball Softball Confederation) platform for live scoring and results management. This indicates a procurement signal for 'Software as a Service' (SaaS) or specialized sports data management tools. The association relies on external federation technology rather than building in-house solutions, suggesting a vendor relationship model."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:49:32.298948",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Marketing Manager, Content & Creative",
+                "entity": "Sports Reference (Baseball-Reference.com)",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain",
+            "US-Centric Content",
+            "Commercial Product Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 228,
+              "elapsed_seconds": 4.158110857009888
+            }
+          ],
+          "reasoning": "The scraped content is from Baseball-Reference.com, a US-based sports statistics website. It contains no information regarding the Croatian Baseball Association, its procurement activities, or its technology stack. The content focuses on MLB statistics, US team standings, and commercial products (Stathead), making it irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:49:47.516419",
+          "domain_explored": "https://wbsceurope.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Platforms",
+              "Federation Management Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Registration (Barcelona 2026)",
+              "Delegate Travel & Accommodation",
+              "Conference Networking (Vendor Discovery)"
+            ]
+          },
+          "patterns_found": [
+            "Event-Based Procurement Cycle",
+            "Federation Ecosystem Dependency",
+            "Travel & Logistics Spend",
+            "Professional Development Budget"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 551,
+              "output_tokens": 283,
+              "elapsed_seconds": 7.265048027038574
+            }
+          ],
+          "reasoning": "While the WBSC Europe site is not the direct procurement portal for the Croatian Baseball Association, it identifies a recurring high-value event (European Softball Blue Convention) that necessitates procurement. The association will require travel, accommodation, and registration services for delegates. Additionally, conventions often serve as venues for discovering and selecting enterprise-level sports technologies (stats, ticketing, CRM) used by other federations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:50:01.212576",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx (Event Scheduling)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Content",
+            "Community-Driven Data Model",
+            "Open Source Licensing (CC0)",
+            "Volunteer Contribution Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 288,
+              "elapsed_seconds": 5.853825092315674
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a free and open knowledge base. It contains no specific information regarding the 'Croatian Baseball Association' (Hrvatski baseball savez). The content focuses on general Wikidata functionality (SPARQL, editing, community portal) and global news (WikidataCon 2025). There are no procurement signals, technology stacks specific to the target entity, or governance patterns relevant to the client. This is a false positive in the search chain, likely triggered by the entity having a generic Wikidata entry, but the page content itself is not relevant to procurement intelligence for the client."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:50:13.285661",
+          "domain_explored": "https://iwgwomenandsport.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mission-Driven Advocacy Content",
+            "Global Network Structure",
+            "Generic Call-to-Action (Get Involved)",
+            "No Commercial/Procurement Language"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.304360866546631
+            }
+          ],
+          "reasoning": "The content is exclusively focused on advocacy, equality, and networking for women in sport. It describes the organization's mission ('level the playing field') and goals but contains zero technical infrastructure, operational needs, or purchasing signals. It is a high-level marketing/mission statement with no relevance to the specific procurement intelligence of the Croatian Baseball Association."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:50:23.628308",
+          "domain_explored": "https://pepperdinewaves.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sidearm Sports (inferred from /calendar.aspx path structure common in US college athletics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Entity",
+            "US Collegiate Athletics Context",
+            "Generic Sports Platform Artifacts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 728,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.0313451290130615
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Pepperdine Waves,' the athletic division of Pepperdine University (USA). This is completely unrelated to the Croatian Baseball Association. The content consists of standard collegiate sports navigation (Schedule, Results, Composite Calendar) and does not contain Croatian procurement signals, federation governance data, or relevant technology stacks for the target entity."
+        }
+      ],
+      "total_input_tokens": 6308,
+      "total_output_tokens": 1470,
+      "estimated_cost_usd": 0.040974
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Croatian Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:50:23.630537"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.313473",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:48.078786"
+}

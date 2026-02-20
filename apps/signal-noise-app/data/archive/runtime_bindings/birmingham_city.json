@@ -1,0 +1,346 @@
+{
+  "entity_id": "birmingham_city",
+  "entity_name": "Birmingham City",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "birmingham.gov.uk",
+    "birminghamal.gov",
+    "newsnow.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/birmingham-city-council/jobs",
+      "https://uk.linkedin.com/company/birmingham-city-fc/jobs",
+      "https://www.linkedin.com/showcase/birmingham-city-jobs-birmingham/",
+      "https://uk.linkedin.com/jobs/birmingham-city-fc-jobs",
+      "https://uk.linkedin.com/jobs/jobs-in-birmingham",
+      "https://uk.linkedin.com/jobs/full-time-.-jobs-birmingham",
+      "https://uk.linkedin.com/company/jobs-in-birmingham",
+      "https://uk.linkedin.com/jobs/employment-officer-jobs-birmingham"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "birmingham_city",
+      "entity_name": "Birmingham City",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://birmingham.gov.uk",
+        "https://birminghamal.gov",
+        "https://uk.linkedin.com/company/birmingham-city-council/jobs",
+        "https://uk.linkedin.com/jobs/birmingham-city-fc-jobs",
+        "https://newsnow.co.uk",
+        "https://uk.linkedin.com/jobs/jobs-in-birmingham",
+        "https://www.linkedin.com/showcase/birmingham-city-jobs-birmingham/",
+        "https://uk.linkedin.com/company/birmingham-city-fc/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Recruitment for Property & Planning",
+        "Business Development Function",
+        "Contract Works Management",
+        "Programme Support (CYPF - Children, Young People & Families)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Birmingham City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:45:12.655855",
+          "domain_explored": "https://birmingham.gov.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:45:22.573842",
+          "domain_explored": "https://birminghamal.gov",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Payment Systems (Credit Card processing)",
+              "311 Call Center Software",
+              "Permitting Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Employment & Bidding Portal (Link present)",
+              "Business License Renewal System",
+              "Food Truck Permit Application Process",
+              "Traffic Calming Infrastructure Program"
+            ]
+          },
+          "patterns_found": [
+            "Citizen Service Portals (311, Tax, Tickets)",
+            "Public-Private Partnerships (Jimmie Hale Mission)",
+            "Community Development Initiatives (Traffic Calming)",
+            "Standard Municipal Governance Structure (City Council/Committees)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 323,
+              "elapsed_seconds": 6.7646849155426025
+            }
+          ],
+          "reasoning": "The content confirms the entity is the City of Birmingham, Alabama (not Birmingham, UK). While the homepage is service-oriented, the presence of specific portals for 'Tax & License', 'Permits', and 'Employment & Bidding' indicates established procurement and vendor management channels. The 'Employment & Bidding' link is a direct signal of procurement activity, warranting a weak accept to investigate that specific sub-domain."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:45:51.949461",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevance to Entity",
+            "General News Aggregation",
+            "Political Scandal Coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 161,
+              "elapsed_seconds": 18.60743808746338
+            }
+          ],
+          "reasoning": "The provided content is a general news feed (NewsNow) covering national UK politics, international affairs, and entertainment. There is no mention of Birmingham City Council, Birmingham City (US), or any local governance, procurement, or technology implementation specific to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:45:58.821161",
+          "domain_explored": "https://uk.linkedin.com/company/birmingham-city-council/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "Senior Property & Support Officer",
+              "Principal Development Planning Officer",
+              "Business Development Manager",
+              "Contract Works Officer",
+              "Programme Support Officer (CYPF)"
+            ],
+            "procurement_indicators": [
+              "Contract Works Officer (Direct vendor/contract management)",
+              "Business Development Manager (Likely involved in partnerships/PPIs)",
+              "Principal Development Planning Officer (Signals future infrastructure/consultancy RFPs)",
+              "Programme Support Officer (Indicates active programmes requiring resources)"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment for Property & Planning",
+            "Business Development Function",
+            "Contract Works Management",
+            "Programme Support (CYPF - Children, Young People & Families)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 383,
+              "elapsed_seconds": 3.42653226852417
+            }
+          ],
+          "reasoning": "The content confirms the correct entity (Birmingham City Council, UK) and reveals active hiring for roles that directly imply procurement and vendor management activities. Specifically, the 'Business Development Manager' and 'Contract Works Officer' roles are strong indicators of procurement intent and contract management. The 'Principal Development Planning Officer' role suggests upcoming infrastructure projects requiring vendor services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:46:09.059056",
+          "domain_explored": "https://uk.linkedin.com/company/birmingham-city-fc/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Product Platforms",
+              "Marketing Automation Tools"
+            ],
+            "job_postings": [
+              "Academy Physiotherapist",
+              "Senior Marketing Planning & Campaigns Manager",
+              "Physiotherapist - Women's First Team",
+              "People Partner",
+              "Digital Product Marketing Executive"
+            ],
+            "procurement_indicators": [
+              "Marketing Campaign Management",
+              "Digital Product Development"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sports Club vs. Local Authority)",
+            "Commercial Marketing Focus",
+            "Sports Medicine Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 293,
+              "elapsed_seconds": 6.850746154785156
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Birmingham City FC (the football club), not Birmingham City Council (the local government entity). While the job titles (e.g., Digital Product Marketing Executive) suggest technology adoption, the entity is a commercial sports organization, which falls outside the scope of public sector procurement intelligence for the specified target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:46:16.675328",
+          "domain_explored": "https://www.linkedin.com/showcase/birmingham-city-jobs-birmingham/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Family Solicitor (Private Legal 500 Firm)",
+              "Business Studies Teacher (Education Sector)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Third-Party Recruiter vs. Local Authority)",
+            "Generic Job Aggregation",
+            "Private Sector Focus (Legal 500 Firm, Law Staff Limited)",
+            "Content Repetition/Spam Indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1634,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.773171901702881
+            }
+          ],
+          "reasoning": "The analyzed content is from a third-party recruitment aggregator (jobsRmine/Law Staff Limited) targeting the general Birmingham, UK area, not the official Birmingham City Council or Birmingham, AL government. The specific job listings (Family Solicitor, Business Studies Teacher) are for private sector firms or schools, indicating no direct procurement signals or governance patterns from the target entity 'Birmingham City'."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:46:24.822639",
+          "domain_explored": "https://uk.linkedin.com/jobs/birmingham-city-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "People Partner",
+              "Digital Product Marketing Executive",
+              "Senior Marketing Planning & Campaigns Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sports Club vs. Local Authority)",
+            "Commercial Marketing Focus",
+            "Sports Medicine Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1704,
+              "output_tokens": 218,
+              "elapsed_seconds": 4.695055246353149
+            }
+          ],
+          "reasoning": "The content is explicitly for Birmingham City FC (Football Club), not Birmingham City Council or the local government entity. The job postings (People Partner, Marketing Executive) are related to sports club operations and commercial revenue, not public sector procurement or governance. This confirms the entity mismatch identified in Iteration 5."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:46:32.081528",
+          "domain_explored": "https://uk.linkedin.com/jobs/jobs-in-birmingham",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Lung Cancer Admin Support (Aneurin Bevan University Health Board)",
+              "Cabin Crew Opportunities (Emirates)",
+              "Retail Sales Advisor (UNIFACCAMP)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Geographic Aggregator vs. Specific Local Authority)",
+            "Private Sector Dominance (Emirates, UNIFACCAMP)",
+            "Healthcare Sector Noise (Aneurin Bevan - Wales based)",
+            "Low Signal-to-Noise Ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1764,
+              "output_tokens": 273,
+              "elapsed_seconds": 2.9043807983398438
+            }
+          ],
+          "reasoning": "The content represents a generic geographic job search aggregation for 'Birmingham' rather than specific recruitment or procurement activity by Birmingham City Council (the Entity). The listings are dominated by private sector employers (Emirates), unrelated healthcare boards (Aneurin Bevan), and irrelevant entities (UNIFACCAMP). There is no direct link to the target entity's procurement, governance, or technology stack."
+        }
+      ],
+      "total_input_tokens": 11019,
+      "total_output_tokens": 1903,
+      "estimated_cost_usd": 0.061602000000000004
+    },
+    "procurement_signals": [
+      "Active Recruitment for Property & Planning",
+      "Business Development Function",
+      "Contract Works Management",
+      "Programme Support (CYPF - Children, Young People & Families)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Birmingham City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:46:32.082317"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.120599",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:27:58.637055"
+}

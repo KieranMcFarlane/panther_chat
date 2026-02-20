@@ -1,0 +1,398 @@
+{
+  "entity_id": "trinidad_&_tobago",
+  "entity_name": "Trinidad & Tobago",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "foreign.gov.tt",
+    "finance.gov.tt",
+    "info.ttbizlink.gov.tt",
+    "chamber.org.tt",
+    "fintechtt.com",
+    "metoffice.gov.tt"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://tt.linkedin.com/jobs/trinidad-%26-tobago-jobs",
+      "https://tt.linkedin.com/jobs/jobs-in-dover",
+      "https://tt.linkedin.com/jobs",
+      "https://tt.linkedin.com/jobs/jobs-in-lancaster",
+      "https://tt.linkedin.com/jobs/jobs-in-lowell",
+      "https://tt.linkedin.com/jobs/jobs-in-glendale",
+      "https://tt.linkedin.com/jobs/jobs-in-dayton",
+      "https://tt.linkedin.com/jobs/jobs-in-altus?countryRedirected=1",
+      "https://tt.linkedin.com/jobs/top-jobs",
+      "https://tt.linkedin.com/jobs/jobs-in-palm-city"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "trinidad_&_tobago",
+      "entity_name": "Trinidad & Tobago",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://tt.linkedin.com/jobs",
+        "https://tt.linkedin.com/jobs/trinidad-%26-tobago-jobs",
+        "https://finance.gov.tt",
+        "https://tt.linkedin.com/jobs/jobs-in-lowell",
+        "https://fintechtt.com",
+        "https://chamber.org.tt",
+        "https://metoffice.gov.tt",
+        "https://foreign.gov.tt",
+        "https://tt.linkedin.com/jobs/jobs-in-dover",
+        "https://tt.linkedin.com/jobs/jobs-in-lancaster",
+        "https://info.ttbizlink.gov.tt"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Trinidad & Tobago may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:18:45.096078",
+          "domain_explored": "https://foreign.gov.tt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:19:00.415116",
+          "domain_explored": "https://finance.gov.tt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:19:22.161316",
+          "domain_explored": "https://info.ttbizlink.gov.tt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:19:37.035133",
+          "domain_explored": "https://chamber.org.tt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) for digital magazine publishing",
+              "Event management platforms (for Annual Meeting & Outlook)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Publication of 'National Budget Recommendations 2025-2026' (Indicates policy advocacy and future spending priorities)",
+              "Business Outlook Index Q4 2025 (Indicates market sentiment and investment climate)",
+              "Annual Meeting & Outlook 2026/2027 (High-level networking event for strategic planning)"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Advocacy",
+            "Economic Intelligence Reporting",
+            "Business Networking Events"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 356,
+              "elapsed_seconds": 5.304746150970459
+            }
+          ],
+          "reasoning": "The Trinidad & Tobago Chamber of Industry and Commerce is a key private sector entity. While not a direct government procurement portal, their 'National Budget Recommendations' and 'Business Outlook Index' reports provide high-value intelligence on macro-economic trends, sectoral priorities, and policy advocacy. This helps identify where the private sector is pushing for government spending or regulatory changes, which often precedes public sector opportunities. The 'Member 2 Member' program also indicates B2B procurement activity within the local ecosystem."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:19:52.730807",
+          "domain_explored": "https://fintechtt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Virtual Asset Platforms",
+              "Digital Payment Gateways",
+              "Mobile Financial Services",
+              "Broadband Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Government collaboration on 'Cash-less Society' initiatives",
+              "TTIFC (Trinidad & Tobago International Financial Centre) transition support",
+              "Virtual Asset Working Group (VAWG) position statements",
+              "Board nominations and governance structure"
+            ]
+          },
+          "patterns_found": [
+            "Public-Private Partnership (PPP) Facilitation",
+            "Digital Transformation Advocacy (Cash-less Society)",
+            "Virtual Asset Regulation Working Group",
+            "Industry Association Networking"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 346,
+              "elapsed_seconds": 8.882548093795776
+            }
+          ],
+          "reasoning": "The content represents a key industry body (FinTech Association) acting as a bridge between the government and private sector. While not a direct procurement portal, it signals high-level government intent to adopt FinTech solutions (cash-less society, virtual assets) and indicates where public sector digital transformation budgets will likely be focused. It provides context on the ecosystem and regulatory standards that influence future government RFPs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:20:03.380305",
+          "domain_explored": "https://metoffice.gov.tt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Drupal (inferred from /node/ URL structure)",
+              "WordPress (External Blog)",
+              "PHP (inferred from .php login script)",
+              "Legacy Internal Web Portal (HTTP on IP 190.58.130.190)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Internal Staff Portal (suggests intranet maintenance contracts)",
+              "Data Dissemination Services (implies hosting/bandwidth needs)",
+              "Climate Section Operations (implies scientific software/hardware)"
+            ]
+          },
+          "patterns_found": [
+            "Scientific Data Processing & Dissemination",
+            "Legacy Infrastructure (Internal Web Portal)",
+            "Content Management System (Drupal/WordPress)",
+            "Climate & Agriculture Monitoring Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 362,
+              "elapsed_seconds": 3.630419969558716
+            }
+          ],
+          "reasoning": "The Trinidad and Tobago Meteorological Service (TTMS) site indicates a reliance on legacy infrastructure (internal IP address login) and a mixed content management stack (Drupal main site with WordPress blog). While there are no explicit RFPs in this text, the operational requirements for 'Climate Data', 'Agro-met Bulletins', and 'Dryness Monitoring' suggest a need for data storage, processing, and web hosting services. The presence of a 'Staff Login' and internal IP hints at ongoing IT maintenance needs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:20:17.480440",
+          "domain_explored": "https://tt.linkedin.com/jobs/trinidad-%26-tobago-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cruise Booking Agent (Evermore Travel LLC - Georgia/US)",
+              "Booking Agent (Evermore Travel LLC - Nevada/US)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate (Sign-in Wall)",
+            "Geographic Mismatch (US-based results)",
+            "Low-value Commercial Listings (Travel Agents)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1628,
+              "output_tokens": 224,
+              "elapsed_seconds": 3.1501269340515137
+            }
+          ],
+          "reasoning": "The scraped content represents a 'Sign In' wall and generic job listings that are geographically irrelevant (United States-based remote roles for a travel agency). There is no accessible content regarding Trinidad & Tobago government procurement, local RFPs, or public sector technology stacks. The signal-to-noise ratio for the target entity is effectively zero."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:20:34.314831",
+          "domain_explored": "https://tt.linkedin.com/jobs/jobs-in-dover",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Care Assistant (Caremark Ltd)",
+              "Trainee Probation Officer (HMPPS)",
+              "Health Care Assistant (NHS)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Dover, England vs Trinidad & Tobago)",
+            "Sector Mismatch (Public Sector/Healthcare vs Target Procurement)",
+            "Low-value Commercial Listings (Care Assistants)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1690,
+              "output_tokens": 234,
+              "elapsed_seconds": 4.528403997421265
+            }
+          ],
+          "reasoning": "The scraped content from 'tt.linkedin.com/jobs/jobs-in-dover' returns listings for Dover, England (UK), not Dover, Trinidad & Tobago. The entities listed (Caremark Ltd, HMPPS, NHS) are UK-based with no relevance to T&T procurement. This confirms the platform's tendency to misdirect geographic queries, rendering it useless for local signal gathering."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:20:44.579126",
+          "domain_explored": "https://tt.linkedin.com/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate (Sign-in Wall)",
+            "Geographic Mismatch (Cuautitl\u00e1n Izcalli, Mexico vs Trinidad & Tobago)",
+            "Generic Content Aggregation",
+            "No Public Sector Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.2157139778137207
+            }
+          ],
+          "reasoning": "The scraped content represents the logged-out homepage of LinkedIn. It is blocked by an authentication gate ('Sign in'), preventing access to actual job listings. Furthermore, the visible 'suggested search' links point to locations in Mexico (Cuautitl\u00e1n Izcalli), indicating a failure to target the Trinidad & Tobago geography. There is no accessible information regarding procurement, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:21:02.268966",
+          "domain_explored": "https://tt.linkedin.com/jobs/jobs-in-lancaster",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "MSK Physiotherapist (Richmond Villages)",
+              "Admin Officer - Lancaster Courthouse (Ministry of Justice UK)",
+              "Estates Manager (NHS Foundation Trust)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Lancaster, England vs Trinidad & Tobago)",
+            "Sector Mismatch (Healthcare/UK Public Sector vs Target Procurement)",
+            "Generic Content Aggregation (LinkedIn Job Listings)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1829,
+              "output_tokens": 228,
+              "elapsed_seconds": 4.129046201705933
+            }
+          ],
+          "reasoning": "The content provided is exclusively for job vacancies located in Lancaster, England (e.g., Ministry of Justice UK, NHS Foundation Trust). There is no relevance to Trinidad & Tobago procurement signals. The search path continues to yield irrelevant geographic results."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:21:15.316701",
+          "domain_explored": "https://tt.linkedin.com/jobs/jobs-in-lowell",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive Assistant at PUMA Group (Somerville, MA)",
+              "Junior Planner Wholesale at PUMA Group (Somerville, MA)",
+              "Paid Social Associate at the LEGO Group (Boston, MA)",
+              "Social Media Content Creator at Keurig Dr Pepper Inc. (Burlington, MA)",
+              "Analytics Engineer at hackajob (Waltham, MA)",
+              "Director of Operations at MUSEUM OF ICE CREAM (Boston, MA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Lowell, MA vs Trinidad & Tobago)",
+            "Commercial Sector Dominance (PUMA, LEGO, Keurig Dr Pepper)",
+            "Generic Job Aggregation",
+            "Irrelevant Job Titles (Executive Assistant, Social Media Creator)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1907,
+              "output_tokens": 322,
+              "elapsed_seconds": 3.8222460746765137
+            }
+          ],
+          "reasoning": "The scraped content exclusively lists job opportunities in Lowell, Massachusetts, and surrounding US areas (Somerville, Boston, Burlington, Waltham). The entities involved (PUMA, LEGO Group, Keurig Dr Pepper) are international private corporations with no apparent connection to Trinidad & Tobago government procurement. There is zero signal relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 13314,
+      "total_output_tokens": 2287,
+      "estimated_cost_usd": 0.07424700000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Trinidad & Tobago may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:21:15.318132"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.295329",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:22:43.094941"
+}

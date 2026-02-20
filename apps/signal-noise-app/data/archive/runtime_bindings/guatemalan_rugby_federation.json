@@ -1,0 +1,180 @@
+{
+  "entity_id": "guatemalan_rugby_federation",
+  "entity_name": "Guatemalan Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "guatemalarugby.com",
+    "grokipedia.com",
+    "asiarugby.com",
+    "apps.apple.com",
+    "americasrugbynews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guatemalan_rugby_federation",
+      "entity_name": "Guatemalan Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://guatemalarugby.com",
+        "https://grokipedia.com",
+        "https://asiarugby.com",
+        "https://americasrugbynews.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guatemalan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:17:18.037058",
+          "domain_explored": "https://guatemalarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - Inferred from news publishing",
+              "Event Management Platforms - Inferred from tournament organization"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Torneo De 7s Gran Jaguar 2025 (International Event Logistics)",
+              "Deportivos Nacionales de Rugby 2025 (National Event Coordination)",
+              "Regional Qualifiers (Sacatep\u00e9quez, Retalhuleu)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Multi-Location Logistics",
+            "Digital Content Publishing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 281,
+              "elapsed_seconds": 4.62029504776001
+            }
+          ],
+          "reasoning": "The content reveals active operational scaling through the organization of the 'Torneo De 7s Gran Jaguar 2025' and 'Deportivos Nacionales 2025'. These events imply procurement needs for event management software, logistics services, and marketing tools. The presence of news sections indicates a CMS is in use, but specific vendor tech stacks are not visible in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:17:20.865993",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:17:23.682190",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:17:29.178525",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile App Marketplace Aggregation",
+            "Consumer Gaming Trends",
+            "Digital Content Discovery"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.6236090660095215
+            }
+          ],
+          "reasoning": "The scraped content from the Apple App Store represents a generic, consumer-facing marketplace for mobile applications and games. It contains no specific information regarding the Guatemalan Rugby Federation, its internal operations, technology stack, or procurement activities. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:17:37.374401",
+          "domain_explored": "https://americasrugbynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Sports Journalism",
+            "Event Scheduling & Logistics",
+            "High-Performance Sports Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 771,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.3152849674224854
+            }
+          ],
+          "reasoning": "The content is a news article regarding Argentina's 2026 rugby schedule. While it discusses high-performance event logistics, it provides no specific information regarding the Guatemalan Rugby Federation's procurement activities, technology stack, or governance. The entity of interest (Guatemala) is not mentioned."
+        }
+      ],
+      "total_input_tokens": 3605,
+      "total_output_tokens": 624,
+      "estimated_cost_usd": 0.020175
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guatemalan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:17:37.375381"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290545",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:20.749033"
+}

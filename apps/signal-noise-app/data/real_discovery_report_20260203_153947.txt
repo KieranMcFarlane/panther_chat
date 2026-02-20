@@ -1,0 +1,23 @@
+================================================================================
+REAL DISCOVERY COMPARISON REPORT
+================================================================================
+Timestamp: 2026-02-03T15:39:47.758560+00:00
+Entities Tested: 2
+
+SUMMARY
+--------------------------------------------------------------------------------
+Total Cost: $0.0000
+Total Iterations: 0
+Average Confidence: 0.00
+Average Cost: $0.0000
+Average Iterations: 0.0
+Actionable Count: 0/2
+
+BEST PERFORMERS
+--------------------------------------------------------------------------------
+
+ENTITY RESULTS
+--------------------------------------------------------------------------------
+arsenal-fc: ❌ FAILED - 'ParameterConfig' object has no attribute 'max_cost_per_entity'
+chelsea-fc: ❌ FAILED - 'ParameterConfig' object has no attribute 'max_cost_per_entity'
+================================================================================

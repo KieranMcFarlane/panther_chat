@@ -1,0 +1,167 @@
+{
+  "entity_id": "french_volleyball_federation",
+  "entity_name": "French Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "sports.gouv.fr",
+    "creditmutuel.fr",
+    "worldparavolley.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_volleyball_federation",
+      "entity_name": "French Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://www-old.cev.eu",
+        "https://sports.gouv.fr",
+        "https://creditmutuel.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:05:46.572219",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting: Montpellier (FRA) listed as a host city for a 1* FIVB/CEV World Tour event (historical data)."
+            ]
+          },
+          "patterns_found": [
+            "Navigational Structure",
+            "Event Listings",
+            "Federation Links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.397686719894409
+            }
+          ],
+          "reasoning": "The content is a navigational menu and event index from the CEV (Conf\u00e9d\u00e9ration Europ\u00e9enne de Volleyball) website. While it lists 'Montpellier (FRA)' as a venue, it provides no specific information regarding the French Volleyball Federation's internal procurement, technology stack, or governance. It is contextually relevant to the sport but lacks actionable procurement signals for the specific target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:05:50.378206",
+          "domain_explored": "https://sports.gouv.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:05:57.224178",
+          "domain_explored": "https://creditmutuel.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Banking Apps (iOS, Android)",
+              "Online Account Management"
+            ],
+            "job_postings": [
+              "General Banking Recruitment"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Consumer Banking Interface",
+            "Mobile App Promotion",
+            "Recruitment Portal Link",
+            "Local Branch Locator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.3986051082611084
+            }
+          ],
+          "reasoning": "The content is the homepage of Cr\u00e9dit Mutuel, a major French bank. It is entirely focused on consumer retail banking products (accounts, loans, insurance) and general brand marketing. There is no content, navigation, or sub-link structure related to the French Volleyball Federation, sports governance, or B2B procurement relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:06:03.934327",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Governing Body Content",
+            "Event Results & News Aggregation",
+            "Paralympic Classification & Education",
+            "Federation Governance (Appointments)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.9030418395996094
+            }
+          ],
+          "reasoning": "The content is entirely focused on international ParaVolley sports news, event results (ASEAN Para Games), governance appointments (Dr. Janko Ple\u0161nik), and athlete classification. There is no mention of the French Volleyball Federation, procurement activities, or technology vendors. This domain is irrelevant to the specific procurement intelligence goal for the French entity."
+        }
+      ],
+      "total_input_tokens": 4283,
+      "total_output_tokens": 640,
+      "estimated_cost_usd": 0.022448999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:06:03.937198"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.340927",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:42.518897"
+}

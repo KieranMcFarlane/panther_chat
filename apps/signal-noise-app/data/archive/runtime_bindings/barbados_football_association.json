@@ -1,0 +1,238 @@
+{
+  "entity_id": "barbados_football_association",
+  "entity_name": "Barbados Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "barbadosfa.org",
+    "inside.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://bb.linkedin.com/jobs/view/general-secretary-barbados-football-association-at-fifa-4242857007",
+      "https://www.linkedin.com/posts/futboljobs.com_executive-director-of-the-barbados-football-activity-7336066736070299649--ooP"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "barbados_football_association",
+      "entity_name": "Barbados Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://bb.linkedin.com/jobs/view/general-secretary-barbados-football-association-at-fifa-4242857007",
+        "https://www.linkedin.com/posts/futboljobs.com_executive-director-of-the-barbados-football-activity-7336066736070299649--ooP",
+        "https://barbadosfa.org",
+        "https://inside.fifa.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Recruitment (General Secretary)",
+        "Commercial Revenue Growth Strategy",
+        "Operational Efficiency & Digital Transformation",
+        "Financial Governance & Budget Management",
+        "Corporate Governance Reform",
+        "Executive Leadership Recruitment",
+        "Organizational Restructuring",
+        "Secretariat Administration",
+        "Governance & Policy Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Barbados Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:59:55.409096",
+          "domain_explored": "https://barbadosfa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Systems (implied by festivals/workshops)",
+              "Sports Management Platforms (FIFA Football for Schools)",
+              "Communication Platforms (Community outreach)"
+            ],
+            "job_postings": [
+              "General Secretary (Leadership/Admin)"
+            ],
+            "procurement_indicators": [
+              "Partnership with National HIV/STI Community Outreach Program",
+              "Partnership with National Peace Program",
+              "Rollout of FIFA Football for Schools",
+              "Hosting Concacaf Team Managers Workshop",
+              "Primary Schools Girls\u2019 Football Festival execution"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnerships (FIFA, Concacaf, National Peace Program)",
+            "Capacity Building Initiatives (Coaching, Referees, Youth)",
+            "Event Management (Qualifiers, Festivals, Workshops)",
+            "Governance Changes (General Secretary appointment)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 396,
+              "elapsed_seconds": 5.505273103713989
+            }
+          ],
+          "reasoning": "While the content is primarily news and operational updates rather than explicit procurement notices, it reveals significant organizational growth and dependency on external partnerships. The high volume of events, youth development programs, and 'FIFA Football for Schools' rollout indicates a need for event management software, training platforms, and logistical vendor support. The appointment of a new General Secretary often precedes administrative reviews and new vendor engagements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:00:01.836548",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding often triggers local infrastructure tenders (General market signal, not specific to BFA found here)"
+            ]
+          },
+          "patterns_found": [
+            "Global Strategic Initiatives",
+            "FIFA Forward Program",
+            "Women's Game Development",
+            "Infrastructure Refurbishment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.5253708362579346
+            }
+          ],
+          "reasoning": "The content is from FIFA's global news portal and focuses on high-level international strategy (Women's Champions Cup) and global development programs (FIFA Forward in Burundi). While it highlights areas where football associations generally receive funding (infrastructure, women's football), it contains no specific procurement signals, technology stacks, or governance details relevant to the Barbados Football Association. This is generic industry context, not entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:00:09.932974",
+          "domain_explored": "https://bb.linkedin.com/jobs/view/general-secretary-barbados-football-association-at-fifa-4242857007",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Management Systems (Budgeting/Accounting)",
+              "CRM (Sponsorship/Member Management)",
+              "Digital Communication Platforms",
+              "Office Administration Software"
+            ],
+            "job_postings": [
+              "General Secretary (Chief Executive Officer)"
+            ],
+            "procurement_indicators": [
+              "Strategic goal to consolidate and grow income streams (Sponsorship procurement)",
+              "Need to identify and exploit new income streams (Vendor diversification)",
+              "Operational efficiency mandate (Process optimization tools)",
+              "Financial accountability requirements (Audit/Compliance tools)",
+              "Communications strategy overhaul (Marketing/Agency services)"
+            ]
+          },
+          "patterns_found": [
+            "Executive Recruitment (General Secretary)",
+            "Commercial Revenue Growth Strategy",
+            "Operational Efficiency & Digital Transformation",
+            "Financial Governance & Budget Management",
+            "Corporate Governance Reform"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 397,
+              "elapsed_seconds": 4.553912162780762
+            }
+          ],
+          "reasoning": "The posting for a General Secretary is a high-level procurement signal indicating a restructuring phase. The specific requirement for 'commercial objectives' and 'new income streams' strongly suggests future investment in marketing, CRM, and digital platforms. The emphasis on 'operational efficiency' and 'financial performance' indicates a readiness to invest in ERP/Financial management tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:00:16.177546",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_executive-director-of-the-barbados-football-activity-7336066736070299649--ooP",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Executive Director / Secretary General",
+                "type": "Executive Leadership",
+                "description": "Responsible for the administration of the Secretariat and management of key activities in accordance with internal regulations and Council guidelines."
+              }
+            ],
+            "procurement_indicators": [
+              "Executive Search (Leadership Procurement)",
+              "Operational Management Responsibility",
+              "Governance & Compliance Framework"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Recruitment",
+            "Organizational Restructuring",
+            "Secretariat Administration",
+            "Governance & Policy Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 339,
+              "elapsed_seconds": 2.8141231536865234
+            }
+          ],
+          "reasoning": "This content confirms a major procurement signal: the recruitment of a full-time Executive Director (Secretary General). This role is critical as it implies the centralization of administrative and operational control. The appointment of an executive leader is typically a precursor to organizational restructuring, strategic planning, and the initiation of new vendor relationships or technology implementations to achieve the administration's goals."
+        }
+      ],
+      "total_input_tokens": 5889,
+      "total_output_tokens": 1391,
+      "estimated_cost_usd": 0.038532
+    },
+    "procurement_signals": [
+      "Executive Recruitment (General Secretary)",
+      "Commercial Revenue Growth Strategy",
+      "Operational Efficiency & Digital Transformation",
+      "Financial Governance & Budget Management",
+      "Corporate Governance Reform",
+      "Executive Leadership Recruitment",
+      "Organizational Restructuring",
+      "Secretariat Administration",
+      "Governance & Policy Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Barbados Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:00:16.178644"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.203819",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:06.912600"
+}

@@ -1,0 +1,287 @@
+{
+  "entity_id": "egyptian_rugby_federation",
+  "entity_name": "Egyptian Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "egyptrugby.com",
+    "sportlandoffreedom.com",
+    "english.ahram.org.eg",
+    "educa2.madrid.org",
+    "cairoscene.com",
+    "eastlaws.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "egyptian_rugby_federation",
+      "entity_name": "Egyptian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://eastlaws.com",
+        "https://sportlandoffreedom.com",
+        "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF",
+        "https://cairoscene.com",
+        "https://english.ahram.org.eg",
+        "https://egyptrugby.com",
+        "https://educa2.madrid.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Egyptian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:43:12.504141",
+          "domain_explored": "https://egyptrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook (Social Media)",
+              "Twitter (Social Media)",
+              "Instagram (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting: Rugby Africa Regional Sevens (Dec 2021)",
+              "Event Hosting: Arab Rugby 7's championship (Feb 2021)",
+              "Event Hosting: AUC 28 Feb championship",
+              "Key Stakeholder: Hussein Fouad El Ghazzawy (CEO & Board Member)",
+              "Key Stakeholder: Hussam Saheb (President & Board Member)",
+              "Key Stakeholder: Mohamed Dermouni (Coach)",
+              "Contact Point: manager@egyptrugby.com"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Identification",
+            "Event Management Operations",
+            "Basic Digital Presence (Social Media)",
+            "Historical Event Hosting (2021)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 352,
+              "elapsed_seconds": 6.654598951339722
+            }
+          ],
+          "reasoning": "The content provides strong identification of key decision-makers (CEO, President, Coach) which is critical for governance mapping, but lacks explicit procurement signals such as RFPs, technology stacks, or vendor partnerships. The presence of event hosting (Rugby Africa Regional Sevens) suggests a capability for event-based procurement, but the data is largely historical (2021) and administrative."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:43:21.404014",
+          "domain_explored": "https://sportlandoffreedom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Metaverse (Conceptual)",
+              "Virtual Reality (VR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CSR Project Implementation",
+              "Educational Program Management"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Italian NGO vs Egyptian Federation)",
+            "Educational/CSR Project Content",
+            "Metaverse/VR Concept References",
+            "Third-Party Project Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.884171962738037
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Sport land of freedom', an Italian sports-based NGO/association (evidenced by Italian language and references to 'Erika Morri' and 'Wo*men\u2019s rugby land of freedom'). While it mentions rugby and a 'Metaverse' project, this is a third-party entity and not the Egyptian Rugby Federation. There are no direct procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:43:27.241367",
+          "domain_explored": "https://english.ahram.org.eg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Content",
+            "Geopolitical Focus",
+            "Irrelevant Industry Sectors"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.591804027557373
+            }
+          ],
+          "reasoning": "The provided content is a general news feed from Ahram Online covering politics, war, economy, and general society. There is no mention of the Egyptian Rugby Federation, rugby, or specific sports procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:43:30.206177",
+          "domain_explored": "https://educa2.madrid.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:43:36.245095",
+          "domain_explored": "https://cairoscene.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Media Publication",
+            "Lifestyle & Entertainment Focus",
+            "Event Calendar (Generic)",
+            "No Direct Entity Affiliation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.794786214828491
+            }
+          ],
+          "reasoning": "The scraped content from CairoScene identifies the site as a general lifestyle, culture, and entertainment publication. While it mentions 'Business' and 'Startups', the content is editorial news (e.g., AI Summit, Museum exhibitions) rather than operational procurement data for the Egyptian Rugby Federation. There is no mention of the Federation, tenders, or specific vendor requirements."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:43:44.447324",
+          "domain_explored": "https://eastlaws.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI Legal Assistant (SeShat)",
+              "Google SSO",
+              "Electronic Contract Creation System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Legal Services vs Sports Federation)",
+            "B2C Subscription Model",
+            "SaaS Platform Features (AI Assistant, Login/Registration)",
+            "Irrelevant Industry Sector (Legal/Legislative)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1598,
+              "output_tokens": 273,
+              "elapsed_seconds": 4.787122964859009
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Eastlaws' (\u0634\u0628\u0643\u0629 \u0642\u0648\u0627\u0646\u064a\u0646 \u0627\u0644\u0634\u0631\u0642), a digital legal database and legislative service provider. While it mentions advanced technologies like an AI legal assistant ('SeShat'), this is a product offering of the website owner, not a procurement signal for the Egyptian Rugby Federation. There is no relationship between the Egyptian Rugby Federation and this legal entity, nor are there any signals indicating the Federation is looking to procure these specific legal services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:43:53.558272",
+          "domain_explored": "https://www.linkedin.com/posts/allsportseventsjobs_jobinsports-workinsports-sportsevents-activity-7195724488376827904-liGF",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Corporate Events Manager",
+                "company": "Confederation Africaine de Football (CAF)",
+                "location": "Cairo, Egypt",
+                "relevance": "Low (Wrong Entity)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (CAF vs Egyptian Rugby Federation)",
+            "Geographic Proximity (Cairo Location)",
+            "Generic Job Aggregator Content",
+            "Event Management Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1684,
+              "output_tokens": 257,
+              "elapsed_seconds": 5.7812111377716064
+            }
+          ],
+          "reasoning": "While the content is geographically relevant (Cairo, Egypt) and sector-relevant (Sports Events), the hiring entity is the Confederation Africaine de Football (CAF), not the Egyptian Rugby Federation. CAF is a distinct continental governing body for football, and their hiring activities do not constitute procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 9089,
+      "total_output_tokens": 1472,
+      "estimated_cost_usd": 0.049347
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Egyptian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:43:53.559507"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.289557",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:33.023987"
+}

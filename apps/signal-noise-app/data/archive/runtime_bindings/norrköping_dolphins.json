@@ -1,0 +1,96 @@
+{
+  "entity_id": "norrk\u00f6ping_dolphins",
+  "entity_name": "Norrk\u00f6ping Dolphins",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "dolphins.se",
+    "basketball.eurobasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "norrk\u00f6ping_dolphins",
+      "entity_name": "Norrk\u00f6ping Dolphins",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://dolphins.se",
+        "https://basketball.eurobasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Norrk\u00f6ping Dolphins may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:24:40.027544",
+          "domain_explored": "https://dolphins.se",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:24:48.463419",
+          "domain_explored": "https://basketball.eurobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_sports_news_aggregation",
+            "irrelevant_league_coverage",
+            "player_transfer_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 198,
+              "elapsed_seconds": 3.8447091579437256
+            }
+          ],
+          "reasoning": "The scraped content from Eurobasket.com is a global news aggregator for basketball. It contains game results, player awards, and transfer rumors from various countries (Spain, Italy, UK, Russia, etc.). While there is a single mention of 'Sweden Basketligan' (Curtis), the content is strictly sports performance-related and does not contain any organizational, operational, or procurement signals specific to the Norrk\u00f6ping Dolphins entity."
+        }
+      ],
+      "total_input_tokens": 1390,
+      "total_output_tokens": 198,
+      "estimated_cost_usd": 0.0071400000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Norrk\u00f6ping Dolphins may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:24:48.464657"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.226480",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:36.985545"
+}

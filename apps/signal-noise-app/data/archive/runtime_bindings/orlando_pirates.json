@@ -1,0 +1,242 @@
+{
+  "entity_id": "orlando_pirates",
+  "entity_name": "Orlando Pirates",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "orlandopiratesfc.com",
+    "orlandopirates.com",
+    "piratesshop.co.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+      "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "orlando_pirates",
+      "entity_name": "Orlando Pirates",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://orlandopiratesfc.com",
+        "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+        "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof",
+        "https://piratesshop.co.za",
+        "https://orlandopirates.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialist Technical Staff Recruitment",
+        "Data-Driven Performance Investment",
+        "Tactical Innovation Strategy"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Orlando Pirates may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:46:40.776491",
+          "domain_explored": "https://orlandopiratesfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism content",
+            "Sponsorship visibility (Betway Premiership)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 565,
+              "output_tokens": 140,
+              "elapsed_seconds": 3.744799852371216
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news regarding match results and league standings. There are no mentions of internal business operations, technology acquisition, job vacancies, or organizational restructuring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:46:52.312403",
+          "domain_explored": "https://orlandopirates.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sidearm Sports (Web CMS)",
+              "Ad Blocker Detection Scripts",
+              "Ticketing/CRM Platform (Implied by 'Season Ticket Deposits')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Sidearm Sports for web services",
+              "Investment in digital ticketing infrastructure for 2026 season"
+            ]
+          },
+          "patterns_found": [
+            "Splash page implementation for 2026 Season Ticket Deposits",
+            "Ad Blocker detection and management script",
+            "Vendor attribution: Sidearm Sports (link in footer)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 889,
+              "output_tokens": 295,
+              "elapsed_seconds": 4.70476508140564
+            }
+          ],
+          "reasoning": "While the content is primarily a splash page and ad-blocker warning, it reveals specific technology vendors and digital infrastructure. The presence of a '2026 Season Ticket Deposit' splash page indicates the use of a Ticketing/CRM platform capable of handling future deposits. The link to 'sidearmsports.com' explicitly identifies the website CMS provider (Sidearm Sports), which is a key procurement signal for their digital stack."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:47:03.467177",
+          "domain_explored": "https://piratesshop.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure and 'Quick add' UI patterns)",
+              "Shopify CDN (Inferred)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active procurement of retail inventory for 2025/26 season (Adidas kits)",
+              "Licensing agreement with Adidas for merchandise",
+              "E-commerce platform hosting/maintenance utilization"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Implementation (Shopify)",
+            "Merchandising Strategy (2025/26 Season Kits)",
+            "Vendor Partnership (Adidas)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 312,
+              "elapsed_seconds": 3.372100830078125
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce channel (piratesshop.co.za). The presence of 'Quick add' functionality, specific product collections, and ZAR currency indicates a transactional digital platform. The URL structure and 'cdn.shopify.com' references (implied by standard Shopify patterns in the text structure) reveal the technology stack. This indicates procurement activity related to e-commerce licensing, platform maintenance, and inventory management for the 2025/26 season."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:47:11.290387",
+          "domain_explored": "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics Platforms (implied by 'data-driven tactical innovation')",
+              "Video Analysis Software (implied by 'analyse' and 'coach' functions)"
+            ],
+            "job_postings": [
+              "Set Piece Coach - First Team (Johannesburg)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for specialized technical roles",
+              "Budget allocation for performance analysis staff",
+              "Strategic shift towards data-centric coaching methodologies"
+            ]
+          },
+          "patterns_found": [
+            "Specialist Technical Staff Recruitment",
+            "Data-Driven Performance Investment",
+            "Tactical Innovation Strategy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1557,
+              "output_tokens": 290,
+              "elapsed_seconds": 2.5146329402923584
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a specialized 'Set Piece Coach' role. This is a direct procurement signal indicating investment in human capital and technical infrastructure to support 'data-driven tactical innovation'. It validates the entity's active hiring phase and focus on performance enhancement technologies."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:47:21.789116",
+          "domain_explored": "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Football Artificial Intelligence Officer (Benchmark Role - Al Ain FC)"
+            ],
+            "procurement_indicators": [
+              "Use of specialized staffing agencies ('Jobs In Football') for technical recruitment",
+              "Market trend: Investment in AI and Analytics roles within football operations"
+            ]
+          },
+          "patterns_found": [
+            "Specialist Recruitment Channel Identification",
+            "Emerging Role Benchmarking (AI Officer)",
+            "Vendor Landscape Mapping (HR Services)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 323,
+              "elapsed_seconds": 5.823171854019165
+            }
+          ],
+          "reasoning": "While this specific page is the company profile of a third-party recruiter ('Jobs In Football') and not a direct procurement page for Orlando Pirates, it validates a critical procurement channel. The content confirms the existence of specialized agencies handling high-value technical roles (e.g., the 'Football Artificial Intelligence Officer' post for Al Ain FC). For Orlando Pirates, this indicates that procurement for specialized technical talent may be outsourced to similar niche platforms rather than advertised on general job boards, expanding the search strategy for vendor intelligence."
+        }
+      ],
+      "total_input_tokens": 6105,
+      "total_output_tokens": 1360,
+      "estimated_cost_usd": 0.038715
+    },
+    "procurement_signals": [
+      "Specialist Technical Staff Recruitment",
+      "Data-Driven Performance Investment",
+      "Tactical Innovation Strategy"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Orlando Pirates may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:47:21.790868"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.180975",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:38:48.453401"
+}

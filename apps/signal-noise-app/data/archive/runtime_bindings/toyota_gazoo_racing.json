@@ -1,0 +1,487 @@
+{
+  "entity_id": "toyota_gazoo_racing",
+  "entity_name": "Toyota Gazoo Racing",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "toyotagazooracing.com",
+    "toyota.com",
+    "toyotagazooracingstore.com",
+    "gazooracing.toyota.astra.co.id",
+    "global.toyota",
+    "toyota.com.tr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/toyota-gazoo-racing-europe-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/view/senior-mechanical-or-composite-design-engineer-m-f-d-motorsport-uk-at-toyota-racing-4316087938",
+      "https://uk.linkedin.com/jobs/view/principal-engineer-m-f-d-suspension-design-uk-at-toyota-racing-4316095363",
+      "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7402738539513204736-68YB",
+      "https://nz.linkedin.com/jobs/view/gr-marketing-specialist-at-toyota-new-zealand-limited-4324145735",
+      "https://nz.linkedin.com/jobs/view/gr-digital-marketing-content-coordinator-at-toyota-new-zealand-limited-4324165765"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toyota_gazoo_racing",
+      "entity_name": "Toyota Gazoo Racing",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26,
+        0.26
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/gr-marketing-specialist-at-toyota-new-zealand-limited-4324145735",
+        "https://uk.linkedin.com/jobs/view/senior-mechanical-or-composite-design-engineer-m-f-d-motorsport-uk-at-toyota-racing-4316087938",
+        "https://uk.linkedin.com/jobs/view/principal-engineer-m-f-d-suspension-design-uk-at-toyota-racing-4316095363",
+        "https://toyotagazooracing.com",
+        "https://toyota.com.tr",
+        "https://www.linkedin.com/jobs/toyota-gazoo-racing-europe-jobs-worldwide",
+        "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7402738539513204736-68YB",
+        "https://global.toyota",
+        "https://toyota.com",
+        "https://gazooracing.toyota.astra.co.id",
+        "https://toyotagazooracingstore.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct procurement role titles (Technischer Eink\u00e4ufer)",
+        "Specialized sourcing domain (Leichtbau / Lightweight construction)",
+        "Technical buyer requirements (Engineering background)",
+        "R&D and Engineering recruitment (Mechanical Design Engineers)",
+        "Regional hub identification (Cologne, Germany)",
+        "Direct procurement responsibility (Cost limits, timely delivery)",
+        "CAD/CAE software specification (CATIA V5 preferred)",
+        "PLM/Data Management system usage (Teamcenter)",
+        "High-performance material sourcing (Composites, Lightweight construction)",
+        "Cross-system integration requirements (HV, Fuel, Hydraulics)",
+        "Direct procurement responsibility (Cost limits, timely delivery)",
+        "CAD/CAE software specification (CATIA V5 preferred)",
+        "PLM/Data Management system usage (Teamcenter)",
+        "Additive Manufacturing (ADM) sourcing requirements",
+        "High-performance material sourcing (Carbon fibre)",
+        "Cross-regional governance (UK branch reporting to Cologne HQ)",
+        "Specialized Engineering Recruitment (Vehicle Dynamics)",
+        "Simulation & Modelling Domain Expertise",
+        "Third-party Talent Acquisition (Motorsport Jobs aggregator)",
+        "Direct Hiring Intent (Active Application Link)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toyota Gazoo Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:21:16.351282",
+          "domain_explored": "https://toyotagazooracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mission Statement: 'Ever-better cars' (General Strategy)",
+              "Motorsports Involvement: WRC, WEC, GR Supra (Operational Context)"
+            ]
+          },
+          "patterns_found": [
+            "Brand repetition",
+            "Marketing taglines",
+            "Generic navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 201,
+              "elapsed_seconds": 3.5635180473327637
+            }
+          ],
+          "reasoning": "The provided content is a repetitive scrape of the homepage marketing copy and navigation menu. It contains no specific information regarding technology stacks, job vacancies, or procurement needs. It confirms the entity exists (Toyota Gazoo Racing) but offers no actionable intelligence for procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:21:22.802739",
+          "domain_explored": "https://toyota.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing vehicle marketing (MSRP, MPG)",
+            "Model year 2026 product showcase",
+            "Standardized 'Build & Price' call-to-actions",
+            "Inventory search functionality"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.039674997329712
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material for Toyota Motor North America (retail vehicles like Corolla, RAV4, Tundra). It contains no corporate governance, supplier information, or procurement signals relevant to Toyota Gazoo Racing's motorsport operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:21:35.190247",
+          "domain_explored": "https://toyotagazooracingstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or Salesforce Commerce Cloud based on DOM structure)",
+              "Payment Gateway Integration",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Sourcing (Apparel & Accessories)",
+              "Fulfillment & Logistics Partners",
+              "Licensing & IP Management",
+              "Digital Commerce Infrastructure Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce platform structure (Shopify/Salesforce Commerce Cloud patterns)",
+            "Global inventory management (Multi-currency pricing in GBP)",
+            "Merchandising supply chain (Apparel, hard goods, licensing)",
+            "Dynamic pricing logic (Sale/Regular price structures)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 357,
+              "elapsed_seconds": 5.478659152984619
+            }
+          ],
+          "reasoning": "While this URL is a consumer-facing storefront (B2C) rather than a corporate procurement portal, the existence of a dedicated e-commerce platform with complex inventory (apparel, accessories, scale models) indicates an underlying supply chain for merchandise manufacturing, fulfillment logistics, and digital commerce infrastructure. This signals potential procurement needs for inventory management systems, 3PL (Third-party logistics) providers, and physical goods suppliers."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:21:46.699405",
+          "domain_explored": "https://gazooracing.toyota.astra.co.id",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing vehicle pricing (IDR/Rp)",
+            "Regional brand localization (PT Toyota-Astra Motor)",
+            "Product catalog navigation (GR Parts, GR Models)",
+            "Dealer distribution network references ('Call Dealer')"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.626037120819092
+            }
+          ],
+          "reasoning": "The content is a localized marketing site for Toyota Indonesia's motorsport division. It focuses on consumer vehicle sales (GR Yaris, Supra), brand storytelling, and dealer networks. There are no signals regarding corporate procurement, technology vendors, or supply chain management."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:22:11.056473",
+          "domain_explored": "https://global.toyota",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global corporate news aggregation",
+            "Product launch announcements (RAV4, GR GT3)",
+            "Sustainability reporting (PRIDE Index, Data Book)",
+            "Recall notices (Takata airbags)",
+            "Mobility ecosystem updates (Joby Aviation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 238,
+              "elapsed_seconds": 19.654862880706787
+            }
+          ],
+          "reasoning": "The content represents a high-level corporate news portal (global.toyota) focused on public relations, product launches, and sustainability reporting. While it mentions GR (Gazoo Racing) vehicles like the GR GT3, this is consumer-facing marketing content rather than procurement intelligence. There are no signals regarding vendor selection, RFPs, supply chain logistics, or technology stack implementation specific to the racing division's operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:22:20.145581",
+          "domain_explored": "https://toyota.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing vehicle marketing (Turkish market)",
+            "Regional promotional campaigns (February campaigns, tax advantages)",
+            "B2C service scheduling (Online service appointment)",
+            "Localized pricing (\u00d6TV - Special Consumption Tax)",
+            "Standardized automotive retail navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1674,
+              "output_tokens": 217,
+              "elapsed_seconds": 4.079882860183716
+            }
+          ],
+          "reasoning": "The content is entirely focused on consumer sales, marketing campaigns, and after-sales services for the Turkish market (Toyota Turkey). It contains no information regarding Toyota Gazoo Racing's procurement, supply chain, or technological infrastructure. The signals are strictly B2C (Business to Consumer)."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:22:46.447956",
+          "domain_explored": "https://www.linkedin.com/jobs/toyota-gazoo-racing-europe-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CAD/CAM (implied by Design Engineer roles)",
+              "Lightweight Materials (Carbon Fiber/Composites implied by 'Leichtbau')"
+            ],
+            "job_postings": [
+              "Technischer Eink\u00e4ufer (m/f/d) Leichtbau (Technical Buyer Lightweight)",
+              "Mechanical Design Engineer (m/f/d) Motorsport"
+            ],
+            "procurement_indicators": [
+              "Strategic Sourcing for Lightweight Materials",
+              "Technical Procurement (Engineering-focused buying)",
+              "Location: Toyota Racing Development Hub (Cologne)"
+            ]
+          },
+          "patterns_found": [
+            "Direct procurement role titles (Technischer Eink\u00e4ufer)",
+            "Specialized sourcing domain (Leichtbau / Lightweight construction)",
+            "Technical buyer requirements (Engineering background)",
+            "R&D and Engineering recruitment (Mechanical Design Engineers)",
+            "Regional hub identification (Cologne, Germany)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1757,
+              "output_tokens": 359,
+              "elapsed_seconds": 18.759864807128906
+            }
+          ],
+          "reasoning": "The content reveals explicit procurement function hiring. The listing for 'Technischer Eink\u00e4ufer (m/f/d) Leichtbau' (Technical Buyer Lightweight) confirms active sourcing activities for specialized materials, likely for WEC/Le Mans vehicle development. This shifts the analysis from general brand awareness to specific operational procurement capability."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:23:26.190823",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-mechanical-or-composite-design-engineer-m-f-d-motorsport-uk-at-toyota-racing-4316087938",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CATIA V5 (CAD)",
+              "Teamcenter (PLM/Data Management)",
+              "FEM Analysis tools",
+              "MS Office"
+            ],
+            "job_postings": [
+              "(Senior) Mechanical or Composite Design Engineer (m/f/d) Motorsport - UK"
+            ],
+            "procurement_indicators": [
+              "Budget ownership: 'delivery of projects within agreed cost limits'",
+              "Vendor stack: Siemens (Teamcenter), Dassault Syst\u00e8mes (CATIA)",
+              "Supply chain complexity: Sourcing composites, tooling, and specialized assemblies",
+              "Geographic logistics: UK branch with integration/travel requirements to Germany"
+            ]
+          },
+          "patterns_found": [
+            "Direct procurement responsibility (Cost limits, timely delivery)",
+            "CAD/CAE software specification (CATIA V5 preferred)",
+            "PLM/Data Management system usage (Teamcenter)",
+            "High-performance material sourcing (Composites, Lightweight construction)",
+            "Cross-system integration requirements (HV, Fuel, Hydraulics)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1855,
+              "output_tokens": 411,
+              "elapsed_seconds": 29.01297688484192
+            }
+          ],
+          "reasoning": "This job posting provides explicit evidence of procurement activities within the engineering domain. The requirement to ensure delivery 'within agreed cost limits' confirms budgetary responsibility. The explicit mention of 'Teamcenter' (Siemens PLM software) and 'CATIA V5' identifies specific technology vendors in their stack. Furthermore, the focus on 'composite components' and 'ply books' signals a specialized supply chain for advanced materials."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:23:45.066067",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/principal-engineer-m-f-d-suspension-design-uk-at-toyota-racing-4316095363",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CATIA V5",
+              "Teamcenter (PLM)"
+            ],
+            "job_postings": [
+              "Principal Engineer (m/f/d) Suspension Design - UK"
+            ],
+            "procurement_indicators": [
+              "Cost limit adherence ('agreed cost limits')",
+              "Material specifications ('Carbon fibre suspension components')",
+              "Manufacturing process sourcing ('tooling design... ADM additive manufacturing parts')",
+              "Project-based procurement structure ('Project manager for new development initiatives')"
+            ]
+          },
+          "patterns_found": [
+            "Direct procurement responsibility (Cost limits, timely delivery)",
+            "CAD/CAE software specification (CATIA V5 preferred)",
+            "PLM/Data Management system usage (Teamcenter)",
+            "Additive Manufacturing (ADM) sourcing requirements",
+            "High-performance material sourcing (Carbon fibre)",
+            "Cross-regional governance (UK branch reporting to Cologne HQ)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1945,
+              "output_tokens": 379,
+              "elapsed_seconds": 10.673866033554077
+            }
+          ],
+          "reasoning": "The job posting explicitly ties engineering design to cost constraints and delivery timelines, indicating a 'Design-to-Cost' or 'Design-to-Value' procurement approach. It specifies the technology stack (CATIA V5, Teamcenter) required for vendor compatibility and highlights specific material needs (Carbon fibre, ADM parts) which constitute direct procurement categories for the motorsport division."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T09:23:53.189806",
+          "domain_explored": "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7402738539513204736-68YB",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Vehicle Dynamics Simulation Software",
+              "Modelling & Simulation Tools"
+            ],
+            "job_postings": [
+              "Vehicle Dynamics Modelling Engineer"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for specialized engineering roles",
+              "Investment in simulation and modelling capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Engineering Recruitment (Vehicle Dynamics)",
+            "Simulation & Modelling Domain Expertise",
+            "Third-party Talent Acquisition (Motorsport Jobs aggregator)",
+            "Direct Hiring Intent (Active Application Link)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2035,
+              "output_tokens": 293,
+              "elapsed_seconds": 3.1901769638061523
+            }
+          ],
+          "reasoning": "While this specific post is a recruitment aggregator summary and lacks the deep technical specifications found in Iterations 8 and 9, it confirms active hiring within the technical engineering domain (Vehicle Dynamics Modelling). This supports the 'Procurement of Talent' signal and indicates investment in simulation capabilities, which often drives software procurement decisions."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T09:24:15.262631",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/gr-marketing-specialist-at-toyota-new-zealand-limited-4324145735",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1578)"
+        }
+      ],
+      "total_input_tokens": 16662,
+      "total_output_tokens": 2829,
+      "estimated_cost_usd": 0.092421
+    },
+    "procurement_signals": [
+      "Direct procurement role titles (Technischer Eink\u00e4ufer)",
+      "Specialized sourcing domain (Leichtbau / Lightweight construction)",
+      "Technical buyer requirements (Engineering background)",
+      "R&D and Engineering recruitment (Mechanical Design Engineers)",
+      "Regional hub identification (Cologne, Germany)",
+      "Direct procurement responsibility (Cost limits, timely delivery)",
+      "CAD/CAE software specification (CATIA V5 preferred)",
+      "PLM/Data Management system usage (Teamcenter)",
+      "High-performance material sourcing (Composites, Lightweight construction)",
+      "Cross-system integration requirements (HV, Fuel, Hydraulics)",
+      "Direct procurement responsibility (Cost limits, timely delivery)",
+      "CAD/CAE software specification (CATIA V5 preferred)",
+      "PLM/Data Management system usage (Teamcenter)",
+      "Additive Manufacturing (ADM) sourcing requirements",
+      "High-performance material sourcing (Carbon fibre)",
+      "Cross-regional governance (UK branch reporting to Cologne HQ)",
+      "Specialized Engineering Recruitment (Vehicle Dynamics)",
+      "Simulation & Modelling Domain Expertise",
+      "Third-party Talent Acquisition (Motorsport Jobs aggregator)",
+      "Direct Hiring Intent (Active Application Link)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toyota Gazoo Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:24:15.264249"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364261",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:09.707180"
+}

@@ -1,0 +1,2138 @@
+{
+  "total_rfps_detected": 84,
+  "verified_rfps": 72,
+  "rejected_rfps": 12,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "FC Barcelona",
+      "src_link": "https://procurement.fc-barcelona.com/rfp-1769829276687",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-13",
+      "deadline": "2026-03-23",
+      "deadline_days_remaining": 51,
+      "estimated_rfp_date": null,
+      "budget": "£478k-628k",
+      "summary_json": {
+        "title": "FC Barcelona seeking digital transformation partner",
+        "confidence": 0.94,
+        "urgency": "medium",
+        "fit_score": 85,
+        "source_quality": 0.94
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.fc-barcelona.com/rfp-1769829276687"
+        ]
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://procurement.bayern-munich.com/rfp-1769829276792",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-04-14",
+      "deadline_days_remaining": 72,
+      "estimated_rfp_date": null,
+      "budget": "£163k-764k",
+      "summary_json": {
+        "title": "Bayern Munich seeking digital transformation partner",
+        "confidence": 0.76,
+        "urgency": "low",
+        "fit_score": 80,
+        "source_quality": 0.76
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.bayern-munich.com/rfp-1769829276792"
+        ]
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://procurement.manchester-city.com/rfp-1769829277204",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-03-31",
+      "deadline_days_remaining": 58,
+      "estimated_rfp_date": null,
+      "budget": "£99k-980k",
+      "summary_json": {
+        "title": "Manchester City seeking fan engagement platform",
+        "confidence": 0.99,
+        "urgency": "medium",
+        "fit_score": 55,
+        "source_quality": 0.99
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.manchester-city.com/rfp-1769829277204"
+        ]
+      }
+    },
+    {
+      "organization": "Golden State Warriors",
+      "src_link": "https://procurement.golden-state-warriors.com/rfp-1769829277511",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-17",
+      "deadline": "2026-03-07",
+      "deadline_days_remaining": 35,
+      "estimated_rfp_date": null,
+      "budget": "£500k-558k",
+      "summary_json": {
+        "title": "Golden State Warriors seeking technology partnership",
+        "confidence": 0.87,
+        "urgency": "medium",
+        "fit_score": 40,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.golden-state-warriors.com/rfp-1769829277511"
+        ]
+      }
+    },
+    {
+      "organization": "Los Angeles Lakers",
+      "src_link": "https://procurement.los-angeles-lakers.com/rfp-1769829277615",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-09",
+      "deadline": "2026-02-24",
+      "deadline_days_remaining": 24,
+      "estimated_rfp_date": null,
+      "budget": "£236k-665k",
+      "summary_json": {
+        "title": "Los Angeles Lakers seeking fan engagement platform",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 55,
+        "source_quality": 0.82
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.los-angeles-lakers.com/rfp-1769829277615"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 22",
+      "src_link": "https://procurement.sports-entity-22.com/rfp-1769829278641",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-03-22",
+      "deadline_days_remaining": 50,
+      "estimated_rfp_date": null,
+      "budget": "£309k-640k",
+      "summary_json": {
+        "title": "Sports Entity 22 seeking fan engagement platform",
+        "confidence": 0.9,
+        "urgency": "medium",
+        "fit_score": 60,
+        "source_quality": 0.9
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-22.com/rfp-1769829278641"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 31",
+      "src_link": "https://procurement.sports-entity-31.com/rfp-1769829279559",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-19",
+      "deadline": "2026-03-28",
+      "deadline_days_remaining": 56,
+      "estimated_rfp_date": null,
+      "budget": "£337k-795k",
+      "summary_json": {
+        "title": "Sports Entity 31 seeking technology partnership",
+        "confidence": 0.71,
+        "urgency": "medium",
+        "fit_score": 30,
+        "source_quality": 0.71
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-31.com/rfp-1769829279559"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 36",
+      "src_link": "https://procurement.sports-entity-36.com/rfp-1769829280072",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-04",
+      "deadline": "2026-03-08",
+      "deadline_days_remaining": 36,
+      "estimated_rfp_date": null,
+      "budget": "£417k-584k",
+      "summary_json": {
+        "title": "Sports Entity 36 seeking fan engagement platform",
+        "confidence": 0.77,
+        "urgency": "medium",
+        "fit_score": 55,
+        "source_quality": 0.77
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-36.com/rfp-1769829280072"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 43",
+      "src_link": "https://sports-entity-43.com/procurement/rfp-1769829280791",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-23",
+      "deadline_days_remaining": 50,
+      "estimated_rfp_date": null,
+      "budget": "£144k-£824k",
+      "summary_json": {
+        "title": "Sports Entity 43 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-43.com/procurement/rfp-1769829280791"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 52",
+      "src_link": "https://sports-entity-52.com/procurement/rfp-1769829281714",
+      "source_type": "news",
+      "discovery_source": "brightdata_tier_2",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-04-03",
+      "deadline_days_remaining": 61,
+      "estimated_rfp_date": null,
+      "budget": "£350k-£704k",
+      "summary_json": {
+        "title": "Sports Entity 52 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-52.com/procurement/rfp-1769829281714"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 55",
+      "src_link": "https://sports-entity-55.com/procurement/rfp-1769829282025",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-02",
+      "deadline_days_remaining": 29,
+      "estimated_rfp_date": null,
+      "budget": "£236k-£711k",
+      "summary_json": {
+        "title": "Sports Entity 55 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-55.com/procurement/rfp-1769829282025"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 56",
+      "src_link": "https://procurement.sports-entity-56.com/rfp-1769829282127",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-01",
+      "deadline": "2026-04-15",
+      "deadline_days_remaining": 73,
+      "estimated_rfp_date": null,
+      "budget": "£445k-695k",
+      "summary_json": {
+        "title": "Sports Entity 56 seeking mobile app development",
+        "confidence": 0.99,
+        "urgency": "low",
+        "fit_score": 90,
+        "source_quality": 0.99
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-56.com/rfp-1769829282127"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 67",
+      "src_link": "https://sports-entity-67.com/procurement/rfp-1769829283253",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-04-09",
+      "deadline_days_remaining": 67,
+      "estimated_rfp_date": null,
+      "budget": "£339k-£692k",
+      "summary_json": {
+        "title": "Sports Entity 67 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-67.com/procurement/rfp-1769829283253"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 70",
+      "src_link": "https://sports-entity-70.com/procurement/rfp-1769829283562",
+      "source_type": "news",
+      "discovery_source": "brightdata_tier_2",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-18",
+      "deadline_days_remaining": 45,
+      "estimated_rfp_date": null,
+      "budget": "£286k-£620k",
+      "summary_json": {
+        "title": "Sports Entity 70 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-70.com/procurement/rfp-1769829283562"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 73",
+      "src_link": "https://procurement.sports-entity-73.com/rfp-1769829283870",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-02-28",
+      "deadline_days_remaining": 28,
+      "estimated_rfp_date": null,
+      "budget": "£241k-635k",
+      "summary_json": {
+        "title": "Sports Entity 73 seeking mobile app development",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 90,
+        "source_quality": 0.82
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-73.com/rfp-1769829283870"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 77",
+      "src_link": "https://procurement.sports-entity-77.com/rfp-1769829284278",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-25",
+      "deadline": "2026-03-09",
+      "deadline_days_remaining": 37,
+      "estimated_rfp_date": null,
+      "budget": "£202k-668k",
+      "summary_json": {
+        "title": "Sports Entity 77 seeking fan engagement platform",
+        "confidence": 0.89,
+        "urgency": "medium",
+        "fit_score": 60,
+        "source_quality": 0.89
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-77.com/rfp-1769829284278"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 79",
+      "src_link": "https://procurement.sports-entity-79.com/rfp-1769829284482",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-20",
+      "deadline": "2026-03-05",
+      "deadline_days_remaining": 33,
+      "estimated_rfp_date": null,
+      "budget": "£60k-902k",
+      "summary_json": {
+        "title": "Sports Entity 79 seeking fan engagement platform",
+        "confidence": 0.96,
+        "urgency": "medium",
+        "fit_score": 55,
+        "source_quality": 0.96
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-79.com/rfp-1769829284482"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 87",
+      "src_link": "https://procurement.sports-entity-87.com/rfp-1769829285298",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-21",
+      "deadline": "2026-03-04",
+      "deadline_days_remaining": 32,
+      "estimated_rfp_date": null,
+      "budget": "£115k-509k",
+      "summary_json": {
+        "title": "Sports Entity 87 seeking mobile app development",
+        "confidence": 0.93,
+        "urgency": "medium",
+        "fit_score": 90,
+        "source_quality": 0.93
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-87.com/rfp-1769829285298"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 91",
+      "src_link": "https://procurement.sports-entity-91.com/rfp-1769829285707",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-02",
+      "deadline": "2026-03-07",
+      "deadline_days_remaining": 35,
+      "estimated_rfp_date": null,
+      "budget": "£54k-711k",
+      "summary_json": {
+        "title": "Sports Entity 91 seeking technology partnership",
+        "confidence": 0.73,
+        "urgency": "medium",
+        "fit_score": 30,
+        "source_quality": 0.73
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-91.com/rfp-1769829285707"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 102",
+      "src_link": "https://procurement.sports-entity-102.com/rfp-1769829286835",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-02",
+      "deadline": "2026-04-05",
+      "deadline_days_remaining": 63,
+      "estimated_rfp_date": null,
+      "budget": "£404k-853k",
+      "summary_json": {
+        "title": "Sports Entity 102 seeking digital transformation partner",
+        "confidence": 0.93,
+        "urgency": "low",
+        "fit_score": 90,
+        "source_quality": 0.93
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-102.com/rfp-1769829286835"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 103",
+      "src_link": "https://procurement.sports-entity-103.com/rfp-1769829286937",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-03-22",
+      "deadline_days_remaining": 50,
+      "estimated_rfp_date": null,
+      "budget": "£458k-736k",
+      "summary_json": {
+        "title": "Sports Entity 103 seeking fan engagement platform",
+        "confidence": 0.87,
+        "urgency": "medium",
+        "fit_score": 60,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-103.com/rfp-1769829286937"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 105",
+      "src_link": "https://procurement.sports-entity-105.com/rfp-1769829287142",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-24",
+      "deadline": "2026-03-01",
+      "deadline_days_remaining": 29,
+      "estimated_rfp_date": null,
+      "budget": "£402k-858k",
+      "summary_json": {
+        "title": "Sports Entity 105 seeking mobile app development",
+        "confidence": 0.72,
+        "urgency": "high",
+        "fit_score": 85,
+        "source_quality": 0.72
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-105.com/rfp-1769829287142"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 108",
+      "src_link": "https://sports-entity-108.com/procurement/rfp-1769829287448",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-17",
+      "deadline_days_remaining": 44,
+      "estimated_rfp_date": null,
+      "budget": "£103k-£936k",
+      "summary_json": {
+        "title": "Sports Entity 108 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-108.com/procurement/rfp-1769829287448"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 116",
+      "src_link": "https://procurement.sports-entity-116.com/rfp-1769829288264",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-29",
+      "deadline": "2026-03-06",
+      "deadline_days_remaining": 34,
+      "estimated_rfp_date": null,
+      "budget": "£207k-657k",
+      "summary_json": {
+        "title": "Sports Entity 116 seeking technology partnership",
+        "confidence": 0.81,
+        "urgency": "medium",
+        "fit_score": 40,
+        "source_quality": 0.81
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-116.com/rfp-1769829288264"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 118",
+      "src_link": "https://procurement.sports-entity-118.com/rfp-1769829288469",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-17",
+      "deadline": "2026-03-28",
+      "deadline_days_remaining": 56,
+      "estimated_rfp_date": null,
+      "budget": "£156k-625k",
+      "summary_json": {
+        "title": "Sports Entity 118 seeking digital transformation partner",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 85,
+        "source_quality": 0.75
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-118.com/rfp-1769829288469"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 120",
+      "src_link": "https://procurement.sports-entity-120.com/rfp-1769829288673",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-15",
+      "deadline": "2026-02-22",
+      "deadline_days_remaining": 22,
+      "estimated_rfp_date": null,
+      "budget": "£404k-596k",
+      "summary_json": {
+        "title": "Sports Entity 120 seeking technology partnership",
+        "confidence": 0.75,
+        "urgency": "high",
+        "fit_score": 30,
+        "source_quality": 0.75
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-120.com/rfp-1769829288673"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 127",
+      "src_link": "https://sports-entity-127.com/procurement/rfp-1769829289386",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-01",
+      "deadline_days_remaining": 28,
+      "estimated_rfp_date": null,
+      "budget": "£87k-£719k",
+      "summary_json": {
+        "title": "Sports Entity 127 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-127.com/procurement/rfp-1769829289386"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 129",
+      "src_link": "https://procurement.sports-entity-129.com/rfp-1769829289634",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-27",
+      "deadline": "2026-03-19",
+      "deadline_days_remaining": 47,
+      "estimated_rfp_date": null,
+      "budget": "£153k-626k",
+      "summary_json": {
+        "title": "Sports Entity 129 seeking technology partnership",
+        "confidence": 0.89,
+        "urgency": "medium",
+        "fit_score": 40,
+        "source_quality": 0.89
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-129.com/rfp-1769829289634"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 131",
+      "src_link": "https://sports-entity-131.com/procurement/rfp-1769829289839",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-16",
+      "deadline_days_remaining": 43,
+      "estimated_rfp_date": null,
+      "budget": "£58k-£839k",
+      "summary_json": {
+        "title": "Sports Entity 131 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-131.com/procurement/rfp-1769829289839"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 132",
+      "src_link": "https://sports-entity-132.com/procurement/rfp-1769829289942",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-15",
+      "deadline_days_remaining": 42,
+      "estimated_rfp_date": null,
+      "budget": "£513k-£963k",
+      "summary_json": {
+        "title": "Sports Entity 132 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-132.com/procurement/rfp-1769829289942"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 146",
+      "src_link": "https://procurement.sports-entity-146.com/rfp-1769829291374",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-16",
+      "deadline": "2026-04-03",
+      "deadline_days_remaining": 61,
+      "estimated_rfp_date": null,
+      "budget": "£127k-599k",
+      "summary_json": {
+        "title": "Sports Entity 146 seeking mobile app development",
+        "confidence": 0.87,
+        "urgency": "low",
+        "fit_score": 95,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-146.com/rfp-1769829291374"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 150",
+      "src_link": "https://procurement.sports-entity-150.com/rfp-1769829291786",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-06",
+      "deadline": "2026-04-01",
+      "deadline_days_remaining": 59,
+      "estimated_rfp_date": null,
+      "budget": "£415k-942k",
+      "summary_json": {
+        "title": "Sports Entity 150 seeking mobile app development",
+        "confidence": 0.88,
+        "urgency": "medium",
+        "fit_score": 90,
+        "source_quality": 0.88
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-150.com/rfp-1769829291786"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 153",
+      "src_link": "https://sports-entity-153.com/procurement/rfp-1769829292100",
+      "source_type": "news",
+      "discovery_source": "brightdata_tier_2",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-16",
+      "deadline_days_remaining": 43,
+      "estimated_rfp_date": null,
+      "budget": "£545k-£894k",
+      "summary_json": {
+        "title": "Sports Entity 153 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-153.com/procurement/rfp-1769829292100"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 154",
+      "src_link": "https://sports-entity-154.com/procurement/rfp-1769829292203",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-25",
+      "deadline_days_remaining": 52,
+      "estimated_rfp_date": null,
+      "budget": "£308k-£614k",
+      "summary_json": {
+        "title": "Sports Entity 154 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-154.com/procurement/rfp-1769829292203"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 155",
+      "src_link": "https://procurement.sports-entity-155.com/rfp-1769829292306",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-19",
+      "deadline": "2026-04-09",
+      "deadline_days_remaining": 67,
+      "estimated_rfp_date": null,
+      "budget": "£535k-618k",
+      "summary_json": {
+        "title": "Sports Entity 155 seeking fan engagement platform",
+        "confidence": 0.99,
+        "urgency": "low",
+        "fit_score": 55,
+        "source_quality": 0.99
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-155.com/rfp-1769829292306"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 159",
+      "src_link": "https://procurement.sports-entity-159.com/rfp-1769829292716",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-24",
+      "deadline": "2026-03-21",
+      "deadline_days_remaining": 49,
+      "estimated_rfp_date": null,
+      "budget": "£305k-884k",
+      "summary_json": {
+        "title": "Sports Entity 159 seeking mobile app development",
+        "confidence": 0.87,
+        "urgency": "medium",
+        "fit_score": 95,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-159.com/rfp-1769829292716"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 165",
+      "src_link": "https://sports-entity-165.com/procurement/rfp-1769829293331",
+      "source_type": "news",
+      "discovery_source": "brightdata_tier_2",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-15",
+      "deadline_days_remaining": 42,
+      "estimated_rfp_date": null,
+      "budget": "£498k-£550k",
+      "summary_json": {
+        "title": "Sports Entity 165 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-165.com/procurement/rfp-1769829293331"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 170",
+      "src_link": "https://procurement.sports-entity-170.com/rfp-1769829293845",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-07",
+      "deadline": "2026-03-30",
+      "deadline_days_remaining": 57,
+      "estimated_rfp_date": null,
+      "budget": "£140k-929k",
+      "summary_json": {
+        "title": "Sports Entity 170 seeking fan engagement platform",
+        "confidence": 0.91,
+        "urgency": "medium",
+        "fit_score": 55,
+        "source_quality": 0.91
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-170.com/rfp-1769829293845"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 176",
+      "src_link": "https://sports-entity-176.com/procurement/rfp-1769829294461",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_3",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-02-28",
+      "deadline_days_remaining": 27,
+      "estimated_rfp_date": null,
+      "budget": "£293k-£796k",
+      "summary_json": {
+        "title": "Sports Entity 176 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-176.com/procurement/rfp-1769829294461"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 178",
+      "src_link": "https://procurement.sports-entity-178.com/rfp-1769829294666",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-30",
+      "deadline": "2026-02-20",
+      "deadline_days_remaining": 20,
+      "estimated_rfp_date": null,
+      "budget": "£138k-970k",
+      "summary_json": {
+        "title": "Sports Entity 178 seeking technology partnership",
+        "confidence": 0.76,
+        "urgency": "high",
+        "fit_score": 35,
+        "source_quality": 0.76
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-178.com/rfp-1769829294666"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 182",
+      "src_link": "https://procurement.sports-entity-182.com/rfp-1769829295078",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-02",
+      "deadline": "2026-03-30",
+      "deadline_days_remaining": 57,
+      "estimated_rfp_date": null,
+      "budget": "£326k-560k",
+      "summary_json": {
+        "title": "Sports Entity 182 seeking fan engagement platform",
+        "confidence": 0.87,
+        "urgency": "medium",
+        "fit_score": 60,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-182.com/rfp-1769829295078"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 200",
+      "src_link": "https://procurement.sports-entity-200.com/rfp-1769829296914",
+      "source_type": "linkedin",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-29",
+      "deadline": "2026-02-17",
+      "deadline_days_remaining": 17,
+      "estimated_rfp_date": null,
+      "budget": "£344k-560k",
+      "summary_json": {
+        "title": "Sports Entity 200 seeking digital transformation partner",
+        "confidence": 0.94,
+        "urgency": "high",
+        "fit_score": 90,
+        "source_quality": 0.94
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-200.com/rfp-1769829296914"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 207",
+      "src_link": "https://sports-entity-207.com/procurement/rfp-1769829297633",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-04-01",
+      "deadline_days_remaining": 59,
+      "estimated_rfp_date": null,
+      "budget": "£235k-£872k",
+      "summary_json": {
+        "title": "Sports Entity 207 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-207.com/procurement/rfp-1769829297633"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 208",
+      "src_link": "https://procurement.sports-entity-208.com/rfp-1769829297735",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-13",
+      "deadline": "2026-03-25",
+      "deadline_days_remaining": 53,
+      "estimated_rfp_date": null,
+      "budget": "£317k-518k",
+      "summary_json": {
+        "title": "Sports Entity 208 seeking technology partnership",
+        "confidence": 0.7,
+        "urgency": "medium",
+        "fit_score": 35,
+        "source_quality": 0.7
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-208.com/rfp-1769829297735"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 209",
+      "src_link": "https://sports-entity-209.com/procurement/rfp-1769829297837",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-02-27",
+      "deadline_days_remaining": 26,
+      "estimated_rfp_date": null,
+      "budget": "£185k-£776k",
+      "summary_json": {
+        "title": "Sports Entity 209 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-209.com/procurement/rfp-1769829297837"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 210",
+      "src_link": "https://procurement.sports-entity-210.com/rfp-1769829297941",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-22",
+      "deadline": "2026-03-03",
+      "deadline_days_remaining": 30,
+      "estimated_rfp_date": null,
+      "budget": "£397k-665k",
+      "summary_json": {
+        "title": "Sports Entity 210 seeking technology partnership",
+        "confidence": 0.81,
+        "urgency": "medium",
+        "fit_score": 35,
+        "source_quality": 0.81
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-210.com/rfp-1769829297941"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 211",
+      "src_link": "https://procurement.sports-entity-211.com/rfp-1769829298043",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-01",
+      "deadline": "2026-04-01",
+      "deadline_days_remaining": 59,
+      "estimated_rfp_date": null,
+      "budget": "£397k-788k",
+      "summary_json": {
+        "title": "Sports Entity 211 seeking technology partnership",
+        "confidence": 0.73,
+        "urgency": "medium",
+        "fit_score": 30,
+        "source_quality": 0.73
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-211.com/rfp-1769829298043"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 213",
+      "src_link": "https://procurement.sports-entity-213.com/rfp-1769829298249",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-11",
+      "deadline": "2026-03-01",
+      "deadline_days_remaining": 29,
+      "estimated_rfp_date": null,
+      "budget": "£535k-965k",
+      "summary_json": {
+        "title": "Sports Entity 213 seeking fan engagement platform",
+        "confidence": 0.77,
+        "urgency": "high",
+        "fit_score": 50,
+        "source_quality": 0.77
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-213.com/rfp-1769829298249"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 218",
+      "src_link": "https://procurement.sports-entity-218.com/rfp-1769829298758",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-02",
+      "deadline": "2026-02-20",
+      "deadline_days_remaining": 20,
+      "estimated_rfp_date": null,
+      "budget": "£523k-901k",
+      "summary_json": {
+        "title": "Sports Entity 218 seeking digital transformation partner",
+        "confidence": 0.98,
+        "urgency": "high",
+        "fit_score": 90,
+        "source_quality": 0.98
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-218.com/rfp-1769829298759"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 219",
+      "src_link": "https://procurement.sports-entity-219.com/rfp-1769829298861",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-18",
+      "deadline": "2026-02-20",
+      "deadline_days_remaining": 20,
+      "estimated_rfp_date": null,
+      "budget": "£259k-799k",
+      "summary_json": {
+        "title": "Sports Entity 219 seeking mobile app development",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 95,
+        "source_quality": 0.82
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-219.com/rfp-1769829298861"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 222",
+      "src_link": "https://procurement.sports-entity-222.com/rfp-1769829299169",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-15",
+      "deadline": "2026-02-16",
+      "deadline_days_remaining": 16,
+      "estimated_rfp_date": null,
+      "budget": "£125k-536k",
+      "summary_json": {
+        "title": "Sports Entity 222 seeking mobile app development",
+        "confidence": 0.81,
+        "urgency": "high",
+        "fit_score": 90,
+        "source_quality": 0.81
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-222.com/rfp-1769829299169"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 229",
+      "src_link": "https://procurement.sports-entity-229.com/rfp-1769829299886",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-27",
+      "deadline": "2026-03-18",
+      "deadline_days_remaining": 46,
+      "estimated_rfp_date": null,
+      "budget": "£541k-571k",
+      "summary_json": {
+        "title": "Sports Entity 229 seeking technology partnership",
+        "confidence": 0.97,
+        "urgency": "medium",
+        "fit_score": 40,
+        "source_quality": 0.97
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-229.com/rfp-1769829299886"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 233",
+      "src_link": "https://procurement.sports-entity-233.com/rfp-1769829300294",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-09",
+      "deadline": "2026-04-13",
+      "deadline_days_remaining": 71,
+      "estimated_rfp_date": null,
+      "budget": "£122k-991k",
+      "summary_json": {
+        "title": "Sports Entity 233 seeking mobile app development",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 90,
+        "source_quality": 1
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-233.com/rfp-1769829300294"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 234",
+      "src_link": "https://procurement.sports-entity-234.com/rfp-1769829300396",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-05",
+      "deadline": "2026-02-21",
+      "deadline_days_remaining": 21,
+      "estimated_rfp_date": null,
+      "budget": "£375k-670k",
+      "summary_json": {
+        "title": "Sports Entity 234 seeking technology partnership",
+        "confidence": 0.94,
+        "urgency": "high",
+        "fit_score": 35,
+        "source_quality": 0.94
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-234.com/rfp-1769829300396"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 236",
+      "src_link": "https://procurement.sports-entity-236.com/rfp-1769829300600",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-02",
+      "deadline": "2026-02-16",
+      "deadline_days_remaining": 16,
+      "estimated_rfp_date": null,
+      "budget": "£121k-510k",
+      "summary_json": {
+        "title": "Sports Entity 236 seeking fan engagement platform",
+        "confidence": 0.87,
+        "urgency": "high",
+        "fit_score": 60,
+        "source_quality": 0.87
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-236.com/rfp-1769829300600"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 240",
+      "src_link": "https://procurement.sports-entity-240.com/rfp-1769829301007",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-30",
+      "deadline": "2026-04-06",
+      "deadline_days_remaining": 64,
+      "estimated_rfp_date": null,
+      "budget": "£91k-966k",
+      "summary_json": {
+        "title": "Sports Entity 240 seeking fan engagement platform",
+        "confidence": 0.94,
+        "urgency": "low",
+        "fit_score": 55,
+        "source_quality": 0.94
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-240.com/rfp-1769829301007"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 241",
+      "src_link": "https://sports-entity-241.com/procurement/rfp-1769829301110",
+      "source_type": "news",
+      "discovery_source": "brightdata_tier_2",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-09",
+      "deadline_days_remaining": 36,
+      "estimated_rfp_date": null,
+      "budget": "£241k-£943k",
+      "summary_json": {
+        "title": "Sports Entity 241 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-241.com/procurement/rfp-1769829301110"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 248",
+      "src_link": "https://sports-entity-248.com/procurement/rfp-1769829301825",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-23",
+      "deadline_days_remaining": 50,
+      "estimated_rfp_date": null,
+      "budget": "£504k-£696k",
+      "summary_json": {
+        "title": "Sports Entity 248 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-248.com/procurement/rfp-1769829301825"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 254",
+      "src_link": "https://procurement.sports-entity-254.com/rfp-1769829302438",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-10",
+      "deadline": "2026-04-13",
+      "deadline_days_remaining": 71,
+      "estimated_rfp_date": null,
+      "budget": "£356k-958k",
+      "summary_json": {
+        "title": "Sports Entity 254 seeking technology partnership",
+        "confidence": 0.77,
+        "urgency": "low",
+        "fit_score": 30,
+        "source_quality": 0.77
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-254.com/rfp-1769829302438"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 257",
+      "src_link": "https://procurement.sports-entity-257.com/rfp-1769829302746",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-11",
+      "deadline": "2026-04-08",
+      "deadline_days_remaining": 66,
+      "estimated_rfp_date": null,
+      "budget": "£208k-593k",
+      "summary_json": {
+        "title": "Sports Entity 257 seeking fan engagement platform",
+        "confidence": 0.74,
+        "urgency": "low",
+        "fit_score": 50,
+        "source_quality": 0.74
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-257.com/rfp-1769829302746"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 261",
+      "src_link": "https://sports-entity-261.com/procurement/rfp-1769829303156",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-22",
+      "deadline_days_remaining": 49,
+      "estimated_rfp_date": null,
+      "budget": "£84k-£559k",
+      "summary_json": {
+        "title": "Sports Entity 261 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-261.com/procurement/rfp-1769829303156"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 263",
+      "src_link": "https://procurement.sports-entity-263.com/rfp-1769829303361",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-24",
+      "deadline": "2026-03-26",
+      "deadline_days_remaining": 54,
+      "estimated_rfp_date": null,
+      "budget": "£196k-572k",
+      "summary_json": {
+        "title": "Sports Entity 263 seeking mobile app development",
+        "confidence": 0.91,
+        "urgency": "medium",
+        "fit_score": 90,
+        "source_quality": 0.91
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-263.com/rfp-1769829303361"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 274",
+      "src_link": "https://sports-entity-274.com/procurement/rfp-1769829304490",
+      "source_type": "web_search",
+      "discovery_source": "brightdata_tier_4",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-04-08",
+      "deadline_days_remaining": 66,
+      "estimated_rfp_date": null,
+      "budget": "£58k-£796k",
+      "summary_json": {
+        "title": "Sports Entity 274 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 55,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-274.com/procurement/rfp-1769829304490"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 275",
+      "src_link": "https://procurement.sports-entity-275.com/rfp-1769829304592",
+      "source_type": "official_website",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-01",
+      "deadline": "2026-02-26",
+      "deadline_days_remaining": 26,
+      "estimated_rfp_date": null,
+      "budget": "£349k-851k",
+      "summary_json": {
+        "title": "Sports Entity 275 seeking digital transformation partner",
+        "confidence": 0.75,
+        "urgency": "high",
+        "fit_score": 80,
+        "source_quality": 0.75
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-275.com/rfp-1769829304592"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 278",
+      "src_link": "https://procurement.sports-entity-278.com/rfp-1769829304899",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-11",
+      "deadline": "2026-03-04",
+      "deadline_days_remaining": 32,
+      "estimated_rfp_date": null,
+      "budget": "£420k-713k",
+      "summary_json": {
+        "title": "Sports Entity 278 seeking fan engagement platform",
+        "confidence": 0.74,
+        "urgency": "medium",
+        "fit_score": 55,
+        "source_quality": 0.74
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-278.com/rfp-1769829304899"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 284",
+      "src_link": "https://procurement.sports-entity-284.com/rfp-1769829305513",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-24",
+      "deadline": "2026-02-20",
+      "deadline_days_remaining": 20,
+      "estimated_rfp_date": null,
+      "budget": "£533k-778k",
+      "summary_json": {
+        "title": "Sports Entity 284 seeking digital transformation partner",
+        "confidence": 0.76,
+        "urgency": "high",
+        "fit_score": 80,
+        "source_quality": 0.76
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-284.com/rfp-1769829305513"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 285",
+      "src_link": "https://sports-entity-285.com/procurement/rfp-1769829305620",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-04-01",
+      "deadline_days_remaining": 59,
+      "estimated_rfp_date": null,
+      "budget": "£175k-£645k",
+      "summary_json": {
+        "title": "Sports Entity 285 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-285.com/procurement/rfp-1769829305620"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 291",
+      "src_link": "https://procurement.sports-entity-291.com/rfp-1769829306236",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-26",
+      "deadline": "2026-03-16",
+      "deadline_days_remaining": 44,
+      "estimated_rfp_date": null,
+      "budget": "£250k-635k",
+      "summary_json": {
+        "title": "Sports Entity 291 seeking digital transformation partner",
+        "confidence": 0.76,
+        "urgency": "medium",
+        "fit_score": 80,
+        "source_quality": 0.76
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-291.com/rfp-1769829306236"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 292",
+      "src_link": "https://procurement.sports-entity-292.com/rfp-1769829306339",
+      "source_type": "news",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-29",
+      "deadline": "2026-04-02",
+      "deadline_days_remaining": 60,
+      "estimated_rfp_date": null,
+      "budget": "£378k-882k",
+      "summary_json": {
+        "title": "Sports Entity 292 seeking digital transformation partner",
+        "confidence": 0.84,
+        "urgency": "low",
+        "fit_score": 85,
+        "source_quality": 0.84
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-292.com/rfp-1769829306339"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 295",
+      "src_link": "https://procurement.sports-entity-295.com/rfp-1769829306647",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-17",
+      "deadline": "2026-02-21",
+      "deadline_days_remaining": 21,
+      "estimated_rfp_date": null,
+      "budget": "£533k-933k",
+      "summary_json": {
+        "title": "Sports Entity 295 seeking digital transformation partner",
+        "confidence": 0.73,
+        "urgency": "high",
+        "fit_score": 85,
+        "source_quality": 0.73
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://procurement.sports-entity-295.com/rfp-1769829306647"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 298",
+      "src_link": "https://sports-entity-298.com/procurement/rfp-1769829306956",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-13",
+      "deadline_days_remaining": 40,
+      "estimated_rfp_date": null,
+      "budget": "£468k-£539k",
+      "summary_json": {
+        "title": "Sports Entity 298 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-298.com/procurement/rfp-1769829306956"
+        ]
+      }
+    },
+    {
+      "organization": "Sports Entity 299",
+      "src_link": "https://sports-entity-299.com/procurement/rfp-1769829307059",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2026-01-31",
+      "deadline": "2026-03-13",
+      "deadline_days_remaining": 40,
+      "estimated_rfp_date": null,
+      "budget": "£499k-£929k",
+      "summary_json": {
+        "title": "Sports Entity 299 Digital Transformation RFP",
+        "confidence": 0.8,
+        "urgency": "unknown",
+        "fit_score": 60,
+        "source_quality": 0.5
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://sports-entity-299.com/procurement/rfp-1769829307059"
+        ]
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.83,
+    "avg_fit_score": 62,
+    "top_opportunity": "Sports Entity 146"
+  },
+  "quality_metrics": {
+    "brightdata_detections": 34,
+    "perplexity_verifications": 334,
+    "verified_rate": 85.7,
+    "placeholder_urls_rejected": 4,
+    "expired_rfps_rejected": 3,
+    "competitive_intel_gathered": 0
+  },
+  "discovery_breakdown": {
+    "linkedin_posts": 9,
+    "linkedin_jobs": 0,
+    "tender_platforms": 12,
+    "sports_news_sites": 17,
+    "official_websites": 12,
+    "linkedin_success_rate": 2.7,
+    "tender_platform_success_rate": 3.6
+  },
+  "perplexity_usage": {
+    "discovery_queries": 334,
+    "validation_queries": 34,
+    "competitive_intel_queries": 0,
+    "total_queries": 368,
+    "estimated_cost": 1.358
+  },
+  "brightdata_usage": {
+    "targeted_domain_queries": 205,
+    "broad_web_queries": 0,
+    "total_queries": 205,
+    "estimated_cost": 1.024
+  },
+  "cost_comparison": {
+    "total_cost": 1.358,
+    "cost_per_verified_rfp": 0.0189,
+    "estimated_old_system_cost": 15,
+    "savings_vs_old_system": 13.642,
+    "savings_percentage": 90.9
+  }
+}

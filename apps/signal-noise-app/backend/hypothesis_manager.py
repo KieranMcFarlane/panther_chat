@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 # Import Phase 5 components
 try:
-    from backend.hypothesis_cache import HypothesisLRUCache, CacheConfig
+    from hypothesis_cache import HypothesisLRUCache, CacheConfig
     CACHE_AVAILABLE = True
 except ImportError:
     CACHE_AVAILABLE = False
@@ -246,7 +246,7 @@ class HypothesisManager:
                 logger.info("🔬 Using native FalkorDB repository")
             except ImportError:
                 try:
-                    from backend.hypothesis_persistence import HypothesisRepository
+                    from hypothesis_persistence import HypothesisRepository
                     self._repository = HypothesisRepository()
                     logger.info("🔬 Using neo4j-based FalkorDB repository")
                 except ImportError:
@@ -273,7 +273,7 @@ class HypothesisManager:
         Returns:
             List of initialized Hypothesis objects
         """
-        from backend.template_loader import TemplateLoader
+        from template_loader import TemplateLoader
 
         logger.info(f"🔬 Initializing hypotheses for {entity_name} from {template_id}")
 
@@ -324,8 +324,14 @@ class HypothesisManager:
 
         # Persist to FalkorDB
         if self._repository:
-            # Initialize repository if needed
+            # Initialize repository if needed (check for both neo4j driver and native graph)
+            needs_init = False
             if hasattr(self._repository, 'driver') and self._repository.driver is None:
+                needs_init = True
+            elif hasattr(self._repository, 'graph') and self._repository.graph is None:
+                needs_init = True
+
+            if needs_init:
                 await self._repository.initialize()
 
             # Save all hypotheses

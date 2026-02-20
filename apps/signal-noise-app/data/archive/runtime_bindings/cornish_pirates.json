@@ -1,0 +1,185 @@
+{
+  "entity_id": "cornish_pirates",
+  "entity_name": "Cornish Pirates",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "cornish-pirates.com",
+    "newsnow.co.uk",
+    "navyrugbyunion.co.uk",
+    "gladiatorrugby.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cornish_pirates",
+      "entity_name": "Cornish Pirates",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://navyrugbyunion.co.uk",
+        "https://cornish-pirates.com",
+        "https://newsnow.co.uk",
+        "https://gladiatorrugby.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "E-commerce Platform Usage (Ticketco.events)",
+        "Digital Transformation (New Shop Look)",
+        "Strategic Partnerships (Suez Sustainability)",
+        "Executive Leadership Visibility (CEO Updates)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cornish Pirates may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:56:07.245071",
+          "domain_explored": "https://cornish-pirates.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketco.events (Ticketing Platform)",
+              "Twitter/X (Social Media)",
+              "PiratesTV (Video Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Suez (Sustainability Services)",
+              "Ticketco Events Procurement (Ticketing System)",
+              "Merchandise E-commerce Update ('New Look, New Era')"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Ticketco.events)",
+            "Digital Transformation (New Shop Look)",
+            "Strategic Partnerships (Suez Sustainability)",
+            "Executive Leadership Visibility (CEO Updates)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 265,
+              "elapsed_seconds": 3.873034954071045
+            }
+          ],
+          "reasoning": "The content reveals specific technology vendors (Ticketco for ticketing) and active commercial partnerships (Suez), indicating procurement activity in event management and sustainability. The 'New Look' shop suggests recent investment in e-commerce infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:56:17.782817",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 550,
+              "output_tokens": 137,
+              "elapsed_seconds": 2.9981889724731445
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow is a generic news aggregator feed focusing on UK politics (Lord Mandelson, Labour Party) and unrelated topics (Jeffrey Epstein). There is absolutely no content, metadata, or links related to the Cornish Pirates, rugby, or procurement activities. This is entirely irrelevant noise."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:56:28.744012",
+          "domain_explored": "https://navyrugbyunion.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Events & Administration Coordinator",
+                "entity": "Navy Rugby Union",
+                "date": "30 January 2026",
+                "relevance": "Low - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Fixture Listing",
+                "details": "Senior Women XV vs Cornwall Women (Feb 2026)",
+                "relevance": "Contextual - Confirms Cornwall Women's team activity, not Pirates procurement"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Content",
+            "Competitor/Partner Fixture Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 287,
+              "elapsed_seconds": 4.115739822387695
+            }
+          ],
+          "reasoning": "The content is from the Navy Rugby Union (RNRU) website, not Cornish Pirates. While there is a fixture listing for 'Senior Women XV vs Cornwall Women', this refers to the representative Cornwall Women's team, not the Cornish Pirates club. No direct procurement signals for the Cornish Pirates entity were found in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:56:47.618074",
+          "domain_explored": "https://gladiatorrugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3354,
+      "total_output_tokens": 689,
+      "estimated_cost_usd": 0.020397
+    },
+    "procurement_signals": [
+      "E-commerce Platform Usage (Ticketco.events)",
+      "Digital Transformation (New Shop Look)",
+      "Strategic Partnerships (Suez Sustainability)",
+      "Executive Leadership Visibility (CEO Updates)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cornish Pirates may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:56:47.619713"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.278836",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:45.521439"
+}

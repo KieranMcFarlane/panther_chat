@@ -1,0 +1,125 @@
+{
+  "entity_id": "kashima_antlers",
+  "entity_name": "Kashima Antlers",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "antlers.co.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://jp.linkedin.com/jobs/view/kashima-antlers-fc-executive-%E9%B9%BF%E5%B3%B6%E3%82%A2%E3%83%B3%E3%83%88%E3%83%A9%E3%83%BC%E3%82%BA-fc-%E5%B9%B9%E9%83%A8-at-mercari-inc-3700248742"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kashima_antlers",
+      "entity_name": "Kashima Antlers",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://antlers.co.jp",
+        "https://jp.linkedin.com/jobs/view/kashima-antlers-fc-executive-%E9%B9%BF%E5%B3%B6%E3%82%A2%E3%83%B3%E3%83%88%E3%83%A9%E3%83%BC%E3%82%BA-fc-%E5%B9%B9%E9%83%A8-at-mercari-inc-3700248742"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Partnership / Joint Venture",
+        "Digital Transformation (DX) Leadership",
+        "New Business Development",
+        "Fan Engagement & CRM Strategy",
+        "Stakeholder Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kashima Antlers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:46:59.100887",
+          "domain_explored": "https://antlers.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:47:07.514605",
+          "domain_explored": "https://jp.linkedin.com/jobs/view/kashima-antlers-fc-executive-%E9%B9%BF%E5%B3%B6%E3%82%A2%E3%83%B3%E3%83%88%E3%83%A9%E3%83%BC%E3%82%BA-fc-%E5%B9%B9%E9%83%A8-at-mercari-inc-3700248742",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems (Fan Club Management)",
+              "E-commerce Platforms (Merchandise/Ticketing)",
+              "Data Analytics (Fan Acquisition)",
+              "Digital Marketing Tools"
+            ],
+            "job_postings": [
+              "Kashima Antlers FC Executive (Mercari Inc.) - Focus on business strategy, new revenue streams, and digital transformation."
+            ],
+            "procurement_indicators": [
+              "Intent to create new businesses leveraging existing assets",
+              "Strategy formulation for partner companies and revenue generation",
+              "Improvement of fan club and marketing initiatives",
+              "Investment in local community and government projects",
+              "Mercari Group influence on tech adoption"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership / Joint Venture",
+            "Digital Transformation (DX) Leadership",
+            "New Business Development",
+            "Fan Engagement & CRM Strategy",
+            "Stakeholder Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 411,
+              "elapsed_seconds": 4.640528917312622
+            }
+          ],
+          "reasoning": "The content reveals a major strategic shift: Mercari (a tech giant) has acquired a stake in Kashima Antlers and is recruiting a 'Kashima Antlers FC Executive' to drive business transformation. This is a high-confidence procurement signal because the role explicitly mandates 'creating new businesses,' 'formulating strategies,' and 'improving marketing initiatives.' This indicates an immediate need for vendors/partners to support digital infrastructure, CRM systems, and new business ventures."
+        }
+      ],
+      "total_input_tokens": 1426,
+      "total_output_tokens": 411,
+      "estimated_cost_usd": 0.010443000000000001
+    },
+    "procurement_signals": [
+      "Strategic Partnership / Joint Venture",
+      "Digital Transformation (DX) Leadership",
+      "New Business Development",
+      "Fan Engagement & CRM Strategy",
+      "Stakeholder Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kashima Antlers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:47:07.516131"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.130580",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:50.901637"
+}

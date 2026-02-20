@@ -1,0 +1,218 @@
+{
+  "entity_id": "prema_racing",
+  "entity_name": "Prema Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "premaracing.com",
+    "premafanclub.com",
+    "indycar.com",
+    "fiaformula3.com",
+    "fiaformula2.com",
+    "f4championship.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "prema_racing",
+      "entity_name": "Prema Racing",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fiaformula3.com",
+        "https://premafanclub.com",
+        "https://premaracing.com",
+        "https://indycar.com",
+        "https://fiaformula2.com",
+        "https://f4championship.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Prema Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:37:24.870324",
+          "domain_explored": "https://premaracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Driver roster management",
+            "Series participation (UAE4)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 415,
+              "output_tokens": 132,
+              "elapsed_seconds": 3.992658853530884
+            }
+          ],
+          "reasoning": "The content is a standard sports announcement regarding a driver joining a racing lineup. It contains no information regarding technology acquisition, vendor selection, or organizational infrastructure changes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:37:33.108932",
+          "domain_explored": "https://premafanclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Discord (Community Platform)",
+              "E-commerce / Subscription Management Software (implied by renewal/subscription model)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Promotional Merchandising (Customized gadgets, drinking bottles)",
+              "Logistics & Shipping (Global shipping of gift boxes)",
+              "Event Services (Meet & greet coordination)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Strategy",
+            "Merchandising & Logistics",
+            "Community Platform Usage (Discord)",
+            "Event Management (Virtual/In-person)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 323,
+              "elapsed_seconds": 4.387169122695923
+            }
+          ],
+          "reasoning": "The content reveals a structured 'Fan Club' initiative requiring physical logistics (gift boxes, shipping) and digital community management (Discord). While primarily a marketing/engagement function, the need for 'customized gadgets', 'drinking bottles', and shipping services indicates procurement activity in the promotional merchandise and logistics categories. It is a WEAK_ACCEPT because it confirms vendor usage (merch/logistics) but is likely low-complexity B2C procurement rather than strategic B2B sourcing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:37:40.311001",
+          "domain_explored": "https://indycar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iRacing (Sim Racing Platform)",
+              "YouTube (Media Hosting)",
+              "Spotify (Audio Streaming)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media production contracts (FOX Sports commercial shoots)",
+              "Title sponsorship agreements (NTT, Gainbridge)"
+            ]
+          },
+          "patterns_found": [
+            "Series-Level Scheduling & Operations",
+            "Media Rights & Broadcasting (FOX Sports)",
+            "Sponsorship Activation (Verizon, Gainbridge)",
+            "Sim Racing Integration (Thrustmaster iRacing Pro Series)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.130498170852661
+            }
+          ],
+          "reasoning": "The scraped content represents the official INDYCAR SERIES homepage, focusing on the broader championship ecosystem (schedules, standings, series-wide media) rather than the specific operational or procurement activities of Prema Racing. While it confirms the competitive environment Prema participates in, it contains no direct signals regarding Prema's internal procurement, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:37:43.055228",
+          "domain_explored": "https://fiaformula3.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:37:45.799653",
+          "domain_explored": "https://fiaformula2.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:37:51.745591",
+          "domain_explored": "https://f4championship.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Series-Level Operations Management",
+            "Event Logistics & Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 579,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.3346900939941406
+            }
+          ],
+          "reasoning": "The content describes the operational schedule and conclusion of the Formula 4 championship season. While this confirms the environment in which Prema Racing operates, it contains no specific information regarding Prema's internal procurement activities, technology stack, or vendor partnerships."
+        }
+      ],
+      "total_input_tokens": 3839,
+      "total_output_tokens": 901,
+      "estimated_cost_usd": 0.025032
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Prema Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:37:51.747109"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.368040",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:11.182611"
+}

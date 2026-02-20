@@ -1,0 +1,98 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "world_netball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_orienteering_federation_(iof)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_padel_federation_(fip)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_pickleball_federation_(ipf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_rowing_(fisa)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_sailing",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_sambo_federation_(fias)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_shooting_(issf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_skate",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_skating_union_(isu)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_ski_&_snowboard_federation_(fis)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_squash_federation_(wsf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_sumo_federation_(ifs)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_surfing_association_(isa)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_table_tennis_federation_(ittf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_taekwondo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_tennis_federation_(itf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_triathlon",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_flying_disc_federation_(wfdf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_volleyball_(fivb)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_weightlifting_federation_(iwf)",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-02-02T00:15:09.089706",
+  "last_checkpoint_time": "2026-02-02T00:15:09.090194",
+  "end_time": "2026-02-02T00:15:09.091647"
+}

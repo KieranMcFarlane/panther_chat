@@ -1,0 +1,214 @@
+{
+  "entity_id": "gas_sales_bluenergy_piacenza",
+  "entity_name": "Gas Sales Bluenergy Piacenza",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "gassalespiacenza.it",
+    "www-old.cev.eu",
+    "volleybox.net",
+    "legavolley.it",
+    "gassalespiacenza.vivaticket.it",
+    "lubevolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gas_sales_bluenergy_piacenza",
+      "entity_name": "Gas Sales Bluenergy Piacenza",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://gassalespiacenza.vivaticket.it",
+        "https://www-old.cev.eu",
+        "https://gassalespiacenza.it",
+        "https://legavolley.it",
+        "https://volleybox.net",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gas Sales Bluenergy Piacenza may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:39:44.508185",
+          "domain_explored": "https://gassalespiacenza.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Platform (VBTV/Volleyball World)",
+              "E-commerce Platform (Shop Online)",
+              "Newsletter Marketing Tool"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Volleyball World for streaming services (VBTV)",
+              "Operation of an online retail shop for merchandise",
+              "Data collection for newsletter marketing (Privacy compliance mentioned)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Consumption (OTT/Streaming)",
+            "E-commerce Operations (Online Shop)",
+            "Direct-to-Consumer (DTC) Marketing",
+            "Fan Engagement Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.6022989749908447
+            }
+          ],
+          "reasoning": "The content reveals a shift towards digital fan engagement and monetization. While primarily sports news, the explicit promotion of 'VBTV' (OTT streaming), an online 'Shop' for merchandise, and newsletter signups indicates the use of e-commerce platforms and digital marketing tools. This suggests potential procurement needs for e-commerce maintenance, CRM (newsletter management), and digital content delivery services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:39:51.268075",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Sports Federation Navigation",
+            "Event Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.665688991546631
+            }
+          ],
+          "reasoning": "The content provided is scraped from the Confederation Europ\u00e9enne de Volleyball (CEV) website (www-old.cev.eu), which is the governing body for volleyball in Europe. This content is entirely unrelated to the target entity, Gas Sales Bluenergy Piacenza, other than the fact that Gas Sales Bluenergy is a corporate sponsor of the Piacenza volleyball team. The page contains navigation menus for European Championships, Beach Volleyball, and event calendars, but provides no procurement signals, technology stack details, or business operations data regarding Gas Sales Bluenergy Piacenza itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:39:54.047449",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:40:01.524322",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Navigation",
+            "League Scheduling",
+            "Team Rosters",
+            "Generic Login Portal"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.005403995513916
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports league management (Lega Volley), including team standings, schedules, and player statistics. 'Gas Sales Bluenergy Piacenza' appears only as a competitor name within a list of teams. There are no corporate governance, procurement, or technology signals associated with the entity's business operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:40:04.515363",
+          "domain_explored": "https://gassalespiacenza.vivaticket.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:40:11.311301",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity Content",
+            "Sports Team News",
+            "Ticketing Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 155,
+              "elapsed_seconds": 3.529658079147339
+            }
+          ],
+          "reasoning": "The content is exclusively focused on 'Lube Volley' (a different volleyball team based in Civitanova), covering match results, ticket sales, and player interviews. There is no mention of 'Gas Sales Bluenergy Piacenza' or any procurement-related activities relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5853,
+      "total_output_tokens": 877,
+      "estimated_cost_usd": 0.030714
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gas Sales Bluenergy Piacenza may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:40:11.314163"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.316690",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:58.112172"
+}

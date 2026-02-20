@@ -1,0 +1,291 @@
+{
+  "entity_id": "houston_astros",
+  "entity_name": "Houston Astros",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "mlbshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/houston-astros-jobs",
+      "https://www.linkedin.com/jobs/houston-astros-jobs-west-palm-beach-fl",
+      "https://www.linkedin.com/jobs/view/player-development-analyst-at-houston-astros-4349579381",
+      "https://www.linkedin.com/jobs/view/senior-manager-promotions-events-at-houston-astros-4365339033",
+      "https://www.linkedin.com/jobs/view/technical-director-ballpark-entertainment-at-houston-astros-4362842261",
+      "https://www.linkedin.com/jobs/view/development-coach-at-houston-astros-4341873235",
+      "https://www.linkedin.com/jobs/view/promotion-team-corpus-christi-hooks-at-houston-astros-4353542370",
+      "https://www.linkedin.com/jobs/view/bat-boy-girl-fayetteville-woodpeckers-at-houston-astros-4352967579",
+      "https://www.linkedin.com/jobs/professional-sports-jobs-houston-tx"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "houston_astros",
+      "entity_name": "Houston Astros",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.16,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.16
+      ],
+      "explored_domains": [
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/view/senior-manager-promotions-events-at-houston-astros-4365339033",
+        "https://www.linkedin.com/jobs/view/technical-director-ballpark-entertainment-at-houston-astros-4362842261",
+        "https://www.linkedin.com/jobs/houston-astros-jobs-west-palm-beach-fl",
+        "https://www.linkedin.com/jobs/houston-astros-jobs",
+        "https://www.linkedin.com/jobs/view/player-development-analyst-at-houston-astros-4349579381"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Vendor Management Language",
+        "Budget Ownership",
+        "Procurement of Premium Items",
+        "Cross-functional Project Management",
+        "Sponsorship Activation",
+        "Specific Hardware Procurement (Ross Video)",
+        "Software Stack Specification",
+        "Vendor Ecosystem Integration",
+        "Payroll/HR System Usage (UltiPro)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Houston Astros may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:22:55.121047",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:23:02.198186",
+          "domain_explored": "https://www.linkedin.com/jobs/houston-astros-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Player Development Apprentice",
+              "Part-time Security Operations Team Member"
+            ],
+            "procurement_indicators": [
+              "Active recruitment (136 roles detected)",
+              "Operational expansion (Security Ops)",
+              "Investment in Player Development infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "LinkedIn Auth Wall",
+            "Job Title Visibility",
+            "High Volume of Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.095521926879883
+            }
+          ],
+          "reasoning": "The content is heavily obstructed by LinkedIn's authentication wall (repetitive 'Sign in' text), preventing full analysis of job descriptions. However, the scraped text reveals specific job titles ('Player Development Apprentice', 'Part-time Security Operations') and a high volume of roles (136 jobs). This confirms active hiring and organizational growth, which correlates with procurement needs, even if specific technology stacks are hidden behind the login."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:23:08.951300",
+          "domain_explored": "https://www.linkedin.com/jobs/houston-astros-jobs-west-palm-beach-fl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Guest Services Associate",
+              "Ticket Sales & Services Apprentice"
+            ],
+            "procurement_indicators": [
+              "Operational hiring at CACTI Park (West Palm Beach)",
+              "Potential need for ticketing software support",
+              "Potential need for training/onboarding vendors"
+            ]
+          },
+          "patterns_found": [
+            "LinkedIn Auth Wall",
+            "Job Title Visibility",
+            "High Volume of Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.224979877471924
+            }
+          ],
+          "reasoning": "The content confirms active hiring at the West Palm Beach facility (CACTI Park), indicating operational activity and potential procurement needs for staffing, training, or facility services. However, the 'Auth Wall' prevents deep analysis of job descriptions for specific technology stacks or procurement intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:23:16.748598",
+          "domain_explored": "https://www.linkedin.com/jobs/view/player-development-analyst-at-houston-astros-4349579381",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Purchasing Agent - Phipps Neighborhoods",
+              "Benefits Administrator - Phipps Neighborhoods",
+              "Leasing Manager - Phipps Neighborhoods"
+            ],
+            "procurement_indicators": [
+              "Purchasing Agent role (Wrong Entity)"
+            ]
+          },
+          "patterns_found": [
+            "Content Mismatch",
+            "Wrong Entity (Phipps Neighborhoods)",
+            "Job Board Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.6582179069519043
+            }
+          ],
+          "reasoning": "The scraped content does not contain information regarding the Houston Astros. The content is a listing of jobs for 'Phipps Neighborhoods' (Phipps Houses) in New York, NY. The URL suggests a specific job posting for a 'Player Development Analyst' at the Astros, but the scraped text is completely unrelated, likely due to a redirect or scraping error. Therefore, no procurement signals for the target entity were found."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:23:23.489647",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-manager-promotions-events-at-houston-astros-4365339033",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Manager, Promotions & Events"
+            ],
+            "procurement_indicators": [
+              "Strategic management of key vendor relationships",
+              "Manage end-to-end planning... of premium item process",
+              "Budget management for key expense lines",
+              "Optimization of... costs for strategic marketing assets"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Management Language",
+            "Budget Ownership",
+            "Procurement of Premium Items",
+            "Cross-functional Project Management",
+            "Sponsorship Activation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 269,
+              "elapsed_seconds": 3.4080569744110107
+            }
+          ],
+          "reasoning": "This posting explicitly mentions 'Strategic management of key vendor relationships' and 'budget management for key expense lines,' indicating direct procurement responsibility for promotional materials and event services. It confirms the entity structure and validates the procurement function within the Marketing department."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:23:30.552352",
+          "domain_explored": "https://www.linkedin.com/jobs/view/technical-director-ballpark-entertainment-at-houston-astros-4362842261",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ross Xpression",
+              "Ross Tessera",
+              "Ross Dashboard",
+              "Ross Acuity Switcher",
+              "Ross Carbonite Switcher",
+              "ScorePad (Plays Now, Pitches Now)",
+              "Adobe Creative Suite",
+              "UltiPro (HR/Payroll)"
+            ],
+            "job_postings": [
+              "Technical Director, Ballpark Entertainment"
+            ],
+            "procurement_indicators": [
+              "Requirement for expert knowledge of specific Ross Video hardware/software packages",
+              "Integration needs with sponsorship and marketing departments for content distribution",
+              "Usage of UltiPro for time approval and payroll processing"
+            ]
+          },
+          "patterns_found": [
+            "Specific Hardware Procurement (Ross Video)",
+            "Software Stack Specification",
+            "Vendor Ecosystem Integration",
+            "Payroll/HR System Usage (UltiPro)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1637,
+              "output_tokens": 332,
+              "elapsed_seconds": 3.3214147090911865
+            }
+          ],
+          "reasoning": "The job description explicitly lists proprietary hardware and software requirements (Ross Xpression, Ross Carbonite/Acuity, ScorePad), indicating active procurement or maintenance of specialized AV technology. It also confirms the use of UltiPro for HR/payroll processing."
+        }
+      ],
+      "total_input_tokens": 7554,
+      "total_output_tokens": 1358,
+      "estimated_cost_usd": 0.043032
+    },
+    "procurement_signals": [
+      "Vendor Management Language",
+      "Budget Ownership",
+      "Procurement of Premium Items",
+      "Cross-functional Project Management",
+      "Sponsorship Activation",
+      "Specific Hardware Procurement (Ross Video)",
+      "Software Stack Specification",
+      "Vendor Ecosystem Integration",
+      "Payroll/HR System Usage (UltiPro)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Houston Astros may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:23:30.557101"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.308463",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:34:07.227415"
+}

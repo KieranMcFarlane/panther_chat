@@ -1,0 +1,155 @@
+{
+  "entity_id": "gibraltar_volleyball_association",
+  "entity_name": "Gibraltar Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "chronicle.gi",
+    "gibraltar.gov.gi",
+    "edition.pagesuite.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gibraltar_volleyball_association",
+      "entity_name": "Gibraltar Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://chronicle.gi",
+        "https://gibraltar.gov.gi",
+        "https://edition.pagesuite.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gibraltar Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:35:24.361218",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Grant/Funding Opportunity",
+                "description": "CEV Solidarity Fund applications open (Feb 2026). Potential source of budget for GVA projects.",
+                "source": "CEV News",
+                "date": "2026-02-02"
+              },
+              {
+                "type": "Strategic Development",
+                "description": "Reference to scouting processes and S&C team establishment in other federations, indicating standard development activities GVA may emulate.",
+                "source": "CEV News",
+                "date": "2026-01-29"
+              }
+            ]
+          },
+          "patterns_found": [
+            "CEV Solidarity Fund Applications",
+            "Federation Development Grants",
+            "Event Hosting Bids"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 362,
+              "elapsed_seconds": 11.680890083312988
+            }
+          ],
+          "reasoning": "The content reveals the opening of the 'CEV Solidarity Fund' (Feb 2026). While this is a general European confederation update, it represents a direct procurement vehicle for National Federations like Gibraltar. Gibraltar Volleyball Association likely needs to apply for these funds to finance projects, which implies a downstream procurement need for goods, services, or events to utilize these funds. This is an 'enabler' for procurement rather than a direct purchase."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:36:27.267722",
+          "domain_explored": "https://chronicle.gi",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:36:32.214380",
+          "domain_explored": "https://gibraltar.gov.gi",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:37:10.051206",
+          "domain_explored": "https://edition.pagesuite.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "B2B SaaS Solution Landing Page",
+            "Generic Product Descriptions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.3368868827819824
+            }
+          ],
+          "reasoning": "The content is entirely promotional material for PageSuite, a digital publishing platform. It describes the vendor's product features (eEditions, Apps, Portals) and value propositions. There is no specific information regarding the Gibraltar Volleyball Association, their procurement activities, or their adoption of this technology. This is irrelevant vendor noise."
+        }
+      ],
+      "total_input_tokens": 2838,
+      "total_output_tokens": 543,
+      "estimated_cost_usd": 0.016659
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gibraltar Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:37:10.052764"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341580",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:01.993797"
+}

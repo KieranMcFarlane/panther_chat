@@ -1,0 +1,97 @@
+{
+  "template_id": "tier_1_club_centralized_procurement",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "expanded_at": "2026-01-28T15:06:43.928715",
+  "signal_examples": [
+    {
+      "source_url": "https://example.com",
+      "signal_type": "job_posting",
+      "content": "This is a mock result - implement actual MCP transport",
+      "confidence": 0.8,
+      "timestamp": "2026-01-28T15:06:43.928685",
+      "metadata": {
+        "channel": "jobs_board",
+        "query": "\"Arsenal FC\" \"CRM\" OR \"Digital\" jobs"
+      }
+    },
+    {
+      "source_url": "https://arsenal.com",
+      "signal_type": "keyword_detection",
+      "content": "Found 'Data' on official site",
+      "confidence": 0.6,
+      "timestamp": "2026-01-28T15:06:43.928694",
+      "metadata": {
+        "channel": "official_site",
+        "keyword": "Data"
+      }
+    },
+    {
+      "source_url": "https://arsenal.com/news",
+      "signal_type": "press_release",
+      "content": "Found announcement keyword 'new' in news",
+      "confidence": 0.7,
+      "timestamp": "2026-01-28T15:06:43.928701",
+      "metadata": {
+        "channel": "press",
+        "keyword": "new"
+      }
+    }
+  ],
+  "live_urls": {
+    "job_posting": [
+      "https://example.com"
+    ],
+    "keyword_detection": [
+      "https://arsenal.com"
+    ],
+    "press_release": [
+      "https://arsenal.com/news"
+    ]
+  },
+  "enriched_patterns": {
+    "Strategic Leadership Hire": [
+      "This is a mock result - implement actual MCP transport",
+      "Found announcement keyword 'new' in news"
+    ],
+    "Vendor Stack Expansion": [
+      "This is a mock result - implement actual MCP transport",
+      "Found announcement keyword 'new' in news"
+    ],
+    "Contract Renewal Cycle": [
+      "This is a mock result - implement actual MCP transport",
+      "Found announcement keyword 'new' in news"
+    ]
+  },
+  "expansion_metadata": {
+    "template_id": "tier_1_club_centralized_procurement",
+    "collection_plan": {
+      "channels_to_scrape": [
+        "jobs_board",
+        "official_site",
+        "partner_site",
+        "press"
+      ],
+      "search_queries": {
+        "jobs_board": [
+          "\"Arsenal FC\" \"CRM\" OR \"Digital\" jobs"
+        ],
+        "press": [
+          "\"Arsenal FC\" partnership announcement"
+        ]
+      },
+      "urls_to_scrape": [
+        "https://arsenal.com"
+      ],
+      "priority_order": [
+        "jobs_board",
+        "official_site",
+        "press"
+      ],
+      "estimated_signals": {}
+    },
+    "total_signals": 3,
+    "channels_scraped": 3,
+    "confidence_boost": 0.042
+  }
+}

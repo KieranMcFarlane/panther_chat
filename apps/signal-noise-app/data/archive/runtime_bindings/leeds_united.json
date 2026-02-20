@@ -1,0 +1,416 @@
+{
+  "entity_id": "leeds_united",
+  "entity_name": "Leeds United",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "leedsunited.com",
+    "shop.leedsunited.com",
+    "premierleague.com",
+    "newsnow.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/leedsunited/jobs",
+      "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7356316334453846018-Aovw",
+      "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7353772019844272129-G45v",
+      "https://www.linkedin.com/posts/bikash-deb-20993877_careers-leeds-united-activity-7336347907568070656-cN8n",
+      "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7336325827195789312-Xm1I",
+      "https://uk.linkedin.com/jobs/view/marketing-manager-at-the-leeds-united-foundation-4365486689",
+      "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7320741243154567169-8CYR",
+      "https://www.linkedin.com/posts/dominicjjordan_careers-leeds-united-activity-7267104671096344579-xBsj",
+      "https://www.linkedin.com/posts/bikash-deb-20993877_careers-leeds-united-activity-7333801354836013056-K9P9"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "leeds_united",
+      "entity_name": "Leeds United",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7353772019844272129-G45v",
+        "https://shop.leedsunited.com",
+        "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7336325827195789312-Xm1I",
+        "https://www.linkedin.com/posts/bikash-deb-20993877_careers-leeds-united-activity-7336347907568070656-cN8n",
+        "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7356316334453846018-Aovw",
+        "https://uk.linkedin.com/company/leedsunited/jobs",
+        "https://premierleague.com",
+        "https://newsnow.co.uk",
+        "https://leedsunited.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Football Analytics Expansion",
+        "Proprietary Platform Development",
+        "Advanced Data Infrastructure (Skeletal/Event Tracking)",
+        "R&D Investment",
+        "Remote-First Infrastructure Procurement",
+        "In-house Software Engineering Recruitment",
+        "Principal Data Scientist Hiring",
+        "Data Engineering & Analytics Expansion",
+        "Digital Transformation (Internal Build vs Buy)",
+        "Multi-disciplinary Tech Hiring (Design + Data)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Leeds United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:50:56.405318",
+          "domain_explored": "https://leedsunited.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Journalism/Match Reporting",
+            "Video Content Hosting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.2822060585021973
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive match reports, player interviews, and multimedia links related to a specific football game (Leeds United vs Arsenal). There are no mentions of corporate strategy, technology vendors, job vacancies, or infrastructure upgrades. This is consumer-facing sports content, not business intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:51:08.796326",
+          "domain_explored": "https://shop.leedsunited.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Klarna (Payments/FinTech)",
+              "Apple Pay (Digital Wallets)",
+              "PayPal (Payment Processing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced E-commerce Operations (Fanatics, LLC)",
+              "Supply Chain Management (Merchandise Inventory)",
+              "Financial Services Partnership (Klarna)",
+              "Compliance Requirement (Modern Slavery Statement link)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Outsourcing",
+            "Vendor Branding (Fanatics)",
+            "Payment Gateway Diversity",
+            "Digital Marketing Tools (Klarna)",
+            "Corporate Governance Links (Modern Slavery)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.565112113952637
+            }
+          ],
+          "reasoning": "While the page is a consumer storefront, it reveals critical procurement intelligence regarding the club's operational structure. The presence of 'Fanatics' copyright and the 'Klarna' payment option indicates a fully outsourced e-commerce model and a partnership with a Buy Now, Pay Later provider. This shifts the procurement hypothesis from 'building tech' to 'managing vendor partnerships' and 'platform licensing'."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:51:15.176514",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Aggregation",
+            "Sponsorship Taxonomy",
+            "Content Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1209,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.134484052658081
+            }
+          ],
+          "reasoning": "The scraped content is from the Premier League's main homepage, not Leeds United's specific domain. It lists league-wide commercial partners (e.g., 'Official Cloud & AI Partner') and generic navigation elements. There is no specific procurement intelligence regarding Leeds United's internal operations, technology stack, or vendor selection process in this data."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:51:26.150872",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Aggregation",
+            "Political News Filtering",
+            "Keyword Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 662,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.886403799057007
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow is a news aggregation feed regarding UK politics (Keir Starmer) and the Royal Family (Prince Andrew/Jeffrey Epstein). It contains zero information about Leeds United's operations, supply chain, technology stack, or procurement activities. The entity 'Leeds United' is not mentioned in the provided text fragment."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:51:59.615898",
+          "domain_explored": "https://uk.linkedin.com/company/leedsunited/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Platform Policy Enforcement",
+            "Data Scraping Barrier"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 563,
+              "output_tokens": 180,
+              "elapsed_seconds": 31.0706729888916
+            }
+          ],
+          "reasoning": "The target URL returned a '403 Forbidden' error with the instruction 'Use only company name in the URL'. This indicates that the specific job listing endpoint is protected against direct scraping or requires a specific session ID/tokens not present in the request. Consequently, no procurement signals, job postings, or technology stack data could be extracted."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:52:08.667861",
+          "domain_explored": "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7356316334453846018-Aovw",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "Executive Performance Head Chef"
+            ],
+            "procurement_indicators": [
+              "Investment in Performance Nutrition",
+              "Outsourcing of Recruitment Marketing"
+            ]
+          },
+          "patterns_found": [
+            "Operational Recruitment (Catering)",
+            "Performance Nutrition Investment",
+            "LinkedIn Talent Acquisition Usage",
+            "Social Media Engagement Noise"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 274,
+              "elapsed_seconds": 4.349063873291016
+            }
+          ],
+          "reasoning": "While the content is primarily a job posting for an Executive Performance Head Chef (operational expenditure rather than strategic procurement), it confirms the club's active investment in 'Performance' infrastructure. This indicates a budget allocation for high-quality nutrition services, which often involves procurement of specialized food vendors and equipment. The link to other vacancies suggests a broader hiring campaign that may include technical roles."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:52:45.575451",
+          "domain_explored": "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7353772019844272129-G45v",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Part Time 9-14 Academy Coach"
+            ],
+            "procurement_indicators": [
+              "Youth Development Staffing",
+              "Academy Operational Costs"
+            ]
+          },
+          "patterns_found": [
+            "Academy Recruitment",
+            "Part-Time Operational Scaling",
+            "LinkedIn Talent Acquisition Usage",
+            "Youth Development Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1694,
+              "output_tokens": 242,
+              "elapsed_seconds": 32.517197132110596
+            }
+          ],
+          "reasoning": "The content confirms active recruitment within the Academy structure (ages 9-14). While this is an operational HR signal rather than a direct procurement tender, it indicates investment in youth development infrastructure and coaching staff, which correlates with the 'Operational Recruitment' pattern established in previous iterations. It validates the club's growth phase but offers no specific vendor or technology data."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:52:55.251392",
+          "domain_explored": "https://www.linkedin.com/posts/bikash-deb-20993877_careers-leeds-united-activity-7336347907568070656-cN8n",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full Stack Development",
+              "Data Infrastructure Pipelines",
+              "Event-tracking Data",
+              "Skeletal Tracking Data",
+              "Model Deployment Tools",
+              "Cloud Infrastructure (implied by remote/abroad support)"
+            ],
+            "job_postings": [
+              "Software Engineer (Football Platform)",
+              "Data Engineer/Scientist",
+              "Principal Data Scientist (R&D)"
+            ],
+            "procurement_indicators": [
+              "Build vs. Buy Strategy (Platform Development)",
+              "Data Vendor Sourcing (Tracking Data)",
+              "Cloud Hosting Procurement",
+              "Remote Work Tooling"
+            ]
+          },
+          "patterns_found": [
+            "Football Analytics Expansion",
+            "Proprietary Platform Development",
+            "Advanced Data Infrastructure (Skeletal/Event Tracking)",
+            "R&D Investment",
+            "Remote-First Infrastructure Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1764,
+              "output_tokens": 378,
+              "elapsed_seconds": 5.250128984451294
+            }
+          ],
+          "reasoning": "This content reveals a significant internal investment in proprietary technology infrastructure, specifically a 'central platform' for football analytics. The recruitment of high-level technical roles (Principal Data Scientist, Software Engineer) indicates a shift from buying off-the-shelf solutions to building in-house capabilities. This requires procurement of cloud infrastructure, developer tools, and tracking data services."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:53:17.018577",
+          "domain_explored": "https://www.linkedin.com/posts/leedsunited_careers-leeds-united-activity-7336325827195789312-Xm1I",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics Platforms",
+              "Custom Software Development",
+              "Graphic Design Software"
+            ],
+            "job_postings": [
+              "Software Engineer",
+              "Principal Data Scientist",
+              "Data Engineer/Scientist",
+              "Junior Graphic Designer",
+              "Football Recruitment Co-ordinator"
+            ],
+            "procurement_indicators": [
+              "Internal capability building for Data Science",
+              "Expansion of Engineering headcount",
+              "Investment in Performance Analytics"
+            ]
+          },
+          "patterns_found": [
+            "In-house Software Engineering Recruitment",
+            "Principal Data Scientist Hiring",
+            "Data Engineering & Analytics Expansion",
+            "Digital Transformation (Internal Build vs Buy)",
+            "Multi-disciplinary Tech Hiring (Design + Data)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1840,
+              "output_tokens": 339,
+              "elapsed_seconds": 17.517653942108154
+            }
+          ],
+          "reasoning": "The content lists specific technical vacancies including 'Software Engineer', 'Principal Data Scientist', and 'Data Engineer/Scientist'. This confirms a strategic shift towards building proprietary software and data infrastructure in-house rather than outsourcing, representing a clear procurement signal for technical talent and associated tooling."
+        }
+      ],
+      "total_input_tokens": 12114,
+      "total_output_tokens": 2252,
+      "estimated_cost_usd": 0.07012199999999999
+    },
+    "procurement_signals": [
+      "Football Analytics Expansion",
+      "Proprietary Platform Development",
+      "Advanced Data Infrastructure (Skeletal/Event Tracking)",
+      "R&D Investment",
+      "Remote-First Infrastructure Procurement",
+      "In-house Software Engineering Recruitment",
+      "Principal Data Scientist Hiring",
+      "Data Engineering & Analytics Expansion",
+      "Digital Transformation (Internal Build vs Buy)",
+      "Multi-disciplinary Tech Hiring (Design + Data)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Leeds United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:53:17.020084"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.120280",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:18.466251"
+}

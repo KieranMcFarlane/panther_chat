@@ -1,0 +1,381 @@
+{
+  "entity_id": "western_province",
+  "entity_name": "Western Province",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "western.gov.pg",
+    "westernprovince.gov.rw",
+    "cm.wp.gov.lk",
+    "newlandscricket.com",
+    "finance.gov.pg",
+    "westernprovincegolf.co.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lk.linkedin.com/jobs/jobs-in-colombo",
+      "https://lk.linkedin.com/jobs/jobs-in-north-western-province",
+      "https://lk.linkedin.com/jobs/colombo-jobs",
+      "https://www.linkedin.com/jobs/jobs-in-sri-lanka",
+      "https://lk.linkedin.com/jobs/part-time-jobs-jobs-colombo",
+      "https://www.linkedin.com/jobs/career141-jobs-worldwide",
+      "https://lk.linkedin.com/jobs/top-jobs",
+      "https://lk.linkedin.com/jobs/executive-jobs",
+      "https://lk.linkedin.com/jobs/school-for-jobs-western-province",
+      "https://lk.linkedin.com/jobs/international-development-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "western_province",
+      "entity_name": "Western Province",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://cm.wp.gov.lk",
+        "https://westernprovince.gov.rw",
+        "https://western.gov.pg",
+        "https://lk.linkedin.com/jobs/part-time-jobs-jobs-colombo",
+        "https://www.linkedin.com/jobs/jobs-in-sri-lanka",
+        "https://newlandscricket.com",
+        "https://westernprovincegolf.co.za",
+        "https://lk.linkedin.com/jobs/jobs-in-colombo",
+        "https://lk.linkedin.com/jobs/jobs-in-north-western-province",
+        "https://lk.linkedin.com/jobs/colombo-jobs",
+        "https://finance.gov.pg"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Western Province may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:46:33.042944",
+          "domain_explored": "https://western.gov.pg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Western Province Launches its 5 Year Development Plan (Strategic Intent)",
+              "Australia reaffirms commitment to long-term development support (Funding/Partnership)",
+              "Administrative Structure: 4 Districts, 16 LLGs, 336 Wards (Implementation Scale)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Planning",
+            "Development Partnerships",
+            "Administrative Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 254,
+              "elapsed_seconds": 2.8821921348571777
+            }
+          ],
+          "reasoning": "The content is primarily descriptive and historical (geography, demographics), lacking direct procurement signals like RFPs or tech stack details. However, the mention of the '5 Year Development Plan' and 'Australia reaffirms commitment to long-term development support' indicates a structured planning cycle and potential for future infrastructure or service-related procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:46:57.485065",
+          "domain_explored": "https://westernprovince.gov.rw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:47:19.051936",
+          "domain_explored": "https://cm.wp.gov.lk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:47:31.357361",
+          "domain_explored": "https://newlandscricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Governance",
+            "Mission/Vision Statements",
+            "Non-Procurement Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1119,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.3589580059051514
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Western Province Cricket' (WPCA), a sports governing body in Cape Town. This is a false positive match for the 'Western Province' government entity. The content focuses on sports administration, 'breaking boundaries', and facility maintenance rather than government procurement, public administration, or digital transformation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:47:47.025160",
+          "domain_explored": "https://finance.gov.pg",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:47:59.636319",
+          "domain_explored": "https://westernprovincegolf.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Governance",
+            "Non-Procurement Entity",
+            "Regional Governing Body"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.042325019836426
+            }
+          ],
+          "reasoning": "The entity 'Western Province Golf' is a governing body for amateur golf in South Africa, not a government administration. The content focuses on sports administration, leagues, and membership rather than public sector procurement or digital governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:48:10.384693",
+          "domain_explored": "https://lk.linkedin.com/jobs/jobs-in-colombo",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Administration Data Assistant - NHS Scotland",
+              "Brand Projects Executive - Unilever",
+              "Project Engineer - Unilever",
+              "Executive - Administration - Orfium",
+              "Executive Assistant to the CEO - Skaleart"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Aggregation",
+            "Private Sector Hiring",
+            "BPO Operations",
+            "Job Board Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.9723551273345947
+            }
+          ],
+          "reasoning": "The search results for 'Western Province' return a generic job board feed for the Western Province of Sri Lanka (Colombo). The entities listed (NHS Scotland, Unilever, Orfium, Skaleart) are private sector or foreign organizations operating in the region, not the 'Western Province' government entity itself. This indicates that the search query is too broad and is picking up geographic noise rather than specific government procurement or governance signals."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:48:22.355162",
+          "domain_explored": "https://lk.linkedin.com/jobs/jobs-in-north-western-province",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Store Keeper",
+              "Plantation Operations Supervisor",
+              "Agricultural Extension Supervisor",
+              "Sales Marketing Executive",
+              "Tour Executive"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Hiring",
+            "Geographic Aggregation",
+            "Low-Value Roles",
+            "Non-Governmental Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1640,
+              "output_tokens": 257,
+              "elapsed_seconds": 2.672902822494507
+            }
+          ],
+          "reasoning": "The content represents a generic job board aggregation for the 'North Western Province' region in Sri Lanka. The listings are entirely private sector (Smart Quest Consultancy, Amazing Green, Heaven's Trail), focusing on operational roles (Store Keeper, Tour Executive) rather than government procurement or strategic technology implementation. This does not align with the objective of finding procurement signals for the government entity 'Western Province'."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:48:40.165934",
+          "domain_explored": "https://lk.linkedin.com/jobs/colombo-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant/Associate Professor of Practice, Intelligence Operations - University of Arizona",
+              "Dermatologist - Integrated Dermatology"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Hiring",
+            "Geographic Aggregation",
+            "Authentication Gate",
+            "Low-Value Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.691373825073242
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job aggregation page filtered for 'Colombo'. It lists private sector roles (University of Arizona, Integrated Dermatology) and requires authentication to view details. There is no connection to the 'Western Province' government entity or public procurement processes."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T03:48:48.897488",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-sri-lanka",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Academic Warden - Girls Hostels",
+              "Academic Warden - Boys Hostels",
+              "Proctor - University of Ruhuna",
+              "Academic Staff Vacancies - Faculty of Engineering"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch",
+            "Academic Sector Hiring",
+            "Private Sector Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1737,
+              "output_tokens": 242,
+              "elapsed_seconds": 4.349102020263672
+            }
+          ],
+          "reasoning": "The search results are filtered for 'Sri Lanka' and specifically list the 'University of Ruhuna' located in the 'Southern Province'. This confirms the entity is in Sri Lanka, not the target 'Western Province' (likely Papua New Guinea based on the .gov.pg domain in Iteration 1). Furthermore, the content consists of academic staff vacancies (Warden, Proctor), which are internal HR matters, not procurement signals."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T03:49:13.034143",
+          "domain_explored": "https://lk.linkedin.com/jobs/part-time-jobs-jobs-colombo",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "238450 - Administration Data Assistant (NHS Scotland)",
+              "Trainee Finance Officer (WSO2)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Hiring",
+            "Geographic Aggregation",
+            "Authentication Gate",
+            "BPO Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1791,
+              "output_tokens": 214,
+              "elapsed_seconds": 14.708859205245972
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page filtered for 'Part Time Jobs' in Colombo, Western Province. It lists roles for private entities (WSO2, NHS Scotland) and requires authentication to view details. This indicates a general labor market rather than specific government procurement signals or technology investments by the 'Western Province' administrative entity."
+        }
+      ],
+      "total_input_tokens": 12459,
+      "total_output_tokens": 1772,
+      "estimated_cost_usd": 0.063957
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Western Province may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:49:13.039089"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.295491",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:51.277229"
+}

@@ -1,0 +1,169 @@
+{
+  "entity_id": "ik_s\u00e4vehof",
+  "entity_name": "IK S\u00e4vehof",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "partillecup.com",
+    "commons.wikimedia.org",
+    "goteborg.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ik_s\u00e4vehof",
+      "entity_name": "IK S\u00e4vehof",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://goteborg.com",
+        "https://eurohandball.com",
+        "https://commons.wikimedia.org",
+        "https://partillecup.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IK S\u00e4vehof may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:19:29.714754",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls blocking content",
+            "Tournament schedules (Men's EHF EURO 2026, Champions League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.334014892578125
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news site (eurohandball.com). It contains high-level tournament results, schedules, and cookie wall notices. There is no mention of the specific entity 'IK S\u00e4vehof', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:19:37.903402",
+          "domain_explored": "https://partillecup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Livestreaming platforms (Over 3500 matches live)",
+              "Mobile Application (The App)",
+              "Social Media Integration (Facebook, Instagram, TikTok, Youtube)"
+            ],
+            "job_postings": [
+              "Referees (Volunteer/Operational)"
+            ],
+            "procurement_indicators": [
+              "Event expansion to Cairo (Potential for vendor needs in new region)",
+              "Sponsorship deals (Avisorg mentioned as winner/sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Tournament logistics and scale (110,000 goals, 91 courts)",
+            "Digital product offerings (Livestream All Access Pass, Mobile App)",
+            "Event expansion (Partille World Cup Cairo 2026)",
+            "Recruitment for operational roles (Referees)",
+            "Sponsorship visibility (Avisorg)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 370,
+              "elapsed_seconds": 5.173911809921265
+            }
+          ],
+          "reasoning": "The content is focused on the operational execution, marketing, and logistics of the Partille Cup tournament. While there is evidence of digital infrastructure (livestreaming, apps) and event expansion, these are consumer-facing or operational aspects of the tournament entity, not direct procurement signals for IK S\u00e4vehof (the specific handball club). The recruitment is for volunteer referees, not corporate procurement roles. No direct link to IK S\u00e4vehof's internal procurement needs or technology stack was found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:19:40.693989",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:19:50.083586",
+          "domain_explored": "https://goteborg.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General tourism and event listings",
+            "Municipal marketing content",
+            "Third-party event calendar integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 179,
+              "elapsed_seconds": 6.067588806152344
+            }
+          ],
+          "reasoning": "The content is a generic tourism calendar for the city of Gothenburg (goteborg.com). While it lists major events at venues like Scandinavium (where IK S\u00e4vehof might play), it provides no specific information about IK S\u00e4vehof's internal operations, procurement needs, or technology stack. It is consumer-facing content, not B2B intelligence."
+        }
+      ],
+      "total_input_tokens": 4289,
+      "total_output_tokens": 737,
+      "estimated_cost_usd": 0.023922
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IK S\u00e4vehof may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:19:50.084678"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.356507",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:49.770310"
+}

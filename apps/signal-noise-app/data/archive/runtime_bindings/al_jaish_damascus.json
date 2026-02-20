@@ -1,0 +1,159 @@
+{
+  "entity_id": "al_jaish_damascus",
+  "entity_name": "Al Jaish Damascus",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "playmakerstats.com",
+    "tribuna.com",
+    "grokipedia.com",
+    "a.osmarks.net",
+    "ma-1xbet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_jaish_damascus",
+      "entity_name": "Al Jaish Damascus",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ma-1xbet.com",
+        "https://a.osmarks.net",
+        "https://playmakerstats.com",
+        "https://tribuna.com",
+        "https://grokipedia.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Jaish Damascus may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:02:59.304457",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:03:09.825460",
+          "domain_explored": "https://tribuna.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Football match results",
+            "Transfer rumors"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.3108859062194824
+            }
+          ],
+          "reasoning": "The scraped content from tribuna.com is exclusively related to European football (soccer) news, match scores, and player transfers. There is absolutely no content related to 'Al Jaish Damascus', military procurement, governance, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:03:15.669783",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:03:27.685616",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static content mirror",
+            "Offline reader interface (Kiwix)",
+            "JavaScript dependency"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 521,
+              "output_tokens": 172,
+              "elapsed_seconds": 4.465249061584473
+            }
+          ],
+          "reasoning": "The scraped content indicates the target is a Kiwix ZIM file mirror or offline reader interface. The content is a generic wrapper ('All languages', 'All categories') with no specific data related to 'Al Jaish Damascus', procurement activities, or organizational governance. It is a technical dead end for intelligence gathering."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:03:35.672901",
+          "domain_explored": "https://ma-1xbet.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1908,
+      "total_output_tokens": 327,
+      "estimated_cost_usd": 0.010629
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Jaish Damascus may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:03:35.676572"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233134",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:02.647458"
+}

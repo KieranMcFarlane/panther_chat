@@ -1,0 +1,307 @@
+{
+  "entity_id": "ecuadorian_baseball_federation",
+  "entity_name": "Ecuadorian Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball-reference.com",
+    "wbscamericas.org",
+    "grokipedia.com",
+    "wbscafrica.org",
+    "lavidabaseball.com",
+    "worldbaseball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/sportsbook-manager-at-bettingjobs-4314991336",
+      "https://www.linkedin.com/jobs/amazon-sports-jobs-los-angeles-metropolitan-area"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ecuadorian_baseball_federation",
+      "entity_name": "Ecuadorian Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://worldbaseball.com",
+        "https://baseball-reference.com",
+        "https://wbscamericas.org",
+        "https://grokipedia.com",
+        "https://wbscafrica.org",
+        "https://lavidabaseball.com",
+        "https://www.linkedin.com/jobs/view/sportsbook-manager-at-bettingjobs-4314991336",
+        "https://www.linkedin.com/jobs/amazon-sports-jobs-los-angeles-metropolitan-area"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ecuadorian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:20:55.840237",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference - Not Ecuadorian Baseball Federation)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "US-Centric Data (MLB)",
+            "Commercial Product Promotion (Stathead)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 218,
+              "elapsed_seconds": 7.969949007034302
+            }
+          ],
+          "reasoning": "The scraped content is from Baseball-Reference.com, a US-based sports statistics website. It contains MLB standings, player statistics, and a job posting for the website's parent company (Sports Reference). There is absolutely no connection to the Ecuadorian Baseball Federation, Ecuadorian procurement processes, or local technology implementation. This data is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:21:14.377030",
+          "domain_explored": "https://wbscamericas.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Potential Event Management Systems",
+              "Sports Data Analytics (Game Stats)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Requirements (Logistics/Operations)",
+              "Compliance with International Federation Standards"
+            ]
+          },
+          "patterns_found": [
+            "Event Governance Structure",
+            "International Federation Partnership",
+            "Qualification Timeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 474,
+              "output_tokens": 297,
+              "elapsed_seconds": 10.630550861358643
+            }
+          ],
+          "reasoning": "The content confirms the Ecuadorian Baseball Federation's participation in the 2026 World Baseball Classic Qualifiers. While this is primarily a sporting event, the involvement of the World Baseball Softball Confederation (WBSC) and the Confederation Panamericana de Beisbol (COPABE) indicates a structured governance environment. This participation often triggers requirements for event management software, travel logistics, and statistical reporting tools compliant with international standards, though no direct procurement intent is explicitly stated in this press release."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:21:17.738803",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:21:49.304087",
+          "domain_explored": "https://wbscafrica.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope (Africa vs Ecuador)",
+            "Awards/Recognition Content",
+            "Congress Governance Coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 581,
+              "output_tokens": 204,
+              "elapsed_seconds": 19.987563610076904
+            }
+          ],
+          "reasoning": "The scraped content from wbscafrica.org pertains to the WBSC Africa region and focuses on awards and governance congresses. While it confirms the existence of a structured federation model, it provides zero specific procurement signals, technology stack details, or vendor opportunities for the Ecuadorian Baseball Federation specifically. The geographic scope renders the detailed content irrelevant for Ecuadorian procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:21:58.689111",
+          "domain_explored": "https://lavidabaseball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media/Entertainment Content Focus",
+            "Cultural Storytelling (Latino Baseball Culture)",
+            "Third-Party Partnerships (Smithsonian)",
+            "Editorial Content Strategy",
+            "US-Centric Subjects (MLB Players)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.905186891555786
+            }
+          ],
+          "reasoning": "The content is strictly media and entertainment-focused, featuring human interest stories, video production, and cultural exhibitions (e.g., Smithsonian partnership). There is no presence of organizational governance, administrative operations, or procurement activities relevant to the Ecuadorian Baseball Federation."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:22:08.104781",
+          "domain_explored": "https://worldbaseball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global League Aggregation (MLB, NPB, KBO, LIDOM)",
+            "Sports News Media Focus (Game Scores, Roster Moves)",
+            "E-commerce Integration (Official Merchandise)",
+            "Event Coverage (Caribbean Series, Serie de Las Americas)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.2734010219573975
+            }
+          ],
+          "reasoning": "The content is purely a media aggregation site (World Baseball Network) focused on international league results, news, and merchandise. It lacks organizational governance, administrative structure, or procurement signals relevant to the Ecuadorian Baseball Federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:22:16.614822",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sportsbook-manager-at-bettingjobs-4314991336",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sportsbook Manager",
+                "entity": "BettingJobs (Recruitment)",
+                "location": "LATAM / Remote",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Recruitment Agency Content",
+            "Commercial Gambling Sector Focus",
+            "Geographic Mismatch (Mexico vs Ecuador)",
+            "Private Sector Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.7478201389312744
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Sportsbook Manager' in the gambling/casino industry, specifically for the Mexican market. This is irrelevant to the Ecuadorian Baseball Federation, which is a non-profit sports governing body. There is no intersection between the Federation's needs and commercial sports betting operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:22:26.466245",
+          "domain_explored": "https://www.linkedin.com/jobs/amazon-sports-jobs-los-angeles-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive Assistant, Creator Ad Partnerships",
+              "Executive Talent Lead, Amazon Entertainment"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Los Angeles vs Ecuador)",
+            "Corporate Sector Focus (Amazon/Tech vs Non-Profit Sports Federation)",
+            "Recruitment Platform Noise (LinkedIn)",
+            "Irrelevant Job Functions (Executive Assistant, Ad Partnerships)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.211070775985718
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for Amazon roles in Los Angeles. It is completely disconnected from the Ecuadorian Baseball Federation in terms of geography (Los Angeles Metropolitan Area), entity (Amazon vs Federation), and function (Corporate hiring vs Federation procurement)."
+        }
+      ],
+      "total_input_tokens": 9022,
+      "total_output_tokens": 1573,
+      "estimated_cost_usd": 0.050661
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ecuadorian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:22:26.468881"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314162",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:52.138165"
+}

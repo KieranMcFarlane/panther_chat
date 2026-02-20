@@ -1,0 +1,236 @@
+{
+  "entity_id": "ural_ufa",
+  "entity_name": "Ural Ufa",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "wikidata.org",
+    "playmakerstats.com",
+    "en.fc-zenit.ru",
+    "sofascore.com",
+    "volleytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ural_ufa",
+      "entity_name": "Ural Ufa",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.fc-zenit.ru",
+        "https://www-old.cev.eu",
+        "https://playmakerstats.com",
+        "https://sofascore.com",
+        "https://volleytimes.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ural Ufa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:32:24.547918",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_governing_body",
+            "event_calendar_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.916063070297241
+            }
+          ],
+          "reasoning": "The content is entirely related to the Confederation Europ\u00e9enne de Volleyball (CEV), detailing event calendars, tournament results, and organizational structure. There is absolutely no mention of 'Ural Ufa', procurement activities, or corporate technology stacks. This represents a false positive in the scraping process or a complete lack of relevance to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:32:32.768833",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "open_source_repository",
+            "community_portal_structure",
+            "wiki_platform",
+            "generic_knowledge_base"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.4527716636657715
+            }
+          ],
+          "reasoning": "The content analyzed is the main landing page for Wikidata, a general-purpose open knowledge base. It contains generic information about data literacy, community events (birthdays, conferences), and volunteer contributions. There is no specific content related to the entity 'Ural Ufa', nor are there any procurement signals, vendor solicitations, or corporate technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:33:05.421807",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:33:16.820811",
+          "domain_explored": "https://en.fc-zenit.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (Zenit App)",
+              "Video Streaming (Zenit-TV)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: WINLINE (Betting partner)",
+              "Sponsorship: FONBET (Betting partner)"
+            ]
+          },
+          "patterns_found": [
+            "sports_team_content",
+            "match_results_and_fixtures",
+            "player_contract_news",
+            "sponsorship_brands",
+            "fan_app_promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 242,
+              "elapsed_seconds": 4.32045578956604
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on FC Zenit, a professional football club. It contains match results (Zenit vs Shanghai Port), player news (Pedro contract extension), league standings (RPL), and fan engagement (app download). There are no procurement signals, corporate governance structures, or B2B technology investment indicators relevant to 'Ural Ufa'."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:33:30.182601",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_aggregation_platform",
+            "live_score_dashboard",
+            "consumer_facing_content",
+            "advertisement_monetization"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 166,
+              "elapsed_seconds": 4.387434005737305
+            }
+          ],
+          "reasoning": "The scraped content from Sofascore is exclusively a consumer-facing sports dashboard displaying live scores, fixtures, and player rankings. It contains no corporate governance information, vendor procurement signals, or B2B technology infrastructure details relevant to 'Ural Ufa'."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:33:40.858697",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregation",
+            "match_results_and_fixtures",
+            "player_transfer_news",
+            "league_standings",
+            "editorial_content_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.182999849319458
+            }
+          ],
+          "reasoning": "The content is exclusively focused on volleyball sports news, including match results, player transfers, and league standings. There is no presence of corporate operations, technology infrastructure, or procurement-related activities relevant to the entity Ural Ufa."
+        }
+      ],
+      "total_input_tokens": 7295,
+      "total_output_tokens": 970,
+      "estimated_cost_usd": 0.036435
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ural Ufa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:33:40.860027"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320213",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:41.439940"
+}

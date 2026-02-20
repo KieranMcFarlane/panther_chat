@@ -1,0 +1,134 @@
+{
+  "entity_id": "jt_thunders_hiroshima",
+  "entity_name": "JT Thunders Hiroshima",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "jt-thunders-hiroshima-fc.jp",
+    "dive-hiroshima.com",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jt_thunders_hiroshima",
+      "entity_name": "JT Thunders Hiroshima",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sofascore.com",
+        "https://dive-hiroshima.com",
+        "https://jt-thunders-hiroshima-fc.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "JT Thunders Hiroshima may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:54:46.005137",
+          "domain_explored": "https://jt-thunders-hiroshima-fc.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management System (Platform ID: n163)",
+              "E-commerce/Online Shop",
+              "Survey/Forms Tool (implied by 'Fan Club Survey')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Fan Club Survey distribution (Jan 2026) - indicates potential need for data analysis services or survey tool upgrades.",
+              "Online Shop member-exclusive discounts - indicates active CRM usage."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Fan Engagement & Survey Tools",
+            "Membership Management System"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 938,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.150159120559692
+            }
+          ],
+          "reasoning": "The scraped content reveals the use of a specific digital platform ('/s/n163/') for login, registration, and news management, indicating a structured fan relationship management system. The presence of a 'Fan Club Survey' (\u30d5\u30a1\u30f3\u30af\u30e9\u30d6\u30a2\u30f3\u30b1\u30fc\u30c8) suggests active data collection efforts. While this confirms digital capabilities, it is standard operational infrastructure rather than a new procurement signal, warranting a weak acceptance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:54:51.951633",
+          "domain_explored": "https://dive-hiroshima.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Content",
+            "Event Listings",
+            "Local Campaign Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.2328898906707764
+            }
+          ],
+          "reasoning": "The analyzed content from 'dive-hiroshima.com' is a regional tourism portal focused on general travel, events (Mihara Shrine Market), and local cuisine (Oysters/Biwa Beef). While it mentions 'Sports Spectating' generally, it contains no specific references to 'JT Thunders Hiroshima', nor does it reveal any corporate procurement signals, technology stacks, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:54:54.762874",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2352,
+      "total_output_tokens": 484,
+      "estimated_cost_usd": 0.014315999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "JT Thunders Hiroshima may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:54:54.763754"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322940",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:48.399791"
+}

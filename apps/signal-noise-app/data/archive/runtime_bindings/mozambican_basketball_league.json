@@ -1,0 +1,193 @@
+{
+  "entity_id": "mozambican_basketball_league",
+  "entity_name": "Mozambican Basketball League",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "afrobasket.com",
+    "bal.nba.com",
+    "clubofmozambique.com",
+    "a.osmarks.net",
+    "africa-press.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mozambican_basketball_league",
+      "entity_name": "Mozambican Basketball League",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://a.osmarks.net",
+        "https://bal.nba.com",
+        "https://clubofmozambique.com",
+        "https://afrobasket.com",
+        "https://africa-press.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mozambican Basketball League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:59:41.980678",
+          "domain_explored": "https://afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Focus on player transfers and game results",
+            "Irrelevant geographic scope (North/West Africa focus)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.0478389263153076
+            }
+          ],
+          "reasoning": "The scraped content from afrobasket.com consists entirely of game results, player transfers, and league standings for countries other than Mozambique (Egypt, Angola, Morocco, etc.). There are no mentions of the Mozambican Basketball League, nor are there any signals regarding procurement, job openings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:00:14.773024",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:00:24.293290",
+          "domain_explored": "https://clubofmozambique.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Political and corporate governance topics",
+            "Irrelevant content (Banking/Finance sector focus)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 642,
+              "output_tokens": 178,
+              "elapsed_seconds": 4.479663848876953
+            }
+          ],
+          "reasoning": "The scraped content from 'clubofmozambique.com' focuses on corporate governance and legal investigations within the banking sector (BPI CEO). There are no signals related to sports, basketball, or league procurement activities. The source appears to be a general news outlet rather than a sports or procurement portal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:00:30.236443",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Offline content reader (Kiwix)",
+            "JavaScript dependency error",
+            "Generic language/category placeholders"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 573,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.9437289237976074
+            }
+          ],
+          "reasoning": "The target URL resolves to a Kiwix offline reader instance (a.osmarks.net), which is a tool for viewing archived content (like Wikipedia) without internet access. This is technically a utility page, not the Mozambican Basketball League. It contains no organizational data, governance information, or procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:00:36.823618",
+          "domain_explored": "https://africa-press.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Pan-African geographic scope",
+            "Focus on macro-politics and economy",
+            "Sports section focused on Football/Handball (CAF/Afcon)",
+            "No specific Mozambican Basketball League content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.0263171195983887
+            }
+          ],
+          "reasoning": "The scraped content represents a generic news aggregator homepage with a broad focus on African politics, economy, and major sports (Football/Handball). While 'Mozambique' appears in the country list and a headline about LNG, there is zero mention of basketball, the Mozambican League, or associated procurement activities. The site lacks the specific domain relevance required to extract procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 4143,
+      "total_output_tokens": 781,
+      "estimated_cost_usd": 0.024144
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mozambican Basketball League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:00:36.825535"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.241337",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:11.562804"
+}

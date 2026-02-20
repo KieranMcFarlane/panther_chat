@@ -1,0 +1,129 @@
+{
+  "entity_id": "24h_series",
+  "entity_name": "24H Series",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "24hseries.com",
+    "24hseries.shop"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "24h_series",
+      "entity_name": "24H Series",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://24hseries.com",
+        "https://24hseries.shop"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "24H Series may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:46:19.565874",
+          "domain_explored": "https://24hseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Creventic Motorsports TV (Streaming Platform)",
+              "Website Ticketing Engine (Custom/Unknown Vendor)",
+              "Social Media Integration (implied by news sharing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RAVENOL multi-year partnership deal (Jan 2026)",
+              "Venue contracts: Mugello, Spa-Francorchamps, Paul Ricard, N\u00fcrburgring, Barcelona",
+              "VIP Packages & Ticketing operations",
+              "Timing & Scoring systems (implied by 'Top 10 Shoot-out' and BOP changes)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship procurement cycle",
+            "Venue and logistics contracting",
+            "Digital ticketing infrastructure",
+            "Live streaming dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 319,
+              "elapsed_seconds": 2.602339029312134
+            }
+          ],
+          "reasoning": "The content confirms active commercial operations and partnership procurement (RAVENOL deal). It reveals a reliance on digital infrastructure for ticket sales and live streaming (Creventic Motorsports TV), indicating potential procurement needs for streaming tech, ticketing platforms, and venue services. However, specific vendor tech stacks or RFPs are not listed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:46:29.937422",
+          "domain_explored": "https://24hseries.shop",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Hosted)",
+              "Digital Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Vendor Management",
+              "Inventory Procurement",
+              "Webshop Infrastructure Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce infrastructure utilization",
+            "Merchandise supply chain management",
+            "Brand licensing and retail operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.995352268218994
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce platform (24hseries.shop) for merchandise. This indicates a procurement category for 'Retail & Logistics' involving inventory management, physical production (screen printing/embroidery), and e-commerce hosting services. While not a direct signal for high-value enterprise software, it validates the organization's maturity in vendor management for consumer goods."
+        }
+      ],
+      "total_input_tokens": 2761,
+      "total_output_tokens": 582,
+      "estimated_cost_usd": 0.017013
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "24H Series may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:46:29.939022"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376900",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:38:43.584804"
+}

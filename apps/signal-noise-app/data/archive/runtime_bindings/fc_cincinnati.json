@@ -1,0 +1,390 @@
+{
+  "entity_id": "fc_cincinnati",
+  "entity_name": "FC Cincinnati",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "fccincinnati.com",
+    "mlssoccer.com",
+    "mlsnextpro.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/fc-cincinnati/jobs",
+      "https://www.linkedin.com/jobs/fc-cincinnati-jobs-cincinnati-oh",
+      "https://www.linkedin.com/jobs/fc-cincinnati-jobs",
+      "https://www.linkedin.com/jobs/view/senior-financial-analyst-at-fc-cincinnati-4361195780",
+      "https://www.linkedin.com/jobs/view/control-room-staff-at-fc-cincinnati-4342969680",
+      "https://www.linkedin.com/jobs/sports-jobs-cincinnati-oh",
+      "https://www.linkedin.com/posts/teamwork-online-llc_sports-jobs-and-careers-with-fc-cincinnati-activity-7173660896131502082-GETQ",
+      "https://www.linkedin.com/jobs/soccer-jobs-cincinnati-oh",
+      "https://www.linkedin.com/jobs/view/set-piece-coach-at-fc-cincinnati-4344864103"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_cincinnati",
+      "entity_name": "FC Cincinnati",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://mlssoccer.com",
+        "https://fccincinnati.com",
+        "https://www.linkedin.com/jobs/view/senior-financial-analyst-at-fc-cincinnati-4361195780",
+        "https://www.linkedin.com/company/fc-cincinnati/jobs",
+        "https://www.linkedin.com/jobs/fc-cincinnati-jobs",
+        "https://mlsnextpro.com",
+        "https://www.linkedin.com/jobs/fc-cincinnati-jobs-cincinnati-oh",
+        "https://www.linkedin.com/jobs/view/control-room-staff-at-fc-cincinnati-4342969680"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job postings for Senior Financial Analyst",
+        "Job postings for Head of Performance Analysis",
+        "Job postings for Control Room Staff",
+        "Technology Stack Discovery: Vena Reporting",
+        "Technology Stack Discovery: Tableau",
+        "Job postings for Control Room Staff",
+        "Specific hardware and software requirements",
+        "Technical production operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Cincinnati may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:05:23.873494",
+          "domain_explored": "https://fccincinnati.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Official App (Presence confirmed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership (FC Porto) - Sports Operations"
+            ]
+          },
+          "patterns_found": [
+            "Sports content recaps",
+            "Social media channel presence",
+            "Strategic sports partnerships"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 195,
+              "elapsed_seconds": 4.024258852005005
+            }
+          ],
+          "reasoning": "The content provided is a repetitive scrape of sports news (preseason recap) and standard social media links. While the 'Official App' link confirms digital asset ownership, there is no specific information regarding procurement activities, technology vendors, or job openings in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:05:31.034140",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-wide transfer news",
+            "Competitor roster moves (Red Bull New York, Inter Miami)",
+            "Sports journalism content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.5950968265533447
+            }
+          ],
+          "reasoning": "The scraped content from mlssoccer.com focuses on league-wide transfer news regarding other teams (Red Bull New York, Inter Miami, Houston Dynamo, Orlando City). There is no mention of FC Cincinnati, nor are there any procurement signals, technology investments, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:05:56.758326",
+          "domain_explored": "https://mlsnextpro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-wide operational announcements",
+            "Competitor roster management (Charlotte FC, Red Bull New York)",
+            "Season scheduling logistics"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 179,
+              "elapsed_seconds": 21.79400086402893
+            }
+          ],
+          "reasoning": "The content is focused on league-wide operations, scheduling, and competitor news for the 2026 MLS NEXT Pro season. While it confirms the league's expansion (Connecticut United FC), it contains no specific information regarding FC Cincinnati's procurement activities, technology stack, or governance decisions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:06:06.065775",
+          "domain_explored": "https://www.linkedin.com/company/fc-cincinnati/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software (implied by Performance Analysis role)",
+              "Broadcast/Production Equipment (implied by Control Room role)",
+              "Financial ERP/Planning Software (implied by Financial Analyst role)"
+            ],
+            "job_postings": [
+              "Head of Performance Analysis (Posted 1 week ago)",
+              "Senior Financial Analyst (Posted 2 weeks ago)",
+              "Control Room Staff (Posted 1 month ago)"
+            ],
+            "procurement_indicators": [
+              "Headcount growth (373 employees)",
+              "Investment in Performance Analysis infrastructure",
+              "Investment in Financial Operations"
+            ]
+          },
+          "patterns_found": [
+            "Job postings for Senior Financial Analyst",
+            "Job postings for Head of Performance Analysis",
+            "Job postings for Control Room Staff",
+            "Organizational growth (373 employees)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 387,
+              "elapsed_seconds": 6.013179302215576
+            }
+          ],
+          "reasoning": "While the page does not contain explicit RFPs or vendor lists, the active recruitment for a Senior Financial Analyst and a Head of Performance Analysis indicates organizational growth and investment in infrastructure. These roles often influence or manage procurement decisions (budgeting, software selection, data tools). The Control Room Staff posting suggests investment in broadcast/AV technology. This confirms capability and potential indirect procurement signals, justifying a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:06:13.532830",
+          "domain_explored": "https://www.linkedin.com/jobs/fc-cincinnati-jobs-cincinnati-oh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Analysis Software (Implied)",
+              "Sports Performance Analytics Platforms (Implied)",
+              "Broadcast/Broadcast Control Systems (Implied)"
+            ],
+            "job_postings": [
+              "Senior Financial Analyst",
+              "Head of Performance Analysis",
+              "Control Room Staff"
+            ],
+            "procurement_indicators": [
+              "Financial Governance (Analyst role)",
+              "Data/Analytics Investment (Performance Analysis role)",
+              "Media Operations Investment (Control Room role)"
+            ]
+          },
+          "patterns_found": [
+            "Job postings for Senior Financial Analyst",
+            "Job postings for Head of Performance Analysis",
+            "Job postings for Control Room Staff"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 342,
+              "elapsed_seconds": 3.835188150405884
+            }
+          ],
+          "reasoning": "The content confirms active hiring for roles that influence procurement and technology decisions. The 'Senior Financial Analyst' role suggests budget management and financial governance, while 'Head of Performance Analysis' indicates investment in sports analytics and data tools. 'Control Room Staff' implies broadcast technology infrastructure needs. However, the content does not explicitly list vendors or specific technology stacks, resulting in a weak signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:06:21.423935",
+          "domain_explored": "https://www.linkedin.com/jobs/fc-cincinnati-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Planning & Analysis (FP&A) Software",
+              "Sports Performance Analytics Platforms (e.g., Prozone, Amisco, Second Spectrum)",
+              "Broadcast Production Equipment",
+              "Video Analysis Tools"
+            ],
+            "job_postings": [
+              "Senior Financial Analyst",
+              "Head of Performance Analysis",
+              "Control Room Staff"
+            ],
+            "procurement_indicators": [
+              "Financial Analysis Capacity Building",
+              "Sports Tech Investment",
+              "Media Operations Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Job postings for Senior Financial Analyst",
+            "Job postings for Head of Performance Analysis",
+            "Job postings for Control Room Staff"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1666,
+              "output_tokens": 360,
+              "elapsed_seconds": 4.361469984054565
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for key operational roles. The 'Senior Financial Analyst' role indicates financial governance and potential budget management for procurement cycles. The 'Head of Performance Analysis' suggests investment in sports analytics software and data infrastructure. The 'Control Room Staff' role implies investment in broadcast technology and AV infrastructure. While these are not direct RFPs, they represent capability building and technology investments relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:06:28.584814",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-financial-analyst-at-fc-cincinnati-4361195780",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Vena Reporting",
+              "Tableau",
+              "Excel (Advanced)"
+            ],
+            "job_postings": [
+              "Senior Financial Analyst"
+            ],
+            "procurement_indicators": [
+              "Financial reporting and forecasting software usage",
+              "Cross-departmental KPI tracking implementation",
+              "Process optimization initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Job postings for Senior Financial Analyst",
+            "Job postings for Head of Performance Analysis",
+            "Job postings for Control Room Staff",
+            "Technology Stack Discovery: Vena Reporting",
+            "Technology Stack Discovery: Tableau"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.6123762130737305
+            }
+          ],
+          "reasoning": "This iteration provides strong evidence of procurement intent by identifying specific software tools (Vena Reporting, Tableau) required for financial management. The job description explicitly mentions optimizing processes using these tools, indicating active investment and utilization of financial technology infrastructure."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:06:37.723748",
+          "domain_explored": "https://www.linkedin.com/jobs/view/control-room-staff-at-fc-cincinnati-4342969680",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Dreamcatcher Replay",
+              "Dreamcatcher Clips Player",
+              "Ross Expression CG",
+              "Ross Carbonite Switcher",
+              "Daktronics Show Control",
+              "Microsoft Office",
+              "Excel"
+            ],
+            "job_postings": [
+              "Control Room Staff"
+            ],
+            "procurement_indicators": [
+              "Requirement for specific broadcast hardware operation (Ross, Daktronics)",
+              "Requirement for specific replay software operation (Dreamcatcher)",
+              "Need for multi-branded marketing integration capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Job postings for Control Room Staff",
+            "Specific hardware and software requirements",
+            "Technical production operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1815,
+              "output_tokens": 328,
+              "elapsed_seconds": 5.591695308685303
+            }
+          ],
+          "reasoning": "The job description provides explicit details on the technology stack used for match production at TQL Stadium. It lists specific hardware (Ross Carbonite Switcher, Daktronics Show Control) and software (Dreamcatcher, Ross Expression) required for the role. This constitutes a strong procurement signal regarding the maintenance and operation of existing AV and broadcast infrastructure."
+        }
+      ],
+      "total_input_tokens": 12578,
+      "total_output_tokens": 2251,
+      "estimated_cost_usd": 0.07149900000000001
+    },
+    "procurement_signals": [
+      "Job postings for Senior Financial Analyst",
+      "Job postings for Head of Performance Analysis",
+      "Job postings for Control Room Staff",
+      "Technology Stack Discovery: Vena Reporting",
+      "Technology Stack Discovery: Tableau",
+      "Job postings for Control Room Staff",
+      "Specific hardware and software requirements",
+      "Technical production operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Cincinnati may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:06:37.739663"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.151271",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:19.016838"
+}

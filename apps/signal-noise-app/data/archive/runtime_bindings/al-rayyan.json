@@ -1,0 +1,317 @@
+{
+  "entity_id": "al-rayyan",
+  "entity_name": "Al-Rayyan",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "alrayyansc.com",
+    "alrayyan.shop",
+    "alrayyan.com",
+    "ariu.edu.qa",
+    "alrayyanrcp.com",
+    "alrayyan.tv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?geoId=106925081"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-rayyan",
+      "entity_name": "Al-Rayyan",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://alrayyan.shop",
+        "https://ariu.edu.qa",
+        "https://alrayyan.com",
+        "https://www.linkedin.com/jobs/search/?geoId=106925081",
+        "https://alrayyansc.com",
+        "https://alrayyanrcp.com",
+        "https://alrayyan.tv"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Rayyan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:54:32.367883",
+          "domain_explored": "https://alrayyansc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Twitter/X",
+              "YouTube",
+              "Snapchat",
+              "Instagram",
+              "Facebook",
+              "Flickr"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Social Media Integration (Twitter/X, YouTube, Instagram, Facebook, Snapchat, Flickr)",
+            "Sports League Table Data (QSL)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.6359317302703857
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, match results, player interviews (Thiago Silva, Artur Jorge), and league standings. There are no mentions of corporate technology, job vacancies, or business operations that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:54:45.115845",
+          "domain_explored": "https://alrayyan.shop",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/ and /products/)",
+              "Newsletter Marketing Tool"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "E-commerce Platform Subscription/Usage",
+              "Physical Inventory Procurement (Keychains, Scarves, Bottles, Caps)",
+              "Merchandise Supplier Relationships"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Digital Merchandising",
+            "Newsletter Marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1282,
+              "output_tokens": 305,
+              "elapsed_seconds": 5.758027076721191
+            }
+          ],
+          "reasoning": "The discovery of the `alrayyan.shop` subdomain confirms the entity utilizes a Shopify-based e-commerce platform for merchandise sales. While this is a direct procurement signal (indicating a vendor relationship with Shopify and a need for inventory management), it is categorized as WEAK_ACCEPT because it represents operational/retail procurement rather than the strategic B2B or digital transformation signals (like RFPs or enterprise software) typically sought in the initial discovery phase. It confirms they have a budget for digital commerce."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:55:08.523831",
+          "domain_explored": "https://alrayyan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on structure)",
+              "Lead Generation Forms (General Inquiry, Booking)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vision 2030 Initiative Partnerships",
+              "Service & Maintenance Contracting (Book Repair forms)",
+              "B2B Supply Chain (Parts and Accessories)",
+              "Fleet Logistics (Shipping to anywhere in GCC)"
+            ]
+          },
+          "patterns_found": [
+            "B2B E-commerce Operations",
+            "Vision 2030 Strategic Alignment",
+            "Service & Maintenance Infrastructure",
+            "Fleet Management Capabilities"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 314,
+              "elapsed_seconds": 5.472373008728027
+            }
+          ],
+          "reasoning": "The content confirms Al-Rayyan is a major supplier of specialty vehicles (Golf Carts, UTVs) in Saudi Arabia, explicitly aligning with Vision 2030 initiatives. While primarily a commercial site, the presence of 'Book Repair and Service Appointment' forms, B2B testimonials (resorts, Royal Commission for Diriyah), and fleet management capabilities indicates procurement activities related to vehicle maintenance, spare parts, and infrastructure support."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:55:20.108659",
+          "domain_explored": "https://ariu.edu.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "University of Derby (Academic Services Platform)",
+              "Virtual Learning Environments (implied by UK partnership)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Academic Partnership Procurement (University of Derby)",
+              "Vendor Termination (NHL Stenden - 2021)",
+              "Curriculum Procurement (8 specialized degree programs)",
+              "Accreditation Licensing Services"
+            ]
+          },
+          "patterns_found": [
+            "Academic Partnership Transition (Vendor Switch)",
+            "UK Accreditation Compliance",
+            "Specialized Business & Hospitality Education Portfolio",
+            "Strategic Rebranding (Stenden to ARIU)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 324,
+              "elapsed_seconds": 2.964543104171753
+            }
+          ],
+          "reasoning": "The content reveals a significant procurement event: the termination of a 20-year partnership with NHL Stenden (Netherlands) and the procurement of new academic services from the University of Derby (UK) in 2021. This indicates active vendor management and high-value B2B procurement for educational services. While the page is informational, the history of partnership switching suggests a willingness to change vendors to meet strategic goals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:55:31.025813",
+          "domain_explored": "https://alrayyanrcp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fully Automatic Production Line",
+              "Heavy-Duty Presses"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Client: Supreme Committee (World Cup Legacy)",
+              "Client: Ashghal (Public Works Authority)",
+              "Client: Qatar Armed Forces",
+              "Client: Ministry of Transportation and Communication",
+              "Client: Lusail Real Estate Development Company",
+              "Service: Readymix Concrete & Cement Supply",
+              "Capability: Infrastructure Project Fulfillment"
+            ]
+          },
+          "patterns_found": [
+            "Industrial Manufacturing Capacity",
+            "Public Sector Client Portfolio",
+            "Infrastructure Supply Chain",
+            "Heavy Machinery Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 387,
+              "elapsed_seconds": 3.201159954071045
+            }
+          ],
+          "reasoning": "The content reveals 'Al Rayyan Readymix Concrete & Cement Products W.L.L', a distinct entity from the sports club but relevant to the broader Al-Rayyan ecosystem. The site serves as a B2B capability showcase, highlighting 'Product Innovation' and 'Fully Automatic Production Lines'. The explicit listing of high-value clients (Supreme Committee, Ashghal, Qatar Armed Forces) indicates active participation in large-scale government tenders and infrastructure projects. While not a direct procurement *request*, the presence of heavy-duty press equipment implies a supply chain requiring maintenance, parts, and industrial procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:55:49.705362",
+          "domain_explored": "https://alrayyan.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Digital Media Broadcasting",
+            "Content Repetition (Spam/Scraping Noise)",
+            "Arabic Language Media Asset"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 669,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.9945969581604
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of repetitive Arabic text ('Latest Episodes', 'Our Screen') with no structural HTML, links, or metadata. It indicates a media/video platform (Al-Rayyan TV) but lacks actionable procurement signals such as vendor lists, technology infrastructure details, or corporate governance information."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:56:08.734821",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?geoId=106925081",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Store Coordinator (Snoonu)",
+              "Supply Coordinator (Snoonu)",
+              "Telecom Systems Engineer (Elsewedy Electric)",
+              "Clinical Providers (Intellect)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Noise (Al Rayyan Municipality vs Entity)",
+            "Logistics & Labor Hiring Spikes (Snoonu)",
+            "Engineering Services Demand (Elsewedy Electric)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 259,
+              "elapsed_seconds": 14.103791952133179
+            }
+          ],
+          "reasoning": "The search results for 'Al Rayyan' return job postings located within the Al Rayyan municipality (e.g., Barwa City) rather than for the specific entity 'Al-Rayyan' (Sports Club/University/Investments). The listings are dominated by third-party logistics (Snoonu) and industrial firms (Elsewedy), indicating a high signal-to-noise ratio. There is no direct evidence of procurement activity or hiring by the target entity."
+        }
+      ],
+      "total_input_tokens": 9527,
+      "total_output_tokens": 1964,
+      "estimated_cost_usd": 0.058040999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Rayyan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:56:08.738212"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358718",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:02.289345"
+}

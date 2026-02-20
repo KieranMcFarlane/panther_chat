@@ -1,0 +1,323 @@
+{
+  "entity_id": "afc",
+  "entity_name": "AFC",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "the-afc.com",
+    "media.the-afc.com",
+    "afctoronto.ca"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/theafcdotcom/jobs/",
+      "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+      "https://www.linkedin.com/jobs/afc-jobs-worldwide",
+      "https://vn.linkedin.com/jobs/view/account-manager-at-afc-vietnam-ltd-afc-global-education-4268106999",
+      "https://au.linkedin.com/company/theafcdotcom/jobs",
+      "https://in.linkedin.com/company/theafcdotcom/jobs",
+      "https://ca.linkedin.com/jobs/the-afc-jobs",
+      "https://sg.linkedin.com/jobs/view/intern-brand-project-management-at-asia-football-group-4255649369",
+      "https://www.linkedin.com/jobs/afc-automotive-finance-corporation-jobs?trk=public_jobs_linkster_link"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afc",
+      "entity_name": "AFC",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/afc-jobs-worldwide",
+        "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+        "https://vn.linkedin.com/jobs/view/account-manager-at-afc-vietnam-ltd-afc-global-education-4268106999",
+        "https://au.linkedin.com/company/theafcdotcom/jobs",
+        "https://media.the-afc.com",
+        "https://the-afc.com",
+        "https://afctoronto.ca",
+        "https://www.linkedin.com/company/theafcdotcom/jobs/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:32:57.281670",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:33:23.965426",
+          "domain_explored": "https://media.the-afc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Media Platform Usage",
+              "Event Accreditation System"
+            ]
+          },
+          "patterns_found": [
+            "media_portal_login",
+            "accreditation_management",
+            "vision_statement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1380,
+              "output_tokens": 202,
+              "elapsed_seconds": 21.82406187057495
+            }
+          ],
+          "reasoning": "The content is a login page for the AFC Media Channel. While it confirms the existence of a digital platform for media management and accreditation, it contains no technical specifications, vendor selection processes, or explicit procurement signals. It is a functional user interface, not a source of intelligence regarding purchasing decisions or technology stack investments."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:33:36.657551",
+          "domain_explored": "https://afctoronto.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (Merchandise browsing)",
+              "Content Management (News/Media alerts)",
+              "Gallery Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partnership (Dove #ChangeTheCompliment)",
+              "Merchandise Licensing/Sales"
+            ]
+          },
+          "patterns_found": [
+            "sports_team_entity",
+            "merchandise_ecommerce",
+            "league_affiliation_nsl",
+            "sponsorship_partnerships",
+            "media_alerts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 266,
+              "elapsed_seconds": 3.931243896484375
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'AFC Toronto' is a professional women's soccer team (Northern Super League), not the Asian Football Confederation (AFC) targeted in the initial prompt. While there are commercial activities (merchandise, Dove partnership), these are consumer/sponsorship revenue streams, not the organizational procurement or governance signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:33:44.054084",
+          "domain_explored": "https://www.linkedin.com/company/theafcdotcom/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "entity_size_verified: 601_employees",
+              "subsidiary_identified: AFC Academic Centre of Excellence (ACE)",
+              "subsidiary_identified: AFC Dream Asia Foundation"
+            ]
+          },
+          "patterns_found": [
+            "no_active_job_postings",
+            "entity_verification",
+            "subsidiary_entities"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 265,
+              "elapsed_seconds": 4.167983055114746
+            }
+          ],
+          "reasoning": "The scraped content from the LinkedIn Jobs tab confirms the entity (AFC) but explicitly states 'There are currently no jobs posted'. While this confirms the company size and location (AFC House, Kuala Lumpur), the absence of active job listings means there are no direct procurement signals (such as 'Manager, Procurement' or 'Digital Transformation Lead') to extract. The discovery of affiliated entities (ACE, Dream Asia) is noted but not immediately actionable for procurement intelligence without further exploration."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:33:55.131819",
+          "domain_explored": "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Audio-visual systems",
+              "LED video boards",
+              "Show control systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Venue Sports Presentation and Fan Experience Manager",
+                "entity": "Local Organising Committee AFC Women\u2019s Asian Cup 2026 Pty Ltd",
+                "location": "Perth, Western Australia, Australia",
+                "posted": "2 months ago",
+                "procurement_relevance": "High - Direct responsibility for procuring fan experience services and managing contractors."
+              }
+            ],
+            "procurement_indicators": [
+              "Sourcing of venue presentation technology",
+              "Procurement of entertainment services",
+              "Management of third-party contractors",
+              "Event-specific vendor selection"
+            ]
+          },
+          "patterns_found": [
+            "event_management_hiring",
+            "local_organising_committee_procurement",
+            "vendor_management_responsibility",
+            "contractor_oversight"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 407,
+              "elapsed_seconds": 6.996575832366943
+            }
+          ],
+          "reasoning": "While the main AFC corporate page showed no activity, this search result reveals active hiring for the 'Local Organising Committee AFC Women\u2019s Asian Cup 2026'. The specific role of 'Venue Sports Presentation and Fan Experience Manager' includes explicit vendor management and procurement responsibilities ('manage contractors', 'procure services'). This indicates active procurement cycles for event services, even if corporate hiring is low."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:34:03.180273",
+          "domain_explored": "https://www.linkedin.com/jobs/afc-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "AFC Lead - Risk Identification and Controls (Aberdeen - Financial Services)",
+              "Regional Manager (All India Football Federation)"
+            ],
+            "procurement_indicators": [
+              "Risk management roles (Financial sector)",
+              "Regional management roles (AIFF)"
+            ]
+          },
+          "patterns_found": [
+            "search_term_ambiguity",
+            "irrelevant_entity_results",
+            "financial_sector_noise",
+            "aiif_association"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 253,
+              "elapsed_seconds": 4.48396372795105
+            }
+          ],
+          "reasoning": "The search results for 'AFC' are dominated by irrelevant entities (Aberdeen financial services, generic 'AFC' acronyms) and lower-tier football associations (AIFF). There is no clear signal from the target entity (Asian Football Confederation). The data suggests the search term is too broad or the target entity is not actively posting on this specific search stream."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:34:12.945890",
+          "domain_explored": "https://vn.linkedin.com/jobs/view/account-manager-at-afc-vietnam-ltd-afc-global-education-4268106999",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Account Manager",
+                "entity": "AFC Vietnam Ltd & AFC Global Education",
+                "location": "Hanoi",
+                "focus": "Student recruitment / Education services",
+                "status": "Irrelevant (Wrong Entity)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_name_collision",
+            "education_sector_focus",
+            "student_recruitment_services",
+            "subsidiary_entity_mismatch",
+            "geographic_scope_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 284,
+              "elapsed_seconds": 6.186172962188721
+            }
+          ],
+          "reasoning": "The content refers to 'AFC Vietnam Ltd & AFC Global Education', an entity focused on student recruitment and education partnerships. This is a distinct entity from the Asian Football Confederation (the target AFC). The job description explicitly mentions 'university partners' and 'student recruitment,' confirming the education sector context. There are no signals relevant to sports federation procurement."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:34:20.287867",
+          "domain_explored": "https://au.linkedin.com/company/theafcdotcom/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 15 column 34 (char 750)"
+        }
+      ],
+      "total_input_tokens": 9062,
+      "total_output_tokens": 1677,
+      "estimated_cost_usd": 0.052341
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:34:20.289179"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458247",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:34.333774"
+}

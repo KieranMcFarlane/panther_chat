@@ -1,0 +1,189 @@
+{
+  "entity_id": "fiba_americas",
+  "entity_name": "FIBA Americas",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "global_governance_bodies",
+  "discovered_domains": [
+    "about.fiba.basketball",
+    "fiba.basketball",
+    "basketball.ca",
+    "refereeing.fiba.basketball"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiba_americas",
+      "entity_name": "FIBA Americas",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://about.fiba.basketball",
+        "https://refereeing.fiba.basketball",
+        "https://basketball.ca",
+        "https://fiba.basketball"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIBA Americas may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:49:01.284642",
+          "domain_explored": "https://about.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global community engagement strategy (General)"
+            ]
+          },
+          "patterns_found": [
+            "Generic corporate messaging",
+            "High content repetition (scraping artifact)",
+            "Global governance focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.7810328006744385
+            }
+          ],
+          "reasoning": "The provided content consists of repetitive, high-level 'About Us' text (e.g., 'FIBA, the world governing body for basketball...') and generic navigation labels. There are no specific mentions of technology stacks, job openings, RFPs, or specific investment strategies relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:49:08.781897",
+          "domain_explored": "https://fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal: Ameresco (Energy sector) associated with Power Rankings"
+            ]
+          },
+          "patterns_found": [
+            "Consumer-facing content aggregation",
+            "High-volume sports journalism",
+            "Global event promotion (U17, Qualifiers)",
+            "Sponsorship visibility (Ameresco)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.254759788513184
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on fan engagement, sports news, and game results. While the presence of 'Ameresco Power Rankings' confirms sponsorship activity, the content itself lacks operational, technical, or administrative signals necessary to identify procurement needs (e.g., RFPs, tech stack, job postings). This is a public-facing news feed with no corporate governance data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:49:18.453074",
+          "domain_explored": "https://basketball.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webflow (Inferred from 'Oops! Something went wrong' error text)",
+              "Marketing Automation (Mailchimp/Constant Contact equivalent for mailing lists)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Flair Airlines (B2C travel partnership, not procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Consumer-facing marketing forms (Newsletter/Flight registration)",
+            "B2C audience targeting (Fans, Youth players)",
+            "Generic CMS structure (Webflow/Standard form elements)",
+            "National Federation scope (Canada Basketball) vs. Continental scope (FIBA Americas)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 307,
+              "elapsed_seconds": 6.448016166687012
+            }
+          ],
+          "reasoning": "The content is strictly consumer-facing (B2C), focusing on fan travel packages, newsletter signups, and youth player registration. There are no signals of enterprise procurement, vendor management, or corporate technology stacks. Additionally, the target entity is Canada Basketball (a member federation), not FIBA Americas (the continental governing body), which limits direct relevance to the primary objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:49:25.581137",
+          "domain_explored": "https://refereeing.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webinar platforms (implied by 'Monday Special Webinar')",
+              "Video hosting (implied by 'Latest Videos')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational content aggregation",
+            "Global training program coordination",
+            "Standard CMS publishing (News/Events)",
+            "No vendor/supplier language detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.676809072494507
+            }
+          ],
+          "reasoning": "The scraped content from 'refereeing.fiba.basketball' is exclusively focused on educational content, training webinars, and rule updates for referees. While this indicates an operational department (Refereeing/Officiating), the content is purely informational and instructional. There are no signals regarding the procurement of goods, services, or technologies required to run these programs."
+        }
+      ],
+      "total_input_tokens": 5773,
+      "total_output_tokens": 964,
+      "estimated_cost_usd": 0.031779
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIBA Americas may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:49:25.581822"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.242932",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:43.076771"
+}

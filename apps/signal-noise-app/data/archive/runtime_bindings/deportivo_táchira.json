@@ -1,0 +1,215 @@
+{
+  "entity_id": "deportivo_t\u00e1chira",
+  "entity_name": "Deportivo T\u00e1chira",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "deportivotachira.com",
+    "transfermarkt.us",
+    "play.google.com",
+    "conmebollibertadores.com",
+    "oreateai.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "deportivo_t\u00e1chira",
+      "entity_name": "Deportivo T\u00e1chira",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://transfermarkt.us",
+        "https://deportivotachira.com",
+        "https://conmebollibertadores.com",
+        "https://oreateai.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Deportivo T\u00e1chira may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:03:03.276146",
+          "domain_explored": "https://deportivotachira.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Social Media Integration (Instagram, Facebook, X-twitter, Youtube)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Online Retail Operations (Merchandise sales)",
+              "Subscription Management ('Ab\u00f3nate al Bicampe\u00f3n')",
+              "Sponsorship Management ('Principales patrocinadores')"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations",
+            "Digital Content Management",
+            "Fan Engagement Platforms"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 291,
+              "elapsed_seconds": 6.401251792907715
+            }
+          ],
+          "reasoning": "The content reveals active e-commerce operations ('Tienda Aurinegra') and digital content management (news, press releases, gallery). While no direct procurement signals (RFPs) are present, the existence of an online store and structured digital content indicates a baseline requirement for e-commerce platforms, web hosting, and potentially CRM for fan management ('Ab\u00f3nate')."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:03:12.875807",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Global Transfer Market Data",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.83721923828125
+            }
+          ],
+          "reasoning": "The scraped content is from the homepage of Transfermarkt, a global sports news aggregator. It contains generic headlines about European clubs (Liverpool, Chelsea, Real Madrid) and MLS transfers. There is absolutely no mention of Deportivo T\u00e1chira, Venezuelan football, or specific procurement activities related to the entity. This source is irrelevant for gathering procurement intelligence on the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:03:24.012628",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Consumer App Store",
+            "Gaming and Entertainment Content",
+            "Irrelevant Search Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.088334083557129
+            }
+          ],
+          "reasoning": "The scraped content represents the generic Google Play Store homepage, listing popular mobile games (e.g., Free Fire, Clash of Clans) and apps. There is no mention of Deportivo T\u00e1chira, no official club applications, and no procurement signals such as job postings or vendor solicitations. This indicates a search failure or irrelevant result."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:03:38.683124",
+          "domain_explored": "https://conmebollibertadores.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Match Scheduling",
+            "Generic Competition Results",
+            "Third-Party Venue Listings",
+            "Irrelevant Entity Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 194,
+              "elapsed_seconds": 7.433294773101807
+            }
+          ],
+          "reasoning": "The scraped content consists of a schedule and results feed for the CONMEBOL Libertadores tournament. While it lists Venezuelan teams like Monagas and UCV, it contains zero data regarding the target entity, Deportivo T\u00e1chira. The content is purely operational sports data (scores, dates, venues) and offers no insights into procurement, technology stacks, or governance for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:03:48.422532",
+          "domain_explored": "https://oreateai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Content Generation Services",
+            "AI Writing Tools",
+            "Consumer Marketing Copy",
+            "Irrelevant Domain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 658,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.561995029449463
+            }
+          ],
+          "reasoning": "The scraped content from 'oreateai.com' is purely marketing copy for an AI essay writing service. It contains no information regarding Deportivo T\u00e1chira, sports management, or enterprise procurement activities. The domain and content are entirely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 6386,
+      "total_output_tokens": 1017,
+      "estimated_cost_usd": 0.034413
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Deportivo T\u00e1chira may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:03:48.423996"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.193118",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:08:27.281787"
+}

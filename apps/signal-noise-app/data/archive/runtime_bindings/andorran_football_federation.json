@@ -1,0 +1,144 @@
+{
+  "entity_id": "andorran_football_federation",
+  "entity_name": "Andorran Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "fedandfut.com",
+    "inside.fifa.com",
+    "fcandorra.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "andorran_football_federation",
+      "entity_name": "Andorran Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://inside.fifa.com",
+        "https://fcandorra.com",
+        "https://fedandfut.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Andorran Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:30:22.889377",
+          "domain_explored": "https://fedandfut.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:30:29.803686",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (Potential source of budget, not direct procurement)"
+            ]
+          },
+          "patterns_found": [
+            "FIFA Forward funding program",
+            "Women's football development initiatives",
+            "Infrastructure refurbishment projects"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.530271053314209
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal (inside.fifa.com), not the Andorran Football Federation's domain. While it mentions funding programs like 'FIFA Forward' which the Andorran Federation might utilize, there are no direct procurement signals, technology stacks, or governance details specific to Andorra in this text. The content is high-level sports news and global strategy."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:30:33.923886",
+          "domain_explored": "https://fcandorra.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:30:40.129172",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile gaming storefront content",
+            "Consumer entertainment applications",
+            "Irrelevant search results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.798750877380371
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com lists consumer mobile games (Candy Crush, PUBG, etc.) and entertainment apps. There is absolutely no content related to the Andorran Football Federation, B2B procurement, enterprise software, or organizational governance. This source is entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2868,
+      "total_output_tokens": 392,
+      "estimated_cost_usd": 0.014484
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Andorran Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:30:40.130856"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.200553",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:18.929040"
+}

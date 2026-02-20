@@ -1,0 +1,121 @@
+{
+  "entity_id": "botswana_basketball_association",
+  "entity_name": "Botswana Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "play.fiba3x3.com",
+    "afrobasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "botswana_basketball_association",
+      "entity_name": "Botswana Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://afrobasket.com",
+        "https://play.fiba3x3.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Botswana Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:02:12.859734",
+          "domain_explored": "https://play.fiba3x3.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FIBA 3x3 Platform (SaaS)",
+              "Player Profile Management System",
+              "Event Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of centralized international federation software",
+              "Potential need for local data integration tools",
+              "Reliance on external ranking and event tracking systems"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Dependency",
+            "Federation Ecosystem",
+            "User Authentication/Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1131,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.6250407695770264
+            }
+          ],
+          "reasoning": "The content confirms the Botswana Basketball Association relies on the FIBA 3x3 digital ecosystem (play.fiba3x3.com) for player management and events. While this is not a direct procurement signal for *new* vendors, it establishes a baseline technology stack and highlights a dependency on external federation platforms. Any local digital transformation would likely need to integrate with this existing SaaS infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:02:26.887470",
+          "domain_explored": "https://afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Regional League Coverage",
+            "Player Transfer/Roster News",
+            "Game Results Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.9546968936920166
+            }
+          ],
+          "reasoning": "The content from afrobasket.com is a general news feed covering basketball results and player transfers across the continent (Angola, Egypt, Morocco, etc.). It contains no specific mentions of the Botswana Basketball Association (BBA), no governance documentation, and no technology or procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2545,
+      "total_output_tokens": 463,
+      "estimated_cost_usd": 0.01458
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Botswana Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:02:26.908784"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.254428",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:57.531159"
+}

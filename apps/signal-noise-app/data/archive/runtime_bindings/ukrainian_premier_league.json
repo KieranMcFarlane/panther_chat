@@ -1,0 +1,358 @@
+{
+  "entity_id": "ukrainian_premier_league",
+  "entity_name": "Ukrainian Premier League",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "watchupl.com",
+    "tv.kyivstar.ua",
+    "europeanleagues.com",
+    "shakhtar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_new-professional-opportunity-in-the-ukrainian-activity-7419057329557479424-QCrs",
+      "https://hk.linkedin.com/company/futboljobs.com",
+      "https://nz.linkedin.com/company/futboljobs.com?trk=similar-companies_org_image",
+      "https://ge.linkedin.com/jobs/view/regional-account-manager-at-setanta-sports-3247010013"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ukrainian_premier_league",
+      "entity_name": "Ukrainian Premier League",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://ge.linkedin.com/jobs/view/regional-account-manager-at-setanta-sports-3247010013",
+        "https://www.linkedin.com/posts/futboljobs.com_new-professional-opportunity-in-the-ukrainian-activity-7419057329557479424-QCrs",
+        "https://hk.linkedin.com/company/futboljobs.com",
+        "https://watchupl.com",
+        "https://shakhtar.com",
+        "https://nz.linkedin.com/company/futboljobs.com?trk=similar-companies_org_image",
+        "https://tv.kyivstar.ua",
+        "https://europeanleagues.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "OTT/Streaming Platform Deployment",
+        "Direct-to-Consumer (DTC) Monetization",
+        "Multi-device Digital Rights Management",
+        "Micro-transaction Revenue Model",
+        "OTT Platform Expansion",
+        "Regional Sales Operations",
+        "Strategic Partnership Management",
+        "Digital Rights Distribution"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ukrainian Premier League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:15:45.547865",
+          "domain_explored": "https://watchupl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Streaming Platform",
+              "Payment Gateway (Stripe/PayPal implied)",
+              "Live Chat Infrastructure",
+              "Video on Demand (VOD) Hosting",
+              "Digital Rights Management (DRM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Digital Product Offering (League Pass/Club Pass)",
+              "Infrastructure for multi-device streaming (up to 3 devices)",
+              "Ad-free delivery technology",
+              "Transactional payment processing capability"
+            ]
+          },
+          "patterns_found": [
+            "OTT/Streaming Platform Deployment",
+            "Direct-to-Consumer (DTC) Monetization",
+            "Multi-device Digital Rights Management",
+            "Micro-transaction Revenue Model"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 321,
+              "elapsed_seconds": 3.290421962738037
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the UPL's proprietary OTT platform (WatchUPL). This confirms a major procurement event for digital broadcasting infrastructure. The presence of tiered subscription models, live chat, and multi-device streaming indicates the acquisition or development of a sophisticated video streaming stack (CDN, transcoding, payment gateways, and DRM)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:15:48.381075",
+          "domain_explored": "https://tv.kyivstar.ua",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:15:56.393594",
+          "domain_explored": "https://europeanleagues.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "52nd European Leagues General Assembly (Sofia, March 2026) - Potential networking event but not a direct procurement signal"
+            ]
+          },
+          "patterns_found": [
+            "Industry Association News Aggregation",
+            "General Assembly Governance",
+            "Sustainability Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.2222790718078613
+            }
+          ],
+          "reasoning": "The content is from the European Leagues association website, not the Ukrainian Premier League (UPL) entity. While the UPL is a member, this page lists high-level industry news (Sustainability, Transfer Windows, General Assembly) relevant to all European leagues. It lacks specific procurement signals, technology stacks, or vendor partnerships attributable to the UPL specifically. The content is too generic to derive actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:16:04.288792",
+          "domain_explored": "https://shakhtar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Magento (E-commerce platform)",
+              "Google Analytics (UA-XXXXXX-Y)",
+              "Facebook Pixel",
+              "jQuery (JavaScript Library)",
+              "Modernizr (Feature Detection)",
+              "Cloudflare (CDN/Security)"
+            ],
+            "job_postings": [
+              "\u0420\u043e\u0431\u043e\u0442\u0430 \u0432 \u043a\u043b\u0443\u0431\u0456 (Careers at the Club) - Link present in footer"
+            ],
+            "procurement_indicators": [
+              "Digital Ticketing System (News section dedicated to tickets)",
+              "VIP Hospitality Management (Sky Box, Business Club modules)",
+              "Merchandise Management (Shop with categorization)",
+              "Fan Data Platform ('Join the Club' / '\u0412\u0441\u0442\u0443\u043f\u0438\u0442\u0438 \u0434\u043e \u043a\u043b\u0443\u0431\u0443' call to actions)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure (Magento)",
+            "Fan Engagement Platform (Ticketing/CRM)",
+            "Digital Content Management (Video/News)",
+            "Corporate Hospitality Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 398,
+              "elapsed_seconds": 4.80195689201355
+            }
+          ],
+          "reasoning": "While the target entity is the Ukrainian Premier League (UPL), analyzing a top-tier member club (Shakhtar Donetsk) provides valuable intelligence on the technology standards and procurement requirements within the ecosystem. The site reveals a sophisticated digital stack including Magento for e-commerce and structured ticketing/hospitality modules. This suggests the UPL and its members operate with mature digital procurement needs, specifically around CRM, streaming, and e-commerce integration."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:16:10.467567",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_new-professional-opportunity-in-the-ukrainian-activity-7419057329557479424-QCrs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Professional Football Players (Sports Operations)"
+            ],
+            "procurement_indicators": [
+              "Use of external recruitment platform (Futboljobs)"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition (Sports Operations)",
+            "Third-Party Recruitment (Futboljobs)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.09555721282959
+            }
+          ],
+          "reasoning": "The content describes a recruitment drive for football players (sports operations) via a third-party job board. While this indicates the club is actively hiring, it does not provide specific insights into corporate procurement, technology stack acquisition, or digital transformation initiatives relevant to the analyst's focus."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:16:18.419074",
+          "domain_explored": "https://hk.linkedin.com/company/futboljobs.com",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (Generic)",
+              "Social Media (LinkedIn)"
+            ],
+            "job_postings": [
+              "Striker (Chinese Super League)",
+              "Centre Forward (Saudi Pro League)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Recruitment (Futboljobs)",
+            "Global Sports Labor Market Aggregation",
+            "Generic Job Board Functionality"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1634,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.106732130050659
+            }
+          ],
+          "reasoning": "The content is a company overview and feed for 'Futboljobs', a third-party job board and recruitment platform. While it lists job openings (e.g., Chinese Super League, Saudi Pro League), these are global listings hosted by the platform, not specific procurement signals or technology investments originating from the Ukrainian Premier League (UPL) or its direct entities. There is no specific mention of UPL, Ukrainian clubs, or related technology procurement in the provided text."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:16:32.456442",
+          "domain_explored": "https://nz.linkedin.com/company/futboljobs.com?trk=similar-companies_org_image",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Striker (Chinese Super League)",
+              "Centre Forward (Saudi Pro League)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Recruitment (Futboljobs)",
+            "Global Sports Labor Market Aggregation",
+            "Generic Job Board Functionality"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1704,
+              "output_tokens": 252,
+              "elapsed_seconds": 10.473796129226685
+            }
+          ],
+          "reasoning": "The content analyzed is a generic company overview and feed for 'Futboljobs.com', a third-party job board. While it lists sports industry vacancies (e.g., Chinese Super League, Saudi Pro League), these are user-generated listings hosted on the platform, not specific procurement signals or technology investments by the Ukrainian Premier League (UPL). The content confirms the nature of the intermediary but provides no actionable intelligence regarding UPL's internal procurement, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:16:40.586481",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/regional-account-manager-at-setanta-sports-3247010013",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "OTT Platform",
+              "Linear TV Broadcasting"
+            ],
+            "job_postings": [
+              {
+                "role": "Regional Account Manager",
+                "company": "Setanta Sports",
+                "location": "Tbilisi, Georgia",
+                "focus": "Sales, Account Management, CEE Region"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership (Setanta Sports holds UPL broadcasting rights)",
+              "Sales Infrastructure Investment (Hiring for revenue growth)",
+              "Market Expansion (14 CEE countries target)"
+            ]
+          },
+          "patterns_found": [
+            "OTT Platform Expansion",
+            "Regional Sales Operations",
+            "Strategic Partnership Management",
+            "Digital Rights Distribution"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1776,
+              "output_tokens": 356,
+              "elapsed_seconds": 4.626195192337036
+            }
+          ],
+          "reasoning": "The content explicitly identifies Setanta Sports as a key partner/distributor for the Ukrainian Premier League (listed alongside Champions League and F1 in their content portfolio). The job posting for a Regional Account Manager confirms active commercial operations and sales growth strategies in the CEE region, which directly involves the monetization and distribution of UPL digital rights. This signals a procurement channel through media rights partnerships and sales infrastructure."
+        }
+      ],
+      "total_input_tokens": 10999,
+      "total_output_tokens": 2042,
+      "estimated_cost_usd": 0.063627
+    },
+    "procurement_signals": [
+      "OTT/Streaming Platform Deployment",
+      "Direct-to-Consumer (DTC) Monetization",
+      "Multi-device Digital Rights Management",
+      "Micro-transaction Revenue Model",
+      "OTT Platform Expansion",
+      "Regional Sales Operations",
+      "Strategic Partnership Management",
+      "Digital Rights Distribution"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ukrainian Premier League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:16:40.587350"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.196411",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:10.576299"
+}

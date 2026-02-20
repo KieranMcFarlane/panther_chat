@@ -1,0 +1,215 @@
+{
+  "entity_id": "cba_(china)",
+  "entity_name": "CBA (China)",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "365scores.com",
+    "basketball-reference.com",
+    "china.org.cn",
+    "sportspro.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://cn.linkedin.com/jobs/view/finance-manager-shanghai-at-commonwealth-bank-4344138289"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cba_(china)",
+      "entity_name": "CBA (China)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://sportspro.com",
+        "https://cn.linkedin.com/jobs/view/finance-manager-shanghai-at-commonwealth-bank-4344138289",
+        "https://basketball-reference.com",
+        "https://365scores.com",
+        "https://china.org.cn"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Entity Confirmation (Commonwealth Bank of Australia)",
+        "Job Posting (Finance Manager)",
+        "Technology Stack Discovery (PeopleSoft GL)",
+        "Operational Scope (Shanghai & Beijing Branches)",
+        "Regulatory Compliance (Local Tax & Accounting Standards)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CBA (China) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:53:20.152342",
+          "domain_explored": "https://365scores.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:53:32.629307",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary Database Engine)",
+              "Immaculate Grid (Web Application)"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference)"
+            ],
+            "procurement_indicators": [
+              "Data Licensing Agreements (Implied: B/R acts as a source for CBA stats)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Name Collision (CBA vs. CBA)",
+            "Statistical Data Aggregation",
+            "B2C Subscription Model (Stathead)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 301,
+              "elapsed_seconds": 4.227306127548218
+            }
+          ],
+          "reasoning": "The scraped content from Basketball Reference explicitly mentions 'China's CBA' as a data source for international basketball leagues. This confirms that the acronym 'CBA' in this context refers to the 'Chinese Basketball Association' (a sports league), not 'China' as a geopolitical entity or a specific corporate body capable of procurement in the traditional sense. There are no procurement signals, technology stacks, or governance patterns relevant to corporate procurement for the entity 'China' found in this sports statistics content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:54:06.432407",
+          "domain_explored": "https://china.org.cn",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:54:18.124340",
+          "domain_explored": "https://sportspro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered streaming",
+              "Data analytics platforms",
+              "Shared reality tech"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Collision",
+            "General Industry Trends",
+            "Future State Predictions (2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 773,
+              "output_tokens": 208,
+              "elapsed_seconds": 4.174429893493652
+            }
+          ],
+          "reasoning": "The content is a general sports technology trend article for the year 2026. While it mentions relevant technologies (AI, Streaming), it is not specific to the entity 'CBA (China)'\u2014likely referring to the Chinese Basketball Association or a similar body\u2014and contains no specific procurement signals, RFPs, or vendor partnerships related to that specific entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:54:35.098440",
+          "domain_explored": "https://cn.linkedin.com/jobs/view/finance-manager-shanghai-at-commonwealth-bank-4344138289",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "PeopleSoft GL",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              {
+                "title": "Finance Manager Shanghai",
+                "location": "Shanghai, China",
+                "department": "Institutional Banking and Markets (IB&M) - Finance Asia",
+                "status": "No longer accepting applications",
+                "key_requirements": "Experience in PeopleSoft GL, Statutory/Regulatory reporting, Transfer pricing"
+              }
+            ],
+            "procurement_indicators": [
+              "ERP Maintenance & Licensing (PeopleSoft)",
+              "Compliance & Reporting Tools",
+              "Process Automation Solutions"
+            ]
+          },
+          "patterns_found": [
+            "Entity Confirmation (Commonwealth Bank of Australia)",
+            "Job Posting (Finance Manager)",
+            "Technology Stack Discovery (PeopleSoft GL)",
+            "Operational Scope (Shanghai & Beijing Branches)",
+            "Regulatory Compliance (Local Tax & Accounting Standards)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 371,
+              "elapsed_seconds": 4.376085996627808
+            }
+          ],
+          "reasoning": "The content confirms the target entity is Commonwealth Bank of Australia (CBA) operating in China (Shanghai/Beijing). It provides a direct procurement signal via a job posting that explicitly lists 'PeopleSoft GL' as a required technology, indicating an active deployment and maintenance requirement for this ERP module in the region."
+        }
+      ],
+      "total_input_tokens": 3691,
+      "total_output_tokens": 880,
+      "estimated_cost_usd": 0.024273
+    },
+    "procurement_signals": [
+      "Entity Confirmation (Commonwealth Bank of Australia)",
+      "Job Posting (Finance Manager)",
+      "Technology Stack Discovery (PeopleSoft GL)",
+      "Operational Scope (Shanghai & Beijing Branches)",
+      "Regulatory Compliance (Local Tax & Accounting Standards)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CBA (China) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:54:35.099459"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416227",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:23.652566"
+}

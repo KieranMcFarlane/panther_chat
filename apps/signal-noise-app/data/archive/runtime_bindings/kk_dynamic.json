@@ -1,0 +1,211 @@
+{
+  "entity_id": "kk_dynamic",
+  "entity_name": "KK Dynamic",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "kkdynamic.rs",
+    "kkdynamicservicesllc.com",
+    "kkdes.co.ke",
+    "zoominfo.com",
+    "portlandpilots.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kk_dynamic",
+      "entity_name": "KK Dynamic",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://kkdynamicservicesllc.com",
+        "https://kkdynamic.rs",
+        "https://kkdes.co.ke",
+        "https://portlandpilots.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Service Provider Portfolio",
+        "Case Study Publication",
+        "WordPress Specialization",
+        "Local Payment Integration (MPESA)",
+        "Infrastructure Deployment"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KK Dynamic may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:57:58.000137",
+          "domain_explored": "https://kkdynamic.rs",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news content",
+            "Team performance reporting",
+            "Event logistics (travel to Lakta\u0161i/Banjaluka)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 545,
+              "output_tokens": 151,
+              "elapsed_seconds": 3.907909870147705
+            }
+          ],
+          "reasoning": "The content is a sports news article reporting on a pre-season basketball match result between KK Dynamic and Borac. It contains no information regarding business operations, technology stacks, job vacancies, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:58:05.068532",
+          "domain_explored": "https://kkdynamicservicesllc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "GoDaddy (Website Builder)",
+              "Google reCAPTCHA",
+              "Google Analytics (implied by cookie policy)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Type: Consulting Vendor",
+              "Payment Gateway: Online payments for client billing",
+              "Business Model: B2B Service Sales"
+            ]
+          },
+          "patterns_found": [
+            "Consulting service provider model",
+            "Generic B2B service descriptions",
+            "GoDaddy Website Builder template",
+            "Self-referential content (Entity is the Vendor)",
+            "Cookie consent and reCAPTCHA implementation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.11366605758667
+            }
+          ],
+          "reasoning": "The analyzed content confirms that KK Dynamic Services LLC is a vendor/supplier of consulting services (Financial, Org Dev, Tech, Marketing, HR, Operations) rather than an entity procuring these services for internal use. The text explicitly states 'We provide tailored solutions' and lists services they sell. The presence of 'undefined' placeholders and the 'Powered by GoDaddy' footer indicates a generic, low-investment template site with no complex enterprise procurement infrastructure. This contradicts the hypothesis of finding procurement signals for internal purchasing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:58:16.306377",
+          "domain_explored": "https://kkdes.co.ke",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress",
+              "CMS",
+              "Databases",
+              "LLMSEO (AI Search Optimization)",
+              "Cloud Servers",
+              "MPESA STK Push",
+              "Enterprise Systems (ERP)",
+              "Custom Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Portfolio: Web Design, Software Dev, ICT Infrastructure",
+              "Project Delivery: '38 Projects Completed', Recent case studies (2025)",
+              "Vendor Capability: 'End-to-End Enterprise Solutions', 'ICT Training'",
+              "Technical Expertise: WordPress recovery, Payment gateway integration"
+            ]
+          },
+          "patterns_found": [
+            "Service Provider Portfolio",
+            "Case Study Publication",
+            "WordPress Specialization",
+            "Local Payment Integration (MPESA)",
+            "Infrastructure Deployment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 373,
+              "elapsed_seconds": 4.95084285736084
+            }
+          ],
+          "reasoning": "The content confirms KK Dynamic is an active IT service provider ('KK Dynamic Enterprise Solutions') in Kenya. The site lists specific services (Web Development, ERP, Infrastructure), demonstrates active project delivery (portfolio dates in 2023-2025), and publishes technical case studies (MPESA integration, WordPress recovery). This establishes the entity as a potential vendor for IT procurement and indicates their own consumption of hosting and development tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:58:19.329973",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:58:22.848927",
+          "domain_explored": "https://portlandpilots.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3414,
+      "total_output_tokens": 868,
+      "estimated_cost_usd": 0.023261999999999998
+    },
+    "procurement_signals": [
+      "Service Provider Portfolio",
+      "Case Study Publication",
+      "WordPress Specialization",
+      "Local Payment Integration (MPESA)",
+      "Infrastructure Deployment"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KK Dynamic may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:58:22.849842"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.225191",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:09.755063"
+}

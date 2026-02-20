@@ -1,0 +1,306 @@
+{
+  "entity_id": "cricket_west_indies",
+  "entity_name": "Cricket West Indies",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "windiescricket.com",
+    "windiesmasters.com",
+    "caribbeancricket.com",
+    "windieswarriors.com",
+    "wiplayers.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/cricket-jobs",
+      "https://ag.linkedin.com/jobs/view/fan-product-officer-at-cricket-west-indies-cwi-3530749506"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cricket_west_indies",
+      "entity_name": "Cricket West Indies",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://caribbeancricket.com",
+        "https://windieswarriors.com",
+        "https://windiesmasters.com",
+        "https://windiescricket.com",
+        "https://uk.linkedin.com/company/cricket-jobs",
+        "https://ag.linkedin.com/jobs/view/fan-product-officer-at-cricket-west-indies-cwi-3530749506",
+        "https://wiplayers.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Hiring Intent",
+        "Specialist Role Procurement",
+        "Performance Consultancy Engagement",
+        "LinkedIn Recruitment Channel",
+        "Proprietary Platform Development",
+        "Commercial Revenue Growth Strategy",
+        "Fan Engagement Infrastructure",
+        "Direct Hiring Intent (Product Management)",
+        "Digital Transformation"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cricket West Indies may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:12:27.193759",
+          "domain_explored": "https://windiescricket.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:12:36.874926",
+          "domain_explored": "https://windiesmasters.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Masters Association Entity",
+            "Alumni/Legacy Focus",
+            "Amateur Tournament Participation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.5329909324645996
+            }
+          ],
+          "reasoning": "The content belongs to the 'Cricket West Indies Masters Association', a distinct entity focused on alumni and over-40s tournaments. It is operationally separate from the primary Cricket West Indies (CWI) governing body responsible for procurement and major technology investments. The content focuses on legacy, squad announcements, and magazine downloads with no corporate governance or procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:12:46.797508",
+          "domain_explored": "https://caribbeancricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Match Reports",
+            "Tournament Results",
+            "Player Performance Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.0540950298309326
+            }
+          ],
+          "reasoning": "The content provided is purely sports journalism, focusing on match reports, scores, and player performance for the Women's Super50 Cup and T20I series. There is no mention of corporate strategy, technology acquisition, job vacancies, or procurement notices. The source is a news outlet, not the procurement arm of Cricket West Indies."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:12:56.728311",
+          "domain_explored": "https://windieswarriors.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Fan Club Entity",
+            "Supporter Engagement",
+            "Historical Education Focus",
+            "Fundraising Activities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.643663167953491
+            }
+          ],
+          "reasoning": "The content identifies the entity as the 'Windies Warriors Supporters Club' (WWSC), a non-profit fan group dedicated to supporting West Indies cricket through fundraising and education. It is a consumer-facing community site, not the governing body or a commercial procurement arm. There are no signals of B2B purchasing, RFPs, or enterprise technology adoption."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:13:09.115872",
+          "domain_explored": "https://wiplayers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Labor Union Entity",
+            "Player Representation Focus",
+            "Collective Bargaining Authority",
+            "News Aggregation / Journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.365975856781006
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as the West Indies Players\u2019 Association (WIPA), which is a labor union and representative body for cricketers, not the governing board (Cricket West Indies). While WIPA engages in 'Player Development' and 'Community' programs, the content is primarily informational (news releases, condolences, squad announcements) and lacks commercial procurement signals such as RFPs, technology stack details, or vendor solicitations relevant to the primary target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:13:25.678110",
+          "domain_explored": "https://uk.linkedin.com/company/cricket-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)"
+            ],
+            "job_postings": [
+              {
+                "role": "Specialist Batting Consultant",
+                "entity": "Cricket West Indies",
+                "source": "Cricket Jobs / LinkedIn",
+                "type": "Specialist Contractor / Coaching Staff"
+              }
+            ],
+            "procurement_indicators": [
+              "Active search for specialist performance consultancy services",
+              "Utilization of niche job aggregators for talent acquisition"
+            ]
+          },
+          "patterns_found": [
+            "Direct Hiring Intent",
+            "Specialist Role Procurement",
+            "Performance Consultancy Engagement",
+            "LinkedIn Recruitment Channel"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 290,
+              "elapsed_seconds": 2.654569149017334
+            }
+          ],
+          "reasoning": "The content explicitly identifies a procurement signal for Cricket West Indies: a job posting for a 'Specialist Batting Consultant'. This confirms active recruitment and vendor engagement for specialized services. The platform (Cricket Jobs) serves as a verified aggregator for CWI's hiring needs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:13:34.945540",
+          "domain_explored": "https://ag.linkedin.com/jobs/view/fan-product-officer-at-cricket-west-indies-cwi-3530749506",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Proprietary Platforms",
+              "Fan Engagement Systems",
+              "Commercial Revenue Tech"
+            ],
+            "job_postings": [
+              {
+                "role": "Fan Product Officer",
+                "status": "Closed (2 years ago)",
+                "focus": "Platform Development & Commercial Revenue",
+                "contact": "recruitment@cricketwestindies.org"
+              }
+            ],
+            "procurement_indicators": [
+              "Strategic shift towards digital product ownership",
+              "Investment in proprietary technology infrastructure",
+              "Focus on monetizing fan engagement"
+            ]
+          },
+          "patterns_found": [
+            "Proprietary Platform Development",
+            "Commercial Revenue Growth Strategy",
+            "Fan Engagement Infrastructure",
+            "Direct Hiring Intent (Product Management)",
+            "Digital Transformation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1642,
+              "output_tokens": 375,
+              "elapsed_seconds": 2.943269729614258
+            }
+          ],
+          "reasoning": "The content explicitly confirms a strategic initiative to build 'new proprietary platforms' aimed at increasing fan engagement and revenue. This indicates a clear procurement signal for technology development, software infrastructure, and specialized product management talent. The role of 'Fan Product Officer' suggests a move towards in-house digital product ownership, which often precedes or accompanies vendor procurement for tech stacks (CRM, CMS, Analytics)."
+        }
+      ],
+      "total_input_tokens": 9050,
+      "total_output_tokens": 1433,
+      "estimated_cost_usd": 0.048645
+    },
+    "procurement_signals": [
+      "Direct Hiring Intent",
+      "Specialist Role Procurement",
+      "Performance Consultancy Engagement",
+      "LinkedIn Recruitment Channel",
+      "Proprietary Platform Development",
+      "Commercial Revenue Growth Strategy",
+      "Fan Engagement Infrastructure",
+      "Direct Hiring Intent (Product Management)",
+      "Digital Transformation"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cricket West Indies may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:13:34.947147"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299648",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:54:23.620518"
+}

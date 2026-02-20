@@ -1,0 +1,197 @@
+{
+  "entity_id": "partizan_belgrade",
+  "entity_name": "Partizan Belgrade",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "partizanshop.rs",
+    "serbianshop.com",
+    "racingdatabase.eu",
+    "lensdatabase.fr",
+    "besoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://rs.linkedin.com/jobs/view/sales-and-marketing-specialist-at-vk-partizan-4284367652"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "partizan_belgrade",
+      "entity_name": "Partizan Belgrade",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://serbianshop.com",
+        "https://racingdatabase.eu",
+        "https://rs.linkedin.com/jobs/view/sales-and-marketing-specialist-at-vk-partizan-4284367652",
+        "https://besoccer.com",
+        "https://lensdatabase.fr",
+        "https://partizanshop.rs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Partizan Belgrade may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:57:40.076315",
+          "domain_explored": "https://partizanshop.rs",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:57:46.650260",
+          "domain_explored": "https://serbianshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "retail_ecommerce",
+            "cultural_merchandise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.308439016342163
+            }
+          ],
+          "reasoning": "The scraped content from serbianshop.com is a generic e-commerce catalog for Serbian cultural gifts, sports apparel, and icons. It contains no references to Partizan Belgrade, FK Partizan, KK Partizan, or any associated corporate entities. The site is a retailer (selling national team kits and 'Etno' items), not a procurement portal or the official club channel. Therefore, it offers zero procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:57:49.947348",
+          "domain_explored": "https://racingdatabase.eu",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:57:53.064971",
+          "domain_explored": "https://lensdatabase.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:57:55.969292",
+          "domain_explored": "https://besoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:58:11.419740",
+          "domain_explored": "https://rs.linkedin.com/jobs/view/sales-and-marketing-specialist-at-vk-partizan-4284367652",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sales And Marketing Specialist",
+                "entity": "VK Partizan",
+                "location": "Belgrade, Serbia",
+                "type": "Contract",
+                "seniority": "Entry level",
+                "focus_areas": [
+                  "Sales",
+                  "Customer Service",
+                  "Training",
+                  "Communication"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "signal": "Commercial Expansion",
+                "details": "Hiring for sales and marketing roles suggests active revenue generation efforts."
+              },
+              {
+                "signal": "Vendor Potential",
+                "details": "New sales staff often require CRM software or marketing automation tools."
+              }
+            ]
+          },
+          "patterns_found": [
+            "job_posting_sales_marketing",
+            "organizational_growth",
+            "vendor_partnership_potential"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 415,
+              "elapsed_seconds": 11.957758903503418
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for a 'Sales And Marketing Specialist' at VK Partizan (Waterpolo club). While this is a sports entity distinct from FK Partizan (Football), it validates the broader organization's commercial activity and hiring needs. The role description emphasizes sales, customer service, and training, indicating a need for CRM or sales enablement tools, though no specific technology stack is mentioned. It suggests a capability for vendor engagement."
+        }
+      ],
+      "total_input_tokens": 2919,
+      "total_output_tokens": 608,
+      "estimated_cost_usd": 0.017876999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Partizan Belgrade may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:58:11.421139"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.213993",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:05.011572"
+}

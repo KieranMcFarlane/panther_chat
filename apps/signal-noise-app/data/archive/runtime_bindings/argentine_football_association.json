@@ -1,0 +1,178 @@
+{
+  "entity_id": "argentine_football_association",
+  "entity_name": "Argentine Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "afatickets.com.ar",
+    "forsoccer.com",
+    "statsperform.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_football_association",
+      "entity_name": "Argentine Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://afatickets.com.ar",
+        "https://statsperform.com",
+        "https://forsoccer.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:09:44.590278",
+          "domain_explored": "https://afatickets.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Management System",
+              "E-commerce/Payment Gateway",
+              "CRM (Fan Database)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational dependency on digital ticketing infrastructure",
+              "Requirement for high-availability web hosting/services",
+              "Payment processing partnerships"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Platform",
+            "Fan Identity Management",
+            "E-commerce Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 368,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.18023419380188
+            }
+          ],
+          "reasoning": "The domain 'afatickets.com.ar' confirms the existence of a dedicated digital ticketing platform. This indicates a reliance on third-party SaaS providers or significant internal software development. While no immediate RFP is visible, the operation of such a platform creates a continuous need for support, scalability, and potential vendor management (payment gateways, cloud infrastructure)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:10:47.593620",
+          "domain_explored": "https://forsoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:10:56.571172",
+          "domain_explored": "https://statsperform.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Opta Data Feeds",
+              "OptaAI Studio",
+              "Opta Vision (Video Analysis)",
+              "Live Streaming Features",
+              "Dynamic Stats API"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Dedicated 'Leagues & Federations' solution track",
+              "Product categories for 'Match Analysis' and 'Player Recruitment' (Technical Dept needs)",
+              "Product categories for 'Fan Engagement' and 'Content Agency' (Commercial/Digital needs)",
+              "Betting & Integrity tools (Governance needs)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data Analytics (Opta)",
+            "AI & Machine Learning Integration",
+            "Fan Engagement Platforms",
+            "Match Analysis & Recruitment Tools",
+            "Federation & League Solutions"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 347,
+              "elapsed_seconds": 4.471597909927368
+            }
+          ],
+          "reasoning": "Stats Perform is a dominant vendor in the sports data space. While the page is a general product catalog, it highlights specific categories relevant to AFA's operations: 'Leagues & Federations', 'Match Analysis', 'Player Recruitment', and 'Fan Engagement'. This suggests a high probability that AFA either procures or requires these types of data services and analytics tools for team performance and digital content."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:11:07.747227",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Gaming Content",
+            "Consumer Entertainment Applications"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.0964150428771973
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com lists generic mobile games (e.g., Mobile Legends, Township, Top Eleven). While 'Top Eleven' is football-related, it is a consumer game by Nordeus, not a procurement signal or technology stack component of the Argentine Football Association. The content provides no B2B context, vendor information, or infrastructure details relevant to AFA's procurement."
+        }
+      ],
+      "total_input_tokens": 3301,
+      "total_output_tokens": 795,
+      "estimated_cost_usd": 0.021828
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:11:07.749550"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.201283",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:01.801022"
+}

@@ -1,0 +1,208 @@
+{
+  "entity_id": "lille_osc",
+  "entity_name": "Lille OSC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "newsnow.co.uk",
+    "onefootball.com",
+    "mobile.ytsports.cn",
+    "frenchfootballdaily.com",
+    "en.soccerwiki.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/view/supply-chain-manager-europe-at-tarkett-4341783806"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lille_osc",
+      "entity_name": "Lille OSC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mobile.ytsports.cn",
+        "https://onefootball.com",
+        "https://fr.linkedin.com/jobs/view/supply-chain-manager-europe-at-tarkett-4341783806",
+        "https://en.soccerwiki.org",
+        "https://newsnow.co.uk",
+        "https://frenchfootballdaily.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lille OSC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:10:55.140976",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Irrelevant political and entertainment topics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.4154670238494873
+            }
+          ],
+          "reasoning": "The provided content is a general news feed covering UK politics, international crime, financial markets, and entertainment. There is absolutely no mention of Lille OSC, Stade Pierre-Mauroy, or any procurement activities related to the club. The content is entirely irrelevant to the entity in question."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:10:58.332017",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:11:01.993572",
+          "domain_explored": "https://mobile.ytsports.cn",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:11:08.874290",
+          "domain_explored": "https://frenchfootballdaily.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity (Stade Lavallois vs Lille OSC)",
+            "Historical content (2020/21 season)",
+            "Consumer merchandise news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 695,
+              "output_tokens": 143,
+              "elapsed_seconds": 3.8575439453125
+            }
+          ],
+          "reasoning": "The content discusses Stade Lavallois (Laval), not Lille OSC. It focuses on historical kit releases for the 2020/21 season, which is irrelevant to current procurement intelligence for LOSC."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:11:14.143290",
+          "domain_explored": "https://en.soccerwiki.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical match statistics database",
+            "Player transfer history archives",
+            "Seasonal performance records",
+            "Static encyclopedic content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 529,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.309434175491333
+            }
+          ],
+          "reasoning": "The content is strictly historical and statistical (match results, player lineups, transfer fees). It lacks forward-looking information, corporate governance details, or technology infrastructure data required for procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:11:20.946895",
+          "domain_explored": "https://fr.linkedin.com/jobs/view/supply-chain-manager-europe-at-tarkett-4341783806",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Supply Chain Manager Europe at Tarkett (Irrelevant Entity)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Tarkett)",
+            "Generic Job Board Listings",
+            "Logistics/Supply Chain Roles (Non-Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1583,
+              "output_tokens": 210,
+              "elapsed_seconds": 2.318169116973877
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job listing page for a 'Supply Chain Manager' position at Tarkett, a flooring company. While the role title contains 'Supply Chain', the entity is not Lille OSC. The surrounding content lists generic logistics jobs for other companies (Stalaven, Prodway, Iveco). There is no signal related to Lille OSC's procurement activities, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 4161,
+      "total_output_tokens": 673,
+      "estimated_cost_usd": 0.022578
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lille OSC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:11:20.948382"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.122942",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:50.600308"
+}

@@ -1,0 +1,132 @@
+{
+  "entity_id": "australian_baseball_federation",
+  "entity_name": "Australian Baseball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "baseball.com.au",
+    "theabl.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "australian_baseball_federation",
+      "entity_name": "Australian Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://theabl.com.au",
+        "https://baseball.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Australian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:05:35.427642",
+          "domain_explored": "https://baseball.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thirst Creative (Web Design Vendor)",
+              "Baseball.com.au Shop (E-commerce platform)",
+              "Mailchimp / Newsletter Tool (Implied by 'Subscribe to monthly newsletter')"
+            ],
+            "job_postings": [
+              "Careers Page (General link present, no specific roles listed in snippet)"
+            ],
+            "procurement_indicators": [
+              "Website design by Thirst Creative",
+              "Baseball.com.au Shop operations",
+              "Monthly newsletter subscription management"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Attribution",
+            "Digital Asset Management",
+            "Newsletter Marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.1862080097198486
+            }
+          ],
+          "reasoning": "The content provides clear evidence of existing vendor relationships (Thirst Creative) and active digital marketing operations (Newsletter, Shop). While no active RFP is present, the identification of the web design vendor confirms a procurement history in the digital/creative space, and the 'Careers' section indicates an active HR function."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:05:42.488608",
+          "domain_explored": "https://theabl.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thirst Creative (Web Design Vendor)",
+              "Ticketing Platform (Implied by 'Buy tickets' integration)",
+              "E-commerce Platform (Implied by 'ABL Shop')"
+            ],
+            "job_postings": [
+              "Careers Page Link (General Indicator)"
+            ],
+            "procurement_indicators": [
+              "Website design by Thirst Creative (Existing Vendor)",
+              "E-commerce functionality (Shop)",
+              "Ticketing systems"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Attribution",
+            "Digital Asset Management",
+            "E-commerce Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.038238048553467
+            }
+          ],
+          "reasoning": "The content confirms the relationship between the Australian Baseball Federation (ABF) and the Australian Baseball League (ABL). While the primary focus is consumer engagement (tickets, news), the identification of 'Thirst Creative' as the design agency provides a concrete vendor partnership signal. The presence of an 'ABL Shop' and 'Careers' links indicates potential procurement activities in e-commerce platforms and HR services, though no active tenders are visible in this text."
+        }
+      ],
+      "total_input_tokens": 2775,
+      "total_output_tokens": 596,
+      "estimated_cost_usd": 0.017265000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Australian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:05:42.490550"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312198",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:37.802055"
+}

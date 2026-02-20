@@ -1,0 +1,212 @@
+{
+  "entity_id": "allianz_milano",
+  "entity_name": "Allianz Milano",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "allianz.it",
+    "powervolleymilano.it",
+    "allianz.com",
+    "volley.jamcamp.it",
+    "legavolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "allianz_milano",
+      "entity_name": "Allianz Milano",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://powervolleymilano.it",
+        "https://legavolley.it",
+        "https://allianz.it",
+        "https://allianz.com",
+        "https://volley.jamcamp.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Allianz Milano may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:13:11.629947",
+          "domain_explored": "https://allianz.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AllianzNOW (Mobile App)",
+              "Preventivass (Comparison/Integration Tool)",
+              "Web Content Management (Magazine/Blog platform)",
+              "Instagram (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Transformation focus ('AllianzNOW', 'online services')",
+              "Cybersecurity awareness content ('Phishing defense')",
+              "Partnership management (Milano Cortina 2026, Jannik Sinner)",
+              "Customer Experience optimization ('liquidazione sinistri')"
+            ]
+          },
+          "patterns_found": [
+            "Digital Customer Experience (CX) Investment",
+            "Cybersecurity Awareness Content",
+            "Strategic Partnership Management",
+            "Legacy System Integration (IVASS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.631847858428955
+            }
+          ],
+          "reasoning": "The content confirms active investment in digital customer engagement tools (AllianzNOW app, online quote calculators) and content management (Magazine). While there are no explicit RFPs, the focus on 'improving customer experience' and cybersecurity education suggests a need for supporting marketing automation, analytics, and security services. The mention of 'Preventivass' indicates compliance with legacy regulatory integrations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:13:29.009715",
+          "domain_explored": "https://powervolleymilano.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Analytics (_ga, _ga_*)",
+              "Generic Cookie Consent Scripts"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal (Brand presence on jerseys/venue)",
+              "Venue Management: Allianz Cloud"
+            ]
+          },
+          "patterns_found": [
+            "Sports Marketing & Sponsorship",
+            "Brand Visibility (Title Sponsorship)",
+            "Fan Engagement (Ticketing, News)",
+            "Cookie Consent Management (Iubenda/Generic)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.4886348247528076
+            }
+          ],
+          "reasoning": "The content is strictly related to the sports team 'Allianz Powervolley Milano'. While it confirms Allianz's active sponsorship and marketing investment in the region, it contains no corporate procurement signals (RFPs, tech stack, job postings, or business services) relevant to Allianz Milano's insurance operations or digital transformation needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:13:40.015720",
+          "domain_explored": "https://allianz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Services & Infrastructure (Milano Cortina 2026 Winter Games)",
+              "Risk Management Consulting for Renewable Energy Projects",
+              "Marketing & Sponsorship Activation Services"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Infrastructure Support (Milano Cortina 2026)",
+            "Renewable Energy Investment & Asset Management",
+            "Global Sports Marketing Partnerships",
+            "Brand Value Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.350970029830933
+            }
+          ],
+          "reasoning": "While the content is primarily corporate news rather than explicit procurement data, it confirms significant operational activities that require vendor support. Specifically, the 'Official Insurer' role for the Milano Cortina 2026 Winter Games implies procurement needs for event infrastructure, security, and local logistics in Milan. The investment in offshore wind farms indicates active asset management requiring specialized technical services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:13:46.878558",
+          "domain_explored": "https://volley.jamcamp.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:14:01.466813",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Governance & Operations",
+            "Sponsorship Ecosystem Management",
+            "Digital Content Distribution (Live Scores, Stats)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 221,
+              "elapsed_seconds": 6.306970834732056
+            }
+          ],
+          "reasoning": "The content is a navigation dump from 'legavolley.it', the official site of the Italian Volleyball League. While 'Allianz Milano' is listed as a team in the 'SuperLega Credem Banca' (the top tier), this page serves as a league-wide directory and results aggregator. It confirms Allianz Milano's participation in the league but provides no specific information regarding Allianz Milano's internal procurement, technology stack, or business operations. It is purely contextual sports data."
+        }
+      ],
+      "total_input_tokens": 5794,
+      "total_output_tokens": 1096,
+      "estimated_cost_usd": 0.033822000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Allianz Milano may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:14:01.467469"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.316609",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:11.643740"
+}

@@ -1,0 +1,334 @@
+{
+  "entity_id": "red_bull_salzburg",
+  "entity_name": "Red Bull Salzburg",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "redbullsalzburg.at",
+    "ecrbs.redbulls.com",
+    "redbullshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/fc-red-bull-salzburg-jobs-worldwide?f_C=3037010",
+      "https://cy.linkedin.com/jobs/expert-internal-communications-jobs-vienna-09?trk=guest_job_details_jd_jserp_more_jobs_link",
+      "https://at.linkedin.com/jobs/view/assistant-to-global-head-of-sales-at-red-bull-4125795957",
+      "https://at.linkedin.com/jobs/view/event-facility-assistant-at-red-bull-3971228399",
+      "https://at.linkedin.com/jobs/view/praktikum-ec-red-bull-salzburg-kommunikation-at-red-bull-4295010146",
+      "https://www.linkedin.com/jobs/jobs-in-palling?countryRedirected=1",
+      "https://at.linkedin.com/jobs/view/senior-social-media-email-marketing-specialist-red-bull-energy-wear-at-red-bull-3978419240",
+      "https://at.linkedin.com/jobs/view/fachkraft-logistik-at-red-bull-3986976586"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "red_bull_salzburg",
+      "entity_name": "Red Bull Salzburg",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://redbullsalzburg.at",
+        "https://cy.linkedin.com/jobs/expert-internal-communications-jobs-vienna-09?trk=guest_job_details_jd_jserp_more_jobs_link",
+        "https://at.linkedin.com/jobs/view/praktikum-ec-red-bull-salzburg-kommunikation-at-red-bull-4295010146",
+        "https://redbullshop.com",
+        "https://at.linkedin.com/jobs/view/assistant-to-global-head-of-sales-at-red-bull-4125795957",
+        "https://at.linkedin.com/jobs/view/event-facility-assistant-at-red-bull-3971228399",
+        "https://www.linkedin.com/jobs/fc-red-bull-salzburg-jobs-worldwide?f_C=3037010",
+        "https://ecrbs.redbulls.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Red Bull Salzburg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:51:58.288526",
+          "domain_explored": "https://redbullsalzburg.at",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:52:05.403425",
+          "domain_explored": "https://ecrbs.redbulls.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing System (Implied via 'Abokarte')",
+              "Video CMS (Implied via 'Red Bulls TV')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: win2day (Betting partner)",
+              "Sponsorship: IDM W\u00e4rmepumpen (Arena partner)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing/Subscription Systems (Abokarte)",
+            "Sponsorship Display (win2day, IDM W\u00e4rmepumpen)",
+            "Content Management (Video/Interviews)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 265,
+              "elapsed_seconds": 4.1454737186431885
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on game results, schedules, and fan engagement (tickets, video interviews). While 'Abokarte' (season tickets) implies the use of ticketing software, and 'win2day' indicates a sponsorship partnership, there is no explicit information regarding procurement needs, technology stack vendors, or corporate decision-making structures. The content is consumer-facing sports data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:52:13.900328",
+          "domain_explored": "https://redbullshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Global/Shared)",
+              "Product Information Management (PIM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Management (Winter Sale clearance)",
+              "Product Sourcing (Red Bull Spect Eyewear, Replica Kits)"
+            ]
+          },
+          "patterns_found": [
+            "Global E-commerce Platform (Shared Infrastructure)",
+            "Merchandise Procurement (Apparel & Accessories)",
+            "Seasonal Sales Cycles (Winter Sale)",
+            "Cross-Entity Branding (RB Salzburg, RB Leipzig, F1)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 310,
+              "elapsed_seconds": 4.551153898239136
+            }
+          ],
+          "reasoning": "The content is scraped from the global Red Bull Shop (redbullshop.com), which serves as a centralized B2C merchandise platform. While 'FC Red Bull Salzburg' is listed as a target entity for merchandise, the content represents consumer-facing retail output (sales, discounts, product catalogs) rather than upstream procurement signals (RFPs, vendor selection, or enterprise tech stack investments). The infrastructure is shared globally, limiting specific insights into Salzburg's independent procurement operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:52:20.250189",
+          "domain_explored": "https://www.linkedin.com/jobs/fc-red-bull-salzburg-jobs-worldwide?f_C=3037010",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Search Indexing Issue",
+            "Data Availability Gap"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 582,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.2364327907562256
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'No results found' error on LinkedIn. This suggests the entity name might be structured differently in the database (e.g., 'FC Red Bull Salzburg' vs 'Red Bull Salzburg' or 'RB Leipzig' grouping) or the scraping mechanism failed to bypass a login/gate. Since no actual job data or descriptions were retrieved, no procurement signals or technology stack information can be extracted."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:52:28.211818",
+          "domain_explored": "https://cy.linkedin.com/jobs/expert-internal-communications-jobs-vienna-09?trk=guest_job_details_jd_jserp_more_jobs_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results",
+            "Geographic Mismatch (Vienna vs. Salzburg)",
+            "Entity Mismatch (Huawei, OSCE, UN-Habitat, BSH advisors)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.0481321811676025
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for 'Expert Internal Communications' roles in Vienna. None of the listings (Huawei, OSCE, UN-Habitat, BSH advisors) are affiliated with Red Bull Salzburg. The geographic focus on Vienna also deviates from the entity's Salzburg base, making this irrelevant to the specific procurement intelligence goal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:52:40.431777",
+          "domain_explored": "https://at.linkedin.com/jobs/view/assistant-to-global-head-of-sales-at-red-bull-4125795957",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Teams",
+              "Microsoft SharePoint",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Assistant to Global Head of Sales (Off-Premise) - Closed/Archived"
+            ],
+            "procurement_indicators": [
+              "Budget ownership for Off-Premise department",
+              "Invoice handling and processing",
+              "Organization of international workshops and customer meetings",
+              "Travel planning and execution"
+            ]
+          },
+          "patterns_found": [
+            "Global Sales Operations (Off-Premise)",
+            "Budget Management Authority",
+            "Vendor Invoice Handling",
+            "Microsoft Technology Stack (MSTeams, SharePoint, MS Office)",
+            "International Workshop & Event Procurement",
+            "Travel & Incentives Budgeting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 344,
+              "elapsed_seconds": 8.663794994354248
+            }
+          ],
+          "reasoning": "While this is a support role, the responsibilities explicitly include managing budget lines for 'travel, meeting, incentives' and handling invoices for global teams. This indicates procurement activity related to MICE (Meetings, Incentives, Conferences, and Exhibitions) and travel services. The role also confirms the use of Microsoft collaboration tools (SharePoint, MSTeams) as part of the operational stack."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:52:49.827749",
+          "domain_explored": "https://at.linkedin.com/jobs/view/event-facility-assistant-at-red-bull-3971228399",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Event & Facility Assistant (Hangar-7)"
+            ],
+            "procurement_indicators": [
+              "Facility Service Procurement (Cleaning/Repairs)",
+              "Event Vendor Management",
+              "Financial Settlement/Billing Responsibility"
+            ]
+          },
+          "patterns_found": [
+            "Facility Management Operations",
+            "Event Logistics & Coordination",
+            "Vendor/Supplier Coordination (Repairs, Cleaning)",
+            "Budget Responsibility (Endabrechnung/Invoicing)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1731,
+              "output_tokens": 304,
+              "elapsed_seconds": 5.7543909549713135
+            }
+          ],
+          "reasoning": "While this is a junior operational role at Hangar-7 (a distinct venue from the football club but under the Red Bull umbrella), it explicitly mentions responsibilities relevant to procurement: 'Organisation von Reinigungs- und Reparaturarbeiten' (Organization of cleaning and repair works) and 'Endabrechnung' (Final billing/settlement). This indicates a need for facility service vendors and event suppliers, confirming the entity engages in service procurement, even if the specific football club procurement tech stack isn't detailed here."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:52:56.994750",
+          "domain_explored": "https://at.linkedin.com/jobs/view/praktikum-ec-red-bull-salzburg-kommunikation-at-red-bull-4295010146",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Photoshop",
+              "Video Editing Software (Unspecified)",
+              "Internal 'Club-Tool' (Proprietary Platform)",
+              "Social Media Management Platforms"
+            ],
+            "job_postings": [
+              "Praktikum EC Red Bull Salzburg - Kommunikation (Internship)"
+            ],
+            "procurement_indicators": [
+              "Out-of-Home (OOH) Campaign Procurement",
+              "Event Material Sourcing",
+              "Creative Software Licensing",
+              "Promotional Item Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Content Creation Tools (Photoshop, Video Editing)",
+            "Internal 'Club-Tool' (Proprietary/Custom Software)",
+            "Out-of-Home (OOH) Marketing Campaigns",
+            "Event-Based Procurement (Promotions, Kids Club)",
+            "Social Media Management Stack"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1807,
+              "output_tokens": 332,
+              "elapsed_seconds": 3.587270975112915
+            }
+          ],
+          "reasoning": "While this is an internship posting (lower immediate purchasing authority), it reveals specific software usage ('Club-Tool', Photoshop) and marketing spend categories (OOH campaigns, event materials). It confirms the entity operates distinct marketing operations requiring specific creative tools and external vendor support for physical events."
+        }
+      ],
+      "total_input_tokens": 10213,
+      "total_output_tokens": 1925,
+      "estimated_cost_usd": 0.059514
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Red Bull Salzburg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:52:56.997874"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.175382",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:45.272004"
+}

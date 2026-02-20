@@ -1,0 +1,230 @@
+{
+  "entity_id": "kapfenberg_bulls",
+  "entity_name": "Kapfenberg Bulls",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "thelondonlions.com",
+    "basketballaustria.tv",
+    "eurohoops.net",
+    "basketball-reference.com",
+    "shop.mtms.at"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kapfenberg_bulls",
+      "entity_name": "Kapfenberg Bulls",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://basketball-reference.com",
+        "https://thelondonlions.com",
+        "https://basketballaustria.tv",
+        "https://eurohoops.net",
+        "https://shop.mtms.at"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kapfenberg Bulls may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:21:47.529985",
+          "domain_explored": "https://thelondonlions.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Ticketing)",
+              "NordVPN (Cybersecurity/VPN)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "London Lions - NordVPN Partnership (Cybersecurity vendor)",
+              "London Lions - Boyle Sports Partnership (Betting/Gambling vendor)",
+              "London Lions - Adidas NextGen Tournament (Apparel/Event vendor)",
+              "London Lions - New Arena Plan (Infrastructure project)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Competitor Analysis",
+            "Sponsorship Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 291,
+              "elapsed_seconds": 4.845629930496216
+            }
+          ],
+          "reasoning": "The scraped content is from the London Lions (thelondonlions.com), a competitor to the target entity (Kapfenberg Bulls). While the content reveals industry-standard procurement activities (NordVPN partnership, Ticketmaster usage, Boyle Sports sponsorship), these do not represent procurement signals for Kapfenberg Bulls. The data is relevant only for competitive benchmarking, not direct procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:21:53.780182",
+          "domain_explored": "https://basketballaustria.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (implied requirement)",
+              "Client-Side Rendering (CSR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering",
+            "Content Delivery Network",
+            "Generic Error Handling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 434,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.894663095474243
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a client-side JavaScript loading message and a generic instruction to enable JavaScript. This indicates the site is a Single Page Application (SPA) where the actual content is rendered dynamically in the browser, not in the initial HTML response. Since the scraper cannot execute JavaScript, no substantive procurement signals, governance data, or technology stack details are visible in this raw text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:21:58.996446",
+          "domain_explored": "https://eurohoops.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Coverage",
+            "League-Level Content",
+            "Non-Specific Entity Mention"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 544,
+              "output_tokens": 159,
+              "elapsed_seconds": 1.9904930591583252
+            }
+          ],
+          "reasoning": "The content is a generic sports preview for the Basketball Champions League. While the Kapfenberg Bulls participate in this league ecosystem, the article does not mention the specific team, nor does it contain any procurement, technology, or operational signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:22:05.036503",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Statistical Database",
+            "Global Sports Aggregator",
+            "Generic Team Listing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 237,
+              "elapsed_seconds": 2.711556911468506
+            }
+          ],
+          "reasoning": "The content is from Basketball Reference, a global statistical database for basketball. While it lists 'Chicago Bulls' in the team selection menu, this is a generic reference to the NBA franchise, not the specific Austrian entity 'Kapfenberg Bulls'. The content focuses on historical stats, scores, and general NBA information, showing no procurement signals, technology stacks, or business operations related to the target entity in Austria."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:22:12.921996",
+          "domain_explored": "https://shop.mtms.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Client-Side Dependency)",
+              "mtms Solutions Platform (Ticketing/Shop)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract with mtms Solutions GmbH",
+              "Usage of specialized ticketing software",
+              "Infrastructure requiring modern browser support"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Relationship",
+            "Ticketing Infrastructure",
+            "SaaS Dependency",
+            "Legacy Browser Constraints"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 709,
+              "output_tokens": 256,
+              "elapsed_seconds": 5.006695985794067
+            }
+          ],
+          "reasoning": "The content reveals a critical vendor dependency: 'mtms Solutions GmbH' powers the ticketing and shop infrastructure for the entity. While the page itself is a generic error/landing page, the copyright and domain attribution confirm an active procurement relationship for e-commerce and ticketing software. This indicates investment in digital sales channels."
+        }
+      ],
+      "total_input_tokens": 4541,
+      "total_output_tokens": 1164,
+      "estimated_cost_usd": 0.031083
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kapfenberg Bulls may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:22:12.923112"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227685",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:40.993279"
+}

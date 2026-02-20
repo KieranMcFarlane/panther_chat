@@ -1,0 +1,338 @@
+{
+  "entity_id": "khl",
+  "entity_name": "KHL",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "engmhl.khl.ru",
+    "apps.apple.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_jobopportunity-healthcarejobs-walkininterview-activity-7371143002158718976-6Kpy",
+      "https://www.linkedin.com/posts/kalinga-hospital-ltd_jobopportunity-healthcarejobs-walkininterview-activity-7371143919105085440-qAkh",
+      "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiringnow-joinourteam-healthcarejobs-activity-7313556361991073792-yM1o",
+      "https://www.linkedin.com/posts/kalinga-hospital-ltd_hiringnow-joinourteam-healthcarejobs-activity-7313556242784784384-Dy64",
+      "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiring-businessdevelopment-healthcarejobs-activity-7332048185542004736-co1y"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "khl",
+      "entity_name": "KHL",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiringnow-joinourteam-healthcarejobs-activity-7313556361991073792-yM1o",
+        "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiring-businessdevelopment-healthcarejobs-activity-7332048185542004736-co1y",
+        "https://www.linkedin.com/posts/kalinga-hospital-ltd_jobopportunity-healthcarejobs-walkininterview-activity-7371143919105085440-qAkh",
+        "https://www.linkedin.com/posts/kalinga-hospital-ltd_hiringnow-joinourteam-healthcarejobs-activity-7313556242784784384-Dy64",
+        "https://apps.apple.com",
+        "https://engmhl.khl.ru",
+        "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_jobopportunity-healthcarejobs-walkininterview-activity-7371143002158718976-6Kpy"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KHL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:09:15.194157",
+          "domain_explored": "https://engmhl.khl.ru",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:09:21.483044",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_app_store_content",
+            "consumer_mobile_gaming",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1379,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.1544251441955566
+            }
+          ],
+          "reasoning": "The scraped content from apps.apple.com is a generic homepage featuring consumer mobile games (Roblox, Pokemon, Genshin Impact) and lifestyle apps. There is absolutely no mention of the entity 'KHL' (Kontinental Hockey League) or any B2B procurement signals, technology stacks, or corporate governance information relevant to the target entity. This is a false positive in the crawling process."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:09:27.835511",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_app_store_content",
+            "consumer_mobile_gaming",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.4902050495147705
+            }
+          ],
+          "reasoning": "The scraped content is from the Google Play Store and lists consumer mobile games (e.g., Candy Crush, PUBG Mobile), educational apps, and entertainment media. There is no content related to corporate operations, procurement needs, or enterprise technology stacks for the entity KHL."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:09:35.450826",
+          "domain_explored": "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_jobopportunity-healthcarejobs-walkininterview-activity-7371143002158718976-6Kpy",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Biomedical Equipment Systems",
+              "IT Infrastructure (General)",
+              "Hospital Management Systems (Implied by IT Manager role)"
+            ],
+            "job_postings": [
+              "Manager \u2013 IT",
+              "Biomedical Head",
+              "Manager \u2013 Branding",
+              "Quality Head",
+              "Manager \u2013 Operations"
+            ],
+            "procurement_indicators": [
+              "Biomedical Equipment Procurement (Implied by Head role)",
+              "IT Vendor Management (Implied by IT Manager role)",
+              "Marketing Agency/Tool Procurement (Implied by Branding Manager role)"
+            ]
+          },
+          "patterns_found": [
+            "managerial_hiring",
+            "it_management_role",
+            "biomedical_equipment_focus",
+            "branding_marketing_investment",
+            "operational_expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 350,
+              "elapsed_seconds": 4.184613943099976
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, the specific hiring of 'Manager \u2013 IT' and 'Biomedical Head' indicates active management of technology infrastructure and medical equipment procurement. The 'Manager \u2013 Branding' role suggests marketing spend. These roles imply governance structures that handle vendor selection and procurement decisions, even if the specific intent to buy new tech isn't explicit in the text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:09:50.711015",
+          "domain_explored": "https://www.linkedin.com/posts/kalinga-hospital-ltd_jobopportunity-healthcarejobs-walkininterview-activity-7371143919105085440-qAkh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Biomedical Equipment Systems",
+              "IT Infrastructure"
+            ],
+            "job_postings": [
+              "Manager \u2013 IT",
+              "Biomedical Head",
+              "Manager \u2013 Branding",
+              "Manager \u2013 Operations",
+              "Quality Head"
+            ],
+            "procurement_indicators": [
+              "Biomedical Head role suggests equipment procurement/management",
+              "IT Manager role suggests software/hardware procurement",
+              "Manager - Branding role suggests marketing services procurement"
+            ]
+          },
+          "patterns_found": [
+            "managerial_hiring",
+            "it_management_role",
+            "biomedical_equipment_focus",
+            "branding_marketing_role",
+            "operations_management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 336,
+              "elapsed_seconds": 11.758972883224487
+            }
+          ],
+          "reasoning": "The content is a standard job posting but includes specific managerial roles relevant to procurement and technology implementation. Specifically, the listing for 'Manager \u2013 IT' and 'Biomedical Head' indicates an existing or expanding capability to manage technology infrastructure and medical equipment procurement. While this is a hiring signal rather than a direct RFP, it confirms the entity has structured departments capable of vendor engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:09:57.419763",
+          "domain_explored": "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiringnow-joinourteam-healthcarejobs-activity-7313556361991073792-yM1o",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Dynamic Professionals (Unspecified)",
+                "contact": "hr@kalingahospital.com",
+                "source": "LinkedIn",
+                "recency": "10 months ago"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_hiring_post",
+            "hr_email_contact",
+            "social_media_engagement",
+            "third_party_recruitment_spam"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1643,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.3120908737182617
+            }
+          ],
+          "reasoning": "The content is a generic 'We're Hiring' post for 'Dynamic Professionals' without listing specific roles, departments, or seniority levels. While it confirms active hiring (HR activity), it lacks the specificity (e.g., IT, Procurement, Management roles) required to derive technology or procurement intelligence. The presence of a bot comment (Docthub) further dilutes the signal quality."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:10:05.416736",
+          "domain_explored": "https://www.linkedin.com/posts/kalinga-hospital-ltd_hiringnow-joinourteam-healthcarejobs-activity-7313556242784784384-Dy64",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Generic hiring call for 'Dynamic Professionals' (No specific roles listed)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_hiring_post",
+            "hr_email_contact",
+            "social_media_engagement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1712,
+              "output_tokens": 193,
+              "elapsed_seconds": 4.7628748416900635
+            }
+          ],
+          "reasoning": "This is a generic 'We're Hiring' post that lacks specific role titles, technical requirements, or departmental details. While it confirms the organization is active and hiring, it provides zero insight into procurement needs, technology stacks, or specific investments. It is functionally identical to the content analyzed in Iteration 6."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:10:12.790685",
+          "domain_explored": "https://www.linkedin.com/posts/kalinga-hospital-ltd-06b5451a1_hiring-businessdevelopment-healthcarejobs-activity-7332048185542004736-co1y",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Executive \u2013 Business Development",
+                "department": "Sales / Marketing",
+                "requirements": "MBA/Pharma preferred, Min. 2 years in Healthcare Marketing",
+                "locations": "Tamluk (West Bengal), Jajpur, Bhubaneswar (Odisha)"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Strategic Growth",
+                "signal": "Expansion into Tamluk (WB) and Jajpur (Odisha) suggests potential future procurement for facility setup or regional marketing services."
+              }
+            ]
+          },
+          "patterns_found": [
+            "generic_hiring_post",
+            "business_development_focus",
+            "regional_expansion_indicators",
+            "hr_email_contact"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1784,
+              "output_tokens": 327,
+              "elapsed_seconds": 3.780087947845459
+            }
+          ],
+          "reasoning": "This content is a standard job posting for a Business Development Executive. While it indicates organizational growth and potential expansion into new regions (Tamluk, Jajpur), it does not reveal specific procurement needs, technology stacks, or purchasing intent. The role focuses on marketing and sales rather than procurement or technology implementation."
+        }
+      ],
+      "total_input_tokens": 11010,
+      "total_output_tokens": 1794,
+      "estimated_cost_usd": 0.05993999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KHL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:10:12.792102"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447919",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:47:58.828482"
+}

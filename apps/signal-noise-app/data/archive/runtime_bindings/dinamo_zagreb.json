@@ -1,0 +1,194 @@
+{
+  "entity_id": "dinamo_zagreb",
+  "entity_name": "Dinamo Zagreb",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "gnkdinamo.hr",
+    "fcdynamo.com",
+    "shop.gnkdinamo.hr",
+    "transfermarkt.us"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dinamo_zagreb",
+      "entity_name": "Dinamo Zagreb",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://fcdynamo.com",
+        "https://gnkdinamo.hr",
+        "https://shop.gnkdinamo.hr",
+        "https://transfermarkt.us"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dinamo Zagreb may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:28:37.139224",
+          "domain_explored": "https://gnkdinamo.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (tickets.gnkdinamo.hr)",
+              "OTT/Video Streaming Platform (Dinamo+)",
+              "E-commerce Platform (Webshop)",
+              "Social Media Management (Facebook, LinkedIn, TikTok, WhatsApp, Instagram, X)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital content delivery infrastructure (Dinamo+)",
+              "Membership management system (35,572 members)",
+              "Merchandise logistics and e-commerce",
+              "Foundation management software (Zaklada GNK DINAMO NEMA PREDAJE)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing & Membership Platform",
+            "OTT/Streaming Service (Dinamo+)",
+            "E-commerce Integration (Webshop)",
+            "Social Media Ecosystem",
+            "Foundation/CSR Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 353,
+              "elapsed_seconds": 3.624274253845215
+            }
+          ],
+          "reasoning": "The content reveals a mature digital ecosystem focused on direct-to-consumer (DTC) revenue streams. While no explicit procurement RFPs are listed, the operation of 'Dinamo+' (OTT), a membership portal, and a webshop indicates reliance on third-party vendors for streaming infrastructure, payment processing, and e-commerce logistics. The presence of a foundation suggests separate governance structures requiring administrative software."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:28:47.588613",
+          "domain_explored": "https://fcdynamo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Language/Region)",
+            "Sports News Content",
+            "Academy/Youth League Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.290302038192749
+            }
+          ],
+          "reasoning": "The scraped content is from FC Dynamo Kyiv (fcdynamo.com), evidenced by the Ukrainian language and specific references to the 'Dynamo' Academy (\u0414\u042e\u0424\u0428 \u00ab\u0414\u0438\u043d\u0430\u043c\u043e\u00bb) and Ukrainian leagues (\u041d\u041b\u041c). This is a different entity than Dinamo Zagreb. The content focuses on sports news, training camps, and match results, containing no procurement signals relevant to the Croatian target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:28:58.618329",
+          "domain_explored": "https://shop.gnkdinamo.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Magento (Inferred from URL structure /hr/c/ and /hr/p/ patterns common in Magento 1/2)",
+              "Localized Currency (EUR)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of product catalogs (New collections, Retro lines)",
+              "Membership discount logic implementation (\u010clanovi pricing)",
+              "Loyalty points system (Bodovi)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Magento)",
+            "Dynamic Pricing & Membership Logic",
+            "Loyalty Program Integration (Bodovi)",
+            "Localized Content (Croatian Language)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 315,
+              "elapsed_seconds": 4.549002170562744
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce platform (shop.gnkdinamo.hr) for merchandise sales. While this is a direct revenue stream rather than a procurement signal, the underlying technology stack (indicated by URL structure and category paths) and the complexity of the logic (Member pricing, Loyalty points) suggest an active investment in digital retail infrastructure. This validates the 'E-commerce Integration' pattern identified in Iteration 1."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:29:08.759517",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "Transfer Market Valuations",
+            "Third-Party Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.8547163009643555
+            }
+          ],
+          "reasoning": "The content is from a third-party sports data and news portal (Transfermarkt) focusing on global transfer rumors, market values, and general football news. It contains no proprietary information regarding Dinamo Zagreb's internal operations, technology stack, or procurement activities. It is an external data source, not a corporate asset."
+        }
+      ],
+      "total_input_tokens": 5741,
+      "total_output_tokens": 1025,
+      "estimated_cost_usd": 0.032598
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dinamo Zagreb may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:29:08.760979"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.172192",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:32.159119"
+}

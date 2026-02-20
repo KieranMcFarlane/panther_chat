@@ -1,0 +1,397 @@
+{
+  "entity_id": "canadian_ice_hockey_federation",
+  "entity_name": "Canadian Ice Hockey Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "spenglercup.ch",
+    "forums.hfboards.com",
+    "depot-e.uqtr.ca",
+    "researchgate.net",
+    "archive.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/hockey-jobs",
+      "https://ca.linkedin.com/jobs/hockey-jobs-toronto-on",
+      "https://ca.linkedin.com/jobs/nhl-jobs",
+      "https://www.linkedin.com/company/national-hockey-league/jobs",
+      "https://ca.linkedin.com/jobs/hockey-canada-jobs",
+      "https://ca.linkedin.com/company/ccmhockey/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "canadian_ice_hockey_federation",
+      "entity_name": "Canadian Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://spenglercup.ch",
+        "https://forums.hfboards.com",
+        "https://ca.linkedin.com/jobs/nhl-jobs",
+        "https://ca.linkedin.com/jobs/hockey-jobs",
+        "https://archive.org",
+        "https://researchgate.net",
+        "https://depot-e.uqtr.ca",
+        "https://ca.linkedin.com/jobs/hockey-jobs-toronto-on",
+        "https://www.linkedin.com/company/national-hockey-league/jobs",
+        "https://ca.linkedin.com/jobs/hockey-canada-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Canadian Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:05:54.740252",
+          "domain_explored": "https://spenglercup.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Sponsorship Listings",
+            "Historical Narrative"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 170,
+              "elapsed_seconds": 7.003475189208984
+            }
+          ],
+          "reasoning": "The content is scraped from 'spenglercup.ch', a Swiss tournament website, and is entirely composed of marketing copy, sponsor logos, and historical narratives. There is no relation to the 'Canadian Ice Hockey Federation' (CIHF) entity, nor are there any signals regarding procurement, RFPs, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:06:02.816955",
+          "domain_explored": "https://forums.hfboards.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Xenforo Cloud (v2.3.8)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SaaS subscription renewal (Xenforo Cloud) by unrelated third party"
+            ]
+          },
+          "patterns_found": [
+            "Xenforo Cloud Hosting",
+            "Forum Software Administration",
+            "User-Generated Content (UGC)",
+            "Public Community Engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.449369668960571
+            }
+          ],
+          "reasoning": "The target entity is the 'Canadian Ice Hockey Federation' (a national sports governing body). The analyzed content is from HFBoards.com, a third-party, independent fan community forum. While the site discusses hockey topics relevant to the Federation (e.g., Olympics, Team Canada), the site itself is not operated by the Federation. The technical signal (Xenforo Cloud upgrade) indicates IT procurement by the forum owner, not the Federation. There is no direct link or procurement signal originating from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:06:09.675733",
+          "domain_explored": "https://depot-e.uqtr.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OAI-PMH (Open Archive Initiative Protocol for Metadata Harvesting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Repository Platform",
+            "OAI-PMH Standards Compliance",
+            "Research Dissemination"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1047,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.3492321968078613
+            }
+          ],
+          "reasoning": "The content describes the institutional repository of the Universit\u00e9 du Qu\u00e9bec \u00e0 Trois-Rivi\u00e8res (UQTR). It is an academic archive for research documents, not a procurement or operational site for the Canadian Ice Hockey Federation. There is no connection to the target entity or purchasing activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:06:12.731487",
+          "domain_explored": "https://researchgate.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:06:19.113070",
+          "domain_explored": "https://archive.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering (CSR) Dependency",
+            "Generic Web Accessibility Message",
+            "Content Obfuscation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 559,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.107203245162964
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a JavaScript requirement notice. This indicates the site relies heavily on client-side rendering to display content. Since the scraper provided the raw HTML without executing the JavaScript, no actual text, links, or procurement data is visible for analysis."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:06:26.743254",
+          "domain_explored": "https://ca.linkedin.com/jobs/hockey-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "Client-Side Rendering (CSR)"
+            ],
+            "job_postings": [
+              "Membership Service Representative at Canucks Sports & Entertainment",
+              "Program Director at True North Sports Camps"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Generic Job Aggregation",
+            "Third-Party Entities (Canucks Sports & Entertainment, True North Sports Camps)",
+            "Client-Side Rendering (CSR) / Dynamic Content Loading"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.8613739013671875
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Hockey' roles in Canada. It is heavily gated by authentication prompts ('Sign in to set job alerts') and lists vacancies for third-party entities (e.g., Canucks Sports & Entertainment) rather than the target entity, 'Canadian Ice Hockey Federation'. There is no specific content, technology stack information, or procurement signals related to the target Federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:06:34.381450",
+          "domain_explored": "https://ca.linkedin.com/jobs/hockey-jobs-toronto-on",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "Client-Side Rendering (CSR)"
+            ],
+            "job_postings": [
+              "Program Director - Leaside Multi-Sport Camp (True North Sports Camps)",
+              "Director of Sales (Canlan Sports)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Generic Job Aggregation",
+            "Third-Party Entities (True North Sports Camps, Canlan Sports)",
+            "Geographic Filtering (Toronto, ON)",
+            "Consumer-Grade Platform (LinkedIn)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 284,
+              "elapsed_seconds": 4.175019025802612
+            }
+          ],
+          "reasoning": "The content is a generic job search results page from LinkedIn, filtered for 'Hockey' roles in Toronto. It is protected by an authentication wall, preventing deep analysis of specific postings. The visible entities (True North Sports Camps, Canlan Sports) are third-party organizations, not the target entity (Canadian Ice Hockey Federation). The roles (Program Director, Director of Sales) are operational, not procurement-focused."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:06:42.415010",
+          "domain_explored": "https://ca.linkedin.com/jobs/nhl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Manager, Partnership Marketing at Canucks Sports & Entertainment",
+              "Director, Broadcast at Canucks Sports & Entertainment"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Generic Job Aggregation",
+            "Third-Party Entities (Canucks Sports & Entertainment)",
+            "Dynamic Content Loading (CSR)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 258,
+              "elapsed_seconds": 4.3577470779418945
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for 'Nhl' roles on LinkedIn. The primary content is gated behind an authentication wall ('Sign in to set job alerts'), and the visible listings are for third-party entities (specifically Canucks Sports & Entertainment) rather than the target entity (Canadian Ice Hockey Federation). There are no specific procurement signals, technology stack details, or RFPs related to the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:06:56.290482",
+          "domain_explored": "https://www.linkedin.com/company/national-hockey-league/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ServiceNow",
+              "iOS",
+              "DevSecOps",
+              "YouTube"
+            ],
+            "job_postings": [
+              "ServiceNow Business Process Engineer",
+              "Senior iOS Engineer",
+              "DevSecOps Engineer",
+              "YouTube Video Editor"
+            ],
+            "procurement_indicators": [
+              "ServiceNow Investment (NHL)",
+              "Mobile App Development (NHL)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (NHL vs Canadian Ice Hockey Federation)",
+            "Authentication Gate/Wall",
+            "Generic Job Aggregation",
+            "High-Volume Recruitment (1,980 employees)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1779,
+              "output_tokens": 302,
+              "elapsed_seconds": 10.617263793945312
+            }
+          ],
+          "reasoning": "The content is explicitly for the National Hockey League (NHL), a distinct entity from the target 'Canadian Ice Hockey Federation'. While the content reveals technology investments (ServiceNow, iOS) by the NHL, it is irrelevant to the target entity's procurement. Additionally, the content is obstructed by LinkedIn's authentication gate, preventing deep analysis of job descriptions for specific procurement signals."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T14:07:02.821283",
+          "domain_explored": "https://ca.linkedin.com/jobs/hockey-canada-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "YHL League Convenor",
+                "entity": "Canlan Sports",
+                "location": "Oakville, Ontario, Canada",
+                "relevance": "Low - Third Party"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Generic Job Aggregation",
+            "Entity Mismatch (Hockey Canada vs Canadian Ice Hockey Federation)",
+            "Third-Party Entities (Canlan Sports)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1821,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.1241791248321533
+            }
+          ],
+          "reasoning": "The content is blocked by an authentication wall, preventing access to actual procurement signals. The only visible job listing ('YHL League Convenor') is for Canlan Sports, a third-party commercial entity, and does not represent direct procurement by the target entity. Furthermore, 'Hockey Canada' is a distinct governing body from the 'Canadian Ice Hockey Federation', indicating an entity mismatch."
+        }
+      ],
+      "total_input_tokens": 12944,
+      "total_output_tokens": 2195,
+      "estimated_cost_usd": 0.071757
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Canadian Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:07:02.821992"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305731",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:59.152007"
+}

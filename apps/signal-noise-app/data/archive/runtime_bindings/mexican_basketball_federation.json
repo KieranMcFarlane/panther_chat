@@ -1,0 +1,175 @@
+{
+  "entity_id": "mexican_basketball_federation",
+  "entity_name": "Mexican Basketball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "vtb-league.com",
+    "nytimes.com",
+    "eurobasket.com",
+    "selecaoppge.unb.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mexican_basketball_federation",
+      "entity_name": "Mexican Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nytimes.com",
+        "https://eurobasket.com",
+        "https://vtb-league.com",
+        "https://selecaoppge.unb.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mexican Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:04:40.717233",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Geographic Mismatch",
+            "Language Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.044290065765381
+            }
+          ],
+          "reasoning": "The scraped content belongs to the VTB United League (vtb-league.com), a professional basketball league based in Russia. The content is entirely in Russian and lists Russian teams (e.g., CSKA Moscow, Zenit). There is absolutely no connection to the Mexican Basketball Federation (ADEMEBA) or the Mexican market. Therefore, no procurement signals for the target entity can be derived."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:04:49.225599",
+          "domain_explored": "https://nytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Geographic Mismatch",
+            "Content Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.678651809692383
+            }
+          ],
+          "reasoning": "The content provided is from the New York Times homepage and covers general global news (US Politics, Entertainment, Middle East conflicts). There is absolutely no mention of the Mexican Basketball Federation, Mexican sports procurement, or related technology infrastructure. This source is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:04:58.772010",
+          "domain_explored": "https://eurobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Geographic Mismatch",
+            "Content Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 143,
+              "elapsed_seconds": 3.2387609481811523
+            }
+          ],
+          "reasoning": "The content is strictly sports news (game results, player transfers, roster moves) from Eurobasket.com. It lacks any governance, administrative, or technological context related to the Mexican Basketball Federation (FMB) or its procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:05:07.673869",
+          "domain_explored": "https://selecaoppge.unb.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Geographic Mismatch",
+            "Content Mismatch",
+            "Spam/Scraped Content Aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.648319959640503
+            }
+          ],
+          "reasoning": "The URL (unb.br) suggests a Brazilian educational domain, but the content is a scraped feed of US sports and entertainment headlines (NBA, NFL, Spotify). There is no connection to the Mexican Basketball Federation or Mexican procurement signals."
+        }
+      ],
+      "total_input_tokens": 5703,
+      "total_output_tokens": 637,
+      "estimated_cost_usd": 0.026664
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mexican Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:05:07.676867"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.270272",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:12.566455"
+}

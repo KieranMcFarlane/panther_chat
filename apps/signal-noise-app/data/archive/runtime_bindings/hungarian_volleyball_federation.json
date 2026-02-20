@@ -1,0 +1,261 @@
+{
+  "entity_id": "hungarian_volleyball_federation",
+  "entity_name": "Hungarian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "hvf-web.dataproject.com",
+    "paravolley.eu",
+    "www-old.cev.eu",
+    "sport.uni-pannon.hu",
+    "opendata.renenyffenegger.ch",
+    "sideout.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hungarian_volleyball_federation",
+      "entity_name": "Hungarian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://opendata.renenyffenegger.ch",
+        "https://sport.uni-pannon.hu",
+        "https://sideout.co.uk",
+        "https://hvf-web.dataproject.com",
+        "https://paravolley.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "DATA_PROJECT_PLATFORM_USAGE",
+        "LIVE_STATISTICS_INFRASTRUCTURE",
+        "SPONSOR_INTEGRATION_DIGITAL_ASSETS"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hungarian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:36:25.205943",
+          "domain_explored": "https://hvf-web.dataproject.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DataProject (Competition Management System)",
+              "DataProject Web Solutions (Hosting/Scouting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active software license for DataProject platform",
+              "Digital infrastructure for 2025/2026 and 2026/2027 seasons",
+              "Sponsor integration (TippmixPro) requiring digital asset management"
+            ]
+          },
+          "patterns_found": [
+            "DATA_PROJECT_PLATFORM_USAGE",
+            "LIVE_STATISTICS_INFRASTRUCTURE",
+            "SPONSOR_INTEGRATION_DIGITAL_ASSETS"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.2344000339508057
+            }
+          ],
+          "reasoning": "The scraped content is from the 'hvf-web.dataproject.com' subdomain. This is a definitive procurement signal indicating that the Hungarian Volleyball Federation (HVF) has a commercial licensing agreement with DataProject for their competition management system. The presence of detailed statistics, live scoring, and Dream Team features confirms an active investment in digital sports data infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:36:32.092254",
+          "domain_explored": "https://paravolley.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PVE Registration App (Custom/Proprietary)",
+              "EU Funding Platforms (EACEA)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "European Union (EACEA) Funding Disclaimer",
+              "Active 'Projects' division (2024-pvedp-project)",
+              "Digital Registration Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "EU_PROJECT_FUNDING",
+            "REGISTRATION_APP_USAGE",
+            "DIGITAL_TRANSFORMATION_SIGNALS"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 292,
+              "elapsed_seconds": 3.6938047409057617
+            }
+          ],
+          "reasoning": "The content reveals that ParaVolley Europe utilizes a specific 'PVE Registration App' and is actively engaged in EU-funded projects (specifically referencing EACEA). While this is a European confederation rather than the Hungarian federation directly, it indicates a broader ecosystem investment in digital registration tools and project-based funding that often trickles down to national federations (like the Hungarian Volleyball Federation) for implementation. The repeated mention of 'Projects' suggests active grant management."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:36:46.253137",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy Web Platform (CEV Old Site)",
+              "DataProject Integration (Inferred from 'CLVM/CLVW' match codes)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting: Budapest listed as a host city for CEV/FIVB Beach Volleyball World Tour (1* event)",
+              "Event Operations: Active participation in European Cups (Champions League, CEV Cup, Challenge Cup) requiring travel and logistics procurement",
+              "Governance: Confirmation of HVF as a recognized national federation within the CEV network"
+            ]
+          },
+          "patterns_found": [
+            "HUNGARIAN_HOSTING_SIGNALS",
+            "MULTI_DISCIPLINE_EVENT_MANAGEMENT",
+            "FEDERATION_GOVERNANCE_STRUCTURE"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 391,
+              "elapsed_seconds": 11.150103092193604
+            }
+          ],
+          "reasoning": "The content represents the navigation structure of the CEV (Conf\u00e9d\u00e9ration Europ\u00e9enne de Volleyball) 'old' website. While it is a secondary source (European governing body), it provides critical context for the Hungarian Volleyball Federation's (HVF) procurement environment. Specifically, the explicit listing of '1* Budapest (HUN)' under FIVB/CEV World Tour events indicates that Hungary hosts international beach volleyball events. Hosting international events typically drives procurement for event management software, temporary infrastructure, and local supplier engagement. Additionally, the listing of 'HUN' in the federation links confirms the governance integration."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:36:54.463168",
+          "domain_explored": "https://sport.uni-pannon.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PETE (Custom Student Sport Registration System)",
+              "NEPTUN (Hungarian University Information System)",
+              "alairas.sport.uni-pannon.hu (Sub-domain/Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Custom software development (PETE system)",
+              "System integration requirements (NEPTUN <-> PETE)",
+              "Facility management operations",
+              "Program management (Sport and Study Program)"
+            ]
+          },
+          "patterns_found": [
+            "UNIVERSITY_PARTNERSHIP_ECOSYSTEM",
+            "STUDENT_MANAGEMENT_SYSTEM_USAGE",
+            "SPORT_AND_EDUCATION_PROGRAM_INTEGRATION"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 372,
+              "elapsed_seconds": 4.557044982910156
+            }
+          ],
+          "reasoning": "The content reveals the University of Pannonia's Institute of Physical Education and Sports (TSI), which utilizes a custom 'PETE' system integrated with the national 'NEPTUN' university database for student sport registration and grading. While this is an educational entity, the 'Sport and Study Program' (STP) and the management of sports facilities indicate a potential vendor ecosystem or shared infrastructure that the Hungarian Volleyball Federation might leverage for talent development or academic partnerships. The presence of a custom registration system (PETE) suggests a history of software procurement or development in the Hungarian university sports sector."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:36:57.329184",
+          "domain_explored": "https://opendata.renenyffenegger.ch",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:37:03.146079",
+          "domain_explored": "https://sideout.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Irrelevant Geographic Scope (UK vs Hungary)",
+              "Wrong Entity Type (Private Club vs Federation)"
+            ]
+          },
+          "patterns_found": [
+            "COMMERCIAL_COMPETITOR_ANALYSIS",
+            "EVENT_MANAGEMENT_MODEL",
+            "PRIVATE_MEMBERSHIP_STRUCTURE"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.571676015853882
+            }
+          ],
+          "reasoning": "The content is from SideOut, a UK-based private volleyball club and event company. While it offers coaching and events, it is a commercial entity operating in a different market (UK) and does not represent the Hungarian Volleyball Federation's procurement activities, governance, or technology stack. It provides no direct signals relevant to HVF's purchasing decisions."
+        }
+      ],
+      "total_input_tokens": 7373,
+      "total_output_tokens": 1549,
+      "estimated_cost_usd": 0.045354
+    },
+    "procurement_signals": [
+      "DATA_PROJECT_PLATFORM_USAGE",
+      "LIVE_STATISTICS_INFRASTRUCTURE",
+      "SPONSOR_INTEGRATION_DIGITAL_ASSETS"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hungarian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:37:03.146900"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.344524",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:31.182365"
+}

@@ -1,0 +1,282 @@
+{
+  "entity_id": "projekt_warszawa",
+  "entity_name": "Projekt Warszawa",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "projektwarszawa.waw.pl",
+    "www-old.cev.eu",
+    "en.volleyballworld.com",
+    "op.europa.eu",
+    "ulefone.com",
+    "volleyweek.bg",
+    "worldofvolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "projekt_warszawa",
+      "entity_name": "Projekt Warszawa",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://op.europa.eu",
+        "https://www-old.cev.eu",
+        "https://ulefone.com",
+        "https://projektwarszawa.waw.pl",
+        "https://en.volleyballworld.com",
+        "https://volleyweek.bg",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Projekt Warszawa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:11:54.586474",
+          "domain_explored": "https://projektwarszawa.waw.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal: Caffe Grano (Official Partner)",
+              "Sponsorship Renewal: Hotel Four Points by Sheraton Warszawa Mokot\u00f3w",
+              "Personnel Change: Replacement of Head Coach Tommi Tiilikainen"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship renewals (Caffe Grano, Four Points by Sheraton)",
+            "Personnel restructuring (Head coach resignation, internal promotion)",
+            "Sports operations focus (Match reports, ticket sales)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 230,
+              "elapsed_seconds": 2.4460160732269287
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news, match results, and sponsorship announcements. There are no signals regarding IT procurement, technology investments, or job postings relevant to technology acquisition."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:12:00.597499",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports navigation structure",
+            "Historical event listings (EuroVolley, World Tour)",
+            "Generic footer links (FIVB, confederations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.9540069103240967
+            }
+          ],
+          "reasoning": "The provided content is a generic navigation menu and link list from the CEV (Confederation Europeenne de Volleyball) website. It contains no specific information regarding 'Projekt Warszawa', nor does it contain procurement signals, job postings, or technology stack details relevant to the target entity. It is contextually irrelevant to the specific goal of analyzing Projekt Warszawa's procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:12:21.945438",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VolleyballTV (Streaming Platform)",
+              "Global Ranking System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation navigation",
+            "Live streaming infrastructure (VolleyballTV)",
+            "Official World Rankings data structure",
+            "Generic competition news (Superlega)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 236,
+              "elapsed_seconds": 18.35294795036316
+            }
+          ],
+          "reasoning": "The scraped content represents the global homepage of VolleyballWorld, the international federation's streaming and news hub. While it confirms the existence of a digital ecosystem (streaming, rankings), it contains no specific information regarding 'Projekt Warszawa's' internal procurement, technology stack, or governance. The entity is a participant in this ecosystem, not the operator of this platform."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:12:28.978736",
+          "domain_explored": "https://op.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'EU tenders' link detected (Global scope, not entity specific)"
+            ]
+          },
+          "patterns_found": [
+            "General EU information portal navigation",
+            "Reference to 'EU tenders' as a general category",
+            "Generic resource listings (EUR-Lex, DORIE, EU Whoiswho)",
+            "High-level site map structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.939427137374878
+            }
+          ],
+          "reasoning": "The content represents the main navigation menu and sitemap of the European Union's official portal (europa.eu). While it contains a link labeled 'EU tenders', this is a generic navigation element pointing to the general procurement domain, not specific procurement data related to 'Projekt Warszawa'. There are no specific signals, RFPs, or vendor opportunities relevant to the target entity in this generic index page."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:12:35.272165",
+          "domain_explored": "https://ulefone.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce product listings",
+            "Consumer electronics specifications",
+            "Marketing CTAs ('View Now', 'Learn More')",
+            "Hardware feature descriptions (Thermal imaging, Ruggedized)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.170768976211548
+            }
+          ],
+          "reasoning": "The content is a commercial product catalog for Ulefone, a manufacturer of rugged smartphones. It contains no information regarding Projekt Warszawa, sports club management, or organizational procurement activities. The entity context is completely unrelated to the source content."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:12:42.503523",
+          "domain_explored": "https://volleyweek.bg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Player transfer rumors (Yoandy Leal, Darlan Souza)",
+            "Match reports and game statistics",
+            "Injury reports (Melissa Vargas)",
+            "Generic sports media content structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1674,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.0993258953094482
+            }
+          ],
+          "reasoning": "The content is a standard sports news feed (Volleyweek.bg) focused on player transfers, match results, and team performance analysis. It contains no information regarding Projekt Warszawa's internal operations, technology stack, or procurement activities. The entity of interest (Projekt Warszawa) is not mentioned in the provided text."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:12:48.549618",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Match results and league standings",
+            "Player transfer rumors ('Done deals')",
+            "Generic sports navigation (Italy, Poland, T\u00fcrkiye, Germany, France)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1729,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.1451330184936523
+            }
+          ],
+          "reasoning": "The content is a sports news feed focusing on match results, league standings, and player transfers. While it mentions 'Projekt Warszawa' in the context of league performance and coaching changes, it contains no procurement signals, technology stack information, or governance patterns relevant to purchasing."
+        }
+      ],
+      "total_input_tokens": 10871,
+      "total_output_tokens": 1485,
+      "estimated_cost_usd": 0.054888000000000006
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Projekt Warszawa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:12:48.551285"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318122",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:46.140512"
+}

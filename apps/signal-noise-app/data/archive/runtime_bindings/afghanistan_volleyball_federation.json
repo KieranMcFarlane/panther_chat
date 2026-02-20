@@ -1,0 +1,129 @@
+{
+  "entity_id": "afghanistan_volleyball_federation",
+  "entity_name": "Afghanistan Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "asianvolleyball.net",
+    "pajhwok.com",
+    "reuters.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afghanistan_volleyball_federation",
+      "entity_name": "Afghanistan Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://asianvolleyball.net",
+        "https://pajhwok.com",
+        "https://reuters.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Afghanistan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:52:07.251072",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Sports Governance",
+            "Event Scheduling",
+            "Team Qualification"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 820,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.80207896232605
+            }
+          ],
+          "reasoning": "The content is a news update from the Asian Volleyball Confederation (AVC) regarding the qualification and scheduling of the 2026 Men's and Women's Cups. It mentions the Philippines as the host. There is no mention of the Afghanistan Volleyball Federation, nor are there any signals related to procurement, technology acquisition, or job postings specific to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:52:14.546549",
+          "domain_explored": "https://pajhwok.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Diplomatic engagement for sports expansion (Afghan-Indonesian ties)"
+            ]
+          },
+          "patterns_found": [
+            "Diplomatic Sports Relations",
+            "International Cooperation",
+            "Sports Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 216,
+              "elapsed_seconds": 4.140794992446899
+            }
+          ],
+          "reasoning": "The content reveals a specific news headline regarding 'Afghan, Indonesian officials discuss expanding sports ties'. While this is not a direct procurement document (RFP/Tender), it indicates active diplomatic engagement and potential future cooperation in sports development. This suggests a pipeline for international vendor partnerships or equipment procurement that supports these expanded ties, warranting a weak signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:52:18.089004",
+          "domain_explored": "https://reuters.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2231,
+      "total_output_tokens": 395,
+      "estimated_cost_usd": 0.012618
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Afghanistan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:52:18.089639"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.330571",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:28.542753"
+}

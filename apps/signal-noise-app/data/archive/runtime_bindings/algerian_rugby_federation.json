@@ -1,0 +1,158 @@
+{
+  "entity_id": "algerian_rugby_federation",
+  "entity_name": "Algerian Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "rugbyafrica.africa-newsroom.com",
+    "societegenerale.com",
+    "pleasuresmagazine.com.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "algerian_rugby_federation",
+      "entity_name": "Algerian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://pleasuresmagazine.com.ng",
+        "https://societegenerale.com",
+        "https://rugbyafrica.africa-newsroom.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Algerian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:27:49.522223",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform landing page content",
+            "Irrelevant entity context (Wikidata vs. Algerian Rugby Federation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.2170650959014893
+            }
+          ],
+          "reasoning": "The provided content is the generic homepage text for Wikidata, a global open-data repository. It contains no specific information regarding the Algerian Rugby Federation, its procurement activities, technology stack, or governance. There are no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:28:00.480792",
+          "domain_explored": "https://rugbyafrica.africa-newsroom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic PR/Newsroom content",
+            "Video press release distribution",
+            "Irrelevant entity focus (Rugby Africa vs. Algerian Rugby Federation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 957,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.7162771224975586
+            }
+          ],
+          "reasoning": "The content is a press release from Rugby Africa (the continental governing body) featuring a New Year's message from its President. It is purely promotional/PR material hosted on a news aggregation platform. There is no mention of the Algerian Rugby Federation, nor are there any signals regarding procurement, technology adoption, or administrative operations specific to Algeria."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:28:11.326575",
+          "domain_explored": "https://societegenerale.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Corporate banking news feed",
+            "Global financial services content",
+            "Irrelevant entity context (Soci\u00e9t\u00e9 G\u00e9n\u00e9rale vs. Algerian Rugby Federation)",
+            "Generic investor relations material"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.8166351318359375
+            }
+          ],
+          "reasoning": "The content is entirely focused on Soci\u00e9t\u00e9 G\u00e9n\u00e9rale, a major French bank, covering topics such as copper mining, renewable energy financing, and AI data centers. There is absolutely no mention of the Algerian Rugby Federation, rugby, or sports governance. This represents a complete entity mismatch."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:28:26.705983",
+          "domain_explored": "https://pleasuresmagazine.com.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3800,
+      "total_output_tokens": 549,
+      "estimated_cost_usd": 0.019635
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Algerian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:28:26.708536"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.284770",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:32.839164"
+}

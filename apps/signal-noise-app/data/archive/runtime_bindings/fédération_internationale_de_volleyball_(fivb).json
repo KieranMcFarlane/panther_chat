@@ -1,0 +1,202 @@
+{
+  "entity_id": "f\u00e9d\u00e9ration_internationale_de_volleyball_(fivb)",
+  "entity_name": "F\u00e9d\u00e9ration Internationale de Volleyball (FIVB)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "italy2014.fivb.org",
+    "br.volleyballworld.com",
+    "inside.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w=="
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_volleyball_(fivb)",
+      "entity_name": "F\u00e9d\u00e9ration Internationale de Volleyball (FIVB)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://br.volleyballworld.com",
+        "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w==",
+        "https://italy2014.fivb.org",
+        "https://inside.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Volleyball (FIVB) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:38:21.842807",
+          "domain_explored": "https://italy2014.fivb.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Angular.js (indicated by {{ }} syntax)",
+              "YouTube Embed",
+              "Facebook Share API",
+              "Twitter Share API",
+              "iOS App Store (Apple)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical Mobile App Development (iOS)"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Event Microsite",
+            "Template Literal Syntax (Angular/JS)",
+            "Social Media Integration",
+            "Mobile App Distribution"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 917,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.448462963104248
+            }
+          ],
+          "reasoning": "The content is scraped HTML from a legacy event microsite (Italy 2014). It contains frontend template syntax (e.g., {{item.Title}}) and broken links rather than current procurement intelligence. While it confirms the existence of a mobile app, this is historical data and does not signal active procurement intent or current technology investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:39:06.455906",
+          "domain_explored": "https://br.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - inferred from dynamic news/rankings",
+              "OTT Platform (VolleyballWorld TV)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Subdomain Routing (br.volleyballworld.com)",
+            "Global Schedule Integration (/global-schedule)",
+            "OTT Platform Linkage (tv.volleyballworld.com)",
+            "Dynamic Ranking Data Injection",
+            "Multi-lingual Content Structure (Portuguese)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 251,
+              "elapsed_seconds": 37.77293109893799
+            }
+          ],
+          "reasoning": "The content represents the user-facing output of a localized content delivery system. While it confirms the existence of a centralized digital infrastructure (VolleyballWorld) and OTT platform, it does not contain any back-end administrative signals, vendor solicitations, or technology stack implementation details required for procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:39:39.081710",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Bid Support Activity: Prime Minister of Montenegro supports OSCG's bid to host EuroVolley Men in 2028 (Indicates future event hosting opportunities, but at Confederation level)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (CEV vs FIVB)",
+            "News Aggregation Layout",
+            "Sports Development Content",
+            "Future-Dated Content (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 260,
+              "elapsed_seconds": 26.234843254089355
+            }
+          ],
+          "reasoning": "The content is explicitly from the European Volleyball Confederation (CEV), a distinct confederation under the FIVB umbrella, not the FIVB itself. While FIVB procurement often flows to confederations, this specific page is a public news feed focused on sports development, scouting, and federation bids. It contains no technical specifications, vendor selection criteria, or infrastructure investment details relevant to FIVB procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:39:48.360827",
+          "domain_explored": "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w==",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Competition Management Software (Proprietary/Specific)",
+              "MS Office",
+              "Project Management Platforms"
+            ],
+            "job_postings": [
+              "Volleyball Coordinator (CEV)"
+            ],
+            "procurement_indicators": [
+              "Usage of specialized Competition Management Software",
+              "Requirement for project management platforms"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (CEV vs FIVB)",
+            "Operational Software Usage (Competition Management)",
+            "Sports Administration Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.9128170013427734
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for the 'Conf\u00e9d\u00e9ration Europ\u00e9enne de Volleyball (CEV)', which is the European governing body, not the 'F\u00e9d\u00e9ration Internationale de Volleyball (FIVB)', the global governing body. Although the content reveals the use of specific 'Competition Management Software', this is an operational tool for CEV, not a direct procurement signal for the target entity (FIVB)."
+        }
+      ],
+      "total_input_tokens": 5382,
+      "total_output_tokens": 1039,
+      "estimated_cost_usd": 0.031731
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Volleyball (FIVB) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:39:48.362537"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.464115",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:47.302867"
+}

@@ -1,0 +1,349 @@
+{
+  "entity_id": "west_ham_united",
+  "entity_name": "West Ham United",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "shop.whufc.com",
+    "clublondon.whufc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/west-ham-united/jobs",
+      "https://www.linkedin.com/jobs/west-ham-united-fc-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/west-ham-united-fc-jobs",
+      "https://uk.linkedin.com/jobs/view/senior-partnerships-manager-at-west-ham-united-4367640968",
+      "https://uk.linkedin.com/jobs/view/marketing-executive-at-west-ham-united-fc-4363605757",
+      "https://uk.linkedin.com/jobs/view/academy-player-care-officer-at-west-ham-united-fc-4363713200",
+      "https://uk.linkedin.com/jobs/view/supporter-services-executive-at-west-ham-united-fc-4364395533",
+      "https://uk.linkedin.com/jobs/view/u11-u12-phase-lead-coach-at-west-ham-united-fc-4365295802",
+      "https://uk.linkedin.com/jobs/view/partnerships-manager-at-west-ham-united-fc-4363615637"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "west_ham_united",
+      "entity_name": "West Ham United",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/marketing-executive-at-west-ham-united-fc-4363605757",
+        "https://www.linkedin.com/jobs/west-ham-united-fc-jobs-worldwide",
+        "https://uk.linkedin.com/jobs/west-ham-united-fc-jobs",
+        "https://uk.linkedin.com/jobs/view/senior-partnerships-manager-at-west-ham-united-4367640968",
+        "https://uk.linkedin.com/company/west-ham-united/jobs",
+        "https://clublondon.whufc.com",
+        "https://shop.whufc.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "External Agency & Supplier Management",
+        "Marketing Technology & Analytics Stack",
+        "Principal Partnership Rights Fulfillment",
+        "Data-Driven ROI Reporting",
+        "Multi-channel Marketing Automation (Email/SMS)",
+        "External Agency & Creative Supplier Management",
+        "Campaign Segmentation & CRM Execution",
+        "Cross-Departmental Collaboration (Ticketing, Retail, Hospitality)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "West Ham United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:44:28.252240",
+          "domain_explored": "https://shop.whufc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Klarna (Payments)",
+              "Trustly (Payments)",
+              "Multi-currency Checkout System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Auction Platform (implies 3rd party software usage)",
+              "Licensing Disclaimer (implies IP management/procurement)",
+              "Click & Collect Service (Logistics/Operations)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Retail Operations",
+            "Merchandise Inventory Management",
+            "Multi-currency Payment Processing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.7651119232177734
+            }
+          ],
+          "reasoning": "The content is a navigation menu and sitemap for the West Ham United online store (shop.whufc.com). While it confirms the operation of a complex e-commerce platform, it does not contain specific signals regarding new technology procurement, vendor selection, or strategic decision-making. It indicates existing capabilities (Klarna, Trustly) rather than new procurement intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:44:40.799488",
+          "domain_explored": "https://clublondon.whufc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM (Customer Relationship Management) - implied by 'Waiting List' and 'Enquiry' forms",
+              "Digital Asset Management (LED/Big Screen content)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Catering & Fine Dining Procurement (Club London Restaurants)",
+              "AV Equipment & Stadium Display Services (Pitchside LED)",
+              "Hospitality Workforce Management"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Events Management",
+            "Corporate Partnership & Sponsorship Logistics",
+            "Premium Customer Experience Management",
+            "Lead Generation & CRM (Waiting List)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 316,
+              "elapsed_seconds": 4.0009002685546875
+            }
+          ],
+          "reasoning": "The content focuses on 'Club London' (Hospitality) and 'Matchball Sponsorship'. While primarily revenue-generating, these operations imply procurement needs for: 1) Event Catering and Fine Dining services, 2) AV/LED display technology management for sponsorships, and 3) CRM systems for managing membership waiting lists and enquiries. It confirms the business capability but requires deeper digging to find specific vendor procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:44:45.406838",
+          "domain_explored": "https://uk.linkedin.com/company/west-ham-united/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Data Access Restriction",
+            "Platform Policy Enforcement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 488,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.214235305786133
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'Forbidden' error with a specific instruction to use only the company name in the URL. This suggests the previous URL structure was invalid or blocked by LinkedIn's security measures. No actual job data, procurement signals, or technology stack information was retrieved to analyze."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:45:01.577892",
+          "domain_explored": "https://www.linkedin.com/jobs/west-ham-united-fc-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "CRM (Implied by Supporter Services role)",
+              "Ticketing Systems (Implied by Supporter Services role)"
+            ],
+            "job_postings": [
+              "Senior Partnerships Manager",
+              "Supporter Services Executive"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in Commercial/Partnerships department",
+              "Operational reliance on Supporter Services tools"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Expansion",
+            "Supporter Services Operations",
+            "CRM & Ticketing System Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 278,
+              "elapsed_seconds": 11.960042953491211
+            }
+          ],
+          "reasoning": "While the page is largely gated by a login wall, the visible metadata reveals active recruitment for 'Senior Partnerships Manager' and 'Supporter Services Executive' roles. These positions indicate ongoing commercial activities and reliance on customer service/ticketing infrastructure, providing weak signals of operational scale."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:45:21.368867",
+          "domain_explored": "https://uk.linkedin.com/jobs/west-ham-united-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems",
+              "Ticketing Platforms"
+            ],
+            "job_postings": [
+              "Senior Partnerships Manager",
+              "Supporter Services Executive"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in Commercial department",
+              "Focus on Supporter Services efficiency"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Expansion",
+            "Supporter Services Operations",
+            "CRM & Ticketing System Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 259,
+              "elapsed_seconds": 13.051388025283813
+            }
+          ],
+          "reasoning": "While the page is largely gated by a login wall, the visible job listing snippets provide direct evidence of active recruitment in Commercial (Partnerships) and Operations (Supporter Services). These roles typically require investment in CRM platforms, ticketing systems, and partnership management tools, indicating underlying procurement needs for supporting software and services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:45:34.916766",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-partnerships-manager-at-west-ham-united-4367640968",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Excel, PowerPoint)",
+              "Marketing Automation Platforms",
+              "Data Analytics & ROI Measurement Tools",
+              "CRM Systems (implied by 'insight' and 'reporting')"
+            ],
+            "job_postings": [
+              "Senior Partnerships Manager"
+            ],
+            "procurement_indicators": [
+              "Direct management of agencies and external suppliers",
+              "Requirement for research and insight programs (vendor sourcing)",
+              "Budget authority implied for campaign delivery and activation",
+              "Need for data collation and presentation tools"
+            ]
+          },
+          "patterns_found": [
+            "External Agency & Supplier Management",
+            "Marketing Technology & Analytics Stack",
+            "Principal Partnership Rights Fulfillment",
+            "Data-Driven ROI Reporting"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 359,
+              "elapsed_seconds": 3.709364891052246
+            }
+          ],
+          "reasoning": "The job description for a Senior Partnerships Manager explicitly states the responsibility to 'Manage agencies and external suppliers' and 'Implement research, insight, and measurement programmes.' This confirms direct procurement involvement regarding marketing services, creative agencies, and data/analytics tools. The requirement to demonstrate ROI and present reporting indicates investment in analytics and presentation software."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:45:55.150617",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/marketing-executive-at-west-ham-united-fc-4363605757",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Email Marketing Platform (ESP)",
+              "SMS Marketing Tools",
+              "CRM Software (implied by segmentation/targeting)"
+            ],
+            "job_postings": [
+              "Marketing Executive"
+            ],
+            "procurement_indicators": [
+              "Management of external agencies and designers",
+              "Requirement for campaign delivery tools (Email/SMS)",
+              "Creative brief management processes"
+            ]
+          },
+          "patterns_found": [
+            "Multi-channel Marketing Automation (Email/SMS)",
+            "External Agency & Creative Supplier Management",
+            "Campaign Segmentation & CRM Execution",
+            "Cross-Departmental Collaboration (Ticketing, Retail, Hospitality)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1730,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.721097946166992
+            }
+          ],
+          "reasoning": "The job posting explicitly references the use of specific digital channels (Email, SMS) and the management of external agencies and designers. It confirms the utilization of a marketing technology stack to drive campaigns across ticketing, hospitality, and retail, indicating active procurement needs for marketing software and creative services."
+        }
+      ],
+      "total_input_tokens": 9760,
+      "total_output_tokens": 1943,
+      "estimated_cost_usd": 0.058425000000000005
+    },
+    "procurement_signals": [
+      "External Agency & Supplier Management",
+      "Marketing Technology & Analytics Stack",
+      "Principal Partnership Rights Fulfillment",
+      "Data-Driven ROI Reporting",
+      "Multi-channel Marketing Automation (Email/SMS)",
+      "External Agency & Creative Supplier Management",
+      "Campaign Segmentation & CRM Execution",
+      "Cross-Departmental Collaboration (Ticketing, Retail, Hospitality)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "West Ham United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:45:55.156885"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.119895",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:38:01.001944"
+}

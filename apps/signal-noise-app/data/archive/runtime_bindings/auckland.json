@@ -1,0 +1,490 @@
+{
+  "entity_id": "auckland",
+  "entity_name": "Auckland",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "traditional_domestic_clubs",
+  "discovered_domains": [
+    "aucklandnz.com",
+    "aucklandcouncil.govt.nz",
+    "auckland.ac.nz",
+    "newzealand.com",
+    "aucklandlibraries.govt.nz",
+    "aucklandairport.co.nz",
+    "aucklandfc.co.nz",
+    "aucklandlive.co.nz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/career-in-jobs-auckland",
+      "https://nz.linkedin.com/jobs/jobs-in-auckland",
+      "https://nz.linkedin.com/jobs/employment-jobs-auckland",
+      "https://nz.linkedin.com/jobs/linkedin-jobs-auckland",
+      "https://nz.linkedin.com/jobs/active-jobs-auckland",
+      "https://nz.linkedin.com/jobs/open-jobs-auckland",
+      "https://www.linkedin.com/jobs/jobs-in-new-zealand/",
+      "https://nz.linkedin.com/jobs/seeking-jobs-auckland",
+      "https://nz.linkedin.com/jobs/where-to-apply-for-jobs-auckland",
+      "https://nz.linkedin.com/jobs/google-jobs-auckland"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "auckland",
+      "entity_name": "Auckland",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://aucklandcouncil.govt.nz",
+        "https://nz.linkedin.com/jobs/employment-jobs-auckland",
+        "https://aucklandlive.co.nz",
+        "https://newzealand.com",
+        "https://aucklandnz.com",
+        "https://aucklandlibraries.govt.nz",
+        "https://aucklandfc.co.nz",
+        "https://nz.linkedin.com/jobs/career-in-jobs-auckland",
+        "https://nz.linkedin.com/jobs/jobs-in-auckland",
+        "https://nz.linkedin.com/jobs/linkedin-jobs-auckland",
+        "https://aucklandairport.co.nz",
+        "https://nz.linkedin.com/jobs/active-jobs-auckland",
+        "https://auckland.ac.nz"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Explicit governance terminology",
+        "Municipal service structure",
+        "Direct procurement reference",
+        "Budget and policy planning cycles",
+        "Digital service delivery (myAUCKLAND)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Auckland may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:33:06.572310",
+          "domain_explored": "https://aucklandnz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism and hospitality content",
+            "Consumer-facing directory structure",
+            "Lack of corporate or governance terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.554615020751953
+            }
+          ],
+          "reasoning": "The scraped content is entirely consumer-focused, promoting tourism, events, dining, and accommodation (e.g., 'Discover all of Auckland', 'Eat & Drink', 'Stay'). There is no presence of corporate governance, RFPs, job postings, or technology procurement signals. This source is a promotional tourism board site, not a procurement portal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:33:17.261512",
+          "domain_explored": "https://aucklandcouncil.govt.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "myAUCKLAND (Citizen portal)",
+              "GeoMaps (Geospatial tool)",
+              "Digital rates notices"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Explicit 'procurement' link under 'About Auckland Council'",
+              "10-year budget (Long-term procurement planning)",
+              "Annual budget (Fiscal cycles)",
+              "Resource and building consents (Regulatory processing)",
+              "Infrastructure projects (Stormwater, earthworks, repairs)",
+              "Rubbish and recycling contracts (Waste management services)"
+            ]
+          },
+          "patterns_found": [
+            "Explicit governance terminology",
+            "Municipal service structure",
+            "Direct procurement reference",
+            "Budget and policy planning cycles",
+            "Digital service delivery (myAUCKLAND)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 368,
+              "elapsed_seconds": 4.919919013977051
+            }
+          ],
+          "reasoning": "The content is the official homepage for Auckland Council (Te Kaunihera o T\u0101maki Makaurau), the primary local government body for the region. Unlike the previous tourism-focused site, this page contains explicit references to governance functions such as 'procurement', '10-year budget', 'annual budget', and 'bylaws'. It outlines the council's operational scope, including infrastructure, consents, and digital services (myAUCKLAND), which are key drivers for municipal procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:33:24.544995",
+          "domain_explored": "https://auckland.ac.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Student recruitment language (Study with us, Enrolments)",
+            "Academic calendar references (2026 courses)",
+            "Consumer-facing information architecture (Visa info, Life in Auckland)",
+            "Lack of corporate governance or supplier terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.597095012664795
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on student recruitment, admissions, and academic programs. It represents the consumer-facing side of the University of Auckland rather than the administrative or procurement side. There are no signals regarding technology acquisition, vendor management, or corporate governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:33:27.489778",
+          "domain_explored": "https://newzealand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:33:35.450221",
+          "domain_explored": "https://aucklandlibraries.govt.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "eCollections platform (End-user: eBooks, eAudiobooks, streaming)",
+              "Blogging platform (Auckland Libraries blog, Heritage et AL blog)",
+              "Podcast hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing content (book recommendations, events)",
+            "Operational service focus (library hours, holiday schedules)",
+            "Community engagement language (kids, teens, 'sign up your kids')",
+            "Public sector service delivery (no commercial intent)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1563,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.3401710987091064
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer services (borrowing books, events, hours) and community engagement. While it mentions 'eCollections' (eBooks, streaming), this refers to end-user consumption, not enterprise technology procurement. There are no signals regarding vendor selection, RFPs, or corporate technology stacks."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:33:38.793381",
+          "domain_explored": "https://aucklandairport.co.nz",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:33:45.490731",
+          "domain_explored": "https://aucklandfc.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Ticketing platform)",
+              "Shopify/Custom E-commerce (Merchandise)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C consumer engagement (ticket sales, merchandise)",
+            "Sports and entertainment content (match reports, league standings)",
+            "Promotional language (jackpot, 'Get your ticket', 'Rep the new look')",
+            "E-commerce integration (Ticketmaster, merchandise shop)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1666,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.145293951034546
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports entertainment, fan engagement, and retail operations. While the organization likely procures operational supplies, the website content itself is purely consumer-facing (B2C) and lacks corporate governance, strategic planning, or B2B procurement signals relevant to the analysis."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:33:53.580452",
+          "domain_explored": "https://aucklandlive.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C event promotion (ticket sales, 'Book Now')",
+            "Entertainment content focus (jazz, wrestling, theatre shows)",
+            "Operational visitor information (accessibility, seating, caf\u00e9s)",
+            "Newsletter acquisition ('Sign up', 'Be the first to know')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.6428117752075195
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer-facing event promotion and venue operations. There are no references to corporate governance, supply chain management, or business technology procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:34:04.339970",
+          "domain_explored": "https://nz.linkedin.com/jobs/career-in-jobs-auckland",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Team Leader - Coca-Cola Europacific Partners",
+              "Expressions of Interest - Early Careers - Babcock Australia & New Zealand"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Consumer-facing authentication prompts",
+            "Broad search query results ('Career In' jobs)",
+            "Mixed industry listings (FMCG, Defense)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1820,
+              "output_tokens": 306,
+              "elapsed_seconds": 6.858284950256348
+            }
+          ],
+          "reasoning": "The content represents a generic, unfiltered LinkedIn Jobs search results page for 'Career In' roles in Auckland. While it contains job listings (e.g., Coca-Cola, Babcock), these are general employment opportunities rather than specific procurement signals or organizational governance data. The page is largely obscured by authentication walls ('Sign in to set job alerts') and lacks the specific context of 'Auckland' as a unified entity or its specific procurement projects. It does not advance the hypothesis of finding specific procurement intent for the entity 'Auckland' (Council/Govt) compared to previous iterations."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:34:12.721854",
+          "domain_explored": "https://nz.linkedin.com/jobs/jobs-in-auckland",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cabin Crew - Emirates",
+              "Operator - Citycare Water",
+              "Court Registry Officer - Public Defence Service"
+            ],
+            "procurement_indicators": [
+              "Citycare Water listing suggests potential municipal outsourcing, but lacks specific procurement intent or technology details in this snippet."
+            ]
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Geographic filtering (Auckland) without entity specificity",
+            "Mixed industry results (Aviation, Utilities, Retail, Public Service)",
+            "Consumer-facing authentication prompts"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1883,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.5279927253723145
+            }
+          ],
+          "reasoning": "The content represents a generic search result page for jobs located in the geographic region of Auckland, rather than procurement signals specifically from the target entity 'Auckland' (likely referring to the Council or governance body). The listings are from disparate entities (Emirates, Citycare Water, Petstock) and do not reveal the internal governance, technology stack, or procurement cycle of the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:34:19.430204",
+          "domain_explored": "https://nz.linkedin.com/jobs/employment-jobs-auckland",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Auckland Cabin Crew Opportunities (Emirates)",
+              "People Partner - New Zealand (MECCA Brands)",
+              "Expressions of Interest - Early Careers (Babcock Australia & New Zealand)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Geographic filtering (Auckland) without entity specificity",
+            "Mixed industry results (Aviation, Retail, Defense)",
+            "Consumer-facing authentication prompts"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1960,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.042874336242676
+            }
+          ],
+          "reasoning": "The content represents a generic search result page for 'Employment jobs in Auckland' on LinkedIn. The listings are for diverse private entities (Emirates, MECCA Brands, Babcock) and do not relate to the governance or procurement activities of the target entity 'Auckland' (Auckland Council). The page is a utility for job seekers, not a source of organizational procurement intelligence."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T19:34:27.570589",
+          "domain_explored": "https://nz.linkedin.com/jobs/linkedin-jobs-auckland",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Court Registry Officer at Public Defence Service",
+              "Expressions of Interest at Petstock Group"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Authentication gating (Sign in prompts)",
+            "Mixed employer results (Petstock Group, Public Defence Service)",
+            "Geographic filtering (Auckland) without entity specificity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2031,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.564738035202026
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page filtered for 'Linkedin' roles within Auckland. It displays a mix of unrelated employers (Petstock Group, Public Defence Service) and is heavily gated by authentication prompts ('Sign in to set job alerts'). There is no specific information regarding the target entity 'Auckland' (presumably Auckland Council or related governance body), nor are there specific procurement signals, technology stacks, or governance patterns attributable to the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T19:34:34.121057",
+          "domain_explored": "https://nz.linkedin.com/jobs/active-jobs-auckland",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Venture Capital Associate / Senior Associate (Pacific Channel)",
+              "Register Your Interest - Internships / Graduate Opportunities (Sandfield)",
+              "Senior Support Officer (Ministry of Education)",
+              "Coach \u2013 Talent, Culture & Team - Nike, Manawa Bay (Nike)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Geographic filtering (Auckland) without entity specificity",
+            "Mixed employer results (Nike, Ministry of Education, Sandfield)",
+            "Authentication gating (Sign in prompts)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2100,
+              "output_tokens": 289,
+              "elapsed_seconds": 2.673076868057251
+            }
+          ],
+          "reasoning": "The content represents a generic search for 'Active Jobs' within the Auckland geographic region. The results are a mix of unrelated entities (Nike, Ministry of Education, Sandfield, Pacific Channel) and do not pertain to the specific 'Auckland' entity (Auckland Council) or its procurement activities. This is a noise source, not a signal source for the target entity."
+        }
+      ],
+      "total_input_tokens": 18991,
+      "total_output_tokens": 2885,
+      "estimated_cost_usd": 0.100248
+    },
+    "procurement_signals": [
+      "Explicit governance terminology",
+      "Municipal service structure",
+      "Direct procurement reference",
+      "Budget and policy planning cycles",
+      "Digital service delivery (myAUCKLAND)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Auckland may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:34:34.122181"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.293475",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:47.203219"
+}

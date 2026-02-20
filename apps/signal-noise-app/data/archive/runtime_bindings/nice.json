@@ -1,0 +1,472 @@
+{
+  "entity_id": "nice",
+  "entity_name": "Nice",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "nice.com",
+    "nice.org.uk",
+    "ogcnice.com",
+    "niceforyou.com",
+    "explorenicecotedazur.com",
+    "niceactimize.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/nice-systems/jobs",
+      "https://www.linkedin.com/jobs/nice-ltd-jobs-worldwide",
+      "https://www.linkedin.com/jobs/nice-cxone-jobs",
+      "https://www.linkedin.com/jobs/nice-incontact-jobs-worldwide",
+      "https://www.linkedin.com/jobs/english-jobs-nice?src_gapi=4255&countryRedirected=1",
+      "https://uk.linkedin.com/company/nice-systems/jobs",
+      "https://www.linkedin.com/jobs/nice-actimize-jobs-worldwide",
+      "https://www.linkedin.com/jobs/nice-incontact-jobs",
+      "https://be.linkedin.com/jobs/nice-jobs",
+      "https://www.linkedin.com/jobs/nice-systems-jobs-salt-lake-city-ut"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nice",
+      "entity_name": "Nice",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ogcnice.com",
+        "https://www.linkedin.com/jobs/english-jobs-nice?src_gapi=4255&countryRedirected=1",
+        "https://nice.com",
+        "https://www.linkedin.com/jobs/nice-ltd-jobs-worldwide",
+        "https://niceforyou.com",
+        "https://explorenicecotedazur.com",
+        "https://www.linkedin.com/jobs/nice-cxone-jobs",
+        "https://www.linkedin.com/jobs/nice-incontact-jobs-worldwide",
+        "https://niceactimize.com",
+        "https://www.linkedin.com/company/nice-systems/jobs",
+        "https://nice.org.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nice may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:02:03.409068",
+          "domain_explored": "https://nice.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cognigy (Acquired)",
+              "Snowflake (Partner)",
+              "RingCentral (Partner)",
+              "CXone Mpower",
+              "Generative AI",
+              "Agentic AI"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Acquisition of Cognigy (M&A activity)",
+              "Partnership expansion with RingCentral",
+              "Data sharing partnership with Snowflake",
+              "Large-scale event hosting (Nice World 2026)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Acquisition (M&A)",
+            "Ecosystem Partnerships",
+            "Event-Based Marketing",
+            "AI-First Platform Messaging"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1350,
+              "output_tokens": 343,
+              "elapsed_seconds": 4.713656187057495
+            }
+          ],
+          "reasoning": "The content confirms NICE is in an aggressive growth and investment phase ('AI-first'), evidenced by the recent acquisition of Cognigy and extended partnerships with RingCentral and Snowflake. While this indicates high technology investment, it reflects NICE's *outbound* product strategy rather than *inbound* procurement needs (buying goods/services). However, the integration of Cognigy and partnerships suggests potential future procurement needs for integration services, cloud infrastructure scaling, and internal tools to support the expanded platform."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:02:14.266651",
+          "domain_explored": "https://nice.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "NHS 10 Year Plan",
+              "Clinical Guidelines Publication",
+              "Healthcare Policy Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Governance",
+            "Healthcare Regulation",
+            "Clinical Guidance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 209,
+              "elapsed_seconds": 6.035444974899292
+            }
+          ],
+          "reasoning": "The content analyzed from nice.org.uk belongs to the National Institute for Health and Care Excellence (NHS), a UK government body. This is a distinct entity from Nice Ltd (the target CX software company). The content focuses on clinical guidelines, drug approvals, and NHS policy, which contradicts the procurement hypothesis for the commercial technology entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:02:23.769505",
+          "domain_explored": "https://ogcnice.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (billetterie.ogcnice.com)",
+              "Video Content Management (OGCNICE.TV)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Consumer-facing ticketing operations",
+              "Event management logistics"
+            ]
+          },
+          "patterns_found": [
+            "Sports Entertainment",
+            "Ticketing Operations",
+            "Fan Engagement",
+            "Consumer Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 284,
+              "elapsed_seconds": 5.224583864212036
+            }
+          ],
+          "reasoning": "The scraped content from ogcnice.com confirms the entity is OGC Nice (Olympique Gymnaste Club Nice C\u00f4te d'Azur), a professional football club. The content focuses on ticket sales ('Billetterie'), match schedules ('Nice - Montpellier'), and fan news. This is a distinct entity from NICE Ltd (the software company targeted in Iteration 1) and NICE (the UK health standards body targeted in Iteration 2). As a sports club, it does not fit the B2B procurement profile for enterprise software or government health regulation established in the previous context."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:02:44.186692",
+          "domain_explored": "https://niceforyou.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Apps (iOS/Android)",
+              "IoT Connectivity",
+              "Home Automation Protocols"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "B2C Sales Model",
+              "Product Showcases"
+            ]
+          },
+          "patterns_found": [
+            "B2C Product Marketing",
+            "Consumer IoT Ecosystem",
+            "Home Automation Hardware"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 205,
+              "elapsed_seconds": 15.702974081039429
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer-facing home automation products (gates, alarms, shading) and direct-to-consumer mobile apps. There is no indication of enterprise procurement, B2B vendor acquisition, or corporate governance structures relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:02:52.426069",
+          "domain_explored": "https://explorenicecotedazur.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Facebook, Twitter, Instagram, YouTube, LinkedIn)",
+              "Web Content Management (Event Agendas, Blogging)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "French Riviera Pass (Consumer Product)",
+              "Event Listings (Cultural/Sporting)"
+            ]
+          },
+          "patterns_found": [
+            "Tourism Promotion",
+            "Destination Marketing",
+            "B2C Event Management",
+            "Hospitality Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 260,
+              "elapsed_seconds": 5.03204607963562
+            }
+          ],
+          "reasoning": "The scraped content from 'explorenicecotedazur.com' is clearly a tourism board website (Nice C\u00f4te d'Azur Convention and Visitors Bureau). It focuses on visitor engagement, event calendars, and travel passes (French Riviera Pass). There is no evidence of corporate procurement, enterprise software acquisition, or B2B governance relevant to the target entity 'Nice' (presumably the tech company NICE Ltd)."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:03:02.580329",
+          "domain_explored": "https://niceactimize.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 23 column 54 (char 1350)"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:03:16.211254",
+          "domain_explored": "https://www.linkedin.com/company/nice-systems/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Cloud Infrastructure",
+              "DevOps Toolchains",
+              "Automation Platforms",
+              "CX Software"
+            ],
+            "job_postings": [
+              "Professional Services Engineer, CX",
+              "Cloud Operations Engineer, CX",
+              "Senior DevOps Engineer",
+              "Technical Account Manager",
+              "Infrastructure System Engineer"
+            ],
+            "procurement_indicators": [
+              "Expansion of Cloud Operations (Cloud Ops Engineer)",
+              "Global Service Delivery scaling (Manila, Pune, Sydney, US)",
+              "Investment in Automation (Senior Automation Engineer)"
+            ]
+          },
+          "patterns_found": [
+            "CX (Customer Experience) Service Delivery",
+            "Cloud Infrastructure Operations",
+            "Global Technical Support Expansion",
+            "DevOps & Automation Engineering"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 359,
+              "elapsed_seconds": 9.766737937927246
+            }
+          ],
+          "reasoning": "The content confirms NICE is actively hiring for roles that support complex software delivery and infrastructure (Professional Services, Cloud Ops, DevOps). While these are not direct procurement roles, the volume of 'CX' and 'Cloud' hires indicates a scaling of service delivery capabilities, which often correlates with increased procurement of cloud infrastructure, support tools, and professional services subcontractors."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:03:29.381854",
+          "domain_explored": "https://www.linkedin.com/jobs/nice-ltd-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Salesforce implied by Account Exec/SDM roles)",
+              "Financial Analytics Software",
+              "ITSM Tools (implied by IT Technical Support)"
+            ],
+            "job_postings": [
+              "VP, Customer Success & Services",
+              "VP, Financial Planning & Analysis",
+              "Senior Customer Success Manager",
+              "Technical Account Manager",
+              "IT Technical Support",
+              "Sales Development Representative"
+            ],
+            "procurement_indicators": [
+              "Internal IT Support Hiring (Implies maintenance of existing vendor contracts)",
+              "Customer Success Expansion (Indicates high retention/renewal focus)"
+            ]
+          },
+          "patterns_found": [
+            "Post-Sales Service Delivery",
+            "Internal IT Infrastructure Support",
+            "Financial Planning & Analysis (FP&A)",
+            "B2B Sales Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1671,
+              "output_tokens": 395,
+              "elapsed_seconds": 9.518471956253052
+            }
+          ],
+          "reasoning": "The content confirms Nice Ltd is actively hiring for roles that support existing software operations (Customer Success, Technical Account Management) and internal infrastructure (IT Technical Support). While this indicates a healthy, growing company that maintains its own tech stack, the specific roles listed are operational rather than strategic procurement or new digital transformation implementation. The 'VP, Financial Planning & Analysis' role suggests budget management capacity, but no direct procurement signals are present."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:03:38.638266",
+          "domain_explored": "https://www.linkedin.com/jobs/nice-cxone-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "DevOps",
+              "Cloud Infrastructure",
+              "SaaS Platforms"
+            ],
+            "job_postings": [
+              "Senior DevOps Engineer (Sandy, UT)",
+              "Senior Dedicated Support Engineer (Hoboken, NJ)"
+            ],
+            "procurement_indicators": [
+              "Expansion of Service Delivery Capabilities",
+              "Investment in Platform Reliability (DevOps)",
+              "Geographic expansion of support teams (Sandy, UT & Hoboken, NJ)"
+            ]
+          },
+          "patterns_found": [
+            "CX (Customer Experience) Service Delivery",
+            "Cloud Infrastructure Operations",
+            "Post-Sales Technical Support",
+            "SaaS Platform Engineering"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1731,
+              "output_tokens": 331,
+              "elapsed_seconds": 5.481864929199219
+            }
+          ],
+          "reasoning": "The scraped content confirms active hiring for 'Nice Cxone' roles, specifically in DevOps and Dedicated Support. This reinforces the entity's focus on SaaS delivery and post-sales service infrastructure. While these are engineering roles rather than direct procurement, the 'Dedicated Support' and 'DevOps' functions indicate significant investment in platform stability and customer service delivery, which are downstream procurement drivers for cloud infrastructure and support tools."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:03:46.495117",
+          "domain_explored": "https://www.linkedin.com/jobs/nice-incontact-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "NICE InContact (CXone)"
+            ],
+            "job_postings": [
+              "Customer Retention Representative (CoinFlip)",
+              "Customer Support Representative (CoinFlip)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Job Aggregation",
+            "Third-Party Brand Usage",
+            "Customer Support Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1794,
+              "output_tokens": 238,
+              "elapsed_seconds": 4.033293962478638
+            }
+          ],
+          "reasoning": "The scraped content represents a LinkedIn job search results page for the query 'Nice Incontact'. The listings displayed (e.g., CoinFlip) are from third-party companies using NICE InContact software for their own operations, not direct employment by the target entity (NICE). These are 'user' signals, not 'buyer' procurement signals from the vendor. Therefore, this does not provide insight into NICE's internal procurement activities."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T17:04:00.729414",
+          "domain_explored": "https://www.linkedin.com/jobs/english-jobs-nice?src_gapi=4255&countryRedirected=1",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Gestionnaire Flux Bagages & Passagers (Airport Operations)",
+              "Charg\u00e9 d'information et t\u00e9l\u00e9conseiller (Airport Info)",
+              "GUCCI - Vendeur / vendeuse (Retail)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Job Aggregation",
+            "Hospitality & Retail Operations",
+            "Public Infrastructure Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1855,
+              "output_tokens": 211,
+              "elapsed_seconds": 10.386988162994385
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search aggregator for the geographic location of Nice, France, rather than the corporate entity NICE. The listings (A\u00e9roports de la C\u00f4te d'Azur, Gucci, Athos Partners) are unrelated to the target entity's software and CX business focus."
+        }
+      ],
+      "total_input_tokens": 15853,
+      "total_output_tokens": 2835,
+      "estimated_cost_usd": 0.090084
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nice may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:04:00.731446"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277457",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:40.696952"
+}

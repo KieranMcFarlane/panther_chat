@@ -1,0 +1,189 @@
+{
+  "entity_id": "norwegian_football_federation",
+  "entity_name": "Norwegian Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "noaignite.com",
+    "webtv.un.org",
+    "beta.nonspace.no",
+    "crwflags.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "norwegian_football_federation",
+      "entity_name": "Norwegian Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://noaignite.com",
+        "https://crwflags.com",
+        "https://webtv.un.org",
+        "https://beta.nonspace.no"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Norwegian Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:55:14.395878",
+          "domain_explored": "https://noaignite.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "GenAI",
+              "Customer Data Platform (CDP)",
+              "AI Tools",
+              "Commerce platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Agency Marketing Content",
+            "B2B Service Offering"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.172714948654175
+            }
+          ],
+          "reasoning": "The content is the homepage of 'NoA Ignite', a digital design and technology agency. While they list relevant capabilities (AI, CX, Legacy Tech), this is a vendor site describing their services, not a document from the Norwegian Football Federation (NFF). There is no mention of NFF, no specific procurement signals from the federation, and no evidence of an active partnership or project in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:55:26.487852",
+          "domain_explored": "https://webtv.un.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "Generic Video Streaming Content",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 165,
+              "elapsed_seconds": 9.082574844360352
+            }
+          ],
+          "reasoning": "The content is scraped from webtv.un.org, which is the United Nations Web TV platform. It lists live and archived meetings of UN bodies (UNDP, UNFPA, UNOPS). There is absolutely no connection to the Norwegian Football Federation (NFF). This is a false positive in the scraping process or a completely irrelevant URL."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:55:34.072268",
+          "domain_explored": "https://beta.nonspace.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Agency Partnership",
+                "details": "Nonspace lists NFF as a client for 'Strategy for the Future of Norwegian Football'."
+              },
+              {
+                "type": "Service Category",
+                "details": "Strategic Branding / Digital Transformation Consultancy."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic Consultancy Partnership",
+            "Brand Strategy Development",
+            "Digital Transformation Agency",
+            "Case Study / Portfolio Evidence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 317,
+              "elapsed_seconds": 4.147113084793091
+            }
+          ],
+          "reasoning": "The content identifies 'Nonspace' as a strategic consultancy agency that lists 'Norges Fotballforbund' (The Norwegian Football Federation) as a client. The specific project title 'A Strategy for the Future of Norwegian Football' indicates a high-level strategic partnership. While this confirms a vendor relationship, it falls under WEAK_ACCEPT because it represents past or ongoing strategic/creative services rather than a direct procurement signal for new technology RFPs or immediate purchasing needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:55:40.727923",
+          "domain_explored": "https://crwflags.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "B2C Retail Catalog",
+            "US-Centric Inventory",
+            "Generic Product Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.2313528060913086
+            }
+          ],
+          "reasoning": "The content is a product catalog for a US-based flag retailer (CRW Flags). It lists consumer goods such as car flags, grave markers, and coffee mugs. There is no connection to the Norwegian Football Federation, Norwegian procurement processes, or enterprise technology acquisition."
+        }
+      ],
+      "total_input_tokens": 5724,
+      "total_output_tokens": 858,
+      "estimated_cost_usd": 0.030042
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Norwegian Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:55:40.730022"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.208058",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:51.324492"
+}

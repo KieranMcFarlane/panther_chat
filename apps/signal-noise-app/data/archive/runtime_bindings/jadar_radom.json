@@ -1,0 +1,223 @@
+{
+  "entity_id": "jadar_radom",
+  "entity_name": "Jadar Radom",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "grokipedia.com",
+    "commons.wikimedia.org",
+    "spartiaci.pl",
+    "inside.volleycountry.com",
+    "volleybox.net",
+    "familypedia.fandom.com",
+    "annabet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jadar_radom",
+      "entity_name": "Jadar Radom",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://spartiaci.pl",
+        "https://grokipedia.com",
+        "https://familypedia.fandom.com",
+        "https://annabet.com",
+        "https://inside.volleycountry.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jadar Radom may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:00:36.231843",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:00:45.417118",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wikimedia Commons Interface",
+            "Irrelevant Content (Media Repository)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.5873491764068604
+            }
+          ],
+          "reasoning": "The content is the standard homepage text for Wikimedia Commons, a media file repository. It contains generic navigation, licensing information, and category listings unrelated to the specific entity 'Jadar Radom'. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:00:58.339428",
+          "domain_explored": "https://spartiaci.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Requirement Message",
+            "Hosting Panel Configuration",
+            "Client-Side Rendering Dependency"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 507,
+              "output_tokens": 172,
+              "elapsed_seconds": 5.729573965072632
+            }
+          ],
+          "reasoning": "The target URL (spartiaci.pl) presents a client-side gatekeeper message requiring JavaScript and cookies. The content is a generic system message for site owners regarding hosting panel settings, not a public-facing page with business operations, job postings, or procurement data. There is no content to analyze for signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:01:20.161217",
+          "domain_explored": "https://inside.volleycountry.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:01:31.852630",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer Market Data",
+            "Player Rankings and Statistics",
+            "Forum and Community Features",
+            "Generic Sports Portal Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.330334186553955
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is exclusively related to volleyball player transfers, rankings, and community discussions. There is no content related to corporate procurement, business operations, or the specific entity 'Jadar Radom'. The site is a sports database, not a source for B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:01:49.670896",
+          "domain_explored": "https://familypedia.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Semantic MediaWiki",
+              "Fandom / Wikia Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Genealogy Wiki Platform",
+            "User-Generated Content Focus",
+            "Semantic MediaWiki Stack",
+            "Generic Fandom/Wikia Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1563,
+              "output_tokens": 188,
+              "elapsed_seconds": 11.636078834533691
+            }
+          ],
+          "reasoning": "The scraped content is from 'Familypedia', a genealogy-focused wiki hosted on the Fandom platform. It contains no information regarding 'Jadar Radom', business operations, or procurement activities. The content is strictly related to family history research and ancestor biographies."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:01:56.837437",
+          "domain_explored": "https://annabet.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4967,
+      "total_output_tokens": 705,
+      "estimated_cost_usd": 0.025476
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jadar Radom may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:01:56.838669"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.327760",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:24.456215"
+}

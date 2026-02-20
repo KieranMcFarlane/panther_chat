@@ -1,0 +1,196 @@
+{
+  "entity_id": "algerian_football_federation",
+  "entity_name": "Algerian Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "algerianfootballfederation.com",
+    "inside.fifa.com",
+    "web.fifaclearinghouse.org",
+    "cafonline.com",
+    "plus.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "algerian_football_federation",
+      "entity_name": "Algerian Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://web.fifaclearinghouse.org",
+        "https://inside.fifa.com",
+        "https://plus.fifa.com",
+        "https://cafonline.com",
+        "https://algerianfootballfederation.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Algerian Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:42:47.053943",
+          "domain_explored": "https://algerianfootballfederation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "General Contact Point: contact@algerianfootballfederation.com"
+            ]
+          },
+          "patterns_found": [
+            "Generic corporate boilerplate",
+            "Repetitive content structure",
+            "Standard contact information"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 780,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.388857126235962
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive footer text, generic marketing slogans ('D\u00e9couvrez l'univers du Football Alg\u00e9rien'), and a single contact email address. There are no specific mentions of technology stacks, active RFPs, job vacancies, or digital transformation initiatives. The content is too high-level to derive specific procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:42:55.438936",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Generic navigation menus",
+            "Repetitive boilerplate content",
+            "Irrelevant entity context (FIFA vs. FAF)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.224871873855591
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global website (inside.fifa.com), not the Algerian Football Federation (FAF). The content discusses global initiatives (FIFA Forward, Women's Champions Cup) and contains repetitive navigation elements. There are no specific signals regarding Algerian procurement, technology stacks, or local governance patterns."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:43:05.061453",
+          "domain_explored": "https://web.fifaclearinghouse.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'intermediary payment institution' (Global context only)"
+            ]
+          },
+          "patterns_found": [
+            "Repetitive keyword stuffing",
+            "Global regulatory body content",
+            "Payment processing terminology",
+            "No specific entity targeting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 570,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.2857370376586914
+            }
+          ],
+          "reasoning": "The content is a repetitive, scraped fragment of the FIFA Clearing House page. While it relates to financial transactions (rewards/intermediary payments), it is a generic global service description rather than a specific procurement signal or technology investment by the Algerian Football Federation. It offers no actionable intelligence regarding the FAF's specific vendors, tech stack, or buying intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:43:13.921445",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive navigation elements",
+            "Generic sports content aggregation",
+            "High frequency of 'Show more' and 'See all' UI artifacts",
+            "Absence of corporate governance or administrative keywords"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1078,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.22192120552063
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive user interface artifacts (navigation links, 'Show more' buttons, and section headers) from the CAF (Confederation of African Football) public portal. There is no semantic content related to procurement, job postings, or technology infrastructure specific to the Algerian Football Federation. The content is purely navigational noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:43:19.864402",
+          "domain_explored": "https://plus.fifa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3847,
+      "total_output_tokens": 833,
+      "estimated_cost_usd": 0.024036
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Algerian Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:43:19.865031"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.200361",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:35.041764"
+}

@@ -1,0 +1,242 @@
+{
+  "entity_id": "tigres_uanl",
+  "entity_name": "Tigres UANL",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "tigres.com.mx",
+    "tigretienda.com",
+    "transfermarkt.us",
+    "leaguescup.com",
+    "mlssoccer.com",
+    "worldsoccershop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tigres_uanl",
+      "entity_name": "Tigres UANL",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://tigres.com.mx",
+        "https://transfermarkt.us",
+        "https://worldsoccershop.com",
+        "https://tigretienda.com",
+        "https://mlssoccer.com",
+        "https://leaguescup.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tigres UANL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:22:45.895153",
+          "domain_explored": "https://tigres.com.mx",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Boletomovil (Ticketing Platform)",
+              "Tradablebits (Fan Engagement/Data Capture)",
+              "Custom Mobile App (iOS/Android)",
+              "Spotify (Audio Streaming)",
+              "Social Platforms: Instagram, X-Twitter, TikTok, YouTube"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with SportiumBet (Sponsorship/Betting integration)",
+              "Usage of 'TigreTienda' (E-commerce/Merchandising)",
+              "Link to 'Facturaci\u00f3n' (Invoicing system presence)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Platform",
+            "Third-Party Ticketing Integration",
+            "Social Media Aggregation",
+            "Mobile App Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 339,
+              "elapsed_seconds": 3.409741163253784
+            }
+          ],
+          "reasoning": "The content reveals specific technology vendors used by Tigres UANL for fan engagement and operations. The presence of 'Boletomovil' indicates a reliance on third-party ticketing infrastructure, while 'Tradablebits' suggests a procurement decision for social media aggregation and fan data capture. The 'App Oficial' indicates an investment in mobile development. These are indirect procurement signals (vendor usage) rather than direct RFPs, justifying a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:22:52.869073",
+          "domain_explored": "https://tigretienda.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (E-commerce Platform)",
+              "Shopify Payments (Inferred)",
+              "Cloudflare (Inferred from security headers)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Management System Usage",
+              "Digital Asset Management (DAM) for product images",
+              "Logistics and Fulfillment Partnerships",
+              "Adidas Vendor Relationship Management"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "High-Volume Merchandising Operations",
+            "Global Brand Partnership (Adidas)",
+            "SKU Proliferation Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 337,
+              "elapsed_seconds": 3.9832141399383545
+            }
+          ],
+          "reasoning": "The content confirms Tigres UANL operates a sophisticated direct-to-consumer (DTC) e-commerce channel (tigretienda.com) powered by Shopify. The presence of a complex product catalog with specific SKUs (e.g., 'JM4863'), inventory management signals ('Ya casi se agota'), and distinct product lines (Originals, Women's, Youth) indicates a need for robust supply chain and inventory management software. While this confirms operational capability, it provides weak evidence for *new* procurement intent, as these systems are likely already implemented."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:22:59.830227",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Global Transfer Market Data",
+            "Third-Party Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.9641759395599365
+            }
+          ],
+          "reasoning": "The content provided is from a general football news portal (Transfermarkt) focusing on global transfer rumors, market values, and European leagues (Liverpool, Arsenal, AC Milan). There is absolutely no mention of Tigres UANL, Liga MX, or specific procurement activities related to the entity. The content is irrelevant to the objective of finding procurement signals for Tigres UANL."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:23:06.790891",
+          "domain_explored": "https://leaguescup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Wide Marketing Content",
+            "Tournament Recaps and Highlights",
+            "Editorial Video Content",
+            "General Competition Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.171783924102783
+            }
+          ],
+          "reasoning": "The content is purely editorial and marketing-focused, summarizing the 2025 Leagues Cup tournament and promoting the 2026 schedule. It contains no specific information regarding Tigres UANL's internal operations, technology stack, or procurement activities. The entity is merely a participant in the broader league context described."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:23:13.552051",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Wide Sports Journalism",
+            "Competitor Transfer Activity",
+            "Editorial Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.2964041233062744
+            }
+          ],
+          "reasoning": "The content is entirely focused on league-wide news, specifically player transfers for other clubs (San Jose, Orlando City, Houston Dynamo, Austin FC, Inter Miami). There is no mention of Tigres UANL, nor are there any signals regarding procurement, technology infrastructure, or business operations relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:23:16.554263",
+          "domain_explored": "https://worldsoccershop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 7294,
+      "total_output_tokens": 1217,
+      "estimated_cost_usd": 0.040137
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tigres UANL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:23:16.554537"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.132187",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:50.272849"
+}

@@ -1,0 +1,112 @@
+{
+  "entity_id": "us_dunkerque_hb",
+  "entity_name": "US Dunkerque HB",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "wikiwand.com",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "us_dunkerque_hb",
+      "entity_name": "US Dunkerque HB",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wikiwand.com",
+        "https://eurohandball.com",
+        "https://sofascore.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "US Dunkerque HB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:32:51.198597",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is purely editorial/sports results (EHF EURO 2026)",
+            "No mention of US Dunkerque HB",
+            "No technical infrastructure or vendor signals detected",
+            "Generic cookie consent walls present"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.7740018367767334
+            }
+          ],
+          "reasoning": "The scraped content from eurohandball.com focuses exclusively on general European handball news (Denmark, Croatia, EHF EURO results). There is absolutely no mention of the specific entity 'US Dunkerque HB', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity. This source is irrelevant for gathering intelligence on US Dunkerque HB."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:32:54.055834",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:32:56.834661",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 215,
+      "estimated_cost_usd": 0.007299
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "US Dunkerque HB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:32:56.835342"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349893",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:33.993245"
+}

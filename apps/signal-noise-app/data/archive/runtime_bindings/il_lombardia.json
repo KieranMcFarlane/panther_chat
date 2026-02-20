@@ -1,0 +1,200 @@
+{
+  "entity_id": "il_lombardia",
+  "entity_name": "Il Lombardia",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "ilombardia.it",
+    "illombardia.com",
+    "gfilombardia.it",
+    "illombardiaunder23.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "il_lombardia",
+      "entity_name": "Il Lombardia",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://illombardia.com",
+        "https://gfilombardia.it",
+        "https://illombardiaunder23.it",
+        "https://ilombardia.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Il Lombardia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:14:43.825892",
+          "domain_explored": "https://ilombardia.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Structure: Identified categories for 'Top Sponsor', 'Official Partners', 'Institutional Partners', and 'Official Suppliers'.",
+              "Event Portfolio: Manages a calendar of major cycling events (Strade Bianche, Tirreno Adriatico, Giro d'Italia).",
+              "Media Operations: High volume of video and photo content production requiring infrastructure."
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem",
+            "Event Management",
+            "Media Production"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 275,
+              "elapsed_seconds": 2.554043769836426
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on race results, routes, and media highlights for the 'Il Lombardia' cycling event. It lists sponsor categories (Top Sponsor, Official Partners, etc.) but provides no specific details on technology vendors, internal job postings, or procurement needs. The content is consumer-facing sports news, not B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:15:22.031459",
+          "domain_explored": "https://illombardia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iTunes",
+              "Subtitle Processing (English, Dutch, Italian)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media Distribution",
+            "Historical Documentation",
+            "Consumer Product (iTunes)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 191,
+              "elapsed_seconds": 35.1670777797699
+            }
+          ],
+          "reasoning": "The content analyzed is for a documentary film about the cycling event 'Il Lombardia', not the administrative entity 'Regione Lombardia'. The page describes a movie available on iTunes, directed by Johannes Sigmond. It contains no corporate governance, procurement, or technology implementation signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:15:30.101928",
+          "domain_explored": "https://gfilombardia.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "envire.it (CMS/Hosting)",
+              "Social Media Integration",
+              "Registration Management Platform (implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Management (Presenting Sponsor: W\u00fcrth MODYF; Partner: Enel)",
+              "Event Logistics & Operations (Route setup, Police coordination, Feed stations)",
+              "Merchandising (Race pack/Pacco gara production)",
+              "Safety & Security (Traffic management, medical support implied)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Logistics",
+            "Corporate Sponsorship Ecosystem",
+            "Participant Experience Management",
+            "Route Planning & Safety Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 365,
+              "elapsed_seconds": 4.924664258956909
+            }
+          ],
+          "reasoning": "The content confirms the entity is a major mass-participation cycling event (Gran Fondo) organized by RCS Sports & Events. While the page is consumer-facing (marketing/registration), it reveals a complex operational backend requiring significant procurement. Key signals include the management of 2000+ participants, route logistics (police escorts, road closures), and sponsorship management (W\u00fcrth MODYF, Enel). This indicates a need for vendors in event services, security, timing systems, and merchandising, though no direct RFPs are visible on this specific page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:15:36.666897",
+          "domain_explored": "https://illombardiaunder23.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Document Management",
+              "GPX File Hosting",
+              "Standard Web Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational requirement for Press/Vehicle Accreditation services",
+              "Need for Technical Route Planning & Timing services",
+              "Requirement for Event Signage/Printing (based on 'Libretto Gara')"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics & Operations",
+            "Participant Accreditation Management",
+            "Technical Documentation Distribution",
+            "Digital Asset Management (GPX/PDF)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 333,
+              "elapsed_seconds": 3.0655949115753174
+            }
+          ],
+          "reasoning": "The site is dedicated to the 'Il Lombardia U23' cycling event. It features operational downloads such as technical regulations, route maps (GPX), and accreditation forms for press and vehicles. While this confirms the entity manages complex events requiring logistics and timing services, the content is purely informational/operational for participants and lacks explicit corporate procurement signals (RFPs, vendor selection, or tech stack investments). It validates the 'Event Management' capability but offers no direct insight into purchasing intent."
+        }
+      ],
+      "total_input_tokens": 5695,
+      "total_output_tokens": 1164,
+      "estimated_cost_usd": 0.034545
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Il Lombardia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:15:36.668650"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.407826",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:11.827969"
+}

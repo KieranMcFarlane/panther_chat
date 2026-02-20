@@ -1,0 +1,370 @@
+{
+  "entity_id": "european_handball_federation_(ehf)",
+  "entity_name": "European Handball Federation (EHF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "eurohandball.com",
+    "old.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+      "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+      "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-4106743903?refId=6aSw7jfwf7Vpb2m7oQ5dmg%3D%3D&trackingId=76XE4687zYpDOY0U5jmpOw%3D%3D",
+      "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977",
+      "https://at.linkedin.com/jobs/view/younger-age-category-national-teams-competitions-yac-ntc-coordinator-at-european-handball-federation-4233249285",
+      "https://at.linkedin.com/jobs/view/senior-administrative-assistant-at-european-handball-federation-3970637717?refId=3Ngft8vO9xYPwWGPdBY30w%3D%3D&trackingId=mDmlcl7FwdX2avQHR5TdFw%3D%3D&position=12&pageNum=0",
+      "https://at.linkedin.com/jobs/view/development-programmes-and-special-projects-coordinator-at-european-handball-federation-3779501940?refId=sXfqHQExo7Ui84e4w8Nhiw%3D%3D&trackingId=hn2j7inkHIzd1HdtonF7cA%3D%3D&position=12&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "european_handball_federation_(ehf)",
+      "entity_name": "European Handball Federation (EHF)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://old.eurohandball.com",
+        "https://at.linkedin.com/jobs/view/younger-age-category-national-teams-competitions-yac-ntc-coordinator-at-european-handball-federation-4233249285",
+        "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-4106743903?refId=6aSw7jfwf7Vpb2m7oQ5dmg%3D%3D&trackingId=76XE4687zYpDOY0U5jmpOw%3D%3D",
+        "https://eurohandball.com",
+        "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+        "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+        "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "MarTech Stack Procurement",
+        "CRM & Data Strategy Implementation",
+        "Paid Media & Performance Marketing",
+        "Marketing Automation & Personalization",
+        "Vendor Ecosystem Management (Infront, Eventim)",
+        "Event Operations & Logistics Procurement",
+        "Competition Management Platform Usage",
+        "Budget Administration & Financial Oversight",
+        "Accommodation & Venue Vendor Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "European Handball Federation (EHF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:36:40.714023",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Management Tool (Generic/Custom implementation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Operations: Men's EHF EURO 2026 (Jan 2026)",
+              "Event Operations: Women's EHF EURO 2026 (Dec 2026)",
+              "Sponsorship: Machineseeker (Title Sponsor for Men's Champions League)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Cookie Consent Management",
+            "Sponsorship Branding (Machineseeker)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 266,
+              "elapsed_seconds": 4.356669187545776
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of sports news headlines (Denmark, Croatia, Gidsel), event schedules for 2025-2026, and a repeated cookie consent wall message. There are no explicit signals of procurement activity, technology upgrades, or organizational hiring in this specific text. The presence of 'Machineseeker' indicates a sponsorship deal but not an active procurement process."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:36:46.155791",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational Unit: EHF Marketing (Potential for marketing tech procurement)",
+              "Operational Unit: EHF Reporting Platform (Potential for BI/Analytics tools)",
+              "Operational Unit: EHF TV (Potential for streaming/broadcast tech procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Event Calendar Structure",
+            "Legacy Site Navigation",
+            "Static Content Delivery"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.5207197666168213
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of a calendar widget (December 2025 - November 2026) and a navigation menu. While the navigation confirms the existence of specific functional units (EHF Marketing, EHF TV, EHF Reporting Platform), the content itself is static HTML structure with no embedded procurement signals, vendor names, or technology stack indicators."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:36:52.574603",
+          "domain_explored": "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Excel",
+              "BMD NTCS",
+              "Microsoft Outlook"
+            ],
+            "job_postings": [
+              "Front Desk Employee (Finance Department)"
+            ],
+            "procurement_indicators": [
+              "Office supplies management with price comparison responsibilities",
+              "Processing and administration of incoming invoices",
+              "Management and coordination of vehicle fleet",
+              "Role based in Finance Department (central hub for vendor payments)"
+            ]
+          },
+          "patterns_found": [
+            "Finance Department Operations",
+            "BMD NTCS Software Usage",
+            "Supply Chain Management (Office Supplies)",
+            "Vendor Invoice Processing",
+            "Fleet Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 318,
+              "elapsed_seconds": 2.9692280292510986
+            }
+          ],
+          "reasoning": "While this is a general administrative role, it operates within the Finance Department and explicitly mentions 'price comparison' for office supplies and processing of incoming invoices. This indicates active procurement workflows for general office supplies (OpEx). The specific mention of 'BMD NTCS' confirms the ERP/accounting technology stack used for financial processing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:37:10.681219",
+          "domain_explored": "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "General Office IT Infrastructure",
+              "Project Management Software (implied by process coordination)"
+            ],
+            "job_postings": [
+              "Handball Development Project Coordinator (Vienna, Austria)"
+            ],
+            "procurement_indicators": [
+              "Direct purchasing authority for sports equipment",
+              "Procurement of expert services (coaching, refereeing, marketing)",
+              "Budget administration for Master Plan projects",
+              "External agency coordination",
+              "Adaptive equipment needs (Wheelchair/ID Handball)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Equipment Procurement",
+            "Project-Based Budget Administration",
+            "External Agency Coordination",
+            "IT Process Affinity",
+            "Wheelchair/Adaptive Equipment Needs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 359,
+              "elapsed_seconds": 14.579409837722778
+            }
+          ],
+          "reasoning": "The job description for a 'Handball Development Project Coordinator' reveals specific procurement responsibilities, particularly the authority to 'Initiate orders of the sports equipment' and manage 'expert nominations'. It also highlights the need for IT affinity and process logic, suggesting potential future software procurement. The role involves budget administration and coordination with external agencies, indicating active vendor management."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:37:17.988579",
+          "domain_explored": "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-4106743903?refId=6aSw7jfwf7Vpb2m7oQ5dmg%3D%3D&trackingId=76XE4687zYpDOY0U5jmpOw%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office Suite",
+              "Database Programmes",
+              "Graphic and Illustration Software",
+              "Webinar Tools",
+              "Online Teaching Tools"
+            ],
+            "job_postings": [
+              "In-House Lawyer (Corporate Legal)"
+            ],
+            "procurement_indicators": [
+              "Contract drafting for TV, Media, and Organizers",
+              "Management of data protection contracts (GDPR/DPA)",
+              "Partnership agreement management",
+              "Procurement of online teaching and webinar tools",
+              "Intellectual Property (IP) service management",
+              "Anti-doping case management tools"
+            ]
+          },
+          "patterns_found": [
+            "Contract Management & Vendor Governance",
+            "Data Privacy & Compliance Procurement",
+            "IP & Media Rights Management",
+            "Digital Publishing Infrastructure",
+            "Anti-Doping Administration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 406,
+              "elapsed_seconds": 3.841383218765259
+            }
+          ],
+          "reasoning": "The job description for an In-House Lawyer reveals significant procurement influence within the 'Corporate' legal division. The role involves drafting and negotiating contracts for 'partnerships, organizers, TV, media agreements,' which directly governs vendor relationships and service procurement. Additionally, the responsibility for 'data protection contracts' and 'online teaching tools' indicates active management of SaaS and compliance vendors. While this is a legal role, it acts as a gatekeeper and decision-maker for external service providers."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:37:26.047491",
+          "domain_explored": "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Customer.io (CRM/Automation)",
+              "Segment (Data Pipeline/CDP)",
+              "Typeform (Data Collection)",
+              "Eventim (Ticketing)",
+              "Infront (Media/Marketing Partner)"
+            ],
+            "job_postings": [
+              "Digital Marketing | CRM/Data (Closed, ~8 months ago)"
+            ],
+            "procurement_indicators": [
+              "Active management of digital marketing/CRM platforms",
+              "Cooperation with IT department on tool implementation",
+              "Utilization of paid media (social, display, search)",
+              "GDPR compliance management for marketing tools"
+            ]
+          },
+          "patterns_found": [
+            "MarTech Stack Procurement",
+            "CRM & Data Strategy Implementation",
+            "Paid Media & Performance Marketing",
+            "Marketing Automation & Personalization",
+            "Vendor Ecosystem Management (Infront, Eventim)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 358,
+              "elapsed_seconds": 4.35001015663147
+            }
+          ],
+          "reasoning": "This job posting provides explicit confirmation of the EHF's technology stack and procurement strategy for digital marketing. It directly names specific software vendors (Customer.io, Segment, Typeform) and outlines a strategy focused on data-driven campaigning and automation. This moves beyond general organizational capability to specific technology adoption and vendor partnerships."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:37:34.492065",
+          "domain_explored": "https://at.linkedin.com/jobs/view/younger-age-category-national-teams-competitions-yac-ntc-coordinator-at-european-handball-federation-4233249285",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Online Competition Management Platforms",
+              "Microsoft Office Suite (Excel, Word, PowerPoint, Outlook)"
+            ],
+            "job_postings": [
+              "Younger Age Category National Teams Competitions (YAC NTC) Coordinator"
+            ],
+            "procurement_indicators": [
+              "Budget Management responsibility",
+              "Team Operations & Logistics coordination",
+              "Vendor management for accommodation and venues",
+              "Usage of specialized competition software"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Logistics Procurement",
+            "Competition Management Platform Usage",
+            "Budget Administration & Financial Oversight",
+            "Accommodation & Venue Vendor Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1808,
+              "output_tokens": 333,
+              "elapsed_seconds": 4.772173881530762
+            }
+          ],
+          "reasoning": "The job description explicitly outlines responsibilities for 'Financial Management' and 'Team Operations & Logistics', which directly implies procurement activity for venues, accommodation, and travel. It specifically mentions experience with 'online competition management platforms', indicating investment in specialized sports software. The role requires managing budgets and executing events, confirming procurement intent."
+        }
+      ],
+      "total_input_tokens": 11018,
+      "total_output_tokens": 2290,
+      "estimated_cost_usd": 0.06740399999999999
+    },
+    "procurement_signals": [
+      "MarTech Stack Procurement",
+      "CRM & Data Strategy Implementation",
+      "Paid Media & Performance Marketing",
+      "Marketing Automation & Personalization",
+      "Vendor Ecosystem Management (Infront, Eventim)",
+      "Event Operations & Logistics Procurement",
+      "Competition Management Platform Usage",
+      "Budget Administration & Financial Oversight",
+      "Accommodation & Venue Vendor Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "European Handball Federation (EHF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:37:34.492947"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.360731",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:01.506211"
+}

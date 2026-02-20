@@ -1,0 +1,465 @@
+{
+  "entity_id": "world_rugby",
+  "entity_name": "World Rugby",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "world.rugby",
+    "rugbyworldcup.com",
+    "worldrugbyshop.com",
+    "keeprugbyclean.worldrugby.org",
+    "rugbyeurope.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/world-rugby-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/world-rugby-jobs",
+      "https://au.linkedin.com/jobs/view/people-culture-p-c-coordinator-men-s-rwc-2027-at-world-rugby-4365169087",
+      "https://ie.linkedin.com/jobs/view/player-welfare-administrator-at-world-rugby-4362343468",
+      "https://au.linkedin.com/jobs/view/stakeholder-ticketing-lead-men-s-rwc-2027-at-world-rugby-4353920975",
+      "https://au.linkedin.com/jobs/rugby-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_rugby",
+      "entity_name": "World Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.16,
+        0.22
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/people-culture-p-c-coordinator-men-s-rwc-2027-at-world-rugby-4365169087",
+        "https://au.linkedin.com/jobs/view/stakeholder-ticketing-lead-men-s-rwc-2027-at-world-rugby-4353920975",
+        "https://worldrugbyshop.com",
+        "https://rugbyworldcup.com",
+        "https://rugbyeurope.eu",
+        "https://uk.linkedin.com/jobs/world-rugby-jobs",
+        "https://keeprugbyclean.worldrugby.org",
+        "https://www.linkedin.com/jobs/world-rugby-jobs-worldwide",
+        "https://ie.linkedin.com/jobs/view/player-welfare-administrator-at-world-rugby-4362343468",
+        "https://world.rugby"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialized Medical & Research Infrastructure Procurement",
+        "Trusted Research Environment (TRE) Implementation",
+        "Event Management Supply Chain (Hospitality, AV, Translation)",
+        "Digital Platform Maintenance & Licensing",
+        "Data Governance & DPIA Compliance Frameworks",
+        "Primary Vendor Identification (Ticketmaster)",
+        "B2B Stakeholder Management Infrastructure",
+        "Fixed-Term Event Lifecycle Planning (2026-2027)",
+        "Financial Reconciliation & Quota Management Systems",
+        "Sydney-Based Operational Hub"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:43:57.279877",
+          "domain_explored": "https://world.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Type: Sports Journalism / Match Reports",
+            "Entity Focus: HSBC SVNS Series Results"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 488,
+              "output_tokens": 148,
+              "elapsed_seconds": 4.228388786315918
+            }
+          ],
+          "reasoning": "The scraped content consists solely of sports match results and headlines regarding the HSBC SVNS (Sevens) series in Singapore. There is no mention of corporate strategy, technology infrastructure, hiring, or vendor procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:44:05.722187",
+          "domain_explored": "https://rugbyworldcup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Mitsubishi Estate (Official Supporter, RWC 2027)",
+              "Vendor: LIQUI MOLY (Official Partner, RWC 2027 & 2029)",
+              "Infrastructure: 8 state-of-the-art venues confirmed for RWC 2027 (Australia)",
+              "Event Timeline: Men's RWC 2027 (1 Oct - 13 Nov), Women's RWC 2025 planning active"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Expansion",
+            "Multi-Year Event Planning (2027-2029)",
+            "Venue Infrastructure Selection",
+            "Sponsorship Tier Acquisition (Official Supporter/Partner)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.4473628997802734
+            }
+          ],
+          "reasoning": "The content confirms active procurement and partnership activities for the 2027 and 2029 World Cups. While specific RFPs are not listed, the announcements regarding Mitsubishi Estate and LIQUI MOLY indicate a closed procurement cycle for sponsorships. The venue announcement suggests infrastructure and vendor requirements are being finalized or are in operation. This signals a healthy commercial environment but lacks direct 'Intent' (open bids) for technology or services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:44:13.407509",
+          "domain_explored": "https://worldrugbyshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify inferred from structure)",
+              "Product Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-Commerce Retail Interface",
+            "Consumer Merchandising (B2C)",
+            "Third-Party Licensing (Canterbury)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.057481050491333
+            }
+          ],
+          "reasoning": "The content is scraped from 'worldrugbyshop.com', which is a retail entity selling merchandise (likely a licensee or affiliate), not the official governing body 'World Rugby' (world.rugby). The content displays product listings (T-shirts, shorts) and prices for consumers. There is no information regarding World Rugby's internal procurement, vendor selection, or enterprise technology stack."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:44:24.376054",
+          "domain_explored": "https://keeprugbyclean.worldrugby.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Learning Management Systems (LMS) - implied by 'Online learning modules'",
+              "Content Management System (CMS)",
+              "Video Streaming Platforms - implied by 'News and video'"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Educational Resource Procurement (Nutrition, supplements guidelines)",
+              "Translation & Localization Services (Multi-language support: English, Fran\u00e7ais, Espa\u00f1ol, \u65e5\u672c\u8a9e)",
+              "Anti-Doping Software/IT Systems (Case management and reporting)"
+            ]
+          },
+          "patterns_found": [
+            "Regulatory Compliance Framework",
+            "Educational Content Management",
+            "Global Anti-Doping Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 328,
+              "elapsed_seconds": 4.89960789680481
+            }
+          ],
+          "reasoning": "The content represents the 'Keep Rugby Clean' anti-doping portal. While primarily informational, it indicates a complex operational requirement for global education programs, testing management, and regulatory compliance. This suggests potential procurement for Learning Management Systems (LMS), specialized medical software, and translation/localization services, though no direct vendor solicitations are visible in the navigation structure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:44:33.071933",
+          "domain_explored": "https://rugbyeurope.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "O'Neills E-Commerce Platform (External Vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Partnership (O'Neills)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Rugby Europe vs World Rugby)",
+            "B2C E-commerce Integration (O'Neills Partnership)",
+            "Event Journalism & Match Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.476670980453491
+            }
+          ],
+          "reasoning": "The scraped content is from Rugby Europe (rugbyeurope.eu), a distinct regional governing body, not World Rugby. While there is evidence of commercial activity (ticketing, merchandise via O'Neills), this represents a vendor relationship for Rugby Europe rather than a procurement signal for World Rugby. The content is primarily sports journalism and fan engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:44:43.378581",
+          "domain_explored": "https://www.linkedin.com/jobs/world-rugby-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              {
+                "title": "Associate Director - Sports & Major Events",
+                "employer": "Steer (Vendor/Partner)",
+                "location": "Manchester / London, United Kingdom",
+                "recency": "1 month ago",
+                "signal": "Vendor capacity building for World Rugby projects"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Major Event Planning/Strategy",
+              "Consultancy Contract Activation (Steer Group)",
+              "UK-based Operational Expansion"
+            ]
+          },
+          "patterns_found": [
+            "External Consultancy Engagement (Steer Group)",
+            "Sports & Major Events Infrastructure Planning",
+            "Vendor-Side Recruitment (Proxy for Contract Activity)",
+            "Geographic Hub: Manchester/London (UK Operations)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1637,
+              "output_tokens": 362,
+              "elapsed_seconds": 3.9820170402526855
+            }
+          ],
+          "reasoning": "The content reveals a recruitment drive by 'Steer' (a transport/planning consultancy) for 'Associate Director - Sports & Major Events' roles, explicitly tagged with 'World Rugby'. This indicates active procurement or utilization of external consultancy services for major event planning/infrastructure. While not a direct World Rugby job posting, it signals vendor engagement and operational scale."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:44:55.943646",
+          "domain_explored": "https://uk.linkedin.com/jobs/world-rugby-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Associate Director - Sports & Major Events (Steer Group - Multiple UK Locations)"
+            ],
+            "procurement_indicators": [
+              "Vendor: Steer Group",
+              "Service Category: Transport & Infrastructure Planning",
+              "Relationship: Likely Consultancy/Contractor"
+            ]
+          },
+          "patterns_found": [
+            "Vendor-Side Recruitment (Proxy for Contract Activity)",
+            "External Consultancy Engagement (Steer Group)",
+            "Sports & Major Events Infrastructure Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 307,
+              "elapsed_seconds": 5.4640209674835205
+            }
+          ],
+          "reasoning": "While the job listings are not direct World Rugby vacancies, the repeated appearance of 'Associate Director - Sports & Major Events' roles at Steer Group (a transport and planning consultancy) strongly suggests an active vendor engagement. Steer is likely contracted to support World Rugby (or related major events like RWC 2027/2031) with transport planning, infrastructure strategy, or feasibility studies. This indicates procurement activity in the consultancy/services sector, even if the hiring is happening on the vendor side."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:45:09.015637",
+          "domain_explored": "https://au.linkedin.com/jobs/view/people-culture-p-c-coordinator-men-s-rwc-2027-at-world-rugby-4365169087",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP SuccessFactors (HRIS)",
+              "Payroll Systems (TBC)",
+              "IT Access Management Systems"
+            ],
+            "job_postings": [
+              "People & Culture (P&C) Coordinator - Men's RWC 2027 (Fixed Term: Apr 2026 - Nov 2027)"
+            ],
+            "procurement_indicators": [
+              "HRIS Administration (SAP SuccessFactors)",
+              "Payroll & Benefits Vendor Administration",
+              "IT Equipment & System Access Provisioning",
+              "Employment Contract Management Services"
+            ]
+          },
+          "patterns_found": [
+            "HRIS Technology Stack Discovery (SAP SuccessFactors)",
+            "Fixed-Term Event Infrastructure Build-Up",
+            "Operational Procurement (Payroll & Benefits Administration)",
+            "Vendor Management (IT & System Access Provisioning)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1794,
+              "output_tokens": 349,
+              "elapsed_seconds": 7.2178308963775635
+            }
+          ],
+          "reasoning": "While this is a direct HR role, it provides explicit confirmation of World Rugby's technology stack (SAP SuccessFactors) and indicates the operational ramp-up for the Men's RWC 2027. The role involves administrative procurement tasks (benefits/payroll vendors) and IT coordination, which are relevant signals for understanding the vendor ecosystem and technology infrastructure, though it lacks direct strategic procurement authority."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:45:19.981632",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/player-welfare-administrator-at-world-rugby-4362343468",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Pulselive (Content Management)",
+              "TRE (Trusted Research Environment) - Data Infrastructure",
+              "ADDI (Australian Data Integration / Partner Entity)"
+            ],
+            "job_postings": [
+              "Player Welfare Administrator (Fixed Term)"
+            ],
+            "procurement_indicators": [
+              "Platform Maintenance Budgeting",
+              "Clinician Services Procurement",
+              "TRE Development & Implementation",
+              "Conference Services Sourcing (Hospitality, Travel, IT, Language Interpretation)",
+              "Data Protection & DPIA Implementation Services"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Medical & Research Infrastructure Procurement",
+            "Trusted Research Environment (TRE) Implementation",
+            "Event Management Supply Chain (Hospitality, AV, Translation)",
+            "Digital Platform Maintenance & Licensing",
+            "Data Governance & DPIA Compliance Frameworks"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1877,
+              "output_tokens": 421,
+              "elapsed_seconds": 4.73371696472168
+            }
+          ],
+          "reasoning": "This job posting reveals a specific, high-value project (Brain Health Services) requiring complex procurement. The role explicitly involves budget coordination for 'platform maintenance costs' and 'clinician costs', indicating active vendor management. Furthermore, the reference to developing a 'Trusted Research Environment (TRE)' with ADDI signals a significant upcoming procurement opportunity for secure data infrastructure/analytics. The organization of four annual conferences confirms a recurring procurement stream for event-related services (travel, venues, IT)."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T12:45:32.677538",
+          "domain_explored": "https://au.linkedin.com/jobs/view/stakeholder-ticketing-lead-men-s-rwc-2027-at-world-rugby-4353920975",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Primary Ticketing Platform)",
+              " bespoke ticketing systems (Custom/Proprietary)",
+              "Financial Reconciliation Systems"
+            ],
+            "job_postings": [
+              "Stakeholder Ticketing Lead - Men's RWC 2027 (Fixed Term: March 2026 - Nov 2027)"
+            ],
+            "procurement_indicators": [
+              "Confirmed Vendor Partnership: Ticketmaster",
+              "B2B Sales Strategy Implementation",
+              "Stakeholder Quota Management Procurement",
+              "Sydney Operations Hub Establishment"
+            ]
+          },
+          "patterns_found": [
+            "Primary Vendor Identification (Ticketmaster)",
+            "B2B Stakeholder Management Infrastructure",
+            "Fixed-Term Event Lifecycle Planning (2026-2027)",
+            "Financial Reconciliation & Quota Management Systems",
+            "Sydney-Based Operational Hub"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1967,
+              "output_tokens": 382,
+              "elapsed_seconds": 5.478567123413086
+            }
+          ],
+          "reasoning": "This job posting provides explicit confirmation of a major technology partnership and specific operational infrastructure for RWC 2027. The explicit mention of 'Working closely with Ticketmaster' confirms the primary ticketing vendor, eliminating the need to speculate on the ticketing platform provider. Additionally, the role highlights the need for bespoke systems integration between the vendor (Ticketmaster) and internal Finance/Functional Areas, indicating a complex procurement and implementation environment."
+        }
+      ],
+      "total_input_tokens": 15420,
+      "total_output_tokens": 3057,
+      "estimated_cost_usd": 0.092115
+    },
+    "procurement_signals": [
+      "Specialized Medical & Research Infrastructure Procurement",
+      "Trusted Research Environment (TRE) Implementation",
+      "Event Management Supply Chain (Hospitality, AV, Translation)",
+      "Digital Platform Maintenance & Licensing",
+      "Data Governance & DPIA Compliance Frameworks",
+      "Primary Vendor Identification (Ticketmaster)",
+      "B2B Stakeholder Management Infrastructure",
+      "Fixed-Term Event Lifecycle Planning (2026-2027)",
+      "Financial Reconciliation & Quota Management Systems",
+      "Sydney-Based Operational Hub"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:45:32.679490"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.461718",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:35.180111"
+}

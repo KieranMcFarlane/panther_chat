@@ -1,0 +1,232 @@
+{
+  "entity_id": "belgian_volleyball_federation",
+  "entity_name": "Belgian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "volleyspike-fvwb.be",
+    "worldofvolley.com",
+    "esvoleybol.com",
+    "inside.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_volleyball_federation",
+      "entity_name": "Belgian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://inside.cev.eu",
+        "https://volleyspike-fvwb.be",
+        "https://esvoleybol.com",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Digital Transformation (Digitization of paper-based workflows)",
+        "Mobile Application Development (Google Play deployment)",
+        "Direct Partnership Statement ('Developed in conjunction with the Belgian Volleyball Federation')",
+        "Process Optimization (Cost reduction, error reduction, time-saving)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:08:38.629249",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical hosting of 1* FIVB/CEV World Tour event in Leuven (BEL) (Past event, not current procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (EuroVolley, EuroBeachVolley)",
+            "External partner links (FIVB, National Federations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 261,
+              "elapsed_seconds": 6.231918811798096
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event index from the Confederation Europ\u00e9enne de Volleyball (CEV), the European governing body. While it lists Belgian locations (Leuven) in historical beach volleyball tours and links to the Belgian federation (KBVBV), it contains no specific information regarding the Belgian Volleyball Federation's internal procurement, technology stack, or governance. It is contextually relevant but lacks actionable procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:08:48.513477",
+          "domain_explored": "https://volleyspike-fvwb.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Android/Google Play)",
+              "Digital Scoring Platform",
+              "Data Synchronization System (Match data upload)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: VolleySpike developed in conjunction with Belgian Volleyball Federation",
+              "Cost Reduction Initiative: Replacing printed/purchased scoring sheets with digital solution",
+              "Operational Efficiency: Removing manual data entry and postal validation processes"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation (Digitization of paper-based workflows)",
+            "Mobile Application Development (Google Play deployment)",
+            "Direct Partnership Statement ('Developed in conjunction with the Belgian Volleyball Federation')",
+            "Process Optimization (Cost reduction, error reduction, time-saving)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 345,
+              "elapsed_seconds": 5.395473957061768
+            }
+          ],
+          "reasoning": "The content provides explicit confirmation of a strategic technology partnership between the entity (Belgian Volleyball Federation) and the platform 'VolleySpike'. It confirms a shift from legacy paper-based systems to a digital mobile platform, indicating a clear procurement history and investment in digital infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:08:54.154771",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "International league coverage (Italy, Turkey, Poland, France, Germany)",
+            "Player transfer news ('Done deals')",
+            "Sponsorship visibility (Vodafone, Credem Banca)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.63988995552063
+            }
+          ],
+          "reasoning": "The content is exclusively focused on international match results, standings, and player transfers for the 2025-2026 season. There is no mention of the Belgian Volleyball Federation, nor are there any signals regarding Belgian procurement, governance, or technology infrastructure."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:09:04.964479",
+          "domain_explored": "https://esvoleybol.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Turkey vs Belgium)",
+            "Local Club Operations (Istanbul)",
+            "Generic Sports News Content",
+            "Turkish Language Content (TVF, Haberler)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 222,
+              "elapsed_seconds": 4.480679035186768
+            }
+          ],
+          "reasoning": "The scraped content is from 'ES Voleybol', a local volleyball club based in Istanbul, Turkey (evident from the 'Erkek Tak\u0131mlar\u0131m\u0131z Her Kategoride \u0130stanbul \u0130lk 3\u2019te' headline and Turkish language). The target entity is the Belgian Volleyball Federation. While the domain contains 'voleybol', the context is strictly related to Turkish local leagues (TVF - Turkish Volleyball Federation) and club activities, presenting no procurement signals for the Belgian entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:09:13.001954",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEV Solidarity Fund (Grant application process, not vendor procurement)",
+              "EuroVolley 2028 Bidding Process (Host city selection)"
+            ]
+          },
+          "patterns_found": [
+            "Generic Confederation News (CEV)",
+            "Geographic Mismatch (Montenegro, Azerbaijan, Slovenia)",
+            "Funding Opportunities (Solidarity Fund - Grants, not Procurement)",
+            "Event Bidding (EuroVolley 2028)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1631,
+              "output_tokens": 276,
+              "elapsed_seconds": 5.0588319301605225
+            }
+          ],
+          "reasoning": "The content is sourced from the European Volleyball Confederation (CEV), the governing body for the whole of Europe, not the Belgian Volleyball Federation specifically. While the Belgian federation is a member nation, the articles focus on pan-European activities (Solidarity Fund), other nations (Azerbaijan, Montenegro), and general development news. There are no specific procurement signals, technology investments, or job postings related to the Belgian entity."
+        }
+      ],
+      "total_input_tokens": 7492,
+      "total_output_tokens": 1293,
+      "estimated_cost_usd": 0.041871
+    },
+    "procurement_signals": [
+      "Digital Transformation (Digitization of paper-based workflows)",
+      "Mobile Application Development (Google Play deployment)",
+      "Direct Partnership Statement ('Developed in conjunction with the Belgian Volleyball Federation')",
+      "Process Optimization (Cost reduction, error reduction, time-saving)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:09:13.002698"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.333478",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:04.176851"
+}

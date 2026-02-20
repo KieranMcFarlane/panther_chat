@@ -1,0 +1,199 @@
+{
+  "entity_id": "belgian_rugby_federation",
+  "entity_name": "Belgian Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "gilbertrugby.be",
+    "rugbyunion.fandom.com",
+    "tvhrugbyleague.be",
+    "zoominfo.com",
+    "rugbyinwales.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_rugby_federation",
+      "entity_name": "Belgian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tvhrugbyleague.be",
+        "https://gilbertrugby.be",
+        "https://rugbyinwales.co.uk",
+        "https://rugbyunion.fandom.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:48:42.240738",
+          "domain_explored": "https://gilbertrugby.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WooCommerce (inferred from 'Select options' and product structure)",
+              "WordPress (inferred from standard e-commerce patterns)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Popshop Rugby (Distributor for Gilbert)",
+              "Client mentions: RC BUC, RC Antwerp, BBRFC-Celtic (Clubs procuring gear)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce content structure",
+            "B2C/B2B retail operations",
+            "Third-party vendor relationship (Popshop Rugby)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 322,
+              "elapsed_seconds": 4.922188997268677
+            }
+          ],
+          "reasoning": "The scraped content is from 'gilbertrugby.be', which is explicitly identified as the website for 'POPSHOP Rugby,' the official distributor of Gilbert Rugby in the Benelux region. The content consists of product listings (balls, clothing, accessories), prices, and customer reviews from local rugby clubs (e.g., RC BUC, RC Antwerp). This represents a commercial vendor selling to the market, not the Belgian Rugby Federation (FBRB) procuring services or technology. There are no signals of internal procurement intent, technology stack adoption, or governance decisions by the Federation itself."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:48:47.760375",
+          "domain_explored": "https://rugbyunion.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-Generated Content Platform (Fandom/Wikia)",
+            "Generic Sports Encyclopedia Content",
+            "Outdated Context (References to 2007 Rugby World Cup)",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.306473970413208
+            }
+          ],
+          "reasoning": "The target URL is a community-maintained wiki (Fandom) focused on general Rugby Union history and rules, not the official operations of the Belgian Rugby Federation. It contains no procurement signals, vendor lists, or technology stack information relevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:48:54.110825",
+          "domain_explored": "https://tvhrugbyleague.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-Generated Content / Fan Site Structure",
+            "League Management Data (Scores/Schedules)",
+            "No Corporate Governance Presence",
+            "Irrelevant Domain Entity (TVH Rugby League vs Belgian Rugby Federation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 228,
+              "elapsed_seconds": 2.870997905731201
+            }
+          ],
+          "reasoning": "The scraped content from tvhrugbyleague.be is a sports league management page displaying match schedules, scores, and team standings (Men's and Women's divisions). It contains no corporate information, procurement signals, or technology stack details relevant to the Belgian Rugby Federation. The entity 'TVH Rugby League' appears to be a distinct league or club entity, not the governing body being targeted for procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:48:57.106057",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:49:03.636313",
+          "domain_explored": "https://rugbyinwales.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope (Wales vs Belgium)",
+            "Content Farm / SEO Spam Structure",
+            "Malicious/NSFW Content Injection (Escort Ads)",
+            "Hallucinated/Future-Dated Content (2025 dates)",
+            "Lack of Corporate Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.3636412620544434
+            }
+          ],
+          "reasoning": "The target URL 'rugbyinwales.co.uk' is geographically irrelevant to the Belgian Rugby Federation. The site exhibits characteristics of a compromised or spam-operated domain, mixing generic sports news with explicit adult content advertisements and nonsensical future-dated articles. There is no connection to Belgian rugby procurement."
+        }
+      ],
+      "total_input_tokens": 5824,
+      "total_output_tokens": 944,
+      "estimated_cost_usd": 0.031632
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:49:03.637547"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.286595",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:20.763657"
+}

@@ -1,0 +1,136 @@
+{
+  "entity_id": "arrow_mclaren_indycar_team",
+  "entity_name": "Arrow McLaren IndyCar Team",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "mclaren.com",
+    "indycar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/senior-accountant-at-arrow-mclaren-indycar-4331183980"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "arrow_mclaren_indycar_team",
+      "entity_name": "Arrow McLaren IndyCar Team",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/senior-accountant-at-arrow-mclaren-indycar-4331183980",
+        "https://mclaren.com",
+        "https://indycar.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Arrow McLaren IndyCar Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:17:59.694509",
+          "domain_explored": "https://mclaren.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:18:08.033894",
+          "domain_explored": "https://indycar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iRacing (Virtual/Sim racing platform)",
+              "Thrustmaster (Hardware partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Marketing/Content Production: Evidence of commercial shoots with FOX Sports (suggests external agency usage or production vendor needs, but no specific RFPs)."
+            ]
+          },
+          "patterns_found": [
+            "Entity mentions (Pato O'Ward, Arrow McLaren)",
+            "Broadcast partnership indicators (FOX Sports)",
+            "Sponsorship visibility (Verizon, Gainbridge, NTT)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 287,
+              "elapsed_seconds": 4.288107872009277
+            }
+          ],
+          "reasoning": "The content is the official IndyCar series homepage, focusing on race schedules, standings, and general series news. While it mentions 'Arrow McLaren' driver Pato O'Ward and shows behind-the-scenes content production, it provides no specific information regarding Arrow McLaren's internal procurement operations, technology stack, or vendor needs. It is high-level sports entertainment content rather than corporate procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:18:25.447862",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-accountant-at-arrow-mclaren-indycar-4331183980",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant (Title only, content inaccessible)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Login wall / Authentication barrier",
+            "Generic job search results (irrelevant context)",
+            "Dynamic content loading (scraped HTML shell)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 245,
+              "elapsed_seconds": 13.00580906867981
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's authentication interface (login forms, password recovery, 'Join now') and generic job search results for other companies (LOVING, Catalyst Professional Network). The specific job description for the 'Senior Accountant at Arrow McLaren' was not captured in the provided text, likely due to a login requirement or dynamic rendering that the scraper failed to bypass. Therefore, no specific procurement signals regarding Arrow McLaren can be extracted."
+        }
+      ],
+      "total_input_tokens": 2860,
+      "total_output_tokens": 532,
+      "estimated_cost_usd": 0.01656
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Arrow McLaren IndyCar Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:18:25.450103"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364505",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:24.650753"
+}

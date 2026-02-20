@@ -1,0 +1,118 @@
+{
+  "entity_id": "cayman_islands_basketball_association",
+  "entity_name": "Cayman Islands Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "caymanbasketball.com",
+    "ciba.web.geniussports.com",
+    "caymancompass.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cayman_islands_basketball_association",
+      "entity_name": "Cayman Islands Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ciba.web.geniussports.com",
+        "https://caymancompass.com",
+        "https://caymanbasketball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cayman Islands Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:08:43.903302",
+          "domain_explored": "https://caymanbasketball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Mourant (Sponsorship/Services)",
+              "Vendor: Department of Education Services (Partnership)",
+              "Vendor: Nelson Isley (FIBA Coaching Instructor/Training Services)",
+              "Procurement Activity: Uniforms for 31 teams (Sponsorship-funded)",
+              "Event: FIBA Starter Coaching Course (Jan 13)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate_Sponsorship_Acquisition",
+            "Educational_Partnerships",
+            "Grassroots_Development_Focus",
+            "Event_Uniform_Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 332,
+              "elapsed_seconds": 23.245718002319336
+            }
+          ],
+          "reasoning": "While the content does not reveal direct RFPs or technology stack details, it confirms active procurement of goods (uniforms) and services (coaching instruction) through sponsorship models. The partnership with 'Mourant' indicates a capability to secure external funding for specific league needs (uniforms), and the collaboration with the 'Department of Education Services' suggests a B2G (Business-to-Government) operational pattern. This signals a vendor-friendly environment but suggests a reliance on sponsorship rather than direct budget allocation for league supplies."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:08:48.097039",
+          "domain_explored": "https://ciba.web.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:08:51.020859",
+          "domain_explored": "https://caymancompass.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1370,
+      "total_output_tokens": 332,
+      "estimated_cost_usd": 0.00909
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cayman Islands Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:08:51.021925"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.260425",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:12:55.610013"
+}

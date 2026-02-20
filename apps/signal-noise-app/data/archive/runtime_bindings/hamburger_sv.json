@@ -1,0 +1,96 @@
+{
+  "entity_id": "hamburger_sv",
+  "entity_name": "Hamburger SV",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "bundesliga.com",
+    "borussia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hamburger_sv",
+      "entity_name": "Hamburger SV",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://borussia.com",
+        "https://bundesliga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hamburger SV may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:20:52.235640",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_league_content",
+            "transfer_window_coverage",
+            "irrelevance_to_target_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 466,
+              "output_tokens": 154,
+              "elapsed_seconds": 2.6939289569854736
+            }
+          ],
+          "reasoning": "The content is a general league-wide update regarding the January 2026 transfer window. It lacks specific mention of Hamburger HSV (Hamburger SV), contains no procurement signals, no technology stack details, and no governance information relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:20:55.685015",
+          "domain_explored": "https://borussia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 466,
+      "total_output_tokens": 154,
+      "estimated_cost_usd": 0.003708
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hamburger SV may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:20:55.686289"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.126872",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:48.064376"
+}

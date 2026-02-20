@@ -1,0 +1,159 @@
+{
+  "entity_id": "dtm_(deutsche_tourenwagen_masters)",
+  "entity_name": "DTM (Deutsche Tourenwagen Masters)",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "commons.wikimedia.org",
+    "emiliaromagnaturismo.it",
+    "supergt.net",
+    "trymysport.co.uk",
+    "motorauthority.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dtm_(deutsche_tourenwagen_masters)",
+      "entity_name": "DTM (Deutsche Tourenwagen Masters)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://motorauthority.com",
+        "https://commons.wikimedia.org",
+        "https://supergt.net",
+        "https://trymysport.co.uk",
+        "https://emiliaromagnaturismo.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "DTM (Deutsche Tourenwagen Masters) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:10:08.096507",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:10:14.139678",
+          "domain_explored": "https://emiliaromagnaturismo.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Board Content",
+            "Generic Navigation Structure",
+            "Event Calendar Listings",
+            "Regional Promotion (Emilia-Romagna)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.869163990020752
+            }
+          ],
+          "reasoning": "The content is exclusively promotional material for the Emilia-Romagna tourism board (Italy). It focuses on travel itineraries, food culture, and events. There is absolutely no connection to DTM (Deutsche Tourenwagen Motorsport), nor are there any procurement signals, technology stacks, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:10:18.003824",
+          "domain_explored": "https://supergt.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:10:20.898765",
+          "domain_explored": "https://trymysport.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:10:26.438372",
+          "domain_explored": "https://motorauthority.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Automotive News Aggregation",
+            "Consumer Automotive Reviews",
+            "Industry Gossip/Editorial Content",
+            "Generic Advertorial Layout"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.428471803665161
+            }
+          ],
+          "reasoning": "The content is purely consumer-facing automotive journalism (MotorAuthority). It focuses on car reviews, spy shots, and industry news for enthusiasts. There is no connection to the DTM organization, its operations, or its procurement needs."
+        }
+      ],
+      "total_input_tokens": 2902,
+      "total_output_tokens": 345,
+      "estimated_cost_usd": 0.013881000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "DTM (Deutsche Tourenwagen Masters) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:10:26.440295"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.375156",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:28.491439"
+}

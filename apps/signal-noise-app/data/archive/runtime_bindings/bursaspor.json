@@ -1,0 +1,136 @@
+{
+  "entity_id": "bursaspor",
+  "entity_name": "Bursaspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "bursaspor.org.tr",
+    "bursaspor.net",
+    "bursastore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bursaspor",
+      "entity_name": "Bursaspor",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bursaspor.net",
+        "https://bursaspor.org.tr",
+        "https://bursastore.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bursaspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:39:13.666594",
+          "domain_explored": "https://bursaspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations: Active ticket sales for Adanaspor match indicate usage of a ticketing platform, though specific vendor (e.g., Passo, Biletinial) is not named in the text.",
+              "Membership Management: Publication of membership applications suggests an active CRM or database system, but no procurement intent is visible."
+            ]
+          },
+          "patterns_found": [
+            "Operational Content Loop",
+            "Fan Engagement Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 244,
+              "elapsed_seconds": 2.606863021850586
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of repetitive sports news updates (match results, training logs, ticket sales) and membership announcements. There are no explicit signals regarding technology procurement, job vacancies, or infrastructure investments. The content is purely operational and fan-facing."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:39:21.320991",
+          "domain_explored": "https://bursaspor.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Classic ASP",
+              "JavaScript (Client-side)",
+              "Mailto Links (Basic Contact)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Unofficial Status: Site is a fan archive, not the corporate procurement portal.",
+              "Legacy Infrastructure: Use of Classic ASP suggests no active modern digital transformation procurement on this specific property."
+            ]
+          },
+          "patterns_found": [
+            "Legacy Technology Stack (Classic ASP)",
+            "Fan/Archive Focus",
+            "Unofficial Entity Status"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.6217620372772217
+            }
+          ],
+          "reasoning": "The content analyzed is from 'bursaspor.net', a legacy fan site and archive (explicitly described as 'Bursa futbolunun fikir, d\u001fc\u001fnce, yorum ve ar\u001eiv sitesi'), rather than the official corporate entity. The site uses outdated technology (Classic ASP) and focuses on historical data, fan collections, and editorials. It lacks corporate governance, procurement documentation, or modern business operations signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:39:24.251618",
+          "domain_explored": "https://bursastore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2749,
+      "total_output_tokens": 531,
+      "estimated_cost_usd": 0.016212
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bursaspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:39:24.252615"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.149405",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:41.990557"
+}

@@ -1,0 +1,312 @@
+{
+  "entity_id": "khimki_moscow",
+  "entity_name": "Khimki Moscow",
+  "template_id": "tpl_c1_professional_league_clubs_v1",
+  "cluster_id": "bb_regional_russia",
+  "discovered_domains": [
+    "en.bckhimki.com",
+    "vtb-league.com",
+    "euroleaguebasketball.net",
+    "bc-zenit.com",
+    "maccabi.co.il",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mt.linkedin.com/jobs/research-jobs-moscow?trk=amworks_jserp_redirect",
+      "https://dk.linkedin.com/jobs/view/193379739?trkInfo=searchKeywordString%3AMph%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A15%2CMSRPsearchId%3Ae6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&refId=e6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&trk=jobs_jserp_job_listing_text"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "khimki_moscow",
+      "entity_name": "Khimki Moscow",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://mt.linkedin.com/jobs/research-jobs-moscow?trk=amworks_jserp_redirect",
+        "https://dk.linkedin.com/jobs/view/193379739?trkInfo=searchKeywordString%3AMph%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A15%2CMSRPsearchId%3Ae6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&refId=e6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&trk=jobs_jserp_job_listing_text",
+        "https://bc-zenit.com",
+        "https://euroleaguebasketball.net",
+        "https://en.bckhimki.com",
+        "https://zoominfo.com",
+        "https://vtb-league.com",
+        "https://maccabi.co.il"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Khimki Moscow may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:40:07.635849",
+          "domain_explored": "https://en.bckhimki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports/Entertainment Domain Mismatch",
+            "Content Aggregation (Game Recaps, League Standings)",
+            "Public Relations/News Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.4572088718414307
+            }
+          ],
+          "reasoning": "The analyzed content is exclusively related to BC Khimki, a professional basketball club, rather than the Khimki Moscow municipal administration. The text contains game summaries, player statistics (e.g., Alexey Shved, Timofey Mozgov), and league news (VTB United League, EuroLeague). There are no signals related to government procurement, municipal technology stacks, or administrative decision-making processes relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:40:14.721675",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Navigation",
+            "Team Rosters (Autodor, CSKA, Zenit, etc.)",
+            "Game Schedules",
+            "Fan Engagement Content (MVP, Hall of Fame, Tickets)",
+            "Sponsor Branding (WINLINE, BETSITI)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.0315961837768555
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the VTB United League (a professional basketball league). It lists teams, schedules, and player statistics. While 'Khimki' is a prominent basketball club often associated with this region, this specific page is a league aggregator and does not contain municipal governance or procurement signals for the city of Khimki."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:40:21.871144",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Navigation",
+            "Video Content Aggregation (Highlights/Magic Moments)",
+            "Executive Leadership News (CEO Appointment)",
+            "Sponsorship Branding (Motorola, BKT, AKTOR)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 189,
+              "elapsed_seconds": 4.0536839962005615
+            }
+          ],
+          "reasoning": "The content is exclusively focused on professional basketball operations (EuroLeague), including game highlights, disciplinary news, and executive appointments. There are no signals related to municipal governance, public procurement, or administrative technology stacks relevant to the Khimki Moscow entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:40:42.151836",
+          "domain_explored": "https://bc-zenit.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Navigation",
+            "Player Statistics Aggregation",
+            "Game Recaps/News Focus",
+            "Team Roster Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 175,
+              "elapsed_seconds": 16.526129007339478
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on basketball operations (BC Zenit). It displays player statistics (points, rebounds, assists), game results (Zenit vs. Samara), and coaching news. There is no content related to municipal governance, procurement tenders, or administrative technology stacks for the city of Khimki."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:40:50.159863",
+          "domain_explored": "https://maccabi.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Roster (Player Names/Numbers)",
+            "League Standings (Euroleague Table)",
+            "Ticket Sales Interface ('Purchase Ticket')",
+            "Merchandise Store Links",
+            "Fan Engagement Content (News/Video Highlights)",
+            "Sponsorship Advertising ('Rapyd', 'SkyBox')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.481060028076172
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the operations of the Maccabi Tel Aviv basketball club. It displays player rosters, game schedules, league standings, and ticket purchasing options. There is no content related to municipal governance, public administration, or procurement processes for the Khimki Moscow entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:40:53.445160",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:41:07.267152",
+          "domain_explored": "https://mt.linkedin.com/jobs/research-jobs-moscow?trk=amworks_jserp_redirect",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Medical Science Liaison - Novartis",
+              "Administrative Assistant - United Imaging Healthcare"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Authentication Gate (Sign-in Wall)",
+            "Geographic Mismatch (General Moscow vs. Khimki Specific)",
+            "Unrelated Industry Listings (Pharmaceuticals/Novartis)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 275,
+              "elapsed_seconds": 8.444986820220947
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Research' roles in the Moscow metropolitan area. It is heavily gated by authentication prompts ('Sign in to set job alerts'), preventing deep analysis. The visible listings (e.g., Novartis, United Imaging Healthcare) are for private sector entities in unrelated industries (Pharma, Healthcare) and do not reflect the procurement activities or governance of the Khimki Moscow municipal entity. There is no signal of municipal procurement intent."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:41:16.486776",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/193379739?trkInfo=searchKeywordString%3AMph%2CsearchLocationString%3A%252C%2B%2Cvertical%3Ajobs%2CpageNum%3A1%2Cposition%3A15%2CMSRPsearchId%3Ae6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&refId=e6986d97-e908-4fae-848e-e98b5a02206e_1473496290731&trk=jobs_jserp_job_listing_text",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Dynamics (CRM)",
+              "AutoCAD"
+            ],
+            "job_postings": [
+              {
+                "title": "Pre-Sales Technical Support Engineer",
+                "location": "Khimki, Moscow region",
+                "recruiter": "MPH Vostok",
+                "client_sector": "Heat tracing systems / Oil & Gas",
+                "status": "Archived (9 years ago)"
+              }
+            ],
+            "procurement_indicators": [
+              "Corporate transportation usage (Metro Planernaya shuttle)",
+              "Structured bonus system",
+              "Medical assurance procurement"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Archived)",
+            "CRM Usage (Microsoft Dynamics)",
+            "CAD/Engineering Software",
+            "Geographic Match (Khimki, Moscow Region)",
+            "Vendor/Recruiter Context (MPH Vostok)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1797,
+              "output_tokens": 382,
+              "elapsed_seconds": 5.167443037033081
+            }
+          ],
+          "reasoning": "While the entity 'Khimki Moscow' is not the direct employer (the role is for a client of MPH Vostok or MPH Vostok itself located in Khimki), this content provides concrete evidence of the technology stack and operational standards of companies within the Khimki region. It confirms the use of Microsoft Dynamics and AutoCAD for engineering and sales processes in the area. It is a weak signal because it is an archived post (9 years old) and the hiring entity is a third party/recruiter, not the municipality directly."
+        }
+      ],
+      "total_input_tokens": 10786,
+      "total_output_tokens": 1648,
+      "estimated_cost_usd": 0.057078
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Khimki Moscow may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:41:16.487602"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.215018",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:29.818814"
+}

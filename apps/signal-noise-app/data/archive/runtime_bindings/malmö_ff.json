@@ -1,0 +1,114 @@
+{
+  "entity_id": "malm\u00f6_ff",
+  "entity_name": "Malm\u00f6 FF",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "mffshopen.se"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://se.linkedin.com/jobs/view/high-performance-specialist-acadamy-at-malm%C3%B6-ff-4207723137"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "malm\u00f6_ff",
+      "entity_name": "Malm\u00f6 FF",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://mffshopen.se",
+        "https://se.linkedin.com/jobs/view/high-performance-specialist-acadamy-at-malm%C3%B6-ff-4207723137"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Malm\u00f6 FF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:42:46.163478",
+          "domain_explored": "https://mffshopen.se",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:42:53.166042",
+          "domain_explored": "https://se.linkedin.com/jobs/view/high-performance-specialist-acadamy-at-malm%C3%B6-ff-4207723137",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IDP (Individual Development Plan) Systems",
+              "High-Performance Environment (HPE) Software",
+              "Player Data Tracking Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "High Performance Specialist - Academy",
+                "department": "Academy / High Performance",
+                "focus": "Psychosocial development, IDP management, HPE program implementation",
+                "status": "Closed (Posted ~9 months ago)"
+              }
+            ],
+            "procurement_indicators": [
+              "Program Implementation: Role requires building/improving a new HPE program.",
+              "Data Management: Responsibility for understanding and managing player IDPs.",
+              "Tech Requirement: Explicit 'Tech friendly' requirement for a psychology role suggests digital tool adoption."
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Environment (HPE) Program Investment",
+            "Academy Psychosocial Development",
+            "Tech-Friendly Role Requirement",
+            "Individual Development Plans (IDP) Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 442,
+              "elapsed_seconds": 3.7705109119415283
+            }
+          ],
+          "reasoning": "The job posting confirms Malm\u00f6 FF is actively investing in a structured 'High-Performance Environment' (HPE) program for their academy. While this is a personnel hire, the role involves 'building a development program' and requires the candidate to be 'Tech friendly' and manage 'Individual Development Plans (IDP)'. This suggests a need for software tools to track player development, mental skills, and workshop content, indicating potential future procurement for HPE management systems or sports psychology platforms."
+        }
+      ],
+      "total_input_tokens": 1400,
+      "total_output_tokens": 442,
+      "estimated_cost_usd": 0.01083
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Malm\u00f6 FF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:42:53.255329"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.173322",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:27:09.267945"
+}

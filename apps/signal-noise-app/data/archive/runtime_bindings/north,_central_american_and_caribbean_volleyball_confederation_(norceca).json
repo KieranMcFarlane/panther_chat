@@ -1,0 +1,162 @@
+{
+  "entity_id": "north,_central_american_and_caribbean_volleyball_confederation_(norceca)",
+  "entity_name": "North, Central American and Caribbean Volleyball Confederation (NORCECA)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "norceca.net",
+    "afecavol.org",
+    "africanews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "north,_central_american_and_caribbean_volleyball_confederation_(norceca)",
+      "entity_name": "North, Central American and Caribbean Volleyball Confederation (NORCECA)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02
+      ],
+      "explored_domains": [
+        "https://norceca.net",
+        "https://africanews.com",
+        "https://afecavol.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "North, Central American and Caribbean Volleyball Confederation (NORCECA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:08:01.051606",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static HTML (Legacy)",
+              "PDF Documentation (Standard for reports/charts)",
+              "Multilingual Content Management (English/Spanish)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting & Venue Services (Rotating Schedule 2002-2030)",
+              "Marketing & Branding Services (Branding Kit link)",
+              "Sports Equipment & Infrastructure (Development Centers)",
+              "Governance Consulting (Congress/Candidature documents)",
+              "IT Modernization (Legacy website structure implies future need)"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Web Infrastructure",
+            "PDF-based Governance & Reporting",
+            "Event Management Dependencies",
+            "Rotational Hosting Cycles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 337,
+              "elapsed_seconds": 3.505936861038208
+            }
+          ],
+          "reasoning": "The content reveals a heavy reliance on static HTML and PDF documentation for critical operations (Constitution, Rankings, Reports). The presence of a 'Branding Kit' and 'Development Centers' suggests marketing and operational outsourcing needs. The 'Rotating Schedule' indicates predictable, long-term event planning cycles, which are strong procurement indicators for venue services and equipment rental."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:08:10.882944",
+          "domain_explored": "https://afecavol.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET (.aspx)",
+              "Facebook Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Transparency Section (Governance/Reporting)",
+              "Documentos de Trabajo (Working Documents - potential RFPs/Minutes)",
+              "Event Hosting Requirements (Logistics/Equipment)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Confederation Structure",
+            "Event Management Dependencies",
+            "Legacy Web Infrastructure",
+            "Governance & Transparency Reporting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 316,
+              "elapsed_seconds": 6.265282154083252
+            }
+          ],
+          "reasoning": "The content confirms AFECVOL as a major regional affiliate (Central America) of NORCECA. While the site is primarily informational and event-focused (news, results, photos), the presence of a 'Transparencia' (Transparency) section and 'Documentos de Trabajo' (Working Documents) indicates a governance structure that handles reporting and potentially procurement. The site uses legacy .aspx technology, suggesting a need for digital modernization. This confirms the entity's relevance within the NORCECA ecosystem but provides only weak direct procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:08:16.683200",
+          "domain_explored": "https://africanews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Domain",
+            "General News Aggregation",
+            "No Entity Overlap"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.764794111251831
+            }
+          ],
+          "reasoning": "The provided content is scraped from 'africanews.com', a general news media outlet. The content focuses on geopolitical events (Gaza, Mali), sports (AFCON, Olympics), and business (cocoa, gas) unrelated to NORCECA. There is absolutely no overlap with the North, Central American and Caribbean Volleyball Confederation, nor are there any procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4306,
+      "total_output_tokens": 846,
+      "estimated_cost_usd": 0.025608
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "North, Central American and Caribbean Volleyball Confederation (NORCECA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:08:16.684255"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.330478",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:01.559248"
+}

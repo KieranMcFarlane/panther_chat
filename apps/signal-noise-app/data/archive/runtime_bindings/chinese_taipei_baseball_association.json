@@ -1,0 +1,156 @@
+{
+  "entity_id": "chinese_taipei_baseball_association",
+  "entity_name": "Chinese Taipei Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "wbscasia.org",
+    "baseball.fandom.com",
+    "wikidata.org",
+    "baseball-reference.com",
+    "ocac.gov.tw",
+    "zambiafiles.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_taipei_baseball_association",
+      "entity_name": "Chinese Taipei Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://baseball-reference.com",
+        "https://wikidata.org",
+        "https://baseball.fandom.com",
+        "https://zambiafiles.com",
+        "https://ocac.gov.tw",
+        "https://wbscasia.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Taipei Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:41:45.171847",
+          "domain_explored": "https://wbscasia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:41:51.218121",
+          "domain_explored": "https://baseball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "User-Generated Content Platform",
+            "Irrelevant Domain (baseball.fandom.com)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.0042130947113037
+            }
+          ],
+          "reasoning": "The content analyzed is from the Baseball Wiki on Fandom. It is a general-purpose encyclopedia for baseball history and trivia, not the official website of the Chinese Taipei Baseball Association (CTBA). There are no procurement signals, job postings, or technology stack indicators relevant to the CTBA's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:41:54.036795",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:41:56.835573",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:42:00.458846",
+          "domain_explored": "https://ocac.gov.tw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:42:03.603071",
+          "domain_explored": "https://zambiafiles.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1396,
+      "total_output_tokens": 170,
+      "estimated_cost_usd": 0.006738
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Taipei Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:42:03.603927"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312810",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:02.309801"
+}

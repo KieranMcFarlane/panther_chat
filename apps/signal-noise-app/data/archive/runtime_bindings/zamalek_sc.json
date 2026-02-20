@@ -1,0 +1,189 @@
+{
+  "entity_id": "zamalek_sc",
+  "entity_name": "Zamalek SC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "zamaleksc.com",
+    "zamalek.vercel.app",
+    "transfermarkt.us",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7212477354554630144-2HQU"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "zamalek_sc",
+      "entity_name": "Zamalek SC",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://zamaleksc.com",
+        "https://transfermarkt.us",
+        "https://zamalek.vercel.app",
+        "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7212477354554630144-2HQU",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Zamalek SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:41:42.480482",
+          "domain_explored": "https://zamaleksc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Pending)",
+              "Web Development (Frontend/Backend)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Store Launch (Coming Soon)",
+              "Merchandise Strategy (Home, Woman, Away kits)",
+              "Digital Retail Channel Development"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Launch Signal",
+            "Merchandise Expansion",
+            "Placeholder Content"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 768,
+              "output_tokens": 263,
+              "elapsed_seconds": 16.030409336090088
+            }
+          ],
+          "reasoning": "The content reveals a 'Coming Soon' state for the official Zamalek SC store. While no active RFPs are visible, the explicit text 'Official store products will be available soon with a wide range of official clothes and accessories' indicates a clear intent to launch or upgrade e-commerce capabilities. This suggests a future or active procurement need for e-commerce platforms, inventory management systems, or web development services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:41:45.766710",
+          "domain_explored": "https://zamalek.vercel.app",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:41:52.650622",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Global Sports News Aggregation",
+            "Competitor/Market Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.7851500511169434
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt.us is a global football news aggregator focusing on player transfers, market values, and rumors for clubs worldwide (e.g., Manchester United, Galatasaray, Red Bull New York). There is no mention of Zamalek SC, nor does the site contain B2B procurement signals, job postings, or technology stack information relevant to Zamalek's internal operations. This is a market data source, not a procurement signal source for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:41:55.666891",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:42:02.264989",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7212477354554630144-2HQU",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "Al Jazira Sports & Cultural Club",
+                "role": "Head Coach (U23)",
+                "location": "UAE",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Target",
+            "Competitor Job Posting",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.2400150299072266
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Al Jazira Sports & Cultural Club' (UAE), not Zamalek SC (Egypt). While it confirms the sports industry is hiring, it provides zero intelligence regarding Zamalek's procurement, technology stack, or operational status. It is irrelevant noise for the specific target entity."
+        }
+      ],
+      "total_input_tokens": 3722,
+      "total_output_tokens": 685,
+      "estimated_cost_usd": 0.021441
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Zamalek SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:42:02.265661"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.348701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:29.341411"
+}

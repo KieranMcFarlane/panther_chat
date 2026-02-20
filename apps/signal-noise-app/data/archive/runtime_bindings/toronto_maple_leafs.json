@@ -1,0 +1,251 @@
+{
+  "entity_id": "toronto_maple_leafs",
+  "entity_name": "Toronto Maple Leafs",
+  "template_id": "tpl_tier1_club_north_america_v1",
+  "cluster_id": "nhl_major_league_clubs",
+  "discovered_domains": [
+    "xp.mapleleafs.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/toronto-maple-leafs-jobs",
+      "https://ca.linkedin.com/jobs/view/gate-staff-at-mlse-maple-leaf-sports-entertainment-partnership-4366604343",
+      "https://www.linkedin.com/jobs/view/concierge-at-maple-leaf-sports-entertainment-lt-192280105",
+      "https://www.linkedin.com/jobs/view/in-seat-runner-at-maple-leaf-sports-entertainment-lt-193606313",
+      "https://ca.linkedin.com/jobs/view/manager-e11even-at-mlse-maple-leaf-sports-entertainment-partnership-4342950637",
+      "https://www.linkedin.com/jobs/view/beer-vendor-at-maple-leaf-sports-entertainment-lt-193605258",
+      "https://ca.linkedin.com/jobs/view/ticket-agent-at-mlse-maple-leaf-sports-entertainment-partnership-4344812318",
+      "https://www.linkedin.com/jobs/view/coordinator-global-partnerships-raptors-905-at-maple-leaf-sports-entertainment-lt-205748184"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toronto_maple_leafs",
+      "entity_name": "Toronto Maple Leafs",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/in-seat-runner-at-maple-leaf-sports-entertainment-lt-193606313",
+        "https://ca.linkedin.com/jobs/toronto-maple-leafs-jobs",
+        "https://www.linkedin.com/jobs/view/concierge-at-maple-leaf-sports-entertainment-lt-192280105",
+        "https://ca.linkedin.com/jobs/view/gate-staff-at-mlse-maple-leaf-sports-entertainment-partnership-4366604343",
+        "https://xp.mapleleafs.com",
+        "https://ca.linkedin.com/jobs/view/manager-e11even-at-mlse-maple-leaf-sports-entertainment-partnership-4342950637"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Engineering Expansion",
+        "In-House Product Development",
+        "MLSE Centralized Procurement",
+        "Technology Stack Modernization"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toronto Maple Leafs may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:27:49.025034",
+          "domain_explored": "https://xp.mapleleafs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fan Access / Leafs Insider (CRM/Marketing)",
+              "NHL.com App (Mobile Engagement)",
+              "LostAndFoundReport.com (Operational SaaS)",
+              "Access.mlse.com (Logistics/Info)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Molson (Leafs Nation HQ)",
+              "Sponsorship activation with Mastercard",
+              "Sponsorship activation with Firehouse Subs",
+              "Sponsorship activation with GoodLife Fitness",
+              "Digital contesting infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform Usage",
+            "Third-Party Vendor Reliance",
+            "Cross-Property Integration (MLSE)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 343,
+              "elapsed_seconds": 38.51946711540222
+            }
+          ],
+          "reasoning": "The content reveals the use of specific third-party platforms for fan engagement and operations (e.g., 'lostandfoundreport.com' for lost & found, 'access.mlse.com' for transit updates). While this is primarily a fan-facing portal, the reliance on these external vendors indicates existing procurement relationships and potential for contract renewals or platform upgrades. The mention of 'NHL26' and 'HUT' (Hockey Ultimate Team) suggests active digital marketing partnerships with gaming publishers."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:28:00.272400",
+          "domain_explored": "https://ca.linkedin.com/jobs/toronto-maple-leafs-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fullstack Development Stack",
+              "Product Engineering Tools",
+              "Digital Infrastructure"
+            ],
+            "job_postings": [
+              "Fullstack Engineer (MLSE)",
+              "Product Engineer (MLSE)",
+              "Gate Staff (MLSE)",
+              "Paid Seller, MLSE Foundation 50|50 Program (MLSE)"
+            ],
+            "procurement_indicators": [
+              "Hiring for Product Engineering suggests internal development of digital platforms.",
+              "Recruitment of Fullstack Engineers indicates expansion of web/app capabilities.",
+              "Roles posted under MLSE confirm centralized procurement for the Leafs organization."
+            ]
+          },
+          "patterns_found": [
+            "Digital Engineering Expansion",
+            "In-House Product Development",
+            "MLSE Centralized Procurement",
+            "Technology Stack Modernization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 351,
+              "elapsed_seconds": 7.652733325958252
+            }
+          ],
+          "reasoning": "The discovery of specific engineering roles (Fullstack Engineer, Product Engineer) at MLSE indicates active investment in internal digital capabilities. This suggests a procurement strategy focused on building proprietary technology solutions rather than solely relying on SaaS vendors. These roles are strong indicators of current or upcoming software infrastructure procurement cycles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:28:07.317514",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/gate-staff-at-mlse-maple-leaf-sports-entertainment-partnership-4366604343",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticket Scanners (Hardware)"
+            ],
+            "job_postings": [
+              "Gate Staff (Event Personnel)"
+            ],
+            "procurement_indicators": [
+              "Operational Uniform Procurement (Outerwear provided)",
+              "Ticketing Hardware Usage (Scanners < 32oz)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing (Non-Technical)",
+            "Venue Operations",
+            "High-Turnover Hourly Workforce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.198042869567871
+            }
+          ],
+          "reasoning": "The content describes a 'Gate Staff' position, which is a front-line, hourly operational role focused on ticket scanning and fan services. It lacks strategic procurement intent, technology investment signals, or management-level decision-making indicators relevant to the target hypothesis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:28:10.354041",
+          "domain_explored": "https://www.linkedin.com/jobs/view/concierge-at-maple-leaf-sports-entertainment-lt-192280105",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:28:13.416878",
+          "domain_explored": "https://www.linkedin.com/jobs/view/in-seat-runner-at-maple-leaf-sports-entertainment-lt-193606313",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:28:23.306662",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/manager-e11even-at-mlse-maple-leaf-sports-entertainment-partnership-4342950637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Broken Link / 404 Error",
+            "Irrelevant Content (Woodbine Entertainment)",
+            "Data Scrape Failure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 699,
+              "output_tokens": 167,
+              "elapsed_seconds": 5.386520862579346
+            }
+          ],
+          "reasoning": "The scraped content indicates a failed page load or a redirect to an error page (referencing 'Woodbine Entertainment jobs in United States' and spelling errors). There is no content related to the Toronto Maple Leafs, MLSE, or the 'Manager E11even' role. This provides zero value for procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 4968,
+      "total_output_tokens": 1081,
+      "estimated_cost_usd": 0.031119
+    },
+    "procurement_signals": [
+      "Digital Engineering Expansion",
+      "In-House Product Development",
+      "MLSE Centralized Procurement",
+      "Technology Stack Modernization"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toronto Maple Leafs may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:28:23.308627"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302675",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:00.938524"
+}

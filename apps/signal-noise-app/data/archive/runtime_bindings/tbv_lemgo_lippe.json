@@ -1,0 +1,190 @@
+{
+  "entity_id": "tbv_lemgo_lippe",
+  "entity_name": "TBV Lemgo Lippe",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "tbv-lemgo-lippe.de",
+    "grokipedia.com",
+    "eurohandball.com",
+    "fitline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/mitarbeiter-m-w-d-aufbau-organisation-at-infinity-gmbh-co-kg-4358455589"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tbv_lemgo_lippe",
+      "entity_name": "TBV Lemgo Lippe",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fitline.com",
+        "https://eurohandball.com",
+        "https://tbv-lemgo-lippe.de",
+        "https://grokipedia.com",
+        "https://de.linkedin.com/jobs/view/mitarbeiter-m-w-d-aufbau-organisation-at-infinity-gmbh-co-kg-4358455589"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "TBV Lemgo Lippe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:20:24.463857",
+          "domain_explored": "https://tbv-lemgo-lippe.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SAP Arena (Venue naming rights - usage)",
+              "Phoenix Contact Arena (Venue naming rights - usage)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Renewal of Head Sponsorship (Phoenix Contact)",
+              "Procurement of Retail Inventory (Kempa apparel, fan merchandise)",
+              "Event Logistics (Winter Camp in Brackwede/Verl)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Continuity (Phoenix Contact)",
+            "Merchandise E-commerce (Kempa, DHB)",
+            "Event Operations (Winter Camp, Ticketing)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 286,
+              "elapsed_seconds": 3.6448888778686523
+            }
+          ],
+          "reasoning": "The scraped content consists of standard sports club operations news (sponsorship renewals, match schedules, youth certificates) and e-commerce product listings. While 'Phoenix Contact' is a major technology sponsor, the content confirms a *status quo* relationship rather than a new procurement signal or RFP. No specific job postings, technology upgrades, or governance changes were detected in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:20:30.600046",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:20:39.795740",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Scheduling (Machineseeker EHF Champions League)",
+            "Content Gating (Cookie Consent)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.270509958267212
+            }
+          ],
+          "reasoning": "The scraped content from eurohandball.com focuses on sports news results (Denmark champions, Gidsel MVP) and general federation event calendars. There is no mention of TBV Lemgo Lippe, their specific procurement needs, or their technology stack. The content is generic to the European Handball Federation and does not contain actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:20:48.077009",
+          "domain_explored": "https://fitline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:21:05.565201",
+          "domain_explored": "https://de.linkedin.com/jobs/view/mitarbeiter-m-w-d-aufbau-organisation-at-infinity-gmbh-co-kg-4358455589",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Mitarbeiter (m/w/d) Aufbau & Organisation at Infinity GmbH & Co. KG (Lemgo/Schwalenberg)"
+            ],
+            "procurement_indicators": [
+              "Vendor: Infinity GmbH & Co. KG",
+              "Service Scope: Official Caterer for Phoenix Contact Arena & TBV Lemgo Lippe",
+              "Service Scope: VIP Room Management (Sch\u00fcco Arena Bielefeld)",
+              "Service Scope: Gastronomy at Hermannsdenkmal & Medicum Detmold",
+              "Contact: bewerbung@infinityevents.de"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership (Catering & Gastronomy)",
+            "Facility Operations (Phoenix Contact Arena)",
+            "Event Logistics (B2B & Private)",
+            "Workforce Expansion (Job Posting)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 320,
+              "elapsed_seconds": 7.323870897293091
+            }
+          ],
+          "reasoning": "The content confirms a direct vendor relationship between TBV Lemgo Lippe and Infinity GmbH & Co. KG for catering and VIP services. This identifies Infinity as a key procurement partner in the 'Facility Management & Event Services' category. While this is a confirmed vendor relationship, it is an established contract rather than a new procurement signal, hence a WEAK_ACCEPT."
+        }
+      ],
+      "total_input_tokens": 4348,
+      "total_output_tokens": 790,
+      "estimated_cost_usd": 0.024894
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "TBV Lemgo Lippe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:21:05.567201"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349503",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:56:14.585251"
+}

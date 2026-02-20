@@ -1,0 +1,136 @@
+{
+  "entity_id": "rugby_rovigo_delta",
+  "entity_name": "Rugby Rovigo Delta",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rugbyrovigodelta.it",
+    "store.steampowered.com",
+    "rugby-rovigo-delta.wheree.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_rovigo_delta",
+      "entity_name": "Rugby Rovigo Delta",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rugbyrovigodelta.it",
+        "https://rugby-rovigo-delta.wheree.com",
+        "https://store.steampowered.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Rovigo Delta may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:31:30.124952",
+          "domain_explored": "https://rugbyrovigodelta.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mailticket (Ticketing)",
+              "Custom E-commerce Store (Subdomain)",
+              "Newsletter/CRM Software (Implied by 'Rugbyrovigoclub' signup)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Mailticket for season 2025/26 ticketing",
+              "Operation of a dedicated online store for merchandise",
+              "Data collection initiative via newsletter signup (Privacy compliance mentioned)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage (Mailticket)",
+            "E-commerce Infrastructure (Subdomain Store)",
+            "Marketing Automation (Newsletter Capture)",
+            "Fan Engagement (Community Management)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.4676051139831543
+            }
+          ],
+          "reasoning": "The content reveals the technology stack used for revenue generation and fan engagement. The use of 'Mailticket' for ticketing and a dedicated subdomain 'store.rugbyrovigodelta.it' indicates established vendor relationships for digital services. While no direct RFP is present, the 'Newsletter' signup suggests a need for CRM or email marketing tools to manage the 'Rugbyrovigoclub' community."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:31:35.661285",
+          "domain_explored": "https://store.steampowered.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain (Valve/Steam)",
+            "Gaming Content",
+            "Consumer E-commerce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 162,
+              "elapsed_seconds": 1.924196720123291
+            }
+          ],
+          "reasoning": "The scraped content is from the Steam Store (store.steampowered.com), a digital distribution platform for video games owned by Valve Corporation. It contains no information regarding Rugby Rovigo Delta, its operations, governance, or procurement needs. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:31:38.485350",
+          "domain_explored": "https://rugby-rovigo-delta.wheree.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2782,
+      "total_output_tokens": 477,
+      "estimated_cost_usd": 0.015501
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Rovigo Delta may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:31:38.487375"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281542",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:38.528235"
+}

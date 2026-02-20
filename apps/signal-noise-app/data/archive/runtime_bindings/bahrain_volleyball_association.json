@@ -1,0 +1,183 @@
+{
+  "entity_id": "bahrain_volleyball_association",
+  "entity_name": "Bahrain Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleyb.tripod.com",
+    "asianvolleyball.net",
+    "grokipedia.com",
+    "crownprince.bh",
+    "gdnonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahrain_volleyball_association",
+      "entity_name": "Bahrain Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://volleyb.tripod.com",
+        "https://gdnonline.com",
+        "https://grokipedia.com",
+        "https://crownprince.bh",
+        "https://asianvolleyball.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahrain Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:44:23.435175",
+          "domain_explored": "https://volleyb.tripod.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static HTML",
+              "Tripod.com (Legacy Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical reference to 1997 World Championship (Past event, not active procurement)",
+              "Legacy contact details (Fax/Pager) indicating outdated infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Web Presence (Web 1.0)",
+            "Static Content Structure",
+            "Historical Event Archiving"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 782,
+              "output_tokens": 258,
+              "elapsed_seconds": 4.189216136932373
+            }
+          ],
+          "reasoning": "The content is scraped from a legacy 'Tripod.com' hosting platform (circa 1997) and represents a static, archival website. The presence of 'under construction' placeholders and the lack of any dynamic functionality, contact forms, or modern service descriptions indicate this is not an active channel for procurement operations. It holds no current intelligence value for technology investments or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:44:35.865072",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Alignment with AVC Calendar",
+              "Collaboration with Volleyball World"
+            ]
+          },
+          "patterns_found": [
+            "Confederate Governance Structure",
+            "Regional Sports News Aggregation",
+            "Event Coordination Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 881,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.341285228729248
+            }
+          ],
+          "reasoning": "The content is sourced from the Asian Volleyball Confederation (AVC) and focuses on high-level coordination between the AVC, Volleyball World, and SV.LEAGUE in Japan. While this establishes the sporting ecosystem context, it does not contain specific procurement signals, technology investments, or governance patterns related to the Bahrain Volleyball Association (BVA). The BVA is likely a consumer of these standards rather than a procurement driver in this specific context."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:44:41.981414",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:45:06.557983",
+          "domain_explored": "https://crownprince.bh",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:45:23.960437",
+          "domain_explored": "https://gdnonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevant Content Categories (OMG, International Business)",
+            "Generic Local News (Fuel prices, Traffic tolls)",
+            "Lack of Sports Governance Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 200,
+              "elapsed_seconds": 4.282047986984253
+            }
+          ],
+          "reasoning": "The content provided is a generic news feed from 'Gulf Daily News' (GDN Online). The articles cover general Bahraini news, international business, and human interest stories. There is no mention of the Bahrain Volleyball Association, sports governance, or specific procurement activities related to volleyball. The entity context is missing entirely."
+        }
+      ],
+      "total_input_tokens": 3185,
+      "total_output_tokens": 696,
+      "estimated_cost_usd": 0.019995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahrain Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:45:23.961573"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.333080",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:57.804428"
+}

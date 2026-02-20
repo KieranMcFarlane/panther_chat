@@ -1,0 +1,193 @@
+{
+  "entity_id": "united_states_of_america_cricket",
+  "entity_name": "United States of America Cricket",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "usacricket.org",
+    "espncricinfo.com",
+    "twobirds.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "united_states_of_america_cricket",
+      "entity_name": "United States of America Cricket",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://usacricket.org",
+        "https://espncricinfo.com",
+        "https://zoominfo.com",
+        "https://twobirds.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "United States of America Cricket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:35:55.592371",
+          "domain_explored": "https://usacricket.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Embed)",
+              "Social Media Integration (Twitter/X, Instagram)",
+              "Newsletter Signup Form (Email Marketing)"
+            ],
+            "job_postings": [
+              "Vacancies Page (Link detected: '/vacancies')"
+            ],
+            "procurement_indicators": [
+              "2025 Membership Program Launch (Potential CRM/MMS procurement)",
+              "Transparency & Accountability Series (Governance/Compliance tools)",
+              "Foundational Plan 2020-2023 (Strategic consulting)"
+            ]
+          },
+          "patterns_found": [
+            "Membership Program Overhaul",
+            "Governance & Transparency Initiatives",
+            "Strategic Planning (Foundational Plan)",
+            "Digital Content Management (Blog/News)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 323,
+              "elapsed_seconds": 6.240181922912598
+            }
+          ],
+          "reasoning": "The content reveals a significant '2025 Membership Program' overhaul, indicating a need for Membership Management Systems (MMS) or CRM upgrades. The 'Transparency & Accountability Series' and 'Foundational Plan' suggest active governance and strategic planning, often precursors to management consulting or ERP procurement. However, specific vendor names or technical stacks are not listed in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:36:06.161003",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Media Coverage",
+            "International Match Scheduling",
+            "Editorial Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 229,
+              "elapsed_seconds": 4.148686647415161
+            }
+          ],
+          "reasoning": "The scraped content from ESPNcricinfo is a general sports news feed covering international cricket (India, Pakistan, England, etc.) and global tournaments like the T20 World Cup and WPL. While it mentions 'USA' in the context of a specific player quote ('Saiteja wants to prove USA 'is as good as anyone else''), there are no procurement signals, job postings, or technology investment indicators related to the governing body 'United States of America Cricket' (USAC). This source is irrelevant to the specific procurement intelligence goal for the USAC entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:36:20.599841",
+          "domain_explored": "https://twobirds.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generative AI (Legal context)",
+              "AdTech (Legal context)",
+              "Web Scraping (Legal context)"
+            ],
+            "job_postings": [
+              "Legal Partner Hires (Warsaw, Hong Kong, Shenzhen, Paris, Denmark)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legal Services Firm Content",
+            "Generic Industry Trend Analysis (AI, ESG, AdTech)",
+            "Global Corporate Expansion (Partner Hires)",
+            "Educational Webinars (Compliance focused)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 289,
+              "elapsed_seconds": 9.717554092407227
+            }
+          ],
+          "reasoning": "The scraped content is from the website of Bird & Bird, an international law firm. While the content mentions relevant technology topics like Generative AI, AdTech, and Web Scraping, these are presented as 'Trending Topics' and legal service offerings, not as procurement signals or internal technology investments by USA Cricket. There is no mention of USA Cricket, sports governance, or specific sports industry procurement needs. This represents a distraction from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:36:30.519078",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B Sales Platform Marketing",
+            "Customer Testimonials (Sales Use Cases)",
+            "Product Feature Promotions (AI, Copilot)",
+            "Lead Generation & Account-Based Marketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 216,
+              "elapsed_seconds": 4.4734110832214355
+            }
+          ],
+          "reasoning": "The content provided is the homepage marketing copy for ZoomInfo, a B2B intelligence and sales software vendor. It describes the product's features (AI, GTM execution, contact data) and benefits for sales teams. It does not contain any information regarding USA Cricket's internal operations, procurement needs, technology stack, or governance. It is entirely irrelevant to the target entity's procurement signals."
+        }
+      ],
+      "total_input_tokens": 5782,
+      "total_output_tokens": 1057,
+      "estimated_cost_usd": 0.033201
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "United States of America Cricket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:36:30.521488"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301890",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:16.998356"
+}

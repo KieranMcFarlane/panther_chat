@@ -1,0 +1,305 @@
+{
+  "entity_id": "premier_league",
+  "entity_name": "Premier League",
+  "template_id": "tpl_tier_1_professional_leagues_v1",
+  "cluster_id": "tier_1_professional_leagues",
+  "discovered_domains": [
+    "premierleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/the-premier-league/jobs",
+      "https://in.linkedin.com/jobs/premier-league-jobs",
+      "https://uk.linkedin.com/jobs/premier-league-jobs",
+      "https://www.linkedin.com/jobs/the-premier-league-jobs",
+      "https://www.linkedin.com/posts/the-premier-league_careers-at-the-premier-league-activity-7348732744115339266-EyPb",
+      "https://www.linkedin.com/jobs/premier-league-jobs-new-york-city-metropolitan-area",
+      "https://www.linkedin.com/posts/the-premier-league_careers-at-the-premier-league-activity-7354227157469937667-LxfW",
+      "https://uk.linkedin.com/jobs/premier-league-football-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "premier_league",
+      "entity_name": "Premier League",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/the-premier-league_careers-at-the-premier-league-activity-7348732744115339266-EyPb",
+        "https://uk.linkedin.com/company/the-premier-league/jobs",
+        "https://uk.linkedin.com/jobs/premier-league-jobs",
+        "https://in.linkedin.com/jobs/premier-league-jobs",
+        "https://premierleague.com",
+        "https://www.linkedin.com/jobs/the-premier-league-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "IT Service Desk Expansion",
+        "Information Security Investment",
+        "Operational Support Scaling",
+        "Active Recruitment (3-4 days ago)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Premier League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:50:25.883826",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cloud Infrastructure",
+              "Artificial Intelligence (AI)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Cloud & AI Partner sponsorship slot",
+              "Fantasy Premier League digital platform operations"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Structure",
+            "Cloud & AI Category Sponsorship",
+            "Digital Product Ecosystem (Fantasy PL)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1111,
+              "output_tokens": 251,
+              "elapsed_seconds": 35.17156982421875
+            }
+          ],
+          "reasoning": "The content is a navigation menu/header dump rather than substantive article content. However, it explicitly lists 'Official Cloud & AI Partner' as a distinct commercial category alongside 'Lead Partner' and 'Official Bank'. This confirms a strategic focus on Cloud and AI infrastructure. Additionally, the presence of 'Fantasy Premier League' indicates ongoing digital platform maintenance requirements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:50:37.632357",
+          "domain_explored": "https://uk.linkedin.com/company/the-premier-league/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IT Service Management (ITSM) Tools",
+              "Security Information and Event Management (SIEM)",
+              "Identity and Access Management (IAM)",
+              "Endpoint Detection and Response (EDR)"
+            ],
+            "job_postings": [
+              "IT Service Desk Technician",
+              "Service Desk Team Supervisor",
+              "Information Technology Security Specialist",
+              "Coach Development Manager"
+            ],
+            "procurement_indicators": [
+              "Scaling internal IT support capabilities (Service Desk)",
+              "Enhancing cybersecurity posture (Security Specialist)",
+              "Investment in employee hardware/software ecosystems",
+              "Budget allocation for technical personnel (OpEx)"
+            ]
+          },
+          "patterns_found": [
+            "IT Service Desk Expansion",
+            "Information Security Investment",
+            "Operational Support Scaling",
+            "Active Recruitment (3-4 days ago)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 360,
+              "elapsed_seconds": 8.312963247299194
+            }
+          ],
+          "reasoning": "The discovery of four specific, recent technical job postings (IT Service Desk Technician, Service Desk Team Supervisor, IT Security Specialist) provides direct evidence of active procurement and investment in the infrastructure and security category. This moves the entity from general capability discovery to specific operational intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:50:45.527778",
+          "domain_explored": "https://in.linkedin.com/jobs/premier-league-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Trainee - Live Events (BookMyShow)",
+              "Trainee - Operations (BookMyShow)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Detection",
+            "Vendor/Partner Ecosystem",
+            "Geographic Mismatch (India vs UK HQ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 213,
+              "elapsed_seconds": 4.428109645843506
+            }
+          ],
+          "reasoning": "The scraped content from 'in.linkedin.com' lists jobs for 'BookMyShow' and other entities, not direct roles for 'The Premier League'. These appear to be false positives generated by a keyword search (e.g., 'Premier League' appearing in descriptions or generic tags) rather than direct hiring by the entity. The content does not contain procurement signals for the Premier League itself."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:50:55.822068",
+          "domain_explored": "https://uk.linkedin.com/jobs/premier-league-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Customer Care Manager - Tottenham Hotspur FC",
+              "Partnership Executive - Liverpool FC",
+              "People Partner - Chelsea FC",
+              "Partnership Solutions Manager - Liverpool FC",
+              "Expression Of Interest - Two Circles"
+            ],
+            "procurement_indicators": [
+              "Partnership roles at member clubs (Liverpool FC)",
+              "Agency hiring (Two Circles)"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Detection",
+            "Ecosystem Saturation",
+            "Entity Mismatch (Clubs vs League)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 301,
+              "elapsed_seconds": 6.512385845184326
+            }
+          ],
+          "reasoning": "The search query 'Premier League jobs' returns results for the broader football ecosystem (member clubs like Tottenham, Liverpool, Chelsea) and agencies (Two Circles), rather than the central governing body entity 'The Premier League'. While these clubs are stakeholders, they operate as separate legal entities with distinct procurement budgets. Analyzing them as direct signals for the Premier League's central procurement introduces noise and false positives."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:51:08.574243",
+          "domain_explored": "https://www.linkedin.com/jobs/the-premier-league-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Athlete Relations - US (Sequel)",
+              "Brand Marketing Manager (Fanatics)",
+              "Marketing Lead (Two Circles)",
+              "Software Engineer Intern (Premier Inc - False Positive)"
+            ],
+            "procurement_indicators": [
+              "Partner/Vendor Expansion (Fanatics, Two Circles hiring for PL related work)",
+              "US Market Focus (Roles specific to US operations/relations)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Name Collision (Premier Inc vs Premier League)",
+            "Ecosystem Saturation (Fanatics, Two Circles, Sequel)",
+            "Geographic Mismatch (US-based roles vs UK HQ)",
+            "False Positive Detection"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 363,
+              "elapsed_seconds": 9.121914863586426
+            }
+          ],
+          "reasoning": "The search results for 'Premier League' in the United States are dominated by false positives and ecosystem partners rather than direct procurement signals from the entity itself. The most significant finding is the inclusion of 'Premier Inc' (a healthcare company) due to keyword matching. Other results (Fanatics, Two Circles, Sequel) are commercial partners or vendors hiring to support Premier League-related accounts, but these represent partner operations, not direct League procurement or hiring. The geographic focus (US) further dilutes the relevance to the core UK-based entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:51:19.238397",
+          "domain_explored": "https://www.linkedin.com/posts/the-premier-league_careers-at-the-premier-league-activity-7348732744115339266-EyPb",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Audit Management Systems",
+              "Compliance Tracking Platforms"
+            ],
+            "job_postings": [
+              "Academy Auditor (Education & Player Care)",
+              "Academy Auditor (Coaching)"
+            ],
+            "procurement_indicators": [
+              "Establishment of Independent Standards Organisation (PGAAC)",
+              "Expansion of Regulatory Framework for Academies",
+              "Interdisciplinary Assessment Tools Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Joint Venture Governance (PGAAC)",
+            "Compliance & Audit Framework",
+            "Operational Scaling (Growing Remit)",
+            "Cross-Entity Collaboration (PL, EFL, FA)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1675,
+              "output_tokens": 338,
+              "elapsed_seconds": 7.053074836730957
+            }
+          ],
+          "reasoning": "The post reveals the creation and expansion of the 'Professional Game Academy Audit Company' (PGAAC), a joint standards body mandated by the Premier League, EFL, and FA. While the immediate action is hiring auditors (HR), the underlying signal is the procurement and setup of a new independent governance infrastructure. This indicates investment in compliance frameworks and likely requires supporting software or consultancy services to manage the 'growing remit' of academy assessments across multiple categories."
+        }
+      ],
+      "total_input_tokens": 8801,
+      "total_output_tokens": 1826,
+      "estimated_cost_usd": 0.053793
+    },
+    "procurement_signals": [
+      "IT Service Desk Expansion",
+      "Information Security Investment",
+      "Operational Support Scaling",
+      "Active Recruitment (3-4 days ago)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Premier League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:51:19.240790"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418109",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:35.314863"
+}

@@ -1,0 +1,180 @@
+{
+  "entity_id": "bosnia_and_herzegovina_volleyball_federation",
+  "entity_name": "Bosnia and Herzegovina Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "paravolley.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ba.linkedin.com/jobs/view/marketing-coordinator-m-f-at-unija-smart-accounting-bih-3736688053",
+      "https://ba.linkedin.com/company/bicom-careers"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bosnia_and_herzegovina_volleyball_federation",
+      "entity_name": "Bosnia and Herzegovina Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ba.linkedin.com/company/bicom-careers",
+        "https://paravolley.eu",
+        "https://ba.linkedin.com/jobs/view/marketing-coordinator-m-f-at-unija-smart-accounting-bih-3736688053"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bosnia and Herzegovina Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:35:07.168415",
+          "domain_explored": "https://paravolley.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PVE Registration App (Custom/SaaS)",
+              "EU Project Management Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Funded by the European Union / EACEA",
+              "Active Projects (2024 PVEDP Project)",
+              "Centralized Data Management (Registration App)"
+            ]
+          },
+          "patterns_found": [
+            "EU Funding Dependency",
+            "Digital Transformation (Registration App)",
+            "Project-Based Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.253347158432007
+            }
+          ],
+          "reasoning": "The content confirms ParaVolley Europe (PVE) relies on EU funding (EACEA) and utilizes a 'PVE Registration App'. While this confirms the organization's digital ecosystem, it does not explicitly mention procurement activities by the Bosnia and Herzegovina Volleyball Federation. However, it establishes a high-probability vendor/partner relationship where BiH Federation may need to adopt or integrate PVE's technology stack to remain compliant or active in the region."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:35:19.002122",
+          "domain_explored": "https://ba.linkedin.com/jobs/view/marketing-coordinator-m-f-at-unija-smart-accounting-bih-3736688053",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "Social Media Management Platforms",
+              "Digital Marketing Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Marketing Coordinator",
+                "company": "Unija Smart Accounting BiH",
+                "relevance": "Corporate partner potential with sports focus"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget allocation for internal sports events and games",
+              "Investment in employee training systems",
+              "Hybrid work infrastructure requirements"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sports Sponsorship",
+            "Event Management Outsourcing",
+            "Hybrid Work Infrastructure",
+            "Digital Content Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 381,
+              "elapsed_seconds": 3.885305166244507
+            }
+          ],
+          "reasoning": "While this is a job posting for an accounting firm (Unija Smart Accounting), it explicitly references 'international regional sports games' and 'social gatherings' as a core company benefit. This indicates a corporate culture that invests in sports events, suggesting a potential sponsorship or partnership avenue for the Volleyball Federation. Additionally, the requirement for website maintenance and digital marketing points to a procurement need for marketing technology stacks (CMS, Analytics) which the Federation might share if seeking similar corporate partnerships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:35:28.490692",
+          "domain_explored": "https://ba.linkedin.com/company/bicom-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "VoIP (Voice over IP)",
+              "PBXware (IP PBX)",
+              "SERVERware (Virtualization)",
+              "gloCOM (Mobile/Desktop Communicator)",
+              "Meeting Platform (UC solution)"
+            ],
+            "job_postings": [
+              "Deployment & Training Engineers (Indicates need for on-premise installation and support services)"
+            ],
+            "procurement_indicators": [
+              "Local Presence: Offices in Sarajevo, Zenica, Tuzla, and Banja Luka align with Federation's regional structure.",
+              "Service Provider Model: B2B focus on Service Providers suggests potential for partnership or infrastructure hosting.",
+              "Scalability: Solutions designed for SMBs/Enterprises fit the budget and scale of a Sports Federation."
+            ]
+          },
+          "patterns_found": [
+            "Unified Communications (UC) Infrastructure",
+            "VoIP & Telephony Solutions",
+            "Local Vendor Capability (Bosnia & Herzegovina)",
+            "Cloud & Virtualization Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 392,
+              "elapsed_seconds": 3.7613987922668457
+            }
+          ],
+          "reasoning": "While Bicom Systems is a vendor rather than the Federation itself, it represents a high-probability local supplier for the Federation's communication needs. The Federation likely requires telephony, meeting platforms, and CRM tools (gloCOM) for coordination between national teams and regional offices. Identifying this local capability strengthens the procurement map for potential 'Communication & IT' tenders."
+        }
+      ],
+      "total_input_tokens": 4311,
+      "total_output_tokens": 1050,
+      "estimated_cost_usd": 0.028683
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bosnia and Herzegovina Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:35:28.493158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334760",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:43.231276"
+}

@@ -1,0 +1,221 @@
+{
+  "entity_id": "victoria_bushrangers",
+  "entity_name": "Victoria Bushrangers",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "aus_state_teams",
+  "discovered_domains": [
+    "prov.vic.gov.au",
+    "zoominfo.com",
+    "wikiwand.com",
+    "cricket.com.au",
+    "vicorienteering.asn.au",
+    "icc-cricket.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "victoria_bushrangers",
+      "entity_name": "Victoria Bushrangers",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://wikiwand.com",
+        "https://icc-cricket.com",
+        "https://prov.vic.gov.au",
+        "https://vicorienteering.asn.au",
+        "https://zoominfo.com",
+        "https://cricket.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Victoria Bushrangers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:06:46.489130",
+          "domain_explored": "https://prov.vic.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Public Sector Agency",
+            "Archival Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 162,
+              "elapsed_seconds": 7.3595640659332275
+            }
+          ],
+          "reasoning": "The content is from Public Record Office Victoria (PROV), the state government archives. This is a distinct entity from the Victoria Bushrangers cricket organization. The content focuses on historical records, exhibitions, and government archiving standards, which are irrelevant to the sporting body's procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:06:49.447985",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:06:52.268421",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:07:13.858822",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Content",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 174,
+              "elapsed_seconds": 17.53765106201172
+            }
+          ],
+          "reasoning": "The scraped content is from the general Cricket Australia homepage and focuses exclusively on sports news, match results, and player updates (e.g., Hazlewood, Marsh, T20 World Cup). There is no mention of 'Victoria Bushrangers' as a distinct business entity or procurement unit, nor are there any signals regarding technology investments, RFPs, or corporate governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:07:30.824869",
+          "domain_explored": "https://vicorienteering.asn.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Content",
+            "Sports Governing Body",
+            "Event Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 193,
+              "elapsed_seconds": 10.969835758209229
+            }
+          ],
+          "reasoning": "The scraped content belongs to Orienteering Victoria (vicorienteering.asn.au), the governing body for the sport of orienteering. This is a distinct entity from the Victoria Bushrangers (Cricket). The content focuses on consumer-facing event listings, membership drives, and news updates (e.g., 'Bike-O 75', 'Surfside Series'). There is no overlap in governance, operations, or procurement intent with the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:07:36.551463",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Content",
+            "Sports Governing Body",
+            "Tournament Coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1542,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.61088228225708
+            }
+          ],
+          "reasoning": "The content is sourced from the International Cricket Council (ICC) and focuses on the Men's T20 World Cup, specifically regarding the Sri Lankan squad and warm-up matches. This is a global governing body site providing sports news and tournament updates. There is no relationship to the 'Victoria Bushrangers' entity, nor are there any procurement, technology, or business operation signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:07:39.296698",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5860,
+      "total_output_tokens": 724,
+      "estimated_cost_usd": 0.02844
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Victoria Bushrangers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:07:39.297050"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302514",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:23.125317"
+}

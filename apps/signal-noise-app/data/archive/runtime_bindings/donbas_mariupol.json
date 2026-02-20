@@ -1,0 +1,144 @@
+{
+  "entity_id": "donbas_mariupol",
+  "entity_name": "Donbas Mariupol",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "encyclopediaofukraine.com",
+    "domusweb.it",
+    "freedomhouse.org",
+    "opendemocracy.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "donbas_mariupol",
+      "entity_name": "Donbas Mariupol",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://encyclopediaofukraine.com",
+        "https://domusweb.it",
+        "https://opendemocracy.net",
+        "https://freedomhouse.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Donbas Mariupol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:42:18.528413",
+          "domain_explored": "https://encyclopediaofukraine.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General informational content",
+            "Fundraising/Donation requests",
+            "Academic/Encyclopedic structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.527453899383545
+            }
+          ],
+          "reasoning": "The content is the homepage of the 'Internet Encyclopedia of Ukraine' (IEU), hosted by the Canadian Institute of Ukrainian Studies. It focuses on academic articles, history, and culture. While it mentions 'financial resources' and 'donors,' this refers to funding the encyclopedia's existence, not commercial procurement signals for an entity named 'Donbas Mariupol'. There is no mention of the target entity, RFPs, or technology stacks relevant to the procurement objective."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:42:26.104859",
+          "domain_explored": "https://domusweb.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Editorial content structure",
+            "Design and architecture news focus",
+            "Newsletter subscription prompts",
+            "Digital archive sales (Shop)",
+            "Project submission calls (User Generated Content)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 216,
+              "elapsed_seconds": 4.323881387710571
+            }
+          ],
+          "reasoning": "The target entity is 'Donbas Mariupol', which implies a focus on Ukrainian infrastructure, reconstruction, or regional governance. The analyzed content from 'domusweb.it' is an Italian design and architecture magazine (Domus). The content discusses art curation, HBO Max set design, and fashion brands. There is zero relevance to the target entity or procurement activities in the specified region."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:42:28.979647",
+          "domain_explored": "https://freedomhouse.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:42:31.810117",
+          "domain_explored": "https://opendemocracy.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2770,
+      "total_output_tokens": 425,
+      "estimated_cost_usd": 0.014685
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Donbas Mariupol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:42:31.810968"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.357219",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:22.963162"
+}

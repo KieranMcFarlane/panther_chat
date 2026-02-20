@@ -1,0 +1,114 @@
+{
+  "entity_id": "team_visma",
+  "entity_name": "Team Visma",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "teamvismaleaseabike.com",
+    "lavuelta.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "team_visma",
+      "entity_name": "Team Visma",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://teamvismaleaseabike.com",
+        "https://lavuelta.es"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Team Visma may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:50:41.039752",
+          "domain_explored": "https://teamvismaleaseabike.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Renewal of relationship with Garmin (Sponsorship/Performance Tech)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Renewal (Garmin)",
+            "Personnel Acquisition (Sports Director)",
+            "Race Operations Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.049806118011475
+            }
+          ],
+          "reasoning": "The scraped content consists of race reports, rider interviews, and a sponsorship renewal with Garmin. While the Garmin extension indicates a continued vendor relationship, it is a renewal of an existing sports sponsorship rather than a new procurement signal for business technology or services. No RFPs, job postings, or technology investments were detected."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:50:49.181438",
+          "domain_explored": "https://lavuelta.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Performance Reporting",
+            "Event Operations (La Vuelta 2026)",
+            "Sponsorship Visibility (Tissot)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.1723430156707764
+            }
+          ],
+          "reasoning": "The scraped content from lavuelta.es is focused on race rankings, 2026 route planning, and general sports news. While Team Visma | Lease a Bike is mentioned in the context of rider rankings (Jonas Vingegaard), there is no information regarding their internal procurement activities, technology stack, or business operations. This is external sports data, not a source for procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 2766,
+      "total_output_tokens": 397,
+      "estimated_cost_usd": 0.014253
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Team Visma may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:50:49.182703"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384014",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:14.614755"
+}

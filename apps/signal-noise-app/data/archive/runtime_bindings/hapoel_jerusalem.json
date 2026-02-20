@@ -1,0 +1,442 @@
+{
+  "entity_id": "hapoel_jerusalem",
+  "entity_name": "Hapoel Jerusalem",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "hapoel.co.il",
+    "htafc.co.il",
+    "hapoelbc.com",
+    "amarestoudemire.com",
+    "euroleaguebasketball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/tech-senior-project-manager-at-hapoel-jerusalem-basketball-club-4351401028",
+      "https://www.linkedin.com/jobs/view/head-of-revenue-at-hapoel-jerusalem-basketball-club-4315903143",
+      "https://www.linkedin.com/jobs/view/cluster-manager-at-%D7%9E%D7%A0%D7%94%D7%9C%D7%AA-%D7%94%D7%A6%D7%9E%D7%99%D7%97%D7%94-the-national-program-for-economic-growth-4353962671",
+      "https://www.linkedin.com/jobs/view/head-of-finance-at-ein-prat-leadership-academy-4141636089",
+      "https://www.linkedin.com/jobs/view/project-manager-salesforce-jerusalem-at-unilink-ltd-4352634409",
+      "https://www.linkedin.com/jobs/view/project-manager-at-taldor-4353300078",
+      "https://www.linkedin.com/jobs/view/ai-product-manager-at-logica-it-4337936143"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hapoel_jerusalem",
+      "entity_name": "Hapoel Jerusalem",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/head-of-finance-at-ein-prat-leadership-academy-4141636089",
+        "https://htafc.co.il",
+        "https://amarestoudemire.com",
+        "https://www.linkedin.com/jobs/view/tech-senior-project-manager-at-hapoel-jerusalem-basketball-club-4351401028",
+        "https://hapoelbc.com",
+        "https://www.linkedin.com/jobs/view/project-manager-salesforce-jerusalem-at-unilink-ltd-4352634409",
+        "https://www.linkedin.com/jobs/view/head-of-revenue-at-hapoel-jerusalem-basketball-club-4315903143",
+        "https://hapoel.co.il",
+        "https://euroleaguebasketball.net",
+        "https://www.linkedin.com/jobs/view/cluster-manager-at-%D7%9E%D7%A0%D7%94%D7%9C%D7%AA-%D7%94%D7%A6%D7%9E%D7%99%D7%97%D7%94-the-national-program-for-economic-growth-4353962671"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "CRM Implementation (Salesforce)",
+        "Mobile Application Development",
+        "Digital Transformation (Ticketing/Merch)",
+        "Vendor Management",
+        "Cross-organizational Tech Leadership",
+        "Executive Recruitment (C-Suite Reporting)",
+        "Revenue Operations Strategy",
+        "Sponsorship & Partnership Management",
+        "B2C Sales & Ticketing Optimization",
+        "Merchandising & Licensing Oversight",
+        "Performance Management (KPIs)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hapoel Jerusalem may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:47:14.093570",
+          "domain_explored": "https://hapoel.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Classic ASP (Detected via file extensions 'news.asp', 'game-zone.asp')",
+              "External Ticketing System (tickets.hapoel.co.il)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations Link (tickets.hapoel.co.il)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform (tickets.hapoel.co.il)",
+            "Content Management (ASP/Classic ASP)",
+            "Media Hosting (basket.co.il)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.6304702758789062
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, match results, and game schedules. While a ticketing subdomain (tickets.hapoel.co.il) was identified, the content itself contains no explicit signals of new procurement activities, technology upgrades, or strategic vendor partnerships. The presence of 'asp' file extensions suggests a legacy web infrastructure, but no active RFP or hiring signals were detected."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:47:21.202114",
+          "domain_explored": "https://htafc.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Player Signing: Amonla Boateng (Hapoel Tel Aviv)",
+              "Operational Schedule: Match dates and logistics for Hapoel Tel Aviv"
+            ]
+          },
+          "patterns_found": [
+            "Incorrect Entity Target",
+            "Competitor Intelligence",
+            "League Management Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.3592021465301514
+            }
+          ],
+          "reasoning": "The scraped content from 'htafc.co.il' belongs to Hapoel Tel Aviv (HTAFC), not Hapoel Jerusalem. While this provides competitive intelligence (e.g., player signings like Amonla Boateng, match schedules), it contains zero procurement signals for the target entity (Hapoel Jerusalem). The content is strictly operational/fan-facing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:47:40.212209",
+          "domain_explored": "https://hapoelbc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Detected via 'collections/products' URL structure)",
+              "Ticketing Platform (External link to /tickets/)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Merchandising Operations (The Black Jersey, Official Wear)",
+              "Sponsorship Management (Sponsors section)",
+              "Digital Sales Channels (Season 2025/26 tickets)"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Platform (Shopify)",
+            "Ticketing Operations (External Link)",
+            "Merchandising Strategy (Limited Editions)",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 292,
+              "elapsed_seconds": 16.0187509059906
+            }
+          ],
+          "reasoning": "The content confirms the active use of a dedicated e-commerce platform (shop.hapoelbc.com) for merchandise and an external ticketing system, indicating a mature commercial structure. While no direct RFPs are visible on the homepage, the presence of a sophisticated online store and sponsorship sections validates the organization's capacity for vendor procurement in digital and retail domains."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:48:12.879274",
+          "domain_explored": "https://amarestoudemire.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:48:20.671232",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-level executive change (Chus Bueno named CEO)",
+              "EuroLeague TV streaming rights expansion"
+            ]
+          },
+          "patterns_found": [
+            "League Governance (CEO Appointment)",
+            "Media Rights Management (Streaming)",
+            "Operational Scheduling (Game Rescheduling)",
+            "Sponsorship Visibility (Title Sponsors)",
+            "Digital Content Distribution (Highlights)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1545,
+              "output_tokens": 266,
+              "elapsed_seconds": 4.615597724914551
+            }
+          ],
+          "reasoning": "The content is sourced from the league's governing body (Euroleague Basketball) rather than the target entity (Hapoel Jerusalem). While it mentions 'Hapoel' in the context of game rescheduling and highlights, it provides no insight into Hapoel Jerusalem's internal procurement, technology stack, or vendor partnerships. The signals detected relate to league-wide operations and media, not the specific procurement intelligence of the club."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:48:28.577772",
+          "domain_explored": "https://www.linkedin.com/jobs/view/tech-senior-project-manager-at-hapoel-jerusalem-basketball-club-4351401028",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce (CRM)",
+              "Mobile Application (New Dev)",
+              "Digital Sales Systems"
+            ],
+            "job_postings": [
+              "Tech Senior Project Manager"
+            ],
+            "procurement_indicators": [
+              "Active search for Senior Project Management to lead tech implementations",
+              "Budget allocation for Salesforce CRM organization-wide implementation",
+              "Investment in new mobile application development",
+              "Requirement for vendor and partner management",
+              "Digital sales process overhaul (Ticketing & Merchandise)"
+            ]
+          },
+          "patterns_found": [
+            "CRM Implementation (Salesforce)",
+            "Mobile Application Development",
+            "Digital Transformation (Ticketing/Merch)",
+            "Vendor Management",
+            "Cross-organizational Tech Leadership"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 338,
+              "elapsed_seconds": 4.501247882843018
+            }
+          ],
+          "reasoning": "The job posting for a Tech Senior Project Manager provides explicit confirmation of active procurement and implementation cycles. It confirms the adoption of Salesforce CRM and the development of a new mobile application. The role requires managing vendors and external development teams, indicating immediate outsourcing and partnership opportunities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:48:36.120062",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-of-revenue-at-hapoel-jerusalem-basketball-club-4315903143",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sales Performance Management (SPM) Tools",
+              "Business Intelligence (BI) & Analytics",
+              "Customer Relationship Management (CRM)",
+              "Ticketing Systems",
+              "Merchandising Inventory Management"
+            ],
+            "job_postings": [
+              {
+                "title": "Head of Revenue",
+                "status": "Closed (Hired)",
+                "reporting_line": "CEO (Oren Arielly)",
+                "focus": "Sponsorships, Ticketing, Merchandising"
+              }
+            ],
+            "procurement_indicators": [
+              "Strategic pivot to revenue maximization",
+              "Direct CEO oversight of commercial ops",
+              "Requirement for data analysis and KPI tracking tools",
+              "Expansion of B2C sales capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Executive Recruitment (C-Suite Reporting)",
+            "Revenue Operations Strategy",
+            "Sponsorship & Partnership Management",
+            "B2C Sales & Ticketing Optimization",
+            "Merchandising & Licensing Oversight",
+            "Performance Management (KPIs)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 423,
+              "elapsed_seconds": 4.175948143005371
+            }
+          ],
+          "reasoning": "The job posting for a 'Head of Revenue' is a strong procurement signal indicating a strategic shift towards maximizing commercial efficiency. Reporting directly to the CEO, this role implies a need for new tools and platforms to manage sponsorships, ticketing, and merchandising. The requirement for 'analyzing results' and 'monitoring performance' suggests potential procurement of BI, CRM, or ERP systems to support the new revenue structure."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:48:43.940654",
+          "domain_explored": "https://www.linkedin.com/jobs/view/cluster-manager-at-%D7%9E%D7%A0%D7%94%D7%9C%D7%AA-%D7%94%D7%A6%D7%9E%D7%99%D7%97%D7%94-the-national-program-for-economic-growth-4353962671",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cluster Manager - The National Program for Economic Growth"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Incorrect Entity Target",
+            "Public Sector Recruitment",
+            "Economic Development Policy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1789,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.408689975738525
+            }
+          ],
+          "reasoning": "The job posting is for 'The National Program for Economic Growth' (\u05de\u05e0\u05d4\u05dc\u05ea \u05d4\u05e6\u05de\u05d9\u05d7\u05d4), a government/public sector initiative, not Hapoel Jerusalem Basketball Club. While the location is Jerusalem, the entity and function (Cluster Manager for national industrial ecosystems) are unrelated to the target's sports operations, technology stack, or procurement needs."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:48:50.287035",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-of-finance-at-ein-prat-leadership-academy-4141636089",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Head of Finance",
+                "entity": "Ein Prat Leadership Academy",
+                "status": "Closed",
+                "seniority": "Executive"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Incorrect Entity Target",
+            "Non-Profit Sector Operations",
+            "Educational Sector Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1853,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.025757074356079
+            }
+          ],
+          "reasoning": "The job posting is for 'Ein Prat Leadership Academy', an educational non-profit organization. While located in Jerusalem, it is a distinct legal entity from Hapoel Jerusalem Basketball Club. The financial operations described (public sector funding, educational programs) do not align with the sports franchise's procurement needs."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T14:48:56.293480",
+          "domain_explored": "https://www.linkedin.com/jobs/view/project-manager-salesforce-jerusalem-at-unilink-ltd-4352634409",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Project Manager Salesforce (Unilink Ltd - Government Org)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Incorrect Entity Target",
+            "Government Sector Recruitment",
+            "Recruitment Agency Proxy (Unilink Ltd)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1920,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.4265689849853516
+            }
+          ],
+          "reasoning": "The job posting is for a 'government organization in Jerusalem' recruited by Unilink Ltd. While the location (Jerusalem) and technology (Salesforce) match the target profile, the entity is explicitly a government body, not Hapoel Jerusalem. There is no evidence linking this specific role to the basketball club."
+        }
+      ],
+      "total_input_tokens": 14654,
+      "total_output_tokens": 2415,
+      "estimated_cost_usd": 0.08018700000000001
+    },
+    "procurement_signals": [
+      "CRM Implementation (Salesforce)",
+      "Mobile Application Development",
+      "Digital Transformation (Ticketing/Merch)",
+      "Vendor Management",
+      "Cross-organizational Tech Leadership",
+      "Executive Recruitment (C-Suite Reporting)",
+      "Revenue Operations Strategy",
+      "Sponsorship & Partnership Management",
+      "B2C Sales & Ticketing Optimization",
+      "Merchandising & Licensing Oversight",
+      "Performance Management (KPIs)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hapoel Jerusalem may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:48:56.294247"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217561",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:38.309748"
+}

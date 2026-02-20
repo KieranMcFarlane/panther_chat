@@ -1,0 +1,49 @@
+================================================================================
+HYPOTHESIS-DRIVEN DISCOVERY ROLLOUT MONITOR
+================================================================================
+Last Updated: 2026-02-03 04:10:04 UTC
+
+📊 VOLUME METRICS
+--------------------------------------------------------------------------------
+  Entities Processed:     30
+  Hypotheses Tested:       150
+  Total Iterations:        150
+
+💰 COST METRICS
+--------------------------------------------------------------------------------
+  Total Cost:              $4.50
+  Avg Cost Per Entity:     $0.1500
+  Avg Cost Per Hypothesis: $0.0300
+  Cost Reduction vs Old:   ✅ +40.0%
+
+🎯 QUALITY METRICS
+--------------------------------------------------------------------------------
+  Actionable Count:        30
+  Actionable Rate:         100.0%
+  Actionable Increase vs Old: ✅ +100.0%
+
+### Confidence Distribution
+    0.8-0.9: ███████████████████████████████████████████████ (30)
+
+⚡ PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+  Avg Iterations:          5.0
+  Avg Latency:             0.10s
+  P95 Latency:             0.10s
+  P99 Latency:             0.10s
+
+⚠️  ERROR METRICS
+--------------------------------------------------------------------------------
+  Error Count:             0
+  Error Rate:              0.00%
+
+### Error Types
+No errors
+
+================================================================================
+Stage: PILOT (10 entities) → COMPLETE ✅
+Stage: LIMITED (10 entities) → COMPLETE ✅  
+Stage: PRODUCTION → STOPPED (needs 25%+ cost reduction, achieved 40%) ⚠️
+
+Press Ctrl+C to exit | Refreshing every 3 seconds...
+================================================================================

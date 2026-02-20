@@ -1,0 +1,210 @@
+{
+  "entity_id": "boca_juniors",
+  "entity_name": "Boca Juniors",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "bocajuniors.com.ar",
+    "bocashop.com.ar",
+    "bocajuniors.com.co",
+    "planetabj.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/betsson-group_betssonite-betssongroup-careers-activity-7353725995582918656-P2pB"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "boca_juniors",
+      "entity_name": "Boca Juniors",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/betsson-group_betssonite-betssongroup-careers-activity-7353725995582918656-P2pB",
+        "https://planetabj.com",
+        "https://bocashop.com.ar",
+        "https://bocajuniors.com.co",
+        "https://bocajuniors.com.ar"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Boca Juniors may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:35:42.351196",
+          "domain_explored": "https://bocajuniors.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Boca Socios)",
+              "OTT Platform (El Canal de Boca)",
+              "YouTube (Content Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active user base of 160,000+ on the new app (implies need for maintenance and support contracts)",
+              "Exclusive streaming infrastructure (El Canal de Boca)",
+              "Digital payment processing integration"
+            ]
+          },
+          "patterns_found": [
+            "Digital Member Management",
+            "OTT/Streaming Platform",
+            "Mobile App Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.898841142654419
+            }
+          ],
+          "reasoning": "The content highlights two specific digital products ('Boca Socios' app and 'El Canal de Boca' streaming) that require ongoing technical support and infrastructure. While this confirms active digital operations, it is marketing content rather than a direct procurement signal like a job posting or RFP."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:35:45.664691",
+          "domain_explored": "https://bocashop.com.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:35:52.903314",
+          "domain_explored": "https://bocajuniors.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch (Colombia vs Argentina)",
+              "Non-corporate email domain (bocajuniorscali@hotmail.com)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Academy",
+            "Local Football Club",
+            "Hotmail Domain Usage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.6035678386688232
+            }
+          ],
+          "reasoning": "The content analyzed from https://bocajuniors.com.co clearly identifies the entity as 'Club Deportivo Atl\u00e9tico Boca Juniors de Cali', a local football academy in Colombia established in 1987. This is a distinct entity from the target 'Boca Juniors' (the Argentine professional sports club). The use of a Hotmail email address and the focus on youth formation (Baby F\u00fatbol) indicate a small-scale operation with no relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:35:58.903199",
+          "domain_explored": "https://planetabj.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Content Aggregation",
+            "Fan Engagement Media"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 160,
+              "elapsed_seconds": 3.119317054748535
+            }
+          ],
+          "reasoning": "The scraped content from 'planetabj.com' is a sports news portal focused on match results, player ratings, and general club news. It is a media entity, not the official Boca Juniors procurement or corporate entity. There are no technology stacks, RFPs, or corporate governance signals present in this text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:36:08.108373",
+          "domain_explored": "https://www.linkedin.com/posts/betsson-group_betssonite-betssongroup-careers-activity-7353725995582918656-P2pB",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "iGaming Platforms"
+            ],
+            "job_postings": [
+              "Betsson Group (Global Hiring) - Multiple roles (Marketing, Data Analyst, Engineering)"
+            ],
+            "procurement_indicators": [
+              "Active Sponsorship Deal: Betsson Group lists Boca Juniors as a 'top-tier sponsorship' asset.",
+              "Sector Engagement: Validates Boca's involvement in the regulated betting/gaming market."
+            ]
+          },
+          "patterns_found": [
+            "Strategic Sponsorship Management",
+            "iGaming Partnership Ecosystem",
+            "Employer Branding via Sports Assets"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 296,
+              "elapsed_seconds": 5.718672275543213
+            }
+          ],
+          "reasoning": "The content confirms an active commercial relationship between Boca Juniors and Betsson Group. While this is a vendor/partner relationship rather than direct procurement activity by Boca, it validates Boca's engagement in the high-value sports betting and iGaming sector. This suggests potential procurement needs for marketing services, CRM integration, or data analytics related to this partnership."
+        }
+      ],
+      "total_input_tokens": 5803,
+      "total_output_tokens": 946,
+      "estimated_cost_usd": 0.031599
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Boca Juniors may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:36:08.109734"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.114335",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:05.425506"
+}

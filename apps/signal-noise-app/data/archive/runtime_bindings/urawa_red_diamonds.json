@@ -1,0 +1,190 @@
+{
+  "entity_id": "urawa_red_diamonds",
+  "entity_name": "Urawa Red Diamonds",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "urawa-reds.co.jp",
+    "fctokyo.co.jp",
+    "weleague.jp",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "urawa_red_diamonds",
+      "entity_name": "Urawa Red Diamonds",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://weleague.jp",
+        "https://fctokyo.co.jp",
+        "https://mlssoccer.com",
+        "https://urawa-reds.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Urawa Red Diamonds may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:15:17.446600",
+          "domain_explored": "https://urawa-reds.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "REX TICKET (Ticketing Platform)",
+              "Custom E-commerce Subdomain (e-shop.urawa-reds.co.jp)",
+              "UTM Tracking Parameters (Google Analytics compatible)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with REX TICKET for ticketing infrastructure",
+              "Maintenance of e-shop domain for merchandise",
+              "Digital marketing campaigns utilizing UTM tracking"
+            ]
+          },
+          "patterns_found": [
+            "Third-party Ticketing Platform Usage",
+            "E-commerce Outsourcing",
+            "Digital Marketing Campaign Tracking"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 299,
+              "elapsed_seconds": 5.632773160934448
+            }
+          ],
+          "reasoning": "The content reveals Urawa Red Diamonds' reliance on external platforms for core revenue operations. The presence of 'REX TICKET' (rex-ticket.jp) indicates a B2B partnership for ticketing services, while the 'Online Shop' (e-shop.urawa-reds.co.jp) suggests a separate e-commerce solution. The UTM parameters in URLs (utm_source=tm_sitestatic) demonstrate active investment in digital marketing analytics and traffic attribution."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:15:26.918060",
+          "domain_explored": "https://fctokyo.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Consumption",
+            "Competitor Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.212880849838257
+            }
+          ],
+          "reasoning": "The scraped content is from FC Tokyo (fctokyo.co.jp), a direct competitor to Urawa Red Diamonds. The data consists solely of repetitive match schedules and results, which contains no procurement signals, technology stacks, or governance information relevant to the target entity (Urawa Red Diamonds). This indicates a drift in the scraping target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:15:41.005167",
+          "domain_explored": "https://weleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WEACTION (Fan Engagement App)",
+              "DAZN (Streaming Platform)",
+              "League CMS (Standardized News/Stats Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Childcare facility operations (League-coordinated vendor requirement)",
+              "Marketing collaborations (X-girl)",
+              "Stadium usage for league events (Urawa Red Diamonds Ladies mentioned as host)"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide Digital Platform Standardization",
+            "Childcare Service Vendor Ecosystem",
+            "Sponsor-Driven Technology Procurement",
+            "Broadcasting Rights Management (DAZN)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 332,
+              "elapsed_seconds": 6.173134088516235
+            }
+          ],
+          "reasoning": "While this page is for the league (WE League) and not the club (Urawa Reds Ladies) directly, it reveals the procurement ecosystem in which Urawa operates. The presence of 'WEACTION' (fan app), 'Dazn' (streaming), and specific 'childcare operation' reports indicates that Urawa likely adheres to league-wide vendor standards or procures services from a pre-vetted list (e.g., childcare providers). The 'X-girl' collaboration suggests a procurement model driven by league-level sponsorship deals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:15:51.120193",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant League Mismatch",
+            "Sports Transfer News Consumption",
+            "Entity Context Drift"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.7438759803771973
+            }
+          ],
+          "reasoning": "The content is entirely focused on Major League Soccer (MLS) player transfers (Timo Werner, Alex Freeman, Mateusz Bogusz) and club operations. Urawa Red Diamonds is a J1 League (Japan) entity. While transfer activity implies high-level operational spending, this specific content relates to North American competitors and is irrelevant to Urawa's procurement ecosystem."
+        }
+      ],
+      "total_input_tokens": 5735,
+      "total_output_tokens": 977,
+      "estimated_cost_usd": 0.03186
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Urawa Red Diamonds may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:15:51.120862"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.130230",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:55.682468"
+}

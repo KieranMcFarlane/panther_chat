@@ -1,0 +1,209 @@
+{
+  "entity_id": "dakar_rally",
+  "entity_name": "Dakar Rally",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "dakar.com",
+    "dakarthegame.com",
+    "toyotagazooracing.com",
+    "visitsaudi.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/4300268614/?alternateChannel=search&eBP=NON_CHARGEABLE_CHANNEL&trk=d_flagship3_search_srp_jobs&refId=wvEFDLkVcKwe79ghGnEKrA%3D%3D&trackingId=GhnEBdl+IDek+1zPajhEhw%3D%3D"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dakar_rally",
+      "entity_name": "Dakar Rally",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://dakar.com",
+        "https://toyotagazooracing.com",
+        "https://dakarthegame.com",
+        "https://www.linkedin.com/jobs/view/4300268614/?alternateChannel=search&eBP=NON_CHARGEABLE_CHANNEL&trk=d_flagship3_search_srp_jobs&refId=wvEFDLkVcKwe79ghGnEKrA%3D%3D&trackingId=GhnEBdl+IDek+1zPajhEhw%3D%3D",
+        "https://visitsaudi.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Commercial Strategic Planning",
+        "Vendor & Partner Management",
+        "Sales Operations & CRM Usage",
+        "Event-Based Revenue Generation"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dakar Rally may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:11:32.780626",
+          "domain_explored": "https://dakar.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:11:58.910335",
+          "domain_explored": "https://dakarthegame.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Unreal Engine"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Licensing Agreement (Video Game)",
+              "IP Rights Management (Vehicle likenesses, Driver names, Road Books)",
+              "Digital Transformation (Gaming/Esports sector expansion)",
+              "Vendor Partnership: Game Development Studio"
+            ]
+          },
+          "patterns_found": [
+            "Licensing & IP Procurement",
+            "Digital Asset Management",
+            "Partnership Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 310,
+              "elapsed_seconds": 6.595739126205444
+            }
+          ],
+          "reasoning": "The content is a consumer-facing product page for the video game 'Dakar Desert Rally' rather than the corporate site of the event organizer. However, it confirms the existence of a licensing procurement stream. The entity (Dakar Rally/ASO) has procured a video game developer/publisher (likely Saber Interactive/Nacon based on the game title) to produce the official game. This indicates a procurement category for 'Digital Entertainment Licensing' and 'IP Management'. It also reveals the vendor ecosystem (vehicle manufacturers, teams) involved in the licensing agreements."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:12:21.628606",
+          "domain_explored": "https://toyotagazooracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Marketing Content",
+            "Motorsports Portfolio (WRC, WEC)",
+            "Corporate Philosophy Messaging"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 203,
+              "elapsed_seconds": 17.286951065063477
+            }
+          ],
+          "reasoning": "The content provided is scraped from 'toyotagazooracing.com', which is the official site for the Toyota factory racing team (a competitor/participant in the rally), not the organizer of the Dakar Rally (ASO). The text is purely marketing copy ('pushing the limits', 'ever-better cars') and navigation elements. It contains zero procurement signals, technology infrastructure details, or organizational data relevant to the Dakar Rally event operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:12:34.022684",
+          "domain_explored": "https://visitsaudi.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:12:43.585619",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4300268614/?alternateChannel=search&eBP=NON_CHARGEABLE_CHANNEL&trk=d_flagship3_search_srp_jobs&refId=wvEFDLkVcKwe79ghGnEKrA%3D%3D&trackingId=GhnEBdl+IDek+1zPajhEhw%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sales Analysis Tools",
+              "CRM Platforms (implied by 'visit tracking' and 'account reviews')",
+              "Business Intelligence (for 'cost vs. revenue reporting')"
+            ],
+            "job_postings": [
+              {
+                "role": "Sponsorship Director",
+                "entity": "Saudi Motorsport Company",
+                "location": "Jeddah, Makkah, Saudi Arabia",
+                "focus": "Commercial Strategy, Sales Management, Vendor Relations"
+              }
+            ],
+            "procurement_indicators": [
+              "Management of commercial resources and packages",
+              "Vendor and partner relationship management",
+              "Procurement of sales analysis tools and software",
+              "Outsourcing of service enhancements based on client feedback"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Strategic Planning",
+            "Vendor & Partner Management",
+            "Sales Operations & CRM Usage",
+            "Event-Based Revenue Generation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 392,
+              "elapsed_seconds": 2.9910337924957275
+            }
+          ],
+          "reasoning": "The job posting for a Sponsorship Director at Saudi Motorsport Company (SMC) explicitly confirms SMC as the operating entity for the Dakar Rally in Saudi Arabia. It reveals a sophisticated commercial structure involving strategic planning, vendor management, and sales operations, indicating a high volume of procurement activities related to event services, client management tools, and business development resources."
+        }
+      ],
+      "total_input_tokens": 4370,
+      "total_output_tokens": 905,
+      "estimated_cost_usd": 0.026685
+    },
+    "procurement_signals": [
+      "Commercial Strategic Planning",
+      "Vendor & Partner Management",
+      "Sales Operations & CRM Usage",
+      "Event-Based Revenue Generation"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dakar Rally may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:12:43.587139"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373101",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:22.820591"
+}

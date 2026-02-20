@@ -1,0 +1,92 @@
+{
+  "entity_id": "african_volleyball_confederation_(cavb)",
+  "entity_name": "African Volleyball Confederation (CAVB)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "cavb.africa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "african_volleyball_confederation_(cavb)",
+      "entity_name": "African Volleyball Confederation (CAVB)",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cavb.africa"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "African Volleyball Confederation (CAVB) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:34:27.667577",
+          "domain_explored": "https://cavb.africa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress CMS",
+              "jQuery",
+              "Modernizr",
+              "Bootstrap (suspected based on class structure)",
+              "Google Analytics (gtag.js)",
+              "Facebook Pixel"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Project: Construction of an international standard beach volleyball complex in Benin",
+              "Event Procurement: Coupe des clubs champions Zone 3 (Logistics/Equipment)",
+              "Training Programs: 'Formations' section indicates ongoing procurement for educational services/materials"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Development Signal",
+            "Regional Governance Structure",
+            "Event Management Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 337,
+              "elapsed_seconds": 3.410944938659668
+            }
+          ],
+          "reasoning": "While the homepage is primarily navigational, the 'Actualit\u00e9s' (News) section explicitly mentions a construction project for a 'complexe de beach-volley aux normes internationales au B\u00e9nin' (Benin). This is a direct indicator of infrastructure procurement. The site structure also reveals a reliance on a CMS (WordPress) and a decentralized zonal governance model, suggesting potential for centralized management software procurement."
+        }
+      ],
+      "total_input_tokens": 1368,
+      "total_output_tokens": 337,
+      "estimated_cost_usd": 0.009159
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "African Volleyball Confederation (CAVB) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:34:27.668862"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.329493",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:49.347669"
+}

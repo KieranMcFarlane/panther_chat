@@ -1,0 +1,214 @@
+{
+  "entity_id": "fc_seoul",
+  "entity_name": "FC Seoul",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "fcseoul.com",
+    "fcseoulshop.com",
+    "fcseoul.fan",
+    "english.seoul.go.kr",
+    "zoominfo.com",
+    "fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_seoul",
+      "entity_name": "FC Seoul",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fcseoul.fan",
+        "https://fcseoul.com",
+        "https://english.seoul.go.kr",
+        "https://fcseoulshop.com",
+        "https://fcbarcelona.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Seoul may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:56:21.326213",
+          "domain_explored": "https://fcseoul.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 7 column 57 (char 254)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:56:31.064738",
+          "domain_explored": "https://fcseoulshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Hosted)",
+              "Inventory Management System",
+              "Dynamic Pricing/Promotion Engine"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Vendor Management (Apparel manufacturing)",
+              "Licensing Partnership Management (Sanrio/Hello Kitty)",
+              "Digital Infrastructure Maintenance (Web store)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandising Operations",
+            "Partnership Licensing (Hello Kitty)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1382,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.453122138977051
+            }
+          ],
+          "reasoning": "The content is scraped from the FC Seoul online shop (fcseoulshop.com). While it does not contain explicit procurement signals like RFPs or job postings, it confirms the operation of a digital e-commerce platform. The presence of structured product data, discount management systems, and co-branded merchandise (FC Seoul x Hello Kitty) indicates an active supply chain and vendor relationship management for merchandise manufacturing and digital sales infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:56:35.217678",
+          "domain_explored": "https://fcseoul.fan",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:56:45.456711",
+          "domain_explored": "https://english.seoul.go.kr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI (Physical AI, Intelligent Surveillance)",
+              "Robotics",
+              "Urban Air Mobility (UAM)",
+              "Smart City Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in R&D of AI, Bio, Finance, and Robotics",
+              "Embracing Era of Physical AI Through Robot-Friendly City",
+              "Seoul Fashion Week Business Efficiency"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Governance Scope",
+            "Smart City Initiatives (UAM, AI, Robotics)",
+            "Public Infrastructure Projects"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 349,
+              "elapsed_seconds": 4.62290096282959
+            }
+          ],
+          "reasoning": "The content analyzed is from the official Seoul Metropolitan Government website (english.seoul.go.kr). While it contains high-level strategic signals regarding technology investments (AI, Robotics, Smart City) and large-scale public events, it is not specific to FC Seoul's operational procurement needs. FC Seoul is a private entity (operated by FC Seoul Inc./GS Group) rather than a direct department of the Seoul Metropolitan Government. Although they may collaborate on events (e.g., 'Seoul Festa'), this page does not contain specific procurement signals, RFPs, or technology stack details relevant to the football club's internal operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:56:48.414584",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:57:00.290943",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spotify (Stadium Naming - Sponsorship)",
+              "1xBet (Sponsorship)",
+              "Generic CMS (implied by label.aria tags)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem (Spotify, 1xBet)",
+              "Retail Operations (Official Store, Kits, Memorabilia)",
+              "Membership Management (Culers, 'Only For Culers')"
+            ]
+          },
+          "patterns_found": [
+            "Competitor Entity Mismatch",
+            "Fan Engagement Focus",
+            "Merchandising (E-commerce)",
+            "Sports Content Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 274,
+              "elapsed_seconds": 8.612483978271484
+            }
+          ],
+          "reasoning": "The scraped content is from FC Barcelona (fcbarcelona.com), a competitor to FC Seoul, rather than the target entity. While the site displays standard football club operations (ticketing, merchandising, 'Culers' membership), it provides no procurement intelligence specific to FC Seoul. The content is consumer-facing marketing and news, not B2B procurement signals."
+        }
+      ],
+      "total_input_tokens": 4386,
+      "total_output_tokens": 920,
+      "estimated_cost_usd": 0.026958
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Seoul may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:57:00.292718"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.142133",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:22.901671"
+}

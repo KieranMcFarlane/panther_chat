@@ -1,0 +1,146 @@
+{
+  "entity_id": "angolan_basketball_federation",
+  "entity_name": "Angolan Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "allafrica.com",
+    "afrobasket.com",
+    "africa-press.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "angolan_basketball_federation",
+      "entity_name": "Angolan Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://africa-press.net",
+        "https://afrobasket.com",
+        "https://allafrica.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Angolan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:16:55.075938",
+          "domain_explored": "https://allafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General African news aggregation",
+            "Irrelevant geopolitical content",
+            "Entertainment news",
+            "No entity-specific mentions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 180,
+              "elapsed_seconds": 1.82651686668396
+            }
+          ],
+          "reasoning": "The scraped content represents a general news aggregator homepage (AllAfrica) featuring headlines about South Africa, Nigeria, Ethiopia, and US-Africa relations. There is absolutely no mention of the Angolan Basketball Federation, basketball, or Angolan sports governance. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:17:04.150746",
+          "domain_explored": "https://afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports results aggregation",
+            "Player transfers/roster moves",
+            "Game statistics",
+            "Regional league coverage (Angola, Egypt, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.253636121749878
+            }
+          ],
+          "reasoning": "The content is purely sports journalism focused on game results, player signings, and league standings. While it mentions Angolan teams (C.Ferroviario, ASA, P.Luanda), it contains zero information regarding the Angolan Basketball Federation's administrative operations, technology needs, or procurement cycles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:17:10.768043",
+          "domain_explored": "https://africa-press.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General continental news aggregation",
+            "Geopolitical and macro-economic focus",
+            "High-level sports reporting (AFCON, Handball)",
+            "Absence of organizational governance signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.4361801147460938
+            }
+          ],
+          "reasoning": "The scraped content from Africa Press is a general news aggregator covering broad geopolitical, economic, and pan-African sports topics. While it mentions 'Angola' in a macro-economic context ('Angola Eyes Debt-For-Health Swap'), there is zero specific content regarding the Angolan Basketball Federation's internal operations, procurement needs, or technology stack. The site focuses on high-level regional events rather than specific organizational tenders or vendor partnerships."
+        }
+      ],
+      "total_input_tokens": 4235,
+      "total_output_tokens": 590,
+      "estimated_cost_usd": 0.021554999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Angolan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:17:10.772028"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.247376",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:44.384080"
+}

@@ -1,0 +1,282 @@
+{
+  "entity_id": "lmb_(mexican_league)",
+  "entity_name": "LMB (Mexican League)",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "billsportsmaps.com",
+    "lmtonline.com",
+    "manor-tour.uz",
+    "healthfirstessential.ca",
+    "sportsmemorabilia.com",
+    "steinersports.com",
+    "mm1digital.com",
+    "eceaynatasarim.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lmb_(mexican_league)",
+      "entity_name": "LMB (Mexican League)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportsmemorabilia.com",
+        "https://mm1digital.com",
+        "https://eceaynatasarim.com",
+        "https://manor-tour.uz",
+        "https://healthfirstessential.ca",
+        "https://steinersports.com",
+        "https://billsportsmaps.com",
+        "https://lmtonline.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LMB (Mexican League) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:37:54.067535",
+          "domain_explored": "https://billsportsmaps.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "wrong_entity",
+            "sports_data_aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 148,
+              "elapsed_seconds": 4.546243906021118
+            }
+          ],
+          "reasoning": "The content is entirely focused on South American football (Copa Libertadores) and English football (FA Cup), published by a third-party sports mapping blog. There is absolutely no mention of the LMB (Mexican League), its procurement activities, or technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:38:04.714530",
+          "domain_explored": "https://lmtonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered reporting tools (LPD)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "LPD fleet upgrades (marked patrol vehicles)",
+              "AI tool implementation for police records"
+            ]
+          },
+          "patterns_found": [
+            "wrong_entity",
+            "local_news_aggregation",
+            "municipal_procurement",
+            "irrelevant_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.8003039360046387
+            }
+          ],
+          "reasoning": "The scraped content is from the Laredo Morning Times (lmtonline.com), a local newspaper for Laredo, Texas. The content focuses on municipal government news (City of Laredo, Webb County), local crime, and community events. While there are mentions of procurement (e.g., 'LPD to launch AI-powered tools', 'Police to roll out new marked patrol vehicles'), these relate to the Laredo Police Department, not the LMB (Mexican Baseball League). The entity context is incorrect."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:38:30.039688",
+          "domain_explored": "https://manor-tour.uz",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:38:41.171782",
+          "domain_explored": "https://healthfirstessential.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (Patient Refills)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Consumer Mobile App",
+              "Blister Packaging Services"
+            ]
+          },
+          "patterns_found": [
+            "wrong_entity",
+            "consumer_facing_content",
+            "healthcare_services",
+            "small_business_profile"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.9110660552978516
+            }
+          ],
+          "reasoning": "The content is from 'HealthFirst Pharmacy Group' (Essential Pharmacy), a local Canadian pharmacy network. This is completely unrelated to LMB (Mexican League), which is a professional baseball organization. The content describes patient care, compounding services, and mobile apps for refills, offering no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:38:52.666835",
+          "domain_explored": "https://sportsmemorabilia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_retail",
+            "consumer_facing_content",
+            "memorabilia_sales",
+            "wrong_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 153,
+              "elapsed_seconds": 4.076013088226318
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the sale of autographed sports memorabilia and collectibles to consumers. It is a commercial retail site (SportsMemorabilia.com) and has no connection to the LMB (Mexican League) organization or its procurement operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:39:03.666717",
+          "domain_explored": "https://steinersports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_retail",
+            "consumer_facing_content",
+            "memorabilia_sales",
+            "league_agnostic_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 172,
+              "elapsed_seconds": 4.068233966827393
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the sale of sports memorabilia (NFL, MLB, NBA, NHL) to consumers. It is a retail platform (Steiner Sports) and not the official procurement or operations entity for the Mexican League (LMB). There are no signals regarding B2B procurement, technology infrastructure, or league operations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:39:11.528730",
+          "domain_explored": "https://mm1digital.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:40:21.376421",
+          "domain_explored": "https://eceaynatasarim.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_entity",
+            "ecommerce_retail",
+            "consumer_facing_content",
+            "b2c_services",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 190,
+              "elapsed_seconds": 16.285452842712402
+            }
+          ],
+          "reasoning": "The content is entirely in Turkish and belongs to 'Ece Ayna Tasar\u0131m', a mirror and glass design manufacturer/retailer based in Ankara. This entity has no connection to LMB (Mexican League), which is a baseball organization based in Mexico. The content focuses on consumer products (furniture, mirrors) and B2C sales, contradicting the procurement hypothesis for the target entity."
+        }
+      ],
+      "total_input_tokens": 8949,
+      "total_output_tokens": 1129,
+      "estimated_cost_usd": 0.043782
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LMB (Mexican League) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:40:21.380055"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.414633",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:20.428725"
+}

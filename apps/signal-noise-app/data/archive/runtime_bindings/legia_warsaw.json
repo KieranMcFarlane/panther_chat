@@ -1,0 +1,237 @@
+{
+  "entity_id": "legia_warsaw",
+  "entity_name": "Legia Warsaw",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "legia.com",
+    "play.google.com",
+    "en.cracovia.pl",
+    "the-afc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "legia_warsaw",
+      "entity_name": "Legia Warsaw",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://en.cracovia.pl",
+        "https://the-afc.com",
+        "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124",
+        "https://legia.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Vendor Partnership Confirmation",
+        "Digital Transformation Strategy",
+        "Data Monetization Platform",
+        "Direct Named Reference"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Legia Warsaw may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:29:35.107966",
+          "domain_explored": "https://legia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web CMS (implied by site structure)",
+              "Fan Token Platform (Blockchain/Web3)",
+              "Stadium 360\u00b0 Technology (VR/Imaging)",
+              "Mobile Application (Native App referenced)"
+            ],
+            "job_postings": [
+              "Link detected: /Praca (Careers section - requires further scraping)"
+            ],
+            "procurement_indicators": [
+              "Legia Fan Token (Digital asset procurement)",
+              "Legia Training Center (Facility/Tech procurement)",
+              "Raporty Finansowe (Financial transparency/Governance)",
+              "Program Partnerski (Partnership management)",
+              "Multimedia/Foto/Wideo (Content production needs)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Infrastructure",
+            "Digital Asset Management",
+            "Sponsorship Ecosystem",
+            "Content Management Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 440,
+              "elapsed_seconds": 5.606468915939331
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation structure and footer of legia.com. While it does not contain explicit RFPs or job postings, it reveals significant organizational capabilities and infrastructure that imply procurement needs. Specifically, the presence of 'Legia Fan Token' indicates active involvement in blockchain/crypto-fan engagement, requiring specialized vendor support. The 'Legia Training Center' and 'Stadion 360\u00ba' tabs suggest investments in facility management and VR/3D technology. The extensive categorization of news and multimedia implies a need for a robust CMS and Digital Asset Management (DAM) system. The 'Raporty Finansowe' (Financial Reports) link is a strong signal for governance analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:29:40.936028",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Ecosystem",
+            "Consumer App Marketplace"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.223762035369873
+            }
+          ],
+          "reasoning": "The provided content is a raw scrape of the Google Play Store homepage, featuring generic mobile games (Candy Crush, PUBG, Roblox) and app categories. There is no content specific to Legia Warsaw, no corporate technology infrastructure, and no procurement signals. This represents a data collection error or a context mismatch."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:29:47.972356",
+          "domain_explored": "https://en.cracovia.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom E-commerce Platform (sklep.cracovia.pl)",
+              "Ticketing System (bilety.cracovia.pl)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Webstore Domain",
+              "Dedicated Ticketing Subdomain"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Infrastructure",
+            "E-commerce Integration",
+            "Ticketing Platforms",
+            "Event Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.7790799140930176
+            }
+          ],
+          "reasoning": "The content analyzed is from the website of KS Cracovia (a rival club), not Legia Warsaw. While the content reveals standard football club operational infrastructure (E-commerce, Ticketing, Fan Clubs), it provides zero procurement intelligence regarding the target entity (Legia Warsaw). The decision is REJECT based on entity mismatch."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:29:50.817310",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:29:57.527704",
+          "domain_explored": "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI-driven research tools",
+              "CRM (Salesforce/HubSpot implied)",
+              "Digital Content Platforms",
+              "Fan Data Management Systems"
+            ],
+            "job_postings": [
+              {
+                "role": "Lead Generation Specialist \u2013 Sales Representative",
+                "company": "TISA Group",
+                "context": "Vendor side hiring to support sales to clubs like Legia Warsaw"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor Engagement: Active partnership with TISA AG for digital infrastructure.",
+              "Strategic Intent: Investment in owning fan data and monetization (moving away from 3rd party reliance).",
+              "Category: Sports Tech / Digital Asset Management"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation",
+            "Digital Transformation Strategy",
+            "Data Monetization Platform",
+            "Direct Named Reference"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 358,
+              "elapsed_seconds": 3.2216057777404785
+            }
+          ],
+          "reasoning": "The content explicitly names Legia Warsaw as a client of TISA AG, a Swiss-based sports tech company. This confirms a procurement relationship for a digital platform focused on content ownership, fan data management, and monetization. It validates that Legia is actively investing in technology to control its digital future."
+        }
+      ],
+      "total_input_tokens": 5738,
+      "total_output_tokens": 1188,
+      "estimated_cost_usd": 0.035033999999999996
+    },
+    "procurement_signals": [
+      "Vendor Partnership Confirmation",
+      "Digital Transformation Strategy",
+      "Data Monetization Platform",
+      "Direct Named Reference"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Legia Warsaw may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:29:57.528760"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.178863",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:10.370293"
+}

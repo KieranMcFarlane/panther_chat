@@ -1,0 +1,152 @@
+{
+  "entity_id": "vfl_wolfsburg",
+  "entity_name": "VfL Wolfsburg",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "vfl-wolfsburg.de",
+    "vfl-wob.de",
+    "bundesliga.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vfl_wolfsburg",
+      "entity_name": "VfL Wolfsburg",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://vfl-wob.de",
+        "https://bundesliga.com",
+        "https://vfl-wolfsburg.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VfL Wolfsburg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:26:16.865948",
+          "domain_explored": "https://vfl-wolfsburg.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom E-commerce Platform (shop.vfl-wolfsburg.de)",
+              "Digital Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Sales/Promotion cycles (Shop Sale)",
+              "Ticketing Operations"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Integration",
+            "Fan Engagement Focus",
+            "UTM Tracking Usage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 625,
+              "output_tokens": 248,
+              "elapsed_seconds": 4.6450769901275635
+            }
+          ],
+          "reasoning": "The content provided is exclusively marketing copy and navigation elements from the homepage (Matchcenter, Tickets, Shop). While it confirms the existence of an online shop and ticketing system, it contains no specific signals regarding new procurement, technology stack changes, or corporate governance. The presence of UTM parameters indicates active digital marketing, but this is standard operational activity, not a procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:26:24.887536",
+          "domain_explored": "https://vfl-wob.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)",
+              "Single Page Application (SPA) Architecture"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering (CSR)",
+            "JavaScript Dependency",
+            "Content Obfuscation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 412,
+              "output_tokens": 212,
+              "elapsed_seconds": 4.897972106933594
+            }
+          ],
+          "reasoning": "The target URL (vfl-wob.de) presents a 'JavaScript required' landing page with no accessible HTML content in the initial payload. This indicates a Single Page Application (SPA) architecture where content is dynamically loaded client-side. Since the scraping tool cannot execute JavaScript to render the DOM, no procurement signals, job postings, or technology stack details are visible for analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:26:32.661396",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic League Content",
+            "Sports Journalism",
+            "Fan Engagement Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 557,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.8725080490112305
+            }
+          ],
+          "reasoning": "The content is from the official Bundesliga league website (bundesliga.com), which focuses on league-wide news, transfer updates, and general fan engagement. It does not contain specific information regarding VfL Wolfsburg's internal procurement operations, technology stack, or vendor partnerships. The content is irrelevant to the specific entity being analyzed."
+        }
+      ],
+      "total_input_tokens": 1594,
+      "total_output_tokens": 635,
+      "estimated_cost_usd": 0.014307
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VfL Wolfsburg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:26:32.662422"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.125806",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:35.032072"
+}

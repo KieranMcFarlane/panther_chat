@@ -1,0 +1,210 @@
+{
+  "entity_id": "vancouver_canucks",
+  "entity_name": "Vancouver Canucks",
+  "template_id": "tpl_tier1_club_north_america_v1",
+  "cluster_id": "nhl_major_league_clubs",
+  "discovered_domains": [
+    "ticket.canucks.com",
+    "portal.canucks.com",
+    "canucksarmy.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/view/graphic-designer-at-canucks-sports-entertainment-cse-4363476216"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vancouver_canucks",
+      "entity_name": "Vancouver Canucks",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://canucksarmy.com",
+        "https://ca.linkedin.com/jobs/view/graphic-designer-at-canucks-sports-entertainment-cse-4363476216",
+        "https://portal.canucks.com",
+        "https://ticket.canucks.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Vancouver Canucks may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:08:11.307206",
+          "domain_explored": "https://ticket.canucks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster / Archtics (inferred from ticket.canucks.com domain)",
+              "PDF Document Management (Schedule download)",
+              "Web Filtering / UI Components (Opponent, Month, Day, Jersey)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Managed 'Membership' and 'Premium' tiers (Potential CRM/Service procurement)",
+              "Reliance on Rogers Arena for specific services (Accessible Seating)",
+              "Digital schedule distribution (PDF infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage (Ticketmaster/Archtics)",
+            "Digital Asset Management (PDF hosting)",
+            "Customer Segmentation (Membership/Premium/Accessible)",
+            "Arena Cross-Referencing (Rogers Arena)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 353,
+              "elapsed_seconds": 5.189425945281982
+            }
+          ],
+          "reasoning": "The content is scraped HTML from the public ticketing interface (ticket.canucks.com). While it does not contain explicit procurement intent (like RFPs), it confirms the active use of specific ticketing technologies and digital infrastructure. The presence of 'Membership' and 'Premium' filters indicates a CRM or database segmentation strategy. The link to Rogers Arena for accessible seating suggests a relationship or shared services agreement with the arena operator."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:08:21.412072",
+          "domain_explored": "https://portal.canucks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LiveChat (LiveChat Inc.)",
+              "Custom Member Portal (Account Manager)",
+              "Cookie Consent Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: LiveChat Inc. (Identified via script/chat widget)",
+              "Function: Membership Management & Ticket Operations",
+              "Compliance: Privacy Policy adherence (Cookie usage)"
+            ]
+          },
+          "patterns_found": [
+            "Customer Engagement Platform (LiveChat)",
+            "Membership Management Architecture",
+            "Cookie Consent Management (Privacy Compliance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 896,
+              "output_tokens": 313,
+              "elapsed_seconds": 3.6700668334960938
+            }
+          ],
+          "reasoning": "The content reveals the Vancouver Canucks' Season Ticket Member Portal, a key customer-facing digital asset. While it does not contain explicit procurement language (like RFPs), it identifies specific technologies in use (LiveChat) and outlines the structure of their membership management system. This provides intelligence on existing vendor relationships and digital capabilities, which is relevant for procurement intelligence gathering regarding customer experience (CX) and CRM technologies."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:08:34.335672",
+          "domain_explored": "https://canucksarmy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Affiliate Disavowal",
+            "Editorial Content Structure",
+            "Fan Community Engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 184,
+              "elapsed_seconds": 6.770438194274902
+            }
+          ],
+          "reasoning": "The scraped content explicitly states that CanucksArmy has 'no direct affiliation' with the Vancouver Canucks or Canucks Sports & Entertainment. As a third-party news and editorial blog, it does not reflect the internal procurement, operational, or technological decisions of the entity itself. The content focuses on sports analytics and opinion rather than business operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:09:15.185427",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/graphic-designer-at-canucks-sports-entertainment-cse-4363476216",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Photoshop, Illustrator, InDesign)",
+              "Digital Asset Management (DAM) Systems (Implied by brand consistency requirements)",
+              "Pinterest (Used for inspiration/research)"
+            ],
+            "job_postings": [
+              {
+                "title": "Graphic Designer",
+                "department": "Design",
+                "entity": "Canucks Sports & Entertainment (CSE)",
+                "focus": "Brand Identity, Fan-facing Creative, TV/Digital/OOH/Print",
+                "requirements": "Adobe Creative Suite, 1-3 years experience, Onsite"
+              }
+            ],
+            "procurement_indicators": [
+              "Enterprise License Management: Need for Adobe Creative Suite seats",
+              "Workflow Infrastructure: Requirement for efficient file-building methods suggests potential procurement of project management or DAM software",
+              "Hardware Procurement: Onsite role implies investment in high-performance workstations (Mac/PC)"
+            ]
+          },
+          "patterns_found": [
+            "In-House Creative Agency Model",
+            "Adobe Creative Suite Standardization",
+            "Multi-Brand Asset Management",
+            "Cross-Platform Digital Production"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 468,
+              "elapsed_seconds": 6.446459770202637
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct procurement document, it reveals the internal structure of the Design Department. The requirement for 'production files that reflect the most efficient file-building methods' and 'maintaining brand identity' across four distinct entities (Canucks, Warriors, Abbotsford, Rogers Arena) indicates a need for robust Digital Asset Management (DAM) and workflow tools. The reliance on 'Adobe Creative Suite' confirms a specific technology stack dependency."
+        }
+      ],
+      "total_input_tokens": 5290,
+      "total_output_tokens": 1318,
+      "estimated_cost_usd": 0.03564
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Vancouver Canucks may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:09:15.187225"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.303578",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:27.298501"
+}

@@ -1,0 +1,285 @@
+{
+  "entity_id": "world_athletics",
+  "entity_name": "World Athletics",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "worldathletics.org",
+    "olympics.com",
+    "world-masters-athletics.org",
+    "european-athletics.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/world-athletics-jobs-worldwide",
+      "https://ie.linkedin.com/jobs/view/performance-coaching-expertise-at-athletics-ireland-4071549517",
+      "https://au.linkedin.com/jobs/view/event-coordinator-queensland-sport-and-athletics-centre-at-stadiums-queensland-4331962697"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_athletics",
+      "entity_name": "World Athletics",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://european-athletics.com",
+        "https://www.linkedin.com/jobs/world-athletics-jobs-worldwide",
+        "https://ie.linkedin.com/jobs/view/performance-coaching-expertise-at-athletics-ireland-4071549517",
+        "https://world-masters-athletics.org",
+        "https://au.linkedin.com/jobs/view/event-coordinator-queensland-sport-and-athletics-centre-at-stadiums-queensland-4331962697",
+        "https://worldathletics.org",
+        "https://olympics.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Athletics may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:03:57.921993",
+          "domain_explored": "https://worldathletics.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is exclusively sports journalism (race results, previews, features)",
+            "No corporate governance, vendor, or technology signals present",
+            "High volume of video content suggests existing digital infrastructure (CDN/Video hosting), but no procurement intent detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 203,
+              "elapsed_seconds": 4.662031888961792
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of news articles, race reports, and video titles related to athletic events (e.g., Millrose Games, World Indoor Championships). There is no mention of internal operations, job vacancies, tenders, or technology acquisition strategies."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:04:12.083626",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Augmented Reality (AR) lenses",
+              "Ticketing platforms (external)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing content (Ticket sales, News, Shopping)",
+            "Marketing campaigns (Milano Cortina 2026)",
+            "Augmented Reality (AR) features",
+            "Affiliate/External links (tickets.milanocortina2026.org)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 245,
+              "elapsed_seconds": 9.14487600326538
+            }
+          ],
+          "reasoning": "The content provided is from olympics.com, a consumer-focused media and ticketing platform, rather than the corporate entity World Athletics. While it confirms the existence of AR technology and ticketing infrastructure for the Olympic movement, it provides zero procurement signals regarding World Athletics' specific vendor needs, governance, or technology stack. The entity context is incorrect for the target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:04:20.619368",
+          "domain_explored": "https://world-masters-athletics.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "WMA Regional Social Media Volunteer (Volunteer/Unpaid)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (World Masters Athletics vs World Athletics)",
+            "Consumer-Facing Content (Championships, News, Records)",
+            "Volunteer Requests (Social Media Volunteer)",
+            "Affiliate Linking (MastersRankings.com)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.4821360111236572
+            }
+          ],
+          "reasoning": "The scraped content belongs to World Masters Athletics (WMA), a distinct legal entity from the target organization World Athletics (WA). While WMA is an 'Association in... with World Athletics,' procurement signals for WMA do not directly indicate procurement intent for World Athletics. The content is exclusively operational (news, rules, events) and includes a volunteer request, suggesting a non-profit or volunteer-driven operating model rather than a corporate procurement environment."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:04:29.079961",
+          "domain_explored": "https://european-athletics.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:04:42.896757",
+          "domain_explored": "https://www.linkedin.com/jobs/world-athletics-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "CAD Technician \u2013 Sports Construction (S&C Slatter)",
+              "Sales Assistant Specialist - Running (Decathlon)",
+              "Family Medicine NP/PA (PeaceHealth)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Keyword Spamming)",
+            "Irrelevant Industry Sectors (Healthcare, Retail, Construction)",
+            "No Direct World Athletics Corporate Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 265,
+              "elapsed_seconds": 6.5438573360443115
+            }
+          ],
+          "reasoning": "The search query 'World Athletics jobs' returned results that are algorithmically matched based on keywords rather than direct affiliation. The listings include Eduberance (Education), S&C Slatter (Construction), Decathlon (Retail), and PeaceHealth (Healthcare). None of these are direct procurement signals for the entity World Athletics (the governing body). The page demonstrates that LinkedIn's keyword matching is too broad for this specific entity name."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:04:53.723960",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/performance-coaching-expertise-at-athletics-ireland-4071549517",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Performance Coaching Expertise (Athletics Ireland)"
+            ],
+            "procurement_indicators": [
+              "Expressions of Interest sought for coaching services",
+              "Investment in High Performance Strategy 2022-2028"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Athletics Ireland vs World Athletics)",
+            "Sports Coaching Recruitment (High Performance Director, Technical Coaching)",
+            "Strategic Investment in Human Capital (Coaching Ecosystem)",
+            "Location Specific (Dublin, Ireland)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 282,
+              "elapsed_seconds": 3.833522081375122
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Performance Coaching Expertise' issued by Athletics Ireland, the National Governing Body for Athletics in Ireland. This constitutes a distinct entity from World Athletics (the international governing body). The procurement signals relate to human resources and sports science consulting, not corporate technology or infrastructure procurement relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:05:01.693062",
+          "domain_explored": "https://au.linkedin.com/jobs/view/event-coordinator-queensland-sport-and-athletics-centre-at-stadiums-queensland-4331962697",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Outlook",
+              "Event Booking Management System (Generic)"
+            ],
+            "job_postings": [
+              {
+                "title": "Event Coordinator",
+                "department": "Events Team",
+                "entity": "Stadiums Queensland",
+                "focus": "Facility Operations, Logistics, Staff Supervision"
+              }
+            ],
+            "procurement_indicators": [
+              "Supplier Relationship Management (Operational level)",
+              "Contractor Supervision"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Stadiums Queensland vs World Athletics)",
+            "Venue Operations Recruitment",
+            "Standard Software Usage (Microsoft Office)",
+            "Facility Management Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1805,
+              "output_tokens": 364,
+              "elapsed_seconds": 3.119744062423706
+            }
+          ],
+          "reasoning": "The job posting is for Stadiums Queensland, a government entity operating the Queensland Sport and Athletics Centre (QSAC). While QSAC hosts athletics events and utilizes 'World Athletics accredited' infrastructure, this is a venue operations role (Event Coordinator) for a local facility manager, not a procurement or technology role for the global governing body World Athletics. The technology stack mentioned is generic (Microsoft Office), and the role focuses on facility hire and logistics rather than corporate procurement."
+        }
+      ],
+      "total_input_tokens": 9460,
+      "total_output_tokens": 1622,
+      "estimated_cost_usd": 0.05271
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Athletics may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:05:01.694899"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.450044",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:08:32.978983"
+}

@@ -1,0 +1,157 @@
+{
+  "entity_id": "dams_lucas_oil",
+  "entity_name": "DAMS Lucas Oil",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "damslucasoil.com",
+    "lucasoil.co.uk",
+    "fiaformula3.com",
+    "fiaformula2.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dams_lucas_oil",
+      "entity_name": "DAMS Lucas Oil",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://damslucasoil.com",
+        "https://lucasoil.co.uk",
+        "https://fiaformula2.com",
+        "https://fiaformula3.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "DAMS Lucas Oil may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:36:20.313234",
+          "domain_explored": "https://damslucasoil.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Management (Facebook, Instagram, LinkedIn)",
+              "Web Technologies (SVG icons, Comments Box)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Partnership: Depancel (Watch Brand)",
+              "New Product Launch: Limited Edition Watch (March 2026)",
+              "Operational Expansion: Return to FIA Formula 3 (2025)",
+              "Event Participation: R\u00e9tromobile Paris (2026)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Acquisition",
+            "Merchandising/Brand Extension",
+            "Event Marketing",
+            "Team Expansion (F3 2025)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 293,
+              "elapsed_seconds": 5.60012412071228
+            }
+          ],
+          "reasoning": "The content reveals a new commercial partnership with watch brand Depancel, including the development of a limited-edition product. This indicates active procurement of commercial partners and manufacturing/retail partners for merchandise. Additionally, the expansion into FIA Formula 3 in 2025 suggests underlying procurement needs for operational expansion (equipment, logistics, travel)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:36:28.824619",
+          "domain_explored": "https://lucasoil.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LubricantAdvisor (Third-party SaaS for lubricant identification)",
+              "Multi-language Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced 'Oil Finder' functionality to lucasoil-eu.lubricantadvisor.com",
+              "Investment in regional digital infrastructure (EU specific sub-domain)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Tool Procurement",
+            "Vendor Partnership",
+            "Regional Localization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 277,
+              "elapsed_seconds": 4.417815923690796
+            }
+          ],
+          "reasoning": "The content reveals the use of 'LubricantAdvisor' (lucasoil-eu.lubricantadvisor.com) as the engine for the 'Oil Finder' tool. This indicates a procurement decision to license or partner with a specialized vendor for their digital product catalog and recommendation logic, rather than building it in-house. The multi-language support (ES, IT, DE, PL) suggests a broader European digital strategy requiring localized content management."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:36:31.607931",
+          "domain_explored": "https://fiaformula3.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:36:34.361763",
+          "domain_explored": "https://fiaformula2.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2760,
+      "total_output_tokens": 570,
+      "estimated_cost_usd": 0.016829999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "DAMS Lucas Oil may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:36:34.371488"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367886",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:10.178090"
+}

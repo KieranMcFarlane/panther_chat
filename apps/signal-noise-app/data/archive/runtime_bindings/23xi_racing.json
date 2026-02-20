@@ -1,0 +1,319 @@
+{
+  "entity_id": "23xi_racing",
+  "entity_name": "23XI Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "23xiracing.com",
+    "23xifanshop.com",
+    "dennyhamlin.com",
+    "store.nascar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/vehicle-setup-technician-at-23xi-racing-4033611048",
+      "https://www.linkedin.com/jobs/view/director-of-digital-marketing-at-23xi-racing-4364344126",
+      "https://www.linkedin.com/jobs/view/assembly-shop-mechanic-at-23xi-racing-4345262056",
+      "https://www.linkedin.com/jobs/racing-jobs-concord-nc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "23xi_racing",
+      "entity_name": "23XI Racing",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/assembly-shop-mechanic-at-23xi-racing-4345262056",
+        "https://store.nascar.com",
+        "https://23xiracing.com",
+        "https://dennyhamlin.com",
+        "https://23xifanshop.com",
+        "https://www.linkedin.com/jobs/racing-jobs-concord-nc",
+        "https://www.linkedin.com/jobs/view/vehicle-setup-technician-at-23xi-racing-4033611048",
+        "https://www.linkedin.com/jobs/view/director-of-digital-marketing-at-23xi-racing-4364344126"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "MarTech Stack Management",
+        "External Agency Procurement",
+        "Paid Media Investment Management",
+        "Data Analytics & Performance Measurement"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "23XI Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:46:21.513428",
+          "domain_explored": "https://23xiracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify or similar CMS inferred from product structure)",
+              "Email Marketing / CRM (23XI Insider signup)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management (Apparel, licensed goods)",
+              "Fulfillment & Logistics Services (Shipping physical goods)",
+              "Creative Design Services (Car wraps, branding assets)",
+              "Web Hosting & Maintenance (Racing Hub, Media infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandising & Supply Chain",
+            "Digital Marketing Infrastructure",
+            "CRM & Fan Engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 320,
+              "elapsed_seconds": 6.387665033340454
+            }
+          ],
+          "reasoning": "The content reveals a fully functional e-commerce operation (23XI Shop) and a structured '23XI Insider' fan engagement portal. While no direct RFPs are visible, the presence of a merchandising supply chain (Columbia, '47 brand) and digital data collection mechanisms indicates procurement activities in retail logistics, e-commerce platform maintenance, and marketing technology."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:46:24.387384",
+          "domain_explored": "https://23xifanshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:46:31.153311",
+          "domain_explored": "https://dennyhamlin.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Relationship Confirmation: Denny Hamlin is a co-owner of 23XI Racing.",
+              "Foundation Operations: The Denny Hamlin Foundation partners with medical organizations, suggesting potential procurement in healthcare/charity sectors, but distinct from 23XI Racing operations."
+            ]
+          },
+          "patterns_found": [
+            "Brand Affiliation",
+            "Cross-Promotion",
+            "Content Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.5694611072540283
+            }
+          ],
+          "reasoning": "The content is a personal website for Denny Hamlin (Driver/Owner). While it confirms the 23XI Racing partnership and ownership structure, it is purely informational and marketing-focused (news, bio, foundation). There are no technical signals, job postings, or vendor procurement opportunities present in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:46:35.030181",
+          "domain_explored": "https://store.nascar.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:46:44.247327",
+          "domain_explored": "https://www.linkedin.com/jobs/view/vehicle-setup-technician-at-23xi-racing-4033611048",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Expired Content Redirect",
+            "Unrelated Industry Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 199,
+              "elapsed_seconds": 4.8185131549835205
+            }
+          ],
+          "reasoning": "The provided content represents a generic LinkedIn job search results page for 'Diagnostic Technician' roles. It contains listings for hospitals (Saint Anthony, Cape Cod Healthcare) and universities, completely unrelated to 23XI Racing or motorsports. The URL suggests a redirect or expired job posting (4033611048), and the visible text offers no procurement signals, technology stack details, or relevant governance patterns for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:46:52.646747",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-of-digital-marketing-at-23xi-racing-4364344126",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MailChimp",
+              "Google Analytics",
+              "Slate"
+            ],
+            "job_postings": [
+              {
+                "title": "Director of Digital Marketing",
+                "location": "Huntersville, NC",
+                "procurement_relevance": "Direct oversight of digital strategy, agency coordination, and tool management."
+              }
+            ],
+            "procurement_indicators": [
+              "Coordinate with agencies to manage paid media investments",
+              "Own day-to-day use of MarTech tools... and recommend enhancements",
+              "Work with external agencies to help meet program objectives"
+            ]
+          },
+          "patterns_found": [
+            "MarTech Stack Management",
+            "External Agency Procurement",
+            "Paid Media Investment Management",
+            "Data Analytics & Performance Measurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 334,
+              "elapsed_seconds": 4.868265867233276
+            }
+          ],
+          "reasoning": "The job description for a Director of Digital Marketing explicitly outlines procurement responsibilities, including managing paid media investments, coordinating with external agencies, and owning the MarTech stack (MailChimp, Google Analytics, Slate). This confirms active procurement activity in marketing technology and media services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:47:17.135286",
+          "domain_explored": "https://www.linkedin.com/jobs/view/assembly-shop-mechanic-at-23xi-racing-4345262056",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Walled Garden Content",
+            "Unrelated Industry Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 179,
+              "elapsed_seconds": 20.03271174430847
+            }
+          ],
+          "reasoning": "The scraped content is exclusively the LinkedIn login wall and generic job aggregation ('Mechanical Technical Assistant', 'Aircraft Maintenance Technician'). There is no visible text, description, or metadata specific to the 'Assembly Shop Mechanic' role at 23XI Racing. The content is effectively a prompt to authenticate rather than a source of procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:47:24.340723",
+          "domain_explored": "https://www.linkedin.com/jobs/racing-jobs-concord-nc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "NASCAR",
+                "role": "Social Content Producer",
+                "location": "Charlotte, NC",
+                "relevance": "Competitor/Industry Context"
+              },
+              {
+                "entity": "NASCAR",
+                "role": "Manager, STEM Partnerships",
+                "location": "Charlotte, NC",
+                "relevance": "Competitor/Industry Context"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Walled Garden Content",
+            "Unrelated Industry Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 313,
+              "elapsed_seconds": 3.3758656978607178
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Racing' roles in Concord, NC. While it lists relevant industry entities like NASCAR, it contains no specific information regarding 23XI Racing, their procurement activities, or their specific technology stack. The page is largely behind a login wall ('Sign in to set job alerts') and serves as a directory rather than a source of specific procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 9251,
+      "total_output_tokens": 1583,
+      "estimated_cost_usd": 0.051498
+    },
+    "procurement_signals": [
+      "MarTech Stack Management",
+      "External Agency Procurement",
+      "Paid Media Investment Management",
+      "Data Analytics & Performance Measurement"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "23XI Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:47:24.341907"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366065",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:54.272896"
+}

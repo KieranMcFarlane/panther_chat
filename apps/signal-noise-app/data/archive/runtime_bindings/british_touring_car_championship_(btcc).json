@@ -1,0 +1,354 @@
+{
+  "entity_id": "british_touring_car_championship_(btcc)",
+  "entity_name": "British Touring Car Championship (BTCC)",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "croftcircuit.co.uk",
+    "thruxtonracing.co.uk",
+    "silverstone.co.uk",
+    "restartracing.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/marketing-executive-at-alliance-automotive-group-uk-ireland-4366213067",
+      "https://uk.linkedin.com/jobs/view/sales-and-marketing-automotive-components-at-owen-developments-4183609859",
+      "https://www.linkedin.com/posts/formula-careers_motorsport-careers-formula1-activity-7313817651351293952-YW2O",
+      "https://ie.linkedin.com/jobs/view/credit-control-manager-at-alliance-automotive-group-uk-ireland-4251635605"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_touring_car_championship_(btcc)",
+      "entity_name": "British Touring Car Championship (BTCC)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://restartracing.co.uk",
+        "https://ie.linkedin.com/jobs/view/credit-control-manager-at-alliance-automotive-group-uk-ireland-4251635605",
+        "https://thruxtonracing.co.uk",
+        "https://silverstone.co.uk",
+        "https://croftcircuit.co.uk",
+        "https://uk.linkedin.com/jobs/view/sales-and-marketing-automotive-components-at-owen-developments-4183609859",
+        "https://www.linkedin.com/posts/formula-careers_motorsport-careers-formula1-activity-7313817651351293952-YW2O",
+        "https://uk.linkedin.com/jobs/view/marketing-executive-at-alliance-automotive-group-uk-ireland-4366213067"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British Touring Car Championship (BTCC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:13:50.012643",
+          "domain_explored": "https://croftcircuit.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Venue-specific content",
+            "B2C service offerings",
+            "Generic marketing copy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.0493738651275635
+            }
+          ],
+          "reasoning": "The scraped content is from Croft Circuit, a specific race track venue, rather than the British Touring Car Championship (BTCC) organizing body. The content focuses on B2C driving experiences, track days, and ticket sales for spectators. There is no mention of BTCC procurement, governance, or enterprise technology stacks relevant to the championship's operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:14:01.845706",
+          "domain_explored": "https://thruxtonracing.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Venue-specific B2C marketing",
+            "Generic service offerings (Driving experiences, Karting, Corporate events)",
+            "Event schedule listings (BTCC, BSB)",
+            "Gift voucher sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 197,
+              "elapsed_seconds": 8.760180950164795
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer-facing services (driving experiences, karting) and venue hire for corporate events. While it mentions BTCC as a tenant event, it provides no insight into the BTCC organization's internal procurement, technology stack, or governance. It is a vendor/venue site, not the rights holder or organizer site."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:14:11.208351",
+          "domain_explored": "https://silverstone.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Ticket Sales (F1, Concerts)",
+            "Driving Experience Marketing",
+            "Venue Hospitality (Restaurants, Winter Warmer)",
+            "Social Media Engagement Calls",
+            "Repeated Promotional Copy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 204,
+              "elapsed_seconds": 6.097211837768555
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (ticket sales, driving experiences, hospitality) for the Silverstone venue. There is no mention of the British Touring Car Championship (BTCC) governance, nor are there any procurement signals, technology stack details, or corporate decision-making structures relevant to the BTCC entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:14:26.571773",
+          "domain_explored": "https://restartracing.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Fan Engagement (Fan Club, Merchandise)",
+            "Sports Marketing & PR (Team results, Championship glory)",
+            "Event Schedule Listing",
+            "Content Aggregation (BTCC.net references)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 187,
+              "elapsed_seconds": 11.632466077804565
+            }
+          ],
+          "reasoning": "The content is exclusively focused on B2C fan engagement, sports marketing, and race results for 'Restart Racing', a specific competing team within the BTCC championship. It contains no corporate governance, procurement, or technology implementation signals relevant to the BTCC organizing body itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:14:36.822566",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/marketing-executive-at-alliance-automotive-group-uk-ireland-4366213067",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms",
+              "Content Creation Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Marketing Executive",
+                "entity": "NAPA Racing UK / Alliance Automotive Group",
+                "location": "Birmingham Business Park, Birmingham, England",
+                "requirements": [
+                  "Full driving license",
+                  "Event attendance (10+ BTCC weekends)",
+                  "Content creation",
+                  "Partner engagement"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Event Logistics & Activation Services",
+              "Content Production & Capture",
+              "Retail Merchandising Support",
+              "Partner Relationship Management"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Marketing Executive)",
+            "Vendor/Partner Ecosystem (Alliance Automotive Group, NAPA)",
+            "Event Logistics & Procurement (Event activation, Partner obligations)",
+            "Location Intelligence (Birmingham Business Park)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 433,
+              "elapsed_seconds": 6.421683073043823
+            }
+          ],
+          "reasoning": "While the scraped content is a job posting (B2C/HR) rather than a direct procurement tender, it reveals the operational structure of a key BTCC entity (NAPA Racing UK / Alliance Racing). It identifies the parent company (Alliance Automotive Group) and a specific operational hub (Birmingham Business Park). This provides a lead for vendor targeting and identifies a team with active budget for marketing/operations, warranting a weak signal for potential partnership opportunities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:14:43.761528",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/sales-and-marketing-automotive-components-at-owen-developments-4183609859",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Website CMS",
+              "Social Media Management Platforms",
+              "Sales Performance Metrics Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Sales and Marketing- Automotive Components",
+                "entity": "Owen Developments",
+                "link": "https://uk.linkedin.com/jobs/view/sales-and-marketing-automotive-components-at-owen-developments-4183609859",
+                "seniority": "Mid-Senior level",
+                "department": "Sales and Marketing"
+              }
+            ],
+            "procurement_indicators": [
+              "Sole turbocharger supplier to BTCC",
+              "Global distribution logistics",
+              "Marketing material creation and management",
+              "Promotional event organization"
+            ]
+          },
+          "patterns_found": [
+            "BTCC Official Supplier Relationship",
+            "Job Posting (Sales & Marketing)",
+            "Supply Chain Logistics (Global distribution)",
+            "Marketing Technology Requirements (Website/Social Media management)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 401,
+              "elapsed_seconds": 3.406743049621582
+            }
+          ],
+          "reasoning": "While Owen Developments is a vendor (Tier 2 supplier) rather than the BTCC organizer itself, this posting confirms the active supply chain ecosystem supporting the championship. The role requires managing marketing materials and digital channels (website/social media), indicating potential procurement needs for marketing software, CRM tools, or digital agency services to support their BTCC-related branding."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:14:54.945597",
+          "domain_explored": "https://www.linkedin.com/posts/formula-careers_motorsport-careers-formula1-activity-7313817651351293952-YW2O",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Career Advice Content",
+            "B2C Engagement (Likes, Shares)",
+            "Broad Industry Scope (F1, WEC, IndyCar)",
+            "User-Generated Comments (Non-authoritative)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1783,
+              "output_tokens": 202,
+              "elapsed_seconds": 7.478461980819702
+            }
+          ],
+          "reasoning": "The content is a generic 'Motorsport careers' post by a third-party aggregator (Formula Careers). While it mentions 'GT & Touring Cars' and a user comment explicitly mentions 'BTCC', the post itself is educational/engagement fluff, not a signal of BTCC organizational procurement activity. It lacks specific vendor needs, technology stacks, or job postings tied to the BTCC entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:15:02.245816",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/credit-control-manager-at-alliance-automotive-group-uk-ireland-4251635605",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MAM (Industry specific accounting package)",
+              "Microsoft Windows",
+              "Microsoft Excel"
+            ],
+            "job_postings": [
+              "Credit Control Manager (Alliance Automotive Group)"
+            ],
+            "procurement_indicators": [
+              "Use of specialized industry software (MAM) implies vendor reliance",
+              "Group growth driving operational recruitment"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Finance/Operations)",
+            "Vendor Ecosystem (Alliance Automotive Group, NAPA)",
+            "Technology Stack Discovery (MAM Accounting System)",
+            "BTCC Sponsorship Confirmation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1857,
+              "output_tokens": 302,
+              "elapsed_seconds": 3.6496598720550537
+            }
+          ],
+          "reasoning": "While this is a finance role rather than a direct procurement position, it confirms the operational scale of the NAPA Racing UK / Alliance Automotive Group entity associated with the BTCC. The explicit mention of the 'MAM' accounting system provides a specific technology stack data point (ERP/Accounting) used by the organization, which is relevant for understanding their procurement infrastructure."
+        }
+      ],
+      "total_input_tokens": 12759,
+      "total_output_tokens": 2102,
+      "estimated_cost_usd": 0.06980700000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British Touring Car Championship (BTCC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:15:02.250496"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376179",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:49.761946"
+}

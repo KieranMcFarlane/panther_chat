@@ -1,0 +1,128 @@
+{
+  "entity_id": "ghana_volleyball_association",
+  "entity_name": "Ghana Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "sportsauthority.gov.gh",
+    "ghanaweb.com",
+    "gbcghanaonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ghana_volleyball_association",
+      "entity_name": "Ghana Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportsauthority.gov.gh",
+        "https://ghanaweb.com",
+        "https://gbcghanaonline.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ghana Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:26:46.362482",
+          "domain_explored": "https://sportsauthority.gov.gh",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:26:57.326734",
+          "domain_explored": "https://ghanaweb.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal Structure",
+            "User Authentication/Registration UI",
+            "Generic Sports Section Header"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.651660919189453
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage UI and navigation structure of GhanaWeb (a major news aggregator). While there is a 'Sports' section listed in the navigation, the content provided is purely structural (login forms, generic headlines, and sitemap links). There is no specific mention of the 'Ghana Volleyball Association', no tenders, and no specific technology stack details related to the entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:27:15.226821",
+          "domain_explored": "https://gbcghanaonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal Structure",
+            "Political News Aggregation (NPP Primaries)",
+            "General Sports Headlines (Tennis, Soccer)",
+            "No Dedicated Volleyball Section"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.663472890853882
+            }
+          ],
+          "reasoning": "The scraped content represents a general news feed dominated by political events (NPP Primaries) and general international sports. There are no specific mentions of the Ghana Volleyball Association, nor are there procurement signals such as RFPs, tenders, or job postings related to the entity or its specific technology needs."
+        }
+      ],
+      "total_input_tokens": 2841,
+      "total_output_tokens": 387,
+      "estimated_cost_usd": 0.014328
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ghana Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:27:15.227953"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341492",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:36.134673"
+}

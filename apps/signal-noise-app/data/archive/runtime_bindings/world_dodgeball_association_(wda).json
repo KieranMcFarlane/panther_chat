@@ -1,0 +1,266 @@
+{
+  "entity_id": "world_dodgeball_association_(wda)",
+  "entity_name": "World Dodgeball Association (WDA)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "asiadodgeball.com",
+    "dodgeballaus.com.au",
+    "knowledgehub.josoorinstitute.qa",
+    "majorleaguedodgeball.com.au",
+    "englanddodgeball.com",
+    "warralily.com.au",
+    "ec-undp-electoralassistance.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_dodgeball_association_(wda)",
+      "entity_name": "World Dodgeball Association (WDA)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://majorleaguedodgeball.com.au",
+        "https://dodgeballaus.com.au",
+        "https://warralily.com.au",
+        "https://ec-undp-electoralassistance.org",
+        "https://englanddodgeball.com",
+        "https://asiadodgeball.com",
+        "https://knowledgehub.josoorinstitute.qa"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Dodgeball Association (WDA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:10:22.553221",
+          "domain_explored": "https://asiadodgeball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Suspected WordPress)",
+              "E-commerce Platform",
+              "Web Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Shop presence (implies vendor need for payment processing/merchandise)",
+              "Digital content hosting requirements"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Capability (Shop)",
+            "Content Management System (CMS) usage",
+            "Standardized Navigation Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 525,
+              "output_tokens": 247,
+              "elapsed_seconds": 9.812883138656616
+            }
+          ],
+          "reasoning": "The content reveals a functional website with an active 'Shop' section, indicating e-commerce procurement needs (payment gateways, inventory management). The site structure suggests a CMS (likely WordPress) and a need for web hosting/maintenance. However, there are no explicit signals of new tenders, hiring, or major tech upgrades in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:10:34.299646",
+          "domain_explored": "https://dodgeballaus.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League Registration Management",
+              "National Federation Alignment"
+            ]
+          },
+          "patterns_found": [
+            "League Management Operations",
+            "Content Management System (CMS)",
+            "Event Registration Workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 773,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.2428879737854004
+            }
+          ],
+          "reasoning": "The content reveals active league operations (VPL) requiring registration management, scheduling, and alignment with national bodies. While no direct procurement requests are visible, the operational scale implies a need for event management software, CRM solutions, or registration platforms. The presence of structured tags and author profiles indicates a CMS deployment."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:11:07.843894",
+          "domain_explored": "https://knowledgehub.josoorinstitute.qa",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:11:22.440483",
+          "domain_explored": "https://majorleaguedodgeball.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Website CMS (implied by dynamic content)",
+              "Registration Forms (implied by 'Register Now' calls to action)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement (Multiple locations: Bulleen, Footscray, Greensborough, Hawthorn, Vermont South)",
+              "Seasonal Operations Management (2026 season planning)",
+              "Marketing/Promotional Budget (Referral programs, 'Redeem Offer Here')"
+            ]
+          },
+          "patterns_found": [
+            "League Management Operations",
+            "Venue Coordination & Logistics",
+            "Customer Acquisition Workflow",
+            "Digital Registration System"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 340,
+              "elapsed_seconds": 3.4316840171813965
+            }
+          ],
+          "reasoning": "The content reveals a local league operator (Major League Dodgeball) managing multiple venues and seasons. While there is no direct procurement intent for the WDA, the operational complexity (managing venues across Bulleen, Footscray, etc., and handling registrations) indicates a reliance on administrative software and logistics coordination. This reinforces the pattern of 'League Management Operations' seen in previous iterations, suggesting a potential market for operational software or services targeting the dodgeball ecosystem."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:11:33.602657",
+          "domain_explored": "https://englanddodgeball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - inferred from dynamic event posting",
+              "Event Registration/Ticketing Platform - highly likely for 'Euros 2025'"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Major Event Coordination (European Championships 2025)",
+              "Marketing Campaign Management ('Quest for Gold')"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Logistics",
+            "Content Management System (CMS)",
+            "High-Traffic Event Hosting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 717,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.9500129222869873
+            }
+          ],
+          "reasoning": "The content reveals active coordination for a major international event (Dodgeball Euros 2025). While no direct procurement signals (RFPs) are visible in this snippet, the organization of a 'Quest for Gold' campaign implies operational complexity, travel logistics, and potential needs for event management software, streaming services, or promotional vendors."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:12:02.152254",
+          "domain_explored": "https://warralily.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Virtual Tour Integration",
+              "PDF Document Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Customer Incentive Program ($5,000 Landscaping Offer)"
+            ]
+          },
+          "patterns_found": [
+            "Real Estate Development",
+            "Residential Community Marketing",
+            "B2C Sales Workflow"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 243,
+              "elapsed_seconds": 21.534083127975464
+            }
+          ],
+          "reasoning": "The analyzed content belongs to 'Warralily,' a residential masterplanned community developer in Australia. The content is entirely focused on real estate (House & Land sales, landscaping offers, masterplan downloads). There is absolutely no connection to the World Dodgeball Association (WDA), sports governance, or event management. This entity represents a different sector (Property Development) and does not advance the hypothesis regarding WDA's procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:12:12.300522",
+          "domain_explored": "https://ec-undp-electoralassistance.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5137,
+      "total_output_tokens": 1314,
+      "estimated_cost_usd": 0.035121
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Dodgeball Association (WDA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:12:12.302068"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457593",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:19.774658"
+}

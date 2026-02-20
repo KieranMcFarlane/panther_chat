@@ -1,0 +1,196 @@
+{
+  "entity_id": "cyclassics_hamburg",
+  "entity_name": "Cyclassics Hamburg",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "cyclassics-hamburg.de",
+    "procyclingstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/vertriebsmitarbeiter-m-w-d-im-innendienst-spanischsprachiger-markt-teamassistenz-m-w-d-at-f-h-schule-m%C3%BChlenbau-gmbh-4198552253",
+      "https://de.linkedin.com/jobs/view/mechatroniker-oder-elektrotechniker-m-w-d-service-at-amandus-kahl-4367418824"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cyclassics_hamburg",
+      "entity_name": "Cyclassics Hamburg",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://de.linkedin.com/jobs/view/vertriebsmitarbeiter-m-w-d-im-innendienst-spanischsprachiger-markt-teamassistenz-m-w-d-at-f-h-schule-m%C3%BChlenbau-gmbh-4198552253",
+        "https://cyclassics-hamburg.de",
+        "https://de.linkedin.com/jobs/view/mechatroniker-oder-elektrotechniker-m-w-d-service-at-amandus-kahl-4367418824",
+        "https://procyclingstats.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation / Website Relaunch",
+        "Vendor Engagement (Web Development)",
+        "Content Management / CMS Implementation",
+        "UX/UI Modernization"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cyclassics Hamburg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:35:25.359476",
+          "domain_explored": "https://cyclassics-hamburg.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Web Analytics (implied by 'user guidance' optimization)",
+              "YouTube (Video embedding)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Website Relaunch (Dec 2025)",
+              "Web Development Agency Procurement",
+              "Digital Experience Enhancement"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation / Website Relaunch",
+            "Vendor Engagement (Web Development)",
+            "Content Management / CMS Implementation",
+            "UX/UI Modernization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.476242780685425
+            }
+          ],
+          "reasoning": "The content explicitly confirms a recent website relaunch for the 2025 season. The announcement 'Die neue Cyclassics-Website ist online' indicates a completed procurement cycle for web development services. The focus on 'modern look', 'improved structure', and 'user guidance' suggests investment in front-end design and CMS platforms. This is a strong signal of recent digital procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:35:28.145638",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:35:35.137213",
+          "domain_explored": "https://de.linkedin.com/jobs/view/vertriebsmitarbeiter-m-w-d-im-innendienst-spanischsprachiger-markt-teamassistenz-m-w-d-at-f-h-schule-m%C3%BChlenbau-gmbh-4198552253",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP",
+              "MS Office"
+            ],
+            "job_postings": [
+              "Vertriebsmitarbeiter (m/w/d) im Innendienst spanischsprachiger Markt / Teamassistenz (m/w/d) at F.H. SCHULE M\u00fchlenbau GmbH"
+            ],
+            "procurement_indicators": [
+              "Sponsorship/Partnership procurement: F.H. SCHULE M\u00fchlenbau procures entries or sponsorship for the Cyclassics Hamburg event for employee engagement."
+            ]
+          },
+          "patterns_found": [
+            "Vendor Engagement / Sponsorship",
+            "Employee Benefits / Perks",
+            "Event Participation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 280,
+              "elapsed_seconds": 3.187523126602173
+            }
+          ],
+          "reasoning": "The content is a job posting for F.H. SCHULE M\u00fchlenbau GmbH, not Cyclassics Hamburg. However, under the employee benefits section ('Sportler motivieren wir'), it explicitly lists 'Teamunterst\u00fctzung bei den Cyclassics Hamburg'. This confirms F.H. SCHULE is an active partner or sponsor of the event, indicating a B2B relationship and potential procurement of entry packages or sponsorship assets."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:35:41.892635",
+          "domain_explored": "https://de.linkedin.com/jobs/view/mechatroniker-oder-elektrotechniker-m-w-d-service-at-amandus-kahl-4367418824",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Mechatroniker oder Elektrotechniker (m/w/d) Service",
+                "company": "AMANDUS KAHL",
+                "location": "Reinbek",
+                "relevance": "Mentions 'Team support at Cyclassics Hamburg' as a perk."
+              }
+            ],
+            "procurement_indicators": [
+              "Third-party vendor engagement (AMANDUS KAHL uses event for employee benefits)",
+              "Event sponsorship/participation model validation"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Engagement / Sponsorship",
+            "Employee Benefits / Perks",
+            "Event Participation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 319,
+              "elapsed_seconds": 2.666498899459839
+            }
+          ],
+          "reasoning": "While the job posting is for a different entity (AMANDUS KAHL), it explicitly mentions 'Teamunterst\u00fctzung bei den Cyclassics Hamburg' (Team support at the Cyclassics Hamburg) under the employee benefits section. This confirms that Cyclassics Hamburg is utilized as a third-party engagement platform by local businesses, reinforcing the event's commercial value and vendor ecosystem, though it does not reveal direct procurement activity by the event organizers themselves."
+        }
+      ],
+      "total_input_tokens": 4396,
+      "total_output_tokens": 882,
+      "estimated_cost_usd": 0.026418
+    },
+    "procurement_signals": [
+      "Digital Transformation / Website Relaunch",
+      "Vendor Engagement (Web Development)",
+      "Content Management / CMS Implementation",
+      "UX/UI Modernization"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cyclassics Hamburg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:35:41.893261"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.403703",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:25:41.937334"
+}

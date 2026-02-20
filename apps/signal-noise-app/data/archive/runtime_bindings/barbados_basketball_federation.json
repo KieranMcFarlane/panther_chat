@@ -1,0 +1,125 @@
+{
+  "entity_id": "barbados_basketball_federation",
+  "entity_name": "Barbados Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "barbadostoday.bb"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://bb.linkedin.com/jobs/view/coord-campus-programs-at-ross-university-school-of-medicine-3395104884"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "barbados_basketball_federation",
+      "entity_name": "Barbados Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://barbadostoday.bb",
+        "https://bb.linkedin.com/jobs/view/coord-campus-programs-at-ross-university-school-of-medicine-3395104884"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Barbados Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:44:05.822748",
+          "domain_explored": "https://barbadostoday.bb",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Election coverage (Decision 2026)",
+            "Sports reporting (Cricket, Track & Field)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.473051071166992
+            }
+          ],
+          "reasoning": "The provided content is a general news homepage for 'Barbados Today' dated February 2026. It covers general elections, crime, tourism, and general sports (Cricket, BSSAC). There is absolutely no mention of the Barbados Basketball Federation, basketball operations, or related procurement activities. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:44:16.060689",
+          "domain_explored": "https://bb.linkedin.com/jobs/view/coord-campus-programs-at-ross-university-school-of-medicine-3395104884",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Platforms",
+              "Web Content Management Systems (CMS)"
+            ],
+            "job_postings": [
+              "Coordinator, Campus Programs (Ross University School of Medicine)"
+            ],
+            "procurement_indicators": [
+              "Budget responsibility for campus programming",
+              "Liaison role with outside vendors for Campus Life",
+              "Purchasing authority for student clubs and events",
+              "Procurement needs for intramural sports equipment (Basketball, Soccer, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "Budgetary Authority",
+            "Vendor Liaison Role",
+            "Intramural Sports Management",
+            "Event Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 343,
+              "elapsed_seconds": 5.703750848770142
+            }
+          ],
+          "reasoning": "While the target entity is Ross University (not the Federation), this role is highly relevant to the Barbados basketball ecosystem. The position explicitly includes oversight of intramural basketball and budget responsibility for programming. This identifies a key stakeholder (RUSM Student Affairs) with a budget for sports equipment, event vendors, and facility management, representing a potential indirect procurement channel or partnership opportunity for basketball-related goods and services in Barbados."
+        }
+      ],
+      "total_input_tokens": 2805,
+      "total_output_tokens": 524,
+      "estimated_cost_usd": 0.016275
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Barbados Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:44:16.061191"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252048",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:53.003801"
+}

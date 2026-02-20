@@ -1,0 +1,248 @@
+{
+  "entity_id": "mc_alger",
+  "entity_name": "MC Alger",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "cafonline.com",
+    "soccerassociation.com",
+    "usm-alger.com",
+    "mc-alger.footeo.com",
+    "transfermarkt.us",
+    "joma-sport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mc_alger",
+      "entity_name": "MC Alger",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://usm-alger.com",
+        "https://transfermarkt.us",
+        "https://mc-alger.footeo.com",
+        "https://soccerassociation.com",
+        "https://cafonline.com",
+        "https://joma-sport.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MC Alger may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:15:52.077220",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "navigation_structure_only",
+            "sports_federation_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 910,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.6674277782440186
+            }
+          ],
+          "reasoning": "The scraped content is from the Confederation of African Football (CAF) website and consists solely of navigation menu items (e.g., 'AFCON 2025', 'CAF Champions League', 'Fixtures & Results'). There is absolutely no mention of 'MC Alger' (the target entity), nor are there any procurement signals, job postings, or technology stack indicators relevant to the target entity. This content is irrelevant to the objective of gathering procurement intelligence for MC Alger."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:15:57.363490",
+          "domain_explored": "https://soccerassociation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "directory_indexing",
+            "generic_subscription_model",
+            "third_party_content_aggregator",
+            "outdated_web_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1254,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.3318281173706055
+            }
+          ],
+          "reasoning": "The content represents a generic, third-party football directory and statistics portal (SoccerAssociation.com). While it contains a link to 'Algeria', this is merely a navigational node for general football information, not specific to the entity 'MC Alger'. The site structure (cgi-bin, flat file indexes) and focus (subscriptions, global scores) indicate it is a consumer-facing content site with no relevance to B2B procurement, governance, or technology stack analysis for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:16:03.405118",
+          "domain_explored": "https://usm-alger.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "fan_community_context",
+            "non-commercial_entity",
+            "content_replication",
+            "irrelevant_domain_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 475,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.4876718521118164
+            }
+          ],
+          "reasoning": "The scraped content from usm-alger.com indicates a fan portal or community hub ('Le Carrefour de tou(te)s les Usmistes') dedicated to USM Alger (Union Sportive M\u00e9dina d'Alger). The domain is distinct from the target entity 'MC Alger' (Mouloudia Club d'Alger), representing a rival sports club. The content focuses on fan engagement rather than corporate operations, procurement, or administrative governance. Consequently, it offers no value for MC Alger procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:16:11.288956",
+          "domain_explored": "https://mc-alger.footeo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Footeo (SaaS Platform)",
+              "Facebook Connect"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "saas_platform_usage",
+            "fan_community_context",
+            "social_media_integration",
+            "non-commercial_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 212,
+              "elapsed_seconds": 4.950550079345703
+            }
+          ],
+          "reasoning": "The content confirms that 'mc-alger.footeo.com' is a club-branded page hosted on the Footeo platform (a SaaS for sports clubs). The navigation focuses on fan engagement (photos, videos, songs, forums) rather than corporate operations. The presence of generic platform news ('Bilan du rassemblement des staffs footeo') indicates this is a tenant account, not the official corporate procurement domain."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:16:18.671626",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_market_data_aggregation",
+            "editorial_content_focus",
+            "fan_engagement_features",
+            "irrelevant_commercial_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 181,
+              "elapsed_seconds": 4.351578235626221
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt is exclusively focused on football (soccer) player transfers, market values, and sports news. It contains no information regarding MC Alger's corporate operations, procurement needs, or technology stack. The site is a third-party sports database, not a corporate entity or a procurement portal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:16:25.930601",
+          "domain_explored": "https://joma-sport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Salesforce Commerce Cloud (Demandware)",
+              "Google Analytics (implied by 'Cookies anal\u00edticas')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_platform_usage",
+            "b2c_sales_focus",
+            "marketing_content_duplication",
+            "cookie_consent_management",
+            "newsletter_subscription_cta"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.721453905105591
+            }
+          ],
+          "reasoning": "The scraped content from joma-sport.com is exclusively focused on Business-to-Consumer (B2C) retail activities. Key elements include 'Second Sales' (rebajas), 'Join the #JOMATEAM' newsletter subscriptions, and direct calls to action like 'Comprar' (Buy). The presence of Demandware (Salesforce Commerce Cloud) URLs indicates a standard e-commerce setup. There is no content suggesting B2B procurement, vendor partnerships, or corporate governance related to the entity MC Alger."
+        }
+      ],
+      "total_input_tokens": 7251,
+      "total_output_tokens": 1283,
+      "estimated_cost_usd": 0.04099800000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MC Alger may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:16:25.932580"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.348324",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:59.674850"
+}

@@ -1,0 +1,213 @@
+{
+  "entity_id": "hungarian_handball_federation",
+  "entity_name": "Hungarian Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "wikidata.org",
+    "ehfeuro.eurohandball.com",
+    "hungarytoday.hu",
+    "hungaryhandball2018.com",
+    "elitesport-global.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hungarian_handball_federation",
+      "entity_name": "Hungarian Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://elitesport-global.com",
+        "https://hungarytoday.hu",
+        "https://grokipedia.com",
+        "https://ehfeuro.eurohandball.com",
+        "https://hungaryhandball2018.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hungarian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:17:09.175471",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:17:18.782559",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "Community/Event Announcements",
+            "SPARQL Query Service Mention"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.5069501399993896
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a general-purpose knowledge base. It contains no specific information regarding the Hungarian Handball Federation (Magyar K\u00e9zilabda Sz\u00f6vets\u00e9g). There are no procurement signals, vendor lists, or organizational specifics related to the target entity in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:17:27.686060",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Tournament Results",
+            "Generic Navigation Links",
+            "Future Event Bidding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.3893399238586426
+            }
+          ],
+          "reasoning": "The content is exclusively focused on European Handball Federation (EHF) tournament results, news (Denmark winning, Croatia winning bronze), and future hosting bids (2030 & 2032). There is no mention of the Hungarian Handball Federation, nor are there any procurement signals, technology stacks, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:18:12.536967",
+          "domain_explored": "https://hungarytoday.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Weather and Tourism Reporting",
+            "Political Commentary",
+            "Cultural Event Listings",
+            "Consumer Protection News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 178,
+              "elapsed_seconds": 20.067589282989502
+            }
+          ],
+          "reasoning": "The scraped content from hungarytoday.hu represents a general news portal covering weather, tourism, politics, and culture. There is no mention of the Hungarian Handball Federation, sports governance, or procurement activities. The content is irrelevant to the specific entity and target signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:18:23.087142",
+          "domain_explored": "https://hungaryhandball2018.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'inject investments in high-level sports education' (General policy statement, not a specific procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Historical Narrative",
+            "Encyclopedic Content",
+            "General Sports Information",
+            "Static Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.3977062702178955
+            }
+          ],
+          "reasoning": "The content is a historical overview of handball in Hungary and the Hungarian Handball Federation (MKSz). It discusses the formation of alliances, changes in gameplay rules, and past team performance. There is absolutely no dynamic content, no mention of current technology needs, infrastructure projects, or purchasing activities. It is purely informational/historical."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:18:35.081292",
+          "domain_explored": "https://elitesport-global.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 13 column 30 (char 767)"
+        }
+      ],
+      "total_input_tokens": 5867,
+      "total_output_tokens": 765,
+      "estimated_cost_usd": 0.029075999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hungarian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:18:35.082388"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361785",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:26.299108"
+}

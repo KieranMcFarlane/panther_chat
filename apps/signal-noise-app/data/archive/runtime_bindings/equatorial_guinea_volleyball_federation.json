@@ -1,0 +1,145 @@
+{
+  "entity_id": "equatorial_guinea_volleyball_federation",
+  "entity_name": "Equatorial Guinea Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "playmakerstats.com",
+    "volleybox.net",
+    "shop.volleyballworld.com",
+    "thaiticketmajor.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "equatorial_guinea_volleyball_federation",
+      "entity_name": "Equatorial Guinea Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://shop.volleyballworld.com",
+        "https://playmakerstats.com",
+        "https://volleybox.net",
+        "https://thaiticketmajor.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Equatorial Guinea Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:23:54.291187",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:23:57.084392",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:24:03.748165",
+          "domain_explored": "https://shop.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (inferred from 'collections' and 'products' URL structure)",
+              "E-commerce platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "global_ecommerce_platform",
+            "merchandise_catalog",
+            "irrelevant_entity_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.6571478843688965
+            }
+          ],
+          "reasoning": "The scraped content is from 'shop.volleyballworld.com', the global FIVB/Volleyball World merchandise store. It lists retail jerseys for top-tier nations (Netherlands, Italy, China, Poland) and is entirely unrelated to the Equatorial Guinea Volleyball Federation. There are no signals regarding the target entity's procurement, governance, or technology stack."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:24:11.825869",
+          "domain_explored": "https://thaiticketmajor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_ticketing_platform",
+            "language_mismatch_thai",
+            "irrelevant_entity_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 723,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.800373077392578
+            }
+          ],
+          "reasoning": "The content is from 'ThaiTicketMajor', a Thai ticketing and entertainment platform. It is entirely unrelated to the Equatorial Guinea Volleyball Federation. The text is in Thai, focuses on event ticketing and merchandise, and contains no signals regarding the target entity's procurement, governance, or technology stack."
+        }
+      ],
+      "total_input_tokens": 2152,
+      "total_output_tokens": 374,
+      "estimated_cost_usd": 0.012066
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Equatorial Guinea Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:24:11.826934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339457",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:32.295764"
+}

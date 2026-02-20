@@ -1,0 +1,208 @@
+{
+  "entity_id": "argentine_basketball_confederation",
+  "entity_name": "Argentine Basketball Confederation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "a.osmarks.net",
+    "play.google.com",
+    "selecaoppge.unb.br",
+    "lexology.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_basketball_confederation",
+      "entity_name": "Argentine Basketball Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://a.osmarks.net",
+        "https://lexology.com",
+        "https://selecaoppge.unb.br",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Basketball Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:01:10.739355",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform content",
+            "Irrelevant entity context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.333517074584961
+            }
+          ],
+          "reasoning": "The content is the generic homepage of Wikidata, a general knowledge base. It contains no information regarding the Argentine Basketball Confederation (CABB), its procurement activities, technology stack, or governance. The text describes Wikidata features, community events, and general data literacy, which are unrelated to the specific procurement intelligence task for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:01:16.883596",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform content",
+            "JavaScript dependency error",
+            "Kiwix offline reader interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 467,
+              "output_tokens": 154,
+              "elapsed_seconds": 2.352992057800293
+            }
+          ],
+          "reasoning": "The content represents a technical error page or a generic offline reader interface (Kiwix) rather than specific information regarding the Argentine Basketball Confederation. There is no text related to governance, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:01:25.663106",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic App Store Interface",
+            "Consumer Gaming Content",
+            "Irrelevant Entity Context",
+            "Italian Language Localization (Target Mismatch)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.883678913116455
+            }
+          ],
+          "reasoning": "The scraped content is a generic listing of mobile games and applications from the Google Play Store. It contains no information regarding the Argentine Basketball Confederation, its governance, or its procurement activities. The content is entirely consumer-focused and irrelevant to the B2B procurement intelligence objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:01:59.445329",
+          "domain_explored": "https://selecaoppge.unb.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Aggregator",
+            "Irrelevant Sports/Entertainment Topics",
+            "Scraped/Spam Content Structure",
+            "Future-Dated Entries (Jan 2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 190,
+              "elapsed_seconds": 8.339816808700562
+            }
+          ],
+          "reasoning": "The content provided is a list of generic sports and entertainment headlines (NBA, NFL, F1, Spotify) with future dates (Jan 2026). There is absolutely no connection to the Argentine Basketball Confederation (CABB), nor are there any governance, financial, or procurement signals. The domain appears to be hosting low-quality scraped content or spam."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:02:10.670396",
+          "domain_explored": "https://lexology.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Legal News Aggregator",
+            "Global Law Firm Marketing Content",
+            "Irrelevant Geographic Focus (US, Cyprus, UK)",
+            "Consumer/Subscription Interface (Sign-up prompts)",
+            "Keyword Spamming (Repeated tags for SEO)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.845712900161743
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of Lexology, a global legal news aggregator. The content consists entirely of headlines and summaries contributed by international law firms (e.g., Akin Gump, Skadden) regarding general legal topics (AI, sanctions, ESG). There is no specific mention of the Argentine Basketball Confederation (CABB), Argentine law, or specific procurement activities related to the entity. The page is a generic content hub, not a source of entity-specific procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 6345,
+      "total_output_tokens": 953,
+      "estimated_cost_usd": 0.03333
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Basketball Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:02:10.671552"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.248424",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:14.140991"
+}

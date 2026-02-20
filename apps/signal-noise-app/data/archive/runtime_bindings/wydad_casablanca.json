@@ -1,0 +1,264 @@
+{
+  "entity_id": "wydad_casablanca",
+  "entity_name": "Wydad Casablanca",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "wydad.net",
+    "wydad-casablanca.footeo.com",
+    "wacofficiel.ma",
+    "cafonline.com",
+    "mlssoccer.com",
+    "sundownsfc.co.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wydad_casablanca",
+      "entity_name": "Wydad Casablanca",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sundownsfc.co.za",
+        "https://wacofficiel.ma",
+        "https://mlssoccer.com",
+        "https://wydad.net",
+        "https://cafonline.com",
+        "https://wydad-casablanca.footeo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Wydad Casablanca may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:53:48.918709",
+          "domain_explored": "https://wydad.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static Web Hosting (implied by simple structure)",
+              "Arabic Language Content Localization"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Unofficial Status: Site explicitly states it is not the official club channel, limiting procurement relevance.",
+              "Fan Engagement Focus: Content is strictly consumer-facing (scores, history), not B2B."
+            ]
+          },
+          "patterns_found": [
+            "Unofficial Fan Portal",
+            "Static Content Delivery",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 307,
+              "elapsed_seconds": 3.8121578693389893
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports statistics (match results, standings, player roster) and historical club information. The site explicitly identifies as 'unofficial' (\u0627\u0644\u0633\u064a\u062a \u063a\u064a\u0631 \u0627\u0644\u0631\u0633\u0645\u064a). While this confirms the entity exists and has a digital presence, it offers zero direct procurement signals (RFPs, jobs) or enterprise technology stack insights. It is classified as WEAK_ACCEPT only because it confirms the active digital footprint of the entity, but it provides no actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:53:56.887341",
+          "domain_explored": "https://wydad-casablanca.footeo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Footeo (SaaS Platform)",
+              "Facebook Integration (Social Login)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "No corporate governance structure detected",
+              "No RFP or tender sections",
+              "Reliance on third-party consumer-grade platform"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (Footeo)",
+            "Amateur/Grassroots Management",
+            "Generic Template Content",
+            "Fan Engagement Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.904741048812866
+            }
+          ],
+          "reasoning": "The content is hosted on Footeo, a SaaS platform for amateur sports club management. The site features generic template text ('The wydad casablanca club is creating their website!') and focuses on fan engagement (surveys, photos) rather than corporate operations. This indicates a low-level, likely unofficial or fan-managed presence with no procurement authority or enterprise technology stack."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:54:03.145139",
+          "domain_explored": "https://wacofficiel.ma",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Affiliate Relationship: 1xBet (Historical/Commercial partner)",
+              "Market: Morocco (MAD currency)"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Marketing Content",
+            "Gambling/Betting Promotion",
+            "SEO Keyword Stuffing (Code promo)",
+            "User-Generated/Scraped Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.862955093383789
+            }
+          ],
+          "reasoning": "The content is entirely focused on promoting a gambling affiliate code ('WAC1X') for 1xBet. This indicates the domain is either a parked page, a low-quality SEO affiliate site, or a fan site monetized via betting referrals. It contains zero corporate governance, procurement, or technology stack signals relevant to the club's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:54:10.376121",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Governing Body Portal",
+            "Generic Sports Navigation",
+            "No Club-Specific Governance",
+            "Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1063,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.22475004196167
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of the Confederation of African Football (CAF), the continental governing body. While Wydad Casablanca participates in CAF tournaments (Champions League), this page contains only general navigation, video links, and competition fixtures. It lacks specific procurement signals, job postings, or technology stack details relevant to the club's internal operations. This is a top-level sports media page, not a corporate procurement source."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:54:17.724981",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope (MLS vs Morocco)",
+            "Sports Journalism Content",
+            "Player Transfer News",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1552,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.221116304397583
+            }
+          ],
+          "reasoning": "The scraped content is from 'mlssoccer.com', which covers Major League Soccer (USA/Canada). The entity of interest is Wydad Casablanca (Morocco). The content focuses on player transfers (Timo Werner, Alex Freeman) and league news for US-based teams. There is absolutely no intersection with Wydad Casablanca's operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:54:26.009730",
+          "domain_explored": "https://sundownsfc.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure)",
+              "Generic CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem: Betway, Sanlam, Hollywoodbets",
+              "Stadium Management: Lucas Moripe Stadium",
+              "Youth Development: Sanlam Kay Motsepe Schools Cup"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Match (Mamelodi Sundowns vs Wydad Casablanca)",
+            "Competitor/Peer Club Navigation",
+            "Sponsorship Integration (Betway, Hollywoodbets, Sanlam)",
+            "Standard Sports Club CMS Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1603,
+              "output_tokens": 288,
+              "elapsed_seconds": 4.138274908065796
+            }
+          ],
+          "reasoning": "The content scraped is from the official website of Mamelodi Sundowns FC (sundownsfc.co.za), a South African football club. While this represents a peer entity in African football, it provides zero procurement intelligence regarding Wydad Casablanca. The site structure is standard for sports clubs (News, Fixtures, Teams) and does not contain cross-club procurement data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 8438,
+      "total_output_tokens": 1486,
+      "estimated_cost_usd": 0.047604
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Wydad Casablanca may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:54:26.012753"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.183123",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:54.815639"
+}

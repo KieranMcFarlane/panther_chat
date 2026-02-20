@@ -1,0 +1,103 @@
+{
+  "entity_id": "caldy_rfc",
+  "entity_name": "Caldy RFC",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "caldyrugbyclub.com",
+    "champrugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "caldy_rfc",
+      "entity_name": "Caldy RFC",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://caldyrugbyclub.com",
+        "https://champrugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Caldy RFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:27:47.317677",
+          "domain_explored": "https://caldyrugbyclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sofascore (Data Provider)",
+              "Ticketing Platform (Unspecified Vendor)",
+              "CMS (Likely WordPress or similar based on structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of 'Sofascore' for league table data",
+              "Active 'Buy Tickets & Membership' portal"
+            ]
+          },
+          "patterns_found": [
+            "Third-party data integration (Sofascore)",
+            "E-commerce capability (Ticketing)",
+            "Content management (WordPress/Standard Blog structure)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1238,
+              "output_tokens": 266,
+              "elapsed_seconds": 3.903597116470337
+            }
+          ],
+          "reasoning": "The content reveals a reliance on external data providers (Sofascore) for league standings and an active e-commerce function for tickets/membership. While no direct RFP is visible, the integration of 'Sofascore' indicates a procurement decision regarding data services, and the 'Buy Tickets' functionality suggests the use of a payment gateway or ticketing vendor."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:27:50.173189",
+          "domain_explored": "https://champrugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1238,
+      "total_output_tokens": 266,
+      "estimated_cost_usd": 0.007703999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Caldy RFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:27:50.174960"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280636",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:04.477206"
+}

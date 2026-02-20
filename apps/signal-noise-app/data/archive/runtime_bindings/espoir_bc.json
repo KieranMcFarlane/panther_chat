@@ -1,0 +1,225 @@
+{
+  "entity_id": "espoir_bc",
+  "entity_name": "Espoir BC",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "bb_developing_market",
+  "discovered_domains": [
+    "rwandainspirer.com",
+    "basketzoom.net",
+    "kclpure.kcl.ac.uk",
+    "basket-in-africa.blogspot.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/view/professionnel-le-des-services-de-r%C3%A9adaptation-%E2%80%93-vocationnel-professionnel-le-psr-voc-bilingue-at-wcg-services-4341572756"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "espoir_bc",
+      "entity_name": "Espoir BC",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rwandainspirer.com",
+        "https://basketzoom.net",
+        "https://kclpure.kcl.ac.uk",
+        "https://basket-in-africa.blogspot.com",
+        "https://ca.linkedin.com/jobs/view/professionnel-le-des-services-de-r%C3%A9adaptation-%E2%80%93-vocationnel-professionnel-le-psr-voc-bilingue-at-wcg-services-4341572756"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Espoir BC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:15:41.154523",
+          "domain_explored": "https://rwandainspirer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (General)",
+              "Industrial Automation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Rwanda launches Rwf 25 Billion AI drive (General Gov/Industry)",
+              "Rwanda seeks investors for agro-processing factories"
+            ]
+          },
+          "patterns_found": [
+            "National AI Strategy (Education & Health)",
+            "Agro-processing Investment Opportunities",
+            "Electronics Ecosystem Development"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.9560508728027344
+            }
+          ],
+          "reasoning": "The content from 'Rwanda Inspirer' focuses on macro-level national news (agriculture targets, AI teacher training, geopolitical diplomacy). While it mentions a 'Rwf 25 Billion AI drive' and 'TAJYIRE Group' investments, these are broad economic indicators rather than specific procurement signals (RFPs, tenders) or technology stack details attributable to the target entity 'Espoir BC'. There is no mention of Espoir BC or specific vendor requirements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:15:55.119593",
+          "domain_explored": "https://basketzoom.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Confirmation: Espoir BC is a basketball club from Gabon competing in FIBA Zone 4."
+            ]
+          },
+          "patterns_found": [
+            "Sports Journalism Coverage",
+            "Regional Match Results (Zone 4)",
+            "Team Performance Tracking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 218,
+              "elapsed_seconds": 8.587656736373901
+            }
+          ],
+          "reasoning": "The scraped content from Basketzoom.net is a sports news feed covering basketball match results (e.g., 'Bangui Sporting Club enregistre sa 1ere victoire face \u00e0 Espoir BC'). While it confirms Espoir BC is an active sports entity participating in competitions, it contains no corporate governance, financial, or technical information indicative of procurement activities (RFPs, tech stack, or hiring)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:16:01.862487",
+          "domain_explored": "https://kclpure.kcl.ac.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pure (Research Information System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Research Portal",
+            "Pure Research Information System",
+            "UN Sustainable Development Goals Mapping",
+            "Global Collaboration Tracking"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.6279358863830566
+            }
+          ],
+          "reasoning": "The scraped content is from the King's College London Research Portal (kclpure.kcl.ac.uk). It is an academic repository used to track research outputs, profiles, and projects. There is no connection to 'Espoir BC', nor are there any procurement signals, technology investment opportunities, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:16:08.172738",
+          "domain_explored": "https://basket-in-africa.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism Coverage",
+            "Regional Match Results (AfroBasket/World Cup Qualifiers)",
+            "Federation Administration News (Zimbabwe, Uganda, Nigeria)",
+            "Historical Archival Content (2018)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.682229995727539
+            }
+          ],
+          "reasoning": "The content is a historical sports blog (dated 2018) covering basketball match results and federation administrative changes across Africa. It lacks commercial intent, corporate structure, or technology adoption signals relevant to 'Espoir BC' procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:16:24.601924",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/professionnel-le-des-services-de-r%C3%A9adaptation-%E2%80%93-vocationnel-professionnel-le-psr-voc-bilingue-at-wcg-services-4341572756",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Professionnel(le) des services de r\u00e9adaptation \u2013 vocationnel professionnel(le) (PSR Voc) at WCG Services"
+            ],
+            "procurement_indicators": [
+              "Contractual reporting requirements",
+              "Government program compliance (Anciens Combattants Canada)"
+            ]
+          },
+          "patterns_found": [
+            "Vocational Rehabilitation Services",
+            "Government Contracting (Veterans Affairs Canada)",
+            "Remote Work (T\u00e9l\u00e9travail)",
+            "Clinical Assessment Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 267,
+              "elapsed_seconds": 10.502676963806152
+            }
+          ],
+          "reasoning": "The content is a job posting for WCG Services, a Canadian vocational rehabilitation organization. While WCG Services is a vendor to government entities (Veterans Affairs Canada), this specific content relates to clinical service delivery (PSR Voc) rather than the procurement activities of 'Espoir BC'. There is no connection to the target entity or relevant procurement signals for them."
+        }
+      ],
+      "total_input_tokens": 7373,
+      "total_output_tokens": 1144,
+      "estimated_cost_usd": 0.039279
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Espoir BC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:16:24.603409"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216486",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:51.376632"
+}

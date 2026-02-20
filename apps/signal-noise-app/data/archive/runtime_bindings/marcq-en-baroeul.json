@@ -1,0 +1,414 @@
+{
+  "entity_id": "marcq-en-baroeul",
+  "entity_name": "Marcq-en-Baroeul",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "marcq-en-baroeul.org",
+    "marcqvolley.com",
+    "buildingsolutions-france.arcelormittal.com",
+    "flashscore.com",
+    "cme-lamarcqueterie.fr",
+    "lepetitboulevard.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/lesaffre-emplois-marcq-en-baroeul?trk=public_jobs_related_jserp_link",
+      "https://fr.linkedin.com/jobs/job-link-emplois-marcq-en-baroeul",
+      "https://fr.linkedin.com/jobs/anglais-emplois-marcq-en-baroeul",
+      "https://fr.linkedin.com/jobs/%28-%29-temps-partiel-emplois-marcq-en-baroeul",
+      "https://in.linkedin.com/company/kiabi/jobs",
+      "https://be.linkedin.com/jobs/view/sourcing-execution-scheduler-at-cargill-4289667703",
+      "https://fr.linkedin.com/jobs/adp-emplois-marcq-en-baroeul",
+      "https://www.linkedin.com/company/la-redoute/jobs",
+      "https://fr.linkedin.com/jobs/view/after-school-nanny-in-english-m-f-studentjob-fr-at-jobster-4359164991"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "marcq-en-baroeul",
+      "entity_name": "Marcq-en-Baroeul",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://in.linkedin.com/company/kiabi/jobs",
+        "https://marcq-en-baroeul.org",
+        "https://flashscore.com",
+        "https://fr.linkedin.com/jobs/anglais-emplois-marcq-en-baroeul",
+        "https://buildingsolutions-france.arcelormittal.com",
+        "https://fr.linkedin.com/jobs/%28-%29-temps-partiel-emplois-marcq-en-baroeul",
+        "https://www.linkedin.com/jobs/lesaffre-emplois-marcq-en-baroeul?trk=public_jobs_related_jserp_link",
+        "https://marcqvolley.com",
+        "https://lepetitboulevard.fr",
+        "https://fr.linkedin.com/jobs/job-link-emplois-marcq-en-baroeul",
+        "https://cme-lamarcqueterie.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Marcq-en-Baroeul may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:13:25.691327",
+          "domain_explored": "https://marcq-en-baroeul.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public Service: Electoral management (Inscriptions sur les listes \u00e9lectorales)",
+              "Public Service: Urban ecology/Pest control (Lutter contre le frelon asiatique)",
+              "Public Service: Tourism regulation (Conditions de location des meubl\u00e9s de tourisme)",
+              "Event Management: Cultural festivals (Festival Contes et L\u00e9gendes, Festival Rire \u00e0 Marcq)"
+            ]
+          },
+          "patterns_found": [
+            "Standard municipal news aggregation",
+            "Public service information delivery",
+            "Cultural event promotion"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 293,
+              "elapsed_seconds": 2.3868229389190674
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the homepage 'Actualit\u00e9s' (News) feed. The items listed (Festivals, Electoral rolls, Tourist furnished rentals, Asian hornet control) are public service announcements and cultural events. There are no explicit procurement signals (tenders, calls for bids), no technology stack details, and no job postings. The content is strictly informational for citizens."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:13:33.020273",
+          "domain_explored": "https://marcqvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External service usage: Professional photography (Guillaume DELABROYE)",
+              "Sponsorship structure: 'Partenaires' section indicates potential B2B relationships, but likely for sports marketing, not municipal procurement"
+            ]
+          },
+          "patterns_found": [
+            "Sports club management",
+            "Event scheduling",
+            "Sponsorship/partnership ecosystem",
+            "Content delivery via external photography"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.010305166244507
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Volley Club de Marcq-en-Baroeul' (VCMB), a local sports association. While it mentions 'Partners' and uses professional services (photography), this is distinct from the municipal procurement of the City of Marcq-en-Baroeul. The content focuses on match schedules, team philosophy, and fan engagement rather than government purchasing, technology acquisition, or RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:13:36.406588",
+          "domain_explored": "https://buildingsolutions-france.arcelormittal.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:13:42.980622",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports aggregation",
+            "Gambling/Gaming content",
+            "Multi-language localization",
+            "Third-party advertising"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 681,
+              "output_tokens": 158,
+              "elapsed_seconds": 3.611179828643799
+            }
+          ],
+          "reasoning": "The scraped content is from Flashscore, a global sports results aggregator. It contains no information regarding the municipal entity 'Marcq-en-Baroeul', its governance, or its procurement activities. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:13:45.711462",
+          "domain_explored": "https://cme-lamarcqueterie.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:13:48.501931",
+          "domain_explored": "https://lepetitboulevard.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:13:56.230332",
+          "domain_explored": "https://www.linkedin.com/jobs/lesaffre-emplois-marcq-en-baroeul?trk=public_jobs_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Experience Platforms",
+              "Analytical Chemistry Software",
+              "Project Management Tools"
+            ],
+            "job_postings": [
+              "Digital Experience Coordinator",
+              "Open Innovation Manager",
+              "LEAF Project Manager",
+              "Scientist - Analytical Chemist",
+              "Controleur de Gestion"
+            ],
+            "procurement_indicators": [
+              "Corporate hiring in digital/tech domains",
+              "R&D expansion signals",
+              "Innovation ecosystem activity"
+            ]
+          },
+          "patterns_found": [
+            "Corporate recruitment aggregation",
+            "Digital transformation roles (Digital Experience)",
+            "Innovation management (Open Innovation, LEAF Project)",
+            "R&D investment (Scientist - Analytical Chemist)",
+            "Financial control (Controleur de Gestion)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1619,
+              "output_tokens": 377,
+              "elapsed_seconds": 2.920034170150757
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for Lesaffre, a major private entity headquartered in Marcq-en-Bar\u0153ul. While not direct municipal procurement, the specific roles (Digital Experience, Open Innovation, Project Management) indicate active corporate investment in technology and innovation. This suggests a sophisticated local business ecosystem and potential for B2B partnerships or indirect economic signals, though it does not reflect direct municipal purchasing activity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:14:05.094564",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-link-emplois-marcq-en-baroeul",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Cloud Infrastructure (Scaleway)",
+              "Design Systems (Lead Design role)",
+              "Digital Experience Platforms"
+            ],
+            "job_postings": [
+              {
+                "company": "Lesaffre",
+                "location": "Marcq-en-Baroeul",
+                "role": "Lead Design (W/M)",
+                "signal": "Investment in design leadership and user experience infrastructure."
+              },
+              {
+                "company": "Scaleway",
+                "location": "Lille (Nearby)",
+                "role": "Cloud Support Specialist",
+                "signal": "Regional growth in cloud services, potential vendor proximity."
+              }
+            ],
+            "procurement_indicators": [
+              "Corporate hiring in Marcq-en-Baroeul (Lesaffre) suggests active vendor engagement for design/tech tools.",
+              "Regional 'Digital Experience' roles indicate a market trend towards CX transformation."
+            ]
+          },
+          "patterns_found": [
+            "Corporate recruitment aggregation",
+            "Digital transformation roles (Digital Experience)",
+            "Innovation management (Open Innovation, LEAF Project)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 457,
+              "elapsed_seconds": 3.765552282333374
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page filtered for 'Marcq-en-Baroeul'. While it contains a high volume of listings (97), the majority are for entities in the broader Lille/European region (e.g., Barco in Belgium, Scaleway in Lille). However, specific listings for 'Lesaffre' located in Marcq-en-Baroeul (Lead Design) and the presence of 'Digital Experience' and 'Open Innovation' roles in the broader search results indicate active corporate investment in technology and design within the target geography."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:14:15.433302",
+          "domain_explored": "https://fr.linkedin.com/jobs/anglais-emplois-marcq-en-baroeul",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable de magasin (Balibaris)",
+              "Assistant/e de Direction (Helexia Group)",
+              "Responsable Qualite Achats (Le petit Souk)",
+              "Charg\u00e9\u00b7e de client\u00e8le (Octopus Energy)",
+              "Enseignant anglais (CAP ENGLISH)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation",
+            "Geographic mismatch (Lille vs Marcq-en-Baroeul)",
+            "Low-skill retail/service roles",
+            "Language teaching roles"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 287,
+              "elapsed_seconds": 5.433791399002075
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search aggregation for 'English' speaking roles within the broader Lille region. The specific job listings (Balibaris, Helexia, Le petit Souk, Octopus Energy) are primarily located in Lille or La Madeleine, not Marcq-en-Baroeul. These are standard retail, energy, and administrative roles with no correlation to municipal procurement, technology infrastructure, or corporate governance specific to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:14:29.191567",
+          "domain_explored": "https://fr.linkedin.com/jobs/%28-%29-temps-partiel-emplois-marcq-en-baroeul",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Collaborateur aux actes courants - Notaris.be (Mouscron)",
+              "Assistant administratif f/h - Diligentia (Lille)",
+              "Charg\u00e9 gestion locative F/H - Immobili\u00e8re 3F (Halluin)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation",
+            "Geographic mismatch (Lille/Mouscron vs Marcq-en-Baroeul)",
+            "Low-skill service roles (Assistant, Property Management)",
+            "Broad query matching (Temps Partiel)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1833,
+              "output_tokens": 292,
+              "elapsed_seconds": 10.10974907875061
+            }
+          ],
+          "reasoning": "The search results for 'Temps Partiel' (Part-time) jobs in Marcq-en-Baroeul yield generic administrative and service roles (e.g., administrative assistants, property management) primarily located in neighboring cities like Lille, Mouscron, or Villeneuve-d'Ascq. There is no indication of municipal procurement, technology investment, or strategic hiring by the target entity (Marcq-en-Baroeul). The content represents standard low-skill labor market noise rather than procurement intelligence."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:14:38.658510",
+          "domain_explored": "https://in.linkedin.com/company/kiabi/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chef(fe) de Projet Circularit\u00e9 & R\u00e9paration (h/f/nb) \u2013 CDD 6 mois (Lezennes, Hauts-de-France)",
+              "T\u00e9cnico/a de Proyectos y Obras (Sector Retail) (Madrid)"
+            ],
+            "procurement_indicators": [
+              "Circular Economy Project Management",
+              "Retail Store Development/Engineering"
+            ]
+          },
+          "patterns_found": [
+            "Corporate recruitment aggregation",
+            "Sustainability/Circular Economy initiatives",
+            "Retail operations management",
+            "Geographic proximity (Lille region)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1902,
+              "output_tokens": 275,
+              "elapsed_seconds": 4.598042011260986
+            }
+          ],
+          "reasoning": "While the majority of listings are low-skill retail roles, the presence of a 'Chef(fe) de Projet Circularit\u00e9 & R\u00e9paration' role in nearby Lezennes (Hauts-de-France) indicates strategic investment in sustainability and supply chain transformation. This suggests potential procurement for reverse logistics, repair management software, or sustainability consulting services."
+        }
+      ],
+      "total_input_tokens": 12265,
+      "total_output_tokens": 2403,
+      "estimated_cost_usd": 0.07284
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Marcq-en-Baroeul may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:14:38.660451"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277186",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:01.258477"
+}

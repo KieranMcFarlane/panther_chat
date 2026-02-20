@@ -1,0 +1,96 @@
+{
+  "entity_id": "plk_(polish_basketball_league)",
+  "entity_name": "PLK (Polish Basketball League)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "basketball.fandom.com",
+    "researchgate.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "plk_(polish_basketball_league)",
+      "entity_name": "PLK (Polish Basketball League)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://basketball.fandom.com",
+        "https://researchgate.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "PLK (Polish Basketball League) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:13:11.834601",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "Irrelevant Scope (NBA/WNBA focus)",
+            "User-Generated Content Platform"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1308,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.8795719146728516
+            }
+          ],
+          "reasoning": "The scraped content is from the main page of a general Basketball Wiki (basketball.fandom.com). It focuses on the NBA, WNBA, and general basketball history, and serves as a platform for user-generated content (5,665 articles). There is absolutely no mention of the Polish Basketball League (PLK), its governance, or its specific procurement activities. This source is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:13:14.762269",
+          "domain_explored": "https://researchgate.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1308,
+      "total_output_tokens": 194,
+      "estimated_cost_usd": 0.006834
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "PLK (Polish Basketball League) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:13:14.763225"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.240871",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:18.312787"
+}

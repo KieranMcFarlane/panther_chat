@@ -1,0 +1,282 @@
+{
+  "entity_id": "tour_de_france_femmes",
+  "entity_name": "Tour de France Femmes",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "letourfemmes.fr",
+    "letour.fr",
+    "letourgb.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/race-routes-lead-tdf-grand-depart-2027-at-british-cycling-4327125252",
+      "https://www.linkedin.com/posts/sara-piper_british-cycling-careers-activity-7348770987309510659-cIZO"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_de_france_femmes",
+      "entity_name": "Tour de France Femmes",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.22
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/race-routes-lead-tdf-grand-depart-2027-at-british-cycling-4327125252",
+        "https://letourgb.com",
+        "https://www.linkedin.com/posts/sara-piper_british-cycling-careers-activity-7348770987309510659-cIZO",
+        "https://letour.fr",
+        "https://letourfemmes.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Supplier (Procurement and Contracting) opportunities",
+        "Event Infrastructure Planning",
+        "Local Organizing Committee Formation",
+        "Data Capture for Vendor Sourcing",
+        "Special Purpose Vehicle (SPV) Formation",
+        "Public-Private Partnership (PPP) Structure",
+        "Operational Staffing & Route Planning",
+        "Multi-Stakeholder Coordination (Local Authorities/Emergency Services)",
+        "Marketing & Communications Procurement",
+        "Social Impact Program Planning",
+        "Grand D\u00e9part Operational Build-up",
+        "Dual Event Coordination (TDF & Femmes)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour de France Femmes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:47:24.782024",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zwift (Virtual Cycling / Event Platform)",
+              "Tissot (Timing & Scoring Systems)",
+              "Registration Platform (\u00c9tape Femmes)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Grand D\u00e9part Grande-Bretagne 2027 (Logistics/Operations Planning)",
+              "\u00c9tape Femmes Registration (Event Management Services)",
+              "Horizon Ventoux (Route Planning/Infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "Event Management & Registration",
+            "International Expansion Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 305,
+              "elapsed_seconds": 3.0614569187164307
+            }
+          ],
+          "reasoning": "The content reveals a deep integration with specific technology partners (Zwift for participation/ride tracking, Tissot for timing/results) and indicates active planning for future international events (Grand D\u00e9part Grande-Bretagne 2027). While no direct RFP is found, the reliance on '\u00c9tape' registration platforms and international event planning suggests ongoing needs for event management software, travel/logistics services, and digital engagement tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:47:33.487765",
+          "domain_explored": "https://letour.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Registration Platforms (implied by L'\u00c9tape Series)",
+              "Timing & Scoring Systems (Tissot partnership)",
+              "Mass Participation Event Tech"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Grand D\u00e9part Great Britain 2027 planning (Logistics/Local Vendor Sourcing)",
+              "L'\u00c9tape Series 2026 calendar rollout (Operational Software/Services)",
+              "Sponsorship ecosystem (Tissot, Continental, Lidl-Trek, EF Education-EasyPost)"
+            ]
+          },
+          "patterns_found": [
+            "International Expansion Planning",
+            "Event Management & Registration",
+            "Sponsorship Technology Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 327,
+              "elapsed_seconds": 5.135484933853149
+            }
+          ],
+          "reasoning": "The content reveals strategic planning for the 2027 Grand D\u00e9part in Great Britain and the 2026 L'\u00c9tape Series. While specific procurement documents (RFPs) are not visible in this text, the 'L'\u00c9tape Series' and 'Cycling Challenges' sections indicate a reliance on mass participation event management platforms. The mention of Tissot (timekeeping) and Continental (sponsorship) reinforces the integration of third-party technology partners required to operate these events."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:47:39.736515",
+          "domain_explored": "https://letourgb.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Data Capture Forms (User Registration)",
+              "Email Marketing Automation (Updates sent directly)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Explicit 'Supplier (Procurement and Contracting) opportunities' checkbox on registration form",
+              "Request for 'Sponsorship opportunities' and 'Hospitality opportunities'",
+              "Planning for 'Social impact programme' delivery requiring third-party partners",
+              "Multi-city logistics (Edinburgh, Leeds, London, Cardiff) necessitating diverse vendor contracts"
+            ]
+          },
+          "patterns_found": [
+            "Supplier (Procurement and Contracting) opportunities",
+            "Event Infrastructure Planning",
+            "Local Organizing Committee Formation",
+            "Data Capture for Vendor Sourcing"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 337,
+              "elapsed_seconds": 2.995326042175293
+            }
+          ],
+          "reasoning": "The content explicitly lists 'Supplier (Procurement and Contracting) opportunities' as a registration category, confirming direct procurement intent for the 2027 UK Grand D\u00e9part. The formation of a specific organizing committee (British Cycling partnership) indicates a new governance structure requiring distinct vendor sourcing for infrastructure, logistics, and technology."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:47:51.730426",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/race-routes-lead-tdf-grand-depart-2027-at-british-cycling-4327125252",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Zwift (Title Sponsor integration)",
+              "Hybrid working infrastructure (implied)"
+            ],
+            "job_postings": [
+              "Race Routes Lead - TdF Grand Depart 2027 (British Cycling/Grand Depart GB 2027)"
+            ],
+            "procurement_indicators": [
+              "Formation of Special Purpose Vehicle (SPV) - Grand Depart GB 2027",
+              "Management of public funding (DCMS, Scottish Gov, Welsh Gov, UK Sport)",
+              "Contract: Fixed term until August 2027 (Budget cycle visibility)",
+              "Requirement for closed road route management vendors/partners",
+              "Stakeholder management with ASO (Amaury Sport Organisation)"
+            ]
+          },
+          "patterns_found": [
+            "Special Purpose Vehicle (SPV) Formation",
+            "Public-Private Partnership (PPP) Structure",
+            "Operational Staffing & Route Planning",
+            "Multi-Stakeholder Coordination (Local Authorities/Emergency Services)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 382,
+              "elapsed_seconds": 8.076757192611694
+            }
+          ],
+          "reasoning": "The content reveals the formation of a Special Purpose Vehicle (SPV), 'Grand Depart GB 2027', a joint venture between UKEL and British Cycling, to manage public funding and delivery. This is a direct procurement signal indicating a new legal entity with purchasing power is being established. The recruitment of a 'Race Routes Lead' at \u00a355k confirms active operational build-out and vendor management requirements for the 2027 event."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:48:02.580989",
+          "domain_explored": "https://www.linkedin.com/posts/sara-piper_british-cycling-careers-activity-7348770987309510659-cIZO",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Platforms",
+              "CRM Software",
+              "Marketing Automation Tools"
+            ],
+            "job_postings": [
+              "Marketing Lead (Grand D\u00e9part 2027)",
+              "Communications Lead (Grand D\u00e9part 2027)"
+            ],
+            "procurement_indicators": [
+              "Formation of Brand and Engagement team",
+              "Budget allocation for social impact programme",
+              "Service provider selection for marketing/comms stack imminent"
+            ]
+          },
+          "patterns_found": [
+            "Marketing & Communications Procurement",
+            "Social Impact Program Planning",
+            "Grand D\u00e9part Operational Build-up",
+            "Dual Event Coordination (TDF & Femmes)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 312,
+              "elapsed_seconds": 7.342626094818115
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for Marketing and Communications leadership roles specifically for the 2027 Grand D\u00e9part, indicating the procurement of human capital and the imminent need for associated agency services (PR, creative, digital). The explicit mention of a 'major social impact programme' signals future procurement requirements for community engagement vendors."
+        }
+      ],
+      "total_input_tokens": 7404,
+      "total_output_tokens": 1663,
+      "estimated_cost_usd": 0.047157
+    },
+    "procurement_signals": [
+      "Supplier (Procurement and Contracting) opportunities",
+      "Event Infrastructure Planning",
+      "Local Organizing Committee Formation",
+      "Data Capture for Vendor Sourcing",
+      "Special Purpose Vehicle (SPV) Formation",
+      "Public-Private Partnership (PPP) Structure",
+      "Operational Staffing & Route Planning",
+      "Multi-Stakeholder Coordination (Local Authorities/Emergency Services)",
+      "Marketing & Communications Procurement",
+      "Social Impact Program Planning",
+      "Grand D\u00e9part Operational Build-up",
+      "Dual Event Coordination (TDF & Femmes)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour de France Femmes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:48:02.581733"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.412107",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:45.803443"
+}

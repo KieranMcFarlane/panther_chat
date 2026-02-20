@@ -1,0 +1,338 @@
+{
+  "entity_id": "super_league",
+  "entity_name": "Super League",
+  "template_id": "tpl_rugby_governance_ecosystem_v1",
+  "cluster_id": "rugby_league_admin",
+  "discovered_domains": [
+    "superleague.co.uk",
+    "thesuperleague.com",
+    "superleague.com",
+    "superleaguebasketballm.co.uk",
+    "superleagueplus.co.uk",
+    "rugby-league.com",
+    "indiansuperleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/wsl-football_the-fa-careers-activity-7417858923669393408-tesv",
+      "https://hk.linkedin.com/jobs/view/junior-copywriter-at-east-asia-super-league-3745616634",
+      "https://www.linkedin.com/posts/markkeaney_the-fa-careers-activity-7418973417728700416-pyZX",
+      "https://hk.linkedin.com/jobs/view/director-sponsorship-sales-at-east-asia-super-league-4052971396"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "super_league",
+      "entity_name": "Super League",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://superleague.com",
+        "https://rugby-league.com",
+        "https://superleague.co.uk",
+        "https://thesuperleague.com",
+        "https://indiansuperleague.com",
+        "https://hk.linkedin.com/jobs/view/director-sponsorship-sales-at-east-asia-super-league-4052971396",
+        "https://superleagueplus.co.uk",
+        "https://www.linkedin.com/posts/markkeaney_the-fa-careers-activity-7418973417728700416-pyZX",
+        "https://superleaguebasketballm.co.uk",
+        "https://www.linkedin.com/posts/wsl-football_the-fa-careers-activity-7417858923669393408-tesv",
+        "https://hk.linkedin.com/jobs/view/junior-copywriter-at-east-asia-super-league-3745616634"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Super League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:10:16.904402",
+          "domain_explored": "https://superleague.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:10:24.161508",
+          "domain_explored": "https://thesuperleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content describes a sports competition, not a gaming entity.",
+              "External Governance: Operations deferred to 'A22 Sports Management'."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Static Landing Page",
+            "External Referral"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 217,
+              "elapsed_seconds": 4.197122097015381
+            }
+          ],
+          "reasoning": "The scraped content from 'thesuperleague.com' refers to the 'European Super League' (a football competition organized by A22 Sports Management), not 'Super League' (the gaming/entertainment company explored in Iteration 1). The content is purely informational/marketing with no procurement signals. This confirms the target entity is not present at this URL."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:10:32.689057",
+          "domain_explored": "https://superleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Roblox (Platform)",
+              "Metaverse Infrastructure",
+              "Playable Media Tech"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active campaign delivery (Metaburst Jan 21st, Jan 14th, Nov 26th)",
+              "Client work for major brands (Chipotle)",
+              "High volume of content production"
+            ]
+          },
+          "patterns_found": [
+            "High-Frequency Campaign Execution",
+            "Client-Side Procurement Signals",
+            "Platform-Specific Development (Roblox/Metaverse)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.665708780288696
+            }
+          ],
+          "reasoning": "The scraped content confirms the entity is Super League (the gaming platform company), distinguishing it from the UK rugby entity previously rejected. While the content is primarily marketing copy, the high frequency of 'Metaburst' updates and specific case studies (e.g., Chipotle) indicates an active, high-volume project pipeline. This suggests a need for robust creative technology tools, 3D asset management, and potentially vendor support for campaign execution, warranting a weak signal for procurement capability."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:10:42.726578",
+          "domain_explored": "https://superleaguebasketballm.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:10:46.712376",
+          "domain_explored": "https://superleagueplus.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:10:49.997579",
+          "domain_explored": "https://rugby-league.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:10:53.892601",
+          "domain_explored": "https://indiansuperleague.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:11:01.176567",
+          "domain_explored": "https://www.linkedin.com/posts/wsl-football_the-fa-careers-activity-7417858923669393408-tesv",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Football Development"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Sector",
+            "Sports Federation vs Gaming Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.0805370807647705
+            }
+          ],
+          "reasoning": "The content is from 'Women's Super League Football' (WSL), associated with The FA (Football Association). This is a distinct entity from 'Super League' (the gaming/Roblox/metaverse company identified in Iteration 3). The hiring for a 'Head of Football Development' is related to sports operations, not the digital procurement targets of the Super League gaming entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:11:07.522627",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/junior-copywriter-at-east-asia-super-league-3745616634",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Junior Copywriter at East Asia Super League (Hong Kong)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Sector Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1685,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.980084180831909
+            }
+          ],
+          "reasoning": "The content refers to 'East Asia Super League' (EASL), a Hong Kong-based basketball organization, which is a distinct entity from the target 'Super League' (a US-based gaming/metaverse company identified in Iteration 3). The job posting is for a creative role (Copywriter) within the sports entertainment sector, not a procurement or technical role relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:11:15.100658",
+          "domain_explored": "https://www.linkedin.com/posts/markkeaney_the-fa-careers-activity-7418973417728700416-pyZX",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Football Development"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Sector Mismatch",
+            "Sports Federation vs Gaming Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.5331509113311768
+            }
+          ],
+          "reasoning": "The content refers to 'Women's Super League Football' (WSL), a professional sports league associated with The FA (Football Association). This is a distinct entity from 'Super League' (the gaming/Roblox development company identified in Iteration 3). The hiring for a 'Head of Football Development' is a sports operations role, irrelevant to the technology procurement focus of the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:11:21.127267",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/director-sponsorship-sales-at-east-asia-super-league-4052971396",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft PowerPoint",
+              "Microsoft Excel",
+              "Microsoft Word",
+              "CRM (Client Relationship Management)"
+            ],
+            "job_postings": [
+              "Director, Brand Partnership Sales (Hong Kong)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Sector Mismatch",
+            "Sports Federation vs Gaming Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1806,
+              "output_tokens": 232,
+              "elapsed_seconds": 2.4396071434020996
+            }
+          ],
+          "reasoning": "The content refers to the 'East Asia Super League' (EASL), a professional basketball league based in Hong Kong. This is a distinct entity from 'Super League' (the gaming/Roblox marketing platform identified in Iteration 3). The job description focuses on sports sponsorship sales rather than digital procurement or gaming technology."
+        }
+      ],
+      "total_input_tokens": 9652,
+      "total_output_tokens": 1335,
+      "estimated_cost_usd": 0.048981
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Super League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:11:21.128781"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449141",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:30.927707"
+}

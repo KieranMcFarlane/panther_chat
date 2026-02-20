@@ -1,0 +1,113 @@
+{
+  "entity_id": "cuprum_lubin",
+  "entity_name": "Cuprum Lubin",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "mkscuprum.lubin.pl",
+    "ks.cuprum.pl",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cuprum_lubin",
+      "entity_name": "Cuprum Lubin",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://mkscuprum.lubin.pl",
+        "https://ks.cuprum.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cuprum Lubin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:43:33.352241",
+          "domain_explored": "https://mkscuprum.lubin.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:43:46.168687",
+          "domain_explored": "https://ks.cuprum.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership section (Generic)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club content (Volleyball/PlusLiga)",
+            "Ticket sales operations",
+            "Sponsorship listings (Strategic Sponsors/Partners)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 205,
+              "elapsed_seconds": 5.610112905502319
+            }
+          ],
+          "reasoning": "The scraped content from ks.cuprum.pl is exclusively related to the volleyball club 'Cuprum Stilon Gorz\u00f3w' (match results, ticket sales, fan engagement). It contains no corporate governance, technology infrastructure, or B2B procurement signals relevant to the mining entity 'Cuprum Lubin'. This appears to be a misaligned domain or a sponsored sports entity page."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:44:20.050181",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1385,
+      "total_output_tokens": 205,
+      "estimated_cost_usd": 0.00723
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cuprum Lubin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:44:20.051419"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318611",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:37:56.569098"
+}

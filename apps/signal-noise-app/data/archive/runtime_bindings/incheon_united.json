@@ -1,0 +1,158 @@
+{
+  "entity_id": "incheon_united",
+  "entity_name": "Incheon United",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "incheonutd.com",
+    "transfermarkt.us",
+    "torontofc.ca",
+    "beinsports.com",
+    "besoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "incheon_united",
+      "entity_name": "Incheon United",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://torontofc.ca",
+        "https://transfermarkt.us",
+        "https://besoccer.com",
+        "https://beinsports.com",
+        "https://incheonutd.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Incheon United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:06:01.199908",
+          "domain_explored": "https://incheonutd.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:06:07.609101",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Global transfer market data",
+            "Irrelevant vendor content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.489896059036255
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt.us consists entirely of global football transfer rumors, player market values, and general sports news (e.g., Liverpool, Chelsea, Brighton). There is absolutely no mention of Incheon United, K-League operations, or corporate procurement activities such as technology investments, job postings, or RFPs. This source is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:06:15.979573",
+          "domain_explored": "https://torontofc.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant sports news aggregation",
+            "Wrong entity (Toronto FC vs Incheon United)",
+            "Match recap content",
+            "Player acquisition news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 172,
+              "elapsed_seconds": 4.26501202583313
+            }
+          ],
+          "reasoning": "The content provided is exclusively about Toronto FC (MLS), a different entity than the target Incheon United (K League). The text consists of match recaps, roster updates, and player transfers. There is zero relevance to Incheon United's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:06:18.721388",
+          "domain_explored": "https://beinsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:06:21.912942",
+          "domain_explored": "https://besoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2821,
+      "total_output_tokens": 364,
+      "estimated_cost_usd": 0.013923
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Incheon United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:06:21.913726"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.187294",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:15.963034"
+}

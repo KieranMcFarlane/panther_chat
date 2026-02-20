@@ -1,0 +1,162 @@
+{
+  "entity_id": "cambodian_basketball_federation",
+  "entity_name": "Cambodian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cambodiaexpatsonline.com",
+    "khmertimeskh.com",
+    "prestigeonline.com",
+    "universecwsports.fandom.com",
+    "psncamboya.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cambodian_basketball_federation",
+      "entity_name": "Cambodian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://prestigeonline.com",
+        "https://universecwsports.fandom.com",
+        "https://khmertimeskh.com",
+        "https://cambodiaexpatsonline.com",
+        "https://psncamboya.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cambodian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:49:17.639603",
+          "domain_explored": "https://cambodiaexpatsonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:49:22.636026",
+          "domain_explored": "https://khmertimeskh.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:49:26.077410",
+          "domain_explored": "https://prestigeonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:49:33.321577",
+          "domain_explored": "https://universecwsports.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic error page content",
+            "Non-English content reference",
+            "Fandom platform structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 897,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.933284044265747
+            }
+          ],
+          "reasoning": "The scraped content is a generic 'Page Not Found' error message from the Fandom platform. It contains no information regarding the Cambodian Basketball Federation, its procurement activities, technology stack, or governance. The text is purely navigational and instructional for the Fandom site itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:49:40.018544",
+          "domain_explored": "https://psncamboya.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Iframes (likely for newsletter forms or embedded content)",
+              "Standard web forms (Newsletter subscription)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Non-profit/NGO content (PSE - Para Los Ni\u00f1os de Camboya)",
+            "Spanish language content",
+            "Educational/Vocational training focus (Formaci\u00f3n Profesional)",
+            "Donation/Solicitation mechanisms (Dona, Hazte socio)",
+            "No mention of Basketball or Sports Federation activities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.348151206970215
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'PSE' (Para Los Ni\u00f1os de Camboya), a Spanish NGO focused on child education and poverty reduction in Cambodia. There is absolutely no semantic relationship between this entity and the 'Cambodian Basketball Federation'. The content describes vocational training and child protection services, not sports governance or basketball operations."
+        }
+      ],
+      "total_input_tokens": 2404,
+      "total_output_tokens": 429,
+      "estimated_cost_usd": 0.013647
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cambodian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:49:40.019114"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.257722",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:05.792223"
+}

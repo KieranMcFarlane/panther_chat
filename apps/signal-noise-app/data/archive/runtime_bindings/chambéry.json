@@ -1,0 +1,511 @@
+{
+  "entity_id": "chamb\u00e9ry",
+  "entity_name": "Chamb\u00e9ry",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "chambery.fr",
+    "chamberymontagnes.com",
+    "chamberysavoiefootball.fr",
+    "chartreuse-tourisme.com",
+    "explore-savoie.com",
+    "tourisme.coeurdesavoie.fr",
+    "annecy-town.com",
+    "visit-france.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/job-emplois-chamb%C3%A9ry",
+      "https://fr.linkedin.com/jobs/job-in-italy-emplois-chamb%C3%A9ry",
+      "https://fr.linkedin.com/jobs/job-coordinator-emplois-chamb%C3%A9ry",
+      "https://fr.linkedin.com/jobs/job-link-emplois-chamb%C3%A9ry?trk=expired_jd_redirect",
+      "https://www.linkedin.com/jobs/bdo-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/saf-aerogroup-jobs-worldwide",
+      "https://www.linkedin.com/jobs/compagnie-des-alpes-jobs-worldwide",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3063442079&f_TPR=r2592000&geoId=105015875&keywords=g%C3%A9omaticien&location=France",
+      "https://www.linkedin.com/jobs/crossway-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chamb\u00e9ry",
+      "entity_name": "Chamb\u00e9ry",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://chamberymontagnes.com",
+        "https://chamberysavoiefootball.fr",
+        "https://tourisme.coeurdesavoie.fr",
+        "https://annecy-town.com",
+        "https://chambery.fr",
+        "https://visit-france.org",
+        "https://fr.linkedin.com/jobs/job-emplois-chamb%C3%A9ry",
+        "https://fr.linkedin.com/jobs/job-in-italy-emplois-chamb%C3%A9ry",
+        "https://fr.linkedin.com/jobs/job-link-emplois-chamb%C3%A9ry?trk=expired_jd_redirect",
+        "https://chartreuse-tourisme.com",
+        "https://www.linkedin.com/jobs/bdo-france-jobs-worldwide",
+        "https://explore-savoie.com",
+        "https://fr.linkedin.com/jobs/job-coordinator-emplois-chamb%C3%A9ry"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chamb\u00e9ry may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:52:23.834740",
+          "domain_explored": "https://chambery.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System for chambery.fr)",
+              "PDF Document Management (Magazine downloads)",
+              "Email Marketing Platform (Newsletter subscription)"
+            ],
+            "job_postings": [
+              "General 'Offres d'emploi' section detected (link present)"
+            ],
+            "procurement_indicators": [
+              "Active Urban Planning Projects: 'Travaux Centre-Nord' and 'Am\u00e9nagement du haut de la rue de Boigne' (Construction/Engineering services)",
+              "Digital Administration: High-volume processing of IDs, passports, and certificates (Potential for Document Management or Kiosk vendors)",
+              "Event Management: 'Carnaval de Chamb\u00e9ry' and 'Festival Saperlipopette' (Logistics/Security vendors)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery (Citizen ID & Admin)",
+            "Urban Infrastructure Projects",
+            "Public Sector Employment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 393,
+              "elapsed_seconds": 4.149146795272827
+            }
+          ],
+          "reasoning": "The content confirms the entity's active operations and service delivery scope. While no explicit procurement notices (RFPs) are present in this snippet, the 'Offres d'emploi' (Job Offers) link and active urban projects ('Travaux Centre-Nord', 'Rue de Boigne') indicate organizational activity and budget execution that often precede or accompany procurement needs. The focus on digital services (IDs, passports) suggests a potential need for related IT support or citizen experience platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:52:29.969854",
+          "domain_explored": "https://chamberymontagnes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Promotion",
+            "Event Marketing (Tour de France 2026)",
+            "Content Management (CMS usage)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 143,
+              "elapsed_seconds": 2.9523656368255615
+            }
+          ],
+          "reasoning": "The content is strictly promotional and informational for tourists (activities, sights, sustainability). It lacks any administrative, technical, or purchasing information relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:52:35.778091",
+          "domain_explored": "https://chamberysavoiefootball.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership Page (Commercial, not public tender)"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Sports Club Structure",
+            "Sponsorship/Partnership Model",
+            "Multi-domain Management (.fr vs .com)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 963,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.858668088912964
+            }
+          ],
+          "reasoning": "The analyzed content is the navigation menu of 'Chamb\u00e9ry Savoie Football', a local amateur football club. While it lists 'Premium Partners' and 'Recruitments', these refer to club sponsors and player recruitment, not municipal procurement or public sector hiring. The entity is distinct from the Chamb\u00e9ry municipality, and the content does not contain signals relevant to public procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:52:46.844272",
+          "domain_explored": "https://chartreuse-tourisme.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine (Reservation System)",
+              "CMS (Content Management System)",
+              "E-commerce Platform (Merchandise)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Booking Capabilities",
+              "Digital Asset Management (Webcams/Photos)",
+              "Event Management (Passe Montagne)"
+            ]
+          },
+          "patterns_found": [
+            "Tourism Promotion (Regional Scope)",
+            "E-commerce Integration (Booking Engine)",
+            "Content Marketing (Editorial Calendar)",
+            "Merchandising (Online Boutique)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 303,
+              "elapsed_seconds": 7.942166805267334
+            }
+          ],
+          "reasoning": "The content represents a standard tourism board website (Chartreuse Tourisme) focused on visitor engagement, booking accommodations, and promoting local events. While it utilizes an online booking engine and e-commerce features, these are typical operational tools for tourism entities rather than explicit signals of new procurement intent or RFPs for the target entity (Chamb\u00e9ry). No specific technology investments, job postings, or governance changes were detected."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:52:58.926590",
+          "domain_explored": "https://explore-savoie.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Content Production Budget (High-quality imagery and copywriting)",
+              "Media Licensing (Copyright notices for external photographers/studios)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Content Marketing (Editorial Strategy)",
+            "Asset Management (Image Copyrights)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 232,
+              "elapsed_seconds": 9.000196933746338
+            }
+          ],
+          "reasoning": "The content is purely promotional marketing copy for the Savoie region (ski resorts, gastronomy, hiking). It focuses on consumer attraction rather than municipal operations or procurement needs. While it indicates a budget for content creation and media licensing, it does not reveal specific technology procurement, RFPs, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:53:06.877698",
+          "domain_explored": "https://tourisme.coeurdesavoie.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization (Vignobles en Sc\u00e8ne 2025)",
+              "Public Transport Coordination (Skibus Hiver 25-26)"
+            ]
+          },
+          "patterns_found": [
+            "Inter-territorial Marketing (C\u0153ur de Savoie)",
+            "Seasonal Logistics Management (Skibus)",
+            "Event Management (Vignobles en Sc\u00e8ne, Christmas Markets)",
+            "Content Localization (Cultural Heritage Promotion)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 237,
+              "elapsed_seconds": 5.0507659912109375
+            }
+          ],
+          "reasoning": "The content is entirely consumer-facing, focusing on tourism promotion, event schedules, and logistical information for visitors (e.g., ski shuttles). While it confirms the entity's active role in tourism management, it reveals no information regarding internal procurement processes, technology stacks, or vendor acquisition strategies."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:53:14.271685",
+          "domain_explored": "https://annecy-town.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Annecy vs Chamb\u00e9ry)",
+            "Tourism Content Aggregation",
+            "Generic Information Architecture"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.9718258380889893
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on Annecy and its surrounding region (Haute-Savoie), which is geographically distinct from the target entity, Chamb\u00e9ry. While Chamb\u00e9ry is also in the Savoie region, this specific domain serves as a visitor guide for a different city. The content structure (navigation menus for hotels, restaurants, and sightseeing) indicates a pure tourism portal with no governance, administrative, or procurement signals relevant to Chamb\u00e9ry."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:53:17.281780",
+          "domain_explored": "https://visit-france.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:53:25.024186",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-emplois-chamb%C3%A9ry",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "JavaScript (likely for dynamic content loading)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Dynamic Content Loading (JavaScript)",
+            "Generic Platform UI"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1787,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.1387999057769775
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's authentication interface (login forms, password recovery, 'Sign up' links) and legal disclaimers. There is no visible content regarding specific job postings, company names, or procurement requirements. The page is behind a login wall, preventing analysis of actual job data."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T13:53:36.103078",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-in-italy-emplois-chamb%C3%A9ry",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable de parc (H/F) - Comptoir de Location",
+              "Vendeur / Vendeuse CDI - Boulanger",
+              "Candidature spontan\u00e9e - JEAN LAIN MOBILIT\u00c9S",
+              "Directeur SAV (H/F) - L'Usine Nouvelle"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Private Sector Dominance (Retail, Automotive)",
+            "Authentication Gate (LinkedIn)",
+            "Temporal Mismatch (Stale Listings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1846,
+              "output_tokens": 292,
+              "elapsed_seconds": 7.296625852584839
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search feed for the Chamb\u00e9ry geographic area. The listings are predominantly from private sector entities (Boulanger, Comptoir de Location, Jean Lain Mobilit\u00e9s) and do not reflect the procurement activities or strategic hiring of the target entity (Chamb\u00e9ry). Furthermore, the content is gated by authentication and includes stale data (7 months old), offering no actionable intelligence regarding public sector procurement, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T13:53:45.809796",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-coordinator-emplois-chamb%C3%A9ry",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              {
+                "title": "ASSISTANT CHEF DE PROJET H/F \u2013 Soci\u00e9t\u00e9 d\u2019Am\u00e9nagement de la Savoie",
+                "employer": "SCET | Services Conseil Expertises et Territoires",
+                "location": "Chamb\u00e9ry",
+                "recency": "2 weeks",
+                "significance": "Direct link to territorial development and public infrastructure procurement."
+              },
+              {
+                "title": "Assistant Manager (Shift Leader)",
+                "employer": "Bertrand Franchise",
+                "location": "Rumilly / Albertville",
+                "recency": "1-2 months",
+                "significance": "Low relevance (Private retail sector)."
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Semi-Public Entity Activity",
+                "description": "SCET involvement suggests ongoing urban planning or public service delegation projects."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Public-Private Partnership (PPP) Employment",
+            "Semi-Public Entity Governance (SCET)",
+            "Territorial Development (Am\u00e9nagement)",
+            "Generic Job Aggregation (LinkedIn Noise)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1912,
+              "output_tokens": 464,
+              "elapsed_seconds": 6.131937026977539
+            }
+          ],
+          "reasoning": "While the page is largely dominated by generic retail listings (Bertrand Franchise) and LinkedIn authentication gates, one specific listing stands out: 'Assistant Chef de Projet \u2013 Soci\u00e9t\u00e9 d\u2019Am\u00e9nagement de la Savoie' posted by SCET. SCET is a semi-public entity specializing in territorial development. This indicates procurement activity related to urban planning and public infrastructure projects, managed via public-private partnerships."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T13:53:52.689705",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-link-emplois-chamb%C3%A9ry?trk=expired_jd_redirect",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Platform (Auth Wall)",
+              "JavaScript (implied by dynamic redirect)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate/Wall",
+            "Dynamic Content Loading (JavaScript)",
+            "Generic Platform UI",
+            "User Data Harvesting (Sign-up Flow)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1986,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.238224744796753
+            }
+          ],
+          "reasoning": "The content provided is exclusively the HTML/Text of a LinkedIn authentication wall ('Identifiez-vous pour d\u00e9finir des alertes'). There is zero information regarding specific job postings, procurement needs, or the entity 'Chamb\u00e9ry' within this text. The scraper has failed to bypass the login requirement, resulting in no actionable intelligence."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T13:53:59.010425",
+          "domain_explored": "https://www.linkedin.com/jobs/bdo-france-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Auditeur/Auditrice (Angers)",
+              "Auditeur junior d\u00e9butant - F/H (Les Herbiers)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance (Accounting/Audit)",
+            "Geographic Dispersion (Angers, Les Herbiers)",
+            "Generic Job Aggregation",
+            "Authentication Gate/Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2043,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.793306827545166
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for BDO France, a private sector accounting and audit firm. The listings are geographically dispersed (e.g., Angers, Les Herbiers) and unrelated to the specific procurement needs of the Chamb\u00e9ry public entity. There is no signal of public procurement, RFPs, or technology investments relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 19722,
+      "total_output_tokens": 3126,
+      "estimated_cost_usd": 0.10605600000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chamb\u00e9ry may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:53:59.011542"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277094",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:39.550254"
+}

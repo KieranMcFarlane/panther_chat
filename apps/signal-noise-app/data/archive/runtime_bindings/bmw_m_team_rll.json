@@ -1,0 +1,192 @@
+{
+  "entity_id": "bmw_m_team_rll",
+  "entity_name": "BMW M Team RLL",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "bmw-m.com",
+    "tsm-models.com",
+    "press.bmwgroup.com",
+    "discover.bmw.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bmw_m_team_rll",
+      "entity_name": "BMW M Team RLL",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://press.bmwgroup.com",
+        "https://bmw-m.com",
+        "https://discover.bmw.co.uk",
+        "https://tsm-models.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BMW M Team RLL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:57:36.502673",
+          "domain_explored": "https://bmw-m.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Chatbots / NLP (BMW M Chatbot)",
+              "Gaming Engines / Integration (Fortnite, Rocket League)",
+              "Community Platform Software",
+              "In-Car Apps"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RFP for Community Platform Management (Inferred from 'THE NEW BMW M COMMUNITY')",
+              "Vendor partnerships for Gaming/Collaborations (Fortnite/Rocket League)",
+              "Hospitality and Event Services for 24H N\u00fcrburgring 2026",
+              "Lifestyle Brand Licensing (Fragrance, Puma, Floyd)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Community Platform Launch",
+            "Customer Experience Digitization",
+            "Gaming/Metaverse Integration",
+            "Event Management & Hospitality Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 356,
+              "elapsed_seconds": 18.306118965148926
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing marketing, the explicit launch of 'THE NEW BMW M COMMUNITY' indicates a shift toward digital customer relationship management (CRM) and community platforms. The integration with 'Fortnite and Rocket League' and the 'BMW M CHATBOT' suggests ongoing or upcoming procurement needs for gaming assets, AI/NLP services, and community management software. The 2026 N\u00fcrburgring event signals future hospitality and event vendor requirements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:57:42.942626",
+          "domain_explored": "https://tsm-models.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP (index.php)",
+              "E-commerce Cart Functionality"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Product Listing: 2025 IMSA Daytona 24 Hrs (Mercedes-AMG GT3)",
+              "Retail Product Listing: 2025 IMSA Sebring 12 Hrs (Corvette Z06 GT3.R)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Vendor Content",
+            "Merchandise Retail",
+            "Competitor/Partner Product Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.829369068145752
+            }
+          ],
+          "reasoning": "The scraped content from 'tsm-models.com' is a retail e-commerce site selling scale models (die-cast) of motorcycles and race cars, including BMW competitors (Ducati, Honda, Mercedes) and partners (Corvette/Pratt Miller). While it lists a 2025 IMSA Daytona entry, this is a product description for a toy model, not a direct procurement signal or official communication from BMW M Team RLL. The site is a vendor/seller, not the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:57:48.921918",
+          "domain_explored": "https://press.bmwgroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Manufacturing Operations Reporting",
+            "Corporate Heritage/PR Content",
+            "High-Volume Production Metrics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 899,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.2946228981018066
+            }
+          ],
+          "reasoning": "The content is a standard press release regarding the BMW Group Plant Regensburg's 40th anniversary and production records. It focuses on historical output, manufacturing volume, and plant management. There is no mention of BMW M Team RLL, motorsport-specific procurement, technology acquisition, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:58:00.133939",
+          "domain_explored": "https://discover.bmw.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Marketing & Brand Awareness",
+            "Event Sponsorship & Partnerships",
+            "Product Promotion (Electric/Hydrogen)",
+            "Customer Experience Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.3056581020355225
+            }
+          ],
+          "reasoning": "The content is purely consumer-facing marketing material (BMW Discover UK). It focuses on brand partnerships (Cannes, Frieze, PGA Championship), awards, and product features (iX5 Hydrogen, i7). There are no corporate signals, job postings, or technology infrastructure details relevant to BMW M Team RLL procurement."
+        }
+      ],
+      "total_input_tokens": 5172,
+      "total_output_tokens": 981,
+      "estimated_cost_usd": 0.030231
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BMW M Team RLL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:58:00.135865"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366907",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:19.153397"
+}

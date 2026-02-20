@@ -1,0 +1,423 @@
+{
+  "entity_id": "confederation_of_african_football_(caf)",
+  "entity_name": "Confederation of African Football (CAF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "qa.cafonline.com",
+    "cafonline.com",
+    "footballsoccer.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ng.linkedin.com/jobs/view/executive-assistant-%E2%80%93-general-secretary-office-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4348271646",
+      "https://ng.linkedin.com/jobs/view/senior-procurement-category-manager-%E2%80%93-events-competitions-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4345860353",
+      "https://ng.linkedin.com/jobs/view/broadcast-liaison-services-manager-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4166242878",
+      "https://ng.linkedin.com/jobs/football-jobs",
+      "https://ng.linkedin.com/jobs/view/accountant-payable-executive-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4303722077",
+      "https://eg.linkedin.com/jobs/view/executive-director-%E2%80%93-union-nord-africaine-de-football-unaf-at-the-confederation-of-african-football-caf-at-jobgam-4306970234",
+      "https://www.linkedin.com/posts/jobstodayng_procurement-manager-it-digital-sports-activity-7408861392323215360-Q8i_",
+      "https://ng.linkedin.com/jobs/professional-sports-jobs",
+      "https://www.linkedin.com/posts/jobstodayng_procurement-manager-it-digital-sports-activity-7408923334039453697-q4bj",
+      "https://lr.linkedin.com/jobs/view/information-technology-assistant-at-liberia-football-association-4346450907"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "confederation_of_african_football_(caf)",
+      "entity_name": "Confederation of African Football (CAF)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26
+      ],
+      "explored_domains": [
+        "https://qa.cafonline.com",
+        "https://ng.linkedin.com/jobs/football-jobs",
+        "https://ng.linkedin.com/jobs/view/executive-assistant-%E2%80%93-general-secretary-office-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4348271646",
+        "https://ng.linkedin.com/jobs/view/senior-procurement-category-manager-%E2%80%93-events-competitions-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4345860353",
+        "https://footballsoccer.fandom.com",
+        "https://ng.linkedin.com/jobs/view/broadcast-liaison-services-manager-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4166242878",
+        "https://cafonline.com",
+        "https://ng.linkedin.com/jobs/view/accountant-payable-executive-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4303722077"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Role Hiring",
+        "Event Operations Sourcing",
+        "Supplier Governance Framework",
+        "Category Management Strategy",
+        "Direct Procurement Responsibility",
+        "Supplier Contract Negotiation",
+        "Tender Management",
+        "Budget Ownership",
+        "Broadcast Infrastructure Sourcing",
+        "Job Aggregation Page",
+        "Duplicate Content (Scraping Artifact)",
+        "Cross-Reference Verification",
+        "Historical Hiring Timeline",
+        "Accounts Payable Operations",
+        "Vendor Payment Processing",
+        "Financial Reconciliation",
+        "Invoice Vouching & Verification",
+        "General Ledger Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Confederation of African Football (CAF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:54:33.257729",
+          "domain_explored": "https://qa.cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal/Management: TotalEnergies branding prominent on Champions League assets.",
+              "Event Operations: Upcoming 'CAF Beach Soccer - Egypt 2025' indicates localized vendor needs (infrastructure, marketing)."
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition (Scraping Artifact)",
+            "Sponsorship Branding (TotalEnergies)",
+            "Event Navigation Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 253,
+              "elapsed_seconds": 7.688388824462891
+            }
+          ],
+          "reasoning": "The provided content is a raw, repetitive scrape of the CAF homepage navigation and news headlines. It lists upcoming events (AFCON, Beach Soccer Egypt 2025) and sponsorship assets (TotalEnergies), but contains no technical specifications, RFP notices, job postings, or governance information. It confirms the entity exists and operates events but offers no procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:54:39.941503",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition (Scraping Artifact)",
+            "Sponsorship Branding (TotalEnergies)",
+            "Event Navigation Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 981,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.8174290657043457
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive navigation links and menu items (e.g., 'Show more', 'See all', 'AFCON 2025', 'CAF Champions League'). There is no text related to procurement, technology infrastructure, job openings, or organizational governance. The content represents the UI structure of the homepage rather than substantive information."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:54:45.405464",
+          "domain_explored": "https://footballsoccer.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition (Scraping Artifact)",
+            "Generic Wiki Structure",
+            "Irrelevant Domain (Fandom vs Official Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 820,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.4027650356292725
+            }
+          ],
+          "reasoning": "The scraped content originates from a generic Fandom wiki page ('Football Wiki'), not the official Confederation of African Football (CAF) domain. The content is repetitive UI noise ('Edit', 'Talk', 'Purge') and generic football references ('FIFA'). There is no connection to CAF procurement, governance, or technology stacks."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:54:53.489491",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/executive-assistant-%E2%80%93-general-secretary-office-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4348271646",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment Platform)",
+              "Standard Office Software (Implied by 'drafting correspondences', 'minutes')"
+            ],
+            "job_postings": [
+              {
+                "title": "Executive Assistant \u2013 General Secretary Office",
+                "location": "Cairo, Egypt",
+                "posted": "2 months ago",
+                "status": "Active (66 applicants)"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget for Staffing: Active recruitment indicates available budget.",
+              "Vendor Potential: Role involves 'travel arrangements' and 'accommodations', suggesting interaction with travel vendors.",
+              "Operational Governance: 'Implement streamlined procedures' suggests process optimization, potentially relevant for future process procurement."
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Executive Assistant)",
+            "Operational Location (Cairo, Egypt)",
+            "Administrative Structure (General Secretariat)",
+            "Guest Management & Event Coordination",
+            "Expense Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1575,
+              "output_tokens": 431,
+              "elapsed_seconds": 4.426832914352417
+            }
+          ],
+          "reasoning": "The content confirms CAF is actively hiring for administrative support within the General Secretary's office in Cairo. While this is an operational role rather than a direct procurement or technology role, it indicates organizational activity, budget allocation for staffing, and the presence of administrative infrastructure (expense management, guest management) that often supports procurement functions. It provides a 'weak' signal of organizational health and expansion."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:55:01.321778",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/senior-procurement-category-manager-%E2%80%93-events-competitions-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4345860353",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Procurement Information Systems (Mentioned as 'continuous improvement of procurement processes and information systems')",
+              "Supplier Performance Management Tools"
+            ],
+            "job_postings": [
+              "Senior Procurement Category Manager \u2013 Events & Competitions (Location: Cairo, Egypt)"
+            ],
+            "procurement_indicators": [
+              "Sourcing of Tournament Operations & Logistics",
+              "Security & Safety Requirements Procurement",
+              "Hospitality & VIP/Protocol Contracting",
+              "Member Association Operational Needs",
+              "Tender Process Management (RFP/Selection)",
+              "Supplier Performance Monitoring (SLA/KPIs)",
+              "Category Strategy Development"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Role Hiring",
+            "Event Operations Sourcing",
+            "Supplier Governance Framework",
+            "Category Management Strategy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1677,
+              "output_tokens": 410,
+              "elapsed_seconds": 4.384585857391357
+            }
+          ],
+          "reasoning": "This content provides the strongest evidence yet of active procurement operations. It is a direct job posting for a 'Senior Procurement Category Manager' specifically for 'Events & Competitions'. The description details the scope of procurement activities (logistics, security, hospitality, equipment), confirms the existence of procurement policies/governance standards, and highlights the need for supplier relationship management and information systems. This confirms CAF is actively investing in and structuring its procurement capabilities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:55:08.796120",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/broadcast-liaison-services-manager-at-the-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4166242878",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Technology",
+              "Satellite Operations Systems"
+            ],
+            "job_postings": [
+              "Broadcast Liaison & Services Manager"
+            ],
+            "procurement_indicators": [
+              "Management of tenders and procurement procedures",
+              "Negotiation and execution of supplier contracts",
+              "Budget management for events",
+              "Oversight of external contributors and service providers",
+              "Sourcing of broadcast infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Responsibility",
+            "Supplier Contract Negotiation",
+            "Tender Management",
+            "Budget Ownership",
+            "Broadcast Infrastructure Sourcing"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 323,
+              "elapsed_seconds": 4.271975040435791
+            }
+          ],
+          "reasoning": "This job posting explicitly places the candidate in a procurement-centric role within the Broadcast division. The responsibilities section clearly states 'Manage service providers and handle tenders and procurement procedures' and 'Drafting, negotiation, execution, and implementation of supplier contracts.' This confirms active procurement activities for high-value broadcast services and infrastructure."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:55:18.110059",
+          "domain_explored": "https://ng.linkedin.com/jobs/football-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              {
+                "title": "Executive Assistant \u2013 General Secretary Office",
+                "entity": "CAF",
+                "location": "Nigeria",
+                "age": "2 months ago",
+                "relevance": "Operational Support"
+              },
+              {
+                "title": "Broadcast Liaison & Services Manager",
+                "entity": "CAF",
+                "location": "Nigeria",
+                "age": "1 year ago",
+                "relevance": "Procurement/Broadcast Services"
+              }
+            ],
+            "procurement_indicators": [
+              "Active recruitment for broadcast services management",
+              "Administrative expansion in General Secretariat",
+              "Use of professional recruitment platforms (LinkedIn)"
+            ]
+          },
+          "patterns_found": [
+            "Job Aggregation Page",
+            "Duplicate Content (Scraping Artifact)",
+            "Cross-Reference Verification",
+            "Historical Hiring Timeline"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1815,
+              "output_tokens": 411,
+              "elapsed_seconds": 5.916845083236694
+            }
+          ],
+          "reasoning": "While this specific page is a generic job aggregation list with significant repetition artifacts, it validates the existence of previously identified procurement-relevant roles (Executive Assistant, Broadcast Liaison Manager) within the CAF ecosystem. It confirms CAF is actively recruiting for operational and broadcast management functions in the region, reinforcing the signal that supplier engagement and contract management are active focus areas."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:55:29.328863",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/accountant-payable-executive-at-confederation-of-african-football-caf-at-caf-confederation-of-african-football-4303722077",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Excel)",
+              "General Ledger Software (ERP/Accounting System)"
+            ],
+            "job_postings": [
+              "Accountant Payable Executive (Cairo, Egypt)"
+            ],
+            "procurement_indicators": [
+              "Active Vendor Payment Processing",
+              "Invoice Verification & Stamping Workflow",
+              "Claims Investigation & Validation",
+              "Financial Reconciliation Cycles (Monthly/Quarterly/Annual)"
+            ]
+          },
+          "patterns_found": [
+            "Accounts Payable Operations",
+            "Vendor Payment Processing",
+            "Financial Reconciliation",
+            "Invoice Vouching & Verification",
+            "General Ledger Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1898,
+              "output_tokens": 321,
+              "elapsed_seconds": 7.623157978057861
+            }
+          ],
+          "reasoning": "This job posting provides direct evidence of CAF's financial supply chain operations. The 'Accountant Payable Executive' role is a core procurement function, responsible for the 'processing of payment vouchers from Vendors,' 'vouching the authenticity of claims,' and managing the disbursement flow to external suppliers. This confirms active vendor engagement and validates the financial governance structure of their procurement cycle."
+        }
+      ],
+      "total_input_tokens": 11898,
+      "total_output_tokens": 2511,
+      "estimated_cost_usd": 0.073359
+    },
+    "procurement_signals": [
+      "Direct Procurement Role Hiring",
+      "Event Operations Sourcing",
+      "Supplier Governance Framework",
+      "Category Management Strategy",
+      "Direct Procurement Responsibility",
+      "Supplier Contract Negotiation",
+      "Tender Management",
+      "Budget Ownership",
+      "Broadcast Infrastructure Sourcing",
+      "Job Aggregation Page",
+      "Duplicate Content (Scraping Artifact)",
+      "Cross-Reference Verification",
+      "Historical Hiring Timeline",
+      "Accounts Payable Operations",
+      "Vendor Payment Processing",
+      "Financial Reconciliation",
+      "Invoice Vouching & Verification",
+      "General Ledger Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Confederation of African Football (CAF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:55:29.329559"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.198160",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:35.801891"
+}

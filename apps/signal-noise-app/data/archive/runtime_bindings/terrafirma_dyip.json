@@ -1,0 +1,113 @@
+{
+  "entity_id": "terrafirma_dyip",
+  "entity_name": "Terrafirma Dyip",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "basketball.asia-basket.com",
+    "iyengaryoga.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "terrafirma_dyip",
+      "entity_name": "Terrafirma Dyip",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://basketball.asia-basket.com",
+        "https://iyengaryoga.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Terrafirma Dyip may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:51:23.138592",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Irrelevant geographic focus (Japan, China, Taiwan, etc.)",
+            "Player performance tracking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.6099331378936768
+            }
+          ],
+          "reasoning": "The provided content is a general sports news feed covering various Asian basketball leagues (Japan B1/B2, China CBA, Taiwan TPBL/SBL, etc.). While there is a single mention of the Philippines ('PBA Round 5 of Finals'), it refers to the San Miguel Beermen, not Terrafirma Dyip. There are no mentions of Terrafirma Dyip, corporate announcements, job postings, or technology procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:51:30.870490",
+          "domain_explored": "https://iyengaryoga.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Membership management (Iscrizione 2026)",
+            "Event organization (Convention 2026)",
+            "Educational content delivery (Blog, Podcast, Video)",
+            "Non-profit Association structure (APS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 189,
+              "elapsed_seconds": 4.250732183456421
+            }
+          ],
+          "reasoning": "The scraped content is from 'Associazione Iyengar Yoga Italia', a non-profit yoga association. It contains no relation to 'Terrafirma Dyip' (a professional basketball team). The content focuses on yoga memberships, conventions, and blogs, which are irrelevant to the procurement signals of the target entity."
+        }
+      ],
+      "total_input_tokens": 2778,
+      "total_output_tokens": 393,
+      "estimated_cost_usd": 0.014228999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Terrafirma Dyip may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:51:30.873649"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.238837",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:18.534206"
+}

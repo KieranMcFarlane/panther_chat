@@ -1,0 +1,146 @@
+{
+  "entity_id": "sc_magdeburg",
+  "entity_name": "SC Magdeburg",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "scm-handball.de",
+    "sc-magdeburg.de",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sc_magdeburg",
+      "entity_name": "SC Magdeburg",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://sc-magdeburg.de",
+        "https://scm-handball.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SC Magdeburg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:14:27.596050",
+          "domain_explored": "https://scm-handball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard Sports Reporting",
+            "League Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 596,
+              "output_tokens": 146,
+              "elapsed_seconds": 2.4252781867980957
+            }
+          ],
+          "reasoning": "The content is a standard sports news update regarding the scheduling of Bundesliga handball games by the HBL (Handball Bundesliga). It contains no information regarding technology acquisition, job vacancies, or organizational changes that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:14:33.680923",
+          "domain_explored": "https://sc-magdeburg.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization: Sport Award 2025 (Potential vendor need for event tech/catering, but currently internal reporting)",
+              "Governance: Annual Reports (Rechenschaftsbericht) indicate structured financial cycles"
+            ]
+          },
+          "patterns_found": [
+            "Multi-sport Navigation Structure",
+            "Event Planning (Sport Award 2025)",
+            "Administrative Reporting (Rechenschaftsbericht)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 252,
+              "elapsed_seconds": 2.3156607151031494
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation menu and a news feed aggregator. While it confirms the entity is a multi-sport club (SC Magdeburg) with various departments (Handball, Rudern, etc.), the content is purely informational and historical. There are no explicit signals for procurement, technology investments, or vendor partnerships in this specific dataset."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:14:39.962779",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile App Marketplace Interface",
+            "Consumer Gaming Content",
+            "In-App Purchasing",
+            "Generic App Store Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.6577811241149902
+            }
+          ],
+          "reasoning": "The content provided is raw HTML/text scraped from the Google Play Store homepage. It lists popular mobile games (e.g., Roblox, Candy Crush, PUBG), app categories, and consumer promotions. There is absolutely no content related to SC Magdeburg, sports club management, enterprise procurement, or administrative operations. This is entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3445,
+      "total_output_tokens": 587,
+      "estimated_cost_usd": 0.01914
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SC Magdeburg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:14:39.965020"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349064",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:07.130689"
+}

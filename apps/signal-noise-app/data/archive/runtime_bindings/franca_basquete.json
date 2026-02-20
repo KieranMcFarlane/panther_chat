@@ -1,0 +1,120 @@
+{
+  "entity_id": "franca_basquete",
+  "entity_name": "Franca Basquete",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "bb_developing_market",
+  "discovered_domains": [
+    "francabasquete.com.br",
+    "franca.sp.leg.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "franca_basquete",
+      "entity_name": "Franca Basquete",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://franca.sp.leg.br",
+        "https://francabasquete.com.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Franca Basquete may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:18:57.863778",
+          "domain_explored": "https://francabasquete.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical sports data ingestion",
+            "Venue naming conventions (Pedroc\u00e3o, CT H\u00e9lio Rubens Garcia)",
+            "League participation (NBB, Champions League Americas, Campeonato Paulista)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.134679079055786
+            }
+          ],
+          "reasoning": "The content provided is a raw list of historical game results and schedules from 2019-2020. It contains no information regarding technology vendors, job openings, organizational structure, or procurement activities. It is purely operational sports data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:19:07.911956",
+          "domain_explored": "https://franca.sp.leg.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webmail",
+              "Transparency Portal (Portal da Transpar\u00eancia)",
+              "E-SIC (Electronic Information Service)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public resource management mentions",
+              "Municipal budget execution (R$ 7.4m duod\u00e9cimo)"
+            ]
+          },
+          "patterns_found": [
+            "Legislative news feed",
+            "Civic engagement portals (Ouvidoria, E-SIC)",
+            "Municipal governance structure",
+            "Public service announcements (IPTU, Health, Education)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.2041380405426025
+            }
+          ],
+          "reasoning": "The scraped content is from the official website of the C\u00e2mara Municipal de Franca (City Council). While it contains the keyword 'Franca', it pertains to municipal legislation, public administration (hospitals, taxes), and citizen services (Ouvidoria). There is no content related to 'Franca Basquete', sports management, or private sector procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2789,
+      "total_output_tokens": 447,
+      "estimated_cost_usd": 0.015071999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Franca Basquete may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:19:07.915007"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.215517",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:43.536901"
+}

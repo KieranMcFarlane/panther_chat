@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "borussia-dortmund:2026-01": {
+      "entity_id": "borussia-dortmund",
+      "entity_name": "Borussia Dortmund",
+      "month": "2026-01",
+      "profile": {
+        "entity_id": "borussia-dortmund",
+        "resolved_name": "Borussia Dortmund",
+        "confidence_in_match": 0.85,
+        "ownership": {
+          "has_parent_company": false,
+          "parent_type": null,
+          "parent_name": null
+        },
+        "organisation_scale": {
+          "employee_count_range": "1000-5000",
+          "estimated_revenue_range": "$100M-$500M"
+        },
+        "commercial_signals": {
+          "funding_stage": "Private Equity",
+          "last_funding_date": "2023-06-15",
+          "acquisitions_last_24_months": 2,
+          "investments_count": 5
+        },
+        "technology_posture": {
+          "technology_categories": [
+            "CRM",
+            "Analytics",
+            "Digital"
+          ],
+          "digital_focus_score": 0.8
+        },
+        "people_signals": {
+          "recent_exec_hires": 3,
+          "commercial_roles_present": true
+        },
+        "derived_features": {
+          "commercial_maturity": "high",
+          "procurement_likelihood": 0.7
+        },
+        "cost": {
+          "credits_used": 1,
+          "usd_estimate": 0.25
+        }
+      },
+      "uplift": 0.125,
+      "cost_usd": 0.25,
+      "cached_at": "2026-01-28T20:15:36.889076"
+    }
+  },
+  "metadata": {
+    "last_updated": "2026-01-28T20:15:36.889082",
+    "version": "1.0"
+  }
+}

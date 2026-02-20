@@ -1,0 +1,21 @@
+{
+  "old_model": {
+    "model": "old_fixed_30",
+    "total_iterations": 30,
+    "total_cost": 0.63,
+    "final_confidence": 0.8000000000000005,
+    "accept_count": 0,
+    "weak_accept_count": 30,
+    "is_actionable": false
+  },
+  "new_model": {
+    "model": "new_state_aware",
+    "total_iterations": 19,
+    "total_cost": 0.399,
+    "final_confidence": 0.45949196006638404,
+    "accept_count": 0,
+    "weak_accept_count": 12,
+    "is_actionable": false,
+    "confidence_ceiling": 0.7
+  }
+}

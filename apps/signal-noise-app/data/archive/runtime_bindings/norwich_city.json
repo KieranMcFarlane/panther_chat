@@ -1,0 +1,364 @@
+{
+  "entity_id": "norwich_city",
+  "entity_name": "Norwich City",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "canaries.co.uk",
+    "norwichct.gov",
+    "norwichcsd.org",
+    "norwich.gov.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/jobs-in-norwich",
+      "https://uk.linkedin.com/jobs/employment-jobs-norwich",
+      "https://uk.linkedin.com/jobs/view/service-support-lead-at-norwich-city-council-4357667048",
+      "https://uk.linkedin.com/jobs/government-jobs-jobs-greater-norwich-area-united-kingdom",
+      "https://uk.linkedin.com/jobs/view/housing-officer-tenancy-management-at-norwich-city-council-4354963507",
+      "https://sv.linkedin.com/showcase/jobs-and-careers",
+      "https://uk.linkedin.com/jobs/on-line-jobs-norwich",
+      "https://uk.linkedin.com/jobs/view/customer-contact-apprentice-at-norwich-city-council-4326660859"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "norwich_city",
+      "entity_name": "Norwich City",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://norwichct.gov",
+        "https://uk.linkedin.com/jobs/view/housing-officer-tenancy-management-at-norwich-city-council-4354963507",
+        "https://norwich.gov.uk",
+        "https://uk.linkedin.com/jobs/government-jobs-jobs-greater-norwich-area-united-kingdom",
+        "https://uk.linkedin.com/jobs/employment-jobs-norwich",
+        "https://uk.linkedin.com/jobs/jobs-in-norwich",
+        "https://norwichcsd.org",
+        "https://uk.linkedin.com/jobs/view/service-support-lead-at-norwich-city-council-4357667048",
+        "https://canaries.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "IT Infrastructure Transformation",
+        "Service Management (ITSM)",
+        "Digital-First Modernization",
+        "Local Government Reorganization",
+        "End-User Computing (EUC) Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Norwich City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:30:52.532433",
+          "domain_explored": "https://canaries.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Promotional item procurement (Tour\u00e9 37 free printing offer)"
+            ]
+          },
+          "patterns_found": [
+            "Sports team operations (player transfers)",
+            "Ticketing management",
+            "Promotional marketing (printing offers)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.1206130981445312
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations: a player signing (Mohamed Tour\u00e9), ticket availability for the South stand, and a promotional printing offer. There are no signals related to enterprise technology procurement, job postings, or digital transformation initiatives."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:31:04.604847",
+          "domain_explored": "https://norwichct.gov",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:31:16.925451",
+          "domain_explored": "https://norwichcsd.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (NCSD YouTube)",
+              "Facebook (NCSD Facebook)"
+            ],
+            "job_postings": [
+              "Job Opportunities (General link)"
+            ],
+            "procurement_indicators": [
+              "25-26 Budget Vote",
+              "Capital project",
+              "DCMO Proposal 27 (Potential BOCES cooperative purchasing)"
+            ]
+          },
+          "patterns_found": [
+            "K-12 Educational Entity",
+            "Public School District Operations",
+            "Budget Cycle Planning (25-26)",
+            "Capital Project References"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 289,
+              "elapsed_seconds": 3.657783031463623
+            }
+          ],
+          "reasoning": "The content confirms that 'Norwich City' in this context refers to the Norwich City School District (NCSD) in New York, not the English football club or the municipal government. While 'Capital Project' and '25-26 Budget Vote' indicate procurement activities, this entity is distinct from the target 'Norwich City' (presumably the football club or UK city council based on previous iterations). Therefore, this data is rejected as irrelevant to the primary target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:31:28.841043",
+          "domain_explored": "https://norwich.gov.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:31:39.724406",
+          "domain_explored": "https://uk.linkedin.com/jobs/jobs-in-norwich",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Care Assistant (Caremark Ltd)",
+              "Exam Invigilator (Thorpe St Andrew School)",
+              "Online Life Coach (FindTutors)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Labor Market Data",
+            "Education Sector Hiring (Thorpe St Andrew)",
+            "Care Sector Hiring (Caremark)",
+            "Gig Economy/Freelance Platforms (FindTutors)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.269524097442627
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the city of Norwich, not the specific entity 'Norwich City' (the football club). The listings are dominated by unrelated sectors (caremark Ltd, Thorpe St Andrew School, FindTutors). There are no signals relevant to corporate procurement, sports management operations, or the specific technology stack of the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:31:49.134198",
+          "domain_explored": "https://uk.linkedin.com/jobs/employment-jobs-norwich",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Care Assistant (Caremark Ltd)",
+              "Attendance and Entitlement Officer (Norfolk County Council)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Labor Market Data",
+            "Care Sector Hiring (Caremark)",
+            "Public Sector Administration (Norfolk County Council)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.4447457790374756
+            }
+          ],
+          "reasoning": "The content represents a generic job search feed for the Norwich area, not specific to the target entity 'Norwich City' (which implies the football club or specific corporate entity). The listings are dominated by Caremark (care sector) and Norfolk County Council (local government), neither of which are the target. There are no procurement signals, technology investments, or executive-level hiring relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:32:01.467910",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/service-support-lead-at-norwich-city-council-4357667048",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "End-user device management systems",
+              "Helpdesk/ITSM platforms",
+              "Desktop architecture solutions",
+              "Operating system deployment tools"
+            ],
+            "job_postings": [
+              "Service & Support Lead (Norwich City Council) - \u00a348,226 - \u00a351,356"
+            ],
+            "procurement_indicators": [
+              "Major transformation journey (Local Gov Reorganization)",
+              "Infrastructure modernization roadmap",
+              "Security enhancement initiatives",
+              "Digital-first approach implementation"
+            ]
+          },
+          "patterns_found": [
+            "IT Infrastructure Transformation",
+            "Service Management (ITSM)",
+            "Digital-First Modernization",
+            "Local Government Reorganization",
+            "End-User Computing (EUC) Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 344,
+              "elapsed_seconds": 3.4064791202545166
+            }
+          ],
+          "reasoning": "The job posting for 'Service & Support Lead' explicitly confirms a 'major transformation journey' driven by local government reorganization. It highlights specific procurement-relevant needs: 'smarter systems', 'stronger security', and 'desktop architecture' overhauls. The high salary (\u00a348k-\u00a351k) and managerial nature indicate a strategic role capable of influencing vendor selection and technology stack decisions."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:32:09.924398",
+          "domain_explored": "https://uk.linkedin.com/jobs/government-jobs-jobs-greater-norwich-area-united-kingdom",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Legal Officer (9514) - Norfolk County Council",
+              "Information Compliance Officer - Norfolk County Council",
+              "Trainee Probation Officer - HMPPS"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Labor Market Data",
+            "Public Sector Administration (Norfolk County Council)",
+            "Criminal Justice Operations (HMPPS)",
+            "Legal & Compliance Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 267,
+              "elapsed_seconds": 2.473902940750122
+            }
+          ],
+          "reasoning": "The content represents a generic job search results page for the Greater Norwich area. While it lists government roles (Norfolk County Council, HMPPS), these are operational hiring for legal and probation services rather than strategic procurement signals for 'Norwich City' (which implies the Council or a specific entity). The data is too broad and lacks specific procurement intent or technology investment signals relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:32:19.451072",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/housing-officer-tenancy-management-at-norwich-city-council-4354963507",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Housing Management Systems (implied)",
+              "Case Management Software"
+            ],
+            "job_postings": [
+              "Housing Officer \u2013 Tenancy Management (Grade 5, \u00a332k-\u00a335k)"
+            ],
+            "procurement_indicators": [
+              "Contractor Liaison for Major Works",
+              "Regeneration Project Support",
+              "Temporary Accommodation Sourcing",
+              "Compliance Management"
+            ]
+          },
+          "patterns_found": [
+            "Social Housing Operations",
+            "Regeneration & Major Works Coordination",
+            "Multi-agency Collaboration",
+            "Temporary Relocation Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1795,
+              "output_tokens": 289,
+              "elapsed_seconds": 2.885816812515259
+            }
+          ],
+          "reasoning": "While this is an operational role rather than a direct procurement position, it reveals significant underlying procurement activities. The specific mention of 'regeneration, major works' and 'liaising with contractors' indicates active supply chain management for construction and maintenance services. The scale of operations (15,000 homes) suggests substantial vendor spend."
+        }
+      ],
+      "total_input_tokens": 11064,
+      "total_output_tokens": 1859,
+      "estimated_cost_usd": 0.061077
+    },
+    "procurement_signals": [
+      "IT Infrastructure Transformation",
+      "Service Management (ITSM)",
+      "Digital-First Modernization",
+      "Local Government Reorganization",
+      "End-User Computing (EUC) Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Norwich City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:32:19.451709"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.120508",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:37.309815"
+}

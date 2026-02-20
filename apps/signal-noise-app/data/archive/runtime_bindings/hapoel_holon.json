@@ -1,0 +1,167 @@
+{
+  "entity_id": "hapoel_holon",
+  "entity_name": "Hapoel Holon",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "hapoelholon.co.il",
+    "hapoeluta.org",
+    "basket.co.il"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hapoel_holon",
+      "entity_name": "Hapoel Holon",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://hapoeluta.org",
+        "https://basket.co.il",
+        "https://hapoelholon.co.il"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hapoel Holon may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:49:23.720450",
+          "domain_explored": "https://hapoelholon.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (implied by '\u05de\u05db\u05d9\u05e8\u05ea \u05de\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd')",
+              "Calendar Integration Tools (implied by '\u05d9\u05d5\u05de\u05df \u05d3\u05d9\u05d2\u05d9\u05d8\u05dc\u05d9')",
+              "Social Media Management (TikTok, Instagram, YouTube, Facebook presence)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active sale of subscriptions (requires backend CRM/Billing support)",
+              "Sponsorship management (Main sponsor: Nethanel Group)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing & Subscription Management",
+            "Digital Fan Engagement",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.17276406288147
+            }
+          ],
+          "reasoning": "The content reveals active sales of season subscriptions ('\u05de\u05d9\u05e0\u05d5\u05d9\u05d9\u05dd') and a 'Digital Diary' feature for schedule integration. This indicates a need for Ticketing/CRM systems to manage fan data and sales. While no explicit RFP is visible, the operational requirement for digital sales tools is clear."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:49:35.365633",
+          "domain_explored": "https://hapoeluta.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from 'collections/products' URL structure)",
+              "External Ticketing Platform (Redirect to hapoelbc.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of online store infrastructure",
+              "Seasonal ticketing operations setup (2025/26)"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Platform Usage",
+            "Digital Ticketing Operations",
+            "Content Management System (CMS)",
+            "Merchandising & Retail"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 265,
+              "elapsed_seconds": 3.659018039703369
+            }
+          ],
+          "reasoning": "The content confirms the active use of third-party digital platforms for e-commerce (shop.hapoelbc.com) and ticketing (hapoelbc.com/tickets/). While this does not indicate a *new* procurement event, it validates the entity's reliance on SaaS solutions for revenue generation. The site structure suggests a CMS-driven presence, reinforcing the need for web maintenance services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:49:47.274730",
+          "domain_explored": "https://basket.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WinnerLeague.TV (Streaming Platform)",
+              "VOD Systems",
+              "Digital Calendar Sync (ICS/iCal)",
+              "CMS (ASP based on URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized Service Adoption (Broadcasting & Stats)",
+              "League-wide Ticketing Partnerships",
+              "Fan Engagement Campaigns (3X3 Leagues, All-Star Events)"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide Digital Infrastructure (WinnerLeague.TV)",
+            "Centralized Ticketing Operations",
+            "Fan Engagement Platforms (Fun Zone, 3X3 League)",
+            "Content Management & VOD Hosting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 343,
+              "elapsed_seconds": 5.264157295227051
+            }
+          ],
+          "reasoning": "The content represents the Israeli Basketball Super League (Winner League) administrative body. While Hapoel Holon is a participating member (ranked #6 in the provided table), this page outlines the league's centralized digital ecosystem. This implies that Hapoel Holon likely adheres to league-wide technology standards for broadcasting (WinnerLeague.TV), ticketing, and statistical data management, rather than procuring these systems independently. The presence of 'Fun Zone' and 'Fan Leagues' indicates investment in fan engagement tech."
+        }
+      ],
+      "total_input_tokens": 4216,
+      "total_output_tokens": 869,
+      "estimated_cost_usd": 0.025682999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hapoel Holon may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:49:47.277070"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217868",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:56.420136"
+}

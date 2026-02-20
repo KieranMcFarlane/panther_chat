@@ -1,0 +1,159 @@
+{
+  "entity_id": "fia_americas",
+  "entity_name": "FIA Americas",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fiafoundation.org",
+    "api.fia.com",
+    "fiaregion4.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_americas",
+      "entity_name": "FIA Americas",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fiafoundation.org",
+        "https://fiaregion4.com",
+        "https://api.fia.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Americas may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:14:54.425947",
+          "domain_explored": "https://fiafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Funding Programme (Grants)",
+              "Advocacy Support"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Philanthropic/Grantmaking Focus",
+            "Advocacy Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1002,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.8507940769195557
+            }
+          ],
+          "reasoning": "The content is explicitly from the 'FIA Foundation' (a philanthropic organization focused on road safety advocacy and grants), not 'FIA Americas' (the regional sporting authority). While they share the FIA brand, the Foundation's focus on 'Vision Zero' and funding programs indicates a grant-making rather than procurement-driven operational model. This is irrelevant to the procurement intelligence goals for FIA Americas."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:15:03.417243",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'Invitation to Tender' link (Global Entity)",
+              "FIA Partners and suppliers link (Global Entity)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Global Scope",
+            "Sporting Governance Focus",
+            "Statutory Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 260,
+              "elapsed_seconds": 3.9742040634155273
+            }
+          ],
+          "reasoning": "The content scraped from 'https://api.fia.com' corresponds to the global FIA (F\u00e9d\u00e9ration Internationale de l'Automobile) headquartered in Paris, not FIA Americas. The navigation structure focuses on global sporting governance (World Councils, Statutes, International Courts) and global championships (Formula 1, WEC, WRC). While there is a generic 'Invitation to Tender' link in the footer, the context is the global entity, not the specific regional target (FIA Americas). This confirms a lack of relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:15:13.248255",
+          "domain_explored": "https://fiaregion4.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Intranet Portal (intranet.fiaregion4.com)",
+              "External Documentation Application (hosted on puma.avnam.net - likely legacy/hosted)",
+              "CMS (implied by site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of 'Area Privada' (Private Member Area)",
+              "Coordination of regional events (Congreso Americano)",
+              "Administration of 'Reciprocidad' services (Reciprocity/Insurance/Tourism)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance Structure",
+            "Intranet & Extranet Applications",
+            "Member Club Services (Tourism/Assistance)",
+            "Event Coordination (Congress/Conferences)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 357,
+              "elapsed_seconds": 5.220123767852783
+            }
+          ],
+          "reasoning": "The content confirms 'FIA Region IV' (Americas) as a distinct regional governing body within the FIA network. While the page is primarily informational and member-focused, it reveals structural complexity (Directorio, Management, Status) and the use of specific business applications (Intranet, 'Aplicativo Documentaci\u00f3n Internacional'). The organization of events (Congreso Americano) and management of member benefits suggests a need for event management platforms and CRM systems, justifying a weak signal for potential procurement in these areas."
+        }
+      ],
+      "total_input_tokens": 3842,
+      "total_output_tokens": 827,
+      "estimated_cost_usd": 0.023931
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Americas may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:15:13.248996"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.379198",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:36.228455"
+}

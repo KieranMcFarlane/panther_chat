@@ -1,0 +1,175 @@
+{
+  "entity_id": "updf_tomahawks",
+  "entity_name": "UPDF Tomahawks",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "it.scribd.com",
+    "fuba.web.geniussports.com",
+    "sofascore.com",
+    "basketball.afrobasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "updf_tomahawks",
+      "entity_name": "UPDF Tomahawks",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fuba.web.geniussports.com",
+        "https://it.scribd.com",
+        "https://sofascore.com",
+        "https://basketball.afrobasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UPDF Tomahawks may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:32:42.599797",
+          "domain_explored": "https://it.scribd.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Content",
+            "Navigation Menu Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.6964569091796875
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the Scribd homepage header, footer, and category navigation menus. There is no mention of 'UPDF Tomahawks', nor are there any specific documents, job postings, or procurement signals visible in this generic text. The content is purely structural UI text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:32:52.012020",
+          "domain_explored": "https://fuba.web.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Results",
+            "Repetitive Content Blocks",
+            "Historical Season Data (2019)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.4131321907043457
+            }
+          ],
+          "reasoning": "The scraped content is exclusively sports journalism regarding the 2019 basketball season (FUBA). While it confirms the entity 'UPDF Tomahawks' exists and won a championship, it contains zero information regarding procurement, technology stacks, or business operations. The content is highly repetitive and lacks actionable intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:33:04.502735",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Content",
+            "Repetitive Navigation Elements",
+            "Consumer-Facing Features (Odds, Highlights)",
+            "SEO Keyword Stuffing (League names)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.537735939025879
+            }
+          ],
+          "reasoning": "The content is exclusively related to live sports scores, league standings, and consumer-facing features (player comparison, video highlights) for Sofascore. There is no mention of corporate governance, enterprise procurement, job vacancies, or B2B technology infrastructure relevant to the UPDF Tomahawks entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:33:14.510412",
+          "domain_explored": "https://basketball.afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports League Results",
+            "Player Transfer/Roster Updates",
+            "Consumer-Facing Database Subscription Offers",
+            "Repetitive Game Recaps"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.2775659561157227
+            }
+          ],
+          "reasoning": "The scraped content from basketball.afrobasket.com is exclusively focused on sports news, game results, and player transfers. There is no content related to the entity 'UPDF Tomahawks', nor are there any signals regarding procurement, technology infrastructure, or corporate governance. The site is a consumer-facing sports news outlet."
+        }
+      ],
+      "total_input_tokens": 5711,
+      "total_output_tokens": 697,
+      "estimated_cost_usd": 0.027588
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UPDF Tomahawks may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:33:14.516170"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.231831",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:53.729446"
+}

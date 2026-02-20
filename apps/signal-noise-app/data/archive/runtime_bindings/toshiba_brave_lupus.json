@@ -1,0 +1,188 @@
+{
+  "entity_id": "toshiba_brave_lupus",
+  "entity_name": "Toshiba Brave Lupus",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "bravelupus.com",
+    "league-one.jp",
+    "en.rugby-japan.jp",
+    "en.sports-tokyo-info.metro.tokyo.lg.jp",
+    "tmeic.co.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toshiba_brave_lupus",
+      "entity_name": "Toshiba Brave Lupus",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://en.rugby-japan.jp",
+        "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+        "https://bravelupus.com",
+        "https://tmeic.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toshiba Brave Lupus may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:16:25.276446",
+          "domain_explored": "https://bravelupus.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:16:34.767682",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League schedule data",
+            "Third-party ticketing integration (ticketrugby.jp)",
+            "Generic match results display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.578303098678589
+            }
+          ],
+          "reasoning": "The scraped content is purely operational sports data (match schedules, scores, venues) and generic ticketing links. It contains no corporate information, governance structures, or technology implementation details relevant to Toshiba Brave Lupus's internal procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:16:46.363186",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media Hosting)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Federation-level merchandise operations",
+              "Third-party fan club management platform"
+            ]
+          },
+          "patterns_found": [
+            "Generic federation content",
+            "B2C e-commerce integration",
+            "YouTube media embedding",
+            "Fan club (Sakura Club) external linking"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 713,
+              "output_tokens": 260,
+              "elapsed_seconds": 4.280331134796143
+            }
+          ],
+          "reasoning": "The content analyzed is from the Japan Rugby Football Union (JRFU) official site (en.rugby-japan.jp), not the Toshiba Brave Lupus corporate entity. While it shows an e-commerce platform (shop.rugby-japan.jp) and digital engagement tools (YouTube, Sakura Club), these are federation-level assets, not specific procurement signals for the Toshiba team. This indicates a scope drift away from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:16:57.061916",
+          "domain_explored": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (X/Twitter, Facebook, Instagram)",
+              "CMS (implied by content structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sports volunteer information",
+              "General facility information",
+              "Public administrative information"
+            ]
+          },
+          "patterns_found": [
+            "Government public information portal",
+            "B2C citizen engagement focus",
+            "Generic sports advocacy content",
+            "Third-party social media integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 270,
+              "elapsed_seconds": 2.681105136871338
+            }
+          ],
+          "reasoning": "The content is from the Tokyo Metropolitan Government's Office for Sports Promotion. It is a public information portal designed for citizens (B2C) to find sports events, facilities, and volunteer opportunities. It does not contain corporate procurement signals, vendor selection processes, or technology investment details relevant to a private rugby club entity like Toshiba Brave Lupus."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:17:10.493440",
+          "domain_explored": "https://tmeic.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3595,
+      "total_output_tokens": 692,
+      "estimated_cost_usd": 0.021165
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toshiba Brave Lupus may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:17:10.494651"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281225",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:22:03.328301"
+}

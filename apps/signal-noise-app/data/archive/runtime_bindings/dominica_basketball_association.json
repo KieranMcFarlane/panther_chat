@@ -1,0 +1,165 @@
+{
+  "entity_id": "dominica_basketball_association",
+  "entity_name": "Dominica Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "dominicanewsonline.com",
+    "antiguanice.com",
+    "dominica-weekly.com",
+    "antiguaobserver.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/assistant-women%E2%80%99s-basketball-coach-at-edgewood-university-4242769913"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dominica_basketball_association",
+      "entity_name": "Dominica Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://dominica-weekly.com",
+        "https://www.linkedin.com/jobs/view/assistant-women%E2%80%99s-basketball-coach-at-edgewood-university-4242769913",
+        "https://antiguanice.com",
+        "https://dominicanewsonline.com",
+        "https://antiguaobserver.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dominica Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:44:24.257665",
+          "domain_explored": "https://dominicanewsonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:44:37.371164",
+          "domain_explored": "https://antiguanice.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:44:41.969616",
+          "domain_explored": "https://dominica-weekly.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:44:49.945081",
+          "domain_explored": "https://antiguaobserver.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news content",
+            "Sports reporting (Football, Cricket)",
+            "Local community events",
+            "Irrelevant geographic focus (Antigua vs Dominica)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 187,
+              "elapsed_seconds": 4.481822967529297
+            }
+          ],
+          "reasoning": "The scraped content from 'antiguaobserver.com' focuses entirely on general news, sports (football, cricket), and local events in Antigua and Barbuda. There are no mentions of the Dominica Basketball Association, nor are there any procurement signals, job postings, or technology investment indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:44:58.552497",
+          "domain_explored": "https://www.linkedin.com/jobs/view/assistant-women%E2%80%99s-basketball-coach-at-edgewood-university-4242769913",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach - Men's Basketball (Austin Peay State University)",
+              "Head Womens Soccer Coach (Eureka College)",
+              "Head Coach- Women's Basketball (Kansas City Kansas Community College)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General job board listings (LinkedIn)",
+            "US-based academic institutions",
+            "Sports coaching vacancies (Soccer, Basketball)",
+            "Geographic irrelevance (Clarksville, TN; Eureka, IL; etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1527,
+              "output_tokens": 257,
+              "elapsed_seconds": 4.150780916213989
+            }
+          ],
+          "reasoning": "The content provided is a list of generic job postings from LinkedIn for coaching positions at US-based universities (e.g., Austin Peay State, Eureka College). There is no mention of the Dominica Basketball Association, the Caribbean region, or any procurement activities (RFPs, tech investments). The content is irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2982,
+      "total_output_tokens": 444,
+      "estimated_cost_usd": 0.015606000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dominica Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:44:58.554038"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.267072",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:07.574258"
+}

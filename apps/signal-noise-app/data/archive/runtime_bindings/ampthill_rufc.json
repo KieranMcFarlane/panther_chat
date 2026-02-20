@@ -1,0 +1,167 @@
+{
+  "entity_id": "ampthill_rufc",
+  "entity_name": "Ampthill RUFC",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "ampthillrufc.com",
+    "arufcmembership.co.uk",
+    "saracens.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ampthill_rufc",
+      "entity_name": "Ampthill RUFC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://saracens.com",
+        "https://ampthillrufc.com",
+        "https://arufcmembership.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "SaaS Membership Management",
+        "Digital Transformation",
+        "Self-Service Portal",
+        "Cookie Consent Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ampthill RUFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:32:58.694215",
+          "domain_explored": "https://ampthillrufc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sports CRM",
+              "Player Management Systems",
+              "HR/Contract Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Academy Management (2017/18)",
+              "Semi-professional Contract Administration"
+            ]
+          },
+          "patterns_found": [
+            "Academy Operations",
+            "Semi-professional Contract Management",
+            "Youth Development Pathway"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 266,
+              "elapsed_seconds": 4.175268173217773
+            }
+          ],
+          "reasoning": "The content highlights the 'Academy' and 'semi-professional contracts' for players aged 18-22. While this is primarily operational/sporting content, the management of semi-professional contracts and player development pathways suggests a need for HR/Workforce management tools or specialized Sports CRM systems to track player progression, contracts, and performance metrics. It is a weak signal because it focuses on player 'procurement' rather than corporate procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:33:04.053278",
+          "domain_explored": "https://arufcmembership.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management SaaS",
+              "Cookie Consent Manager"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Third-party SaaS subscription for membership management",
+              "Subdomain delegation (arufcmembership.co.uk)",
+              "Privacy policy compliance integration"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Membership Management",
+            "Digital Transformation",
+            "Self-Service Portal",
+            "Cookie Consent Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 637,
+              "output_tokens": 232,
+              "elapsed_seconds": 2.491548776626587
+            }
+          ],
+          "reasoning": "The discovery of a dedicated membership subdomain (arufcmembership.co.uk) confirms a shift from manual to digital operations. The presence of specific 'MembershipAccount' endpoints indicates the procurement of a specialized SaaS platform for CRM and member administration."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:33:12.140864",
+          "domain_explored": "https://saracens.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Player Contract Management",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 695,
+              "output_tokens": 141,
+              "elapsed_seconds": 4.751245021820068
+            }
+          ],
+          "reasoning": "The content provided is a news article from Saracens.com regarding a player departure (Alex Lozowski). This is irrelevant to Ampthill RUFC's procurement activities. It contains no data regarding Ampthill's vendors, technology stack, or purchasing intent."
+        }
+      ],
+      "total_input_tokens": 2689,
+      "total_output_tokens": 639,
+      "estimated_cost_usd": 0.017652
+    },
+    "procurement_signals": [
+      "SaaS Membership Management",
+      "Digital Transformation",
+      "Self-Service Portal",
+      "Cookie Consent Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ampthill RUFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:33:12.142448"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280547",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:14.262324"
+}

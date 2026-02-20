@@ -1,0 +1,199 @@
+{
+  "entity_id": "chinese_taipei_basketball_association",
+  "entity_name": "Chinese Taipei Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "basketball-tpe.org",
+    "taiwanhoops.com",
+    "grokipedia.com",
+    "wikidata.org",
+    "english.ey.gov.tw",
+    "dbpedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_taipei_basketball_association",
+      "entity_name": "Chinese Taipei Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://english.ey.gov.tw",
+        "https://grokipedia.com",
+        "https://taiwanhoops.com",
+        "https://basketball-tpe.org",
+        "https://dbpedia.org",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Taipei Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:24:04.826059",
+          "domain_explored": "https://basketball-tpe.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:24:39.325208",
+          "domain_explored": "https://taiwanhoops.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ERR_SSL_PROTOCOL_ERROR",
+            "Connection Failure",
+            "Invalid Response"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 574,
+              "output_tokens": 176,
+              "elapsed_seconds": 9.31225323677063
+            }
+          ],
+          "reasoning": "The target URL (taiwanhoops.com) appears to be redirecting or proxying requests to www.dot-sports.org, which is failing due to an SSL protocol error. The content provided is purely browser error messaging; no HTML, text, or structured data regarding the Chinese Taipei Basketball Association's operations, technology stack, or procurement activities could be extracted."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:24:45.418845",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:24:55.528180",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wikimedia Platform Content",
+            "Open Data Repository",
+            "Community Driven Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.026292085647583
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a Wikimedia project. It contains no specific information regarding the 'Chinese Taipei Basketball Association' (CTBA), its procurement activities, technology stack, or governance. The content focuses on general Wikidata statistics, community events (WikidataCon), and documentation. There is no intersection between this content and the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:25:15.521045",
+          "domain_explored": "https://english.ey.gov.tw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:25:26.662860",
+          "domain_explored": "https://dbpedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DBpedia Knowledge Graph",
+              "Linked Open Data (LOD)",
+              "Databus (Data cataloging platform)"
+            ],
+            "job_postings": [
+              "Google Summer of Code (GSoC) Mentions",
+              "Internship opportunities (DBpedia Association)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Open Data Platform Content",
+            "Community Driven Content",
+            "Academic/Research Focus (GSoC, Internships, DAAD)",
+            "Entity Mismatch (DBpedia Association vs. Chinese Taipei Basketball Association)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.11362099647522
+            }
+          ],
+          "reasoning": "The scraped content is from DBpedia.org, an open-source knowledge graph project. It contains blog posts about internships, community chapters, and dataset downloads. There is absolutely no relation to the Chinese Taipei Basketball Association (CTBA), nor are there any procurement signals (RFPs, vendor lists) relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3590,
+      "total_output_tokens": 650,
+      "estimated_cost_usd": 0.02052
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Taipei Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:25:26.663960"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.263337",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:57:04.057386"
+}

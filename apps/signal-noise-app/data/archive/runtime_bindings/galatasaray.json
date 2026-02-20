@@ -1,0 +1,338 @@
+{
+  "entity_id": "galatasaray",
+  "entity_name": "Galatasaray",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "galatasaray.org",
+    "gsstore.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://tr.linkedin.com/jobs/view/2025-galatasaray-university-francophone-career-forum-participants-application-form-at-air-liquide-4228534936",
+      "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4214512297",
+      "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4187279808",
+      "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-m%C3%BCd%C3%BCr%C3%BC-istanbul-avrupa-yakas%C4%B1-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-3817596890?refId=nz%2FXK8lwt4F7xTAhhuYoTw%3D%3D&trackingId=a1ZVXvQKqcmMPEmZmu1qlA%3D%3D&position=5&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://www.linkedin.com/jobs/view/loyalty-rewards-strategy-manager-at-socios-com-4118932389"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "galatasaray",
+      "entity_name": "Galatasaray",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4187279808",
+        "https://gsstore.org",
+        "https://tr.linkedin.com/jobs/view/2025-galatasaray-university-francophone-career-forum-participants-application-form-at-air-liquide-4228534936",
+        "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-m%C3%BCd%C3%BCr%C3%BC-istanbul-avrupa-yakas%C4%B1-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-3817596890?refId=nz%2FXK8lwt4F7xTAhhuYoTw%3D%3D&trackingId=a1ZVXvQKqcmMPEmZmu1qlA%3D%3D&position=5&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://galatasaray.org",
+        "https://www.linkedin.com/jobs/view/loyalty-rewards-strategy-manager-at-socios-com-4118932389",
+        "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4214512297"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Galatasaray may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:14:08.821861",
+          "domain_explored": "https://galatasaray.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "GSPlus (Membership Platform)",
+              "GSPara (Digital Wallet/Payment)",
+              "GSStore (E-commerce)",
+              "GS TV (Video Streaming)",
+              "GStatil (Real Estate/App)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Footer link to '\u0130HALELER' (Tenders) section",
+              "Complex corporate structure requiring ERP/CRM (Sportif A.\u015e., Faktoring, etc.)",
+              "Sponsorship inventory (HDI Sigorta, MCT Technic, Daikin, Fuzul)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Ecosystem",
+            "Sponsorship & Branding Structure",
+            "Content Management System"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 308,
+              "elapsed_seconds": 6.796273231506348
+            }
+          ],
+          "reasoning": "The content is the homepage navigation and footer of Galatasaray's main website. While it does not contain specific RFPs or job postings, it reveals the organizational structure and existing digital product investments (GSPlus, GSPara, GSStore). The presence of '\u0130HALELER' (Tenders) in the footer menu indicates a dedicated section for procurement activities, confirming the existence of a formal procurement process."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:14:32.174324",
+          "domain_explored": "https://gsstore.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Tag Manager (GTM)",
+              "Custom Product Personalization Engine",
+              "E-commerce Platform (Custom/Proprietary based on URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "High SKU Volume & Variety (Sourcing logistics for diverse categories like 'Pet Collection', 'Home Textile', 'Kids')",
+              "Customization Workflow (Procurement of printing/engraving services for 'Forman\u0131 Ki\u015fiselle\u015ftir')",
+              "Collaborative Product Lines (Vendor management for 'GSStore x Reflect Studio', 'Midground')",
+              "Inventory Management (Handling 'Outlet' vs 'New Season' vs 'Limited Edition' stock)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Product Lifecycle Management",
+            "Fan Engagement Personalization",
+            "Supply Chain Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 359,
+              "elapsed_seconds": 13.870009183883667
+            }
+          ],
+          "reasoning": "The content reveals the operational complexity of the GSStore e-commerce platform. While no direct procurement requests are visible, the scale of the inventory (Player-specific merch, Limited Editions, Baby/Bebe lines) and the 'Personalize' functionality indicate a robust backend requiring ongoing maintenance and potential procurement for logistics, inventory management, and personalization software."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:14:43.791049",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/2025-galatasaray-university-francophone-career-forum-participants-application-form-at-air-liquide-4228534936",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "company": "Air Liquide",
+                "role": "Internship / Full-time",
+                "target_audience": "Galatasaray University Students",
+                "platform": "LinkedIn"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "University Career Forum",
+            "Talent Acquisition",
+            "Third-Party Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 234,
+              "elapsed_seconds": 4.798486948013306
+            }
+          ],
+          "reasoning": "The content is a job posting by Air Liquide targeting participants of the 'Galatasaray University Francophone Career Forum'. While it shares the 'Galatasaray' brand name, it refers to the separate educational institution (Galatasaray University), not the sports club (Galatasaray SK). The activity is recruitment (hiring), not procurement (vendor purchasing)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:14:58.391298",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4214512297",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "POS Systems (implied)",
+              "Inventory Management Systems (implied)",
+              "E-commerce Platforms (implied)"
+            ],
+            "job_postings": [
+              "Sat\u0131\u015f Dan\u0131\u015fman\u0131 (Sales Consultant) - Galatasaray Ma\u011fazac\u0131l\u0131k ve Perakendecilik A.\u015e."
+            ],
+            "procurement_indicators": [
+              "Retail Network Expansion (95+ stores)",
+              "Omnichannel Presence (Physical + Online)",
+              "Supply Chain Complexity (Stocking 96 locations)"
+            ]
+          },
+          "patterns_found": [
+            "Retail Expansion Strategy",
+            "Physical Infrastructure Scaling",
+            "Omnichannel Retail Operations",
+            "HR Capacity Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 320,
+              "elapsed_seconds": 7.11095404624939
+            }
+          ],
+          "reasoning": "The job posting confirms Galatasaray's active investment in retail infrastructure (expanding to 95 physical stores + 1 online). While this is an operational role rather than a direct procurement signal, the scale of operations (96 touchpoints) implies a significant supply chain and backend technology requirement (ERP, POS, Inventory Management) to support the retail network. It validates the 'E-commerce Infrastructure' pattern found in Iteration 2."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:15:13.326461",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-t%C3%BCrkiye-geneli-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-4187279808",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "POS Systems (implied)",
+              "Inventory Management Systems (implied)"
+            ],
+            "job_postings": [
+              "Sat\u0131\u015f Dan\u0131\u015fman\u0131 (Sales Consultant) - Nationwide"
+            ],
+            "procurement_indicators": [
+              "Network of 95 physical stores requiring ongoing supply chain support",
+              "Separate legal entity (Galatasaray Ma\u011fazac\u0131l\u0131k ve Perakendecilik A.\u015e.) handling commercial operations"
+            ]
+          },
+          "patterns_found": [
+            "Retail Infrastructure Scaling",
+            "Omnichannel Retail Operations",
+            "Physical Store Network Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1656,
+              "output_tokens": 307,
+              "elapsed_seconds": 4.72171425819397
+            }
+          ],
+          "reasoning": "The job posting confirms the operational scale of Galatasaray Ma\u011fazac\u0131l\u0131k ve Perakendecilik A.\u015e. (95 physical stores + 1 online store). While this is a frontline retail role with no direct procurement authority, the expansion of the physical retail footprint implies ongoing procurement needs for retail infrastructure (store fixtures, POS systems, inventory management) and operational services. It reinforces the 'Retail Expansion' pattern identified in the previous iteration."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:15:32.618791",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-m%C3%BCd%C3%BCr%C3%BC-istanbul-avrupa-yakas%C4%B1-at-galatasaray-ma%C4%9Fazac%C4%B1l%C4%B1k-ve-perakendecilik-a-%C5%9F-3817596890?refId=nz%2FXK8lwt4F7xTAhhuYoTw%3D%3D&trackingId=a1ZVXvQKqcmMPEmZmu1qlA%3D%3D&position=5&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Nebim V3 (ERP/Retail Software)",
+              "MS Office"
+            ],
+            "job_postings": [
+              "Ma\u011faza M\u00fcd\u00fcr\u00fc (Store Manager) - Galatasaray Ma\u011fazac\u0131l\u0131k ve Perakendecilik A.\u015e."
+            ],
+            "procurement_indicators": [
+              "Requirement for Nebim V3 experience suggests existing investment in this ERP platform.",
+              "Mention of 80 physical stores and 1 online site indicates significant infrastructure maintenance and procurement needs.",
+              "Focus on KPIs implies reliance on analytics/reporting tools."
+            ]
+          },
+          "patterns_found": [
+            "ERP System Utilization (Nebim V3)",
+            "Retail Operations Management",
+            "KPI-Driven Performance Management",
+            "Physical Store Network Maintenance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1781,
+              "output_tokens": 327,
+              "elapsed_seconds": 10.497722864151001
+            }
+          ],
+          "reasoning": "While this is a recruitment post for a Store Manager (operational role), it explicitly confirms the use of 'Nebim V3' as a preferred skill. Nebim V3 is a major retail ERP and inventory management system widely used in Turkey. This confirms specific technology procurement within the retail subsidiary. The focus on KPIs and sales performance indicates a data-driven operational structure."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:15:40.806635",
+          "domain_explored": "https://www.linkedin.com/jobs/view/loyalty-rewards-strategy-manager-at-socios-com-4118932389",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Socios.com Platform",
+              "Chiliz Blockchain ($CHZ)",
+              "Fan Tokens (Digital Assets)",
+              "Web3 Infrastructure",
+              "NFTs"
+            ],
+            "job_postings": [
+              "Loyalty & Rewards Strategy Manager (Socios.com - Partner Vendor)"
+            ],
+            "procurement_indicators": [
+              "Partnership reliance for Fan Engagement",
+              "Usage of Blockchain for Loyalty Programs",
+              "Vendor-managed Rewards Ecosystem"
+            ]
+          },
+          "patterns_found": [
+            "Web3 Fan Engagement Partnership",
+            "Blockchain-Based Loyalty Infrastructure",
+            "Fan Token Ecosystem Management",
+            "Data-Driven Fan Retention"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.26595401763916
+            }
+          ],
+          "reasoning": "While this is a job posting for Socios.com (a partner), it explicitly confirms Galatasaray's active participation in the Socios.com Fan Token ecosystem. This signals a procurement category for 'Fan Engagement & Blockchain Services' and indicates reliance on third-party platforms for digital loyalty and rewards."
+        }
+      ],
+      "total_input_tokens": 11100,
+      "total_output_tokens": 2146,
+      "estimated_cost_usd": 0.06549
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Galatasaray may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:15:40.814001"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.145325",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:53.481151"
+}

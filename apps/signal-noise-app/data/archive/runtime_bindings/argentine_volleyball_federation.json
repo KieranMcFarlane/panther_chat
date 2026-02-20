@@ -1,0 +1,219 @@
+{
+  "entity_id": "argentine_volleyball_federation",
+  "entity_name": "Argentine Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "worldofvolley.com",
+    "hipoalergic.com",
+    "betsapi.com",
+    "lexology.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_volleyball_federation",
+      "entity_name": "Argentine Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://betsapi.com",
+        "https://lexology.com",
+        "https://hipoalergic.com",
+        "https://wikidata.org",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:52:03.258470",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.004173994064331
+            }
+          ],
+          "reasoning": "The provided content is the generic homepage of Wikidata, a global open-data repository. It contains no specific information regarding the Argentine Volleyball Federation (FeVA), its procurement activities, technology stack, or governance. The content describes Wikidata's features, community events, and general statistics, which are unrelated to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:52:12.916875",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_sports_news",
+            "match_results_aggregation",
+            "international_league_coverage",
+            "player_transfer_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.474778175354004
+            }
+          ],
+          "reasoning": "The content is entirely focused on international volleyball match results, league standings, and player transfers (e.g., Olympiacos signing Marko Sedlacek). There is no mention of the Argentine Volleyball Federation, nor are there any signals regarding procurement, technology investments, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:52:27.830917",
+          "domain_explored": "https://hipoalergic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Identification",
+                "entity": "Hipoalergic",
+                "relevance": "Manufacturer of sports medical supplies (adhesive tapes, patches) in Argentina.",
+                "potential_category": "Medical/Physio Supplies"
+              },
+              {
+                "type": "Partnership Signal",
+                "details": "Footer mentions 'Sponsor oficial', indicating the company engages in sports sponsorships.",
+                "potential_category": "Sponsorship/Vendor Partnership"
+              }
+            ]
+          },
+          "patterns_found": [
+            "vendor_product_catalog",
+            "sports_medicine_supplies",
+            "local_manuring_capability",
+            "sponsorship_marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 388,
+              "elapsed_seconds": 3.3626911640167236
+            }
+          ],
+          "reasoning": "The content identifies 'Hipoalergic' as an Argentine manufacturer with a specific 'L\u00ednea Deportiva' (Sports Line) featuring products like 'HIPOALERGIC SPORT' (adhesive cotton tape). While this is a vendor site rather than the Federation's procurement portal, it establishes a clear supply chain for sports medicine materials (taping, wound care) that the Argentine Volleyball Federation would likely procure for athlete health and injury management. The mention of 'Sponsor oficial' (Official Sponsor) in the footer suggests existing commercial partnerships, indicating a channel for vendor engagement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:52:45.065796",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_sports_aggregation",
+            "live_betting_odds",
+            "real_time_score_feed",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 197,
+              "elapsed_seconds": 11.150607109069824
+            }
+          ],
+          "reasoning": "The content is a live score and odds feed from a betting aggregator (BetsAPI). While it lists 'Volleyball' and specifically 'Argentina Liga Women', this is purely consumption data (scores/odds) for betting purposes. It provides no insight into the Argentine Volleyball Federation's internal operations, procurement needs, technology stack, or governance. It is irrelevant to the objective of finding procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:52:54.743107",
+          "domain_explored": "https://lexology.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "legal_news_aggregator",
+            "generic_regulatory_analysis",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.2938899993896484
+            }
+          ],
+          "reasoning": "The content is from Lexology, a global legal news aggregator. It contains articles on general regulatory compliance, AI trends, and sanctions (e.g., 'ESG trends to watch in 2026', 'Russia/Ukraine Sanctions Update'). There is no specific mention of the Argentine Volleyball Federation, its procurement activities, or its specific technology stack. The content is high-level legal industry analysis rather than actionable procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 7256,
+      "total_output_tokens": 1140,
+      "estimated_cost_usd": 0.038868
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:52:54.745998"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331845",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:01.864174"
+}

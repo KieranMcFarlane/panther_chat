@@ -1,0 +1,52 @@
+{
+  "current_stage": 3,
+  "stage_results": [
+    {
+      "stage_num": 1,
+      "status": "SUCCESS",
+      "entities_processed": 10,
+      "total_cost_usd": 1.4999999999999998,
+      "actionable_count": 10,
+      "error_count": 0,
+      "start_time": "2026-02-03T04:09:58.641581",
+      "end_time": "2026-02-03T04:10:01.662606",
+      "cost_reduction_vs_old_pct": 20.0,
+      "actionable_increase_vs_old_pct": 80.0,
+      "avg_latency_seconds": 0.0,
+      "p95_latency_seconds": 0.0,
+      "error_rate_pct": 0.0
+    },
+    {
+      "stage_num": 2,
+      "status": "SUCCESS",
+      "entities_processed": 10,
+      "total_cost_usd": 1.4999999999999998,
+      "actionable_count": 10,
+      "error_count": 0,
+      "start_time": "2026-02-03T04:10:02.664348",
+      "end_time": "2026-02-03T04:10:05.686222",
+      "cost_reduction_vs_old_pct": 20.0,
+      "actionable_increase_vs_old_pct": 80.0,
+      "avg_latency_seconds": 0.0,
+      "p95_latency_seconds": 0.0,
+      "error_rate_pct": 0.0
+    },
+    {
+      "stage_num": 3,
+      "status": "FAILED",
+      "entities_processed": 10,
+      "total_cost_usd": 1.4999999999999998,
+      "actionable_count": 10,
+      "error_count": 0,
+      "start_time": "2026-02-03T04:10:06.687762",
+      "end_time": "2026-02-03T04:10:09.706853",
+      "cost_reduction_vs_old_pct": 20.0,
+      "actionable_increase_vs_old_pct": 80.0,
+      "avg_latency_seconds": 0.0,
+      "p95_latency_seconds": 0.0,
+      "error_rate_pct": 0.0
+    }
+  ],
+  "timestamp": "2026-02-03T04:10:09.707458",
+  "metadata": {}
+}

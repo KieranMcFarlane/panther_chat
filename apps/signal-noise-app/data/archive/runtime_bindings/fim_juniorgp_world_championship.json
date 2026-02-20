@@ -1,0 +1,167 @@
+{
+  "entity_id": "fim_juniorgp_world_championship",
+  "entity_name": "FIM JuniorGP World Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "fimjuniorgp.com",
+    "fimmotojunior.com",
+    "fim-europe.com",
+    "fim-moto.com",
+    "roadracingworld.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_juniorgp_world_championship",
+      "entity_name": "FIM JuniorGP World Championship",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://fim-europe.com",
+        "https://fimjuniorgp.com",
+        "https://fimmotojunior.com",
+        "https://roadracingworld.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM JuniorGP World Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:48:16.526614",
+          "domain_explored": "https://fimjuniorgp.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:48:19.312839",
+          "domain_explored": "https://fimmotojunior.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:48:22.328699",
+          "domain_explored": "https://fim-europe.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:48:34.636825",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Document Management System (DMS) - implied by 'Latest documents' and 'Supplementary Regulations' sections",
+              "Translation Management - implied by multiple language codes (English/French)",
+              "Content Management System (CMS) - implied by site structure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Safety & Homologation: Potential procurement for safety gear, helmets, and track testing technologies.",
+              "Sustainability Commission: Indication of budget allocation for environmental and alternative energy projects.",
+              "FIM Quality Product: Vendor partnership program for product licensing.",
+              "Marketing/Touring: Potential need for event management and promotional vendors."
+            ]
+          },
+          "patterns_found": [
+            "Regulatory Governance Structure",
+            "Technical Commissions",
+            "Safety & Homologation",
+            "Sustainability Initiatives",
+            "Digital Document Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 464,
+              "elapsed_seconds": 7.938469886779785
+            }
+          ],
+          "reasoning": "While the content is primarily informational and lacks explicit procurement opportunities (RFPs/Tenders), it reveals the underlying organizational structure that drives procurement. The presence of specific 'Commissions' (Technical, Safety, Sustainability, Mobility) and 'Quality Product' marketing indicates specialized budget centers. The heavy reliance on 'Codes and Regulations' and 'Supplementary Regulations' suggests a need for legal compliance, document management systems, and translation services (evidenced by English/French documents). This provides a 'Weak Accept' as it identifies capability and potential vendor needs (safety gear, tech for sustainability) rather than direct intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:48:44.565977",
+          "domain_explored": "https://roadracingworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media Navigation Structure",
+            "Content Categorization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.7243340015411377
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the navigation menu, social media links, and header elements from RoadRacingWorld.com. While 'FIM JuniorGP' appears as a category tag, there is no substantive content, news articles, or organizational data visible in this text to analyze for procurement signals or technology stacks."
+        }
+      ],
+      "total_input_tokens": 2951,
+      "total_output_tokens": 624,
+      "estimated_cost_usd": 0.018213
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM JuniorGP World Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:48:44.567432"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374945",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:57.801033"
+}

@@ -1,0 +1,549 @@
+{
+  "entity_id": "leinster",
+  "entity_name": "Leinster",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "tier1_professional_clubs",
+  "discovered_domains": [
+    "leinsterrugby.ie",
+    "shop.leinsterrugby.ie",
+    "leinstergaa.ie",
+    "leinsterhockey.ie",
+    "irishrugby.ie",
+    "leinsterrugby.sportlomo.com",
+    "cricketleinster.ie",
+    "leinsterladiesgaelic.ie",
+    "theleinster.ie"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/jobs/view/field-sales-executive-leinster-at-imperial-brands-plc-4366319291",
+      "https://ie.linkedin.com/jobs/view/national-account-executive-leinster-at-sysco-ireland-4366014159",
+      "https://ie.linkedin.com/jobs/view/media-sales-representative-at-leinster-leader-kildarelive-ie-3828148763",
+      "https://ie.linkedin.com/jobs/view/practice-kildare-various-roles-at-leinster-appointments-recruitment-consultants-2640129834",
+      "https://ie.linkedin.com/jobs/view/commercial-sales-representative-leinster-at-cpl-3817626118",
+      "https://ie.linkedin.com/jobs/view/grade-vi-dublin-mid-leinster-retention-officer-tr20251072-at-health-service-executive-4254868604",
+      "https://ie.linkedin.com/jobs/view/account-manager-leinster-wassenburg-medical-ireland-at-wassenburg-medical-ireland-ltd-4233384339"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "leinster",
+      "entity_name": "Leinster",
+      "total_iterations": 15,
+      "completed_iterations": 14,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://leinsterrugby.ie",
+        "https://cricketleinster.ie",
+        "https://ie.linkedin.com/jobs/view/field-sales-executive-leinster-at-imperial-brands-plc-4366319291",
+        "https://ie.linkedin.com/jobs/view/media-sales-representative-at-leinster-leader-kildarelive-ie-3828148763",
+        "https://ie.linkedin.com/jobs/view/commercial-sales-representative-leinster-at-cpl-3817626118",
+        "https://irishrugby.ie",
+        "https://theleinster.ie",
+        "https://leinsterladiesgaelic.ie",
+        "https://ie.linkedin.com/jobs/view/practice-kildare-various-roles-at-leinster-appointments-recruitment-consultants-2640129834",
+        "https://ie.linkedin.com/jobs/view/national-account-executive-leinster-at-sysco-ireland-4366014159",
+        "https://shop.leinsterrugby.ie",
+        "https://leinsterrugby.sportlomo.com",
+        "https://leinsterhockey.ie",
+        "https://leinstergaa.ie"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Leinster may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:55:00.726075",
+          "domain_explored": "https://leinsterrugby.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is focused on sports team operations (player interviews)",
+            "No technical or business governance language detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 388,
+              "output_tokens": 138,
+              "elapsed_seconds": 4.8630530834198
+            }
+          ],
+          "reasoning": "The content provided is a sports interview regarding a player (Rieko), which falls outside the scope of procurement, technology stack analysis, or business governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:55:06.619614",
+          "domain_explored": "https://shop.leinsterrugby.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely shared with Life Style Sports)",
+              "Payment Gateway (Implied by 'Shop Now')",
+              "Inventory Management System (Integrated with retailer)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: Life Style Sports (Platform & Logistics provider)",
+              "Service Level Agreement (SLA): Next day delivery over \u20ac75",
+              "Outsourced Returns Management: 'Free and Easy Returns'"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Outsourcing",
+            "Third-party Logistics (3PL) Partnership",
+            "SaaS E-commerce Solution Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1165,
+              "output_tokens": 316,
+              "elapsed_seconds": 2.8365180492401123
+            }
+          ],
+          "reasoning": "The content reveals that Leinster's e-commerce operations are fully outsourced. The 'Powered by Life Style Sports' footer indicates a partnership or white-label solution, and the 'Free Next Day Delivery' suggests a logistics integration. This identifies a vendor relationship (Life Style Sports) and a specific technology stack (likely a shared e-commerce platform), providing weak evidence of procurement activity in the retail/IT domain."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:55:12.148079",
+          "domain_explored": "https://leinstergaa.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Operations Focus",
+            "Training & Development",
+            "Personnel Investment",
+            "Non-Commercial Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 552,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.587829828262329
+            }
+          ],
+          "reasoning": "The scraped content from 'leinstergaa.ie' focuses on sports operations (coach training) rather than corporate procurement or business technology. This indicates a misalignment with the target entity (Leinster Rugby) and a lack of commercial procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:55:18.087083",
+          "domain_explored": "https://leinsterhockey.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Easy Payments Plus (Payment Gateway)",
+              "Sub-domain architecture (cards.leinsterhockey.ie)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with 'Easy Payments Plus' for financial transactions",
+              "Outsourced digital card management system"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Procurement (Payment Gateway)",
+            "Digital Service Outsourcing",
+            "Sub-domain Utilization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 765,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.9517171382904053
+            }
+          ],
+          "reasoning": "The site reveals the procurement of a third-party payment processing solution ('Easy Payments Plus') and the use of a sub-domain for digital operations ('cards.leinsterhockey.ie'). While not a direct RFP, these are confirmed vendor relationships."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:55:24.321810",
+          "domain_explored": "https://irishrugby.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Ad Manager"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Online Shop (3rd party platform likely)",
+              "Supporters Club Tiers (Membership management system)",
+              "Sponsored Content (Energia, BKT)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Integration",
+            "Sponsorship & Partnership Management",
+            "Digital Advertising Operations (Google Ad Manager)",
+            "Membership Management (Supporters Club)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.078556776046753
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the site structure reveals commercial operations. The presence of a dedicated 'Official Shop' section, a 'Supporters Club' with paid tiers (Adults/Juniors), and Google Ad Manager implementation indicates a digital infrastructure requiring vendor management for e-commerce, payment processing, and ad tech."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:55:30.071185",
+          "domain_explored": "https://leinsterrugby.sportlomo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sportlomo (League Management Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Competition Management",
+              "Vendor Sub-domain Usage"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (Sportlomo)",
+            "Sub-domain Outsourcing",
+            "League Management System Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.9025490283966064
+            }
+          ],
+          "reasoning": "The URL structure (leinsterrugby.sportlomo.com) and the content (fixtures, results, competition listings) confirm that Leinster utilizes 'Sportlomo' as a third-party SaaS provider for league and competition management. This indicates a procurement decision to outsource digital fixture management rather than building in-house."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:55:36.265204",
+          "domain_explored": "https://cricketleinster.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sportlomo (Inferred via widgetData structure)",
+              "SketchTool (Design asset)",
+              "Cookie Consent Manager"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced League Management System",
+              "Digital Platform Vendor (Sportlomo)",
+              "Strategic Planning Documentation"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (Sportlomo)",
+            "League Management System Procurement",
+            "Digital Service Outsourcing",
+            "Cookie Consent Management (Governance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 308,
+              "elapsed_seconds": 3.114199161529541
+            }
+          ],
+          "reasoning": "The scraped content reveals the use of 'widgetData' structures and specific UI patterns (e.g., 'Created with sketchtool', 'Do you consent to our use of Cookies') that are characteristic of the Sportlomo SaaS platform, previously identified in Iteration 6. This indicates a procurement relationship for league management and digital services. The presence of a 'Strategic Plan' and 'Documents' sections suggests potential governance documentation, though the content itself is not visible in this snippet."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:55:42.903165",
+          "domain_explored": "https://leinsterladiesgaelic.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static Web Presence",
+            "Repetitive Content Structure",
+            "Informational Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 793,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.065155267715454
+            }
+          ],
+          "reasoning": "The scraped content is highly repetitive and lacks depth, consisting primarily of a welcome message with no technical infrastructure, vendor partnerships, or operational complexity visible. There are no indicators of procurement activity, technology stacks, or business governance."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:55:49.212948",
+          "domain_explored": "https://theleinster.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Local Supplier Sourcing (Food & Beverage)",
+              "Interior Design Vendor Usage (ODonnell ONeill)",
+              "Art Procurement (300+ works)"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality Operations Focus",
+            "B2C Service Offering",
+            "Brand Ambiguity (Entity Mismatch)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1780,
+              "output_tokens": 224,
+              "elapsed_seconds": 3.0041959285736084
+            }
+          ],
+          "reasoning": "The content is exclusively focused on luxury hospitality operations (rooms, dining, events) for 'The Leinster Hotel'. While hotels procure supplies, this is a distinct commercial entity from the sports/governing bodies analyzed in previous iterations. The signals relate to consumer services (weddings, bookings) rather than corporate procurement or governance technology."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T13:55:58.296917",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/field-sales-executive-leinster-at-imperial-brands-plc-4366319291",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Field Sales Executive - Leinster at Imperial Brands PLC"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "B2C Sales Role",
+            "Territory-Based Role (Leinster as a location, not an entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1847,
+              "output_tokens": 235,
+              "elapsed_seconds": 5.307271957397461
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a 'Field Sales Executive' role at Imperial Brands PLC. While the job title contains the word 'Leinster', it refers to the geographical territory (sales route) within Ireland, not the entity 'Leinster' (Rugby/GAA/Hockey). The employer is Imperial Brands, a tobacco company, which is unrelated to the sports organizations analyzed in previous iterations. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T13:56:04.352869",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/national-account-executive-leinster-at-sysco-ireland-4366014159",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "National Account Executive - Leinster at Sysco Ireland"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Territory-Based Role (Leinster as a location)",
+            "B2B Sales Focus (Foodservice)",
+            "Customer Relationship Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1917,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.440974235534668
+            }
+          ],
+          "reasoning": "The job posting is for Sysco Ireland, a foodservice provider, where 'Leinster' denotes the sales territory or location requirement, not the entity being analyzed. The role focuses on sales execution and account management rather than procurement operations or technology investment for the entity 'Leinster'."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T13:56:11.615019",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/media-sales-representative-at-leinster-leader-kildarelive-ie-3828148763",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Media Sales Representative"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Media & Publishing Operations",
+            "B2C Sales Function",
+            "Regional Branding (Leinster Leader)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1988,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.777114152908325
+            }
+          ],
+          "reasoning": "The job posting is for 'Iconic Media Group' (publishers of the 'Leinster Leader' newspaper), which is a media company sharing a geographic name with the target entity (Leinster Rugby/GAA). The role is a sales position for advertising space, not a procurement or governance role for the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T13:56:18.285817",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/practice-kildare-various-roles-at-leinster-appointments-recruitment-consultants-2640129834",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "RAP",
+              "Quickbooks Online",
+              "Surf",
+              "XERO",
+              "Thesaurus",
+              "Brightpay",
+              "ROS"
+            ],
+            "job_postings": [
+              "Bookkeeper/Audit Seniors/Payroll/Senior Practice Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Recruitment Agency Operations",
+            "B2B Service Provision",
+            "Territory-Based Naming (Leinster as region)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2058,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.224137783050537
+            }
+          ],
+          "reasoning": "The content is a job posting from 'Leinster Appointments', a third-party recruitment agency, not the sports entity 'Leinster'. While the job description details accounting software (Xero, QuickBooks), this refers to the requirements for candidates being placed by the agency, not the internal procurement of the target entity. The name 'Leinster' here refers to the geographic region or the agency's brand, not the target sports organization."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T13:56:25.001352",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/commercial-sales-representative-leinster-at-cpl-3817626118",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Commercial Sales Representative (Leinster Territory)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Territory-Based Role (Leinster as a location)",
+            "Recruitment Agency Operations (Cpl)",
+            "B2B Sales Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2120,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.151271343231201
+            }
+          ],
+          "reasoning": "The content is a job advertisement by CPL Recruitment for a US/Canadian multinational client. The role is a 'Commercial Sales Representative' for the 'Leinster market,' confirming that Leinster is used here as a geographical territory (sales region) rather than the target entity. The hiring entity is a client of CPL, not Leinster itself. There is no governance, procurement, or technology investment signal related to the entity 'Leinster'."
+        }
+      ],
+      "total_input_tokens": 20242,
+      "total_output_tokens": 3103,
+      "estimated_cost_usd": 0.107271
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Leinster may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:56:25.002770"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.271351",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:52.357070"
+}

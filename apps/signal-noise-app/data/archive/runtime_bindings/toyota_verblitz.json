@@ -1,0 +1,195 @@
+{
+  "entity_id": "toyota_verblitz",
+  "entity_name": "Toyota Verblitz",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "verblitz.toyotatimes-sports.toyota",
+    "league-one.jp",
+    "shop.verblitz.com",
+    "en.rugby-japan.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toyota_verblitz",
+      "entity_name": "Toyota Verblitz",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://shop.verblitz.com",
+        "https://en.rugby-japan.jp",
+        "https://league-one.jp",
+        "https://verblitz.toyotatimes-sports.toyota"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toyota Verblitz may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:08:43.908143",
+          "domain_explored": "https://verblitz.toyotatimes-sports.toyota",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Maps (API integration for stadium locations)",
+              "ticketrugby.jp (External Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced ticketing operations to specialized sports platform"
+            ]
+          },
+          "patterns_found": [
+            "Standard sports team web presence",
+            "Use of Google Maps for location services",
+            "External ticketing platform integration (ticketrugby.jp)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 256,
+              "elapsed_seconds": 5.410892963409424
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive match results, schedules, and stadium information. While it confirms the use of an external ticketing vendor (ticketrugby.jp) and Google Maps, it provides no new signals regarding internal technology procurement, digital transformation initiatives, or job postings. The content is operational fan engagement material rather than business intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:08:53.580346",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ticketrugby.jp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League schedule data",
+            "External ticketing platform integration (ticketrugby.jp)",
+            "Standard sports league CMS structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 223,
+              "elapsed_seconds": 5.687902927398682
+            }
+          ],
+          "reasoning": "The scraped content consists of match schedules, scores, and ticketing links for the League One rugby competition. While 'Toyota Verblitz' (\u30c8\u30e8\u30bf\uff36) is identified as a participating entity, the content is strictly operational (game results/tickets) and hosted on the league's central domain (league-one.jp). There are no signals regarding internal procurement, technology adoption, or vendor partnerships specific to Toyota Verblitz's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:09:01.002820",
+          "domain_explored": "https://shop.verblitz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom PHP E-commerce Engine",
+              "MySQL (implied by PHP structure)",
+              "Responsive Web Design"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor for 'CATERPY' collaboration (apparel/accessories)",
+              "Manufacturing partners for 'Made-to-Order' replica jerseys and apparel",
+              "Logistics/fulfillment services for seasonal campaign items",
+              "Platform maintenance for the custom shop.verblitz.com domain"
+            ]
+          },
+          "patterns_found": [
+            "Custom E-commerce Platform (PHP-based)",
+            "High-Frequency Merchandising Operations",
+            "Supply Chain Management (Made-to-Order/Pre-order models)",
+            "Third-party Brand Collaboration (CATERPY)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 367,
+              "elapsed_seconds": 3.444317102432251
+            }
+          ],
+          "reasoning": "The content reveals a dedicated, custom-built e-commerce platform (`shop.verblitz.com`) utilizing PHP architecture. The presence of 'Made-to-Order' (\u53d7\u6ce8\u8ca9\u58f2) and 'Pre-order' functionality indicates a complex supply chain requirement for inventory management and manufacturing procurement. The collaboration with 'CATERPY' confirms an active vendor partnership strategy. While this is primarily a consumer-facing site, the backend operational complexity suggests a need for robust procurement of manufacturing, logistics, and platform maintenance services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:09:14.044178",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Federation-level centralized merchandising (shop.rugby-japan.jp)",
+              "Third-party fan management platform (japanrugby-sakuraclub.jp)"
+            ]
+          },
+          "patterns_found": [
+            "Standard Federation Web Presence",
+            "External E-commerce Linkage (shop.rugby-japan.jp)",
+            "External Fan Community Platform (japanrugby-sakuraclub.jp)",
+            "Video Platform Reliance (YouTube)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 816,
+              "output_tokens": 273,
+              "elapsed_seconds": 8.763484954833984
+            }
+          ],
+          "reasoning": "The scraped content represents the Japan Rugby Football Union's (JRFU) official English portal. While it contains links to an Online Shop and 'Sakura Club' (fan community), these are externalized platforms managed at the Federation level, not specific to Toyota Verblitz's procurement operations. There are no direct procurement signals, technology stack details, or vendor decision-making processes relevant to the specific entity (Toyota Verblitz) in this text."
+        }
+      ],
+      "total_input_tokens": 5084,
+      "total_output_tokens": 1119,
+      "estimated_cost_usd": 0.032037
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toyota Verblitz may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:09:14.049836"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.273994",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:44:09.879456"
+}

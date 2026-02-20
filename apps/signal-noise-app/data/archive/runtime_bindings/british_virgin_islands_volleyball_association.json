@@ -1,0 +1,272 @@
+{
+  "entity_id": "british_virgin_islands_volleyball_association",
+  "entity_name": "British Virgin Islands Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "virginislandsdailynews.com",
+    "norceca.net",
+    "stthomassource.com",
+    "stcroixsource.com",
+    "stjohnsource.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/health-and-wellness-coordinator-lpn-at-brookdale-4355949458"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_virgin_islands_volleyball_association",
+      "entity_name": "British Virgin Islands Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/health-and-wellness-coordinator-lpn-at-brookdale-4355949458",
+        "https://norceca.net",
+        "https://stthomassource.com",
+        "https://virginislandsdailynews.com",
+        "https://stcroixsource.com",
+        "https://stjohnsource.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British Virgin Islands Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:36:56.600128",
+          "domain_explored": "https://virginislandsdailynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "paywall_access_denied",
+            "generic_content_placeholder",
+            "scraped_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 459,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.6775588989257812
+            }
+          ],
+          "reasoning": "The provided text consists entirely of UI placeholders ('Your E-edition is ready') and repetitive headers from the Virgin Islands Daily News website. It contains zero substantive information regarding the British Virgin Islands Volleyball Association, its operations, or any procurement activities. The content is effectively noise."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:37:04.700361",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "governance_news",
+            "sports_results",
+            "event_calendars",
+            "federation_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.9823989868164062
+            }
+          ],
+          "reasoning": "The content is from the NORCECA confederation body, not the BVI entity directly. It contains sports news (MLV results), governance updates (Cayman elections), and general calendars. While it confirms the organizational ecosystem, it yields zero direct procurement signals (RFPs, tech stack, or job postings) for the British Virgin Islands Volleyball Association specifically."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:37:11.982760",
+          "domain_explored": "https://stthomassource.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from structure)",
+              "Social Media Integration (Facebook, Instagram, Twitter, Youtube)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Dedicated 'Procurement Notices' section",
+              "Dedicated 'Requests for Proposals' section",
+              "Dedicated 'Invitations for Bids' section"
+            ]
+          },
+          "patterns_found": [
+            "procurement_notices_section",
+            "requests_for_proposals_link",
+            "invitations_for_bids_link",
+            "legal_notices_structure",
+            "usvi_territorial_focus"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 373,
+              "elapsed_seconds": 4.078783988952637
+            }
+          ],
+          "reasoning": "The scraped content represents the site navigation and footer structure of 'St. Thomas Source'. While the specific page content is repetitive navigation text, the presence of dedicated links for 'Procurement Notices', 'Requests for Proposals', and 'Invitations for Bids' indicates the site hosts the relevant data. This is a 'WEAK_ACCEPT' because the site structure confirms the *capability* and *category* exists, but the specific content regarding the British Virgin Islands Volleyball Association was not visible in this specific scrape (which appears to be navigation-heavy). The site focuses on the US Virgin Islands (USVI), which is a distinct jurisdiction from the British Virgin Islands (BVI), but often regional vendors operate across both."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:37:22.108093",
+          "domain_explored": "https://stcroixsource.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Jobs (Link present in navigation)"
+            ],
+            "procurement_indicators": [
+              "Procurement Notices (Category)",
+              "Requests for Proposals (Category)",
+              "Invitations for Bids (Category)",
+              "Request for Qualifications (Category)",
+              "Marshals Sales (Category)",
+              "Notices of Dissolution (Category)"
+            ]
+          },
+          "patterns_found": [
+            "procurement_notices_section",
+            "requests_for_proposals_link",
+            "invitations_for_bids_link",
+            "request_for_qualifications_link",
+            "legal_notices_section"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 320,
+              "elapsed_seconds": 6.573054075241089
+            }
+          ],
+          "reasoning": "The scraped content represents the site navigation and footer structure of St. Croix Source. It explicitly lists dedicated categories for 'Procurement Notices', 'Requests for Proposals', 'Invitations for Bids', and 'Request for Qualifications'. While the specific content of these notices is not in the provided text, the existence of these dedicated taxonomy categories confirms the site hosts procurement data relevant to the region (USVI), which covers the British Virgin Islands market context."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:37:28.338355",
+          "domain_explored": "https://stjohnsource.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Procurement Notices Section",
+              "Requests for Proposals (RFP) Link",
+              "Invitations for Bids Link",
+              "Request for Qualifications (RFQ) Link"
+            ]
+          },
+          "patterns_found": [
+            "procurement_notices_section",
+            "requests_for_proposals_link",
+            "invitations_for_bids_link",
+            "request_for_qualifications_link"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 265,
+              "elapsed_seconds": 2.4293010234832764
+            }
+          ],
+          "reasoning": "The scraped content represents the site navigation and footer structure of St. John Source. It explicitly lists dedicated categories for 'Procurement Notices', 'Requests for Proposals', 'Invitations for Bids', and 'Request for Qualifications'. While the content itself is just navigation text, the existence of these categories confirms the site hosts the type of public notices required for tracking government and NGO procurement activities in the Virgin Islands."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:37:37.194687",
+          "domain_explored": "https://www.linkedin.com/jobs/view/health-and-wellness-coordinator-lpn-at-brookdale-4355949458",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Health and Wellness Coordinator/LPN",
+                "entity": "Brookdale",
+                "location": "Boynton Beach, FL",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "geographic_mismatch",
+            "healthcare_sector_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.172818899154663
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Brookdale' (a US-based senior living company) located in Boynton Beach, FL. This is completely unrelated to the British Virgin Islands Volleyball Association. It represents noise in the scraping process, likely triggered by keyword matching on 'wellness coordinator' without entity context."
+        }
+      ],
+      "total_input_tokens": 8026,
+      "total_output_tokens": 1528,
+      "estimated_cost_usd": 0.046998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British Virgin Islands Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:37:37.195571"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335009",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:23.250236"
+}

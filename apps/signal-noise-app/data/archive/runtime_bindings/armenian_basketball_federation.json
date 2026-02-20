@@ -1,0 +1,228 @@
+{
+  "entity_id": "armenian_basketball_federation",
+  "entity_name": "Armenian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "armeniabasketball.com",
+    "armeniawbb.com",
+    "multigroup.am",
+    "sport.mediamax.am",
+    "m.a1plus.am"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "armenian_basketball_federation",
+      "entity_name": "Armenian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://armeniabasketball.com",
+        "https://m.a1plus.am",
+        "https://sport.mediamax.am",
+        "https://multigroup.am",
+        "https://armeniawbb.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Armenian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:12:10.029814",
+          "domain_explored": "https://armeniabasketball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop)",
+              "Web Forms (Wufoo, Google Forms, or custom)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management",
+              "Player Registration Database/CRM",
+              "Payment Gateway Services"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce capability (Shop)",
+            "Digital data collection (U16 Signup)",
+            "Non-profit partnership structure (501c3)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 250,
+              "elapsed_seconds": 4.218225955963135
+            }
+          ],
+          "reasoning": "The content reveals active digital capabilities (online shop and player registration forms) and a specific governance model involving a 'Friends of' non-profit entity. While no direct RFPs are visible, the existence of a 'Shop' indicates e-commerce infrastructure needs, and the 'U16 Signup' suggests a need for CRM or database management tools to handle player data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:12:16.949148",
+          "domain_explored": "https://armeniawbb.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Management (Generic)",
+              "Web Analytics (implied by cookie usage)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship solicitation capability",
+              "US Non-profit tax status (501c3) implies grant/donor funding procurement"
+            ]
+          },
+          "patterns_found": [
+            "Non-profit partnership structure (501c3)",
+            "Affiliate/Partner entity governance",
+            "Digital data collection (Cookie consent)",
+            "Sponsorship engagement model"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 308,
+              "elapsed_seconds": 3.9425342082977295
+            }
+          ],
+          "reasoning": "The content confirms a formal partnership structure between the 'Friends of Armenia's Women's Basketball Foundation' (a US-based 501(c)(3)) and the 'Armenian Basketball Federation'. While this specific site (armeniawbb.com) is a partner entity and not the central procurement hub, it validates the ecosystem of affiliated non-profits that support the Federation. The presence of cookie consent banners and a 'Sponsors' section indicates a reliance on web analytics and partnership management tools, though specific vendors are not named."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:13:08.258855",
+          "domain_explored": "https://multigroup.am",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Corporate CMS (Multi-language support)",
+              "Digital Media Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of 'Multi Wellness Center' (Sports Complex)",
+              "Sponsorship of U18 National Basketball Team",
+              "Operation of large-scale hospitality and leisure venues"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sponsorship Governance",
+            "High-Value Asset Procurement",
+            "Sports Infrastructure Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 288,
+              "elapsed_seconds": 47.96988582611084
+            }
+          ],
+          "reasoning": "The content reveals 'Multi Group' as a major conglomerate (25,000+ employees) with a dedicated sports complex ('Multi Wellness Center'). The explicit mention of hosting the Armenian Women's U18 Basketball team confirms a direct governance or sponsorship relationship with the Federation. This signals procurement potential for sports equipment, facility management services, and event sponsorship technology, although the specific intent for the Federation itself is indirect."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:13:17.068866",
+          "domain_explored": "https://sport.mediamax.am",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Media Coverage",
+            "Olympic News Reporting",
+            "Multi-language Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.313996076583862
+            }
+          ],
+          "reasoning": "The scraped content from 'sport.mediamax.am' is a general sports news portal listing articles about the Olympics, football transfers, and flag bearers. There is no mention of the Armenian Basketball Federation, basketball-specific procurement, or governance signals relevant to the target entity. The content is purely informational journalism."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:13:24.287542",
+          "domain_explored": "https://m.a1plus.am",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Political Reporting",
+            "Crime and Safety Reporting",
+            "Sports Reporting (Olympics/Chess)",
+            "Economic Policy Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 199,
+              "elapsed_seconds": 3.8739287853240967
+            }
+          ],
+          "reasoning": "The content from A1plus is a general news feed covering politics, crime, weather, and broad economic policy. While there is a mention of the Winter Olympics and Chess, there are no specific procurement signals, technology investments, or governance details related to the Armenian Basketball Federation. The content is irrelevant to the specific entity being investigated."
+        }
+      ],
+      "total_input_tokens": 7382,
+      "total_output_tokens": 1220,
+      "estimated_cost_usd": 0.040445999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Armenian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:13:24.293218"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.248894",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:25.979286"
+}

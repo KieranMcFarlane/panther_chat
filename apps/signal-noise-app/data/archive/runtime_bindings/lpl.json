@@ -1,0 +1,440 @@
+{
+  "entity_id": "lpl",
+  "entity_name": "LPL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "lankapremierleaguet20.com",
+    "lolesports.com",
+    "srilankacricket.lk",
+    "lplgovernmentrelations.com",
+    "univ-amu.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/lpl-financial/jobs",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs-new-york-ny",
+      "https://www.linkedin.com/jobs/lpl-senior-vice-president-jobs",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs-charlotte-metro",
+      "https://www.linkedin.com/jobs/lpl-marketing-jobs",
+      "https://www.linkedin.com/jobs/lpl-financial-business-development-jobs",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs-greater-boston",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs-austin-texas-metropolitan-area",
+      "https://www.linkedin.com/jobs/lpl-financial-jobs-charlotte-nc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lpl",
+      "entity_name": "LPL",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14
+      ],
+      "explored_domains": [
+        "https://lolesports.com",
+        "https://www.linkedin.com/company/lpl-financial/jobs",
+        "https://www.linkedin.com/jobs/lpl-senior-vice-president-jobs",
+        "https://srilankacricket.lk",
+        "https://univ-amu.fr",
+        "https://lplgovernmentrelations.com",
+        "https://lankapremierleaguet20.com",
+        "https://www.linkedin.com/jobs/lpl-financial-jobs-new-york-ny",
+        "https://www.linkedin.com/jobs/lpl-financial-jobs-charlotte-metro",
+        "https://www.linkedin.com/jobs/lpl-financial-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "SharePoint Intranet Portal",
+        "Government Affairs / Lobbying Function",
+        "Political Action Committee (PAC) Management",
+        "Advocacy Platform (50 State Network)",
+        "FINRA Compliance Integration"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LPL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:38:18.589854",
+          "domain_explored": "https://lankapremierleaguet20.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league content (Cricket/T20)",
+            "Fan engagement focus (Tickets, Scores, Highlights)",
+            "Social media aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 177,
+              "elapsed_seconds": 3.480940103530884
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the Lanka Premier League (LPL) T20 cricket tournament, including match results, team standings, and social media highlights. There is absolutely no mention of LPL Financial, wealth management, enterprise software, or corporate procurement activities. This is a false positive entity match."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:38:28.528259",
+          "domain_explored": "https://lolesports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Esports schedule and results aggregation",
+            "Fan-facing content (match scores, power rankings)",
+            "Legal footer (Riot Games copyright)",
+            "No corporate governance or vendor management content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.2183837890625
+            }
+          ],
+          "reasoning": "The content is exclusively focused on League of Legends esports operations, match schedules, and fan engagement. It is operated by Riot Games and lacks any corporate procurement signals, job postings, or technology stack information relevant to LPL (LPL Financial). The entity 'LPL' in this context refers to the 'LoL Pro League' (a specific region in the game), not the financial services firm."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:38:41.386824",
+          "domain_explored": "https://srilankacricket.lk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership announcement: IFS to partner with Sri Lanka Cricket for ICC Men\u2019s T20 World Cup 2026",
+              "Infrastructure project: SLC Confirms Ongoing Progress on Jaffna International Cricket Stadium (JICS)"
+            ]
+          },
+          "patterns_found": [
+            "Sports journalism and match reports",
+            "Event promotion (ICC T20 World Cup)",
+            "Team management announcements (Coaching staff)",
+            "Infrastructure project updates (Jaffna Stadium)",
+            "Sponsorship activation (IFS partnership)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.469200849533081
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, match results, team administration, and event management related to Sri Lanka Cricket. While there is a mention of a technology partner (IFS) and infrastructure projects, these are operational announcements rather than procurement signals (RFPs, job postings, or tech stack analysis) relevant to LPL (LPL Financial). The entity context (Cricket) contradicts the target entity (Financial Services)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:38:53.057333",
+          "domain_explored": "https://lplgovernmentrelations.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft SharePoint",
+              "Microsoft .NET (WebForm_DoPostBackWithOptions)",
+              "FINRA BrokerCheck API"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Government Relations Software (CQ Roll Call, FiscalNote likely competitors)",
+              "PAC Management Solutions",
+              "Advocacy Grassroots Platforms",
+              "Intranet/SharePoint Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "SharePoint Intranet Portal",
+            "Government Affairs / Lobbying Function",
+            "Political Action Committee (PAC) Management",
+            "Advocacy Platform (50 State Network)",
+            "FINRA Compliance Integration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 321,
+              "elapsed_seconds": 4.016906023025513
+            }
+          ],
+          "reasoning": "This URL resolves to a confirmed internal LPL Financial portal (lplgovernmentrelations.com) hosted on Microsoft SharePoint. Unlike previous iterations which were external sports sites, this is a verified business unit focused on Government Relations and Advocacy. The presence of a '50 State Network', 'LPL PAC', and 'Voter Center' indicates a complex organizational structure requiring specialized compliance, CRM, and web governance tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:39:23.365685",
+          "domain_explored": "https://univ-amu.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Higher Education Audience Segmentation",
+            "French Public Sector Entity (.fr domain)",
+            "General Navigation Menus (Students, Faculty, Alumni)",
+            "RSS Feed Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.3786299228668213
+            }
+          ],
+          "reasoning": "The content is the navigation menu and footer of Aix-Marseille Universit\u00e9 (univ-amu.fr). It identifies the entity as a French academic institution, not the target entity 'LPL' (LPL Financial). The content is purely structural navigation for student and faculty services, containing no procurement signals, technology stacks, or corporate governance data relevant to the target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:39:28.375050",
+          "domain_explored": "https://www.linkedin.com/company/lpl-financial/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Social Media Platform (LinkedIn)",
+            "Standardized URL Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 663,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.587451934814453
+            }
+          ],
+          "reasoning": "The target URL returned a '403 Forbidden' error, preventing access to the underlying job posting data. Without the specific content (titles, descriptions, departments), no procurement signals or technology stack requirements can be extracted. LinkedIn is a secondary aggregator; the primary source data is inaccessible."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:39:36.581888",
+          "domain_explored": "https://www.linkedin.com/jobs/lpl-financial-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform"
+            ],
+            "job_postings": [
+              "VPII, Chief of Staff",
+              "VP, Practice Management Consultant",
+              "SVP - Internal Audit",
+              "Regional Director - W2"
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion (728 open roles)",
+              "Governance Investment (Internal Audit SVP)",
+              "Operational Support Infrastructure (Divisional Admin)"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Recruitment (728 active postings)",
+            "Executive & Operational Leadership Hiring (Chief of Staff, SVP Audit)",
+            "Consultative & Support Roles (Practice Management, Divisional Admin)",
+            "Geographic Expansion (California, Fort Mill SC)",
+            "W2 Employment Model (Regional Director - W2)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1710,
+              "output_tokens": 365,
+              "elapsed_seconds": 3.2658469676971436
+            }
+          ],
+          "reasoning": "While this is a job board and not a direct procurement document, the high volume of postings (728) indicates significant organizational investment and expansion. Specific roles like 'Chief of Staff' and 'Internal Audit' suggest structural growth and governance changes that often precede or accompany procurement cycles for new tools, compliance systems, or infrastructure. The 'W2' designation indicates direct hiring, implying capital expenditure on human resources."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:40:03.860193",
+          "domain_explored": "https://www.linkedin.com/jobs/lpl-financial-jobs-new-york-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI) / Machine Learning (ML)",
+              "Generative AI (implied by 'Distinguished Architect' and 'AI Counsel' roles)",
+              "Cloud Infrastructure (implied by Architecture role)"
+            ],
+            "job_postings": [
+              "Distinguished Architect, Artificial Intelligence",
+              "VP, Assistant General Counsel- AI",
+              "AVP, Strategy",
+              "VP, Senior Relationship Manager"
+            ],
+            "procurement_indicators": [
+              "Executive Leadership for AI: Hiring a 'Distinguished Architect' suggests a budget for significant AI infrastructure build-out or cloud procurement.",
+              "AI Governance Investment: The creation of a specialized 'General Counsel for AI' role indicates a formalized procurement and compliance process for AI tools and data management.",
+              "NY Market Expansion: High volume of roles (29) in New York suggests potential new office procurement or expansion in that financial hub."
+            ]
+          },
+          "patterns_found": [
+            "Artificial Intelligence Governance & Architecture Hiring",
+            "Legal & Compliance Specialization (AI focus)",
+            "Strategic Leadership Recruitment (AVP/VP level)",
+            "Geographic Hub Expansion (New York)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1794,
+              "output_tokens": 447,
+              "elapsed_seconds": 21.565678119659424
+            }
+          ],
+          "reasoning": "While this is a job board (similar to Iteration 7), the specific roles uncovered\u2014specifically 'Distinguished Architect, AI' and 'Assistant General Counsel- AI'\u2014reveal a distinct and high-value procurement signal regarding LPL's investment in Artificial Intelligence infrastructure and governance. This moves beyond general recruitment into specific technology adoption."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:40:16.858768",
+          "domain_explored": "https://www.linkedin.com/jobs/lpl-senior-vice-president-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Vice President, People Business Partner (New York, NY)",
+              "Senior Vice President, People Business Partner (Fort Mill, SC)",
+              "Senior Vice President, People Business Partner (San Diego, CA)"
+            ],
+            "procurement_indicators": [
+              "Executive-level hiring surge implies budget availability",
+              "Focus on 'People Business Partners' suggests potential investment in HRIS or HCM platforms",
+              "Geographic diversification of leadership roles"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Executive Hiring (58 SVP roles)",
+            "Strategic HR Transformation (People Business Partners)",
+            "Multi-Location Expansion (Fort Mill, SC; New York; San Diego)",
+            "Organizational Restructuring Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1870,
+              "output_tokens": 363,
+              "elapsed_seconds": 8.802747011184692
+            }
+          ],
+          "reasoning": "While the content is largely a login gate (walled garden), the visible metadata confirms a significant volume of Senior Vice President-level hiring (58 roles). The specific visibility of 'Senior Vice President, People Business Partner' roles indicates a strategic pivot towards HR transformation and organizational restructuring, which often precedes or accompanies technology procurement changes (e.g., HCM systems). This confirms LPL is in a high-growth or restructuring phase."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T03:40:26.580732",
+          "domain_explored": "https://www.linkedin.com/jobs/lpl-financial-jobs-charlotte-metro",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "VPII, Chief of Staff (Fort Mill, SC)",
+              "SVP - Internal Audit (Fort Mill, SC)"
+            ],
+            "procurement_indicators": [
+              "Regional Headcount Growth",
+              "Governance & Audit Investment"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Regional Hiring (129 roles)",
+            "Strategic Leadership Expansion (Chief of Staff, SVP Audit)",
+            "Operational Hub Presence (Fort Mill, SC)",
+            "Active Recruitment Status"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1950,
+              "output_tokens": 267,
+              "elapsed_seconds": 2.7054038047790527
+            }
+          ],
+          "reasoning": "While the content is largely repetitive UI text, the scraped data confirms a significant volume of active job postings (129 roles) in the Charlotte/Fort Mill metro area. The specific roles identified (Chief of Staff, SVP Internal Audit) indicate continued organizational expansion and investment in governance infrastructure, which supports the procurement hypothesis regarding growth and resource allocation."
+        }
+      ],
+      "total_input_tokens": 15334,
+      "total_output_tokens": 2826,
+      "estimated_cost_usd": 0.088392
+    },
+    "procurement_signals": [
+      "SharePoint Intranet Portal",
+      "Government Affairs / Lobbying Function",
+      "Political Action Committee (PAC) Management",
+      "Advocacy Platform (50 State Network)",
+      "FINRA Compliance Integration"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LPL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:40:26.581847"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417522",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:21.393908"
+}

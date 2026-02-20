@@ -1,0 +1,223 @@
+{
+  "entity_id": "premiership_rugby",
+  "entity_name": "Premiership Rugby",
+  "template_id": "tpl_rugby_governance_ecosystem_v1",
+  "cluster_id": "rugby_league_admin",
+  "discovered_domains": [
+    "premiershiprugby.com",
+    "englandrugby.com",
+    "rugbypass.com",
+    "bristolbearsrugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "premiership_rugby",
+      "entity_name": "Premiership Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://premiershiprugby.com",
+        "https://bristolbearsrugby.com",
+        "https://englandrugby.com",
+        "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613",
+        "https://rugbypass.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Premiership Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:13:20.285095",
+          "domain_explored": "https://premiershiprugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship Renewal/Management",
+                "details": "Gallagher prominently listed as presenter of 'The Rugby Awards 2026', indicating an active long-term partnership."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship visibility (Gallagher)",
+            "Fan engagement campaigns (Big Match Bonanza)",
+            "Content publishing (News/Press Releases)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.6431357860565186
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (match results, news headlines, ticket sales). While it confirms the Gallagher sponsorship, it contains no backend infrastructure details, job postings, or RFP notices relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:13:23.083774",
+          "domain_explored": "https://englandrugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:13:28.541126",
+          "domain_explored": "https://rugbypass.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Scores Data",
+            "Editorial Content Publishing",
+            "Sponsorship Branding (HSBC SVNS)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.2725250720977783
+            }
+          ],
+          "reasoning": "The scraped content from RugbyPass consists primarily of sports match results (scores), tournament schedules (HSBC SVNS 2026), and editorial news headlines regarding the Six Nations and international rugby. There is no presence of corporate information, technology infrastructure details, career opportunities, or strategic vendor partnerships related to Premiership Rugby's procurement operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:13:36.571794",
+          "domain_explored": "https://bristolbearsrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (Shop)",
+              "Video Streaming Platform (Bears TV)",
+              "Calendar Integration (Add to calendar)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Inventory Management (Kit sales)",
+              "Ticketing System Usage"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Retail Operations",
+            "Digital Content Publishing (Video/News)",
+            "Ticketing Operations",
+            "Sports Team Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.5677919387817383
+            }
+          ],
+          "reasoning": "The content is scraped from a specific club entity (Bristol Bears) rather than the central Premiership Rugby governing body. While it indicates active retail (Bears Shop) and digital content operations, it contains no explicit procurement signals (RFPs, job postings, or vendor partnerships) relevant to the central organization's procurement strategy."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:13:45.133161",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Tools",
+              "Content Creation Software",
+              "E-commerce Platform (Online Shop)"
+            ],
+            "job_postings": [
+              {
+                "title": "General Manager",
+                "company": "Hong Kong Scottish RFC",
+                "location": "Hong Kong SAR",
+                "seniority": "Director",
+                "posted": "1 year ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Kit design and ordering process",
+              "Online shop sales promotion",
+              "Website updates coordination",
+              "Office stationery ordering"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (General Manager)",
+            "Sports Club Management",
+            "Sponsorship Management",
+            "Merchandising (Kit/Shop)",
+            "Event Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 362,
+              "elapsed_seconds": 4.977736949920654
+            }
+          ],
+          "reasoning": "The content is a job posting for a General Manager at Hong Kong Scottish RFC. Although 'Premiership rugby' is mentioned, it refers to the Hong Kong Premiership, not the target entity (Premiership Rugby UK). The role is operational/administrative rather than a procurement or technology leadership role. While it mentions kit ordering and website updates, this is a junior management function, not a strategic procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 5870,
+      "total_output_tokens": 1030,
+      "estimated_cost_usd": 0.03306
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Premiership Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:13:45.133736"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449299",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:36.375524"
+}

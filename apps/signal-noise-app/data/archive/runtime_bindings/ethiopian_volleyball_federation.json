@@ -1,0 +1,130 @@
+{
+  "entity_id": "ethiopian_volleyball_federation",
+  "entity_name": "Ethiopian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "gauthmath.com",
+    "jnssm.uk.ac.ir",
+    "ethiopianbusinessreview.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ethiopian_volleyball_federation",
+      "entity_name": "Ethiopian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ethiopianbusinessreview.net",
+        "https://jnssm.uk.ac.ir",
+        "https://gauthmath.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ethiopian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:13:16.399975",
+          "domain_explored": "https://gauthmath.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:13:25.326172",
+          "domain_explored": "https://jnssm.uk.ac.ir",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iThenticate (Plagiarism Detection)",
+              "OJS (Implied by journal structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "academic_journal_scope",
+            "iranian_publisher_entity",
+            "plagiarism_detection_software_mention"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.56097412109375
+            }
+          ],
+          "reasoning": "The content is the 'About' page for the 'Journal of New Studies in Sport Management' (JNSSM), published by Shahid Bahonar University of Kerman in Iran. While the subject matter (Sport Management) aligns with the target entity's domain, the publisher is a different entity in a different country. There are no direct procurement signals, job postings, or technology investments related to the Ethiopian Volleyball Federation. The mention of plagiarism software (iThenticate) is a standard academic policy, not a specific procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:13:32.109393",
+          "domain_explored": "https://ethiopianbusinessreview.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_business_news_scope",
+            "telecom_banking_sector_focus",
+            "irrelevant_content_scraping"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.1907429695129395
+            }
+          ],
+          "reasoning": "The scraped content from 'Ethiopian Business Review' focuses entirely on macro-economic developments, banking (Awash Capital, Lion Bank), and telecommunications (Ethio Telecom). There is absolutely no mention of the Ethiopian Volleyball Federation, sports management, or related procurement activities. The content is irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2839,
+      "total_output_tokens": 432,
+      "estimated_cost_usd": 0.014997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ethiopian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:13:32.110479"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339846",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:22.888190"
+}

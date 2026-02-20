@@ -1,0 +1,374 @@
+{
+  "entity_id": "ziraat_bankasi",
+  "entity_name": "Ziraat Bankasi",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "ziraatbank.com.tr",
+    "bireysel.ziraatbank.com.tr",
+    "ziraatbank.me",
+    "ziraatbank-sa.com",
+    "ziraatkatilim.com.tr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3534824164",
+      "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3774397828",
+      "https://www.linkedin.com/company/isbankasi/jobs",
+      "https://kz.linkedin.com/jobs/view/%D0%BC%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%B5%D1%80-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D0%B0-%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D0%B8-%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-at-kzi-bank-4277449000"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ziraat_bankasi",
+      "entity_name": "Ziraat Bankasi",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://ziraatbank.com.tr",
+        "https://ziraatkatilim.com.tr",
+        "https://kz.linkedin.com/jobs/view/%D0%BC%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%B5%D1%80-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D0%B0-%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D0%B8-%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-at-kzi-bank-4277449000",
+        "https://www.linkedin.com/company/isbankasi/jobs",
+        "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3774397828",
+        "https://ziraatbank.me",
+        "https://ziraatbank-sa.com",
+        "https://bireysel.ziraatbank.com.tr",
+        "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3534824164"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ziraat Bankasi may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:26:56.501586",
+          "domain_explored": "https://ziraatbank.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI Chatbots (Ziraat Asistan)",
+              "Mobile Banking Applications (Ziraat Mobil)",
+              "Fleet Management Systems (Ziraat Filo)",
+              "Digital Credit Scoring/Calculation Engines"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in conversational AI/NLP for customer support",
+              "Development of digital onboarding and loan application flows",
+              "Fleet management service partnerships"
+            ]
+          },
+          "patterns_found": [
+            "Digital Assistant / AI Chatbot Implementation",
+            "Mobile-First Digital Transformation",
+            "Customer Self-Service Capabilities",
+            "Fleet Management Solutions"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.549688816070557
+            }
+          ],
+          "reasoning": "The content reveals Ziraat Bank's active deployment of 'Ziraat Asistan' (an AI chatbot) and 'Ziraat Mobil' (mobile app) to handle complex queries like credit calculations and applications. While this confirms the bank is investing in digital customer experience (CX) and AI technologies, it is primarily a consumer-facing page. It indicates capability and existing vendor relationships (for AI/Mobile tech) rather than a direct procurement signal for new goods/services at this specific moment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:27:05.008830",
+          "domain_explored": "https://bireysel.ziraatbank.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ziraat Onay (Mobile 2FA App)",
+              "Mobil \u0130mza (Mobile Signature)",
+              "E-\u0130mza (Digital Certificate)",
+              "SMS Verification (Fallback)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active maintenance of 'Ziraat Onay' application ecosystem",
+              "Digital onboarding infrastructure",
+              "Potential need for web portal modernization (browser compatibility warnings)"
+            ]
+          },
+          "patterns_found": [
+            "Mobile-First Authentication (Ziraat Onay)",
+            "Digital Onboarding (Dijital Bankac\u0131l\u0131k)",
+            "Cross-Platform Digital Services (E-\u0130mza, Mobil \u0130mza)",
+            "Legacy Browser Compatibility Issues"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 353,
+              "elapsed_seconds": 5.2574427127838135
+            }
+          ],
+          "reasoning": "The content is the login portal for Ziraat Bank's 'Internet Subesi' (Internet Branch). While it does not contain explicit procurement signals (like RFPs or job postings), it confirms the active deployment of specific security technologies ('Ziraat Onay' mobile app for 2FA, Mobile Signature, E-Signature) and a focus on digital customer acquisition. The mention of 'browser compatibility issues' suggests a potential upcoming modernization of the web front-end, though the primary investment focus appears to be mobile-based security infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:27:12.411495",
+          "domain_explored": "https://ziraatbank.me",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SEPA Integration (Effective Oct 7) - implies potential procurement of SWIFT/Euro payment gateway services or consulting.",
+              "Updated General Business Conditions - implies potential procurement of legal consultancy or document management systems."
+            ]
+          },
+          "patterns_found": [
+            "SEPA Zone Integration (Cross-Border Payments)",
+            "Regulatory Compliance (Updated General Business Conditions)",
+            "Regional Subsidiary Operations (Montenegro/Balkans)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 284,
+              "elapsed_seconds": 2.910874128341675
+            }
+          ],
+          "reasoning": "The content is from Ziraat Bank's Montenegro subsidiary (ziraatbank.me). While it lacks direct procurement signals (RFPs, tech stack details), it reveals active infrastructure integration into the European SEPA zone and recent updates to general business conditions. These indicate operational readiness and compliance activities that often require vendor support for payment processing and legal documentation management."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:27:18.493585",
+          "domain_explored": "https://ziraatbank-sa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Multi-language support for Arabic, English, Turkish)",
+              "FX Rate Integration Tools (Excel import functionality visible)",
+              "Social Media Integration (Facebook/X sharing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Regional web hosting and maintenance",
+              "Correspondent banking software",
+              "FX Rate management systems"
+            ]
+          },
+          "patterns_found": [
+            "Regional Subsidiary Operations (Saudi Arabia)",
+            "Multi-language Content Management (Arabic/TR/EN)",
+            "Cross-Border Correspondent Banking Network",
+            "FX Rate Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1262,
+              "output_tokens": 306,
+              "elapsed_seconds": 2.8567252159118652
+            }
+          ],
+          "reasoning": "The content confirms Ziraat Bank's physical presence in Saudi Arabia (ziraatbank-sa.com) and highlights its focus on correspondent banking and global money transfers. While there are no explicit procurement signals (like RFPs), the existence of a regional subsidiary with specific FX and transfer capabilities implies a need for localized IT infrastructure, compliance tools, and web maintenance services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:27:27.916240",
+          "domain_explored": "https://ziraatkatilim.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Core Banking System (Islamic/Participation Banking Module)",
+              "Product Configuration Engine (Parametric Rules)",
+              "Leasing Management Software",
+              "Financial Calculation Engines"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Complex Product Matrix Management",
+              "Multi-Currency Leasing Operations Support",
+              "Dynamic Profit-Rate Calculation Requirements"
+            ]
+          },
+          "patterns_found": [
+            "Participation Banking Core Logic (Interest-Free Finance)",
+            "Dynamic Product Configuration Engine (Parametric Insurance/Finance)",
+            "Multi-Currency & Asset Class Leasing Support",
+            "Self-Service Financial Calculation Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 369,
+              "elapsed_seconds": 4.576280117034912
+            }
+          ],
+          "reasoning": "The content is scraped from Ziraat Kat\u0131l\u0131m (the participation banking subsidiary). While it primarily displays frontend calculation tools (calculators) rather than procurement notices, the complexity of the product matrix (e.g., 'KONUT FINANSMANI SIGORTALI' vs 'KAMPANYA PAKETI', specific asset classes for leasing) indicates a reliance on a robust, configurable Core Banking System and Product Factory. The need to handle multi-currency leasing and specific profit-share calculations (K\u00e2r Pay\u0131) suggests specialized software requirements compared to conventional banking."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:27:35.225515",
+          "domain_explored": "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3534824164",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Specialist for operational risk (ZiraatBank BH, Sarajevo)"
+            ],
+            "procurement_indicators": [
+              "Investment in Risk Management Capacity",
+              "Subsidiary Operational Support"
+            ]
+          },
+          "patterns_found": [
+            "Regional Subsidiary Operations (Bosnia and Herzegovina)",
+            "Operational Risk Management & Compliance",
+            "Enterprise Risk Management (ERM) Framework",
+            "Regulatory Governance (AML, Internal Audit)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.2522780895233154
+            }
+          ],
+          "reasoning": "The content is a job posting for an 'Operational Risk Specialist' at ZiraatBank BH (Bosnia and Herzegovina subsidiary). While this confirms active hiring and investment in risk management infrastructure (Governance), it does not explicitly signal immediate third-party procurement of technology or services. It reinforces the pattern of regional subsidiary expansion and regulatory compliance established in Iterations 3 and 4."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:27:45.658241",
+          "domain_explored": "https://ba.linkedin.com/jobs/view/specialist-for-operational-risk-at-ziraatbank-bh-3774397828",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Specialist for operational risk (ZiraatBank BH, Sarajevo)"
+            ],
+            "procurement_indicators": [
+              "Investment in Risk Management Frameworks",
+              "Subsidiary Governance & Control Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Regional Subsidiary Operations (Bosnia and Herzegovina)",
+            "Operational Risk Management & Compliance",
+            "Enterprise Risk Management (ERM) Framework",
+            "Regulatory Governance (Local & International Standards)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1785,
+              "output_tokens": 294,
+              "elapsed_seconds": 7.129364967346191
+            }
+          ],
+          "reasoning": "The content is a job posting for an 'Operational Risk Specialist' at ZiraatBank BH (Bosnia and Herzegovina), a subsidiary of Ziraat Bankas\u0131. While this confirms the bank's continued investment in risk management infrastructure within its regional branches, it is a personnel role rather than a direct technology procurement signal. It reinforces the pattern of regulatory compliance and risk governance seen in previous iterations but does not explicitly reveal new technology stacks or RFPs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:27:54.275183",
+          "domain_explored": "https://www.linkedin.com/company/isbankasi/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Uzman Yard\u0131mc\u0131s\u0131 (Assistant Specialist) - Generalist role at Isbank"
+            ],
+            "procurement_indicators": [
+              "Competitor Landscape: Identification of Isbank as a key peer in the Turkish banking sector.",
+              "Recruitment Volume: Isbank listing 15,234 employees indicates significant scale, comparable to Ziraat."
+            ]
+          },
+          "patterns_found": [
+            "Competitor Benchmarking (Isbank)",
+            "Generalist Recruitment (Uzman Yard\u0131mc\u0131s\u0131)",
+            "Market Landscape Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1855,
+              "output_tokens": 265,
+              "elapsed_seconds": 4.901774883270264
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'T\u00fcrkiye \u0130\u015f Bankas\u0131' (Isbank), a direct competitor to Ziraat Bankas\u0131. While this provides competitive intelligence, it does not contain direct procurement signals for Ziraat Bankasi itself. The content primarily lists generalist 'Assistant Specialist' roles without technical details relevant to Ziraat's specific procurement needs."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:28:00.178295",
+          "domain_explored": "https://kz.linkedin.com/jobs/view/%D0%BC%D0%B5%D0%BD%D0%B5%D0%B4%D0%B6%D0%B5%D1%80-%D1%81%D0%BB%D1%83%D0%B6%D0%B1%D1%8B-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D0%B0-%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D0%B8-%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B3%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8F-at-kzi-bank-4277449000",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 21 column 48 (char 1269)"
+        }
+      ],
+      "total_input_tokens": 12475,
+      "total_output_tokens": 2482,
+      "estimated_cost_usd": 0.074655
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ziraat Bankasi may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:28:00.179472"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.316450",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:36:18.045628"
+}

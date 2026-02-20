@@ -1,0 +1,79 @@
+{
+  "clusters": {
+    "tier_1_club_centralized_procurement": {
+      "cluster_id": "tier_1_club_centralized_procurement",
+      "channel_effectiveness": {
+        "jobs_board": 0.8022411999999999,
+        "official_site": 0.8022411999999999,
+        "press": 0.8022411999999999
+      },
+      "signal_reliability": {
+        "Strategic Hire": 0.8248260000000001,
+        "Digital Transformation": 0.8019020000000001,
+        "Partnership": 0.8248260000000001
+      },
+      "discovery_shortcuts": [
+        "jobs_board",
+        "official_site",
+        "press"
+      ],
+      "total_bindings": 2,
+      "last_updated": "2026-01-29T03:03:33.851239",
+      "metadata": {
+        "avg_usage_count": 5.0,
+        "avg_success_rate": 0.804826,
+        "avg_confidence_adjustment": 0.125
+      }
+    },
+    "test_cluster_intelligence": {
+      "cluster_id": "test_cluster_intelligence",
+      "channel_effectiveness": {
+        "jobs_board": 0.7777777777777778,
+        "official_site": 0.8,
+        "press": 0.75
+      },
+      "signal_reliability": {
+        "Strategic Hire": 0.795,
+        "Digital Transformation": 0.81,
+        "Partnership": 0.76
+      },
+      "discovery_shortcuts": [
+        "official_site",
+        "jobs_board",
+        "press"
+      ],
+      "total_bindings": 2,
+      "last_updated": "2026-01-29T03:01:23.048562",
+      "metadata": {
+        "avg_usage_count": 4.5,
+        "avg_success_rate": 0.775,
+        "avg_confidence_adjustment": 0.125
+      }
+    },
+    "test_governance_integration": {
+      "cluster_id": "test_governance_integration",
+      "channel_effectiveness": {
+        "jobs_board": 0.6999999999999998,
+        "official_site": 0.6999999999999998
+      },
+      "signal_reliability": {
+        "Strategic Hire": 0.71
+      },
+      "discovery_shortcuts": [
+        "jobs_board",
+        "official_site"
+      ],
+      "total_bindings": 1,
+      "last_updated": "2026-01-29T03:01:23.049269",
+      "metadata": {
+        "avg_usage_count": 3.0,
+        "avg_success_rate": 0.7,
+        "avg_confidence_adjustment": 0.1
+      }
+    }
+  },
+  "metadata": {
+    "total_clusters": 3,
+    "last_updated": "2026-01-29T03:03:33.851254"
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "entity_id": "japan_rugby_football_union",
+  "entity_name": "Japan Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "asiarugby.com",
+    "en.rugby-japan.jp",
+    "rugby-japan.jp",
+    "league-one.jp",
+    "quick.pia.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_rugby_football_union",
+      "entity_name": "Japan Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://rugby-japan.jp",
+        "https://quick.pia.jp",
+        "https://en.rugby-japan.jp",
+        "https://asiarugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Third-Party Ticketing Platform Dependency",
+        "Digital Gate Integration (Smart Gate)",
+        "Mobile Wallet Integration (Google/Apple Pay)",
+        "Inbound Tourism Strategy",
+        "Customer Data Acquisition (CRM) via Vendor"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:19:36.445939",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:19:57.950550",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Google)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)",
+              "Fan Membership Portal (japanrugby-sakuraclub.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active E-commerce domain (shop.rugby-japan.jp)",
+              "Active Fan Engagement domain (japanrugby-sakuraclub.jp)",
+              "Digital content hosting infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Digital Content Streaming (YouTube)",
+            "Fan Engagement Infrastructure (Sakura Club)",
+            "Bilingual Content Management (English/Japanese)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 663,
+              "output_tokens": 312,
+              "elapsed_seconds": 17.174299955368042
+            }
+          ],
+          "reasoning": "The content reveals the Japan Rugby Football Union's digital ecosystem, specifically the utilization of an 'Online Shop' (E-commerce), 'Japan Rugby TV' (hosted on YouTube), and the 'SAKURA CLUB' (fan membership platform). While no direct RFPs are visible, these links indicate active vendor partnerships and technology stacks (Shopify/Custom E-commerce, Google/YouTube, Membership CRM) that require maintenance and potential future procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:20:02.058442",
+          "domain_explored": "https://rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:20:09.528912",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing System (ticketrugby.jp)",
+              "Web CMS (implied by dynamic match scheduling and content structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations: The organization utilizes 'ticketrugby.jp' for sales, suggesting a B2B contract for ticketing infrastructure.",
+              "Digital Platform Management: The league-one.jp site requires ongoing maintenance and content management services."
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Ticketing Platform Dependency",
+            "League Management Digital Infrastructure",
+            "Centralized Content Management System (CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 347,
+              "elapsed_seconds": 3.5765411853790283
+            }
+          ],
+          "reasoning": "The content is scraped from 'league-one.jp', the official site of Japan's professional rugby league (operated by the JRFU). The site functions as a digital hub for match schedules, results, and ticketing. The repeated external links to 'ticketrugby.jp' indicate a reliance on a specialized third-party ticketing vendor rather than a bespoke in-house solution. This confirms the entity operates within a digital ecosystem requiring vendor partnerships for core operations (ticketing), though no direct RFPs are visible in this specific text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:20:16.514103",
+          "domain_explored": "https://quick.pia.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "QUICK Pia (ASP Ticketing System)",
+              "Pia Smart Gate Solution",
+              "Google Pay",
+              "Apple Pay",
+              "Google Wallet",
+              "Apple Wallet"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract with Pia Inc. for 'QUICK Pia' platform",
+              "Procurement of 'Smart Gate Solution' for venue entry",
+              "Adoption of cashless/payment wallet systems",
+              "Use of external platforms for Inbound (foreign visitor) ticket sales"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Ticketing Platform Dependency",
+            "Digital Gate Integration (Smart Gate)",
+            "Mobile Wallet Integration (Google/Apple Pay)",
+            "Inbound Tourism Strategy",
+            "Customer Data Acquisition (CRM) via Vendor"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 331,
+              "elapsed_seconds": 3.481370210647583
+            }
+          ],
+          "reasoning": "The content describes 'QUICK Pia', a specific B2B SaaS ticketing solution designed for sports teams. It explicitly lists 'Kobelco Steelers' (a League One team) as a client. This confirms the procurement of specialized ticketing infrastructure (ASP services) and gate systems by rugby organizations in Japan to handle frictionless entry and inbound sales."
+        }
+      ],
+      "total_input_tokens": 3673,
+      "total_output_tokens": 990,
+      "estimated_cost_usd": 0.025869
+    },
+    "procurement_signals": [
+      "Third-Party Ticketing Platform Dependency",
+      "Digital Gate Integration (Smart Gate)",
+      "Mobile Wallet Integration (Google/Apple Pay)",
+      "Inbound Tourism Strategy",
+      "Customer Data Acquisition (CRM) via Vendor"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:20:16.514632"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290905",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:57.291808"
+}

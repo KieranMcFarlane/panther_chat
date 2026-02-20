@@ -1,0 +1,294 @@
+{
+  "entity_id": "tunisian_ligue_professionnelle_1",
+  "entity_name": "Tunisian Ligue Professionnelle 1",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "wikidata.org",
+    "footballoldcopy.fandom.com",
+    "kids.kiddle.co",
+    "idiskitimes.co.za",
+    "statista.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://tn.linkedin.com/jobs/view/coord-events-at-marriott-international-4224606940",
+      "https://tn.linkedin.com/jobs/view/coord-human-resources-at-marriott-international-4270531148",
+      "https://tn.linkedin.com/jobs/view/server-at-marriott-international-4305769565"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tunisian_ligue_professionnelle_1",
+      "entity_name": "Tunisian Ligue Professionnelle 1",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://tn.linkedin.com/jobs/view/server-at-marriott-international-4305769565",
+        "https://footballoldcopy.fandom.com",
+        "https://tn.linkedin.com/jobs/view/coord-human-resources-at-marriott-international-4270531148",
+        "https://idiskitimes.co.za",
+        "https://statista.com",
+        "https://tn.linkedin.com/jobs/view/coord-events-at-marriott-international-4224606940",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tunisian Ligue Professionnelle 1 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:42:45.856245",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:42:51.836998",
+          "domain_explored": "https://footballoldcopy.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Structure",
+            "User-Generated Content",
+            "Global Football Scope"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.482832908630371
+            }
+          ],
+          "reasoning": "The scraped content is from 'The Football Wiki' (a Fandom site), which is a generic, user-generated encyclopedia for global football topics (e.g., Premier League, FIFA World Cup). It contains no specific information regarding the 'Tunisian Ligue Professionnelle 1' entity, its governance, or its procurement activities. The content is purely informational and navigational, unrelated to business operations or vendor selection."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:42:57.573208",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Educational Content",
+            "Encyclopedic Structure",
+            "Global Scope (Non-Specific)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.1965229511260986
+            }
+          ],
+          "reasoning": "The scraped content from Kiddle.co is a generic, children's encyclopedia index covering broad topics like Science, History, and Geography. It contains no specific information regarding the Tunisian Ligue Professionnelle 1, its governance, technology stack, or procurement activities. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:43:01.064993",
+          "domain_explored": "https://idiskitimes.co.za",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:43:14.610248",
+          "domain_explored": "https://statista.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Statistical Aggregator",
+            "Generic Navigation Structure",
+            "B2C Subscription Model (Pricing)",
+            "Global Trending Topics (Non-Specific)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 204,
+              "elapsed_seconds": 10.3732168674469
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Statista, a global statistics platform. It contains no specific information regarding 'Tunisian Ligue Professionnelle 1', its procurement activities, technology stack, or governance. The content focuses on global trending topics (e.g., Netflix, AI, Nobel Prize) and generic subscription pricing, offering zero intelligence on the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:43:20.944084",
+          "domain_explored": "https://tn.linkedin.com/jobs/view/coord-events-at-marriott-international-4224606940",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Coord-Events",
+                "employer": "Marriott International",
+                "location": "Sheraton Tunis Hotel, Tunis, Tunisia",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Hospitality Sector Entity",
+            "Generic Job Board Interface",
+            "Operational Role (Non-Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.8522279262542725
+            }
+          ],
+          "reasoning": "The scraped content identifies the employer as 'Marriott International' operating at the 'Sheraton Tunis Hotel'. This is a hospitality sector entity, not the governing body of the Tunisian Ligue Professionnelle 1. The role ('Coord-Events') is operational and focused on Food & Beverage logistics, not sports league procurement or digital transformation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:43:28.076754",
+          "domain_explored": "https://tn.linkedin.com/jobs/view/coord-human-resources-at-marriott-international-4270531148",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Coord-Human Resources",
+                "entity": "Marriott International",
+                "location": "Sheraton Tunis Hotel, Tunis, Tunisia",
+                "department": "Human Resources"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Hospitality Sector Entity",
+            "Generic Job Board Interface",
+            "Operational Role (Non-Procurement)",
+            "Administrative Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1654,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.6772382259368896
+            }
+          ],
+          "reasoning": "The content is a job posting for a Human Resources Coordinator at Marriott International (Sheraton Tunis). The role focuses on administrative tasks, filing, and employee relations. It does not contain procurement signals, technology investments, or governance patterns relevant to the Tunisian Ligue Professionnelle 1."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:43:36.604630",
+          "domain_explored": "https://tn.linkedin.com/jobs/view/server-at-marriott-international-4305769565",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MICROS (POS System)"
+            ],
+            "job_postings": [
+              {
+                "title": "Server",
+                "entity": "Marriott International",
+                "location": "Sheraton Tunis Hotel, Tunis, Tunisia",
+                "type": "Operational / Non-Management"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Hospitality Sector Entity (Marriott International)",
+            "Generic Job Board Interface (LinkedIn)",
+            "Operational Role (Food & Beverage/Server)",
+            "Standardized Corporate Boilerplate Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1717,
+              "output_tokens": 287,
+              "elapsed_seconds": 5.1494200229644775
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Server' role at the Sheraton Tunis Hotel, operated by Marriott International. This is an operational, customer-facing position within the hospitality sector, not a procurement, technology, or strategic role relevant to the Tunisian Ligue Professionnelle 1. The entity (Marriott) and the role (Server) are entirely unrelated to the target entity's procurement signals."
+        }
+      ],
+      "total_input_tokens": 9317,
+      "total_output_tokens": 1340,
+      "estimated_cost_usd": 0.048050999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tunisian Ligue Professionnelle 1 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:43:36.605531"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.196616",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:42.068937"
+}

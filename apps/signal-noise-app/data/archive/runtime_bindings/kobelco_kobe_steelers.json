@@ -1,0 +1,222 @@
+{
+  "entity_id": "kobelco_kobe_steelers",
+  "entity_name": "Kobelco Kobe Steelers",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "kobesteelers.com",
+    "league-one.jp",
+    "kobelco.co.jp",
+    "quick.pia.jp",
+    "en.rugby-japan.jp",
+    "toa-global.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kobelco_kobe_steelers",
+      "entity_name": "Kobelco Kobe Steelers",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://quick.pia.jp",
+        "https://kobesteelers.com",
+        "https://en.rugby-japan.jp",
+        "https://toa-global.com",
+        "https://kobelco.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Vendor Partnership (Pia)",
+        "Digital Ticketing Implementation",
+        "User Experience Optimization (No-registration)",
+        "Mobile Wallet Integration (Google/Apple Pay)",
+        "Inbound/International Fan Targeting"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kobelco Kobe Steelers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:54:16.733538",
+          "domain_explored": "https://kobesteelers.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:54:23.556747",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ticketrugby.jp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League Schedule Data",
+            "Ticketing Platform Integration (ticketrugby.jp)",
+            "Sports Match Results"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.8483731746673584
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of rugby match schedules, scores, and ticketing links for the 'League One' organization. While 'Kobelco Kobe Steelers' (\u795e\u6238\uff33) is mentioned as a participating team, the content is purely operational sports data (game times, venues, ticket links). There are no signals regarding corporate procurement, technology investments, or vendor partnerships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:54:26.267664",
+          "domain_explored": "https://kobelco.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:54:34.733913",
+          "domain_explored": "https://quick.pia.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "QUICK Pia (Ticketing ASP)",
+              "Pia Smart Gate Solution",
+              "Google Pay",
+              "Apple Pay",
+              "Google Wallet",
+              "Apple Wallet"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Vendor Partnership with Pia Corporation",
+              "Adoption of 'No-Registration' Ticketing System",
+              "Implementation of Smart Gate Technology"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership (Pia)",
+            "Digital Ticketing Implementation",
+            "User Experience Optimization (No-registration)",
+            "Mobile Wallet Integration (Google/Apple Pay)",
+            "Inbound/International Fan Targeting"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 306,
+              "elapsed_seconds": 5.656161069869995
+            }
+          ],
+          "reasoning": "The content explicitly lists 'Kobelco Kobe Steelers' as a client of the 'QUICK Pia' ticketing service. This confirms a direct procurement relationship for digital ticketing technology. The service focuses on 'no-registration' ticket sales and mobile wallet integration, indicating a strategic investment in digital transformation and fan experience optimization."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:54:44.249714",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Broadcasting)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Federation-wide merchandise vendor (shop.rugby-japan.jp)",
+              "Fan club management platform (japanrugby-sakuraclub.jp)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Integration (Online Shop)",
+            "Digital Content Distribution (YouTube)",
+            "Fan Engagement Platform (Sakura Club)",
+            "General Sports News Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 793,
+              "output_tokens": 277,
+              "elapsed_seconds": 4.412113904953003
+            }
+          ],
+          "reasoning": "The content represents the Japan Rugby Football Union's (JRFU) official portal. While it links to an 'Online Shop' and 'Sakura Club', these are general federation-level properties, not specific procurement signals or technology investments attributable to 'Kobelco Kobe Steelers'. The links point to existing consumer-facing platforms rather than B2B vendor opportunities or internal infrastructure changes."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:54:47.328793",
+          "domain_explored": "https://toa-global.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3650,
+      "total_output_tokens": 785,
+      "estimated_cost_usd": 0.022725000000000002
+    },
+    "procurement_signals": [
+      "Vendor Partnership (Pia)",
+      "Digital Ticketing Implementation",
+      "User Experience Optimization (No-registration)",
+      "Mobile Wallet Integration (Google/Apple Pay)",
+      "Inbound/International Fan Targeting"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kobelco Kobe Steelers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:54:47.404270"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.273226",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:49.685057"
+}

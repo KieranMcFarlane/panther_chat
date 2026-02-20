@@ -1,0 +1,373 @@
+{
+  "entity_id": "conmebol",
+  "entity_name": "CONMEBOL",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "conmebol.com",
+    "conmebolsudamericana.com",
+    "conmebollibertadores.com",
+    "copaamerica.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/3036312822/?capColoOverride=true",
+      "https://www.linkedin.com/company/concacaf/jobs",
+      "https://hr.linkedin.com/company/futboljobs.com?trk=public_post_share-update_actor-image",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-aston-villa-football-activity-7288850623544852480-OC5i",
+      "https://ma.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+      "https://www.linkedin.com/jobs/view/executive-assistant-to-the-evp-head-of-commercial-americas-img-rights-at-img-4323293296"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "conmebol",
+      "entity_name": "CONMEBOL",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/3036312822/?capColoOverride=true",
+        "https://copaamerica.com",
+        "https://hr.linkedin.com/company/futboljobs.com?trk=public_post_share-update_actor-image",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-aston-villa-football-activity-7288850623544852480-OC5i",
+        "https://conmebollibertadores.com",
+        "https://conmebolsudamericana.com",
+        "https://ma.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+        "https://conmebol.com",
+        "https://www.linkedin.com/company/concacaf/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Commercial Hospitality Management",
+        "Vendor/Contractor Management (Catering/Infrastructure)",
+        "Event Operations & Logistics",
+        "Budget Responsibility",
+        "Stakeholder Management (Commercial Partners)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CONMEBOL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:03:26.434670",
+          "domain_explored": "https://conmebol.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:03:36.603748",
+          "domain_explored": "https://conmebolsudamericana.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event scheduling data",
+            "Stadium location metadata",
+            "Multilingual content structure (Spanish/Portuguese)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 170,
+              "elapsed_seconds": 4.004972696304321
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of match results, dates, times, and stadium locations for the CONMEBOL Sudamericana tournament. This is operational/sports data and does not contain any information regarding technology procurement, vendor selection, corporate governance, or job opportunities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:03:54.099680",
+          "domain_explored": "https://conmebollibertadores.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event scheduling data",
+            "Stadium location metadata",
+            "Multilingual content structure (Spanish/Portuguese)",
+            "Real-time match data structures"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 180,
+              "elapsed_seconds": 11.383183240890503
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of match schedules, dates, stadium names, and scores for the 'Copa Libertadores' tournament. This is operational sports data, not corporate procurement information. There are no signals regarding technology vendors, job openings, or organizational spending."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:04:00.955103",
+          "domain_explored": "https://copaamerica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Next.js (inferred from __PAGE__ structure)",
+              "React"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Next.js routing structure (internal framework metadata)",
+            "Internationalization (i18n) parameters (locale: es)",
+            "Client-side rendering placeholders"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 525,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.429605722427368
+            }
+          ],
+          "reasoning": "The provided content consists entirely of obfuscated JavaScript state objects and internal routing parameters for a Next.js application. It contains no visible text, links, or structured data related to procurement, vendors, or operations. It is a technical artifact of the website's build process, not business content."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:04:08.964911",
+          "domain_explored": "https://www.linkedin.com/jobs/view/3036312822/?capColoOverride=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Event Management Software (implied for 350-5000 guest logistics)",
+              "CRM (implied for commercial partner guest management)"
+            ],
+            "job_postings": [
+              "Hospitality Manager (Consultant) - FC DIEZ MEDIA (Focus: Corporate Hospitality for CONMEBOL Libertadores/Sudamericana)"
+            ],
+            "procurement_indicators": [
+              "Outsourcing of Catering Services (Local vendors in host cities)",
+              "Procurement of Temporary Infrastructure (Decoration, Signage, Facilities)",
+              "Staffing and Training Services Procurement",
+              "Vendor Evaluation and Recommendation responsibilities"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Hospitality Management",
+            "Vendor/Contractor Management (Catering/Infrastructure)",
+            "Event Operations & Logistics",
+            "Budget Responsibility",
+            "Stakeholder Management (Commercial Partners)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 395,
+              "elapsed_seconds": 4.776819944381714
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a Hospitality Manager role at FC DIEZ MEDIA (a CONMEBOL commercial partner). It explicitly details the procurement and management of temporary infrastructure, catering, and staffing services for the CONMEBOL Libertadores and Sudamericana tournaments. This reveals the operational structure of how CONMEBOL handles hospitality (via partners like FC Diez Media) and indicates a need for vendors in catering, event construction, and staffing across South America."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:04:17.252013",
+          "domain_explored": "https://www.linkedin.com/company/concacaf/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Strategy and Planning Senior Manager",
+              "Football Communications Associate",
+              "Commercial Partnerships Sales Manager"
+            ],
+            "procurement_indicators": [
+              "Commercial Partnerships Sales (Indirect vendor relevance)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (CONCACAF vs CONMEBOL)",
+            "Competitor Analysis Data",
+            "Sports Federation Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1637,
+              "output_tokens": 225,
+              "elapsed_seconds": 5.112902879714966
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn page of CONCACAF, the governing body for North American football, which is a distinct entity from CONMEBOL (South American football). While this provides industry context, it does not contain direct procurement signals for the target entity (CONMEBOL)."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:04:26.213268",
+          "domain_explored": "https://hr.linkedin.com/company/futboljobs.com?trk=public_post_share-update_actor-image",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (Custom)",
+              "Social Media (LinkedIn for distribution)"
+            ],
+            "job_postings": [
+              {
+                "title": "Forward Wanted - Turkish Super League",
+                "source": "Futboljobs.com",
+                "type": "Sports/Player Recruitment"
+              },
+              {
+                "title": "Professional opportunity in football in Manchester City",
+                "source": "Futboljobs.com",
+                "type": "Education/Operations Management"
+              }
+            ],
+            "procurement_indicators": [
+              "Use of specialized niche platforms for talent acquisition",
+              "Recruitment vendor identification (Futboljobs.com)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Industry Job Aggregation",
+            "Vendor/Partner Identification (FutbolJobs as a channel)",
+            "Recruitment Process Outsourcing (RPO) signals",
+            "Talent Acquisition Market Data"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 397,
+              "elapsed_seconds": 3.965034008026123
+            }
+          ],
+          "reasoning": "While this page is for a third-party job board (FutbolJobs) and not a direct CONMEBOL procurement page, it validates the recruitment ecosystem. It identifies a potential vendor or channel used by football entities (including potentially CONMEBOL or its member associations) to source talent. It confirms the 'Staffing and Recruiting' focus area and provides a source for monitoring future procurement-related hiring (e.g., administrative, operational roles) within the sector."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:04:33.640349",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-aston-villa-football-activity-7288850623544852480-OC5i",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Emerging Talent Scout - Aston Villa Football Club (Irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Aston Villa FC vs CONMEBOL)",
+            "Geographic Irrelevance (UK vs South America)",
+            "Recruitment Noise (Job Aggregator)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1810,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.839970111846924
+            }
+          ],
+          "reasoning": "The content is a job posting for Aston Villa Football Club (an English Premier League team) posted by a third-party aggregator ('Football Careers'). There is no direct relationship to CONMEBOL, the South American football confederation. While one comment mentions a 'Conmebol coach License A', this is merely an applicant's qualification and does not constitute a procurement signal from the entity itself."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:04:46.173000",
+          "domain_explored": "https://ma.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Forward Wanted - Turkish Super League (Salary: up to \u20ac800k)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FutbolJobs vs CONMEBOL)",
+            "Recruitment/Job Board Content",
+            "Geographic Irrelevance (Spain-based entity)",
+            "Social Media Feed Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1879,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.234977960586548
+            }
+          ],
+          "reasoning": "The content is a LinkedIn company page for FutbolJobs, a job board based in Spain. While it contains 'football' keywords, it is a third-party service provider/aggregator, not the target entity (CONMEBOL). The specific post analyzed is a player recruitment notice for the Turkish Super League, which is unrelated to South American procurement signals. This represents 'noise' in the data gathering process."
+        }
+      ],
+      "total_input_tokens": 11954,
+      "total_output_tokens": 2022,
+      "estimated_cost_usd": 0.066192
+    },
+    "procurement_signals": [
+      "Commercial Hospitality Management",
+      "Vendor/Contractor Management (Catering/Infrastructure)",
+      "Event Operations & Logistics",
+      "Budget Responsibility",
+      "Stakeholder Management (Commercial Partners)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CONMEBOL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:04:46.173787"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457988",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:25.703589"
+}

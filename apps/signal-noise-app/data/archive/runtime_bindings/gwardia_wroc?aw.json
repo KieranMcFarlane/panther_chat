@@ -1,0 +1,182 @@
+{
+  "entity_id": "gwardia_wroc?aw",
+  "entity_name": "Gwardia Wroc?aw",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "gwardiawroclaw.pl",
+    "www-old.cev.eu",
+    "academy.gwardiawroclaw.pl",
+    "flashscore.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gwardia_wroc?aw",
+      "entity_name": "Gwardia Wroc?aw",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://commons.wikimedia.org",
+        "https://academy.gwardiawroclaw.pl",
+        "https://flashscore.com",
+        "https://gwardiawroclaw.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gwardia Wroc?aw may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:14:06.286325",
+          "domain_explored": "https://gwardiawroclaw.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportsManago (CRM/Communication System)",
+              "Website CMS (implied by dynamic content/regs)",
+              "Social Media Platforms (Facebook, TikTok, Instagram)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active SaaS subscription for member management",
+              "Data processing compliance (RODO) requirements",
+              "Structured youth academy operations requiring administrative tools"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (SportsManago)",
+            "Digital Member Management",
+            "GDPR/RODO Compliance Framework",
+            "Academy/Youth Training Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 308,
+              "elapsed_seconds": 2.729851245880127
+            }
+          ],
+          "reasoning": "The content confirms the active use of 'SportsManago' for communication, registration, and member handling. While this is a direct technology adoption, it appears to be an established operational tool rather than a new procurement signal. However, the reliance on this specific SaaS platform indicates a capability for digital tool adoption and highlights a need for CRM/automation solutions in the sports sector."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:14:11.471131",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Federation Navigation",
+            "Historical Event Listings",
+            "Multi-language Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.153347969055176
+            }
+          ],
+          "reasoning": "The content provided is a generic navigation menu and event listing from the Confederation Europ\u00e9enne de Volleyball (CEV) website. It contains no specific information regarding 'Gwardia Wroc\u0142aw', their internal operations, technology stack, or procurement activities. The entity 'Gwardia Wroc\u0142aw' is not mentioned in the text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:14:14.890274",
+          "domain_explored": "https://academy.gwardiawroclaw.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:14:20.707138",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "Gambling/Compliance Disclaimers",
+            "Dynamic Content Loading (SPA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 677,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.5869858264923096
+            }
+          ],
+          "reasoning": "The target URL (flashscore.com) is a third-party sports results aggregator. It contains no proprietary information regarding Gwardia Wroc\u0142aw's internal operations, technology stack, or procurement activities. The content consists solely of gambling warnings and generic navigation elements."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:14:23.708721",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3445,
+      "total_output_tokens": 642,
+      "estimated_cost_usd": 0.019965
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gwardia Wroc?aw may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:14:23.709972"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328213",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:30:31.453648"
+}

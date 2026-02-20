@@ -1,0 +1,145 @@
+{
+  "entity_id": "gt_world_challenge_asia",
+  "entity_name": "GT World Challenge Asia",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "gt-world-challenge-asia.com",
+    "asiaregs.sporting.gt-world-challenge.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gt_world_challenge_asia",
+      "entity_name": "GT World Challenge Asia",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://asiaregs.sporting.gt-world-challenge.com",
+        "https://gt-world-challenge-asia.com",
+        "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "GT World Challenge Asia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:49:56.992381",
+          "domain_explored": "https://gt-world-challenge-asia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 24 column 9 (char 1574)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:50:05.177270",
+          "domain_explored": "https://asiaregs.sporting.gt-world-challenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance: SRO Motorsports Group identified as the 'Promoter' and organizing body.",
+              "Compliance: Adherence to FIA International Sporting Code and Appendices.",
+              "Structure: Defines specific series titles (GT Asia, China Cup, Japan Cup) which implies a need for series management software, though no specific vendors are mentioned."
+            ]
+          },
+          "patterns_found": [
+            "Governance Structure",
+            "Regulatory Compliance",
+            "Series Organization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 281,
+              "elapsed_seconds": 5.221076011657715
+            }
+          ],
+          "reasoning": "The content provided consists of the 'Sporting Regulations 2024' foreword. While it establishes the governance framework (SRO Motorsports Group as Promoter, FIA oversight) and defines the series structure (GT3, GT4, GTC categories), it contains no information regarding technology procurement, vendor selection, or operational investments. It is a rulebook document, not a commercial or operational signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:50:27.128885",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/accountant-at-craft-bamboo-racing-3952160254",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MYOB",
+              "Accounting Software (General)",
+              "Payroll Systems"
+            ],
+            "job_postings": [
+              "Accountant (Craft-Bamboo Racing)"
+            ],
+            "procurement_indicators": [
+              "New system implementations (Accounting/ERP)",
+              "Liaison with suppliers and creditors",
+              "Project business case development",
+              "Cashflow planning and budget requirements"
+            ]
+          },
+          "patterns_found": [
+            "Finance & Governance Operations",
+            "ERP/Accounting Software Procurement",
+            "Vendor Management & Invoicing",
+            "Budgeting & Business Case Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 325,
+              "elapsed_seconds": 18.222282886505127
+            }
+          ],
+          "reasoning": "The job posting for an Accountant at Craft-Bamboo Racing (a key team in GT World Challenge Asia) reveals specific procurement-related responsibilities. The role requires managing 'suppliers and all invoicing parties' and explicitly lists 'MYOB Experience, Proficient in accounting software options, and new system implementations' as a preferred requirement. This indicates an active need for accounting software evaluation, procurement, or implementation, as well as ongoing vendor management."
+        }
+      ],
+      "total_input_tokens": 2857,
+      "total_output_tokens": 606,
+      "estimated_cost_usd": 0.017661000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "GT World Challenge Asia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:50:27.131711"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.375822",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:21.529893"
+}

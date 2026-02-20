@@ -1,0 +1,233 @@
+{
+  "entity_id": "uci_road_world_championships",
+  "entity_name": "UCI Road World Championships",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "event_organizers",
+  "discovered_domains": [
+    "ucikigali2025.rw",
+    "montreal2026.org",
+    "tissottiming.com",
+    "downloads.ctfassets.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/digital-content-intern-english-and-french-at-tietalent-4281413264"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uci_road_world_championships",
+      "entity_name": "UCI Road World Championships",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://montreal2026.org",
+        "https://tissottiming.com",
+        "https://ch.linkedin.com/jobs/view/digital-content-intern-english-and-french-at-tietalent-4281413264",
+        "https://downloads.ctfassets.net",
+        "https://ucikigali2025.rw"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation Department Expansion",
+        "Social Media Management Procurement",
+        "Internal Content Production Capability",
+        "Event Reporting Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UCI Road World Championships may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:00:01.100116",
+          "domain_explored": "https://ucikigali2025.rw",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Platform (TravelZuri)",
+              "E-commerce (Santini Shop)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Accommodation Partner: TravelZuri",
+              "Official Merchandise Partner: Santini",
+              "Broadcast reach: 330M+ TV viewers",
+              "Event dates: Sept 21-28, 2025"
+            ]
+          },
+          "patterns_found": [
+            "Official Accommodation Partner (TravelZuri)",
+            "Official Merchandise Partner (Santini)",
+            "Digital Booking Platform Integration",
+            "Broadcast & Media Distribution (330M+ TV viewers)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 314,
+              "elapsed_seconds": 7.286723852157593
+            }
+          ],
+          "reasoning": "The content confirms the event has concluded (September 2025), indicating that major procurement cycles for this specific edition are likely closed. However, the explicit identification of official partners (TravelZuri for accommodation, Santini for merchandise) provides valuable vendor intelligence and establishes a baseline for the technology stack (booking platforms, e-commerce). The 'Partners & Sponsors' section suggests a tiered sponsorship structure which is a key governance pattern."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:00:08.545809",
+          "domain_explored": "https://montreal2026.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:00:25.318913",
+          "domain_explored": "https://tissottiming.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Transponders",
+              "High-Definition Cameras",
+              "Timing Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Partnership Status",
+              "Service Provision Model (Vendor as Partner)"
+            ]
+          },
+          "patterns_found": [
+            "Global Strategic Partnership (UCI-Tissot)",
+            "Proprietary Hardware Provision",
+            "B2B Service Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 456,
+              "output_tokens": 225,
+              "elapsed_seconds": 9.297184944152832
+            }
+          ],
+          "reasoning": "The content confirms Tissot is the official timekeeper for the UCI Road World Championships through a long-standing strategic partnership. This indicates that timing and scoring services are provided via an exclusive top-tier agreement rather than through open procurement or RFP processes for these specific championships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:00:34.558315",
+          "domain_explored": "https://downloads.ctfassets.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "404 Not Found Error",
+            "Broken Link / Dead End"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 529,
+              "output_tokens": 124,
+              "elapsed_seconds": 2.333272933959961
+            }
+          ],
+          "reasoning": "The target URL returned a 404 'NotFound' error. This indicates a broken link or an expired resource, yielding no analyzable content regarding procurement, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:00:58.774109",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/digital-content-intern-english-and-french-at-tietalent-4281413264",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud",
+              "Canva",
+              "Social Media Platforms (Facebook, Instagram, TikTok, X)"
+            ],
+            "job_postings": [
+              {
+                "role": "Digital Content Intern (English and French)",
+                "department": "Digital Transformation Department",
+                "location": "Aigle, Vaud, Switzerland",
+                "focus": "Social media growth, content creation, analytics, event reporting"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in digital growth (5M+ fan base target)",
+              "Need for analytics and reporting tools for sponsors",
+              "Multimedia production requirements",
+              "Interdivisional project support needs"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Department Expansion",
+            "Social Media Management Procurement",
+            "Internal Content Production Capability",
+            "Event Reporting Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1563,
+              "output_tokens": 398,
+              "elapsed_seconds": 16.5535888671875
+            }
+          ],
+          "reasoning": "The job posting confirms the existence of a dedicated 'Digital Transformation Department' at the UCI headquarters in Aigle. This signals active investment in digital infrastructure and content capabilities. The requirement for 'event reports for internal and sponsor purposes' indicates a structured need for analytics and reporting tools, while the focus on multimedia production suggests potential procurement needs for software (Adobe, Canva) or hardware."
+        }
+      ],
+      "total_input_tokens": 3912,
+      "total_output_tokens": 1061,
+      "estimated_cost_usd": 0.027651
+    },
+    "procurement_signals": [
+      "Digital Transformation Department Expansion",
+      "Social Media Management Procurement",
+      "Internal Content Production Capability",
+      "Event Reporting Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UCI Road World Championships may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:00:58.774933"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.412674",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:35.700701"
+}

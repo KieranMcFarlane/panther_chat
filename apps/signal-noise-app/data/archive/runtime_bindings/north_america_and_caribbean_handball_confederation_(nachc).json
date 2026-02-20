@@ -1,0 +1,207 @@
+{
+  "entity_id": "north_america_and_caribbean_handball_confederation_(nachc)",
+  "entity_name": "North America and Caribbean Handball Confederation (NACHC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "usateamhandball.org",
+    "handballontario.com",
+    "grokipedia.com",
+    "handball.no",
+    "universecwsports.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "north_america_and_caribbean_handball_confederation_(nachc)",
+      "entity_name": "North America and Caribbean Handball Confederation (NACHC)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://universecwsports.fandom.com",
+        "https://handballontario.com",
+        "https://grokipedia.com",
+        "https://usateamhandball.org",
+        "https://handball.no"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "North America and Caribbean Handball Confederation (NACHC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:57:06.669293",
+          "domain_explored": "https://usateamhandball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms (evidence via forms.gle link)",
+              "Video Content Management (requires JavaScript, likely YouTube or similar)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: Indian River State College (IRSC) & USATH",
+              "New Facility Establishment: National Training Presence on Florida's Treasure Coast",
+              "Operational Expansion: Athlete Intake and member management workflows"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Expansion",
+            "Infrastructure Development",
+            "Google Workspace Usage (Forms)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 877,
+              "output_tokens": 325,
+              "elapsed_seconds": 5.7058610916137695
+            }
+          ],
+          "reasoning": "The content reveals a significant strategic partnership with Indian River State College (IRSC) to establish a National Training presence. This indicates a phase of infrastructure and operational expansion. While not a direct RFP, such strategic shifts often lead to procurement needs related to facility management, training software, and increased administrative capacity. The use of Google Forms for 'Athlete Intake' suggests a low-cost, current technology stack that may need upgrading as operations scale."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:57:14.712897",
+          "domain_explored": "https://handballontario.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Season Registration (2024 / 2025)",
+              "Coaching Conference",
+              "General Assembly/Conference Sign-ups"
+            ]
+          },
+          "patterns_found": [
+            "Grassroots Sports Marketing",
+            "Event Registration Management",
+            "Local Association Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 235,
+              "elapsed_seconds": 4.693958044052124
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Team Handball Ontario, a regional grassroots member association. While it mentions 'Registration' and 'Conferences', these are operational activities for local sports delivery (player fees, local coaching clinics) rather than procurement signals for the NACHC confederation level. There is no evidence of enterprise technology stacks, RFPs, or governance decision-making relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:57:17.809757",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:57:24.064999",
+          "domain_explored": "https://handball.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Autoinvoice (E-invoicing)",
+              "TV 2 Sport 2 (Broadcasting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Auto-invoicing email address implies digital finance operations",
+              "Sponsorship integration (REMA 1000)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Structure",
+            "Sports Broadcasting Rights Management",
+            "Grassroots Camp Registration",
+            "Auto-invoicing Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.093726873397827
+            }
+          ],
+          "reasoning": "The content is from the Norwegian Handball Federation (Norges H\u00e5ndballforbund), a distinct entity from the target NACHC (North America and Caribbean Handball Confederation). While it reveals operational patterns such as auto-invoicing (969989336@autoinvoice.no) and grassroots camp management (REMA 1000 H\u00e5ndballskolen), these are not procurement signals for the target entity. The geographical and organizational mismatch renders this data irrelevant for direct NACHC procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:57:29.386214",
+          "domain_explored": "https://universecwsports.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Dead Link / 404 Error",
+            "User-Generated Content Platform",
+            "Non-Commercial Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1005,
+              "output_tokens": 146,
+              "elapsed_seconds": 2.3106348514556885
+            }
+          ],
+          "reasoning": "The target URL is a non-existent page on a fan-maintained wiki platform (Fandom). It contains no content, no organizational data, and zero procurement signals. It is functionally a dead end for intelligence gathering regarding the NACHC."
+        }
+      ],
+      "total_input_tokens": 4824,
+      "total_output_tokens": 990,
+      "estimated_cost_usd": 0.029322
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "North America and Caribbean Handball Confederation (NACHC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:57:29.386987"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.360814",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:07.406342"
+}

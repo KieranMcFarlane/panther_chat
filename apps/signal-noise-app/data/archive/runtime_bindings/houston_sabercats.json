@@ -1,0 +1,114 @@
+{
+  "entity_id": "houston_sabercats",
+  "entity_name": "Houston SaberCats",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "emerging_professional_league_clubs",
+  "discovered_domains": [
+    "houstonsabercats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/strength-and-conditioning-coach-at-houston-sabercats-rugby-4273274306"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "houston_sabercats",
+      "entity_name": "Houston SaberCats",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/strength-and-conditioning-coach-at-houston-sabercats-rugby-4273274306",
+        "https://houstonsabercats.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Houston SaberCats may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:53:49.224556",
+          "domain_explored": "https://houstonsabercats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Initiative: Launch of 'Texas Sport for Healing Fund' (July 2025) implies partnership coordination and potential financial management vendor needs.",
+              "Organizational Change: 'Leadership Update' (July 2025) signals a decision-making shift, often a trigger for reviewing existing service contracts and agency partners.",
+              "Program Expansion: 'Sabercats Academy' focus on intensive player development indicates a requirement for performance tracking tools or CRM systems for athlete management."
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnerships & Alliances",
+            "Organizational Restructuring (Leadership)",
+            "Community & Youth Program Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 361,
+              "elapsed_seconds": 11.54417896270752
+            }
+          ],
+          "reasoning": "The content reveals high-level organizational activities that imply future procurement needs. The 'Texas Sport for Healing Fund' launch indicates partnership management and potential legal/compliance procurement. The 'Leadership Update' (July 7, 2025) suggests a restructuring phase, often followed by new vendor selection as new executives establish their preferred tech stacks. The 'Sabercats Academy' focus on 'high-performance expectations' suggests a need for performance analytics or training software."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:53:53.796755",
+          "domain_explored": "https://www.linkedin.com/jobs/view/strength-and-conditioning-coach-at-houston-sabercats-rugby-4273274306",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 470,
+              "output_tokens": 116,
+              "elapsed_seconds": 1.637502908706665
+            }
+          ],
+          "reasoning": "The content provided is a rate-limiting error message from LinkedIn ('Requests rate to linkedin.com is too high'). No actual job description, organizational data, or procurement signals were scraped or available for analysis."
+        }
+      ],
+      "total_input_tokens": 1830,
+      "total_output_tokens": 477,
+      "estimated_cost_usd": 0.012645
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Houston SaberCats may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:53:53.798220"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.272596",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:36.247533"
+}

@@ -1,0 +1,345 @@
+{
+  "entity_id": "fiji_basketball_federation",
+  "entity_name": "Fiji Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "australianvolunteers.com",
+    "websites.sportstg.com",
+    "headlines6047.rssing.com",
+    "commonwealthofnations.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/director-of-sports-marketing-jobs",
+      "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E6%B3%A8%E5%86%8C%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91%E6%96%B0%E8%83%9C%E5%A8%B1%E4%B9%90%E5%85%85%E5%80%BC%E5%AE%A2%E6%9C%8D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E6%AD%A2a57688.cc%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%A8%B1%E4%B9%90%E5%AE%98%E7%BD%91%E5%BC%80%E6%88%B7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:7%E2%92%8A%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/MG%E7%AF%AE%E7%90%83%E5%B7%A8%E6%98%9F%E6%8A%80%E5%B7%A7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E8%8A%B7xx55688%E3%80%82cc%E3%80%91%E4%BA%91%E9%BC%8E%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BB%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91CQ9%E4%BC%A0%E5%A5%87%E7%94%B5%E5%AD%90%E5%AE%98%E6%96%B9%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+V%E4%BF%A1:%E3%80%A5%D0%A7%E3%80%A59%E2%92%8E%E3%80%A57O%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E7%A6%8F%E5%BB%BA%E5%BF%AB%E4%B8%89%E5%85%A8%E5%A4%A9%E8%AE%A1%E5%88%92%E7%BD%91%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E5%BE%AE:2%E2%92%90%D0%A7%D0%97%D0%9179%E2%92%90%E3%80%91%E7%B4%AB%E9%87%91%E5%B2%9B%E6%A3%8B%E7%89%8C%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E6%89%A3:%E2%92%8F%E2%92%98%E2%92%8C%E2%92%9325%E3%80%9111%E9%80%895%E5%85%AD%E4%B8%AA%E5%8F%B7%E4%BB%BB%E9%80%893%E5%A4%9A%E9%92%B1%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a57688%E3%80%82cc%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E5%BC%88%E4%B9%90%E8%B4%B5%E9%98%B3%E6%8D%89%E9%B8%A1%E9%BA%BB%E5%B0%86%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%2B%E6%89%A3-%E3%80%A5%D1%87%E3%80%A597%E3%80%A57o%E3%80%91%E5%B9%BF%E4%B8%9C11%E9%80%895%E4%BB%BB%E9%80%898%E8%BD%AF%E4%BB%B6%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF%E9%97%AEa51688.cc%E3%80%91%E7%99%BE%E7%A6%8F%E5%BD%A9%E7%A5%A8%E7%BD%91%E5%9D%80%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a51688%E3%80%82cc%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E6%AC%A7%E4%BA%9A%E5%9B%BD%E9%99%85%E4%BB%A3%E7%90%86%E5%92%A8%E8%AF%A2%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%2Bv%E4%BF%A1-%E3%80%A54%E3%80%A59%E2%92%8E%E3%80%A57o%E3%80%91%E4%BA%91%E9%A1%B6%E4%B9%8B%E5%BC%88s7.5%E6%9C%80%E6%96%B0%E9%98%B5%E5%AE%B9%E6%8E%92%E8%A1%8C%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%2Bv%E4%BF%A1-%E3%80%A54%E3%80%A59%E2%92%8E%E3%80%A57o%E3%80%91%E5%8A%A0%E6%8B%BF%E5%A4%A728pc%E9%A2%84%E6%B5%8B%E5%A4%A7%E7%A5%9E%E5%90%A7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%2B%E6%8A%A0%E6%8A%A0-%D0%B19o%E2%92%8C7%E2%92%96%D0%B19%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/community-facilitator-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiji_basketball_federation",
+      "entity_name": "Fiji Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/%E7%A6%8F%E5%BB%BA%E5%BF%AB%E4%B8%89%E5%85%A8%E5%A4%A9%E8%AE%A1%E5%88%92%E7%BD%91%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E5%BE%AE:2%E2%92%90%D0%A7%D0%97%D0%9179%E2%92%90%E3%80%91%E7%B4%AB%E9%87%91%E5%B2%9B%E6%A3%8B%E7%89%8C%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E6%89%A3:%E2%92%8F%E2%92%98%E2%92%8C%E2%92%9325%E3%80%9111%E9%80%895%E5%85%AD%E4%B8%AA%E5%8F%B7%E4%BB%BB%E9%80%893%E5%A4%9A%E9%92%B1%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a57688%E3%80%82cc%E3%80%91-jobs",
+        "https://websites.sportstg.com",
+        "https://commonwealthofnations.org",
+        "https://www.linkedin.com/jobs/%E5%BC%88%E4%B9%90%E8%B4%B5%E9%98%B3%E6%8D%89%E9%B8%A1%E9%BA%BB%E5%B0%86%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%2B%E6%89%A3-%E3%80%A5%D1%87%E3%80%A597%E3%80%A57o%E3%80%91%E5%B9%BF%E4%B8%9C11%E9%80%895%E4%BB%BB%E9%80%898%E8%BD%AF%E4%BB%B6%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF%E9%97%AEa51688.cc%E3%80%91%E7%99%BE%E7%A6%8F%E5%BD%A9%E7%A5%A8%E7%BD%91%E5%9D%80%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a51688%E3%80%82cc%E3%80%91-jobs",
+        "https://www.linkedin.com/jobs/director-of-sports-marketing-jobs",
+        "https://www.linkedin.com/jobs/MG%E7%AF%AE%E7%90%83%E5%B7%A8%E6%98%9F%E6%8A%80%E5%B7%A7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E8%8A%B7xx55688%E3%80%82cc%E3%80%91%E4%BA%91%E9%BC%8E%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BB%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91CQ9%E4%BC%A0%E5%A5%87%E7%94%B5%E5%AD%90%E5%AE%98%E6%96%B9%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+V%E4%BF%A1:%E3%80%A5%D0%A7%E3%80%A59%E2%92%8E%E3%80%A57O%E3%80%91-jobs",
+        "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E6%B3%A8%E5%86%8C%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91%E6%96%B0%E8%83%9C%E5%A8%B1%E4%B9%90%E5%85%85%E5%80%BC%E5%AE%A2%E6%9C%8D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E6%AD%A2a57688.cc%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%A8%B1%E4%B9%90%E5%AE%98%E7%BD%91%E5%BC%80%E6%88%B7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:7%E2%92%8A%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs",
+        "https://australianvolunteers.com",
+        "https://headlines6047.rssing.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fiji Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:24:43.613753",
+          "domain_explored": "https://australianvolunteers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Volunteer opportunities (In-country, Remote, Hybrid)"
+            ],
+            "procurement_indicators": [
+              "Capacity Development Support",
+              "Partner Organization Status",
+              "Technical Assistance via Volunteers"
+            ]
+          },
+          "patterns_found": [
+            "International Development Partner",
+            "Capacity Building",
+            "Volunteer Resource Model",
+            "Regional Presence (Pacific)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.4691338539123535
+            }
+          ],
+          "reasoning": "The content identifies Australian Volunteers as a key development partner operating in the Pacific region. While this is not a direct procurement signal for Fiji Basketball Federation, it establishes a high-probability channel for 'in-kind' procurement of technical expertise (IT, Coaching, Admin). The Fiji Basketball Federation likely utilizes or is eligible for this program to fill capability gaps without traditional cash procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:24:52.273052",
+          "domain_explored": "https://websites.sportstg.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:25:01.585425",
+          "domain_explored": "https://headlines6047.rssing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Development Officer (Saula Koroi)",
+              "Administrator / Coach (Leah Seru)",
+              "Assistant Development Officer"
+            ],
+            "procurement_indicators": [
+              "Program rollout requiring logistics and equipment (Hoops for Health)",
+              "Venue usage (Vodafone Arena, Suva)",
+              "International travel logistics (Oceania Championships)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Development Programs",
+            "School Engagement Initiatives",
+            "Tournament Operations",
+            "International Competition Preparation",
+            "Staffing Structure (Development Officers, Administrators)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 336,
+              "elapsed_seconds": 2.750389814376831
+            }
+          ],
+          "reasoning": "The content provides operational context regarding the Fiji Basketball Federation's (FBF) activities in 2016, specifically the 'Hoops for Health' program targeting 30 schools and preparation for the U18 Oceania Championship. While it confirms organizational capacity and staffing (Development Officers, Administrators), it does not contain explicit procurement signals (RFPs, tenders) or technology stack details. It validates the entity's active operational status, justifying a weak acceptance of capability."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:25:16.002723",
+          "domain_explored": "https://commonwealthofnations.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Association",
+            "High-Level Directory Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 156,
+              "elapsed_seconds": 10.233044862747192
+            }
+          ],
+          "reasoning": "The content is a generic homepage for the Commonwealth of Nations. While Fiji is listed as a member state, the content provides no specific information regarding the Fiji Basketball Federation, its procurement activities, or its technology stack. It serves only as a confirmation of geopolitical context."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:25:25.050550",
+          "domain_explored": "https://www.linkedin.com/jobs/director-of-sports-marketing-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Digital Marketing at UNIQLO (USA)",
+              "Director of Marketing at Honey Mama's (USA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (United States focus)",
+            "Corporate Sector Roles (UNIQLO, Honey Mama's)",
+            "Login Wall / Dynamic Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.442692279815674
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for 'Director of Sports Marketing' roles within the United States. The entities listed (e.g., UNIQLO) are large multinational corporations irrelevant to the Fiji Basketball Federation. There is no content linking these roles or technologies to the target entity, nor is there evidence of procurement activity specific to Fiji Basketball."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:25:35.414948",
+          "domain_explored": "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E6%B3%A8%E5%86%8C%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91%E6%96%B0%E8%83%9C%E5%A8%B1%E4%B9%90%E5%85%85%E5%80%BC%E5%AE%A2%E6%9C%8D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E6%AD%A2a57688.cc%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%A8%B1%E4%B9%90%E5%AE%98%E7%BD%91%E5%BC%80%E6%88%B7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:7%E2%92%8A%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Marketing Manager (CRAFTSMAN+, New York)",
+              "Music Assistant, TV (Lensa, New York)",
+              "Senior Vice President, Major Events (Lensa, Austin)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam/Keyword Stuffing",
+            "Black Hat SEO Manipulation",
+            "Irrelevant Geographic Context (United States)",
+            "Generic Job Aggregation (Lensa, CRAFTSMAN+)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1758,
+              "output_tokens": 255,
+              "elapsed_seconds": 5.4062018394470215
+            }
+          ],
+          "reasoning": "The scraped content is heavily polluted with black-hat SEO spam (Chinese characters related to gambling/entertainment services injected into job titles). The underlying content is a generic job aggregation page for the United States (Austin, New York) with no relevance to the Fiji Basketball Federation or the Pacific region. This indicates a low-quality data source that contradicts the procurement hypothesis."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:25:47.938121",
+          "domain_explored": "https://www.linkedin.com/jobs/MG%E7%AF%AE%E7%90%83%E5%B7%A8%E6%98%9F%E6%8A%80%E5%B7%A7%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E7%BD%91%E8%8A%B7xx55688%E3%80%82cc%E3%80%91%E4%BA%91%E9%BC%8E%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BB%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+%E6%8A%A0%E6%8A%A0:29%D0%A7%D0%B7%D0%917%E2%92%909%E3%80%91CQ9%E4%BC%A0%E5%A5%87%E7%94%B5%E5%AD%90%E5%AE%98%E6%96%B9%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F+V%E4%BF%A1:%E3%80%A5%D0%A7%E3%80%A59%E2%92%8E%E3%80%A57O%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam/Keyword Stuffing",
+            "Black Hat SEO Manipulation",
+            "Irrelevant Geographic Context (United States)",
+            "Malicious/Obfuscated URLs"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1959,
+              "output_tokens": 225,
+              "elapsed_seconds": 6.7710349559783936
+            }
+          ],
+          "reasoning": "The content is a malicious SEO spam page targeting LinkedIn's job aggregation infrastructure. The URL and visible text are stuffed with gambling-related keywords ('MG\u7bee\u7403\u5de8\u661f', 'CQ9\u4f20\u5947\u7535\u5b50') and contact information for unauthorized services ('\u7f51\u82b7xx55688'). The actual job listings returned (University of South Florida, Lensa) are generic U.S.-based results completely unrelated to the Fiji Basketball Federation. This indicates a 'poisoned' search result that offers no valid procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:26:11.281671",
+          "domain_explored": "https://www.linkedin.com/jobs/%E7%A6%8F%E5%BB%BA%E5%BF%AB%E4%B8%89%E5%85%A8%E5%A4%A9%E8%AE%A1%E5%88%92%E7%BD%91%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E5%BE%AE:2%E2%92%90%D0%A7%D0%97%D0%9179%E2%92%90%E3%80%91%E7%B4%AB%E9%87%91%E5%B2%9B%E6%A3%8B%E7%89%8C%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F+%E6%89%A3:%E2%92%8F%E2%92%98%E2%92%8C%E2%92%9325%E3%80%9111%E9%80%895%E5%85%AD%E4%B8%AA%E5%8F%B7%E4%BB%BB%E9%80%893%E5%A4%9A%E9%92%B1%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a57688%E3%80%82cc%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam/Keyword Stuffing",
+            "Black Hat SEO Manipulation",
+            "Irelevant Geographic Context (China/Fujian)",
+            "Gambling/Illegal Gaming References"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2145,
+              "output_tokens": 157,
+              "elapsed_seconds": 18.62131094932556
+            }
+          ],
+          "reasoning": "The content is a malicious SEO spam page targeting Chinese gambling keywords (Fujian Fast 3, Zijin Island Chess). It contains no legitimate job postings or procurement data relevant to the Fiji Basketball Federation."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:26:21.651394",
+          "domain_explored": "https://www.linkedin.com/jobs/%E5%BC%88%E4%B9%90%E8%B4%B5%E9%98%B3%E6%8D%89%E9%B8%A1%E9%BA%BB%E5%B0%86%E4%B8%8B%E8%BD%BD%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%2B%E6%89%A3-%E3%80%A5%D1%87%E3%80%A597%E3%80%A57o%E3%80%91%E5%B9%BF%E4%B8%9C11%E9%80%895%E4%BB%BB%E9%80%898%E8%BD%AF%E4%BB%B6%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF%E9%97%AEa51688.cc%E3%80%91%E7%99%BE%E7%A6%8F%E5%BD%A9%E7%A5%A8%E7%BD%91%E5%9D%80%E3%80%90%E8%B0%B7%E6%AD%8C%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B%E5%85%A5a51688%E3%80%82cc%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam/Keyword Stuffing",
+            "Black Hat SEO Manipulation",
+            "Irrelevant Geographic Context (United States)",
+            "Gambling/Software Promotion Keywords"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2326,
+              "output_tokens": 203,
+              "elapsed_seconds": 4.427958011627197
+            }
+          ],
+          "reasoning": "The URL and scraped content are identical to the pattern observed in Iterations 6, 7, and 8. The content consists of Chinese characters related to gambling software (Mahjong, Lottery) and 'Google Screen Suppression' (\u8c37\u6b4c\u9738\u5c4f) SEO spam techniques. The page is a generic LinkedIn login/template page with no specific data regarding the Fiji Basketball Federation. It is classified as irrelevant noise."
+        }
+      ],
+      "total_input_tokens": 14045,
+      "total_output_tokens": 1834,
+      "estimated_cost_usd": 0.069645
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fiji Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:26:21.653097"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269092",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:18.848036"
+}

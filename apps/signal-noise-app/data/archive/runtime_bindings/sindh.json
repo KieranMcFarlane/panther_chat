@@ -1,0 +1,423 @@
+{
+  "entity_id": "sindh",
+  "entity_name": "Sindh",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "lgdsindh.gov.pk",
+    "governor.sindh.gov.pk",
+    "sindhpolice.gov.pk",
+    "sindheducation.gov.pk",
+    "spsc.gos.pk",
+    "tmrwing.gos.pk",
+    "sindhzameen.gos.pk",
+    "pdmi.sindhculture.gov.pk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://pk.linkedin.com/jobs/jobs-in-karachi-division",
+      "https://pk.linkedin.com/jobs/jobs-pk-jobs-sindh",
+      "https://pk.linkedin.com/jobs/job-vacancies-jobs-karachi-division",
+      "https://pk.linkedin.com/jobs/karachi-jobs-kar%C4%81chi",
+      "https://pk.linkedin.com/jobs/hyderabad-jobs",
+      "https://pk.linkedin.com/jobs/jobs-jobs-kar%C4%81chi",
+      "https://pk.linkedin.com/jobs/general-jobs-kar%C4%81chi",
+      "https://pk.linkedin.com/jobs/graduate-jobs-karachi-division",
+      "https://pk.linkedin.com/jobs/clerk-jobs-kar%C4%81chi"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sindh",
+      "entity_name": "Sindh",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.06,
+        0.039999999999999994,
+        0.019999999999999993,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://governor.sindh.gov.pk",
+        "https://pk.linkedin.com/jobs/jobs-pk-jobs-sindh",
+        "https://pk.linkedin.com/jobs/job-vacancies-jobs-karachi-division",
+        "https://sindhzameen.gos.pk",
+        "https://pdmi.sindhculture.gov.pk",
+        "https://sindheducation.gov.pk",
+        "https://tmrwing.gos.pk",
+        "https://spsc.gos.pk",
+        "https://pk.linkedin.com/jobs/karachi-jobs-kar%C4%81chi",
+        "https://pk.linkedin.com/jobs/hyderabad-jobs",
+        "https://pk.linkedin.com/jobs/jobs-in-karachi-division",
+        "https://lgdsindh.gov.pk",
+        "https://sindhpolice.gov.pk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation (e-transfer system)",
+        "Mass Recruitment (1237+ posts)",
+        "Database Management (Salary/HR)",
+        "Digital Learning Platforms",
+        "Administrative Reform"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sindh may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:08:00.341826",
+          "domain_explored": "https://lgdsindh.gov.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:08:18.065238",
+          "domain_explored": "https://governor.sindh.gov.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:08:33.594961",
+          "domain_explored": "https://sindhpolice.gov.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:08:48.367372",
+          "domain_explored": "https://sindheducation.gov.pk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "e-transfer system (eportal.sindheducation.gov.pk)",
+              "Digital Learning Platform",
+              "Employee Database Systems"
+            ],
+            "job_postings": [
+              "Junior Sci. Teacher BPS-14 (1237 Posts)",
+              "Monitoring Assistant BPS-14",
+              "ECT BPS-15",
+              "Managing Director Sindh Education Foundation"
+            ],
+            "procurement_indicators": [
+              "Launch of e-transfer system portal",
+              "Recruitment of Monitoring Assistants (implies M&E software needs)",
+              "JESTs & PSTs joining database (HRIS implementation)",
+              "Guidelines for Home Based Learning (EdTech/LMS potential)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation (e-transfer system)",
+            "Mass Recruitment (1237+ posts)",
+            "Database Management (Salary/HR)",
+            "Digital Learning Platforms",
+            "Administrative Reform"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 358,
+              "elapsed_seconds": 6.299486875534058
+            }
+          ],
+          "reasoning": "The content reveals a major digital transformation initiative ('e-transfer system') and significant mass recruitment drives (1237 Junior Sci. Teachers, Monitoring Assistants). The shift from manual to digital administrative processes indicates a clear need for HR software, database management, and portal infrastructure, which are strong procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:09:23.172114",
+          "domain_explored": "https://spsc.gos.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 25 column 114 (char 1815)"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:09:51.344631",
+          "domain_explored": "https://tmrwing.gos.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:10:25.780905",
+          "domain_explored": "https://sindhzameen.gos.pk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Portal Integration (borasr.com)",
+              "Database Management (Land Revenue)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "IT Infrastructure for Deed Tracking",
+              "Media Buying/Advertising (TV Commercials)",
+              "Public Awareness Campaigns"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery (Land Records)",
+            "Public Awareness Campaigns (TV Commercials)",
+            "External Service Dependencies (BorAsr)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 797,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.4701430797576904
+            }
+          ],
+          "reasoning": "The site indicates an active digital transformation initiative regarding land revenue records (e-registry). The presence of 'Track Deed Status' linking to an external domain (borasr.com) suggests a reliance on third-party IT service providers or hosting solutions. The repeated emphasis on TV commercials indicates a budget for public awareness campaigns and media procurement."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:10:46.727571",
+          "domain_explored": "https://pdmi.sindhculture.gov.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:11:01.687958",
+          "domain_explored": "https://pk.linkedin.com/jobs/jobs-in-karachi-division",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Warehouse Executive - Getz Pharma",
+              "Procurement Officer - Avanceon Middle East & South Asia",
+              "Assistant Customer Operations Manager - Unilever"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "General Labor Market Activity",
+            "Pharmaceutical & FMCG Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 230,
+              "elapsed_seconds": 6.299742937088013
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn job feed for the Karachi region. It lists roles from private entities (Getz Pharma, Unilever, Avanceon) and contains no specific signals regarding Sindh government procurement, public sector RFPs, or government technology implementation. The data is irrelevant to the specific objective of tracking government procurement signals."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T03:11:14.151743",
+          "domain_explored": "https://pk.linkedin.com/jobs/jobs-pk-jobs-sindh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Assistant Brand Manager at Tapal Tea",
+              "Technical Recruiter at Smart Working",
+              "Media Internship at WPP",
+              "S&OP Analyst at Daraz"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "E-commerce & FMCG Focus",
+            "General Labor Market Activity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1707,
+              "output_tokens": 240,
+              "elapsed_seconds": 5.400824069976807
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search result page for 'Jobs Pk' within Sindh. The listings are exclusively from private sector entities (Tapal Tea, Daraz, WPP Media, Smart Working) and focus on commercial roles (Brand Management, S&OP, Media Internships). There are no government entities, public sector procurement notices, or technology implementation signals relevant to the Sindh government entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T03:11:26.148204",
+          "domain_explored": "https://pk.linkedin.com/jobs/job-vacancies-jobs-karachi-division",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General Worker at GSK",
+              "Finance Trainee at LDP Logistics"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance (GSK, LDP Logistics)",
+            "General Labor Market Activity",
+            "Logistics & FMCG Focus",
+            "Authentication Wall (Data Access Restriction)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.273466110229492
+            }
+          ],
+          "reasoning": "The scraped content reveals a job search results page dominated by private sector entities such as GSK (Pharmaceuticals/FMCG) and LDP Logistics. The roles listed (General Worker, Finance Trainee) are standard private sector vacancies with no indication of government procurement, public sector digital transformation, or Sindh-specific government contracting. Additionally, the content is heavily gated by LinkedIn's authentication wall ('Sign in to set job alerts'), preventing deep analysis of potential public sector listings if they exist further down the feed. This contradicts the hypothesis of finding government procurement signals."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T03:11:38.891633",
+          "domain_explored": "https://pk.linkedin.com/jobs/karachi-jobs-kar%C4%81chi",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Customer Operations Manager - Unilever",
+              "Contact Centre Team Leader - Emirates",
+              "Warehouse Executive - Getz Pharma",
+              "Turnaround Maintenance Engineer - Descon"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance (Unilever, Emirates, Getz Pharma, Descon)",
+            "General Labor Market Activity",
+            "FMCG & Pharmaceutical Focus",
+            "No Public Sector Entities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1825,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.5259552001953125
+            }
+          ],
+          "reasoning": "The scraped content lists job openings exclusively for major private multinational corporations (Unilever, Emirates, Getz Pharma) and local conglomerates (Descon). There is no presence of Sindh government departments, public sector undertakings, or state-owned entities. The content represents general private sector hiring activity in Karachi rather than government procurement signals."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T03:11:50.415378",
+          "domain_explored": "https://pk.linkedin.com/jobs/hyderabad-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Executive Access & Power Operations at PTCL (Private Telecom)",
+              "Cash Analyst at Epiq (Private BPO/Legal)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance (PTCL, Epiq)",
+            "General Labor Market Activity",
+            "BPO & Telecom Focus",
+            "Authentication Gating (Sign-in Wall)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1889,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.810858964920044
+            }
+          ],
+          "reasoning": "The content reveals a private-sector job board (LinkedIn) restricted by a login wall. The visible listings (PTCL, Epiq) are private entities, not government procurement. This contradicts the hypothesis of finding Sindh government procurement signals."
+        }
+      ],
+      "total_input_tokens": 11077,
+      "total_output_tokens": 1854,
+      "estimated_cost_usd": 0.061041
+    },
+    "procurement_signals": [
+      "Digital Transformation (e-transfer system)",
+      "Mass Recruitment (1237+ posts)",
+      "Database Management (Salary/HR)",
+      "Digital Learning Platforms",
+      "Administrative Reform"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sindh may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:11:50.418368"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.294545",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:01.608088"
+}

@@ -1,0 +1,226 @@
+{
+  "entity_id": "asia_rugby",
+  "entity_name": "Asia Rugby",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "asiarugby.com",
+    "rugbyasia247.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sg.linkedin.com/jobs/view/national-teams-head-coach-7s-at-singapore-rugby-union-4015769337",
+      "https://ph.linkedin.com/jobs/view/head-of-operations-and-strategy-at-philippine-rugby-football-union-inc-4103114669"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asia_rugby",
+      "entity_name": "Asia Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1
+      ],
+      "explored_domains": [
+        "https://ph.linkedin.com/jobs/view/head-of-operations-and-strategy-at-philippine-rugby-football-union-inc-4103114669",
+        "https://sg.linkedin.com/jobs/view/national-teams-head-coach-7s-at-singapore-rugby-union-4015769337",
+        "https://asiarugby.com",
+        "https://rugbyasia247.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Operations Management",
+        "Donor and Sponsor Compliance Management",
+        "Financial Governance and Budgeting",
+        "Stakeholder Relationship Management",
+        "Institutional Strengthening (HR & Policy)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asia Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:10:42.277195",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Systems",
+              "Scheduling Software",
+              "CRM (for new member federation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership Agreement (MoU) with Chinese RFA",
+              "Launch of 2026 Emirates Competitions Calendar",
+              "Involvement in HSBC SVNS Series logistics"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnerships (MoU)",
+            "Event Management & Operations",
+            "Expansion into China Market"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.2001168727874756
+            }
+          ],
+          "reasoning": "While the content is primarily event news, the specific mention of a 'Landmark MoU' with the Chinese RFA indicates active organizational expansion and partnership formation. This suggests a need for legal services, translation, and potentially new CRM tools to manage the expanded region. The 'Landmark Emirates Competitions Calendar' indicates structured operations requiring scheduling and logistics software."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:10:58.213567",
+          "domain_explored": "https://rugbyasia247.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Coverage (HSBC SVNS, SEA 7s)",
+            "Sponsorship Activity (Mitsubishi Estate, LIQUI MOLY)",
+            "Editorial Content (Interviews, Previews)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 184,
+              "elapsed_seconds": 4.31726598739624
+            }
+          ],
+          "reasoning": "The scraped content is from a media outlet (RugbyAsia247) covering rugby news, results, and major international sponsorships. It contains no information regarding Asia Rugby's internal procurement needs, technology stack, or operational decision-making. It is secondary market noise, not a primary source of procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:11:11.765467",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/national-teams-head-coach-7s-at-singapore-rugby-union-4015769337",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Software (implied by 'Analyze opposition teams')",
+              "Athlete Management Systems (AMS)",
+              "Video Analysis Tools"
+            ],
+            "job_postings": [
+              "National Teams Head Coach (7s) - Singapore Rugby Union"
+            ],
+            "procurement_indicators": [
+              "Investment in High-Performance Unit (HPU) personnel",
+              "Requirement for World Rugby Level 3 Certification (Compliance)",
+              "Cross-union collaboration (CoachSG, Sport Singapore)"
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Sports Procurement",
+            "Technical Staff Acquisition",
+            "Elite Athlete Development Infrastructure",
+            "Regional Expansion Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 326,
+              "elapsed_seconds": 3.0158441066741943
+            }
+          ],
+          "reasoning": "While this is a direct hire for Singapore Rugby Union (SRU) rather than Asia Rugby central, it signals significant investment in the regional high-performance ecosystem. The requirement for 'modern coaching techniques' and 'opposition analysis' suggests a reliance on performance analysis software and video technology. The role supports the broader Asia Rugby strategy of elevating national union standards."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:11:21.393857",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/head-of-operations-and-strategy-at-philippine-rugby-football-union-inc-4103114669",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Management & Reporting Systems",
+              "Payroll & HRIS",
+              "CRM for Stakeholder Management",
+              "Project Management Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Head of Operations and Strategy",
+                "entity": "Philippine Rugby Football Union Inc",
+                "location": "Pasig, National Capital Region, Philippines",
+                "focus": "General Management, Finance, Fundraising, Compliance"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget management and cash flow forecasting",
+              "Donor and sponsor compliance requirements",
+              "Policy development (Safeguarding, Finance, HR)",
+              "Reporting to Board of Trustees and World Rugby"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Operations Management",
+            "Donor and Sponsor Compliance Management",
+            "Financial Governance and Budgeting",
+            "Stakeholder Relationship Management",
+            "Institutional Strengthening (HR & Policy)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 430,
+              "elapsed_seconds": 3.1337718963623047
+            }
+          ],
+          "reasoning": "The job description for 'Head of Operations and Strategy' at the Philippine Rugby Football Union (PRFU) provides explicit evidence of procurement and administrative functions. The role requires managing finances, ensuring donor/sponsor compliance, and developing operational policies. This indicates a need for financial management tools, CRM systems for stakeholder management, and HR/payroll software. It confirms the entity is structured to handle significant vendor and partner relationships."
+        }
+      ],
+      "total_input_tokens": 5808,
+      "total_output_tokens": 1212,
+      "estimated_cost_usd": 0.035604
+    },
+    "procurement_signals": [
+      "Strategic Operations Management",
+      "Donor and Sponsor Compliance Management",
+      "Financial Governance and Budgeting",
+      "Stakeholder Relationship Management",
+      "Institutional Strengthening (HR & Policy)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asia Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:11:21.395316"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.283281",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:54:13.623252"
+}

@@ -1,0 +1,382 @@
+{
+  "total_clusters": 75,
+  "matched_clusters": 75,
+  "unmatched_clusters": 0,
+  "mapping": {
+    "top_tier_club_global": {
+      "template_id": "tpl_top_5_league_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "mid_market_club_uk": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "continental_pro_club": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 84.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50,keyword:club"
+    },
+    "emerging_market_club": {
+      "template_id": "tpl_emerging_club_v1",
+      "score": 85.33333333333333,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.67,digital:1.00,keyword:club"
+    },
+    "lower_tier_club": {
+      "template_id": "tpl_lower_tier_operational_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "top_5_league_clubs": {
+      "template_id": "tpl_top_5_league_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "mid_market_league_clubs": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "emerging_market_clubs": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "domestic_league_pros": {
+      "template_id": "tpl_mid_market_league_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "c1_professional_leagues": {
+      "template_id": "tpl_league_offices_v1",
+      "score": 82.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.50,digital:1.00,keyword:league"
+    },
+    "c2_global_federations": {
+      "template_id": "tpl_global_governing_bodies_v1",
+      "score": 84.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50,keyword:federation"
+    },
+    "c3_club_emerging_markets": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 84.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50,keyword:club"
+    },
+    "c4_club_nordic_mature": {
+      "template_id": "tpl_emerging_market_clubs_v1",
+      "score": 74.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.50,digital:0.50,keyword:club"
+    },
+    "global_governing_bodies": {
+      "template_id": "tpl_global_governing_bodies_v1",
+      "score": 67.0,
+      "reasons": "sports:1.00,revenue:1.00,digital:1.00,keyword:global"
+    },
+    "national_federations": {
+      "template_id": "tpl_global_national_federations_v1",
+      "score": 67.0,
+      "reasons": "sports:0.33,orgs:1.00,revenue:1.00,digital:0.67,keyword:federation"
+    },
+    "commercial_leagues": {
+      "template_id": "tpl_league_offices_v1",
+      "score": 84.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50,keyword:league"
+    },
+    "global_fifa_federations": {
+      "template_id": "tpl_global_national_federations_v1",
+      "score": 63.25,
+      "reasons": "sports:0.33,orgs:1.00,revenue:0.75,digital:0.75,keyword:federation"
+    },
+    "governing_bodies_global": {
+      "template_id": "tpl_governing_bodies_global_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:global"
+    },
+    "bb_emea_top_league": {
+      "template_id": "tpl_c2_corporate_state_ventures_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "bb_apac_corp_league": {
+      "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "bb_developing_market": {
+      "template_id": "tpl_c3_emerging_market_clubs_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "bb_regional_russia": {
+      "template_id": "tpl_c1_professional_league_clubs_v1",
+      "score": 82.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50"
+    },
+    "global_league_confederations": {
+      "template_id": "tpl_national_league_hubs_v1",
+      "score": 62.0,
+      "reasons": "sports:1.00,orgs:0.50,revenue:0.50,digital:0.50,keyword:league"
+    },
+    "european_club_pros": {
+      "template_id": "tpl_established_club_pros_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "asian_pacific_clubs": {
+      "template_id": "tpl_established_club_pros_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "latam_clubs": {
+      "template_id": "tpl_latin_american_clubs_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "emerging_markets_clubs": {
+      "template_id": "tpl_c3_emerging_market_clubs_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "global_governance_bodies": {
+      "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+      "score": 55.0,
+      "reasons": "sports:1.00,revenue:0.50,digital:1.00"
+    },
+    "professional_leagues": {
+      "template_id": "tpl_national_league_hubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "professional_clubs": {
+      "template_id": "tpl_latin_american_clubs_v1",
+      "score": 83.33333333333333,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.67,digital:1.00"
+    },
+    "global_national_federations": {
+      "template_id": "tpl_national_federations_v1",
+      "score": 77.0,
+      "reasons": "sports:0.50,orgs:1.00,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "tier1_professional_clubs": {
+      "template_id": "tpl_major_league_franchises_v1",
+      "score": 72.5,
+      "reasons": "sports:0.67,orgs:1.00,revenue:1.00,digital:0.50"
+    },
+    "emerging_professional_league_clubs": {
+      "template_id": "tpl_latin_american_clubs_v1",
+      "score": 75.0,
+      "reasons": "sports:0.50,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "rugby_corporate_league_one": {
+      "template_id": "tpl_rugby_corporate_league_one_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "rugby_pro_clubs_emerging": {
+      "template_id": "tpl_rugby_pro_club_emerging_v1",
+      "score": 66.66666666666666,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.33,digital:0.33"
+    },
+    "rugby_gov_federations": {
+      "template_id": "tpl_rugby_global_federation_v1",
+      "score": 65.75,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.25,digital:0.25,keyword:federation"
+    },
+    "rugby_league_admin": {
+      "template_id": "tpl_rugby_governance_ecosystem_v1",
+      "score": 69.5,
+      "reasons": "sports:1.00,orgs:0.50,revenue:0.50,digital:1.00,keyword:league"
+    },
+    "rugby_federation_global_standard": {
+      "template_id": "tpl_rugby_global_federation_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "rugby_federation_emerging_associate": {
+      "template_id": "tpl_rugby_national_federations_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "traditional_domestic_clubs": {
+      "template_id": "tpl_developmental_teams_v1",
+      "score": 65.0,
+      "reasons": "sports:1.00,revenue:1.00,digital:1.00"
+    },
+    "cricket_global_federations": {
+      "template_id": "tpl_cricket_global_governing_bodies_v1",
+      "score": 73.66666666666666,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.33,digital:0.67,keyword:global"
+    },
+    "cricket_franchise_leagues": {
+      "template_id": "tpl_cricket_franchise_leagues_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "cricket_associate_members": {
+      "template_id": "tpl_cricket_associate_federations_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "cricket_domestic_club_structure": {
+      "template_id": "tpl_cricket_domestic_club_structure_v1",
+      "score": 73.33333333333333,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.67,digital:0.33"
+    },
+    "icc_global_federations": {
+      "template_id": "tpl_cricket_associate_federations_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "aus_state_teams": {
+      "template_id": "tpl_developmental_teams_v1",
+      "score": 57.5,
+      "reasons": "sports:0.50,orgs:1.00,revenue:0.50,digital:0.50"
+    },
+    "nhl_major_league_clubs": {
+      "template_id": "tpl_tier1_club_north_america_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "major_league_franchises": {
+      "template_id": "tpl_major_league_franchises_v1",
+      "score": 77.0,
+      "reasons": "sports:0.50,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "tier_1_professional_clubs": {
+      "template_id": "tpl_top_5_league_clubs_v1",
+      "score": 62.0,
+      "reasons": "orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "north_american_minor_league": {
+      "template_id": "tpl_lower_tier_operational_clubs_v1",
+      "score": 60.0,
+      "reasons": "orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "corp_ownership_club": {
+      "template_id": "tpl_corp_ownership_club_v1",
+      "score": 72.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.50,digital:0.50"
+    },
+    "franchise_league_club": {
+      "template_id": "tpl_corp_ownership_club_v1",
+      "score": 82.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50"
+    },
+    "traditional_european_club": {
+      "template_id": "tpl_corp_ownership_club_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "semi_pro_challenger": {
+      "template_id": "tpl_developmental_club_v1",
+      "score": 80.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.33"
+    },
+    "global_gov_bodies": {
+      "template_id": "tpl_global_gov_bodies_v1",
+      "score": 79.5,
+      "reasons": "sports:1.00,orgs:0.50,revenue:1.00,digital:1.00,keyword:global"
+    },
+    "european_top_league_clubs": {
+      "template_id": "tpl_european_top_league_clubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:club"
+    },
+    "motorsport_global_federations": {
+      "template_id": "tpl_motorsport_global_federations_v1",
+      "score": 64.5,
+      "reasons": "sports:1.00,orgs:0.50,revenue:1.00,keyword:federation"
+    },
+    "motorsport_top_tier_promoters": {
+      "template_id": "tpl_motorsport_premium_series_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "motorsport_factory_works_teams": {
+      "template_id": "tpl_motorsport_oem_factory_teams_v1",
+      "score": 82.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50"
+    },
+    "motorsport_privateer_teams": {
+      "template_id": "tpl_motorsport_privateer_teams_v1",
+      "score": 69.16666666666666,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.33,digital:0.50"
+    },
+    "motorsport_development_series": {
+      "template_id": "tpl_motorsport_development_series_v1",
+      "score": 82.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:0.50"
+    },
+    "nat_motor_gov_body": {
+      "template_id": "tpl_global_governing_federations_v1",
+      "score": 75.0,
+      "reasons": "sports:0.50,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "uci_worldteam": {
+      "template_id": "tpl_elite_commercial_teams_v1",
+      "score": 90.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "uci_protour_women": {
+      "template_id": "tpl_pro_contender_teams_v1",
+      "score": 72.5,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.50,digital:0.50"
+    },
+    "elite_tour_organizers": {
+      "template_id": "tpl_elite_commercial_teams_v1",
+      "score": 65.0,
+      "reasons": "sports:1.00,revenue:1.00,digital:1.00"
+    },
+    "franchise_leagues": {
+      "template_id": "tpl_franchise_leagues_v1",
+      "score": 84.5,
+      "reasons": "sports:0.75,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "domestic_leagues": {
+      "template_id": "tpl_national_league_hubs_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "professional_cycling_teams": {
+      "template_id": "tpl_pro_contender_teams_v1",
+      "score": 76.66666666666666,
+      "reasons": "sports:1.00,orgs:1.00,revenue:0.33,digital:1.00"
+    },
+    "event_organizers": {
+      "template_id": "tpl_motorsport_development_series_v1",
+      "score": 60.0,
+      "reasons": "orgs:1.00,revenue:1.00,digital:1.00"
+    },
+    "global_governance_federations": {
+      "template_id": "tpl_global_governance_federations_v1",
+      "score": 64.5,
+      "reasons": "sports:0.50,orgs:0.50,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "continental_confederations": {
+      "template_id": "tpl_global_governing_bodies_v1",
+      "score": 79.5,
+      "reasons": "sports:1.00,orgs:0.50,revenue:1.00,digital:1.00,keyword:federation"
+    },
+    "tier_1_professional_leagues": {
+      "template_id": "tpl_tier_1_professional_leagues_v1",
+      "score": 92.0,
+      "reasons": "sports:1.00,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "tier_2_professional_leagues": {
+      "template_id": "tpl_tier_2_3_professional_leagues_v1",
+      "score": 66.28571428571428,
+      "reasons": "sports:0.14,orgs:1.00,revenue:1.00,digital:1.00,keyword:league"
+    },
+    "emerging_league_franchises": {
+      "template_id": "tpl_tier_2_3_professional_leagues_v1",
+      "score": 52.95238095238095,
+      "reasons": "sports:0.14,orgs:1.00,revenue:0.33,digital:1.00,keyword:league"
+    },
+    "niche_international_federations": {
+      "template_id": "tpl_specialized_international_federations_v1",
+      "score": 39.166666666666664,
+      "reasons": "orgs:1.00,revenue:0.33,digital:0.50"
+    }
+  }
+}

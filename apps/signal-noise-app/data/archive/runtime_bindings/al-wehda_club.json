@@ -1,0 +1,238 @@
+{
+  "entity_id": "al-wehda_club",
+  "entity_name": "Al-Wehda Club",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "m.eyeofriyadh.com",
+    "daralaytam.ps",
+    "mofa.gov.ae",
+    "zoominfo.com",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "egypttoday.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-wehda_club",
+      "entity_name": "Al-Wehda Club",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://daralaytam.ps",
+        "https://egypttoday.com",
+        "https://globalsportsarchive.com",
+        "https://mofa.gov.ae",
+        "https://m.eyeofriyadh.com",
+        "https://zoominfo.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Wehda Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:30:37.191604",
+          "domain_explored": "https://m.eyeofriyadh.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General real estate and technology news aggregation",
+            "Event listings for Riyadh area",
+            "No specific mentions of Al-Wehda Club"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.6044490337371826
+            }
+          ],
+          "reasoning": "The provided content is a general news and events listing page for Riyadh (Eye of Riyadh). It contains articles about the Real Estate Future Forum, INNOPROM, and general technology/healthcare news. There is absolutely no mention of Al-Wehda Club, its procurement activities, job postings, or specific technology implementations related to the entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:30:52.376790",
+          "domain_explored": "https://daralaytam.ps",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:31:08.460161",
+          "domain_explored": "https://mofa.gov.ae",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:31:15.065590",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B sales software marketing copy",
+            "Third-party testimonial aggregation",
+            "Sales tool vendor landing page"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1471,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.434101104736328
+            }
+          ],
+          "reasoning": "The provided content is the homepage marketing copy for ZoomInfo, a B2B data intelligence platform. It describes ZoomInfo's features and benefits for sales teams (Go-to-Market strategies, lead generation) but contains zero specific information regarding 'Al-Wehda Club'. There are no procurement signals, technology stacks, or governance patterns related to the target entity in this text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:31:24.941838",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge base landing page content",
+            "Community event listings (WikidataCon, Birthday)",
+            "Open source project documentation (SPARQL, Wikibase)",
+            "No commercial entity signals"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1527,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.1446428298950195
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, an open-source knowledge base. It contains general information about the platform, community events, and documentation. There is absolutely no mention of 'Al-Wehda Club', nor are there any procurement signals, vendor lists, or technology stacks related to the target entity. This is a false positive in the search iteration."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:31:36.444506",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation menu",
+            "Aggregation of international league links",
+            "Absence of specific club entity mentions",
+            "Static content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.233618974685669
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a generic navigation menu for global soccer leagues (UEFA, AFC, CAF, etc.). While the 'Saudi Professional League' is listed as a category, there is no specific mention of 'Al-Wehda Club', team-specific data, or organizational operations. The page is a high-level sports aggregator and does not contain procurement signals, technology stacks, or governance information relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:31:48.013492",
+          "domain_explored": "https://egypttoday.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic news aggregation layout",
+            "Geographic focus on Egypt and Middle East politics",
+            "Repeated navigation elements and headlines",
+            "No mentions of Al-Wehda Club or Saudi club procurement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.6615331172943115
+            }
+          ],
+          "reasoning": "The content is from a general news portal (Egypt Today) focusing on Egyptian politics, regional diplomacy, and general news. There is no content related to Al-Wehda Club, Saudi sports entities, or procurement activities. The entity of interest is not mentioned in the provided text."
+        }
+      ],
+      "total_input_tokens": 7601,
+      "total_output_tokens": 994,
+      "estimated_cost_usd": 0.037712999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Wehda Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:31:48.017363"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358475",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:19.585884"
+}

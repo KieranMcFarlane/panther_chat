@@ -1,0 +1,77 @@
+{
+  "entity_id": "chelsea",
+  "entity_name": "Chelsea",
+  "template_id": "top_tier_club_global",
+  "discovered_at": "2026-01-30T14:59:05.459918Z",
+  "domains": [
+    "chelsea.com",
+    "www.chelsea.com"
+  ],
+  "channels": {
+    "jobs": "linkedin.com/jobs@chelsea",
+    "careers": "chelsea.com/careers",
+    "news": "chelsea.com/news",
+    "press": "chelsea.com/press"
+  },
+  "patterns": {
+    "Digital Infrastructure & Stack": {
+      "patterns_found": [
+        "CRM platform upgrade",
+        "API modernization",
+        "New ticketing system",
+        "Mobile app revamp"
+      ],
+      "iterations_used": 16,
+      "confidence": 0.87,
+      "accept_rate": 0.87
+    },
+    "Commercial & Revenue Systems": {
+      "patterns_found": [
+        "Hospitality booking system",
+        "Sponsorship tech integration",
+        "Merchandise platform"
+      ],
+      "iterations_used": 18,
+      "confidence": 0.81,
+      "accept_rate": 0.94
+    },
+    "Fan Engagement & Experience": {
+      "patterns_found": [
+        "Personalized content delivery",
+        "Gamification platform"
+      ],
+      "iterations_used": 21,
+      "confidence": 0.83,
+      "accept_rate": 0.83
+    },
+    "Data & Analytics": {
+      "patterns_found": [
+        "Performance tracking system",
+        "Data warehouse implementation",
+        "Predictive analytics",
+        "Fan analytics platform"
+      ],
+      "iterations_used": 19,
+      "confidence": 0.78,
+      "accept_rate": 0.85
+    },
+    "Operations & Stadium": {
+      "patterns_found": [
+        "Operations automation",
+        "Stadium Wi-Fi upgrade",
+        "Security surveillance system",
+        "Venue management system"
+      ],
+      "iterations_used": 15,
+      "confidence": 0.91,
+      "accept_rate": 0.91
+    }
+  },
+  "performance_metrics": {
+    "total_iterations": 30,
+    "categories_discovered": 5,
+    "overall_confidence": 0.84,
+    "total_cost_usd": 0.75
+  },
+  "next_refresh": "2026-01-30T14:59:05.459922Z"
+}

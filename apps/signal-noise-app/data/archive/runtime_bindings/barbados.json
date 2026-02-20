@@ -1,0 +1,402 @@
+{
+  "entity_id": "barbados",
+  "entity_name": "Barbados",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "visitbarbados.org",
+    "immigration.gov.bb",
+    "barbados.org",
+    "visitbarbados.com",
+    "travelform.gov.bb",
+    "gisbarbados.gov.bb",
+    "foreign.gov.bb"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/jobs-in-barbados",
+      "https://bb.linkedin.com/jobs/jobs-jobs",
+      "https://bb.linkedin.com/jobs/jobs-in-barbados?countryRedirected=1",
+      "https://bb.linkedin.com/jobs/remote-jobs",
+      "https://bb.linkedin.com/jobs/search",
+      "https://www.linkedin.com/jobs/search/?f_TPR=r604800&geoId=105545106",
+      "https://bb.linkedin.com/jobs/research-jobs",
+      "https://bb.linkedin.com/jobs/information-technology-jobs",
+      "https://bb.linkedin.com/jobs/bank-jobs",
+      "https://bb.linkedin.com/jobs/working-experience-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "barbados",
+      "entity_name": "Barbados",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.02,
+        0.04,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/jobs-in-barbados",
+        "https://gisbarbados.gov.bb",
+        "https://bb.linkedin.com/jobs/jobs-jobs",
+        "https://travelform.gov.bb",
+        "https://visitbarbados.org",
+        "https://barbados.org",
+        "https://foreign.gov.bb",
+        "https://bb.linkedin.com/jobs/remote-jobs",
+        "https://bb.linkedin.com/jobs/jobs-in-barbados?countryRedirected=1",
+        "https://immigration.gov.bb",
+        "https://visitbarbados.com",
+        "https://bb.linkedin.com/jobs/search"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Barbados may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:21:38.752729",
+          "domain_explored": "https://visitbarbados.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Front-end requirement)",
+              "Issuu (Document/Calendar hosting)",
+              "TravelForm.gov.bb (Digital form processing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Customs and Immigration Form (Digital Transformation)",
+              "Barbados Welcome Stamp Application Portal (Remote Work Visa Infrastructure)",
+              "Events Calendar 2025 (Content Management/Marketing)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery",
+            "Remote Work Infrastructure",
+            "Third-party Platform Dependencies"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 294,
+              "elapsed_seconds": 3.1345481872558594
+            }
+          ],
+          "reasoning": "The content reveals active government digital services (Customs/Immigration forms) and the 'Barbados Welcome Stamp' (remote work visa). While no direct procurement notices are present, the reliance on external platforms (Issuu for calendars, TravelForm.gov.bb) and the need to process visa applications indicate underlying infrastructure and potential vendor relationships for digital processing and hosting."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:21:56.051380",
+          "domain_explored": "https://immigration.gov.bb",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:22:02.968625",
+          "domain_explored": "https://barbados.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Marketing Content",
+            "Consumer-Facing Information Architecture"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 160,
+              "elapsed_seconds": 1.9404520988464355
+            }
+          ],
+          "reasoning": "The scraped content from barbados.org is purely promotional and consumer-facing, focusing on tourism (beaches, festivals, attractions). There are no technical specifications, administrative notices, vendor calls, or backend infrastructure details that indicate procurement activity or governance structures."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:22:43.374170",
+          "domain_explored": "https://visitbarbados.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:22:59.559846",
+          "domain_explored": "https://travelform.gov.bb",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:23:13.693489",
+          "domain_explored": "https://gisbarbados.gov.bb",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:23:26.945293",
+          "domain_explored": "https://foreign.gov.bb",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:23:34.066311",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-barbados",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Project Management Software (implied by Project Manager roles)",
+              "Remote Collaboration Tools",
+              "Digital Booking Platforms"
+            ],
+            "job_postings": [
+              "Remote Creative Production Project Manager (Brafton Inc.)",
+              "Remote Tourism Consultant (Viajemos solas pero en Grupo)",
+              "Remote Travel Advisor (Sweet Carolina Luxury Travels)"
+            ],
+            "procurement_indicators": [
+              "Outsourcing of creative production functions",
+              "Investment in remote work infrastructure",
+              "Hospitality sector staffing (Ocean Hotels Group)"
+            ]
+          },
+          "patterns_found": [
+            "Remote-First Workforce Models",
+            "Tourism Sector Digital Transformation",
+            "Outsourced Creative Services",
+            "Hospitality Operational Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1601,
+              "output_tokens": 368,
+              "elapsed_seconds": 3.1858928203582764
+            }
+          ],
+          "reasoning": "While this source is a job board and not a direct procurement portal, the prevalence of 'Remote' roles (Brafton, Viajemos) targeting Barbados indicates a growing reliance on outsourced digital services and remote infrastructure. The specific hiring by international entities (Brafton Inc.) for roles based in Bridgetown suggests Barbados is being used as a nearshore hub for creative production, signaling potential future procurement needs for collaboration tools and bandwidth."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:23:48.094548",
+          "domain_explored": "https://bb.linkedin.com/jobs/jobs-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Scheduler - REMOTE (Lensa - US)",
+              "File Clerks | $80/hr Remote (Crossing Hurdles - US)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch",
+            "Generic Job Aggregation",
+            "Spam/Recruitment Scam Indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.809983968734741
+            }
+          ],
+          "reasoning": "The scraped content from the URL 'bb.linkedin.com/jobs/jobs-jobs' is explicitly filtered for 'Jobs in United States'. The entities listed (Lensa, Crossing Hurdles) are not Barbados government bodies or local Barbados entities. The content represents generic US job listings and recruitment spam, providing zero intelligence regarding Barbados procurement, public sector hiring, or government technology stacks."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T10:23:58.844620",
+          "domain_explored": "https://bb.linkedin.com/jobs/jobs-in-barbados?countryRedirected=1",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Project Management Software (implied by Project Manager role)",
+              "Remote Collaboration Tools",
+              "Digital Content Management Systems"
+            ],
+            "job_postings": [
+              "Remote Creative Production Project Manager (Brafton Inc.)",
+              "Remote Tourism Consultant (Viajemos solas pero en Grupo)",
+              "Remote Travel Advisor (Sweet Carolina Luxury Travels)"
+            ],
+            "procurement_indicators": [
+              "Presence of international digital agencies (Brafton) establishing operational footprint in Bridgetown",
+              "Investment in remote talent infrastructure",
+              "Shift towards service-based economy roles"
+            ]
+          },
+          "patterns_found": [
+            "Remote-First Workforce Models",
+            "Tourism Sector Digital Transformation",
+            "Outsourced Creative Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 385,
+              "elapsed_seconds": 3.6798887252807617
+            }
+          ],
+          "reasoning": "The content confirms a robust ecosystem for remote work and digital services within Barbados, specifically highlighting the island's role as a nearshore hub for North American companies (e.g., Brafton Inc.). While these are private sector hiring activities rather than direct government procurement, they signal a maturing digital infrastructure and a labor market capable of supporting complex remote project management and creative production. This environment is a prerequisite for government digital transformation projects."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T10:24:11.754631",
+          "domain_explored": "https://bb.linkedin.com/jobs/remote-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Scheduler - REMOTE (Lensa - United States)",
+              "Regional Recruiter (Chipotle Mexican Grill - Washington, DC)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (US/DC focus)",
+            "Generic Job Aggregation",
+            "Authentication Wall/Gated Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.6006081104278564
+            }
+          ],
+          "reasoning": "The scraped content explicitly lists 'Remote Jobs in United States' and 'Washington, DC', confirming a geographic mismatch with the target entity (Barbados). The content consists of generic job listings (Chipotle, Lensa) and repeated login prompts, providing zero intelligence regarding Barbados procurement, governance, or local technology stacks."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T10:24:22.192797",
+          "domain_explored": "https://bb.linkedin.com/jobs/search",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform",
+              "Remote Collaboration Tools (implied by 'Remote' roles)",
+              "Digital Content Management (implied by 'Creative Production')"
+            ],
+            "job_postings": [
+              "Remote Creative Production Project Manager - Brafton Inc.",
+              "Remote Tourism Consultant - Viajemos solas pero en Grupo",
+              "Remote Travel Advisor - Sweet Carolina Luxury Travels",
+              "Spa Receptionist - Ocean Hotels Group BARBADOS",
+              "General Worker (Processing Plant) - Ocean Hotels Group BARBADOS"
+            ],
+            "procurement_indicators": [
+              "Outsourced Marketing/Content (Brafton Inc. hiring for Caribbean region)",
+              "Hospitality Sector Staffing (Ocean Hotels Group active hiring)",
+              "Micro-entrepreneurship in Tourism (Luxury Travel agencies)"
+            ]
+          },
+          "patterns_found": [
+            "Remote-First Workforce Models",
+            "Tourism Sector Digital Transformation",
+            "Outsourced Creative Services",
+            "Geographic Tagging Anomalies (Bridgetown as Default)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1828,
+              "output_tokens": 442,
+              "elapsed_seconds": 3.9453980922698975
+            }
+          ],
+          "reasoning": "The search results confirm a high volume of remote work opportunities and tourism-centric roles, reinforcing the 'Digital Nomad' and 'Tourism' economic pillars. However, the presence of 'Bridgetown' as a location tag for fully remote entities (e.g., Brafton, Viajemos) suggests data tagging noise rather than physical procurement presence. The listings are predominantly for individual contributors (Travel Advisors, Creative Managers) rather than procurement decision-makers or large-scale IT infrastructure projects."
+        }
+      ],
+      "total_input_tokens": 11365,
+      "total_output_tokens": 2082,
+      "estimated_cost_usd": 0.065325
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Barbados may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:24:22.195474"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.294626",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:34.602044"
+}

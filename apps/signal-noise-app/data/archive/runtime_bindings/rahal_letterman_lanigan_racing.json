@@ -1,0 +1,372 @@
+{
+  "entity_id": "rahal_letterman_lanigan_racing",
+  "entity_name": "Rahal Letterman Lanigan Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "rahal.com",
+    "indycar.com",
+    "grahamrahal.com",
+    "thelancogroup.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/imsa-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253077181",
+      "https://www.linkedin.com/jobs/view/indycar-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253073392",
+      "https://www.linkedin.com/jobs/racing-jobs-indianapolis-in",
+      "https://www.linkedin.com/posts/fluid-jobs_f1jobs-motorsport-engineering-activity-7269727974248046593-YQCC",
+      "https://www.linkedin.com/jobs/diesel-engines-jobs-indianapolis-in"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rahal_letterman_lanigan_racing",
+      "entity_name": "Rahal Letterman Lanigan Racing",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://grahamrahal.com",
+        "https://thelancogroup.com",
+        "https://www.linkedin.com/jobs/view/imsa-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253077181",
+        "https://www.linkedin.com/jobs/view/indycar-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253073392",
+        "https://www.linkedin.com/jobs/diesel-engines-jobs-indianapolis-in",
+        "https://www.linkedin.com/jobs/racing-jobs-indianapolis-in",
+        "https://indycar.com",
+        "https://rahal.com",
+        "https://www.linkedin.com/posts/fluid-jobs_f1jobs-motorsport-engineering-activity-7269727974248046593-YQCC"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rahal Letterman Lanigan Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:33:50.969797",
+          "domain_explored": "https://rahal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify/Magento/WooCommerce indicators via 'View Featured Product')",
+              "Email Marketing Automation (Mailchimp/Constant Contact indicators via 'Sign up for team news')",
+              "Video Hosting (YouTube/Vimeo integration)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [
+              "Personnel Additions (Jan 26, 2026) - Indicates active hiring phase"
+            ],
+            "procurement_indicators": [
+              "IMSA GTD PRO Program Expansion (McLaren Collaboration)",
+              "Tire Pressure Sensor Procurement (Technical failure implies vendor review)",
+              "Merchandising Supply Chain (Apparel inventory management)",
+              "Fan Engagement Platform Services"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Expansion (McLaren)",
+            "Personnel Scaling (Jan 2026)",
+            "Technical Component Sourcing (Tire Pressure Sensors)",
+            "Direct-to-Consumer (DTC) E-commerce Operations",
+            "Digital Asset Management (Video/Gallery Hosting)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 431,
+              "elapsed_seconds": 6.711464881896973
+            }
+          ],
+          "reasoning": "While the content is primarily marketing and race-results focused, it reveals significant organizational scaling that drives procurement. The 'Multi-Year Collaboration' with McLaren and the 'Personnel Additions' (Jan 2026) indicate a need for expanded HR, IT, and operational infrastructure. The specific mention of 'Tire Pressure Sensor Failure' highlights a need for reliable sensor vendors. The presence of a 'Fan Community' signup and 'Featured Products' confirms active e-commerce and CRM usage."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:34:00.829573",
+          "domain_explored": "https://indycar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thrustmaster (Sim Racing Hardware)",
+              "iRacing (Simulation Software)",
+              "FOX Sports (Broadcast Platform)"
+            ],
+            "job_postings": [
+              "Race Engineer (Mick Schumacher)",
+              "Driver Coach (Ryan Briscoe)"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Procurement: Verizon (Sponsor for No. 12)",
+              "Technical Hiring: Engineering staff acquisition",
+              "Media Production: Commercial shoots with FOX Sports"
+            ]
+          },
+          "patterns_found": [
+            "Personnel Scaling (Technical Staff)",
+            "Vendor Partnerships (Broadcasting)",
+            "Sponsorship Procurement (Verizon)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.812770843505859
+            }
+          ],
+          "reasoning": "While the source is the series homepage (IndyCar.com) rather than the team's specific vendor portal, it contains a specific news item ('RLL Adds Ryan Briscoe as Coach, Hires Engineer for Mick Schumacher') that confirms active procurement of human capital and technical engineering resources. Additionally, the presence of 'Verizon' as a sponsor in the 'Penske Pulls Cover' section (and general broadcast context) indicates active sponsorship procurement and vendor management activities, though less direct than an RFP."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:34:11.068085",
+          "domain_explored": "https://grahamrahal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship/Partnership",
+                "details": "United Rentals partnership active with specific funding commitments ($50/lap)."
+              },
+              {
+                "type": "Facilities",
+                "details": "New Headquarters located at 10850 Creek Way, Zionsville, IN 46077."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement (United Rentals)",
+            "Facility Management (HQ Relocation)",
+            "CSR/Non-profit Partnership Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.547130823135376
+            }
+          ],
+          "reasoning": "While the content is primarily PR-focused regarding the 'Turns For Troops' initiative, it confirms the active procurement and management of major sponsorship partnerships (United Rentals). Additionally, the mention of a 'new HQ' (10850 Creek Way) indicates a recent or ongoing facilities procurement/management phase, which often involves vendor needs for logistics, maintenance, and office services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:34:18.415649",
+          "domain_explored": "https://thelancogroup.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:34:27.523237",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253077181",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Hybrid GTP Systems",
+              "Chassis Setup Software/Sheets",
+              "Measurement Tools (Calipers, Zyglo, Magnaflux)"
+            ],
+            "job_postings": [
+              "IMSA Mechanic Talent Pool (Zionsville, IN)"
+            ],
+            "procurement_indicators": [
+              "Demand for specialized diagnostic tools (Zyglo, Magnaflux)",
+              "Requirement for heavy machinery (Mill, Lathe, Press, Welder)",
+              "Expansion of BMW GTP program infrastructure",
+              "Travel logistics procurement (25+ events/year)"
+            ]
+          },
+          "patterns_found": [
+            "Personnel Scaling (Technical Staff)",
+            "Specialized Tooling Procurement",
+            "Facility Expansion (GTP Program)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 325,
+              "elapsed_seconds": 3.9090800285339355
+            }
+          ],
+          "reasoning": "The content is a job posting for an IMSA Mechanic Talent Pool, explicitly signaling the expansion of the BMW GTP program. While primarily an HR signal, the detailed 'Key Responsibilities' section reveals specific procurement needs for technical equipment (Zyglo, Magnaflux, chassis setup pads) and safety gear. It confirms active scaling of the IMSA division, which correlates with increased operational and capital expenditure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:34:36.890877",
+          "domain_explored": "https://www.linkedin.com/jobs/view/indycar-mechanic-talent-pool-at-rahal-letterman-lanigan-racing-4253073392",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "IndyCar Mechanic Talent Pool (Zionsville, IN)"
+            ],
+            "procurement_indicators": [
+              "Investment in specialized tooling for racecar build and maintenance",
+              "Procurement related to Human Performance Center operations (fitness equipment, medical supplies)",
+              "Uniform and apparel procurement ('exclusive access, and apparel')",
+              "Travel and logistics procurement ('Team travel perks')"
+            ]
+          },
+          "patterns_found": [
+            "Personnel Scaling (Technical Staff)",
+            "Facility & Infrastructure Investment (Human Performance Center)",
+            "Supply Chain Readiness (Tooling & Uniformity)",
+            "Strategic Workforce Planning (Talent Pool Pipeline)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1661,
+              "output_tokens": 336,
+              "elapsed_seconds": 4.537053346633911
+            }
+          ],
+          "reasoning": "The job posting confirms RLL is investing in human capital and infrastructure (Human Performance Center). While primarily a recruitment ad, the emphasis on 'uniformity, fit and finish' and 'proactive problem-solving' implies a need for high-precision tools and standardized equipment procurement to support the mechanics. The 'Talent Pool' strategy indicates planned scaling, which correlates with increased operational procurement needs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:34:49.058686",
+          "domain_explored": "https://www.linkedin.com/jobs/racing-jobs-indianapolis-in",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Intelligence (Arrow McLaren, Chip Ganassi, Penske)",
+            "General Market Labor Demand (Hospitality, Logistics, Marketing)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1735,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.5895941257476807
+            }
+          ],
+          "reasoning": "The content provided is a generic search results page for 'Racing Jobs in Indianapolis'. It lists opportunities for direct competitors (Arrow McLaren, Chip Ganassi) and unrelated entities (Penske Honda), but contains zero specific references, job postings, or signals regarding Rahal Letterman Lanigan Racing (RLL). Therefore, no new procurement intelligence can be extracted for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:34:56.918517",
+          "domain_explored": "https://www.linkedin.com/posts/fluid-jobs_f1jobs-motorsport-engineering-activity-7269727974248046593-YQCC",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Race Engineer"
+            ],
+            "procurement_indicators": [
+              "Technical Staff Expansion",
+              "Competitor Activity Monitoring"
+            ]
+          },
+          "patterns_found": [
+            "Personnel Scaling (Technical Engineering)",
+            "Competitor Benchmarking (McLaren, Andretti, Williams)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1815,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.1775963306427
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'Race Engineer' role at Rahal Letterman Lanigan Racing. While this is a personnel signal rather than a direct procurement signal, high-level technical hiring often correlates with subsequent procurement needs for specialized software, telemetry tools, and hardware. The post also provides context on competitor hiring (e.g., McLaren hiring a Corporate Sustainability Specialist and Williams hiring Simulation Engineers), which helps benchmark RLL's operational focus against the market."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:35:06.774540",
+          "domain_explored": "https://www.linkedin.com/jobs/diesel-engines-jobs-indianapolis-in",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "IndyCar Mechanic Talent Pool (Rahal Letterman Lanigan Racing) - Previously identified"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Market Noise (Irrelevant Search Results)",
+            "Historical Data Repetition (IndyCar Mechanic Talent Pool)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1879,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.9027938842773438
+            }
+          ],
+          "reasoning": "The search query 'Diesel Engines' in Indianapolis returns irrelevant municipal and heavy equipment roles (City of Indianapolis, hth companies). While the target entity's 'IndyCar Mechanic Talent Pool' appears in the results, it is a 7-month-old listing previously analyzed in Iteration 6. There is no new procurement signal or specific intent regarding diesel engine technology or sourcing."
+        }
+      ],
+      "total_input_tokens": 12938,
+      "total_output_tokens": 2387,
+      "estimated_cost_usd": 0.07461899999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rahal Letterman Lanigan Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:35:06.776207"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364587",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:46.095776"
+}

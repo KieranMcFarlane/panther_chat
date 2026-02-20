@@ -1,0 +1,332 @@
+{
+  "entity_id": "nhl",
+  "entity_name": "NHL",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "nhlofficials.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/national-hockey-league/jobs",
+      "https://www.linkedin.com/jobs/nhl-jobs-new-york",
+      "https://www.linkedin.com/jobs/national-hockey-league-%28nhl%29-jobs-worldwide",
+      "https://www.linkedin.com/jobs/nhl-jobs-secaucus-nj",
+      "https://www.linkedin.com/jobs/nhl-jobs",
+      "https://ca.linkedin.com/jobs/nhl-jobs",
+      "https://www.linkedin.com/jobs/nhl-jobs-new-york-ny",
+      "https://www.linkedin.com/jobs/national-hockey-league-%28nhl%29-jobs",
+      "https://www.linkedin.com/jobs/nhl-jobs-chicago-il"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nhl",
+      "entity_name": "NHL",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.14,
+        0.2,
+        0.26
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/nhl-jobs",
+        "https://www.linkedin.com/jobs/national-hockey-league-%28nhl%29-jobs-worldwide",
+        "https://www.linkedin.com/jobs/nhl-jobs-new-york",
+        "https://nhlofficials.com",
+        "https://www.linkedin.com/jobs/nhl-jobs-secaucus-nj",
+        "https://www.linkedin.com/company/national-hockey-league/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "ServiceNow Implementation",
+        "Mobile App Development (iOS)",
+        "DevSecOps Infrastructure Investment",
+        "Digital Content Creation",
+        "ServiceNow Business Process Engineering",
+        "DevSecOps Infrastructure Modernization",
+        "iOS Mobile Application Development",
+        "YouTube Content Production",
+        "Geographic Expansion (Toronto Tech Hub)",
+        "Digital Content Production (YouTube)",
+        "Partnership Management (Islanders)",
+        "Part-Time Labor Utilization",
+        "Digital Content Production (YouTube)",
+        "Part-Time Labor Utilization",
+        "Partnership Management",
+        "Motion Design Outsourcing",
+        "Athletic Development Services"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NHL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:17:51.845793",
+          "domain_explored": "https://nhlofficials.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:17:59.186433",
+          "domain_explored": "https://www.linkedin.com/company/national-hockey-league/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ServiceNow",
+              "iOS (Swift/Objective-C)",
+              "DevSecOps Toolchain (e.g., Tenable, Docker, Kubernetes, CI/CD)",
+              "YouTube / Video Editing Software"
+            ],
+            "job_postings": [
+              "ServiceNow Business Process Engineer (New York, NY)",
+              "Senior iOS Engineer (Greater Toronto Area, Canada)",
+              "DevSecOps Engineer (New York, NY)",
+              "YouTube Video Editor (Part-Time) (New York, NY)"
+            ],
+            "procurement_indicators": [
+              "ServiceNow Platform Procurement/Expansion",
+              "Mobile Development Tools & Licenses",
+              "Cloud Security & Infrastructure Solutions",
+              "Digital Media Asset Management"
+            ]
+          },
+          "patterns_found": [
+            "ServiceNow Implementation",
+            "Mobile App Development (iOS)",
+            "DevSecOps Infrastructure Investment",
+            "Digital Content Creation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 380,
+              "elapsed_seconds": 4.170144081115723
+            }
+          ],
+          "reasoning": "The scraped content reveals active recruitment for roles that directly correlate with specific technology procurement and implementation. The 'ServiceNow Business Process Engineer' role is a strong procurement signal indicating investment in IT Service Management (ITSM) or workflow automation platforms. The 'Senior iOS Engineer' and 'DevSecOps Engineer' roles signal ongoing investment in mobile application infrastructure and cloud security tooling."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:18:06.352971",
+          "domain_explored": "https://www.linkedin.com/jobs/nhl-jobs-new-york",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Editing Software",
+              "Digital Asset Management (DAM)",
+              "YouTube Platform"
+            ],
+            "job_postings": [
+              "YouTube Video Editor (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Investment in digital content volume",
+              "Potential need for creative software licensing",
+              "Media production hardware requirements"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Creation",
+            "Video Production Outsourcing",
+            "Social Media Engagement (YouTube)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.624047040939331
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for a 'YouTube Video Editor' at the NHL. While this is a direct hire, it indicates active investment in digital media infrastructure and content production capabilities. This suggests potential future procurement needs for supporting software (Adobe Creative Cloud, editing tools), hardware, or freelance scaling during peak seasons (Stanley Cup playoffs). It is a WEAK_ACCEPT because it confirms activity but is a staffing signal rather than a direct vendor purchase signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:18:16.662257",
+          "domain_explored": "https://www.linkedin.com/jobs/national-hockey-league-%28nhl%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ServiceNow",
+              "iOS",
+              "DevSecOps",
+              "Cloud Infrastructure",
+              "Video Editing Software"
+            ],
+            "job_postings": [
+              "ServiceNow Business Process Engineer",
+              "DevSecOps Engineer",
+              "Senior iOS Engineer",
+              "YouTube Video Editor (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Enterprise Software Implementation (ServiceNow)",
+              "Mobile Development Platform Investment",
+              "Infrastructure Security & Automation",
+              "Digital Content Creation Outsourcing/Staffing"
+            ]
+          },
+          "patterns_found": [
+            "ServiceNow Business Process Engineering",
+            "DevSecOps Infrastructure Modernization",
+            "iOS Mobile Application Development",
+            "YouTube Content Production",
+            "Geographic Expansion (Toronto Tech Hub)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 406,
+              "elapsed_seconds": 6.997709035873413
+            }
+          ],
+          "reasoning": "The content confirms and strengthens signals from previous iterations. The presence of a 'ServiceNow Business Process Engineer' indicates a structured, enterprise-level digital transformation initiative requiring significant software licensing and consulting. The 'DevSecOps Engineer' role suggests a move towards secure, automated infrastructure (likely cloud-native). The 'Senior iOS Engineer' posting in the Greater Toronto Area confirms the NHL is investing in proprietary mobile application capabilities outside of their NY headquarters. These are high-value procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:18:26.134205",
+          "domain_explored": "https://www.linkedin.com/jobs/nhl-jobs-secaucus-nj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "YouTube Platform",
+              "Video Editing Software"
+            ],
+            "job_postings": [
+              "YouTube Video Editor (Part-Time) - National Hockey League (NHL)",
+              "Director, Partnership Management - New York Islanders"
+            ],
+            "procurement_indicators": [
+              "Outsourcing of creative labor (Part-time editor)",
+              "Investment in digital engagement channels",
+              "Sponsorship/Partnership infrastructure management"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Production (YouTube)",
+            "Partnership Management (Islanders)",
+            "Part-Time Labor Utilization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 277,
+              "elapsed_seconds": 5.116848945617676
+            }
+          ],
+          "reasoning": "The content reveals specific job postings that signal active procurement needs. The 'YouTube Video Editor' role confirms continued investment in digital content infrastructure, while the 'Director, Partnership Management' role (New York Islanders) indicates vendor/sponsor relationship management activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:18:36.659290",
+          "domain_explored": "https://www.linkedin.com/jobs/nhl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "YouTube (Platform)",
+              "Video Editing Software",
+              "Motion Graphics Software"
+            ],
+            "job_postings": [
+              "YouTube Video Editor (Part-Time) - National Hockey League (NHL)",
+              "Intern, Motion Design - New York Islanders",
+              "Editor - New York Islanders",
+              "Director, Partnership Management - New York Islanders"
+            ],
+            "procurement_indicators": [
+              "Investment in digital content creation infrastructure",
+              "Utilization of gig-economy/part-time labor for specialized media tasks",
+              "Outsourcing of creative design functions",
+              "Active management of corporate partnerships"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Production (YouTube)",
+            "Part-Time Labor Utilization",
+            "Partnership Management",
+            "Motion Design Outsourcing",
+            "Athletic Development Services"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1630,
+              "output_tokens": 398,
+              "elapsed_seconds": 6.851106882095337
+            }
+          ],
+          "reasoning": "The content reveals specific hiring activities directly linked to digital transformation and content creation. The 'YouTube Video Editor' role at the NHL confirms a continued investment in digital platforms and video production tools. The presence of 'Motion Design' and 'Editor' roles for the New York Islanders indicates a broader league-wide trend of outsourcing creative services. Additionally, the 'Director, Partnership Management' role suggests ongoing vendor relationship management activities."
+        }
+      ],
+      "total_input_tokens": 7551,
+      "total_output_tokens": 1770,
+      "estimated_cost_usd": 0.049203
+    },
+    "procurement_signals": [
+      "ServiceNow Implementation",
+      "Mobile App Development (iOS)",
+      "DevSecOps Infrastructure Investment",
+      "Digital Content Creation",
+      "ServiceNow Business Process Engineering",
+      "DevSecOps Infrastructure Modernization",
+      "iOS Mobile Application Development",
+      "YouTube Content Production",
+      "Geographic Expansion (Toronto Tech Hub)",
+      "Digital Content Production (YouTube)",
+      "Partnership Management (Islanders)",
+      "Part-Time Labor Utilization",
+      "Digital Content Production (YouTube)",
+      "Part-Time Labor Utilization",
+      "Partnership Management",
+      "Motion Design Outsourcing",
+      "Athletic Development Services"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NHL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:18:36.659941"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447772",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:53.154296"
+}

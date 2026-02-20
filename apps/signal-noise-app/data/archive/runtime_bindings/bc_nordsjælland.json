@@ -1,0 +1,177 @@
+{
+  "entity_id": "bc_nordsj\u00e6lland",
+  "entity_name": "BC Nordsj\u00e6lland",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://dk.linkedin.com/jobs/view/senior-campaign-specialist-programmatic-at-better-collective-4309637156",
+      "https://dk.linkedin.com/jobs/view/senior-financial-analyst-copenhagen-at-danske-bank-4040000972",
+      "https://dk.linkedin.com/jobs/view/global-logistics-order-coordinator-ambitious-entry-levels-considered-at-pack-tech-a-s-4145808001"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bc_nordsj\u00e6lland",
+      "entity_name": "BC Nordsj\u00e6lland",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://dk.linkedin.com/jobs/view/senior-campaign-specialist-programmatic-at-better-collective-4309637156",
+        "https://dk.linkedin.com/jobs/view/senior-financial-analyst-copenhagen-at-danske-bank-4040000972",
+        "https://dk.linkedin.com/jobs/view/global-logistics-order-coordinator-ambitious-entry-levels-considered-at-pack-tech-a-s-4145808001"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Programmatic Advertising Investment",
+        "Data-Driven Marketing Optimization",
+        "MarTech Stack Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BC Nordsj\u00e6lland may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:53:55.052976",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/senior-campaign-specialist-programmatic-at-better-collective-4309637156",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "DSPs (Demand Side Platforms)",
+              "DMPs (Data Management Platforms)",
+              "3rd-party Ad Servers",
+              "MS Office (Excel, PowerPoint)",
+              "Ad Trafficking Systems"
+            ],
+            "job_postings": [
+              "Senior Campaign Specialist (Programmatic)"
+            ],
+            "procurement_indicators": [
+              "Hiring for programmatic campaign management",
+              "Requirement to 'Evaluate tools, test new approaches'",
+              "Focus on ROI and scalable media buying",
+              "Need for ad trafficking and campaign setup software"
+            ]
+          },
+          "patterns_found": [
+            "Programmatic Advertising Investment",
+            "Data-Driven Marketing Optimization",
+            "MarTech Stack Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1378,
+              "output_tokens": 309,
+              "elapsed_seconds": 5.141770124435425
+            }
+          ],
+          "reasoning": "The job posting for a 'Senior Campaign Specialist (Programmatic)' confirms active investment in digital advertising infrastructure and personnel. The role requires managing high-volume campaigns and evaluating new tools, indicating a need for robust DSP (Demand Side Platform) and analytics solutions to support these operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:54:06.786395",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/senior-financial-analyst-copenhagen-at-danske-bank-4040000972",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Excel, PowerPoint)"
+            ],
+            "job_postings": [
+              "Senior Financial Analyst at Danske Bank (Corporate Advisory)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Corporate Advisory Services",
+            "M&A Transaction Support",
+            "Financial Modeling & Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.201421022415161
+            }
+          ],
+          "reasoning": "The job posting is for a Senior Financial Analyst role at Danske Bank, specifically within the 'Corporate Advisory' division. This division provides financial advice (M&A, funding strategy) to the bank's clients. While BC Nordsj\u00e6lland is a corporate entity that might utilize banking services, this posting describes the *service provider's* internal hiring to deliver those services. It does not indicate that BC Nordsj\u00e6lland is procuring new technology, software, or external vendors; rather, it highlights a potential vendor relationship (Danske Bank) expanding its capacity. There is no direct procurement signal originating from BC Nordsj\u00e6lland in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:54:19.854628",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/global-logistics-order-coordinator-ambitious-entry-levels-considered-at-pack-tech-a-s-4145808001",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office 365",
+              "Microsoft Dynamics 365 Business Central (BC 365)"
+            ],
+            "job_postings": [
+              "Global logistics & order coordinator at Pack Tech A/S"
+            ],
+            "procurement_indicators": [
+              "Logistics and shipping operations",
+              "Supplier coordination",
+              "Order administration"
+            ]
+          },
+          "patterns_found": [
+            "Logistics & Order Management",
+            "Supply Chain Coordination",
+            "ERP Utilization (Business Central 365)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.664844989776611
+            }
+          ],
+          "reasoning": "The job posting is for a role at Pack Tech A/S, a packaging company, and is unrelated to BC Nordsj\u00e6lland (a sports club). While the role involves 'purchasing' coordination and ERP systems (BC 365), it is an operational logistics role within a manufacturing/supply chain context, not a procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 4347,
+      "total_output_tokens": 850,
+      "estimated_cost_usd": 0.025791
+    },
+    "procurement_signals": [
+      "Programmatic Advertising Investment",
+      "Data-Driven Marketing Optimization",
+      "MarTech Stack Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BC Nordsj\u00e6lland may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:54:19.856388"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227160",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:18.549416"
+}

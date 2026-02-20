@@ -1,0 +1,183 @@
+{
+  "entity_id": "dinamo_moscow",
+  "entity_name": "Dinamo Moscow",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "vldinamo.ru",
+    "fcdynamo.com",
+    "www-old.cev.eu",
+    "fckrasnodar.ru"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dinamo_moscow",
+      "entity_name": "Dinamo Moscow",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fckrasnodar.ru",
+        "https://www-old.cev.eu",
+        "https://fcdynamo.com",
+        "https://vldinamo.ru"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dinamo Moscow may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:23:25.961712",
+          "domain_explored": "https://vldinamo.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "intickets.ru (Ticketing Platform)",
+              "iframe integration (Web architecture)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active ticket sales infrastructure (Vendor: intickets.ru)",
+              "Sponsorship hierarchy (General/Leading/Official/Technical partners)",
+              "Active roster management (approx. 45 players/staff listed)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Operations",
+            "Sponsorship Ecosystem",
+            "Rostering/Team Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.662205934524536
+            }
+          ],
+          "reasoning": "The content confirms the entity is actively operating a professional sports club (Volleyball) with visible commercial activities (ticket sales via 'intickets.ru') and a structured sponsorship hierarchy (General, Leading, Official, Technical partners). While no direct procurement requests were found, the active use of a third-party ticketing iframe and the management of a large roster and partner network indicate operational capacity and potential vendor relationships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:23:37.001892",
+          "domain_explored": "https://fcdynamo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Academy Operations (U15/U16)",
+            "Training Camp Logistics (Turkey)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.9420619010925293
+            }
+          ],
+          "reasoning": "The scraped content is exclusively sports journalism (match results, training camp updates, academy scores). It contains no corporate governance, technology infrastructure, or procurement signals. The content is in Ukrainian, focusing on on-pitch activities rather than business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:23:47.251056",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Governance",
+            "Event Scheduling/Calendaring",
+            "Multi-Sport Coordination",
+            "Historical Data Archiving"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.108937978744507
+            }
+          ],
+          "reasoning": "The content is scraped from the Confederation Europ\u00e9enne de Volleyball (CEV) website, a governing body for European volleyball. While it lists competitions and events, it contains no specific information regarding Dinamo Moscow's internal operations, procurement needs, or technology stack. The entity context (Dinamo Moscow) is completely absent from this external federation page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:23:57.337016",
+          "domain_explored": "https://fckrasnodar.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Standings",
+            "Team Rostering",
+            "Match Scheduling",
+            "Fan Engagement Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.2742531299591064
+            }
+          ],
+          "reasoning": "The scraped content from fckrasnodar.ru is exclusively focused on sports operations: league standings (RPL, Youth Leagues), player statistics (scorers), and news updates about training camps. There is no presence of corporate governance, procurement notices, or technology infrastructure discussions. This is a competitor entity (FC Krasnodar) and does not serve the procurement intelligence function for Dinamo Moscow."
+        }
+      ],
+      "total_input_tokens": 5704,
+      "total_output_tokens": 841,
+      "estimated_cost_usd": 0.029726999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dinamo Moscow may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:23:57.339982"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319496",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:32.215317"
+}

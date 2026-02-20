@@ -1,0 +1,211 @@
+{
+  "entity_id": "saint-rapha\u00ebl_var_handball",
+  "entity_name": "Saint-Rapha\u00ebl Var Handball",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "history.eurohandball.com",
+    "billetterie.psg.fr",
+    "esterel-cotedazur.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "saint-rapha\u00ebl_var_handball",
+      "entity_name": "Saint-Rapha\u00ebl Var Handball",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://esterel-cotedazur.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://billetterie.psg.fr",
+        "https://history.eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Saint-Rapha\u00ebl Var Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:32:31.322321",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls blocking content",
+            "Tournament schedules (Machineseeker EHF Champions League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 184,
+              "elapsed_seconds": 6.733566045761108
+            }
+          ],
+          "reasoning": "The provided content is a scraped list of general European Handball Federation (EHF) news headlines and tournament schedules. It contains no specific information regarding 'Saint-Rapha\u00ebl Var Handball', its internal operations, technology stack, or procurement activities. The content is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:32:41.095721",
+          "domain_explored": "https://history.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EOS Data (Platform Design/Software)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical sports data archive",
+            "Generic navigation interface",
+            "Third-party vendor attribution (EOS Data)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 736,
+              "output_tokens": 199,
+              "elapsed_seconds": 3.2768709659576416
+            }
+          ],
+          "reasoning": "The content is a generic interface for the EHF competition history archive. It contains no specific information regarding Saint-Rapha\u00ebl Var Handball's operations, procurement needs, or internal technology stack. The only technical signal is a footer credit for 'EOS Data', which indicates the platform provider for the federation site, not the specific club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:33:08.900166",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketplace (Secondary ticketing platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (PSG vs Saint-Rapha\u00ebl Var Handball)",
+            "Standard Ticketing Interface",
+            "Fan Engagement Content (Stadium Tours)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.68340802192688
+            }
+          ],
+          "reasoning": "The scraped content is from the Paris Saint-Germain (PSG) ticketing platform, not Saint-Rapha\u00ebl Var Handball. While it demonstrates standard sports industry ticketing features (secondary market via 'Ticketplace', stadium tours), it provides zero procurement intelligence regarding the target entity (SRVH). The content is irrelevant to the specific objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:33:21.125959",
+          "domain_explored": "https://esterel-cotedazur.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Board Content",
+            "Generic Destination Marketing Interface",
+            "Seasonal Activity Aggregation",
+            "User Segmentation (Family/Couple/Friends)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 200,
+              "elapsed_seconds": 4.845216274261475
+            }
+          ],
+          "reasoning": "The content is exclusively focused on promoting the Est\u00e9rel C\u00f4te d'Azur region as a tourist destination. It lists generic activities (hiking, beaches, markets) and seasonal events (Valentine's Day, Chandeleur). There is no mention of Saint-Rapha\u00ebl Var Handball, nor are there any procurement signals, technology stacks, or governance indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:33:33.858824",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation Interface",
+            "High-volume League Listings (Soccer focus)",
+            "Standardized Navigation Structure",
+            "No Entity-Specific Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 200,
+              "elapsed_seconds": 5.37786602973938
+            }
+          ],
+          "reasoning": "The scraped content represents a generic sports archive homepage listing global soccer leagues (UEFA, CONCACAF, etc.). There is no mention of 'Saint-Rapha\u00ebl Var Handball', handball-specific data, or organizational operations. The site is a statistical aggregator and does not contain procurement signals, vendor information, or business intelligence related to the target entity."
+        }
+      ],
+      "total_input_tokens": 6715,
+      "total_output_tokens": 987,
+      "estimated_cost_usd": 0.03495
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Saint-Rapha\u00ebl Var Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:33:33.872332"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350158",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:59.890081"
+}

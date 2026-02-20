@@ -1,0 +1,377 @@
+{
+  "entity_id": "hibernian",
+  "entity_name": "Hibernian",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "hibernianfc.co.uk",
+    "hiberniandirect.co.uk",
+    "hibs.org.uk",
+    "newsnow.co.uk",
+    "hibernianhealth.com",
+    "eticketing.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/casual-sales-assistant-hibernian-fc-retail-store-at-gamblingcareers-com-4367951649",
+      "https://ie.linkedin.com/jobs/view/sales-executive-payments-at-hibernian-recruitment-4364255899",
+      "https://ie.linkedin.com/jobs/view/pensions-advisor-at-hibernian-recruitment-4366395705",
+      "https://ie.linkedin.com/jobs/view/deputy-branch-manager-at-hibernian-recruitment-4365330773",
+      "https://ie.linkedin.com/jobs/view/sales-support-executive-at-hibernian-recruitment-4294336105",
+      "https://ie.linkedin.com/jobs/view/territory-sales-manager-at-hibernian-recruitment-4362755880"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hibernian",
+      "entity_name": "Hibernian",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ie.linkedin.com/jobs/view/sales-support-executive-at-hibernian-recruitment-4294336105",
+        "https://hibs.org.uk",
+        "https://ie.linkedin.com/jobs/view/deputy-branch-manager-at-hibernian-recruitment-4365330773",
+        "https://newsnow.co.uk",
+        "https://hiberniandirect.co.uk",
+        "https://eticketing.co.uk",
+        "https://hibernianhealth.com",
+        "https://ie.linkedin.com/jobs/view/sales-executive-payments-at-hibernian-recruitment-4364255899",
+        "https://hibernianfc.co.uk",
+        "https://ie.linkedin.com/jobs/view/pensions-advisor-at-hibernian-recruitment-4366395705",
+        "https://uk.linkedin.com/jobs/view/casual-sales-assistant-hibernian-fc-retail-store-at-gamblingcareers-com-4367951649"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "vendor_partnership_retail_ops",
+        "point_of_sale_technology",
+        "merchandise_ecosystem",
+        "outsourced_retail_management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hibernian may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:19:45.565319",
+          "domain_explored": "https://hibernianfc.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:20:09.276179",
+          "domain_explored": "https://hiberniandirect.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:20:25.826536",
+          "domain_explored": "https://hibs.org.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:20:36.133897",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_news_aggregation",
+            "political_content",
+            "entity_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 600,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.871574878692627
+            }
+          ],
+          "reasoning": "The provided content is a news feed snippet regarding UK politics (Keir Starmer) and the Royal Family (Prince Andrew), sourced from NewsNow. It contains absolutely no information regarding Hibernian FC, its procurement activities, technology stack, or business operations. This is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:20:47.310480",
+          "domain_explored": "https://hibernianhealth.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Bespoke Digital Solutions (Internal)",
+              "IT systems developed by internal team"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "AED Defibrillators procurement",
+              "Vaccination programme logistics"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "healthcare_industry",
+            "family_business_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.6171610355377197
+            }
+          ],
+          "reasoning": "The content is from Hibernian Healthcare, a private medical services and training company in Ireland. This is a distinct entity from Hibernian F.C. (the football club). While they share the 'Hibernian' name, the business context (healthcare vs. sports), leadership (Alan Moran), and operations are unrelated to the procurement needs of the football club."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:20:55.825628",
+          "domain_explored": "https://eticketing.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:21:10.317118",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/casual-sales-assistant-hibernian-fc-retail-store-at-gamblingcareers-com-4367951649",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fanatics Point of Sale System (POS)"
+            ],
+            "job_postings": [
+              {
+                "title": "Casual Retail Store Assistant",
+                "department": "Retail / Merchandise",
+                "contract_type": "Part-time / Casual",
+                "focus": "Front-line sales, POS operation, customer experience"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Partnership",
+                "description": "Use of Fanatics POS system implies a B2B relationship with Fanatics for retail infrastructure and potentially inventory management.",
+                "confidence": "High"
+              },
+              {
+                "type": "Operational Structure",
+                "description": "Retail operations follow a 'Fanatics Brand' model, suggesting potential outsourcing or heavy vendor reliance for merchandising standards.",
+                "confidence": "Medium"
+              }
+            ]
+          },
+          "patterns_found": [
+            "vendor_partnership_retail_ops",
+            "point_of_sale_technology",
+            "merchandise_ecosystem",
+            "outsourced_retail_management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 425,
+              "elapsed_seconds": 5.529369115829468
+            }
+          ],
+          "reasoning": "The job posting confirms a critical vendor partnership for retail operations. The explicit mention of the 'Fanatics Point of Sale System (POS)' identifies a key technology provider and indicates that Hibernian FC's merchandise operations are integrated with Fanatics (likely via their Fanatics Commerce division). This represents a confirmed procurement relationship and active technology usage."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:21:22.473942",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/sales-executive-payments-at-hibernian-recruitment-4364255899",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "recruitment_agency_intermediary",
+            "retail_hospitality_tech_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.334641933441162
+            }
+          ],
+          "reasoning": "The content is a job posting hosted by 'Hibernian Recruitment', an Irish recruitment agency, on behalf of a client in the Retail & Hospitality Technology sector. While 'Hibernian' appears in the title, it refers to the agency, not Hibernian FC. The job description focuses on card payment processing sales, which is unrelated to the procurement operations of a football club. This is a false positive entity match."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:21:35.649667",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/pensions-advisor-at-hibernian-recruitment-4366395705",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "recruitment_agency_intermediary",
+            "financial_services_industry",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1709,
+              "output_tokens": 176,
+              "elapsed_seconds": 6.279396057128906
+            }
+          ],
+          "reasoning": "The job posting is for 'Hibernian Recruitment', a third-party agency based in Dublin, Ireland, recruiting for a separate financial services client. This is unrelated to Hibernian FC (the football club in Edinburgh, Scotland). The content focuses on financial advice, not procurement or technology relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T03:21:46.845473",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/deputy-branch-manager-at-hibernian-recruitment-4365330773",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Deputy Branch Manager (Banking/Financial Services)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "recruitment_agency_intermediary",
+            "financial_services_industry",
+            "retail_banking_ops"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1772,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.88022518157959
+            }
+          ],
+          "reasoning": "The job posting is for a Deputy Branch Manager in a retail banking setting, listed by 'Hibernian Recruitment' (an agency). This confirms the entity mismatch identified in previous iterations (Hibernian Recruitment vs. Hibernian FC). The role focuses on banking operations (mortgages, AML, KYC) rather than the sports club's procurement or technology needs."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T03:21:58.930685",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/sales-support-executive-at-hibernian-recruitment-4294336105",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "CRM systems"
+            ],
+            "job_postings": [
+              "Sales Support Executive (Financial Services)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "recruitment_agency_intermediary",
+            "financial_services_industry",
+            "crm_usage_generic"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1837,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.0261011123657227
+            }
+          ],
+          "reasoning": "The job posting is for a position at a financial services company in Kilkenny, advertised by 'Hibernian Recruitment' (a recruitment agency). This is a distinct entity from Hibernian FC (the football club). The role involves sales support for finance/leasing, not football club operations or procurement."
+        }
+      ],
+      "total_input_tokens": 10630,
+      "total_output_tokens": 1586,
+      "estimated_cost_usd": 0.05568
+    },
+    "procurement_signals": [
+      "vendor_partnership_retail_ops",
+      "point_of_sale_technology",
+      "merchandise_ecosystem",
+      "outsourced_retail_management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hibernian may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:21:58.934398"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.140353",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:21.489590"
+}

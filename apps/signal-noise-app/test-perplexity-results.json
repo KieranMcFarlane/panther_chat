@@ -1,0 +1,79 @@
+{
+  "total_rfps_detected": 1,
+  "verified_rfps": 1,
+  "rejected_rfps": 0,
+  "entities_checked": 2,
+  "highlights": [
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://www.isportconnect.com/tender/arsenal-digital-transformation",
+      "source_type": "tender_portal",
+      "discovery_source": "brightdata_tier_1",
+      "discovery_method": "brightdata_fallback",
+      "validation_status": "VERIFIED",
+      "date_published": "2025-01-15",
+      "deadline": "2025-03-15",
+      "deadline_days_remaining": 30,
+      "budget": "\u00a350,000-100,000",
+      "summary_json": {
+        "title": "Digital Transformation Platform - Mobile App & Fan Engagement",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 92,
+        "source_quality": 0.8
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://www.isportconnect.com/tender/arsenal-digital-transformation"
+        ]
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.85,
+    "avg_fit_score": 92.0,
+    "top_opportunity": "Arsenal FC"
+  },
+  "quality_metrics": {
+    "brightdata_detections": 1,
+    "perplexity_verifications": 1,
+    "verified_rate": 1.0,
+    "placeholder_urls_rejected": 0,
+    "expired_rfps_rejected": 0,
+    "competitive_intel_gathered": 0
+  },
+  "discovery_breakdown": {
+    "linkedin_posts": 0,
+    "linkedin_jobs": 0,
+    "tender_platforms": 1,
+    "sports_news_sites": 0,
+    "official_websites": 0,
+    "linkedin_success_rate": 0.0,
+    "tender_platform_success_rate": 1.0
+  },
+  "perplexity_usage": {
+    "discovery_queries": 3,
+    "validation_queries": 1,
+    "competitive_intel_queries": 0,
+    "total_queries": 4,
+    "estimated_cost": 0.04
+  },
+  "brightdata_usage": {
+    "targeted_domain_queries": 3,
+    "broad_web_queries": 0,
+    "total_queries": 3,
+    "estimated_cost": 0.006
+  },
+  "cost_comparison": {
+    "total_cost": 0.046,
+    "cost_per_verified_rfp": 0.046,
+    "estimated_old_system_cost": 0.3,
+    "savings_vs_old_system": 0.254
+  },
+  "test_mode": true,
+  "generated_at": "2026-02-05T03:32:56.006305"
+}

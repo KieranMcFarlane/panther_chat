@@ -1,0 +1,199 @@
+{
+  "entity_id": "tour_de_romandie",
+  "entity_name": "Tour de Romandie",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "tourderomandie.ch",
+    "tourderomandiefeminin.ch",
+    "tissottiming.com",
+    "velowire.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_de_romandie",
+      "entity_name": "Tour de Romandie",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.039999999999999994,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.039999999999999994
+      ],
+      "explored_domains": [
+        "https://tourderomandiefeminin.ch",
+        "https://tissottiming.com",
+        "https://velowire.com",
+        "https://tourderomandie.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour de Romandie may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:02:10.261852",
+          "domain_explored": "https://tourderomandie.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Curator.io"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public funding support (Cantons romands)",
+              "Press kit/Dossier de presse distribution",
+              "Partnership management ('Partenaires du Tour')"
+            ]
+          },
+          "patterns_found": [
+            "Social Media Aggregation",
+            "Public Sector Funding",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 233,
+              "elapsed_seconds": 3.645720958709717
+            }
+          ],
+          "reasoning": "The content is primarily sports results and navigation, but the explicit mention of 'Powered by Curator.io' confirms the use of a social media aggregation tool. The reference to 'Avec le soutien des cantons romands' indicates public sector funding/governance, which implies structured procurement cycles for public contracts, though no specific RFPs are listed here."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:02:21.590320",
+          "domain_explored": "https://tourderomandiefeminin.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Curator.io (Social Media Aggregation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SaaS tool usage (Curator.io)",
+              "Sponsor-funded digital campaigns (Focuswater)",
+              "Public funding (Cantons romands)"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Technology Stack",
+            "Sponsorship Activation",
+            "Public Sector Funding",
+            "Fan Engagement Platforms"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 284,
+              "elapsed_seconds": 2.8105111122131348
+            }
+          ],
+          "reasoning": "While the content is primarily event results (Palmar\u00e8s), it reveals specific technology vendors and sponsorship structures that imply procurement activities. The presence of 'Powered by Curator.io' indicates a SaaS subscription for social media aggregation. The 'Jeu de la Meilleure Suissesse by FOCUSWATER' suggests a partnership involving digital campaign management or gamification services. The mention of 'Avec le soutien des cantons romands' confirms public sector funding, which often requires formal procurement processes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:02:34.111679",
+          "domain_explored": "https://tissottiming.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Transponder Timing Systems",
+              "GPS Tracking",
+              "TV Graphics Integration",
+              "Data Feed APIs"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Timekeeper Status",
+              "UCI Partnership",
+              "End-to-end Event Data Management"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Lock-in / Strategic Partnership",
+            "Specialized Equipment Procurement",
+            "Data Infrastructure Outsourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 459,
+              "output_tokens": 289,
+              "elapsed_seconds": 5.261069059371948
+            }
+          ],
+          "reasoning": "The content confirms Tissot Timing as the official timekeeper and data partner for the UCI (including Tour de Romandie). This indicates a heavy reliance on specialized third-party vendors for critical event infrastructure (timing, scoring, data transmission). While this is a vendor site, it confirms the 'Buy' over 'Build' strategy for core technical operations, suggesting procurement is centralized through UCI/Tissot partnerships rather than individual event tenders for these specific services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:02:43.930906",
+          "domain_explored": "https://velowire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OpenStreetMap",
+              "Google Earth"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Industry News",
+            "Competitor Analysis",
+            "Route Visualization Tools"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.646458864212036
+            }
+          ],
+          "reasoning": "The scraped content from VeloWire is a general cycling news aggregator covering various races (Tour de France, Vuelta a Espa\u00f1a, Tour Down Under) unrelated to Tour de Romandie. While it mentions the use of mapping technologies (OpenStreetMap, Google Earth) for route visualization, this is descriptive of the industry standard rather than specific procurement activity by the target entity. There are no direct signals regarding Tour de Romandie's purchasing, governance, or technology stack."
+        }
+      ],
+      "total_input_tokens": 4735,
+      "total_output_tokens": 1030,
+      "estimated_cost_usd": 0.029655
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour de Romandie may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:02:43.932468"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.401315",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:29.578677"
+}

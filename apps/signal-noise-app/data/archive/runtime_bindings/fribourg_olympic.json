@@ -1,0 +1,194 @@
+{
+  "entity_id": "fribourg_olympic",
+  "entity_name": "Fribourg Olympic",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "fribourg-olympic.ch",
+    "euroleaguebasketball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/speaker-at-fribourg-olympic-basket-3785254383",
+      "https://www.linkedin.com/posts/thinksport_jobboard-sportjobs-joboppoortunity-activity-6988407767078203392-lGhc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fribourg_olympic",
+      "entity_name": "Fribourg Olympic",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://euroleaguebasketball.net",
+        "https://ch.linkedin.com/jobs/view/speaker-at-fribourg-olympic-basket-3785254383",
+        "https://www.linkedin.com/posts/thinksport_jobboard-sportjobs-joboppoortunity-activity-6988407767078203392-lGhc",
+        "https://fribourg-olympic.ch"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fribourg Olympic may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:50:18.412692",
+          "domain_explored": "https://fribourg-olympic.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smeetz (Ticketing & Event Management Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active contract/usage of Smeetz for ticket sales",
+              "Usage of UTM tracking parameters (utm_medium=smeetzReferralLink) indicating digital marketing integration"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage (Smeetz)",
+            "Digital Ticketing Operations",
+            "Referral Link Tracking (UTM parameters)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.7266809940338135
+            }
+          ],
+          "reasoning": "The content reveals the use of 'Smeetz' as the ticketing platform via deep links (discover.smeetz.com). This confirms a specific technology vendor relationship in the event management/ticketing category. While this is an operational signal rather than a new procurement intent, it identifies a key component of their technology stack and potential partner ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:50:23.840843",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-level media rights procurement (EuroLeague TV)"
+            ]
+          },
+          "patterns_found": [
+            "League-level Governance News",
+            "Streaming Rights Expansion (EuroLeague TV)",
+            "General Tournament Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.411522150039673
+            }
+          ],
+          "reasoning": "The content is from the Euroleague Basketball governing body site, not the specific entity (Fribourg Olympic). While it mentions streaming rights and governance, these are league-level initiatives, not specific procurement signals for Fribourg Olympic. There is no direct correlation to Fribourg's purchasing intent or technology stack."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:50:33.057799",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/speaker-at-fribourg-olympic-basket-3785254383",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Speaker (Announcer) - Game Day Operations"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Operational Staffing (Game Day Operations)",
+            "Venue Resource Constraints (Salle Omnisport de St-L\u00e9onard)",
+            "Volunteer/Part-time Engagement Model",
+            "Language Requirements (French/German)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 221,
+              "elapsed_seconds": 5.7702460289001465
+            }
+          ],
+          "reasoning": "The content describes a job posting for a 'Speaker' (Announcer/MC) for game-day entertainment at the Salle Omnisport de St-L\u00e9onard. This is an operational, role-based hire to address workload distribution among existing staff, not a procurement signal for technology, enterprise software, or vendor services. It falls under HR/Staffing rather than Procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:50:41.159498",
+          "domain_explored": "https://www.linkedin.com/posts/thinksport_jobboard-sportjobs-joboppoortunity-activity-6988407767078203392-lGhc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)",
+              "ThinkSport (Job Board Platform)"
+            ],
+            "job_postings": [
+              "Unspecified Role (via ThinkSport)"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment (Potential for HR Tech or Office Supply procurement)",
+              "Membership in ThinkSport Network (Access to shared services/partners)"
+            ]
+          },
+          "patterns_found": [
+            "HR & Recruitment Activity",
+            "ThinkSport Network Membership",
+            "Talent Acquisition Pipeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.736837863922119
+            }
+          ],
+          "reasoning": "The content confirms Fribourg Olympic is actively utilizing the ThinkSport job board platform for recruitment. While the specific job description is not visible in this snippet, the presence of the entity in a curated list of 'latest offers in Switzerland' indicates active hiring. Active hiring is a leading indicator of potential procurement needs (onboarding software, equipment, HR services) or organizational growth, warranting a weak signal."
+        }
+      ],
+      "total_input_tokens": 5825,
+      "total_output_tokens": 956,
+      "estimated_cost_usd": 0.031815
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fribourg Olympic may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:50:41.160069"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227832",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:55.633272"
+}

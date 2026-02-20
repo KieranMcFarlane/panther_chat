@@ -1,0 +1,240 @@
+{
+  "entity_id": "belize_basketball_federation",
+  "entity_name": "Belize Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "belizeolympic.org",
+    "commonwealthofnations.org",
+    "greaterbelize.com",
+    "breakingbelizenews.com",
+    "nebl.web.geniussports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belize_basketball_federation",
+      "entity_name": "Belize Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://commonwealthofnations.org",
+        "https://greaterbelize.com",
+        "https://belizeolympic.org",
+        "https://nebl.web.geniussports.com",
+        "https://breakingbelizenews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "SaaS Platform Dependency",
+        "League Management Outsourcing",
+        "Digital Statistics Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belize Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:10:04.350236",
+          "domain_explored": "https://belizeolympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Gmail (Google Workspace) - bzeolympic@gmail.com",
+              "WordPress (implied by structure/author archive)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Olympic Solidarity Scholarships (Program Funding)",
+              "Worldwide Olympic Partners (Sponsorship/Vendor tier)",
+              "Marion Jones Stadium (Facility Management/Infrastructure)",
+              "Executive Committee (Budget Authority: Arturo Vasquez - Treasurer)"
+            ]
+          },
+          "patterns_found": [
+            "Olympic Solidarity Funding",
+            "Shared Infrastructure (Marion Jones Stadium)",
+            "Federation Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 356,
+              "elapsed_seconds": 6.957795143127441
+            }
+          ],
+          "reasoning": "While this page belongs to the Belize Olympic Committee (BOCGA) and not the Basketball Federation directly, it provides critical context for procurement intelligence. The BOCGA is the governing body that distributes 'Olympic Solidarity' funding and manages the 'Marion Jones Stadium' complex. Basketball, being a core Olympic sport, relies on this relationship for financing and facilities. The presence of a Treasurer and Secretary General indicates a structured budget cycle. The 'National Federations' link confirms the hierarchical relationship where BOCGA procurement decisions impact the Basketball Federation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:10:14.359579",
+          "domain_explored": "https://commonwealthofnations.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'Business' and 'Government' directories for member states (Generic)"
+            ]
+          },
+          "patterns_found": [
+            "Generic Directory Structure",
+            "High-Level Government Categories",
+            "Standardized Regional Classifications"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.5363588333129883
+            }
+          ],
+          "reasoning": "The content is a high-level index page for the Commonwealth of Nations. While it lists Belize as a member state and provides categories for 'Business' and 'Government', it contains zero specific information regarding the Belize Basketball Federation, its specific procurement activities, or its technology stack. It is a navigational hub, not a source of actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:10:56.048931",
+          "domain_explored": "https://greaterbelize.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Streaming Infrastructure",
+              "WhatsApp Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Advertising Services (Vendor perspective)",
+              "Creative Services (Vendor perspective)"
+            ]
+          },
+          "patterns_found": [
+            "Media Broadcasting Infrastructure",
+            "General News Aggregation",
+            "Community Billboard Services"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 238,
+              "elapsed_seconds": 32.66258883476257
+            }
+          ],
+          "reasoning": "The content represents a media outlet (Greater Belize Media/News 5) rather than the Federation itself. While 'Live Streaming & Broadcasting' and 'Creative Services' indicate technical capabilities, they are services offered *by* the media company, not procurement signals *from* the Basketball Federation. No direct links to Federation procurement, RFPs, or governance were found."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:11:06.302228",
+          "domain_explored": "https://breakingbelizenews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ministry of Infrastructure Development Notice (Unrelated to BBF)"
+            ]
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Crime Reporting Focus",
+            "Sports Journalism (Football/Soccer)",
+            "Public Notices (Infrastructure)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 232,
+              "elapsed_seconds": 5.918560028076172
+            }
+          ],
+          "reasoning": "The scraped content from 'Breaking Belize News' is a general news aggregator. While it contains a 'Sports' section, the specific articles listed focus on Football (Verdes FC, Concacaf U17) and general crime/politics. There are no specific articles, tenders, or organizational updates related to the Belize Basketball Federation. The 'Public Notice' regarding the Ministry of Infrastructure is unrelated to basketball federation procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:11:17.854693",
+          "domain_explored": "https://nebl.web.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Genius Sports Platform",
+              "League Management System",
+              "Facebook Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract with Genius Sports for league infrastructure",
+              "Usage of hosted web solutions (.web.geniussports.com subdomain)",
+              "Social media integration for content distribution"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Dependency",
+            "League Management Outsourcing",
+            "Digital Statistics Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 617,
+              "output_tokens": 292,
+              "elapsed_seconds": 4.593330144882202
+            }
+          ],
+          "reasoning": "The URL structure (nebl.web.geniussports.com) confirms a direct partnership with Genius Sports, a major sports technology provider. This is a strong procurement signal indicating the federation (or the National Elite Basketball League) relies on third-party SaaS for critical operations (stats, standings, website). This establishes a clear vendor relationship pattern and a high likelihood of future procurement for related services (CRM, data analytics, streaming)."
+        }
+      ],
+      "total_input_tokens": 6408,
+      "total_output_tokens": 1335,
+      "estimated_cost_usd": 0.039249000000000006
+    },
+    "procurement_signals": [
+      "SaaS Platform Dependency",
+      "League Management Outsourcing",
+      "Digital Statistics Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belize Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:11:17.855765"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252301",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:47.686209"
+}

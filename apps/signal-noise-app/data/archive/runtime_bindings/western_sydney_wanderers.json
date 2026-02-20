@@ -1,0 +1,347 @@
+{
+  "entity_id": "western_sydney_wanderers",
+  "entity_name": "Western Sydney Wanderers",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "wswanderersfc.com.au",
+    "wswanderersfootball.com",
+    "westernsydney.edu.au",
+    "aleagues.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/view/intern-academy-performance-analyst-at-western-sydney-wanderers-fc-4363481847",
+      "https://au.linkedin.com/company/footballaus/jobs",
+      "https://www.linkedin.com/posts/cdcaustralia_westernsydneywanderers-cdcnsw-busdrivercareers-activity-7401796858911846401-DGCu",
+      "https://au.linkedin.com/jobs/sports-jobs-colyton-ns"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "western_sydney_wanderers",
+      "entity_name": "Western Sydney Wanderers",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/company/footballaus/jobs",
+        "https://au.linkedin.com/jobs/view/intern-academy-performance-analyst-at-western-sydney-wanderers-fc-4363481847",
+        "https://au.linkedin.com/jobs/sports-jobs-colyton-ns",
+        "https://www.linkedin.com/posts/cdcaustralia_westernsydneywanderers-cdcnsw-busdrivercareers-activity-7401796858911846401-DGCu",
+        "https://wswanderersfc.com.au",
+        "https://aleagues.com.au",
+        "https://wswanderersfootball.com",
+        "https://westernsydney.edu.au"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Western Sydney Wanderers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:04:29.737701",
+          "domain_explored": "https://wswanderersfc.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High content repetition (scraping artifact)",
+            "Focus on sports journalism and match results",
+            "Generic 'Latest News' aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 161,
+              "elapsed_seconds": 8.84823989868164
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match results (Sydney Derby), and repetitive loading artifacts. There are no mentions of technology, hiring, tenders, or organizational strategy relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:04:38.445806",
+          "domain_explored": "https://wswanderersfootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Management System",
+              "Payment Gateway (supports vouchers)",
+              "Event Management Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue procurement (Western Sydney University - Hawkesbury Campus)",
+              "Venue procurement (Wanderers Fives - Rooty Hill)",
+              "Venue procurement (Good Samaritan Catholic College)",
+              "Retail supply chain (Adidas kits for camps)",
+              "Software licensing (Booking/Registration platform)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce functionality for program bookings",
+            "Third-party payment processing integration",
+            "Dynamic pricing and inventory management",
+            "Venue partnership reliance (Western Sydney University)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 353,
+              "elapsed_seconds": 3.8471648693084717
+            }
+          ],
+          "reasoning": "The content reveals a robust 'Football School' and 'Community' division managing high-volume transactions (clinics, camps, term programs). The presence of 'Book Now' flows, specific pricing tiers, and Active Kids voucher validation indicates a functional e-commerce procurement need. The reliance on external venues (Western Sydney University) suggests a B2B partnership model, though the specific vendors for the booking engine are not named in the text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:04:46.992274",
+          "domain_explored": "https://westernsydney.edu.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Academic Institution vs. Sports Club)",
+            "Course Catalogue Content",
+            "Educational Pedagogy Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 530,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.5097920894622803
+            }
+          ],
+          "reasoning": "The scraped content originates from Western Sydney University (academic entity), not the Western Sydney Wanderers FC (sports entity). The content lists 'Undergraduate Degrees', which is irrelevant to the procurement intelligence goals for the football club. This indicates a drift in the crawling target."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:05:09.883901",
+          "domain_explored": "https://aleagues.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Opta (Sports Data Provider)",
+              "Generic CMS (implied by 'Loading\u2026' artifacts)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship visibility (Isuzu UTE, Liberty, Ninja)"
+            ]
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Generic match center UI",
+            "Sports journalism focus",
+            "Entity Mismatch (Governing body vs. Individual Club)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 260,
+              "elapsed_seconds": 18.507792234420776
+            }
+          ],
+          "reasoning": "The content is from the central league governing body (A-Leagues/Professional Footballers Australia), not the Western Sydney Wanderers entity directly. While it mentions the Wanderers in a match report ('shaky Wanderers'), the site functions as a broadcast and news aggregator for the entire league. It lacks specific procurement signals, vendor selection processes, or technology stack details unique to the Wanderers' internal operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:05:18.270279",
+          "domain_explored": "https://au.linkedin.com/jobs/view/intern-academy-performance-analyst-at-western-sydney-wanderers-fc-4363481847",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Hudl Sportscode",
+              "VEO",
+              "Drone/UAV Technology",
+              "Video Analysis Software"
+            ],
+            "job_postings": [
+              "Intern | Academy performance analyst"
+            ],
+            "procurement_indicators": [
+              "Requirement for proprietary software licensing (Hudl/VEO)",
+              "Need for video storage and distribution infrastructure",
+              "Investment in drone hardware and operation capabilities",
+              "Academy-level technology budget allocation"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Performance Analysis Software Stack",
+            "Video Workflow Management Infrastructure",
+            "Drone Technology Integration (UAV)",
+            "Academy High-Performance Environment Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 332,
+              "elapsed_seconds": 4.738976955413818
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct tender, it explicitly reveals the technology stack required for high-performance operations. The mention of 'Hudl Sportscode', 'VEO', and 'Drone operation' confirms active investment in specific proprietary software and hardware. This indicates a procurement need for licensing, maintenance, and storage solutions associated with these tools."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:05:26.974158",
+          "domain_explored": "https://au.linkedin.com/company/footballaus/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Club Licensing Bodies (Football Australia)"
+            ],
+            "procurement_indicators": [
+              "Club Licensing Compliance (Indirect)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Governing Body vs. Specific Club)",
+            "Regulatory/Compliance Focus (Club Licensing)",
+            "Generic Job Aggregator Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 241,
+              "elapsed_seconds": 5.403691053390503
+            }
+          ],
+          "reasoning": "The scraped content belongs to Football Australia, the national governing body, not the Western Sydney Wanderers. While 'Club Licensing Bodies' implies a regulatory framework that the Wanderers must comply with (potentially driving procurement for compliance tools), the content itself does not contain specific procurement signals, technology stacks, or intent attributable to the Wanderers organization. It is a parent-entity job board."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:05:35.289761",
+          "domain_explored": "https://www.linkedin.com/posts/cdcaustralia_westernsydneywanderers-cdcnsw-busdrivercareers-activity-7401796858911846401-DGCu",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Marketing Platforms",
+              "Digital Video Production Tools",
+              "Stadium Display Infrastructure (Big Screen)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Commercial Partnership Agreement (CDC NSW)",
+              "Media Production Services (Advertisement filming)",
+              "Venue & Asset Management (CommBank Stadium activation)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership/Sponsorship Activation",
+            "Media Production Procurement (Video/Ad Filming)",
+            "Venue Asset Utilization (CommBank Stadium)",
+            "Brand Integration Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1764,
+              "output_tokens": 310,
+              "elapsed_seconds": 5.043821096420288
+            }
+          ],
+          "reasoning": "While this is a B2B partnership post rather than a direct tender, it confirms the Western Sydney Wanderers' active procurement of commercial partnerships and media production services. The collaboration with CDC NSW involves the creation of video assets and stadium advertising, indicating an investment in creative agencies and media buying capabilities. It signals a willingness to leverage brand equity for commercial value."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:05:46.347326",
+          "domain_explored": "https://au.linkedin.com/jobs/sports-jobs-colyton-ns",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Consumer Growth Executive (A-Leagues) - Duplicate/League Level",
+              "Sports Development Officer (Goal Soccer Academy) - Unrelated Entity"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregator Interface",
+            "Geographic Mismatch (Colyton vs. Wanderers HQ)",
+            "Entity Mismatch (Goal Soccer Academy, Touch Football Australia)",
+            "High Noise-to-Signal Ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1835,
+              "output_tokens": 294,
+              "elapsed_seconds": 7.195576190948486
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered for 'Sports jobs in Colyton'. While the A-Leagues 'Consumer Growth Executive' role appears in the list, it is a league-level vacancy (previously identified as an entity mismatch in Iteration 4) rather than a direct Western Sydney Wanderers procurement signal. The other listings (Goal Soccer Academy, Council roles) are unrelated entities. The content provides no specific procurement signals, technology stack details, or decision-making patterns unique to the Wanderers."
+        }
+      ],
+      "total_input_tokens": 11752,
+      "total_output_tokens": 2123,
+      "estimated_cost_usd": 0.067101
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Western Sydney Wanderers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:05:46.349036"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.188499",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:52.867784"
+}

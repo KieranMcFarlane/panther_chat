@@ -1,0 +1,179 @@
+{
+  "entity_id": "kbo_league",
+  "entity_name": "KBO League",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "mykbostats.com",
+    "m.corp.kt.com",
+    "sooplive.com",
+    "baseball-reference.com",
+    "sports-event.kr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kbo_league",
+      "entity_name": "KBO League",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mykbostats.com",
+        "https://sooplive.com",
+        "https://baseball-reference.com",
+        "https://sports-event.kr",
+        "https://m.corp.kt.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KBO League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:53:49.759519",
+          "domain_explored": "https://mykbostats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:53:58.043642",
+          "domain_explored": "https://m.corp.kt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "KT AI (K intelligence Suite)",
+              "5G / Intelligent Networking",
+              "IPTV"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General corporate branding (KT Corporation)",
+            "B2C service marketing (Internet, 5G, IPTV)",
+            "High-level technology buzzwords (AI, 5G Platform)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.784595012664795
+            }
+          ],
+          "reasoning": "The scraped content is from the main corporate homepage of KT Corporation (a major Korean telecom), not the KBO League. While KT is a major sponsor and technology partner of the KBO, this specific content is generic corporate marketing (AI, 5G, Governance) and lacks specific procurement signals, RFPs, or technology stack details related to the KBO League entity itself. It does not advance the discovery of KBO-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:54:05.732803",
+          "domain_explored": "https://sooplive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing live streaming UI",
+            "B2C content categories (Gaming, IRL, Just Chatting)",
+            "Streamer metrics (Viewer counts, status indicators)",
+            "Platform branding (SOOP)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 184,
+              "elapsed_seconds": 3.4010977745056152
+            }
+          ],
+          "reasoning": "The scraped content represents the consumer-facing homepage of a live streaming platform (SOOP). It lists active streams, trending categories (e.g., Valorant, Minecraft), and viewer counts. There is no corporate information, governance structure, or procurement intent visible in this data."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:54:08.560649",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:54:14.805001",
+          "domain_explored": "https://sports-event.kr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Event Marketing",
+            "Repetitive Content Structure",
+            "Marathon/Running Event Promotion",
+            "Generic Sports Blogging"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.30515193939209
+            }
+          ],
+          "reasoning": "The content is exclusively focused on promoting consumer-facing running events (marathons, relays) and generic sports news. There is no mention of the KBO League, enterprise procurement, vendor selection, or technology infrastructure. The site appears to be a promotional blog for running events, irrelevant to KBO procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 4366,
+      "total_output_tokens": 610,
+      "estimated_cost_usd": 0.022248
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KBO League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:54:14.806059"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.414364",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:29:26.501643"
+}

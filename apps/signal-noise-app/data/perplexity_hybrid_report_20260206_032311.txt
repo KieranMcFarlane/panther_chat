@@ -1,0 +1,11 @@
+PERPLEXITY-FIRST HYBRID RFP DETECTION REPORT
+================================================================================
+
+Generated: 2026-02-06T03:23:11.412310+00:00
+Entities Checked: 3
+Total RFPs Detected: 0
+Verified RFPs: 0
+Rejected RFPs: 0
+
+HIGHLIGHTS:
+--------------------------------------------------------------------------------

@@ -1,0 +1,360 @@
+{
+  "entity_id": "philadelphia_union",
+  "entity_name": "Philadelphia Union",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "philadelphiaunion.com",
+    "phillysoccerpage.net",
+    "mlssoccer.com",
+    "visitphilly.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/philadelphia-union-jobs",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7378449741015195648-NiyS",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7304867637946122240-dX81",
+      "https://www.linkedin.com/company/philadelphia-eagles/jobs",
+      "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-philadelphia-union-activity-7218595198526726144-dPGH",
+      "https://cn.linkedin.com/company/careers-in-sport",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-philadelphia-union-activity-7199748558973976576-14ZL"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "philadelphia_union",
+      "entity_name": "Philadelphia Union",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://philadelphiaunion.com",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7304867637946122240-dX81",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7378449741015195648-NiyS",
+        "https://www.linkedin.com/jobs/philadelphia-union-jobs",
+        "https://www.linkedin.com/company/philadelphia-eagles/jobs",
+        "https://visitphilly.com",
+        "https://phillysoccerpage.net",
+        "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-philadelphia-union-activity-7218595198526726144-dPGH"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Philadelphia Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:36:39.521464",
+          "domain_explored": "https://philadelphiaunion.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising (Kit Launch)",
+              "Event Management (Pop-up events)"
+            ]
+          },
+          "patterns_found": [
+            "Seasonal Event Planning",
+            "Merchandising Activities",
+            "Sports Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 174,
+              "elapsed_seconds": 1.910257339477539
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, including kit launches, match recaps, and preseason schedules. There are no mentions of technology vendors, job openings, or organizational restructuring that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:36:53.761085",
+          "domain_explored": "https://phillysoccerpage.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism & Commentary",
+            "Fan Engagement Content",
+            "Event Photography"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 150,
+              "elapsed_seconds": 6.908751964569092
+            }
+          ],
+          "reasoning": "The source is a third-party fan blog (Philly Soccer Page) containing editorial content, match previews, and site redesign announcements. It lacks direct access to the Philadelphia Union's internal operations, financial decisions, or vendor partnerships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:37:02.365368",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-wide Sports Journalism",
+            "Player Transfer & Roster Management",
+            "General League News Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.021498918533325
+            }
+          ],
+          "reasoning": "The content is entirely focused on league-wide player transfers (Timo Werner, Mateusz Bogusz, etc.) and roster moves for other clubs (San Jose, Orlando City, Houston). There is no mention of the Philadelphia Union, their business operations, or any procurement/technology activities specific to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:37:12.173623",
+          "domain_explored": "https://visitphilly.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism & Destination Marketing",
+            "General Event Aggregation",
+            "Hospitality Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 173,
+              "elapsed_seconds": 4.543461799621582
+            }
+          ],
+          "reasoning": "The content is from a general tourism board (Visit Philly) focused on destination marketing and city-wide events (e.g., 2026 celebrations, Super Bowl). While the Philadelphia Union operates in this city, this content does not reflect the Union's specific procurement, operational, or technological activities. It lacks entity-specific relevance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:37:20.171928",
+          "domain_explored": "https://www.linkedin.com/jobs/philadelphia-union-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "2026 Subaru Park Internship (via Aramark)"
+            ],
+            "procurement_indicators": [
+              "Vendor: Aramark (Facilities/Staffing Partner)",
+              "Location: Subaru Park, Chester, PA",
+              "Outsourced Operations Model"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Vendor Staffing",
+            "Facilities Operations Outsourcing",
+            "Internship Pipeline Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 976,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.415961980819702
+            }
+          ],
+          "reasoning": "The content reveals a direct vendor relationship between Philadelphia Union (Subaru Park) and Aramark for staffing/internships. While not a direct procurement job posting, it confirms the outsourcing model for facilities operations, which is a key governance pattern. It indicates procurement activities are likely managed through established partners like Aramark rather than direct hiring for these roles."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:37:29.649789",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7378449741015195648-NiyS",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Youth Coach (Academy)"
+            ],
+            "procurement_indicators": [
+              "Academy Expansion",
+              "Coaching Education Standards"
+            ]
+          },
+          "patterns_found": [
+            "Youth Academy Operations",
+            "Technical Staff Recruitment",
+            "USSF Licensing Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 226,
+              "elapsed_seconds": 4.107849836349487
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for the Youth Academy (Youth Coach). While this is a direct hiring signal, it indicates operational growth within the academy pipeline, which often correlates with future needs for training equipment, software for player development, and facility services. It validates the entity's active hiring phase but is a personnel signal rather than a direct vendor procurement signal."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:37:44.039501",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-philadelphia-union-activity-7304867637946122240-dX81",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Technical Director, Youth"
+            ],
+            "procurement_indicators": [
+              "Academy Restructuring",
+              "High-Level Personnel Investment"
+            ]
+          },
+          "patterns_found": [
+            "Youth Academy Operations",
+            "Technical Staff Recruitment",
+            "USSF Licensing Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1751,
+              "output_tokens": 222,
+              "elapsed_seconds": 7.9564642906188965
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Technical Director, Youth' role. While this is an HR activity rather than a direct procurement signal, high-level technical director hires often precede strategic shifts in academy operations, training methodologies, and associated technology procurement (e.g., video analysis, player tracking). It confirms active investment in the youth pipeline."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:37:49.649179",
+          "domain_explored": "https://www.linkedin.com/company/philadelphia-eagles/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Philadelphia Eagles vs. Philadelphia Union"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "NFL Franchise Operations",
+            "Irrelevant Market Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 820,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.216602087020874
+            }
+          ],
+          "reasoning": "The target entity is the Philadelphia Union (MLS), whereas the analyzed content pertains to the Philadelphia Eagles (NFL). Although both are Philadelphia-based sports franchises with potentially similar operational structures, they are distinct corporate entities. Procurement intelligence for the Union cannot be reliably derived from the Eagles' job postings without confirmation of shared services or holding companies. This represents a hard entity mismatch."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:37:58.148495",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-philadelphia-union-activity-7218595198526726144-dPGH",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Academy Goalkeeping"
+            ],
+            "procurement_indicators": [
+              "Academy Staffing",
+              "Specialized Coaching Equipment (implied)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Academy Operations",
+            "Technical Staff Recruitment",
+            "Specialized Role Requirements",
+            "USSF Licensing Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1879,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.2771730422973633
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Head of Academy Goalkeeping' role. While this confirms active hiring within the Academy operations, it is a repeat of the pattern observed in Iterations 6 and 7 (coaching recruitment). It does not reveal new procurement categories (tech, facilities, services) beyond personnel acquisition, hence the WEAK_ACCEPT."
+        }
+      ],
+      "total_input_tokens": 12812,
+      "total_output_tokens": 1811,
+      "estimated_cost_usd": 0.06560099999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Philadelphia Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:37:58.149990"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.151704",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:58:24.746894"
+}

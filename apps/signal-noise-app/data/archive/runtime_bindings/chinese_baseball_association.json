@@ -1,0 +1,230 @@
+{
+  "entity_id": "chinese_baseball_association",
+  "entity_name": "Chinese Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball-reference.com",
+    "1800bailbonds.com",
+    "baseballsociologist.wordpress.com",
+    "wbscasia.org",
+    "taipeitimes.com",
+    "walteromalley.com",
+    "baseball.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinese_baseball_association",
+      "entity_name": "Chinese Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://taipeitimes.com",
+        "https://baseball-reference.com",
+        "https://walteromalley.com",
+        "https://baseballsociologist.wordpress.com",
+        "https://baseball.fandom.com",
+        "https://wbscasia.org",
+        "https://1800bailbonds.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinese Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:32:02.772381",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:32:07.201501",
+          "domain_explored": "https://1800bailbonds.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:32:17.112664",
+          "domain_explored": "https://baseballsociologist.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Social media sharing buttons",
+            "Historical photo references",
+            "MLB player contract news (Cleveland Guardians)",
+            "Generic blog content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.605699062347412
+            }
+          ],
+          "reasoning": "The scraped content is from a personal blog ('The Baseball Sociologist') and consists of a historical quote, a photo of Judy Johnson, and social media sharing buttons. There is absolutely no connection to the Chinese Baseball Association, nor are there any procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:32:19.880928",
+          "domain_explored": "https://wbscasia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:32:28.220871",
+          "domain_explored": "https://taipeitimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news navigation structure",
+            "Geopolitical content (Taiwan Strait, Military)",
+            "Technology industry news (Nvidia, TSMC)",
+            "Economic reports (Start-up investment)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.6082510948181152
+            }
+          ],
+          "reasoning": "The content provided is the homepage HTML of a general news publication (Taipei Times). While it contains keywords relevant to the region (Taiwan, China), it lacks specific mentions of the 'Chinese Baseball Association' (CBA) or any direct procurement signals (RFPs, tenders, job postings) related to that entity. The content focuses on military, political, and broad economic news rather than sports association governance or purchasing activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:32:35.835428",
+          "domain_explored": "https://walteromalley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vimeo (Video Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical biographical content",
+            "Museum and archive references",
+            "Legacy family ownership history",
+            "Vimeo video hosting",
+            "Static content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.367509126663208
+            }
+          ],
+          "reasoning": "The scraped content from walteromalley.com is a historical archive dedicated to the legacy of the former owner of the Los Angeles Dodgers (Walter O'Malley). It contains biographies, museum exhibit news, and historical articles about Dodger Stadium. There is no connection to the Chinese Baseball Association, nor are there any signals regarding current procurement activities, technology investments, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:32:53.743337",
+          "domain_explored": "https://baseball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom (Wikia) CMS",
+              "RSS Feed Aggregation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wiki-based content management (Fandom/Wikia platform)",
+            "User-generated content structure (Create account, Sign in to edit)",
+            "Encyclopedic data structure (Teams, Players, Ballparks)",
+            "RSS feed integration (Major League Baseball RSS Feed)",
+            "Community contribution calls to action"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 271,
+              "elapsed_seconds": 11.080926895141602
+            }
+          ],
+          "reasoning": "The scraped content is from a general baseball encyclopedia (Baseball Wiki/Fandom). It contains no information regarding the Chinese Baseball Association, its governance, or its procurement activities. The content focuses on historical MLB data, player statistics, and wiki community management guidelines. There are no signals of B2B vendor partnerships, technology stacks, or organizational decision-making relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6134,
+      "total_output_tokens": 922,
+      "estimated_cost_usd": 0.032232000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinese Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:32:53.744446"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312716",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:30.201894"
+}

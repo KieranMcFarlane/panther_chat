@@ -1,0 +1,419 @@
+{
+  "entity_id": "haitian_volleyball_federation",
+  "entity_name": "Haitian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "norceca.net",
+    "haitilibre.com",
+    "volleyhall.org",
+    "icihaiti.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4291098785",
+      "https://lt.linkedin.com/jobs/view/junior-talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4161045756",
+      "https://lt.linkedin.com/jobs/view/hr-generalist-%E2%80%A2-security-systems-solutions-at-teltonika-4327162111",
+      "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4176437103",
+      "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-for-engineering-area-f-m-d-at-ignitis-group-4157179734",
+      "https://lt.linkedin.com/jobs/view/assistant-for-vicepresident-of-semiconductor-technology-and-development-%E2%80%A2-teltonika-iot-group-at-teltonika-4060972627?refId=z7gFZns62kxl33hJUtwkSg%3D%3D&trackingId=3ySUuRxhkLiaGdbXZFfxAA%3D%3D",
+      "https://lt.linkedin.com/jobs/view/trainee-communities-policy-team-f-m-d-ignitis-renewables-at-ignitis-group-4262422621"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "haitian_volleyball_federation",
+      "entity_name": "Haitian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.16,
+        0.18
+      ],
+      "explored_domains": [
+        "https://haitilibre.com",
+        "https://lt.linkedin.com/jobs/view/hr-generalist-%E2%80%A2-security-systems-solutions-at-teltonika-4327162111",
+        "https://lt.linkedin.com/jobs/view/junior-talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4161045756",
+        "https://norceca.net",
+        "https://volleyhall.org",
+        "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4176437103",
+        "https://icihaiti.com",
+        "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4291098785",
+        "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-for-engineering-area-f-m-d-at-ignitis-group-4157179734"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Haitian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:08:54.293213",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Document Management (Standard for reporting/schedules)",
+              "Web Content Management (Static HTML structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Requirements (Rotating Schedule 2002-2030)",
+              "Governance Compliance (NORCECA Constitution)",
+              "Regional Development Centers (Infrastructure potential)",
+              "Branding Guidelines (Procurement of marketing materials)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance & Oversight",
+            "Event Hosting Cycles (2026-2030)",
+            "Constitutional Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 355,
+              "elapsed_seconds": 4.396529912948608
+            }
+          ],
+          "reasoning": "While the content is from the regional confederation (NORCECA) rather than the Haitian Federation directly, it establishes the governance framework and mandatory event cycles that drive procurement needs. The 'Candidaturas 2024-2028' and 'Rotating Schedule' documents indicate that Haiti, as an affiliate, must prepare for hosting duties or participation in events through 2030, necessitating equipment, travel, and logistical procurement. The mention of 'good governance practices' in the Cayman Islands article suggests a regional trend towards formalized operations that may require digital tools or administrative support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:09:01.779799",
+          "domain_explored": "https://haitilibre.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "U-17 World Cup Qualification (Implies travel/logistics contracts)",
+              "National Team 'Grenadi\u00e8res' Activity"
+            ]
+          },
+          "patterns_found": [
+            "Sports Event Operations",
+            "FIFA Qualification Cycles",
+            "National Team Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.2559380531311035
+            }
+          ],
+          "reasoning": "While the scraped content is a general news aggregator and lacks specific procurement notices for the Haitian Volleyball Federation, it confirms the operational context of Haitian sports. The mention of the U-17 Women's National Team ('Grenadi\u00e8res') qualifying for the FIFA World Cup indicates active high-level sports management. This implies a need for logistics, travel, and equipment procurement, even if specific RFPs are not visible on this general news page."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:09:08.943139",
+          "domain_explored": "https://volleyhall.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms (implied by 'Buy Museum Tickets')",
+              "Social Media Integration (Instagram feed)",
+              "Content Management System (CMS) for News/Events",
+              "Digital Exhibit Platforms"
+            ],
+            "job_postings": [
+              "Internship Program (General)"
+            ],
+            "procurement_indicators": [
+              "Private Event Rentals (Venue procurement)",
+              "Group Tours (Operational logistics)",
+              "Shop/Merchandising (E-commerce)",
+              "MoU with FIVB (Governance/Compliance alignment)"
+            ]
+          },
+          "patterns_found": [
+            "Global Federation Partnerships (FIVB MoU)",
+            "Event Management & Ticketing Operations",
+            "Digital Exhibits & Virtual Museum Infrastructure",
+            "Annual Event Cycles (Induction, Classics, Tournaments)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 390,
+              "elapsed_seconds": 3.348038911819458
+            }
+          ],
+          "reasoning": "While the International Volleyball Hall of Fame (IVHF) is a distinct entity from the Haitian Volleyball Federation, this content provides valuable context on the global volleyball ecosystem and technology standards. The presence of 'Digital Exhibits,' 'Online Exhibits,' and 'Buy Tickets' functionality indicates a baseline for digital transformation that national federations may need to interface with. The FIVB MoU highlights the importance of international recognition, which is a key driver for federations like Haiti to invest in branding and compliance technologies."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:09:16.856773",
+          "domain_explored": "https://icihaiti.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Technological tools for education (General Gov Tech context)",
+              "Ultra-modern emergency response vehicles (Infrastructure context)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Aeronautical Authority (AAN) procurement of fire trucks (Jan 2026)",
+              "Ministry of Education deployment of tech tools",
+              "LHF (Football League) active playoff operations (Jan 2026)"
+            ]
+          },
+          "patterns_found": [
+            "Sports League Operations (LHF Playoffs)",
+            "Infrastructure Procurement (Aeronautical Fire Trucks)",
+            "Public Sector Technology Deployment (Education Tools)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 362,
+              "elapsed_seconds": 3.8876380920410156
+            }
+          ],
+          "reasoning": "While the scraped content is dominated by general security and political news, it provides a valuable proxy for sports league operations in Haiti through the 'LHF Playoff' reports (Ligue Ha\u00eftienne de Football). This confirms the operational cadence of local sports federations (scheduling, results management). Additionally, the specific procurement of 'ultra-modern' fire trucks for the National Airport Authority and the deployment of technological tools in education indicate active government procurement cycles for infrastructure and digital transformation, which sets a precedent for similar investments in sports federations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:09:25.909089",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4291098785",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "GPS Tracking",
+              "Fleet Management Systems",
+              "Telematics"
+            ],
+            "job_postings": [
+              "Talent Acquisition Partner (Fixed-term)"
+            ],
+            "procurement_indicators": [
+              "Corporate Sports Investment (Volleyball mentioned specifically)",
+              "Logistics Technology Adoption"
+            ]
+          },
+          "patterns_found": [
+            "Telematics & Fleet Management Technology",
+            "Corporate Wellness & Sports Infrastructure",
+            "High-Volume Recruitment Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1610,
+              "output_tokens": 324,
+              "elapsed_seconds": 5.081988096237183
+            }
+          ],
+          "reasoning": "While the job posting is for a private sector entity (Teltonika) in Lithuania and not a direct procurement signal from the Haitian Volleyball Federation, it provides valuable secondary intelligence. The specific mention of 'Company-paid sports activities (basketball, football, volleyball)' indicates a corporate culture that invests in volleyball infrastructure and events. This suggests a potential partnership or sponsorship opportunity where the Federation could procure technology or funding from corporate entities with similar profiles, or utilize similar telematics technology for team logistics."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:09:38.382682",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/junior-talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4161045756",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Applicant Tracking Systems (ATS)",
+              "Telematics GPS Devices",
+              "HR Analytics & Reporting Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Junior Talent Acquisition Partner",
+                "type": "Fixed-Term Contract",
+                "rate": "13-16 Eur/h",
+                "relevance": "Indicates demand for HR tech to manage sports personnel/athletes."
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in employee well-being and sports facilities",
+              "Use of telematics for logistics (relevant for team travel/equipment tracking)",
+              "Adoption of structured HR processes (KPIs, ATS) which are often lacking in federations but represent a procurement goal."
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sports Infrastructure & Wellness Programs",
+            "Telematics & Fleet Management Technology",
+            "HR Technology Stack (ATS & Recruitment Tools)",
+            "High-Volume Recruitment Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1691,
+              "output_tokens": 454,
+              "elapsed_seconds": 8.765619039535522
+            }
+          ],
+          "reasoning": "While this is a job posting for a Lithuanian company (Teltonika) and not a direct tender from the Haitian Volleyball Federation, it provides critical context on the 'Corporate Wellness' and 'Sports Infrastructure' vertical. The Federation often partners with or models operations after private sector entities for facility management and event hosting. The mention of 'Company-paid sports activities (volleyball)' and 'telematics' reinforces the intersection of logistics (fleet management for team travel) and sports operations. This signals a market trend where telematics and HR tech are procured to support sports entities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:09:46.735525",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/hr-generalist-%E2%80%A2-security-systems-solutions-at-teltonika-4327162111",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP SuccessFactors (HRM System)"
+            ],
+            "job_postings": [
+              "HR Generalist \u2022 Security Systems Solutions"
+            ],
+            "procurement_indicators": [
+              "HR System Implementation & Management",
+              "Security Hardware Procurement (Intrusion Detection/Building Protection)",
+              "Office Improvement & Facility Upgrades",
+              "Industrial Security Systems Deployment"
+            ]
+          },
+          "patterns_found": [
+            "HR Technology Stack (SAP SuccessFactors)",
+            "Security & Facility Management Infrastructure",
+            "High-Volume Recruitment Operations",
+            "Industrial Security Systems Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1776,
+              "output_tokens": 328,
+              "elapsed_seconds": 5.109109163284302
+            }
+          ],
+          "reasoning": "While the entity is Teltonika (a Lithuanian tech firm) and not the Haitian Volleyball Federation directly, the content reveals specific procurement-relevant technologies and infrastructure patterns. The Federation may utilize similar HR systems (SAP SuccessFactors) or require security solutions (intrusion detection, building protection) for their facilities. The 'Security Systems Solutions' business unit context provides a vendor landscape reference for potential facility upgrades."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:09:53.618197",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-%E2%80%A2-telematics-at-teltonika-4176437103",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Applicant Tracking System (ATS)",
+              "Telematics GPS"
+            ],
+            "job_postings": [
+              "Talent Acquisition Partner (Fixed-Term Contract)"
+            ],
+            "procurement_indicators": [
+              "Company-paid sports activities (Volleyball, Basketball, Football, Yoga)",
+              "Health insurance procurement",
+              "HR process improvement tools"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sports Infrastructure & Wellness Programs",
+            "Telematics & Fleet Management Technology",
+            "HR Technology Stack (ATS & Recruitment Tools)",
+            "High-Volume Recruitment Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1856,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.4231719970703125
+            }
+          ],
+          "reasoning": "While the entity is a Lithuanian telematics firm (Teltonika) and not the Haitian Volleyball Federation, the content reinforces the 'Corporate Sports' pattern identified in previous iterations. The explicit listing of 'volleyball' alongside basketball and football as company-paid sports activities suggests a potential procurement category for sports equipment and event management services within large corporate structures."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:10:00.881883",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/talent-acquisition-partner-for-engineering-area-f-m-d-at-ignitis-group-4157179734",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MELP (Benefits Platform)",
+              "Recruitment Metrics & Analytics Tools"
+            ],
+            "job_postings": [
+              "Talent Acquisition Partner for Engineering Area (Ignitis Group)"
+            ],
+            "procurement_indicators": [
+              "Corporate Wellness Budgets",
+              "Team Sports Equipment Procurement",
+              "Facility Rentals for Corporate Leagues"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Sports Infrastructure & Wellness Programs",
+            "Engineering Talent Acquisition & Technical Workforce Planning",
+            "Employee Benefits Platforms (MELP Application)",
+            "Green Energy Transformation Projects"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1943,
+              "output_tokens": 339,
+              "elapsed_seconds": 3.7686479091644287
+            }
+          ],
+          "reasoning": "While this job posting is for Ignitis Group (an energy utility) and not the Haitian Volleyball Federation directly, it reinforces the 'Corporate Sports Infrastructure' pattern identified in previous iterations (Teltonika). The mention of 'volleyball and basketball teams' within a corporate benefits package highlights a procurement channel where companies purchase equipment, league fees, and facility management services for employee wellness. This is relevant for identifying potential sponsors or partners for the Federation."
+        }
+      ],
+      "total_input_tokens": 14639,
+      "total_output_tokens": 3097,
+      "estimated_cost_usd": 0.09037200000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Haitian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:10:00.883516"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.343481",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:46.891362"
+}

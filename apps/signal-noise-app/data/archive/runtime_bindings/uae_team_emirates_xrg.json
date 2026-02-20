@@ -1,0 +1,148 @@
+{
+  "entity_id": "uae_team_emirates_xrg",
+  "entity_name": "UAE Team Emirates XRG",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "uci_worldteam",
+  "discovered_domains": [
+    "uaeteamemirates.com",
+    "lavuelta.es",
+    "tour-auvergne-rhone-alpes.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uae_team_emirates_xrg",
+      "entity_name": "UAE Team Emirates XRG",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uaeteamemirates.com",
+        "https://tour-auvergne-rhone-alpes.fr",
+        "https://lavuelta.es"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UAE Team Emirates XRG may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:40:44.146607",
+          "domain_explored": "https://uaeteamemirates.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Race Calendar Management (Operational)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Public Fan Engagement",
+            "Race Calendar Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.119765043258667
+            }
+          ],
+          "reasoning": "The scraped content consists of high-level marketing copy, race results, and a social wall. There are no technology stack indicators, job postings, or strategic investment signals present in this specific dataset. The content is purely informational and promotional, indicating a public-facing layer rather than operational procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:40:50.047139",
+          "domain_explored": "https://lavuelta.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Visibility: Team listed in official 2025 rankings (J. Vine, 61pts).",
+              "Event Logistics: Participation in La Vuelta 26 (Monaco to Granada)."
+            ]
+          },
+          "patterns_found": [
+            "Sports Performance Data",
+            "Brand Visibility",
+            "Third-Party Event Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.6703879833221436
+            }
+          ],
+          "reasoning": "The scraped content from lavuelta.es is a public-facing sports results page. While it confirms the entity 'UAE Team Emirates XRG' exists and participates in La Vuelta (ranking data for J. Vine), it provides zero insight into internal procurement activities, technology stacks, or governance. The mention of 'Tissot' indicates a vendor relationship for the race organizer, not the team."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:40:55.475331",
+          "domain_explored": "https://tour-auvergne-rhone-alpes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Performance Data",
+            "Brand Visibility",
+            "Third-Party Event Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.3319530487060547
+            }
+          ],
+          "reasoning": "The scraped content from tour-auvergne-rhone-alpes.fr is a public-facing race results and news page. While it confirms the entity 'UAE Team Emirates XRG' (specifically Tadej Poga\u010dar) won the 2025 event, it provides no insight into the team's internal procurement activities, technology stack, or operational governance. This is external outcome data, not an internal procurement signal."
+        }
+      ],
+      "total_input_tokens": 4223,
+      "total_output_tokens": 599,
+      "estimated_cost_usd": 0.021654
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UAE Team Emirates XRG may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:40:55.476426"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.382355",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:08.016736"
+}

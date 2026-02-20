@@ -1,0 +1,295 @@
+{
+  "entity_id": "international_ski_&_snowboard_federation_(fis)",
+  "entity_name": "International Ski & Snowboard Federation (FIS)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "fis-ski.com",
+    "ifsafreeride.org",
+    "freerideworldtour.com",
+    "skiracing.com",
+    "snowsports.co.nz",
+    "usskiandsnowboard.org",
+    "assets.fis-ski.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_ski_&_snowboard_federation_(fis)",
+      "entity_name": "International Ski & Snowboard Federation (FIS)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://assets.fis-ski.com",
+        "https://snowsports.co.nz",
+        "https://fis-ski.com",
+        "https://freerideworldtour.com",
+        "https://skiracing.com",
+        "https://usskiandsnowboard.org",
+        "https://ifsafreeride.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Ski & Snowboard Federation (FIS) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:15:18.604711",
+          "domain_explored": "https://fis-ski.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android)",
+              "Content Management System (CMS)",
+              "Data Analytics (Leaderboards/Results)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "App Store maintenance and development contracts",
+              "Marketing/Content creation for 'I Love Snow' campaign",
+              "Digital infrastructure for Milano Cortina 2026 lead-up"
+            ]
+          },
+          "patterns_found": [
+            "Mobile Application Distribution",
+            "Marketing Campaign Management",
+            "Event Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 294,
+              "elapsed_seconds": 2.9705400466918945
+            }
+          ],
+          "reasoning": "The content confirms the existence of a consumer-facing mobile application ('Official FIS App') and an active marketing campaign ('I Love Snow'). While this does not indicate immediate new procurement, it establishes the vendor ecosystem (App development/maintenance) and strategic focus areas (Fan engagement/Digital storytelling) where budget is allocated. The presence of 'Constructors' Championship' data suggests B2B data management systems."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:15:32.112980",
+          "domain_explored": "https://ifsafreeride.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LiveHeats (Membership & Event Management Platform)",
+              "ProPortal (Athlete Access System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Membership System to LiveHeats",
+              "Staffing Structure (Operations Director, Brand Manager, Education System Manager)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (IFSA vs FIS)",
+            "Third-Party Platform Usage (LiveHeats)",
+            "Non-Profit Membership Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 289,
+              "elapsed_seconds": 5.389195203781128
+            }
+          ],
+          "reasoning": "The content confirms that 'ifsafreeride.org' belongs to the International Freeskiers & Snowboarders Association (IFSA), a separate 501(c)(3) nonprofit entity founded by Shane McConkey, not the International Ski & Snowboard Federation (FIS). While they operate in the same industry, they are distinct legal entities. The site relies on 'LiveHeats.com' for membership and 'ProPortal' access, indicating a reliance on third-party software rather than direct procurement signals for the target entity (FIS)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:16:07.665787",
+          "domain_explored": "https://freerideworldtour.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting/Streaming (implied by video content)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active content production cycle (Jan 2026)",
+              "Sponsorship fulfillment activities (GoPro)",
+              "Multi-tier event management (Pro vs Challenger)"
+            ]
+          },
+          "patterns_found": [
+            "Content Production Pipeline",
+            "Sponsorship Integration (GoPro)",
+            "Event Series Management (Challenger Series)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 264,
+              "elapsed_seconds": 28.381943225860596
+            }
+          ],
+          "reasoning": "The content is purely consumer-facing (news/videos) and lacks direct procurement signals (RFPs, vendor lists). However, the high frequency of video production and specific 'GoPro x FWT' co-branding indicates a structured content supply chain and partnership model, suggesting potential procurement needs for production services, hosting, and digital asset management."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:16:36.650448",
+          "domain_explored": "https://skiracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Rights Partnership: ESPN collaboration for 'On the Edge' series indicates FIS is engaging in content licensing/broadcasting deals, though this is an external observation of FIS activity, not a procurement signal found on the target site."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Media vs Federation)",
+            "Editorial Content Focus",
+            "Third-Party Media Partnerships"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 267,
+              "elapsed_seconds": 22.20190405845642
+            }
+          ],
+          "reasoning": "The target URL (skiracing.com) is a media publication (Ski Racing Media), not the governing body (FIS). The content consists entirely of race results, athlete news, and editorial pieces. While there is a reference to ESPN ('On the Edge'), this indicates FIS's media rights distribution strategy rather than direct procurement signals from FIS itself. This source is a consumer of FIS data, not a source for FIS procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:16:54.284060",
+          "domain_explored": "https://snowsports.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Document Reference: SSNZ-Statement-of-Strategic-Intent-FINAL.pdf (National level strategy)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (National Federation vs International Federation)",
+            "Grassroots & Membership Focus",
+            "Content Aggregation (News Feed)",
+            "Strategic Document Availability (PDF)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 271,
+              "elapsed_seconds": 10.599993705749512
+            }
+          ],
+          "reasoning": "The content clearly identifies Snow Sports NZ as the *national* sporting organization (NSO) for New Zealand, representing the interests of specific disciplines *to* the international body (FIS), rather than being FIS itself. The site focuses on local membership, grassroots development, and aggregating news about NZ athletes. While there is a link to a 'Statement of Strategic Intent', this pertains to NZ's national strategy, not FIS global procurement. This is a downstream stakeholder, not the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:17:04.879614",
+          "domain_explored": "https://usskiandsnowboard.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Partnership: ESPN / Disney+ (Content Distribution)",
+              "Title Sponsor: Stifel (Financial Services)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (National Federation vs International Federation)",
+            "Media & Results Aggregation",
+            "Sponsorship Activation (Stifel, ESPN)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1643,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.276853084564209
+            }
+          ],
+          "reasoning": "The content is sourced from U.S. Ski & Snowboard (usskiandsnowboard.org), which is the National Governing Body (NGB) for the United States, not the International Ski & Snowboard Federation (FIS). While U.S. Ski & Snowboard is a member of FIS, their procurement operations, budget cycles, and technology stacks are distinct and separate from the international federation's requirements. The content provided is purely editorial (race results, athlete profiles, and media partnerships) and contains no signals regarding FIS's procurement or technology infrastructure."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:17:17.668813",
+          "domain_explored": "https://assets.fis-ski.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Error 404 (Not Found)",
+            "Static Asset Hosting (assets subdomain)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 708,
+              "output_tokens": 154,
+              "elapsed_seconds": 6.608874082565308
+            }
+          ],
+          "reasoning": "The target URL (assets.fis-ski.com) returned a 404 Not Found error. This subdomain is typically used for hosting static files (images, CSS, JS) rather than business content. The error indicates the specific resource is missing or the path is incorrect, yielding no procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 9735,
+      "total_output_tokens": 1815,
+      "estimated_cost_usd": 0.056429999999999994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Ski & Snowboard Federation (FIS) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:17:17.670319"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.462311",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:38.145103"
+}

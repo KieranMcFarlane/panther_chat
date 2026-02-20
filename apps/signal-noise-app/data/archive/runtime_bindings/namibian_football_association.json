@@ -1,0 +1,127 @@
+{
+  "entity_id": "namibian_football_association",
+  "entity_name": "Namibian Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "namibian.com.na",
+    "xinhuanet.com",
+    "embassyofnamibia.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "namibian_football_association",
+      "entity_name": "Namibian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://embassyofnamibia.fr",
+        "https://xinhuanet.com",
+        "https://namibian.com.na"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Namibian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:41:14.890967",
+          "domain_explored": "https://namibian.com.na",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news publication structure",
+            "Existence of 'Vacancies & Tenders' section (generic)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.8233838081359863
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a general news publication (The Namibian). While a 'Vacancies & Tenders' link exists in the navigation, the specific content displayed (crime news, lithium projects, economic stats) contains zero mentions of the Namibian Football Association (NFA), football, or sports governance. There are no procurement signals specific to the target entity in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:41:33.423300",
+          "domain_explored": "https://xinhuanet.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:41:44.271845",
+          "domain_explored": "https://embassyofnamibia.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Diplomatic mission structure (Embassy)",
+            "Consular services focus (Visas, Passports)",
+            "Generic 'Vacancies' link (unverified content)",
+            "Static informational content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 225,
+              "elapsed_seconds": 5.491525888442993
+            }
+          ],
+          "reasoning": "The scraped content represents the official Embassy of Namibia in France. While it contains a 'Vacancies' link, the surrounding context is strictly diplomatic and consular (visas, tourism, diplomacy). There is no content suggesting the Embassy handles procurement for the Namibian Football Association (NFA). The entity is a government diplomatic mission, not a sports federation or commercial entity, making it irrelevant to NFA procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 2808,
+      "total_output_tokens": 414,
+      "estimated_cost_usd": 0.014634
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Namibian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:41:44.274364"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.206274",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:02.658515"
+}

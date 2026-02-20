@@ -1,0 +1,207 @@
+{
+  "entity_id": "colombian_basketball_federation",
+  "entity_name": "Colombian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "novayagazeta.eu",
+    "thecitypaperbogota.com",
+    "blog.sportiw.com",
+    "loweringthebar.net",
+    "thebogotapost.com",
+    "basketnews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colombian_basketball_federation",
+      "entity_name": "Colombian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://novayagazeta.eu",
+        "https://loweringthebar.net",
+        "https://thebogotapost.com",
+        "https://thecitypaperbogota.com",
+        "https://basketnews.com",
+        "https://blog.sportiw.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colombian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:05:12.530876",
+          "domain_explored": "https://novayagazeta.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "wrong_language",
+            "wrong_entity",
+            "news_media"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 162,
+              "elapsed_seconds": 5.140844106674194
+            }
+          ],
+          "reasoning": "The scraped content is from 'Novaya Gazeta Europe' (novayagazeta.eu), a Russian-language news outlet. The content focuses on geopolitical news, the war in Ukraine, and political commentary. There is absolutely no connection to the Colombian Basketball Federation, sports management, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:05:15.348371",
+          "domain_explored": "https://thecitypaperbogota.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:05:22.157108",
+          "domain_explored": "https://blog.sportiw.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "wrong_language",
+            "wrong_geography",
+            "content_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.5926992893218994
+            }
+          ],
+          "reasoning": "The content is from Sportiw, a French company focused on athlete career transition and sports news. It is not the Colombian Basketball Federation. The language is French, not Spanish, and the geography is France, not Colombia. There are no procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:05:28.709762",
+          "domain_explored": "https://loweringthebar.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "wrong_entity",
+            "wrong_geography",
+            "satire_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 499,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.9214420318603516
+            }
+          ],
+          "reasoning": "The content describes a legal incident involving a toy dinosaur, which is unrelated to the Colombian Basketball Federation. The source appears to be a legal humor or news blog with no connection to sports governance, procurement, or the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:05:34.752334",
+          "domain_explored": "https://thebogotapost.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "general_news",
+            "no_procurement_signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 723,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.523315191268921
+            }
+          ],
+          "reasoning": "The content is a general news article about Colombia's 2026 outlook (politics, World Cup, culture). It lacks specific details regarding the Colombian Basketball Federation's internal operations, technology stack, or procurement activities (RFPs, vendors). It is too high-level to be useful for procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:05:37.607849",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4023,
+      "total_output_tokens": 629,
+      "estimated_cost_usd": 0.021504000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colombian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:05:37.608934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.263423",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:59.893651"
+}

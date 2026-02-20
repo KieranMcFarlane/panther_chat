@@ -1,0 +1,211 @@
+{
+  "entity_id": "milan\u0096san_remo_women",
+  "entity_name": "Milan\u0096San Remo Women",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "cyclingnews.com",
+    "bikeradar.com",
+    "velo.outsideonline.com",
+    "cyclingstage.com",
+    "escapecollective.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "milan\u0096san_remo_women",
+      "entity_name": "Milan\u0096San Remo Women",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bikeradar.com",
+        "https://velo.outsideonline.com",
+        "https://escapecollective.com",
+        "https://cyclingstage.com",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Milan\u0096San Remo Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:34:16.031995",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Race results reporting",
+            "Equipment technology reviews (consumer-focused)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.450731039047241
+            }
+          ],
+          "reasoning": "The scraped content from Cyclingnews consists entirely of general sports news headlines, race results (Cyclo-cross World Championships, Cadel Evans Great Ocean Road Race), and consumer-focused equipment galleries. There is no mention of the specific entity 'Milan\u2013San Remo Women', nor are there any signals regarding organizational procurement, job postings, or backend technology infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:34:30.973342",
+          "domain_explored": "https://bikeradar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Wahoo (indoor training ecosystem)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer equipment reviews",
+            "B2C advertising features",
+            "General cycling industry news",
+            "Training advice content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.3822309970855713
+            }
+          ],
+          "reasoning": "The content is entirely consumer-focused (B2C), featuring bike reviews, buying guides, and training advice. While there are 'Advertising Features' with brands like Wahoo and Orange, these are promotional placements for consumer products, not B2B procurement signals or organizational vendor partnerships relevant to the Milan\u2013San Remo Women entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:34:40.190881",
+          "domain_explored": "https://velo.outsideonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer sports news aggregation",
+            "Equipment reviews and consumer gear testing",
+            "Athlete performance analysis",
+            "B2C advertising (e.g., 'Get all the latest delivered to your feed')"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.1356942653656006
+            }
+          ],
+          "reasoning": "The scraped content from Velo/Outside Online consists entirely of consumer-focused sports journalism, gear reviews ('Best Smart Trainers', 'Enve Melee Dream Build'), and race reporting. There are no articles, job postings, or organizational announcements related to the internal operations, procurement needs, or governance of the 'Milan\u2013San Remo Women' entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:35:08.057663",
+          "domain_explored": "https://cyclingstage.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Race results reporting",
+            "Team roster listings",
+            "Consumer-focused cycling journalism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 524,
+              "output_tokens": 170,
+              "elapsed_seconds": 22.729060888290405
+            }
+          ],
+          "reasoning": "The scraped content from CyclingStage.com is a consumer-facing sports news outlet. It focuses on race previews, results, and team rosters. There is no presence of corporate governance, job listings, or technology procurement signals relevant to the operational entity 'Milan\u2013San Remo Women'."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:35:14.809824",
+          "domain_explored": "https://escapecollective.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism and race reporting",
+            "Athlete interviews and features",
+            "Race result analysis",
+            "Photo journalism/galleries"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.264565944671631
+            }
+          ],
+          "reasoning": "The scraped content from escapecollective.com consists entirely of sports news articles, athlete interviews (e.g., Michael Storer), and race reports (e.g., Cadel Evans Great Ocean Road Race, CX Worlds). There is no presence of corporate governance, vendor procurement, job postings, or technology infrastructure discussions relevant to the entity 'Milan\u2013San Remo Women'."
+        }
+      ],
+      "total_input_tokens": 6331,
+      "total_output_tokens": 961,
+      "estimated_cost_usd": 0.033408
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Milan\u0096San Remo Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:35:14.811003"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.409910",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:17:18.037584"
+}

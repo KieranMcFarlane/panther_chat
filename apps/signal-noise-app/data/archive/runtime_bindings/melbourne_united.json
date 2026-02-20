@@ -1,0 +1,115 @@
+{
+  "entity_id": "melbourne_united",
+  "entity_name": "Melbourne United",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "melbourneutd.com.au",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "melbourne_united",
+      "entity_name": "Melbourne United",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://flashscore.com",
+        "https://melbourneutd.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Melbourne United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:28:40.407608",
+          "domain_explored": "https://melbourneutd.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webflow (Inferred from 'div block' placeholder text)",
+              "Digital Asset Management (DAM) System (Inferred from External Media IDs)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Management System (CMS) Artifacts",
+            "Structured Data/Schema Markup (Sports)",
+            "Media Asset Management (UUIDs)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 252,
+              "elapsed_seconds": 5.985467910766602
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of raw HTML fragments, repetitive schedule data (game times, dates, opponents), and UUIDs for external media. There is no narrative text, job descriptions, or vendor information present in this specific snippet. While the presence of 'External Media ID' and UUIDs indicates the use of a Digital Asset Management (DAM) or media platform, it is not a specific procurement signal requiring an update in confidence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:28:46.611382",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator Content",
+            "Gambling/Compliance Warnings",
+            "Loading Indicators (Client-Side Rendering)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 601,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.2389938831329346
+            }
+          ],
+          "reasoning": "The provided content is from Flashscore, a third-party sports aggregator. It contains generic gambling warnings, loading states, and navigation elements unrelated to Melbourne United's internal operations or procurement strategy. There is no proprietary information, vendor selection, or technology stack data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 1960,
+      "total_output_tokens": 431,
+      "estimated_cost_usd": 0.012345
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Melbourne United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:28:46.612785"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.213131",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:19.760607"
+}

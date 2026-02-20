@@ -1,0 +1,175 @@
+{
+  "entity_id": "al_wasl_sc",
+  "entity_name": "Al Wasl SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "alwaslsc.ae",
+    "play.google.com",
+    "zoominfo.com",
+    "lensdatabase.fr",
+    "behance.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_wasl_sc",
+      "entity_name": "Al Wasl SC",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://alwaslsc.ae",
+        "https://behance.net",
+        "https://lensdatabase.fr",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Wasl SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:08:21.005768",
+          "domain_explored": "https://alwaslsc.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High volume of sports content (match results, signings)",
+            "Standard club news updates (preparations, Flag Day)",
+            "Absence of corporate or business development keywords"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.5707647800445557
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news, match results, player transfers, and generic club announcements. There are no explicit signals regarding procurement activities, technology adoption, or job postings. The content is purely operational/sports-focused, offering no insight into business spending or vendor selection."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:08:28.059479",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Google Play Store Interface",
+            "Consumer Mobile Gaming Content",
+            "Irrelevant App Store Metadata (ratings, pricing, genres)",
+            "Presence of competitor apps (EA Sports FC, Top Football Manager)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.7841877937316895
+            }
+          ],
+          "reasoning": "The content provided is a raw scrape of the Google Play Store homepage or a generic games category. It lists popular consumer mobile games (Candy Crush, PUBG, etc.) and app store interface elements (device types, 'Top grossing'). There is absolutely no content related to Al Wasl SC, its operations, or its procurement activities. This is entirely irrelevant noise."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:08:31.028303",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:08:34.120724",
+          "domain_explored": "https://lensdatabase.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:08:40.899083",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Creative Portfolio Platform",
+            "Freelance Hiring Interface",
+            "Irrelevant Project Showcase (Global/Non-Local)",
+            "Absence of Corporate Governance Keywords"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.721801996231079
+            }
+          ],
+          "reasoning": "The content represents the generic homepage of Behance, a global creative portfolio platform. While the platform contains a 'Hire a Freelancer' feature, the specific content scraped (project thumbnails like 'Lambo Graveyard', 'Wordmarks Collection', etc.) is generic creative work with no relation to Al Wasl SC. There are no signals of Al Wasl SC using this platform for procurement, nor are there specific job postings or RFPs related to the entity."
+        }
+      ],
+      "total_input_tokens": 4315,
+      "total_output_tokens": 623,
+      "estimated_cost_usd": 0.022289999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Wasl SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:08:40.900532"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.232794",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:12.884768"
+}

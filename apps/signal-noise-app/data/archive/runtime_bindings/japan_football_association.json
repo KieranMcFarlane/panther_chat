@@ -1,0 +1,81 @@
+{
+  "entity_id": "japan_football_association",
+  "entity_name": "Japan Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "inside.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_football_association",
+      "entity_name": "Japan Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:47:10.682069",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Governing Body Content",
+            "Event Promotion",
+            "Future-Dated Content (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.24166202545166
+            }
+          ],
+          "reasoning": "The content is sourced from FIFA's global website (inside.fifa.com) and focuses on high-level strategic initiatives, global event promotion (FIFA Women\u2019s Champions Cup), and infrastructure projects in other nations (Burundi). It contains no specific information regarding the Japan Football Association's (JFA) procurement activities, technology stack, or local governance patterns. The content is irrelevant to the specific entity being analyzed."
+        }
+      ],
+      "total_input_tokens": 1363,
+      "total_output_tokens": 198,
+      "estimated_cost_usd": 0.007058999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:47:10.683194"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205745",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:54.757890"
+}

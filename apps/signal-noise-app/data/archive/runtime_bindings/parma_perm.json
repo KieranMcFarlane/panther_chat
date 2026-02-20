@@ -1,0 +1,429 @@
+{
+  "entity_id": "parma_perm",
+  "entity_name": "Parma Perm",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "vtb-league.com",
+    "lokobasket.com",
+    "minskbasket.by",
+    "en.bckhimki.com",
+    "bc-zenit.com",
+    "pbcastana.kz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy",
+      "https://www.linkedin.com/jobs/consultant-jobs-bologna?trk=guest_job_search_related_jserp_link",
+      "https://www.linkedin.com/jobs/view/travel-mri-tech-job-in-parma-oh-make-%242-735-%242-927-week-at-aya-healthcare-4365171112",
+      "https://www.linkedin.com/jobs/view/sales-specialist-at-cgh-group-4360861135",
+      "https://www.linkedin.com/jobs/search/?currentJobId=2904819391&f_TPR=r86400&geoId=91000000&keywords=pharmacovigilance%20jobs&location=European%20Union",
+      "https://www.linkedin.com/jobs/view/customer-service-representative-at-waterway-carwash-4367029344",
+      "https://www.linkedin.com/jobs/view/2026-summer-intern-manufacturing-controls-engineer-at-general-motors-4360728318",
+      "https://si.linkedin.com/jobs/view/customer-service-specialist-at-barilla-group-4170780360",
+      "https://www.linkedin.com/jobs/view/customer-service-representative-at-u-haul-4345930027"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "parma_perm",
+      "entity_name": "Parma Perm",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://lokobasket.com",
+        "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy",
+        "https://pbcastana.kz",
+        "https://www.linkedin.com/jobs/search/?currentJobId=2904819391&f_TPR=r86400&geoId=91000000&keywords=pharmacovigilance%20jobs&location=European%20Union",
+        "https://minskbasket.by",
+        "https://www.linkedin.com/jobs/view/sales-specialist-at-cgh-group-4360861135",
+        "https://www.linkedin.com/jobs/view/travel-mri-tech-job-in-parma-oh-make-%242-735-%242-927-week-at-aya-healthcare-4365171112",
+        "https://bc-zenit.com",
+        "https://www.linkedin.com/jobs/consultant-jobs-bologna?trk=guest_job_search_related_jserp_link",
+        "https://en.bckhimki.com",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Parma Perm may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:31:31.119878",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Confirmation: Parma Perm is a professional basketball club in the VTB League.",
+              "Sponsorship: Team carries naming rights sponsor 'BETSITI'."
+            ]
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Sponsorship Visibility"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 199,
+              "elapsed_seconds": 5.412325143814087
+            }
+          ],
+          "reasoning": "The content is a navigation menu and team roster for the VTB United League (basketball). While 'Parma Perm' is confirmed as a participating team (listed as 'BETSITI PARMA Perm region'), the content contains no procurement signals, technology stacks, or governance data relevant to business operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:31:37.517345",
+          "domain_explored": "https://lokobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Visibility: 'BETSITI PARMA' listed as team name"
+            ]
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Sponsorship Visibility",
+            "Event Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.931025743484497
+            }
+          ],
+          "reasoning": "The content from lokobasket.com is a sports news and schedule page for 'Lokomotiv-Kuban' (a basketball club). While it lists a match against 'BETSITI PARMA Perm', confirming the entity exists in this context, the page contains no corporate governance, technology stack, or procurement-related information. It is purely consumer-facing sports content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:31:44.689212",
+          "domain_explored": "https://minskbasket.by",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partner List: MTS (Telecommunications)",
+              "Partner List: BETERA (Betting/Title Sponsor)",
+              "Partner List: Euroopt (Retail)",
+              "Technical Sponsor: Hotel Planeta"
+            ]
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Sponsorship Visibility",
+            "Event Scheduling",
+            "Partner Ecosystem"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 271,
+              "elapsed_seconds": 2.5192151069641113
+            }
+          ],
+          "reasoning": "The analyzed content belongs to the 'Minsk' Basketball Club (minskbasket.by). While the page lists a comprehensive array of commercial partners (e.g., MTS, Belneftestrakh, Euroopt) and technical sponsors, these are established sponsorship relationships rather than active procurement signals (RFPs, tenders, or job postings). The content is focused on game results, league standings, and club news. There is no evidence of the target entity 'Parma Perm' or any procurement activities related to it."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:31:50.629925",
+          "domain_explored": "https://en.bckhimki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Event Scheduling",
+            "Sponsorship Visibility",
+            "Competitor Analysis"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.5980618000030518
+            }
+          ],
+          "reasoning": "The scraped content from bckhimki.com is exclusively focused on sports journalism, game results, and team announcements. It contains no corporate governance information, technology infrastructure details, or business procurement signals relevant to Parma Perm."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:31:56.462414",
+          "domain_explored": "https://bc-zenit.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Event Scheduling",
+            "Sponsorship Visibility",
+            "Roster Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.2323780059814453
+            }
+          ],
+          "reasoning": "The scraped content from bc-zenit.com is exclusively focused on sports news, game results, and player statistics. There are no visible sections or text related to corporate governance, procurement tenders, technology infrastructure, or job vacancies. The site functions purely as a sports team portal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:32:05.866343",
+          "domain_explored": "https://pbcastana.kz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Event Scheduling",
+            "Multilingual Content (Kazakh/Russian)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.657240152359009
+            }
+          ],
+          "reasoning": "The content is entirely focused on basketball match results, schedules, and league standings for 'BC Astana' (Astana Tigers). It contains no corporate information, governance details, or technology infrastructure related to the target entity 'Parma Perm'. The domain appears to be a sports news or team site unrelated to the procurement investigation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:32:13.284273",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Commerciale Estero (Wholesale Manager)",
+              "Regional Sales Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Aggregation",
+            "Recruitment Activity",
+            "Geographic Filtering (Italy)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.8433966636657715
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered for 'Gi Group' in Italy. While it confirms the entity is actively hiring (e.g., 'Commerciale Estero', 'Regional Sales Manager'), the content is a list of roles for placement or general management rather than direct procurement signals (RFPs, supply chain roles, or tech stack investments). The entity 'Parma Perm' is not mentioned, and the roles listed are standard sales/management positions, indicating general business operations rather than specific procurement intent."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:32:22.589507",
+          "domain_explored": "https://www.linkedin.com/jobs/consultant-jobs-bologna?trk=guest_job_search_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Business Management Consultant at NEVERHACK Italy",
+              "Consulente Clientela at Deutsche Bank"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Aggregation",
+            "Geographic Filtering (Bologna, Italy)",
+            "Generic Role Titles (Consultant)",
+            "Authentication Wall (Sign-in Prompt)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1746,
+              "output_tokens": 230,
+              "elapsed_seconds": 5.449372291564941
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Consultant' roles in Bologna. While it lists companies like Deutsche Bank and NEVERHACK Italy, there is no specific mention of 'Parma Perm' or the entity of interest. The content is largely repetitive login prompts and generic job listings unrelated to the specific target entity's procurement activities."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:32:39.510746",
+          "domain_explored": "https://www.linkedin.com/jobs/view/travel-mri-tech-job-in-parma-oh-make-%242-735-%242-927-week-at-aya-healthcare-4365171112",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Epic (Charting System)"
+            ],
+            "job_postings": [
+              "Travel MRI Tech",
+              "Radiology / Cardiology"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Parma, OH vs Parma, Italy)",
+            "Healthcare Sector Focus",
+            "Staffing/Recruitment Agency Content",
+            "Technology Stack Discovery (Epic Systems)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1822,
+              "output_tokens": 270,
+              "elapsed_seconds": 13.373950958251953
+            }
+          ],
+          "reasoning": "The content is a job posting for a Travel MRI Tech in Parma, Ohio (USA), posted by Aya Healthcare. This is a geographic mismatch for the target entity 'Parma Perm' (likely related to Parma, Italy, given the context of previous iterations exploring Italian domains and the VTB league). The content pertains to clinical staffing rather than corporate procurement or business development. While it reveals the use of Epic Systems software, this is operational data for a hospital, not a procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:32:46.585056",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sales-specialist-at-cgh-group-4360861135",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Specialist - CGH Group (Parma, OH)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Parma, OH vs Parma, Italy)",
+            "Insurance Sector Focus",
+            "Recruitment Activity",
+            "Commission-Based Sales Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1890,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.467724084854126
+            }
+          ],
+          "reasoning": "The job listing is for a 'Sales Specialist' at CGH Group located in Parma, Ohio (USA), not Parma, Italy. The role focuses on life insurance sales and recruitment, which does not align with the procurement intelligence objectives for the Italian entity 'Parma Perm'."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T17:32:53.517195",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=2904819391&f_TPR=r86400&geoId=91000000&keywords=pharmacovigilance%20jobs&location=European%20Union",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Medical Science Liaison (Paris - France) at Santen",
+              "Drug Safety Associate at wherewework Hellas"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Aggregation",
+            "Geographic Filtering (European Union)",
+            "Sector Specificity (Pharmacovigilance)",
+            "Generic Recruitment Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1972,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.29526686668396
+            }
+          ],
+          "reasoning": "The content represents a generic, logged-out LinkedIn job search results page for 'Pharmacovigilance Jobs' within the European Union. While the sector (Pharma/Life Sciences) is relevant to potential procurement for 'Parma Perm' (assuming Parma, Italy context), the page itself is a functional search interface requiring authentication to view details. It contains no specific signals regarding the entity 'Parma Perm', no specific vendor selection, and no technology stack implementation details. It is a broad market noise page."
+        }
+      ],
+      "total_input_tokens": 17897,
+      "total_output_tokens": 2366,
+      "estimated_cost_usd": 0.08918100000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Parma Perm may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:32:53.518764"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.229217",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:09.749348"
+}

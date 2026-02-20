@@ -1,0 +1,139 @@
+{
+  "entity_id": "dhaka_metropolis",
+  "entity_name": "Dhaka Metropolis",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "flashscore.com",
+    "espncricinfo.com",
+    "specialbranch.gov.bd"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dhaka_metropolis",
+      "entity_name": "Dhaka Metropolis",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://flashscore.com",
+        "https://specialbranch.gov.bd",
+        "https://espncricinfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dhaka Metropolis may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:35:44.474793",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gambling/Gaming content",
+            "French/German language content",
+            "Generic sports navigation",
+            "Loading indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 543,
+              "output_tokens": 164,
+              "elapsed_seconds": 3.0161430835723877
+            }
+          ],
+          "reasoning": "The content is entirely related to sports betting, gambling services, and generic website navigation (Flashscore). There is absolutely no content related to Dhaka Metropolis, government procurement, or enterprise technology. This is a false positive or irrelevant data source."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:35:48.573224",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:35:57.206283",
+          "domain_explored": "https://specialbranch.gov.bd",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Applications (Public Service)",
+              "Immigration & Visa Management Systems",
+              "Refugee Management Database",
+              "Security Monitoring Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Statement on using 'latest technology'",
+              "Mention of 'apps and digital tools' for service delivery",
+              "Operational scope: Immigration, Foreigner Registration, KPI Security, Refugee Management"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Intent",
+            "Public Service Digitization",
+            "Immigration/Visa Management Systems",
+            "Security & Intelligence Operations",
+            "Refugee Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 346,
+              "elapsed_seconds": 4.60998797416687
+            }
+          ],
+          "reasoning": "The content confirms the entity is the Special Branch of Bangladesh Police. While it lacks explicit RFPs or job postings, the Chief's message explicitly states a mission to 'use the latest technology' and mentions specific digital tools ('apps and digital tools') for immigration, visa, and refugee management. This indicates a clear intent for procuring and maintaining specialized software and security technology, fitting the 'Technology Investments' and 'Digital Transformation' focus areas."
+        }
+      ],
+      "total_input_tokens": 1979,
+      "total_output_tokens": 510,
+      "estimated_cost_usd": 0.013586999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dhaka Metropolis may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:35:57.209075"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.295410",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:55.884685"
+}

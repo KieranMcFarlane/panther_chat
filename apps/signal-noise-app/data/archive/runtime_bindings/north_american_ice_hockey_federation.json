@@ -1,0 +1,393 @@
+{
+  "entity_id": "north_american_ice_hockey_federation",
+  "entity_name": "North American Ice Hockey Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "pointstreaksites.com",
+    "usahockey.com",
+    "tier1hockeyfederation.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/usa-hockey-jobs",
+      "https://www.linkedin.com/jobs/view/director-broadcast-research-at-national-hockey-league-nhl-4329170024",
+      "https://www.linkedin.com/jobs/view/director-finance-events-at-national-hockey-league-nhl-4344395739",
+      "https://www.linkedin.com/jobs/view/manager-technology-training-ai-enablement-at-national-hockey-league-nhl-4342264179",
+      "https://www.linkedin.com/jobs/view/nhl-com-international-producer-at-national-hockey-league-nhl-4328928456",
+      "https://www.linkedin.com/jobs/nhl-manager-jobs",
+      "https://www.linkedin.com/jobs/view/senior-manager-club-business-affairs-at-national-hockey-league-nhl-4343325082",
+      "https://www.linkedin.com/jobs/view/director-software-engineering-at-national-hockey-league-nhl-4304134365"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "north_american_ice_hockey_federation",
+      "entity_name": "North American Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.14,
+        0.14,
+        0.2,
+        0.22
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/manager-technology-training-ai-enablement-at-national-hockey-league-nhl-4342264179",
+        "https://www.linkedin.com/jobs/view/director-finance-events-at-national-hockey-league-nhl-4344395739",
+        "https://tier1hockeyfederation.com",
+        "https://usahockey.com",
+        "https://www.linkedin.com/jobs/view/nhl-com-international-producer-at-national-hockey-league-nhl-4328928456",
+        "https://www.linkedin.com/jobs/view/director-broadcast-research-at-national-hockey-league-nhl-4329170024",
+        "https://www.linkedin.com/jobs/usa-hockey-jobs",
+        "https://pointstreaksites.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Advanced Analytics & Data Science Integration",
+        "Syndicated Data Procurement (Nielsen/Numeris)",
+        "Streaming & Smart TV Measurement Technologies",
+        "AI-Driven Scheduling Tools",
+        "Audience Intelligence & Consumer Behavior Research",
+        "AI & Generative AI Enablement Strategy",
+        "Learning Management System (LMS) Procurement",
+        "Digital Transformation & Change Management",
+        "Collaboration & Productivity Suite Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "North American Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:54:40.649331",
+          "domain_explored": "https://pointstreaksites.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pointstreak Sports Technology (Websites)",
+              "Pointstreak Stream",
+              "Pointstreak Registration",
+              "Pointstreak Statistics",
+              "Pointstreak Performance",
+              "StackSports (Parent/Vendor Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Pointstreak Sports Technology identified as a provider for sports org websites.",
+              "Service: 'Design' services offered (Professional design team).",
+              "Service: 'Integration' capabilities mentioned (connecting systems to save time/money).",
+              "Product: Content Management System (CMS) for sports organizations."
+            ]
+          },
+          "patterns_found": [
+            "Vendor Discovery",
+            "Product Suite Analysis",
+            "Service Integration Capabilities"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 431,
+              "elapsed_seconds": 10.004723310470581
+            }
+          ],
+          "reasoning": "The content analyzed is the official product page of 'Pointstreak Sports Technology' (specifically their 'Websites' and 'Stream' products). While this is a vendor page rather than the target entity's internal site, it confirms the existence of a procurement category relevant to the 'North American Ice Hockey Federation'. The federation likely uses or requires similar sports technology solutions (Statistics, Registration, Websites, Streaming). The mention of 'StackSports' in the support link indicates a larger parent vendor ecosystem. This is classified as WEAK_ACCEPT because it establishes the *capability* and *product landscape* the federation would procure from, even if it doesn't show a specific intent to purchase right now."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:54:52.280434",
+          "domain_explored": "https://usahockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media/Social)",
+              "RSS Feeds (Content Distribution)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partners Section (Vendor ecosystem entry point)",
+              "Winter Meeting / Governance Updates (Budget cycle alignment)",
+              "Warrior Hockey Title Sponsorship (Active vendor engagement)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Partnership Ecosystem",
+            "Governance & Rule Change Cycles",
+            "Event Sponsorship Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.057485103607178
+            }
+          ],
+          "reasoning": "The content confirms USA Hockey as the central governing body (NGB) for the region, validating the entity context. While no direct RFPs are visible on the homepage, the explicit 'Corporate Partners' section and the 'Winter Meeting' news (indicating governance/rule changes like the 'DL Approved Starting In 2027-28') signal organizational maturity and a structured budget cycle. The mention of 'Warrior Hockey' as a title sponsor for a major tournament indicates active vendor relationships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:55:02.728376",
+          "domain_explored": "https://tier1hockeyfederation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) for news/updates",
+              "Statistical Integration (MyHockeyRankings)",
+              "Event Registration/Management Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of 200+ AAA teams implies backend software procurement",
+              "Showcase events across PA/CT indicate venue and logistics vendor needs",
+              "Partnerships with Junior Leagues (USHL, NAHL) suggest potential shared technology services"
+            ]
+          },
+          "patterns_found": [
+            "League Governance & Operations",
+            "Event Management & Logistics",
+            "Digital Platform Requirements",
+            "Multi-Entity Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1471,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.9283206462860107
+            }
+          ],
+          "reasoning": "The content confirms the entity is a large-scale sanctioning body (Tier 1 Hockey Federation) managing 200+ teams and multi-state events. While the page is informational, the operational scale (200+ teams, national rankings, showcase events) implies a need for robust procurement in event management, statistical tracking (MyHockeyRankings integration), and web infrastructure. The mention of 'run by rink owners' suggests a decentralized governance model requiring vendor coordination."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:55:11.329053",
+          "domain_explored": "https://www.linkedin.com/jobs/usa-hockey-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Marketing Automation Platforms (implied by 'Marketing Operations')",
+              "CRM Systems",
+              "Digital Analytics Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Marketing Operation Intern",
+                "entity": "USA Hockey",
+                "location": "Plymouth, MI",
+                "posted": "1 month ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Internal capacity building for marketing execution",
+              "Potential future requirement for marketing software or agency support to manage increased workload"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Operations Expansion",
+            "Digital Engagement Tools",
+            "Event Management Staffing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 330,
+              "elapsed_seconds": 5.181410074234009
+            }
+          ],
+          "reasoning": "The discovery of a specific 'Marketing Operation Intern' role at USA Hockey indicates active investment in marketing infrastructure and processes. While an intern role is junior, the specific focus on 'Operations' suggests a need to organize workflows, potentially involving CRM management, campaign tracking, or vendor coordination. This signals a growing maturity in their marketing procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:55:25.138729",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-broadcast-research-at-national-hockey-league-nhl-4329170024",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Nielsen Analytics",
+              "Numeris Software",
+              "Smart TV Audience Measurement Tools",
+              "AI & Data Science Scheduling Algorithms",
+              "Microsoft Office (Excel, PowerPoint)"
+            ],
+            "job_postings": [
+              "Director, Broadcast Research (National Hockey League)"
+            ],
+            "procurement_indicators": [
+              "Vendor reporting management for international broadcasts",
+              "Procurement of syndicated viewership data (Nielsen/Numeris)",
+              "Investment in custom quantitative and qualitative research initiatives",
+              "Adoption of newer audience measurement technologies (Smart TV/AI)"
+            ]
+          },
+          "patterns_found": [
+            "Advanced Analytics & Data Science Integration",
+            "Syndicated Data Procurement (Nielsen/Numeris)",
+            "Streaming & Smart TV Measurement Technologies",
+            "AI-Driven Scheduling Tools",
+            "Audience Intelligence & Consumer Behavior Research"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1597,
+              "output_tokens": 442,
+              "elapsed_seconds": 9.22021484375
+            }
+          ],
+          "reasoning": "The job posting for a Director, Broadcast Research reveals a strategic pivot towards data-driven decision-making and advanced technology adoption. The role requires managing vendor reporting for international broadcasts and utilizing syndicated data (Nielsen, Numeris), indicating ongoing and future procurement cycles for data licenses and analytics platforms. Furthermore, the explicit mention of utilizing 'data science/AI in sports scheduling' and 'Smart TV-based audience measurement' signals a strong intent to invest in or procure sophisticated AI and digital intelligence tools to enhance viewership and content strategy."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:55:35.497940",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-finance-events-at-national-hockey-league-nhl-4344395739",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 24 column 50 (char 1233)"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:55:46.963400",
+          "domain_explored": "https://www.linkedin.com/jobs/view/manager-technology-training-ai-enablement-at-national-hockey-league-nhl-4342264179",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365",
+              "Monday.com",
+              "Slack",
+              "Learning Management Systems (LMS)",
+              "AI-powered learning systems",
+              "Video learning tools",
+              "Workflow automation tools"
+            ],
+            "job_postings": [
+              "Manager, Technology Training & AI Enablement"
+            ],
+            "procurement_indicators": [
+              "Search for modern LMS platforms to support multi-channel learning strategy",
+              "Procurement of AI-driven tools for employee productivity and automation",
+              "Vendor evaluation for collaboration software (Slack, Monday) mentioned in training context",
+              "Partnerships with AI training providers or content creators"
+            ]
+          },
+          "patterns_found": [
+            "AI & Generative AI Enablement Strategy",
+            "Learning Management System (LMS) Procurement",
+            "Digital Transformation & Change Management",
+            "Collaboration & Productivity Suite Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1731,
+              "output_tokens": 410,
+              "elapsed_seconds": 4.713890075683594
+            }
+          ],
+          "reasoning": "This job posting confirms the NHL is actively investing in internal digital transformation, specifically targeting AI adoption and technology fluency. The requirement to 'Utilize modern learning platforms (LMS, AI-powered learning systems...)' indicates a clear procurement need for training infrastructure. Additionally, the focus on 'Collaboration tools (e.g., Microsoft 365, Monday, Slack)' and 'Workflow automation' signals ongoing or upcoming SaaS procurement to support these new capabilities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:55:58.737469",
+          "domain_explored": "https://www.linkedin.com/jobs/view/nhl-com-international-producer-at-national-hockey-league-nhl-4328928456",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Adobe Photoshop",
+              "HTML/CSS",
+              "Social Media Management Platforms"
+            ],
+            "job_postings": [
+              "NHL.com International Producer"
+            ],
+            "procurement_indicators": [
+              "CMS Licensing & Maintenance",
+              "Localization & Translation Service Requirements",
+              "Digital Asset Storage & Delivery Systems",
+              "Freelance/Correspondent Management Tools"
+            ]
+          },
+          "patterns_found": [
+            "Content Management System (CMS) Utilization",
+            "Digital Asset Management (DAM) & Localization",
+            "Global Digital Operations Infrastructure",
+            "Freelance Workforce Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1811,
+              "output_tokens": 359,
+              "elapsed_seconds": 5.366637945175171
+            }
+          ],
+          "reasoning": "While this is an operational role rather than a direct procurement position, it confirms the NHL's reliance on a specific Content Management System (CMS) and Digital Asset Management (DAM) infrastructure to support eight foreign language properties. The requirement for 'building articles in content management system' and 'programming editorial and video content' indicates an existing or potential need for software licensing, localization tools, and freelance management platforms. It supports the hypothesis of a complex digital technology stack."
+        }
+      ],
+      "total_input_tokens": 10923,
+      "total_output_tokens": 2607,
+      "estimated_cost_usd": 0.071874
+    },
+    "procurement_signals": [
+      "Advanced Analytics & Data Science Integration",
+      "Syndicated Data Procurement (Nielsen/Numeris)",
+      "Streaming & Smart TV Measurement Technologies",
+      "AI-Driven Scheduling Tools",
+      "Audience Intelligence & Consumer Behavior Research",
+      "AI & Generative AI Enablement Strategy",
+      "Learning Management System (LMS) Procurement",
+      "Digital Transformation & Change Management",
+      "Collaboration & Productivity Suite Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "North American Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:55:58.738802"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.304941",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:40.806160"
+}

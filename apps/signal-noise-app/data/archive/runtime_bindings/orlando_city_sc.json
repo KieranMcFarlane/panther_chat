@@ -1,0 +1,410 @@
+{
+  "entity_id": "orlando_city_sc",
+  "entity_name": "Orlando City SC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "orlandocitysc.com",
+    "mlssoccer.com",
+    "mlsstore.com",
+    "weareorlandocityuk.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/orlando-city-sc-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/fan-ambassadors-fan-ambassador-at-orlando-city-sc-4365884333",
+      "https://www.linkedin.com/jobs/view/ticket-sales-group-account-executive-orlando-pride-at-orlando-city-sc-4367564244",
+      "https://www.linkedin.com/jobs/view/stadium-operations-facilities-operations-assistant-at-orlando-city-sc-4343629387",
+      "https://www.linkedin.com/jobs/view/street-team-street-team-at-orlando-city-sc-4330458348",
+      "https://www.linkedin.com/jobs/view/tickets-sales-member-experience-specialist-at-orlando-city-sc-4330501323",
+      "https://www.linkedin.com/jobs/view/communications-match-day-communications-at-orlando-city-sc-4330528346",
+      "https://www.linkedin.com/jobs/view/creative-videographer-at-orlando-city-sc-4344163303"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "orlando_city_sc",
+      "entity_name": "Orlando City SC",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.06,
+        0.08,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/stadium-operations-facilities-operations-assistant-at-orlando-city-sc-4343629387",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/jobs/orlando-city-sc-jobs-worldwide",
+        "https://www.linkedin.com/jobs/view/fan-ambassadors-fan-ambassador-at-orlando-city-sc-4365884333",
+        "https://www.linkedin.com/jobs/view/ticket-sales-group-account-executive-orlando-pride-at-orlando-city-sc-4367564244",
+        "https://www.linkedin.com/jobs/view/street-team-street-team-at-orlando-city-sc-4330458348",
+        "https://mlsstore.com",
+        "https://weareorlandocityuk.com",
+        "https://orlandocitysc.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Leadership Hiring (VP Level)",
+        "Digital Marketing Transformation",
+        "Stadium Operations & Security Services",
+        "Ticketing & CRM Operations",
+        "Sales Infrastructure Expansion",
+        "CRM Utilization (SalesForce)",
+        "Revenue Operations Strategy",
+        "Direct Sales Procurement (Labor)",
+        "NWSL (Orlando Pride) Commercial Investment"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Orlando City SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:35:25.288376",
+          "domain_explored": "https://orlandocitysc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stadium Infrastructure (General)",
+              "Point of Sale (POS) (Implied for pop-up bar)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inter&Co Stadium upgrades ahead of 2026 seasons",
+              "Launch of new pop-up bar for 2026 Kickoff events",
+              "Club-record Homegrown transfer (Villarreal CF)"
+            ]
+          },
+          "patterns_found": [
+            "Stadium Infrastructure Upgrades",
+            "Event/Fan Experience Expansion",
+            "Player Transfer Activity (Homegrown)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 264,
+              "elapsed_seconds": 4.118058681488037
+            }
+          ],
+          "reasoning": "The content explicitly mentions 'Inter&Co Stadium announces upgrades' and the launch of a 'new pop-up bar.' While specific vendors are not listed, stadium upgrades and new physical infrastructure typically involve construction, AV integration, and POS systems procurement. The player transfer indicates sporting operations activity but minimal tech procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:35:33.594514",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Alex Freeman Transfer (Player Acquisition)",
+              "Homegrown Player Contracting"
+            ]
+          },
+          "patterns_found": [
+            "Player Transfer Activity (Homegrown/Academy)",
+            "Academy Development Investment",
+            "Transfer Fee Valuation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 251,
+              "elapsed_seconds": 2.836047887802124
+            }
+          ],
+          "reasoning": "The scraped content explicitly mentions 'Orlando City set new precedent with Alex Freeman transfer'. This indicates a specific procurement event involving the acquisition of a player (Alex Freeman), likely a Homegrown player given the context of 'precedent' and typical MLS transfer reporting. While this confirms the club is active in the 'market' for talent, it is a specific sports transaction rather than general corporate procurement (IT, infrastructure). However, it validates the entity's active investment cycle."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:35:42.471319",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Klarna (Payment Processing)",
+              "Fanatics Commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized League Contract (Fanatics)",
+              "Outsourced E-commerce Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide E-commerce Aggregation",
+            "Fanatics Licensing Model",
+            "Standardized Retail Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 249,
+              "elapsed_seconds": 2.770646810531616
+            }
+          ],
+          "reasoning": "The content is from the centralized MLSStore.com, which is operated by Fanatics, LLC. This indicates that Orlando City SC's retail operations are outsourced to the league's exclusive merchandising partner. Consequently, Orlando City SC does not manage independent procurement for e-commerce platforms, payment processing (Klarna), or standard merchandise distribution, as these are handled via the centralized league contract."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:35:53.131470",
+          "domain_explored": "https://weareorlandocityuk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Independent Fan Blog",
+            "Personal Life Announcement",
+            "Third-Party Media Coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.4133667945861816
+            }
+          ],
+          "reasoning": "The content is a personal blog post from the owner of an independent fan site ('Orlando City UK') announcing a reduction in activity due to paternity leave. It is not an official Orlando City SC channel and contains no information regarding the club's internal procurement, technology stack, or operational spending."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:36:00.579193",
+          "domain_explored": "https://www.linkedin.com/jobs/orlando-city-sc-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems (implied by Account Executive roles)",
+              "Digital Marketing Tools (implied by VP Marketing role)",
+              "Ticketing Platforms (implied by Box Office/Operations roles)"
+            ],
+            "job_postings": [
+              "Marketing Dept - Vice President of Marketing",
+              "Ticket Sales - Account Executive, Group Sales",
+              "Ticket Sales - Premium Account Executive",
+              "Tickets Operations - Matchday Box Office Representative",
+              "Stadium Operations - Part Time, Stadium Security Guard"
+            ],
+            "procurement_indicators": [
+              "Strategic Marketing Review (Triggered by VP Marketing hire)",
+              "Stadium Security Vendor Management",
+              "Ticketing Software/Platform Maintenance",
+              "Premium Sales Support Tools"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Hiring (VP Level)",
+            "Digital Marketing Transformation",
+            "Stadium Operations & Security Services",
+            "Ticketing & CRM Operations",
+            "Sales Infrastructure Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 403,
+              "elapsed_seconds": 2.9967880249023438
+            }
+          ],
+          "reasoning": "The discovery of a 'Vice President of Marketing' role is a high-value procurement signal, indicating strategic investment in brand strategy and likely an upcoming review of marketing agencies, analytics platforms, and creative services. Additionally, the volume of operational roles (Security, Box Office) suggests active vendor management for stadium services and staffing."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:36:07.880066",
+          "domain_explored": "https://www.linkedin.com/jobs/view/fan-ambassadors-fan-ambassador-at-orlando-city-sc-4365884333",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticketing Scanning Systems",
+              "Workforce Management Tools"
+            ],
+            "job_postings": [
+              "Fan Ambassador (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Guest Experience Department Expansion",
+              "Stadium Operations Staffing Vendors",
+              "Uniform/Attire Procurement for Staff",
+              "Multi-Event Logistics Support"
+            ]
+          },
+          "patterns_found": [
+            "Stadium Operations & Guest Experience Staffing",
+            "Part-Time Labor Procurement",
+            "Event-Based Service Delivery Models",
+            "Inter&Co Stadium Multi-Event Utilization (NWSL, UFL)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.2294058799743652
+            }
+          ],
+          "reasoning": "While this is a job posting, it is for a part-time, hourly, non-exempt role focused on direct labor rather than strategic procurement or technology implementation. However, it confirms active investment in the Guest Experience department and stadium operations infrastructure. It also highlights the multi-tenant nature of Inter&Co Stadium (Orlando City, Orlando Pride, UFL Storm), which implies a need for flexible, scalable service contracts and workforce management solutions."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:36:14.427831",
+          "domain_explored": "https://www.linkedin.com/jobs/view/ticket-sales-group-account-executive-orlando-pride-at-orlando-city-sc-4367564244",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SalesForce CRM"
+            ],
+            "job_postings": [
+              "Group Account Executive, Orlando Pride"
+            ],
+            "procurement_indicators": [
+              "SalesForce CRM Licensing & Maintenance",
+              "Commission-based Sales Structure Implementation",
+              "Group Ticketing & Event Management Tools"
+            ]
+          },
+          "patterns_found": [
+            "CRM Utilization (SalesForce)",
+            "Revenue Operations Strategy",
+            "Direct Sales Procurement (Labor)",
+            "NWSL (Orlando Pride) Commercial Investment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 240,
+              "elapsed_seconds": 2.615777015686035
+            }
+          ],
+          "reasoning": "The job posting explicitly confirms the use of SalesForce CRM, a key technology stack component. It also indicates active procurement of sales talent to drive revenue for the Orlando Pride (NWSL), signaling a commercial expansion strategy separate from the MLS team."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:36:23.749759",
+          "domain_explored": "https://www.linkedin.com/jobs/view/stadium-operations-facilities-operations-assistant-at-orlando-city-sc-4343629387",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Unrelated Industry Listings",
+            "Sign-In Wall / Restricted Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1799,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.687358856201172
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn jobs search results page for 'Facilities Services' roles. It lists unrelated companies (Christian Dior, Peapack Private Bank & Trust) and does not contain the specific job description or metadata for the Orlando City SC role referenced in the URL. The content is blocked behind a sign-in wall, rendering it useless for specific procurement signal extraction regarding Orlando City SC."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:36:33.493387",
+          "domain_explored": "https://www.linkedin.com/jobs/view/street-team-street-team-at-orlando-city-sc-4330458348",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Physician Family Practice - Clinica Sierra Vista",
+              "Medical Doctor - Vetted Solutions"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Unrelated Industry Listings (Healthcare)",
+            "Sign-In Wall / Restricted Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1864,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.6008412837982178
+            }
+          ],
+          "reasoning": "The scraped content is entirely unrelated to Orlando City SC or the sports industry. The page displays job listings for 'Resident Doctor' and 'Physician Family Practice' for entities like 'Clinica Sierra Vista' and 'Vetted Solutions'. This indicates a broken link, a redirect error, or a generic job aggregation page that failed to load the specific 'Street Team' content mentioned in the URL. There are zero procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 14357,
+      "total_output_tokens": 2326,
+      "estimated_cost_usd": 0.077961
+    },
+    "procurement_signals": [
+      "Executive Leadership Hiring (VP Level)",
+      "Digital Marketing Transformation",
+      "Stadium Operations & Security Services",
+      "Ticketing & CRM Operations",
+      "Sales Infrastructure Expansion",
+      "CRM Utilization (SalesForce)",
+      "Revenue Operations Strategy",
+      "Direct Sales Procurement (Labor)",
+      "NWSL (Orlando Pride) Commercial Investment"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Orlando City SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:36:33.495122"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.153063",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:58:21.251572"
+}

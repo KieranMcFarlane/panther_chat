@@ -1,0 +1,358 @@
+{
+  "entity_id": "corinthians",
+  "entity_name": "Corinthians",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "corinthians.com.br",
+    "shoptimao.com.br",
+    "meutimao.com.br",
+    "fieltorcedor.com.br",
+    "doearenacorinthians.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sg.linkedin.com/jobs/view/operations-manager-in-food-beverage-at-corinthians-asia-group-4306313099",
+      "https://sg.linkedin.com/jobs/view/junior-marketing-graphic-designer-at-corinthians-asia-group-4293598300",
+      "https://sg.linkedin.com/jobs/view/account-administrative-executive-at-corinthians-asia-group-4173386730",
+      "https://www.linkedin.com/jobs/view/emergency-response-operations-coordinator-at-samaritan-s-purse-4143844866",
+      "https://www.linkedin.com/posts/hotel-jobs-worldwide_job-openings-at-raffles-jeddah-saudi-arabia-activity-7334887934480850944-IhvK"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "corinthians",
+      "entity_name": "Corinthians",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://shoptimao.com.br",
+        "https://meutimao.com.br",
+        "https://sg.linkedin.com/jobs/view/junior-marketing-graphic-designer-at-corinthians-asia-group-4293598300",
+        "https://www.linkedin.com/jobs/view/emergency-response-operations-coordinator-at-samaritan-s-purse-4143844866",
+        "https://fieltorcedor.com.br",
+        "https://sg.linkedin.com/jobs/view/operations-manager-in-food-beverage-at-corinthians-asia-group-4306313099",
+        "https://www.linkedin.com/posts/hotel-jobs-worldwide_job-openings-at-raffles-jeddah-saudi-arabia-activity-7334887934480850944-IhvK",
+        "https://doearenacorinthians.com.br",
+        "https://sg.linkedin.com/jobs/view/account-administrative-executive-at-corinthians-asia-group-4173386730",
+        "https://corinthians.com.br"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Corinthians may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:29:31.530176",
+          "domain_explored": "https://corinthians.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:29:38.179034",
+          "domain_explored": "https://shoptimao.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_ecommerce_feedback_loop",
+            "b2c_customer_satisfaction_survey"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 628,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.894235849380493
+            }
+          ],
+          "reasoning": "The content scraped from 'shoptimao.com.br' is a standard, repetitive B2C customer feedback loop ('Your opinion is very important to us...'). It indicates a transactional relationship with individual consumers rather than B2B procurement activities. There is no signal of corporate governance, technology infrastructure, or vendor acquisition relevant to Corinthians."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:29:40.989121",
+          "domain_explored": "https://meutimao.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:29:50.017484",
+          "domain_explored": "https://fieltorcedor.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM System",
+              "Payment Gateway",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Membership Management Platform",
+              "Ticketing System Integration",
+              "Recurring Billing Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "subscription_tiering",
+            "digital_monetization",
+            "customer_relationship_management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.5273241996765137
+            }
+          ],
+          "reasoning": "The content reveals a structured B2C membership program ('Fiel Torcedor') with tiered pricing and digital benefits. While this is a revenue-generating page, it indicates the use of CRM and billing systems to manage memberships, dependencies, and digital content access. It confirms the entity's active investment in digital fan engagement platforms."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:29:55.239305",
+          "domain_explored": "https://doearenacorinthians.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:30:03.984958",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/operations-manager-in-food-beverage-at-corinthians-asia-group-4306313099",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "operations_management_software",
+              "ai_recruitment_tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Operations Manager in Food & Beverage",
+                "entity": "Corinthians Asia Group",
+                "location": "Singapore",
+                "status": "Closed"
+              }
+            ],
+            "procurement_indicators": [
+              "F&B_inventory_procurement",
+              "alcohol_import_export_licenses"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "industry_mismatch",
+            "false_positive_corinthians"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 293,
+              "elapsed_seconds": 4.733155965805054
+            }
+          ],
+          "reasoning": "The content refers to 'Corinthians Asia Group', a Singapore-based Food & Beverage company operating restaurants (Hanjip, Nami, Fu Yuan). This is a distinct legal entity from Sport Club Corinthians Paulista (the Brazilian football club). The industry (F&B) and geography (Singapore) do not match the target entity's profile (Sports/Entertainment/Brazil). Therefore, this provides no valid procurement signals for the target."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:30:12.028952",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/junior-marketing-graphic-designer-at-corinthians-asia-group-4293598300",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Junior Marketing & Graphic Designer",
+                "entity": "Corinthians Asia Group",
+                "location": "Singapore",
+                "sector": "Hospitality/F&B",
+                "relevance": "False Positive - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "industry_mismatch",
+            "false_positive_corinthians"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1622,
+              "output_tokens": 255,
+              "elapsed_seconds": 4.414200067520142
+            }
+          ],
+          "reasoning": "The content refers to 'Corinthians Asia Group', a Singapore-based hospitality company (F&B, restaurants, bars) founded in 2019. This is a distinct legal entity from Sport Club Corinthians Paulista (the Brazilian football club). The job posting is for a graphic designer in the hospitality sector, which does not provide procurement intelligence relevant to the football club's operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:30:22.058491",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/account-administrative-executive-at-corinthians-asia-group-4173386730",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Google Workspace",
+              "Accounting Software"
+            ],
+            "job_postings": [
+              "Account Administrative Executive"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "industry_mismatch",
+            "false_positive_corinthians"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1685,
+              "output_tokens": 207,
+              "elapsed_seconds": 6.012714147567749
+            }
+          ],
+          "reasoning": "The job posting is for 'Corinthians Asia Group' in the 'Food and Beverage Services' industry located in Singapore. This entity is unrelated to Sport Club Corinthians Paulista (the Brazilian football club). The role focuses on accounting and administrative tasks for an F&B business, not procurement or technology for the sports entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:30:29.608386",
+          "domain_explored": "https://www.linkedin.com/jobs/view/emergency-response-operations-coordinator-at-samaritan-s-purse-4143844866",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Emergency Response Operations Coordinator at Samaritan's Purse (Juba, South Sudan)"
+            ],
+            "procurement_indicators": [
+              "Supplier vetting processes",
+              "Open tender procurement",
+              "Framework agreements"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "industry_mismatch",
+            "false_positive_corinthians"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1749,
+              "output_tokens": 214,
+              "elapsed_seconds": 4.325323820114136
+            }
+          ],
+          "reasoning": "The job posting is for 'Samaritan's Purse', a humanitarian aid organization, and is located in South Sudan. It has no connection to Sport Club Corinthians Paulista (the Brazilian football club). While the role involves procurement operations, the entity is completely unrelated to the target."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:30:41.567323",
+          "domain_explored": "https://www.linkedin.com/posts/hotel-jobs-worldwide_job-openings-at-raffles-jeddah-saudi-arabia-activity-7334887934480850944-IhvK",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant purchasing Manager",
+              "Revenue Manager",
+              "Sales Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "industry_mismatch",
+            "false_positive_corinthians"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1819,
+              "output_tokens": 181,
+              "elapsed_seconds": 8.544345140457153
+            }
+          ],
+          "reasoning": "The content is a job posting for Raffles Jeddah in Saudi Arabia, managed by 'Hotel Jobs Worldwide'. There is no connection to the entity 'Corinthians' (the Brazilian sports club). While there is an 'Assistant purchasing Manager' role listed, it is irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 10521,
+      "total_output_tokens": 1564,
+      "estimated_cost_usd": 0.055023
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Corinthians may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:30:41.568447"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.116238",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:57.591407"
+}

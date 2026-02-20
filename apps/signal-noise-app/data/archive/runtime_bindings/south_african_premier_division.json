@@ -1,0 +1,179 @@
+{
+  "entity_id": "south_african_premier_division",
+  "entity_name": "South African Premier Division",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "football.miraheze.org",
+    "sofascore.com",
+    "kickalgor.com",
+    "livesoccertv.com",
+    "livescorehunter.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_african_premier_division",
+      "entity_name": "South African Premier Division",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://football.miraheze.org",
+        "https://livescorehunter.com",
+        "https://kickalgor.com",
+        "https://sofascore.com",
+        "https://livesoccertv.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South African Premier Division may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:46:53.756764",
+          "domain_explored": "https://football.miraheze.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic wiki platform",
+            "User-generated content",
+            "Encyclopedia format",
+            "No corporate entity presence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 685,
+              "output_tokens": 162,
+              "elapsed_seconds": 4.077921152114868
+            }
+          ],
+          "reasoning": "The scraped content is the main page of a generic, user-generated football encyclopedia (Miraheze). It contains no information regarding the South African Premier Division's internal operations, spending, or technology stack. It is irrelevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:46:56.551766",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:47:05.524557",
+          "domain_explored": "https://kickalgor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ELO Rating Algorithm",
+              "Data Visualization Tools (Charts/Stars)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports ranking aggregation",
+            "ELO rating calculation system",
+            "Statistical data visualization",
+            "Regional league categorization (CAF, UEFA, CONMEBOL, etc.)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 245,
+              "elapsed_seconds": 4.544722080230713
+            }
+          ],
+          "reasoning": "The content is a sports analytics and ranking platform (KickAlgor) displaying ELO ratings for global football leagues and clubs. While it mentions 'South Africa' and 'Mamelodi Sundowns' within the CAF (Africa) rankings, it provides no information regarding the South African Premier Division's internal operations, governance, or procurement activities. It is a consumer-facing statistics site, not a source for organizational intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:47:08.535363",
+          "domain_explored": "https://livesoccertv.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:47:19.863877",
+          "domain_explored": "https://livescorehunter.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports aggregation portal",
+            "Generic live score navigation structure",
+            "User-facing content consumption interface",
+            "Absence of organizational governance data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1079,
+              "output_tokens": 195,
+              "elapsed_seconds": 7.351135969161987
+            }
+          ],
+          "reasoning": "The content is a navigation menu for a global live score aggregation website (LiveScoreHunter). It lists generic sports categories (Football, Tennis, E-Sports) and links to live streams. There is no mention of the South African Premier Division, nor are there any procurement signals, vendor lists, or organizational infrastructure details."
+        }
+      ],
+      "total_input_tokens": 3202,
+      "total_output_tokens": 602,
+      "estimated_cost_usd": 0.018636
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South African Premier Division may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:47:19.865226"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.195408",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:39.329834"
+}

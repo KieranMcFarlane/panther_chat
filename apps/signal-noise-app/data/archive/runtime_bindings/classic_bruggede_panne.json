@@ -1,0 +1,180 @@
+{
+  "entity_id": "classic_brugge\u0096de_panne",
+  "entity_name": "Classic Brugge\u0096De Panne",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "rondevanbrugge.be",
+    "velowire.com",
+    "cyclingnews.com",
+    "procyclingstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "classic_brugge\u0096de_panne",
+      "entity_name": "Classic Brugge\u0096De Panne",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://procyclingstats.com",
+        "https://velowire.com",
+        "https://cyclingnews.com",
+        "https://rondevanbrugge.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Classic Brugge\u0096De Panne may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:34:45.167518",
+          "domain_explored": "https://rondevanbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Manager (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "GDPR/Compliance Implementation",
+            "Generic Cookie Consent Banner"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.144531011581421
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a generic, duplicated Cookie Consent Manager (CMP) script text in Dutch. It contains no information regarding the entity's internal operations, technology stack, job openings, or procurement plans. It is boilerplate web infrastructure code."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:34:56.536477",
+          "domain_explored": "https://velowire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OpenStreetMap",
+              "Google Earth"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "General Cycling News Aggregation",
+            "Event Route Data (OpenStreetMap/Google Earth)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.359886884689331
+            }
+          ],
+          "reasoning": "The scraped content from 'velowire.com' is a general cycling news aggregator covering events like the Tour de France and Vuelta a Espa\u00f1a. It contains no information regarding 'Classic Brugge\u2013De Panne', its organizers, or its procurement activities. The content is strictly related to race schedules and routes for other events."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:35:33.829156",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Race Results Reporting",
+            "Equipment/Technology Reviews (Consumer Focus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 194,
+              "elapsed_seconds": 31.550987005233765
+            }
+          ],
+          "reasoning": "The content provided is a list of headlines and article summaries from Cyclingnews.com regarding race results (Cyclo-cross World Championships, Cadel Evans Great Ocean Road Race) and consumer equipment showcases (TT bikes). There is no mention of the entity 'Classic Brugge\u2013De Panne', nor are there any procurement signals, job postings, or organizational governance details relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:35:41.081058",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race Results Aggregation",
+            "UCI Classification Data",
+            "Team/Rider Performance Metrics",
+            "Event Calendar Scheduling",
+            "Sports Betting/Quiz Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.9159958362579346
+            }
+          ],
+          "reasoning": "The scraped content from procyclingstats.com is exclusively focused on sporting event outcomes, race calendars, and rider rankings. While 'Ronde Van Brugge - Tour of Bruges' is listed as a future WorldTour event, the context is purely informational for fans and bettors rather than organizational procurement. There are no signals regarding vendor selection, technology acquisition, or business operations associated with the event organizers."
+        }
+      ],
+      "total_input_tokens": 5739,
+      "total_output_tokens": 769,
+      "estimated_cost_usd": 0.028752
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Classic Brugge\u0096De Panne may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:35:41.082898"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.395791",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:17.071739"
+}

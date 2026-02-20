@@ -1,0 +1,266 @@
+{
+  "entity_id": "international_handball_federation_(ihf)",
+  "entity_name": "International Handball Federation (IHF)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "sportfive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+      "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+      "https://at.linkedin.com/jobs/view/senior-administrative-assistant-at-european-handball-federation-3970637717?refId=3Ngft8vO9xYPwWGPdBY30w%3D%3D&trackingId=mDmlcl7FwdX2avQHR5TdFw%3D%3D&position=12&pageNum=0",
+      "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-3970892668"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_handball_federation_(ihf)",
+      "entity_name": "International Handball Federation (IHF)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://sportfive.com",
+        "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+        "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+        "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-3970892668",
+        "https://at.linkedin.com/jobs/view/senior-administrative-assistant-at-european-handball-federation-3970637717?refId=3Ngft8vO9xYPwWGPdBY30w%3D%3D&trackingId=mDmlcl7FwdX2avQHR5TdFw%3D%3D&position=12&pageNum=0"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Handball Federation (IHF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:04:42.371654",
+          "domain_explored": "https://sportfive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Wall",
+            "Marketing Agency Content",
+            "Generic Brand Messaging"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 167,
+              "elapsed_seconds": 5.919002056121826
+            }
+          ],
+          "reasoning": "The scraped content is almost exclusively comprised of cookie consent prompts and generic marketing slogans ('We Are Leaders In Sports Marketing') from the Sportfive website. There is no mention of the International Handball Federation (IHF), no specific procurement signals, and no technical data relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:04:55.705215",
+          "domain_explored": "https://at.linkedin.com/jobs/view/handball-development-project-coordinator-at-european-handball-federation-4077616260",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "E-learning platforms (implied by 'e-learning process and procedure')",
+              "Standard Office Infrastructure (implied)"
+            ],
+            "job_postings": [
+              {
+                "title": "Handball Development Project Coordinator",
+                "entity": "European Handball Federation (EHF)",
+                "location": "Vienna, Austria",
+                "procurement_relevance": "Responsible for initiating equipment orders, nominating experts (coaching/refereeing), and budget administration for Master Plan projects."
+              }
+            ],
+            "procurement_indicators": [
+              "Direct purchasing authority for sports equipment",
+              "Procurement of expert services (coaching, refereeing, marketing)",
+              "Management of project budgets",
+              "RFP/Application evaluation for National Federations",
+              "Event organization procurement (calling for organizers, cooperation agreements)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Project Coordinator",
+            "Procurement Responsibility: Sports Equipment & Expert Services",
+            "Budget Administration Authority",
+            "Master Plan Project Management",
+            "Special Projects: Wheelchair/ID Handball",
+            "Vendor/Stakeholder Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 488,
+              "elapsed_seconds": 4.214560031890869
+            }
+          ],
+          "reasoning": "While this is a job posting for the European Handball Federation (EHF) rather than the IHF directly, the EHF is a key constituent member recognized by the IHF. The role explicitly includes procurement functions such as 'initiate orders of sports equipment,' 'expert nominations,' and 'budget administration.' This indicates a decentralized or project-based procurement structure for development programs (Master Plan), which is relevant intelligence for understanding the ecosystem's purchasing behavior."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:05:09.111730",
+          "domain_explored": "https://at.linkedin.com/jobs/view/front-desk-employee-at-european-handball-federation-4056936159",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "BMD NTCS (ERP/Accounting Software)",
+              "Microsoft Excel",
+              "Microsoft Outlook"
+            ],
+            "job_postings": [
+              "Front Desk Employee (Finance Dept)"
+            ],
+            "procurement_indicators": [
+              "Direct responsibility for purchasing office supplies",
+              "Vendor price comparison activities",
+              "Invoice processing and filing",
+              "Management of vehicle fleet (potential asset procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Procurement Responsibility: Office Supplies & Inventory",
+            "Vendor Management: Price Comparison & Ordering",
+            "Finance Department Alignment",
+            "Technology Stack: BMD NTCS (ERP/Accounting)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 306,
+              "elapsed_seconds": 4.66599178314209
+            }
+          ],
+          "reasoning": "While this is an entry-level administrative role, it explicitly lists procurement-related duties such as 'needs assessment and ordering (including price comparison)' and 'inventory control.' It also confirms the use of specific ERP software (BMD NTCS) within the Finance Department, which is a key technology finding for the EHF ecosystem."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:05:23.157696",
+          "domain_explored": "https://at.linkedin.com/jobs/view/senior-administrative-assistant-at-european-handball-federation-3970637717?refId=3Ngft8vO9xYPwWGPdBY30w%3D%3D&trackingId=mDmlcl7FwdX2avQHR5TdFw%3D%3D&position=12&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office"
+            ],
+            "job_postings": [
+              "Senior Administrative Assistant (Strategic Business)"
+            ],
+            "procurement_indicators": [
+              "Management of external agencies",
+              "Event organization and coordination",
+              "Travel management",
+              "Subsidiary oversight (EHF Marketing, EHF Services & Infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Business Unit Structure",
+            "External Agency Management",
+            "Corporate Governance (Boards & Committees)",
+            "Event Coordination Procurement",
+            "Travel & Administration Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 301,
+              "elapsed_seconds": 2.7576589584350586
+            }
+          ],
+          "reasoning": "While this is an administrative role, it sits within the 'Strategic Business' department which oversees the parent company and subsidiaries (Marketing, Infrastructure). The explicit requirement for 'working with external agencies incl. providing briefings' indicates a procurement-related interface. The role supports governance bodies (Sustainability Board) which often drive ESG-related vendor selection."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:05:31.319707",
+          "domain_explored": "https://at.linkedin.com/jobs/view/in-house-lawyer-at-european-handball-federation-3970892668",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office Suite",
+              "Database Programmes",
+              "Graphic and Illustration Software",
+              "Webinar Tools"
+            ],
+            "job_postings": [
+              "In-House Lawyer (Corporate Legal)"
+            ],
+            "procurement_indicators": [
+              "Management of contracts for TV and media agreements",
+              "Partnership and organizer agreements",
+              "Infrastructure service contracts",
+              "Data protection contracts for the entire organization",
+              "Intellectual property service management",
+              "External cooperation with other sport organizations"
+            ]
+          },
+          "patterns_found": [
+            "Contract Management & Procurement Governance",
+            "Vendor Partnership Agreements",
+            "Data Protection & Compliance Procurement",
+            "Intellectual Property (IP) Management",
+            "Broadcasting & Media Rights Procurement",
+            "Event Organization Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1696,
+              "output_tokens": 403,
+              "elapsed_seconds": 4.668359994888306
+            }
+          ],
+          "reasoning": "While this is a Legal role, the job description explicitly lists the drafting and management of commercial contracts that are direct outputs of procurement processes. The responsibilities include 'partnerships, organizers, TV, media agreements' and 'infrastructure service,' which implies involvement in vendor selection and contract finalization. It confirms the EHF utilizes external vendors for major services (TV, Media, Infrastructure) and requires legal oversight for these procurement activities."
+        }
+      ],
+      "total_input_tokens": 7643,
+      "total_output_tokens": 1665,
+      "estimated_cost_usd": 0.047904
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Handball Federation (IHF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:05:31.321026"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458687",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:48:55.645350"
+}

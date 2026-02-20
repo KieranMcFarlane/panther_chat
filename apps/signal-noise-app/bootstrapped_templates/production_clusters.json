@@ -1,0 +1,4322 @@
+[
+  {
+    "cluster_id": "top_tier_club_global",
+    "cluster_name": "Tier-1 Commercial Clubs",
+    "cluster_description": "Major football clubs in top-tier European and global leagues with high commercial maturity and centralized procurement.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "public"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "These entities operate sophisticated procurement functions often driven by C-level executives (CDO, CCO). Signals are found in strategic partnership announcements, senior tech hires, and official press releases regarding infrastructure overhauls.",
+    "example_entities": [
+      "manchester_city",
+      "liverpool",
+      "paris_saint-germain",
+      "bayern_m\u00fcnchen",
+      "chelsea",
+      "arsenal",
+      "borussia_dortmund"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "mid_market_club_uk",
+    "cluster_name": "UK Mid-Market Clubs",
+    "cluster_description": "Clubs in the Premier League and English Championship with significant revenue but volatile commercial performance.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "local_press"
+    ],
+    "procurement_behavior_summary": "High volume of signals due to large staffing and operational churn. Look for 'Head of Digital', 'CRM Manager', and 'Ticketing Operations' roles as leading indicators of RFP readiness.",
+    "example_entities": [
+      "aston_villa",
+      "west_ham_united",
+      "leicester_city",
+      "leeds_united",
+      "southampton",
+      "fulham",
+      "brighton_&_hove_albion"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "vendor_switch",
+      "explicit_rfp"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "continental_pro_club",
+    "cluster_name": "Continental Pro Clubs",
+    "cluster_description": "Top division clubs in France, Germany, and Italy with strong operational structures but varying digital maturity.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Often bound by league-wide vendor agreements (e.g., SAP/Bundesliga). Signals include league-level tech rollouts and individual club announcements of digital platform refreshes.",
+    "example_entities": [
+      "olympique_de_marseille",
+      "olympique_lyonnais",
+      "vfl_wolfsburg",
+      "eintracht_frankfurt",
+      "rb_leipzig",
+      "lille_osc"
+    ],
+    "expected_signal_types": [
+      "platform_migration",
+      "vendor_switch",
+      "explicit_rfp"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "emerging_market_club",
+    "cluster_name": "Emerging Market Clubs",
+    "cluster_description": "Major clubs in South America with high fan engagement but lower digital procurement maturity.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is often informal and relationship-based. Signals are rare but high-value when they appear, usually triggered by new stadium projects or major sponsorship overhauls.",
+    "example_entities": [
+      "universidad_de_chile",
+      "ldu_quito",
+      "zamalek_sc",
+      "kano_pillars",
+      "river_plate",
+      "gamba_osaka",
+      "boca_juniors",
+      "olimpia",
+      "melbourne_victory",
+      "orlando_pirates",
+      "universidad_cat\u00f3lica",
+      "sydney_fc",
+      "tp_mazembe",
+      "mamelodi_sundowns",
+      "al_merrikh",
+      "persepolis_fc",
+      "pe\u00f1arol",
+      "nacional",
+      "suwon_samsung_bluewings",
+      "cerro_porte\u00f1o",
+      "vissel_kobe",
+      "esperance_de_tunis",
+      "atl\u00e9tico_nacional",
+      "wydad_casablanca",
+      "colo-colo",
+      "beijing_guoan",
+      "caracas_fc",
+      "wellington_phoenix",
+      "incheon_united",
+      "enyimba_fc",
+      "sepahan_sc",
+      "pohang_steelers",
+      "auckland_fc",
+      "deportivo_cali",
+      "cerezo_osaka",
+      "lokomotiv_moscow",
+      "pyramids_fc",
+      "corinthians",
+      "al_duhail_sc",
+      "shandong_taishan",
+      "kaizer_chiefs",
+      "spartak_moscow",
+      "al_rayyan_sc",
+      "independiente_del_valle",
+      "al_sadd_sc",
+      "esteghlal_fc",
+      "deportivo_t\u00e1chira",
+      "palmeiras",
+      "millonarios_fc",
+      "al_hilal_omdurman",
+      "al_ahly_sc",
+      "raja_casablanca",
+      "cska_moscow",
+      "western_sydney_wanderers",
+      "shanghai_port",
+      "emelec",
+      "flamengo",
+      "s\u00e3o_paulo_fc"
+    ],
+    "expected_signal_types": [
+      "strategic_review",
+      "vendor_switch",
+      "platform_migration"
+    ],
+    "entity_count": 58
+  },
+  {
+    "cluster_id": "lower_tier_club",
+    "cluster_name": "Lower Tier & Challenger Clubs",
+    "cluster_description": "Clubs in lower divisions (Championship, League One, 2. Bundesliga) with limited resources and decentralized operations.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "job_boards",
+      "official_sites"
+    ],
+    "procurement_behavior_summary": "Focus on cost-saving tools and essential operational software. High turnover in operational staff creates frequent but low-value signals.",
+    "example_entities": [
+      "burnley",
+      "norwich_city",
+      "schalke_04",
+      "hamburger_sv",
+      "birmingham_city",
+      "fc_metz"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "vendor_switch"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "top_5_league_clubs",
+    "cluster_name": "Tier-1 European Football Clubs",
+    "cluster_description": "Major clubs from 'Top 5' European leagues (La Liga, Serie A) with high commercial maturity, complex ownership structures, and significant vendor ecosystems.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "public",
+        "unknown"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "High volume of complex, high-value RFPs. Decisions are driven by commercial performance and brand strategy. Signals often appear via strategic leadership hires or major digital platform overhauls.",
+    "example_entities": [
+      "real_madrid",
+      "fc_barcelona",
+      "atl\u00e9tico_de_madrid",
+      "sevilla_fc",
+      "juventus",
+      "inter",
+      "ac_milan",
+      "as_roma",
+      "ssc_napoli"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 9
+  },
+  {
+    "cluster_id": "mid_market_league_clubs",
+    "cluster_name": "Mid-Market League Clubs",
+    "cluster_description": "Established clubs from competitive European and Latin American leagues (Eredivisie, Primeira Liga, Liga MX, Serie A). These entities have structured operations but tighter budgets than Tier-1 elites.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "local_press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Procurement is often project-based rather than enterprise-wide. Strong reliance on league-wide vendor partnerships or local agencies. Signals include job postings for marketing heads and stadium upgrades.",
+    "example_entities": [
+      "ajax",
+      "psv_eindhoven",
+      "feyenoord",
+      "sl_benfica",
+      "fc_porto",
+      "sporting_cp",
+      "club_am\u00e9rica",
+      "chivas_guadalajara",
+      "tigres_uanl",
+      "lazio",
+      "atalanta"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "explicit_rfp"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "emerging_market_clubs",
+    "cluster_name": "Emerging Market & State-Associated Clubs",
+    "cluster_description": "Clubs from rapidly developing football markets (Saudi Pro League, J1 League, K League 1). Often characterized by state-backed ownership or corporate conglomerates, leading to distinct, fast-moving procurement cycles.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "state-backed",
+        "private"
+      ],
+      "revenue_band": [
+        "high",
+        "medium"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "government_tenders"
+    ],
+    "procurement_behavior_summary": "High volatility in procurement due to massive investment inflows. Decisions are top-down and often tied to national 'Vision' strategies or corporate rebranding.",
+    "example_entities": [
+      "rk_partizan",
+      "zamalek_sc",
+      "uts_handball_club",
+      "al-wehda_club",
+      "yokohama_f._marinos",
+      "toulouse_union_hb",
+      "kashima_antlers",
+      "al-rayyan",
+      "rk_vojvodina",
+      "fc_seoul",
+      "bm_logro\u00f1o_la_rioja",
+      "hc_motor_zaporizhzhia",
+      "haslum_hk",
+      "ferencv\u00e1rosi_tc",
+      "sc_dhfk_leipzig",
+      "esp\u00e9rance_de_tunis",
+      "handebol_londrina",
+      "sydney_university_handball_club",
+      "al-duhail",
+      "al_nassr",
+      "jeonbuk_hyundai_motors",
+      "hc_odessa",
+      "al_ittihad",
+      "hsv_hamburg",
+      "rk_metaloplastika",
+      "drammen_hk",
+      "ec_pinheiros",
+      "abc_braga",
+      "rk_maribor_branik",
+      "al-gharafa",
+      "us_ivry_handball",
+      "istres_provence_handball",
+      "ska_minsk",
+      "tsv_hannover-burgdorf",
+      "al_hilal",
+      "dinamo_pancevo",
+      "\u00f6if_arendal",
+      "rk_trimo_trebnje",
+      "bjerringbro-silkeborg",
+      "rk_gorenje_velenje",
+      "tatab\u00e1nya_kc",
+      "alings\u00e5s_hk",
+      "donbas_mariupol",
+      "urawa_red_diamonds",
+      "club_africain",
+      "minaur_baia_mare",
+      "hsg_wetzlar",
+      "al-sadd",
+      "eurofarm_pelister",
+      "\u00e1ngel_xim\u00e9nez_puente_genil",
+      "bidasoa_ir\u00fan",
+      "melbourne_handball_club",
+      "bm_benidorm",
+      "cesson_rennes_m\u00e9tropole_hb",
+      "viveros_herol_bm_nava",
+      "saint-rapha\u00ebl_var_handball",
+      "taubat\u00e9_handebol",
+      "al_ahly_sc",
+      "mc_alger",
+      "al-khaleej_club",
+      "al_ahli",
+      "fredericia_hk_1990",
+      "ulsan_hd_fc"
+    ],
+    "expected_signal_types": [
+      "strategic_review",
+      "platform_migration",
+      "leadership_hire",
+      "vendor_switch"
+    ],
+    "entity_count": 63
+  },
+  {
+    "cluster_id": "domestic_league_pros",
+    "cluster_name": "Domestic League Professionals",
+    "cluster_description": "Clubs from geographically isolated or smaller market leagues (Scottish Premiership) where the competitive gap between the top 2 and the rest is significant, but all operate as professional businesses.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "local_press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Focus on cost-efficiency and local engagement. Procurement signals are often subtle, appearing as club infrastructure updates or changes in back-office staff.",
+    "example_entities": [
+      "celtic",
+      "rangers",
+      "hearts",
+      "aberdeen",
+      "hibernian",
+      "dundee_united",
+      "kilmarnock"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "explicit_rfp"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "c1_professional_leagues",
+    "cluster_name": "Tier 1 & 2 Professional Leagues",
+    "cluster_description": "Governing bodies and competition organizers (e.g., Premier League, MLS, LaLiga). These entities manage centralized commercial rights, broadcast deals, and league-wide technology infrastructure (stats, officiating, streaming). They are high-value targets with centralized procurement.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "unknown",
+        "private"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "tender_portals"
+    ],
+    "procurement_behavior_summary": "Issues large, centralized RFPs for broadcast, data, mar-tech, and official partnerships. High digital maturity means signals are often found in press releases or dedicated vendor portals.",
+    "example_entities": [
+      "premier_league",
+      "laliga",
+      "mls",
+      "bundesliga",
+      "serie_a",
+      "ligue_1",
+      "efl_championship",
+      "s\u00fcper_lig",
+      "liga_mx",
+      "brasileir\u00e3o_s\u00e9rie_a",
+      "saudi_pro_league",
+      "j1_league",
+      "k_league_1",
+      "a-league",
+      "chinese_super_league_(csl)",
+      "russian_premier_league_(rpl)",
+      "belgian_pro_league",
+      "ekstraklasa",
+      "austrian_bundesliga",
+      "swiss_super_league",
+      "danish_superliga",
+      "allsvenskan",
+      "liga_portugal_2",
+      "serie_b",
+      "2._bundesliga",
+      "ligue_2",
+      "women's_super_league_(wsl)",
+      "nwsl"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 28
+  },
+  {
+    "cluster_id": "c2_global_federations",
+    "cluster_name": "Global & Continental Federations",
+    "cluster_description": "International governing bodies (e.g., FIFA, UEFA, CONCACAF). These entities manage massive global events, regulatory frameworks, and development programs. Their procurement is highly formal, bureaucratic, and often multi-year.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "international federation",
+        "continental federation"
+      ],
+      "governance_models": [
+        "unknown"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Highly formal tender processes for event hosting, IT infrastructure, and consultancy. Signals include long-cycle vendor registrations and official partner announcements.",
+    "example_entities": [
+      "fifa",
+      "uefa",
+      "conmebol",
+      "concacaf",
+      "caf",
+      "afc",
+      "ofc"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "c3_club_emerging_markets",
+    "cluster_name": "Emerging Market & Challenger Clubs",
+    "cluster_description": "Clubs from emerging football markets (T\u00fcrkiye, USA, Eastern Europe) or rapidly growing leagues. These entities are scaling operations, investing in stadium tech, and expanding digital footprints. Procurement is often decentralized but opportunistic.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "unknown",
+        "private"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press"
+    ],
+    "procurement_behavior_summary": "High frequency of vendor switching and leadership hires as they professionalize. Look for 'Head of Digital' hires or stadium expansion news as precursors to RFPs.",
+    "example_entities": [
+      "galatasaray",
+      "fenerbah\u00e7e",
+      "trabzonspor",
+      "adana_demirspor",
+      "konyaspor",
+      "antalyaspor",
+      "sivasspor",
+      "alanyaspor",
+      "bursaspor",
+      "g\u00f6ztepe",
+      "columbus_crew",
+      "fc_cincinnati",
+      "philadelphia_union",
+      "new_england_revolution",
+      "orlando_city_sc",
+      "d.c._united",
+      "portland_timbers",
+      "austin_fc",
+      "nashville_sc",
+      "sporting_kansas_city",
+      "los_angeles_fc",
+      "la_galaxy",
+      "inter_miami_cf",
+      "seattle_sounders_fc",
+      "atlanta_united",
+      "new_york_city_fc",
+      "red_star_belgrade",
+      "partizan_belgrade",
+      "vojvodina_novi_sad",
+      "dinamo_zagreb",
+      "hajduk_split",
+      "hnk_rijeka",
+      "dynamo_kyiv",
+      "shakhtar_donetsk",
+      "dnipro-1"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "platform_migration"
+    ],
+    "entity_count": 35
+  },
+  {
+    "cluster_id": "c4_club_nordic_mature",
+    "cluster_name": "Nordic & Mature Market Clubs",
+    "cluster_description": "Clubs from highly mature, transparent markets (Scandinavia, Benelux, Alps). These clubs often have structured corporate governance and publish annual reports. They are predictable targets for SaaS and performance tech.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "unknown",
+        "public"
+      ],
+      "revenue_band": [
+        "medium"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press"
+    ],
+    "procurement_behavior_summary": "Stable procurement cycles driven by fiscal years and sporting seasons. High digital maturity means they actively seek efficiency tools.",
+    "example_entities": [
+      "swansea_city",
+      "cardiff_city",
+      "ifk_g\u00f6teborg",
+      "malm\u00f6_ff",
+      "djurg\u00e5rdens_if",
+      "aik_fotboll",
+      "fc_copenhagen",
+      "br\u00f8ndby_if",
+      "fc_midtjylland",
+      "rapid_wien",
+      "austria_wien",
+      "red_bull_salzburg",
+      "fc_basel",
+      "young_boys",
+      "fc_z\u00fcrich",
+      "anderlecht",
+      "club_brugge",
+      "kaa_gent",
+      "legia_warsaw"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration"
+    ],
+    "entity_count": 19
+  },
+  {
+    "cluster_id": "global_governing_bodies",
+    "cluster_name": "Global & Continental Governing Bodies",
+    "cluster_description": "The apex of football governance. These entities manage massive, multi-year cycles (World Cups, Continental Championships). Their procurement is highly bureaucratic, centralized, and predictable based on event cycles.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "unknown"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Strict vendor qualification processes. Heavy reliance on major sponsors/partners. Signals include host city selections, sustainability mandates, and digital transformation RFPs.",
+    "example_entities": [
+      "oceania_continent_handball_federation_(ochf)",
+      "international_sumo_federation_(ifs)",
+      "asian_cycling_confederation_(acc)",
+      "union_cycliste_internationale_(uci)",
+      "world_squash_federation_(wsf)",
+      "confederation_of_north,_central_america_and_caribbean_association_football_(concacaf)",
+      "world_shooting_(issf)",
+      "mlb",
+      "international_handball_federation_(ihf)",
+      "world_triathlon",
+      "south_and_central_america_handball_confederation_(scahc)",
+      "world_sailing",
+      "oceania_football_confederation_(ofc)",
+      "confederation_of_african_cycling_(cac)",
+      "south_american_football_confederation_(conmebol)",
+      "european_handball_federation_(ehf)",
+      "north_america_and_caribbean_handball_confederation_(nachc)",
+      "international_sambo_federation_(fias)",
+      "international_padel_federation_(fip)",
+      "world_rowing_(fisa)",
+      "world_taekwondo",
+      "international_table_tennis_federation_(ittf)",
+      "european_cycling_union_(uec)",
+      "asian_football_confederation_(afc)",
+      "world_rugby",
+      "f\u00e9d\u00e9ration_internationale_de_football_association_(fifa)",
+      "world_flying_disc_federation_(wfdf)",
+      "pan_american_cycling_confederation_(copaci)",
+      "international_pickleball_federation_(ipf)",
+      "confederation_of_african_football_(caf)",
+      "international_skating_union_(isu)",
+      "international_ski_&_snowboard_federation_(fis)",
+      "asian_handball_federation_(ahf)",
+      "npb",
+      "international_weightlifting_federation_(iwf)",
+      "f\u00e9d\u00e9ration_internationale_de_volleyball_(fivb)",
+      "kbo_league",
+      "wbsc_europe",
+      "african_handball_confederation_(cahb)",
+      "world_skate",
+      "international_tennis_federation_(itf)",
+      "international_surfing_association_(isa)",
+      "oceania_cycling_confederation_(occ)",
+      "world_baseball_softball_confederation_(wbsc)",
+      "union_of_european_football_associations_(uefa)",
+      "international_orienteering_federation_(iof)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 46
+  },
+  {
+    "cluster_id": "national_federations",
+    "cluster_name": "National Football Associations",
+    "cluster_description": "The administrative bodies for football within specific countries. They act as intermediaries between global governing bodies and local leagues. Procurement is often public-sector influenced, bureaucratic, and focused on grassroots development, national team logistics, and compliance.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "government_portals"
+    ],
+    "procurement_behavior_summary": "Funding often tied to government grants or FIFA/Confederation funds. Signals include government budget announcements, stadium upgrades, and national team training camp contracts.",
+    "example_entities": [
+      "afghanistan_volleyball_federation",
+      "belgian_basketball_federation",
+      "angolan_basketball_federation",
+      "belize_football_federation",
+      "ecuadorian_basketball_federation",
+      "french_basketball_federation",
+      "danish_volleyball_federation",
+      "bangladesh_football_federation",
+      "bahrain_football_association",
+      "bermuda_football_association",
+      "dominican_republic_volleyball_federation",
+      "cameroonian_basketball_federation",
+      "ghana_volleyball_association",
+      "greenland_volleyball_federation",
+      "brazilian_basketball_confederation",
+      "azerbaijan_volleyball_federation",
+      "argentine_volleyball_federation",
+      "guinea_volleyball_federation",
+      "andorran_volleyball_federation",
+      "bhutan_volleyball_federation",
+      "equatorial_guinea_volleyball_federation",
+      "algerian_volleyball_federation",
+      "chilean_volleyball_federation",
+      "estonian_basketball_association",
+      "gabon_basketball_federation",
+      "egyptian_volleyball_federation",
+      "argentine_baseball_federation",
+      "bulgarian_basketball_federation",
+      "egyptian_football_association",
+      "belarus_basketball_federation",
+      "dominican_republic_basketball_federation",
+      "bahrain_basketball_association",
+      "american_samoa_volleyball_association",
+      "australian_handball_federation",
+      "chinese_volleyball_association",
+      "antigua_and_barbuda_volleyball_association",
+      "burkina_faso_basketball_federation",
+      "canadian_volleyball_federation",
+      "congolese_volleyball_federation_(congo)",
+      "antigua_and_barbuda_basketball_association",
+      "el_salvador_basketball_federation",
+      "cape_verde_basketball_federation",
+      "bulgarian_volleyball_federation",
+      "faroe_islands_volleyball_federation",
+      "hungarian_handball_federation",
+      "comoros_volleyball_federation",
+      "fiji_volleyball_federation",
+      "canadian_baseball_federation",
+      "icelandic_volleyball_federation",
+      "south_african_football_association",
+      "benin_volleyball_federation",
+      "japan_handball_association",
+      "australian_baseball_federation",
+      "canadian_basketball_federation",
+      "ecuadorian_volleyball_federation",
+      "grenada_volleyball_association",
+      "indian_volleyball_federation",
+      "bhutan_basketball_federation",
+      "ethiopian_basketball_federation",
+      "aruba_volleyball_association",
+      "football_federation_australia",
+      "egyptian_basketball_federation",
+      "chadian_volleyball_federation",
+      "austrian_football_association",
+      "central_african_republic_volleyball_federation",
+      "botswana_basketball_association",
+      "brazilian_volleyball_confederation",
+      "british_virgin_islands_volleyball_association",
+      "cuban_volleyball_federation",
+      "ethiopian_volleyball_federation",
+      "cape_verde_volleyball_federation",
+      "chinese_taipei_volleyball_association",
+      "benin_basketball_federation",
+      "cambodian_basketball_federation",
+      "algerian_basketball_federation",
+      "burundi_basketball_federation",
+      "australian_basketball_federation",
+      "guatemalan_volleyball_federation",
+      "bosnia_and_herzegovina_volleyball_federation",
+      "albanian_basketball_association",
+      "cuban_basketball_federation",
+      "gambian_volleyball_federation",
+      "equatorial_guinea_basketball_federation",
+      "german_volleyball_federation",
+      "bahamas_basketball_federation",
+      "belize_volleyball_association",
+      "iraqi_volleyball_federation",
+      "aruba_basketball_federation",
+      "barbados_volleyball_association",
+      "honduran_volleyball_federation",
+      "bahamas_volleyball_federation",
+      "american_samoa_basketball_association",
+      "brunei_darussalam_basketball_association",
+      "chinese_taipei_basketball_association",
+      "egyptian_handball_federation",
+      "armenian_basketball_federation",
+      "greek_volleyball_federation",
+      "benin_football_federation",
+      "andorran_football_federation",
+      "cambodian_volleyball_federation",
+      "indonesian_volleyball_federation",
+      "armenian_football_federation",
+      "burundi_volleyball_federation",
+      "brazilian_handball_confederation",
+      "anguilla_football_association",
+      "afghanistan_football_federation",
+      "czech_volleyball_federation",
+      "gabonese_volleyball_federation",
+      "angolan_volleyball_federation",
+      "guinea-bissau_volleyball_federation",
+      "cayman_islands_volleyball_federation",
+      "eritrean_basketball_federation",
+      "guyana_volleyball_federation",
+      "cyprus_basketball_federation",
+      "cayman_islands_basketball_association",
+      "congolese_volleyball_federation_(drc)",
+      "finnish_basketball_association",
+      "croatian_basketball_federation",
+      "bangladesh_basketball_federation",
+      "danish_handball_federation",
+      "andorran_basketball_federation",
+      "cyprus_volleyball_federation",
+      "chinese_basketball_association",
+      "eswatini_basketball_association",
+      "gibraltar_volleyball_association",
+      "antigua_and_barbuda_football_association",
+      "football_kenya_federation",
+      "bermuda_basketball_association",
+      "croatian_volleyball_federation",
+      "german_handball_federation",
+      "haitian_volleyball_federation",
+      "chilean_basketball_federation",
+      "austrian_basketball_federation",
+      "bahrain_volleyball_association",
+      "burkina_faso_volleyball_federation",
+      "australian_volleyball_federation",
+      "bhutan_football_federation",
+      "azerbaijan_football_federation",
+      "argentine_football_association",
+      "congolese_basketball_federation",
+      "hong_kong_volleyball_association",
+      "belarus_volleyball_federation",
+      "bahamas_football_association",
+      "bermuda_volleyball_association",
+      "french_handball_federation",
+      "azerbaijan_basketball_federation",
+      "fiji_basketball_federation",
+      "angolan_football_federation",
+      "belarus_football_federation",
+      "algerian_football_federation",
+      "french_volleyball_federation",
+      "czech_basketball_federation",
+      "congo_basketball_federation",
+      "bosnia_and_herzegovina_basketball_federation",
+      "bangladesh_volleyball_federation",
+      "baseball_confederation_of_asia_(bca)",
+      "estonian_volleyball_federation",
+      "cameroonian_volleyball_federation",
+      "barbados_basketball_federation",
+      "comoros_basketball_federation",
+      "belgian_football_association",
+      "georgian_volleyball_federation",
+      "albanian_football_association",
+      "el_salvador_volleyball_federation",
+      "british_baseball_federation",
+      "austrian_volleyball_federation",
+      "british_virgin_islands_basketball_federation",
+      "dominica_basketball_association",
+      "brunei_darussalam_volleyball_association",
+      "eswatini_volleyball_association",
+      "afghanistan_basketball_federation",
+      "botswana_volleyball_federation",
+      "djibouti_basketball_federation",
+      "colombian_basketball_federation",
+      "eritrean_volleyball_federation",
+      "belize_basketball_federation",
+      "cook_islands_volleyball_association",
+      "chadian_basketball_federation",
+      "costa_rican_volleyball_federation",
+      "bolivian_volleyball_federation",
+      "french_polynesia_volleyball_federation",
+      "djibouti_volleyball_federation",
+      "costa_rican_basketball_federation",
+      "guam_volleyball_federation",
+      "irish_volleyball_association",
+      "colombian_volleyball_federation",
+      "central_african_republic_basketball_federation",
+      "hungarian_volleyball_federation",
+      "barbados_football_association",
+      "argentine_basketball_confederation",
+      "bolivian_basketball_federation",
+      "armenian_volleyball_federation",
+      "aruba_football_federation",
+      "danish_basketball_federation",
+      "finnish_volleyball_federation",
+      "belgian_volleyball_federation",
+      "iranian_volleyball_federation",
+      "albanian_volleyball_federation"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "leadership_hire",
+      "platform_migration"
+    ],
+    "entity_count": 198
+  },
+  {
+    "cluster_id": "commercial_leagues",
+    "cluster_name": "Commercial League Organizers",
+    "cluster_description": "Top-tier national leagues responsible for media rights, sponsorship, and centralized logistics. They are distinct from clubs in that they sell the 'product' of the league.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "unknown"
+      ],
+      "revenue_band": [
+        "high",
+        "medium"
+      ],
+      "digital_maturity": [
+        "high",
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "press",
+      "official_sites",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Focus on broadcast technology, data analytics, and marketing agencies. Signals often relate to media rights cycles and digital platform overhauls.",
+    "example_entities": [
+      "serbian_superliga",
+      "croatian_football_league",
+      "south_african_premier_division",
+      "egyptian_premier_league",
+      "botola_pro",
+      "persian_gulf_pro_league",
+      "qatar_stars_league",
+      "ukrainian_premier_league",
+      "tunisian_ligue_professionnelle_1",
+      "nigeria_professional_football_league"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 10
+  },
+  {
+    "cluster_id": "global_fifa_federations",
+    "cluster_name": "Global National Football Federations",
+    "cluster_description": "The governing bodies of football within respective countries, responsible for national teams, grassroots development, and league oversight. While revenue and digital maturity vary significantly, they share a common procurement profile centered around FIFA funding cycles, infrastructure development, and centralized governance.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "centralized",
+        "non-profit",
+        "regulatory"
+      ],
+      "revenue_band": [
+        "low",
+        "medium",
+        "high",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium",
+        "high",
+        "unknown"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is heavily influenced by quadrennial World Cup cycles and FIFA Forward funding. High-value tenders (stadiums, kits, tech) are centralized and often announced via official portals or major local tenders. Low maturity federations exhibit sporadic, manual digital signals.",
+    "example_entities": [
+      "english_football_association",
+      "german_football_association",
+      "brazilian_football_confederation",
+      "japan_football_association",
+      "indian_football_association",
+      "football_kenya_federation",
+      "ghana_football_association"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "governing_bodies_global",
+    "cluster_name": "Global Governing Bodies & Leagues",
+    "cluster_description": "International federations and major leagues",
+    "cluster_signature": {
+      "sport_types": [
+        "football",
+        "cricket",
+        "basketball"
+      ],
+      "org_types": [
+        "federation",
+        "league"
+      ],
+      "governance_models": [
+        "public",
+        "non-profit"
+      ],
+      "revenue_band": [
+        "high",
+        "medium"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Centralized procurement with formal tender processes",
+    "example_entities": [
+      "el_salvador_baseball_federation",
+      "european_ice_hockey_federation",
+      "pakistan_football_federation",
+      "papua_new_guinea_football_association",
+      "andorran_ice_sports_federation",
+      "costa_rican_baseball_federation",
+      "namibian_football_association",
+      "panama_football_federation",
+      "khl",
+      "danish_baseball_federation",
+      "paraguayan_football_association",
+      "croatian_baseball_association",
+      "georgian_baseball_federation",
+      "german_baseball_and_softball_federation",
+      "czech_extraliga",
+      "oman_football_association",
+      "oceania_ice_hockey_federation",
+      "algerian_ice_hockey_association",
+      "new_zealand_football",
+      "nigerian_football_federation",
+      "liiga",
+      "estonian_baseball_association",
+      "shl",
+      "chinese_baseball_association",
+      "chinese_taipei_baseball_association",
+      "international_ice_hockey_federation_(iihf)",
+      "south_american_ice_hockey_federation",
+      "asia_ice_hockey",
+      "peruvian_football_federation",
+      "dominican_republic_baseball_federation",
+      "egyptian_baseball_softball_federation",
+      "fiji_baseball_association",
+      "north_american_ice_hockey_federation",
+      "cuban_baseball_federation",
+      "nhl",
+      "cook_islands_baseball_association",
+      "netherlands_football_association",
+      "philippine_football_federation",
+      "national_league_(switzerland)",
+      "north_korean_football_association",
+      "finnish_baseball_federation",
+      "french_baseball_and_softball_federation",
+      "niger_football_federation",
+      "chilean_baseball_federation",
+      "czech_baseball_association",
+      "ice_hockey_africa",
+      "del",
+      "nicaragua_football_federation",
+      "palestine_football_association",
+      "myanmar_football_federation",
+      "nepal_football_association",
+      "ecuadorian_baseball_federation",
+      "colombian_baseball_federation",
+      "mozambique_football_federation",
+      "north_macedonia_football_federation",
+      "norwegian_football_federation"
+    ],
+    "entity_count": 56,
+    "expected_signal_types": [
+      "explicit_rfp",
+      "tender_release",
+      "strategic_review"
+    ]
+  },
+  {
+    "cluster_id": "bb_emea_top_league",
+    "cluster_name": "European Top-Tier Basketball Clubs",
+    "cluster_description": "Professional clubs from major European national leagues (France, Germany, Italy, Greece, Adriatic region, Lithuania). These entities have established commercial structures, dedicated sponsorship departments, and regular vendor churn.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "High frequency of kit supplier and sponsorship deals. Moderate frequency of IT infrastructure upgrades. Tenders are rarely public; signals are found via press releases and marketing pages.",
+    "example_entities": [
+      "bcm_gravelines-dunkerque",
+      "brose_bamberg",
+      "alba_berlin",
+      "dinamo_sassari",
+      "reyer_venezia",
+      "aek_athens",
+      "partizan_belgrade",
+      "crvena_zvezda",
+      "bc_rytas"
+    ],
+    "expected_signal_types": [
+      "vendor-switch",
+      "leadership_hire",
+      "platform_migration"
+    ],
+    "entity_count": 9
+  },
+  {
+    "cluster_id": "bb_apac_corp_league",
+    "cluster_name": "APAC Corporate-League Basketball Clubs",
+    "cluster_description": "Clubs from East Asia and Oceania (Japan, Korea, Philippines, Australia, China) operating within highly commercialized or corporate-owned league structures. Characterized by high corporate governance and strong digital presence.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed"
+      ],
+      "revenue_band": [
+        "high",
+        "medium"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Strong emphasis on brand partnerships and digital fan engagement. Procurement signals often appear as 'Official Partner' announcements or major digital platform overhauls.",
+    "example_entities": [
+      "perth_wildcats",
+      "melbourne_united",
+      "ryukyu_golden_kings",
+      "alvark_tokyo",
+      "seoul_sk_knights",
+      "san_miguel_beermen",
+      "liaoning_flying_leopards",
+      "guangdong_southern_tigers"
+    ],
+    "expected_signal_types": [
+      "vendor-switch",
+      "platform_migration",
+      "explicit_rfp"
+    ],
+    "entity_count": 8
+  },
+  {
+    "cluster_id": "bb_developing_market",
+    "cluster_name": "Emerging Market Basketball Clubs",
+    "cluster_description": "Clubs from South America, Africa, and developing basketball nations in Europe. These entities often rely on sponsorship from conglomerates or state entities and have lower digital maturity, making direct scraping difficult.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "press",
+      "league_sites",
+      "social_media"
+    ],
+    "procurement_behavior_summary": "Signals are sporadic and often tied to major sponsorship deals or facility upgrades rather than structured RFPs. Local language processing is required.",
+    "example_entities": [
+      "flamengo_basketball",
+      "franca_basquete",
+      "al_ahly_basketball",
+      "petro_de_luanda",
+      "espoir_bc",
+      "us_monastir"
+    ],
+    "expected_signal_types": [
+      "vendor-switch",
+      "strategic_review"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "bb_regional_russia",
+    "cluster_name": "Regional Russian & VTB League Clubs",
+    "cluster_description": "Clubs operating in the Russian/VTB sphere. While distinct geographically, their procurement signals (often tied to regional sponsors or state-owned enterprises) follow a pattern distinct from Western European clubs.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed"
+      ],
+      "revenue_band": [
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Similar to EMEA top-tier but with specific regional sponsors. Signals include title sponsorship changes and arena management contracts.",
+    "example_entities": [
+      "unics_kazan",
+      "lokomotiv_kuban",
+      "zenit_st._petersburg",
+      "khimki_moscow",
+      "avtodor_saratov"
+    ],
+    "expected_signal_types": [
+      "vendor-switch",
+      "leadership_hire"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "global_league_confederations",
+    "cluster_name": "Global League Confederations & Top Tier Governing Bodies",
+    "cluster_description": "Major basketball leagues and governing bodies (NBA, EuroLeague, National Federations). These entities centralize procurement for the entire league or sport, often issuing large-scale tenders for digital infrastructure, broadcasting, and data services.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "league",
+        "federation"
+      ],
+      "governance_models": [
+        "centralized",
+        "confederation"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "tender_portals"
+    ],
+    "procurement_behavior_summary": "Issues centralized RFPs for league-wide technology (stats, video, officiating tools), media rights, and marquee partnerships. High compliance and long sales cycles.",
+    "example_entities": [
+      "nba",
+      "euroleague",
+      "wnba",
+      "b1_league",
+      "cba_(china)",
+      "nbl_(australia)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "european_club_pros",
+    "cluster_name": "European Professional Clubs (Top Tier)",
+    "cluster_description": "Established professional clubs in mature European markets (Spain, France, Germany, Italy, Turkey, Israel, Adriatic region). These entities operate as professional sports businesses with dedicated front offices, often backed by corporations or wealthy individuals.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "corporate"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Decentralized procurement focused on fan engagement, ticketing, CRM, and sponsorship activation. Signals often appear via new marketing hires or stadium upgrades.",
+    "example_entities": [
+      "mks_d?browa_g\u00f3rnicza",
+      "kk_vojvodina",
+      "kk_dynamic",
+      "kk_split",
+      "kk_osijek",
+      "hammarby_basket",
+      "norrk\u00f6ping_dolphins",
+      "j\u00e4mtland_basket",
+      "bc_nordsj\u00e6lland",
+      "bakken_bears",
+      "team_fog_n\u00e6stved",
+      "lask_linz_basketball",
+      "oberwart_gunners",
+      "kapfenberg_bulls",
+      "servette_star",
+      "fribourg_olympic",
+      "lions_de_gen\u00e8ve",
+      "club_brugge_basket",
+      "oostende_bc",
+      "antwerp_giants",
+      "bc_donetsk",
+      "budivelnyk_kyiv",
+      "dnipro",
+      "hapoel_jerusalem",
+      "hapoel_holon",
+      "hapoel_tel_aviv",
+      "bnei_herzliya",
+      "ironi_nes_ziona"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "platform_migration"
+    ],
+    "entity_count": 28
+  },
+  {
+    "cluster_id": "asian_pacific_clubs",
+    "cluster_name": "Asian & Pacific Professional Clubs",
+    "cluster_description": "Professional clubs in East Asia, Oceania, and the Middle East. Includes corporate-backed entities (Korea, Japan), state-backed or royal family entities (Qatar, UAE), and independent professional clubs (Australia, Philippines).",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed",
+        "corporate"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Highly variable. Corporate entities (Korea/Japan) have formal procurement. State-backed entities (Middle East) move fast based on royal vision. Australian clubs are similar to European models.",
+    "example_entities": [
+      "anyang_kgc",
+      "goyang_orions",
+      "wonju_db_promy",
+      "jeonju_kcc_egis",
+      "al_rayyan_sc",
+      "al_sadd_sc",
+      "al_gharafa_sc",
+      "al_shamal_sc",
+      "al_wakrah_sc",
+      "sharjah_sc",
+      "al_wasl_sc",
+      "shabab_al_ahli",
+      "al_ain_club",
+      "al_bataeh_club",
+      "melbourne_boomers",
+      "sydney_flames",
+      "townsville_fire"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 17
+  },
+  {
+    "cluster_id": "latam_clubs",
+    "cluster_name": "Latin American Professional Clubs",
+    "cluster_description": "Clubs across South America, often operating as multi-sport entities or member associations. Markets include Argentina, Brazil, Uruguay, Paraguay. Revenue and digital maturity vary significantly.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "membership"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "social_media"
+    ],
+    "procurement_behavior_summary": "Procurement is often informal and relationship-based. Signals include sponsorship announcements, facility upgrades, or new coaching staff.",
+    "example_entities": [
+      "estudiantes_de_bah\u00eda_blanca",
+      "quimsa",
+      "san_lorenzo_de_almagro",
+      "boca_juniors_basketball",
+      "instituto_de_c\u00f3rdoba",
+      "pe\u00f1arol_de_mar_del_plata",
+      "atenas_de_c\u00f3rdoba",
+      "caxias_do_sul_basquete",
+      "corinthians_basquete",
+      "unifacisa",
+      "club_atl\u00e9tico_goes",
+      "malv\u00edn",
+      "aguada",
+      "deportivo_san_jos\u00e9",
+      "olimpia_kings",
+      "libertad"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 16
+  },
+  {
+    "cluster_id": "emerging_markets_clubs",
+    "cluster_name": "Emerging Markets & African Clubs",
+    "cluster_description": "Clubs from developing basketball markets in Africa (South Africa, Nigeria, Mozambique, Uganda) and conflict-affected regions (Syria, Iraq, Libya, Russia). These entities often face resource constraints or geopolitical instability.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "social_media",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Low digital footprint. Procurement is often ad-hoc or dependent on external aid/sponsorship. Signal detection relies heavily on social media activity or league announcements.",
+    "example_entities": [
+      "orlando_pirates_basketball",
+      "cape_town_tigers",
+      "soweto_panthers",
+      "rivers_hoopers",
+      "kwara_falcons",
+      "kano_pillars_basketball",
+      "ferrovi\u00e1rio_de_maputo",
+      "costa_do_sol",
+      "desportivo_de_maputo",
+      "city_oilers",
+      "kcca_panthers",
+      "updf_tomahawks",
+      "al-nasr_benghazi",
+      "al-ittihad_tripoli",
+      "al_wahda_damascus",
+      "al_jaish_damascus",
+      "al_ittihad_aleppo",
+      "al_shorta_sc",
+      "al_karkh_sc",
+      "al_naft_sc",
+      "avtodor_volgograd",
+      "parma_perm",
+      "samara"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 23
+  },
+  {
+    "cluster_id": "global_governance_bodies",
+    "cluster_name": "Global & Continental Governing Bodies",
+    "cluster_description": "High-level regulatory organizations (FIBA, FIBA Zones) responsible for the sport's administration, international tournaments, and standards. These entities issue high-value, centralized tenders for hosting rights, global sponsorships, and major digital infrastructure projects.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "centralized",
+        "confederation"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is highly formal, cyclical (aligned with Olympic/World Cup cycles), and centralized. They issue RFPs for major marketing partners, broadcasting rights, and timing/scoring technology. Signals often appear as strategic committee announcements or official press releases regarding 'hosting rights' or 'commercial partners'.",
+    "example_entities": [
+      "international_basketball_federation_(fiba)",
+      "fiba_africa",
+      "fiba_americas",
+      "fiba_asia",
+      "fiba_europe",
+      "fiba_oceania"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "professional_leagues",
+    "cluster_name": "Professional & Semi-Professional Leagues",
+    "cluster_description": "Organized leagues (national and regional top-tier) that manage competitions, schedules, and centralized commercial rights. These entities are prime targets for data services, officiating tech, and league-wide marketing partnerships. They act as a bridge between the clubs and the governing bodies.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "membership_association",
+        "corporate"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Leagues procure on behalf of their members (e.g., official ball, data provider) or for league operations (streaming platforms, ticketing systems). Signals include 'Request for Proposal' for league sponsors or announcements of new 'official partners'. They are more digitally mature than individual clubs.",
+    "example_entities": [
+      "basketligaen",
+      "austrian_basketball_bundesliga",
+      "swiss_basketball_league",
+      "bnxt_league",
+      "plk_(polish_basketball_league)",
+      "nigerian_premier_league",
+      "basketball_national_league",
+      "mozambican_basketball_league",
+      "uae_basketball_league",
+      "syrian_basketball_league",
+      "iraqi_basketball_premier_league"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "professional_clubs",
+    "cluster_name": "Professional Basketball Clubs",
+    "cluster_description": "Competitive clubs in established or emerging leagues. These entities operate as individual businesses procuring local sponsors, kit suppliers, and facility management. Their procurement is decentralized and highly opportunistic. Signals are often found in local news or job postings rather than formal tenders.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "job_boards",
+      "social_media",
+      "local_press"
+    ],
+    "procurement_behavior_summary": "Clubs constantly churn vendors for jerseys, travel, and equipment. The strongest signal for readiness is often the hiring of new management (GM, CCO) or a change in ownership. RFPs are rare; they usually issue direct RFQs or public calls for partners.",
+    "example_entities": [
+      "nlex_road_warriors",
+      "converge_fiberxers",
+      "deportivo_cali",
+      "ifk_sk\u00f6vde",
+      "blackwater_bossing",
+      "titanes_de_barranquilla",
+      "spartak_moscow",
+      "cherkaski_mavpy",
+      "kyiv-basket",
+      "trotamundos_de_carabobo",
+      "terrafirma_dyip",
+      "rk_alkaloid",
+      "rk_nexe",
+      "guaros_de_lara",
+      "handball_club_eger",
+      "rk_vardar",
+      "chekhovskie_medvedi",
+      "cocodrilos_de_caracas",
+      "caribbean_storm",
+      "piratas_de_la_guaira"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 20
+  },
+  {
+    "cluster_id": "global_national_federations",
+    "cluster_name": "Global National Sports Federations",
+    "cluster_description": "Governing bodies for specific sports within a nation. Typically non-profits focused on development, national team management, and grassroots participation. They rely heavily on sponsorship, government grants, and federation membership dues.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball",
+        "Multi-Sport"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "non-profit",
+        "board-led"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is often sporadic and tied to 4-year Olympic/World Cup cycles. Decisions are highly influenced by board members and sponsorship deals. RFPs are often formal but may be buried in news sections or PDFs. Digital transformation is a growing driver.",
+    "example_entities": [
+      "usa_team_handball",
+      "czech_ice_hockey_association",
+      "german_basketball_federation",
+      "french_polynesia_handball_federation",
+      "nigerian_basketball_federation",
+      "lebanese_handball_federation",
+      "nigerian_handball_federation",
+      "mexican_basketball_federation",
+      "latvian_handball_federation",
+      "italian_basketball_federation",
+      "usa_hockey",
+      "german_ice_hockey_federation",
+      "swedish_ice_hockey_association",
+      "austrian_ice_hockey_association",
+      "canadian_ice_hockey_federation",
+      "french_ice_hockey_federation",
+      "finnish_ice_hockey_association",
+      "mexican_handball_federation",
+      "russian_ice_hockey_federation",
+      "swiss_ice_hockey_federation",
+      "japan_basketball_association",
+      "lao_handball_federation"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 22
+  },
+  {
+    "cluster_id": "tier1_professional_clubs",
+    "cluster_name": "Tier 1 Professional Clubs",
+    "cluster_description": "Elite commercial clubs competing in top-tier domestic leagues (e.g., Premiership, Top 14, URC). These entities have high revenue, complex commercial operations, and sophisticated digital needs. They treat procurement as a strategic function to drive fan engagement and revenue.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby",
+        "Football",
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "consortium"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press",
+      "linkedin"
+    ],
+    "procurement_behavior_summary": "High frequency of RFPs related to sponsorship activation, CRM/Data platforms, stadium technology, and high-performance analytics. Signals are often 'Vendor Switches' or 'Strategic Reviews' driven by commercial cycles.",
+    "example_entities": [
+      "saracens",
+      "stade_toulousain",
+      "leicester_tigers",
+      "leinster",
+      "la_rochelle"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "explicit_rfp",
+      "leadership_hire"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "emerging_professional_league_clubs",
+    "cluster_name": "Emerging Professional League Clubs",
+    "cluster_description": "Clubs in established but developing or lower-tier professional leagues (e.g., MLR, Pro D2). These entities are operationally leaner than Tier 1 clubs but are actively seeking technology and services to bridge the gap to elite status.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby",
+        "Basketball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Procurement is often opportunistic. Look for signals related to ticketing platform upgrades, streaming services, and performance equipment. RFPs are less formal; often direct RFIs or partnership announcements.",
+    "example_entities": [
+      "houston_sabercats",
+      "seattle_seawolves",
+      "agen",
+      "brive",
+      "biarritz_olympique"
+    ],
+    "expected_signal_types": [
+      "platform_migration",
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "rugby_corporate_league_one",
+    "cluster_name": "Corporate-Backed Rugby Clubs (Japan League One)",
+    "cluster_description": "Professional rugby clubs in Japan owned by major conglomerates (e.g., Toyota, Sony, Kobe Steel). These entities function as semi-autonomous branches of large corporations rather than independent sports businesses.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "corporate_subsidiary"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "parent_company_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is heavily influenced by parent company contracts and existing vendor relationships (e.g., kit suppliers managed by corporate HQ). RFPs are rare; vendor switching usually follows corporate cycles or sponsorship changes.",
+    "example_entities": [
+      "saitama_wild_knights",
+      "tokyo_sungoliath",
+      "toyota_verblitz",
+      "kobelco_kobe_steelers",
+      "yokohama_canon_eagles",
+      "kubota_spears",
+      "mitsubishi_sagamihara_dynaboars",
+      "shizuoka_blue_revs",
+      "hanazono_kintetsu_liners",
+      "mie_honda_heat",
+      "ricoh_black_rams",
+      "green_rockets_tokatsu",
+      "toshiba_brave_lupus"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 13
+  },
+  {
+    "cluster_id": "rugby_pro_clubs_emerging",
+    "cluster_name": "Emerging Professional Rugby Clubs",
+    "cluster_description": "Professional clubs in developing rugby markets (USA, Italy) or established markets in lower tiers (England Championship, France Nationale). These entities operate as independent commercial entities focused on survival, growth, and compliance.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union",
+        "Rugby League"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Highly opportunistic and decentralized. Signals often appear via 'Help Wanted' pages or local news regarding facility upgrades. They are price-sensitive and likely to use off-the-shelf solutions rather than custom enterprise builds.",
+    "example_entities": [
+      "chicago_hounds",
+      "toronto_arrows",
+      "rugby_viadana",
+      "petrarca_padova",
+      "mogliano_rugby",
+      "rugby_rovigo_delta",
+      "colorno_rugby",
+      "valorugby_emilia",
+      "rugby_lyons",
+      "fiamme_oro_rugby",
+      "rugby_calvisano",
+      "cornish_pirates",
+      "ealing_trailfinders",
+      "bedford_blues",
+      "doncaster_knights",
+      "nottingham_rugby",
+      "jersey_reds",
+      "coventry_rugby",
+      "hartpury_rfc",
+      "london_scottish",
+      "ampthill_rufc",
+      "caldy_rfc",
+      "chinnor_rfc",
+      "albi",
+      "bourg-en-bresse",
+      "bourgoin",
+      "chamb\u00e9ry",
+      "marcq-en-baroeul",
+      "massy",
+      "narbonne",
+      "nice",
+      "niort",
+      "p\u00e9rigueux",
+      "rennes",
+      "rouen",
+      "suresnes",
+      "tarbes"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration"
+    ],
+    "entity_count": 37
+  },
+  {
+    "cluster_id": "rugby_gov_federations",
+    "cluster_name": "National & Regional Rugby Governing Bodies",
+    "cluster_description": "Non-profit federations responsible for the administration, development, and governance of rugby at a national or regional level. Includes World Rugby, continental associations, and national unions.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "state-backed",
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Formal procurement cycles driven by strategic planning periods (e.g., World Cup cycles). High likelihood of publishing tenders for major software, insurance, and event management contracts. Digital maturity varies by nation.",
+    "example_entities": [
+      "world_rugby",
+      "asia_rugby",
+      "rugby_africa",
+      "rugby_europe",
+      "oceania_rugby",
+      "rugby_americas_north",
+      "sudam\u00e9rica_rugby",
+      "algerian_rugby_federation",
+      "american_samoa_rugby_union",
+      "andorran_rugby_federation",
+      "argentine_rugby_union",
+      "australian_rugby_union",
+      "austrian_rugby_federation",
+      "azerbaijan_rugby_federation",
+      "bahamas_rugby_federation",
+      "barbados_rugby_football_union",
+      "belgian_rugby_federation",
+      "bermuda_rugby_football_union",
+      "bosnia_and_herzegovina_rugby_federation",
+      "botswana_rugby_union",
+      "brazilian_rugby_confederation",
+      "british_virgin_islands_rugby_union",
+      "brunei_rugby_football_union"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 23
+  },
+  {
+    "cluster_id": "rugby_league_admin",
+    "cluster_name": "Professional League Administrators",
+    "cluster_description": "Central governing bodies for top-tier professional leagues (e.g., NRL, Top 14, Premiership). These entities manage the commercial rights, centralized broadcasting, and league-wide technology contracts.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union",
+        "Rugby League"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "consortium"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "High-value, centralized procurement for data analytics, streaming infrastructure, and official sponsorship platforms. Signals are often explicit RFPs or high-level strategic partnerships.",
+    "example_entities": [
+      "nrl",
+      "super_league",
+      "top_14",
+      "premiership_rugby",
+      "united_rugby_championship",
+      "super_rugby",
+      "japan_rugby_league_one",
+      "major_league_rugby_(mlr)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 8
+  },
+  {
+    "cluster_id": "rugby_federation_global_standard",
+    "cluster_name": "Global Rugby Federation (Tier 1)",
+    "cluster_description": "National governing bodies for rugby union with full World Rugby membership. These entities are responsible for the administration, promotion, and development of rugby within their respective countries. They exhibit standard non-profit procurement behaviors, relying heavily on governing body grants and centralized tenders for major events.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "centralized",
+        "non-profit"
+      ],
+      "revenue_band": [
+        "low",
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium",
+        "unknown"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is typically centralized and project-based, often tied to World Rugby grants, tournament hosting, or national team preparation. Digital maturity varies, but official tender portals are rare; signals are often found in news updates or 'partnership' pages.",
+    "example_entities": [
+      "england_rugby_football_union",
+      "french_rugby_federation",
+      "new_zealand_rugby_union",
+      "japan_rugby_football_union",
+      "south_african_rugby_union",
+      "irish_rugby_football_union",
+      "scottish_rugby_union",
+      "italian_rugby_federation"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 8
+  },
+  {
+    "cluster_id": "rugby_federation_emerging_associate",
+    "cluster_name": "Emerging Rugby Federation (Tier 2/3)",
+    "cluster_description": "National rugby unions that are either Associate Members of World Rugby or represent nations with developing rugby infrastructure. These entities have lower commercial maturity and rely heavily on international aid and regional development grants.",
+    "cluster_signature": {
+      "sport_types": [
+        "Rugby Union"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "centralized",
+        "volunteer_led"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "social_media",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Procurement is informal and sporadic, often driven by specific needs like equipment donation or regional tournament support. RFPs are rare; signals are usually leadership changes or announcements of development grants.",
+    "example_entities": [
+      "burkina_faso_rugby_federation",
+      "cambodian_rugby_federation",
+      "costa_rican_rugby_federation",
+      "egyptian_rugby_federation",
+      "eswatini_rugby_union",
+      "guatemalan_rugby_federation",
+      "jordan_rugby_federation",
+      "nepal_rugby_association",
+      "panama_rugby_federation",
+      "qatar_rugby_federation"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 10
+  },
+  {
+    "cluster_id": "traditional_domestic_clubs",
+    "cluster_name": "Legacy Domestic Cricket Associations",
+    "cluster_description": "Historical state, county, or provincial clubs operating within established national structures (England, Australia, India, SA, NZ). These entities balance professional team management with grassroots development and often own heritage venues.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "member-based",
+        "board"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "local_press"
+    ],
+    "procurement_behavior_summary": "Procurement is bureaucratic and seasonal, peaking before the domestic season. They are conservative, prioritizing venue management and ticketing software over flashy marketing tech. Signals often appear as 'Head of Commercial' or 'Head of IT' roles, or infrastructure upgrade tenders.",
+    "example_entities": [
+      "surrey",
+      "victoria",
+      "mumbai",
+      "auckland",
+      "western_province"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "cricket_global_federations",
+    "cluster_name": "Global & National Governing Bodies",
+    "cluster_description": "The primary administrative authorities for cricket (ICC Full Members) and the global governing body. These entities manage national teams, major domestic tournaments, and regulatory frameworks. They are characterized by centralized, bureaucratic procurement cycles with high compliance requirements.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket"
+      ],
+      "org_types": [
+        "federation",
+        "international federation"
+      ],
+      "governance_models": [
+        "board-based",
+        "state-backed",
+        "unknown"
+      ],
+      "revenue_band": [
+        "high",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high",
+        "unknown"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is highly formalized, centralized at the headquarters, and driven by long-term strategic cycles (e.g., World Cup hosting rights, national team sponsorship, central broadcasting deals). RFPs are typically public, large-scale, and require strict vendor compliance.",
+    "example_entities": [
+      "international_cricket_council_(icc)",
+      "board_of_control_for_cricket_in_india",
+      "england_and_wales_cricket_board",
+      "cricket_australia",
+      "pakistan_cricket_board",
+      "cricket_south_africa",
+      "new_zealand_cricket",
+      "bangladesh_cricket_board",
+      "sri_lanka_cricket",
+      "cricket_west_indies",
+      "zimbabwe_cricket",
+      "afghanistan_cricket_board",
+      "cricket_ireland"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 13
+  },
+  {
+    "cluster_id": "cricket_franchise_leagues",
+    "cluster_name": "Elite Franchise Leagues (T20)",
+    "cluster_description": "Top-tier professional T20 leagues characterized by franchise ownership models and high commercial value. These entities operate as distinct commercial properties with centralized marketing and digital rights, often independent of the national federation's domestic structure.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket",
+        "Cricket (T20)"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "board-based"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "High-paced, commercial procurement focused on fan engagement, data analytics, and digital experiences. Decisions are often made by small, specialized commercial teams. Signals include marketing agency RFPs, tech stack overhauls, and sponsorship activations.",
+    "example_entities": [
+      "ipl",
+      "bbl",
+      "psl",
+      "sa20",
+      "cpl",
+      "the_hundred_(men)",
+      "major_league_cricket_(mlc)",
+      "ilt20",
+      "bpl",
+      "lpl",
+      "women's_premier_league_(wpl)"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "explicit_rfp",
+      "platform_migration"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "cricket_associate_members",
+    "cluster_name": "Emerging Cricket Federations (ICC Associates)",
+    "cluster_description": "National governing bodies from non-Test playing nations. These entities are often resource-constrained, volunteer-led, or semi-professional. Procurement is sporadic and often driven by specific development grants or ICC funding milestones rather than organic commercial growth.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "unknown",
+        "private"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "social_media"
+    ],
+    "procurement_behavior_summary": "Low volume of formal RFPs. Procurement is often reactive, relying on personal networks or government aid. Signals are weak and often relate to facility development or specific event hosting rather than enterprise software.",
+    "example_entities": [
+      "argentine_cricket_association",
+      "austrian_cricket_association",
+      "bahamas_cricket_association",
+      "bahrain_cricket_federation",
+      "belgian_cricket_federation",
+      "bermuda_cricket_board",
+      "cricket_canada",
+      "german_cricket_federation",
+      "french_cricket_federation",
+      "danish_cricket_federation"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 10
+  },
+  {
+    "cluster_id": "cricket_domestic_club_structure",
+    "cluster_name": "Domestic & Club Cricket Ecosystems",
+    "cluster_description": "A mix of historic first-class provinces, state teams, and traditional member-based clubs. These entities form the backbone of national domestic competitions but often lack independent commercial autonomy, relying on federation funding or grants.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket",
+        "Cricket (First-Class)"
+      ],
+      "org_types": [
+        "club",
+        "league"
+      ],
+      "governance_models": [
+        "member-based",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "league_sites",
+      "official_sites",
+      "local_press"
+    ],
+    "procurement_behavior_summary": "Procurement is decentralized and often handled by volunteers or small administrative staff. Signals are difficult to detect digitally and usually relate to basic operational needs (equipment, grounds maintenance) rather than strategic tech procurement.",
+    "example_entities": [
+      "gauteng",
+      "lions",
+      "central_punjab",
+      "sindh",
+      "barbados",
+      "jamaica",
+      "trinidad_&_tobago",
+      "dhaka_metropolis",
+      "western_province",
+      "colts_cricket_club",
+      "sinhalese_sports_club",
+      "ranji_trophy",
+      "sheffield_shield",
+      "county_championship"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 14
+  },
+  {
+    "cluster_id": "icc_global_federations",
+    "cluster_name": "Global Emerging Market Federations",
+    "cluster_description": "National governing bodies for cricket in non-test playing nations. These entities are typically membership-based, non-profit organizations focused on grassroots development and participation. They rely heavily on ICC funding and government grants.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "board",
+        "unknown"
+      ],
+      "revenue_band": [
+        "unknown",
+        "low"
+      ],
+      "digital_maturity": [
+        "unknown",
+        "low"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "tender_portals"
+    ],
+    "procurement_behavior_summary": "Procurement is sporadic and project-based, often tied to specific development grants from the ICC or local government sports ministries. RFPs are rare; decisions are often made via direct selection or low-value local tenders. Digital signals are weak.",
+    "example_entities": [
+      "guernsey_cricket_board",
+      "italian_cricket_federation",
+      "japan_cricket_association",
+      "kenya_cricket_association",
+      "nigerian_cricket_federation",
+      "scottish_cricket_union",
+      "united_states_of_america_cricket"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "strategic_review",
+      "explicit_rfp"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "aus_state_teams",
+    "cluster_name": "Australian State Franchise System",
+    "cluster_description": "State-level representative teams operating under the Cricket Australia umbrella. These entities have a centralized administrative structure shared between Men's (Sheffield Shield) and Women's (WNCL) teams, often including Second XI squads.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cricket",
+        "Cricket (Women\u2019s)"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Highly structured procurement following Cricket Australia national frameworks. Signals often originate from state government tender portals or centralized Cricket Australia vendor lists. Strong digital footprint for job postings and team sponsorships.",
+    "example_entities": [
+      "new_south_wales_blues",
+      "queensland_bulls",
+      "victoria_bushrangers",
+      "tasmania_tigers",
+      "western_australia_warriors"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "nhl_major_league_clubs",
+    "cluster_name": "NHL Major League Franchises",
+    "cluster_description": "Professional ice hockey franchises in the National Hockey League. These are high-revenue, corporate entities with sophisticated marketing, ticketing, and arena operations.",
+    "cluster_signature": {
+      "sport_types": [
+        "Ice Hockey"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "public"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Complex procurement involving arena management, broadcast technology, and high-value corporate partnerships. Signals include C-suite hires, digital platform overhauls, and partnership announcements. High noise due to constant marketing activity.",
+    "example_entities": [
+      "toronto_maple_leafs",
+      "montreal_canadiens",
+      "new_york_rangers",
+      "chicago_blackhawks",
+      "vancouver_canucks"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire",
+      "explicit_rfp"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "major_league_franchises",
+    "cluster_name": "Major League Professional Franchises",
+    "cluster_description": "Professional sports clubs operating within top-tier commercial leagues (e.g., MLB). These entities function as high-revenue corporate businesses with sophisticated marketing, sales, and operations departments.",
+    "cluster_signature": {
+      "sport_types": [
+        "Baseball",
+        "Basketball",
+        "Football",
+        "Soccer"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "corporate"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "job_boards",
+      "press",
+      "official_sites"
+    ],
+    "procurement_behavior_summary": "Procurement is decentralized by department (Marketing vs. Baseball Ops). Decisions are made by VPs and Directors. High value on fan engagement, data analytics, and stadium operations. Signals often appear via leadership changes or new stadium initiatives.",
+    "example_entities": [
+      "new_york_yankees",
+      "los_angeles_dodgers",
+      "boston_red_sox",
+      "chicago_cubs",
+      "san_francisco_giants",
+      "st._louis_cardinals",
+      "atlanta_braves",
+      "houston_astros",
+      "new_york_mets",
+      "philadelphia_phillies"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 10
+  },
+  {
+    "cluster_id": "tier_1_professional_clubs",
+    "cluster_name": "Tier 1 Professional Clubs (MLB/NPB/KBO)",
+    "cluster_description": "Top-tier professional franchises with high revenue, complex digital ecosystems, and centralized league procurement mandates. These entities are high-value targets for enterprise software, data analytics, and stadium infrastructure contracts.",
+    "cluster_signature": {
+      "sport_types": [
+        "Baseball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "corporate"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "league_sites",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Decisions are often driven by league-wide partnerships (e.g., MLB/NPB) or major ownership initiatives. High volume of vendor switching for analytics, CRM, and fan engagement tech.",
+    "example_entities": [
+      "san_diego_padres",
+      "yomiuri_giants",
+      "samsung_lions",
+      "fubon_guardians",
+      "lg_twins"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire",
+      "explicit_rfp"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "north_american_minor_league",
+    "cluster_name": "North American Minor League & Development Clubs",
+    "cluster_description": "Feeder teams and regional clubs (MiLB/ABL) with moderate revenue and operational dependency on parent clubs. Procurement is often decentralized or dictated by parent organization standards.",
+    "cluster_signature": {
+      "sport_types": [
+        "Baseball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "local_press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Focus on operational efficiency, ticketing, and local sponsorship. Signals often appear as 'help wanted' for marketing roles or stadium upgrades rather than formal RFPs.",
+    "example_entities": [
+      "durham_bulls",
+      "tacoma_rainiers",
+      "round_rock_express",
+      "brisbane_bandits",
+      "melbourne_aces"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "corp_ownership_club",
+    "cluster_name": "Corporate-Owned Elite Clubs",
+    "cluster_description": "Top-tier volleyball clubs operating as subsidiaries or marketing vehicles for large corporations. They exhibit high stability, centralized procurement through parent company channels, and high digital maturity.",
+    "cluster_signature": {
+      "sport_types": [
+        "Volleyball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "parent_company_tenders"
+    ],
+    "procurement_behavior_summary": "Decisions are often tied to the parent corporation's fiscal year and vendor partnerships. High propensity for 'vendor_switch' signals when corporate sponsorship changes.",
+    "example_entities": [
+      "suntory_sunbirds",
+      "panasonic_panthers",
+      "jt_thunders_hiroshima",
+      "jtekt_stings",
+      "toray_arrows",
+      "fujitsu_kawasaki",
+      "halkbank_ankara",
+      "ziraat_bankasi",
+      "eczac?ba??_dynavit",
+      "arkas_spor",
+      "dinamo_moscow",
+      "zenit_kazan",
+      "lokomotiv_novosibirsk",
+      "belogorie_belgorod",
+      "fakel_novy_urengoy",
+      "dynamo_lo",
+      "kuzbass_kemerovo",
+      "ural_ufa",
+      "sada_cruzeiro",
+      "sesi_s\u00e3o_paulo",
+      "minas_t\u00eanis_clube",
+      "v\u00f4lei_renata",
+      "farma_conde_s\u00e3o_jos\u00e9",
+      "guarulhos",
+      "v\u00f4lei_futuro",
+      "blumenau"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 26
+  },
+  {
+    "cluster_id": "franchise_league_club",
+    "cluster_name": "Emerging Franchise Model Clubs",
+    "cluster_description": "Clubs within centralized, rapidly expanding leagues (US PVF, Japan V.League). These entities prioritize brand building and fan experience technology. Procurement is often standardized or guided by the league office.",
+    "cluster_signature": {
+      "sport_types": [
+        "Volleyball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "High volume of RFPs related to marketing, ticketing, and game ops. Signals often appear as 'leadership_hire' (GMs, CROs) preceding infrastructure spend.",
+    "example_entities": [
+      "vc_long_beach",
+      "san_diego_mojo",
+      "atlanta_vibe",
+      "columbus_fury",
+      "omaha_supernovas",
+      "grand_rapids_rise",
+      "vegas_thrill",
+      "wolfdogs_nagoya",
+      "vc_nagano_tridents",
+      "osaka_blazers_sakai",
+      "voreas_hokkaido"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "traditional_european_club",
+    "cluster_name": "Traditional European Member Clubs",
+    "cluster_description": "Historic clubs in Italy, Poland, Turkey, France, and Germany. Ownership is often private or multi-club models. Procurement is decentralized but digitally discoverable via dedicated press offices and federation portals.",
+    "cluster_signature": {
+      "sport_types": [
+        "Volleyball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Strong signal leakage via local sports press regarding sponsorship deals and kit suppliers. 'Vendor_switch' is a common signal during summer windows.",
+    "example_entities": [
+      "zaksa_k?dzierzyn-ko?le",
+      "jastrz?bski_w?giel",
+      "fenerbah\u00e7e",
+      "galatasaray_hdi_sigorta",
+      "spor_toto",
+      "develi_belediyespor",
+      "altekma",
+      "valsa_group_modena",
+      "allianz_milano",
+      "gas_sales_bluenergy_piacenza",
+      "rana_verona",
+      "sonepar_padova",
+      "cisterna_volley",
+      "gioiella_prisma_taranto",
+      "yuasa_battery_grottazzolina",
+      "mint_vero_volley_monza",
+      "aluron_cmc_warta_zawiercie",
+      "projekt_warszawa",
+      "asseco_resovia_rzesz\u00f3w",
+      "pge_skra_be?chat\u00f3w",
+      "indykpol_azs_olsztyn",
+      "cuprum_lubin",
+      "bogdanka_luk_lublin",
+      "trefl_gda?sk",
+      "dynamo_berlin",
+      "vfb_friedrichshafen",
+      "united_volleys_frankfurt",
+      "netzhoppers_kw-bestensee",
+      "wwk_volleys_herrsching",
+      "tours_vb",
+      "chaumont_vb_52",
+      "nantes_rez\u00e9_m\u00e9tropole_volley",
+      "saint-nazaire_volley-ball",
+      "paris_volley"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "explicit_rfp",
+      "leadership_hire"
+    ],
+    "entity_count": 34
+  },
+  {
+    "cluster_id": "semi_pro_challenger",
+    "cluster_name": "Semi-Professional & Challenger Clubs",
+    "cluster_description": "Clubs in lower-tier divisions (Serie A2, I Liga, 1. DOL, Swiss League) or smaller markets. These entities have lower digital maturity and revenue. Signals are sparse and often found on local community pages or generic job boards.",
+    "cluster_signature": {
+      "sport_types": [
+        "Volleyball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "unknown"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low",
+        "unknown"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press"
+    ],
+    "procurement_behavior_summary": "Low frequency of high-value RFPs. Best signals are 'leadership_hire' (Sports Director, Head Coach) or facility upgrades. High noise ratio.",
+    "example_entities": [
+      "volley_lube",
+      "jadar_radom",
+      "mks_b?dzin",
+      "gwardia_wroc?aw",
+      "kps_siedlce",
+      "azs_agh_krak\u00f3w",
+      "volley_milano",
+      "porto_viro",
+      "cant\u00f9_volley",
+      "cuneo_volley",
+      "ortona_volley",
+      "porto_robur_costa_ravenna",
+      "vbc_mondov\u00ec",
+      "kioene_padova",
+      "ach_volley_ljubljana",
+      "ok_merkur_maribor",
+      "calcit_volley_kamnik",
+      "ok_salonit_anhovo",
+      "panvita_pomgrad",
+      "ok_ho?e",
+      "volley_sch\u00f6nenwerd",
+      "lausanne_uc",
+      "amriswil_volleyball",
+      "lindaren_volley_luzern",
+      "volley_lugano",
+      "volley_n\u00e4fels",
+      "vc_kanti_schaffhausen",
+      "volley_d\u00fcdingen"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "strategic_review"
+    ],
+    "entity_count": 28
+  },
+  {
+    "cluster_id": "global_gov_bodies",
+    "cluster_name": "Global Governing Bodies",
+    "cluster_description": "The apex international federation and its continental confederations. These entities manage the sport's global rules, major international tournaments, and commercial rights. They possess high commercial value and centralized procurement functions.",
+    "cluster_signature": {
+      "sport_types": [
+        "Volleyball"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "Continental Confederation",
+        "Global Governing Body"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "tender_portals"
+    ],
+    "procurement_behavior_summary": "Issues large-scale centralized RFPs for hosting rights, data services, marketing partnerships, and digital infrastructure. High predictability based on event cycles (Olympics, World Championships).",
+    "example_entities": [
+      "f\u00e9d\u00e9ration_internationale_de_volleyball_(fivb)",
+      "asian_volleyball_confederation_(avc)",
+      "african_volleyball_confederation_(cavb)",
+      "european_volleyball_confederation_(cev)",
+      "south_american_volleyball_confederation_(csv)",
+      "north,_central_american_and_caribbean_volleyball_confederation_(norceca)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "european_top_league_clubs",
+    "cluster_name": "European Top-Tier League Clubs",
+    "cluster_description": "Professional handball clubs competing in the highest tiers of European national leagues (Bundesliga, LNH, Liga ASOBAL). These entities are characterized by high commercial maturity, structured corporate governance, and consistent participation in continental competitions (EHF Champions League).",
+    "cluster_signature": {
+      "sport_types": [
+        "Handball"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "corporate"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Procurement is driven by seasonal cycles, sponsorship renewals, and technical infrastructure needs. RFPs are likely to be formal, published on official club portals or major local business tenders. High propensity for vendor switching in technical sports gear and data analytics.",
+    "example_entities": [
+      "thw_kiel",
+      "sg_flensburg-handewitt",
+      "paris_saint-germain_handball",
+      "montpellier_hb",
+      "bar\u00e7a_handbol",
+      "sc_magdeburg",
+      "rhein-neckar_l\u00f6wen",
+      "hbc_nantes",
+      "bm_granollers",
+      "pick_szeged",
+      "telekom_veszpr\u00e9m",
+      "vive_kielce",
+      "meshkov_brest",
+      "rk_zagreb",
+      "f\u00fcchse_berlin",
+      "mt_melsungen",
+      "tbv_lemgo_lippe",
+      "chamb\u00e9ry_savoie_mont_blanc",
+      "us_dunkerque_hb",
+      "ademar_le\u00f3n",
+      "cb_cantabria",
+      "aalborg_h\u00e5ndbold",
+      "gog_h\u00e5ndbold",
+      "skjern_h\u00e5ndbold",
+      "sporting_cp",
+      "fc_porto",
+      "sl_benfica",
+      "g\u00f3rnik_zabrze",
+      "kolstad_handball",
+      "elverum_h\u00e5ndball",
+      "ifk_kristianstad",
+      "ik_s\u00e4vehof",
+      "ystads_if_hf",
+      "hammarby_if_handboll",
+      "sabadell_handbol",
+      "helvetia_anaitasuna"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 36
+  },
+  {
+    "cluster_id": "motorsport_global_federations",
+    "cluster_name": "Global Governing Bodies & Confederations",
+    "cluster_description": "International regulatory bodies (FIA, FIM) and their regional confederations. These entities set the rules for the sport and manage cross-border compliance. Procurement is highly centralized, bureaucratic, and focused on compliance, legal services, and major event hosting rights.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "global",
+        "continental"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Issues global tenders for major services (IT, timing, scoring, legal). Regional confederations often follow central frameworks but issue local tenders for specific events.",
+    "example_entities": [
+      "f\u00e9d\u00e9ration_internationale_de_l'automobile_(fia)",
+      "f\u00e9d\u00e9ration_internationale_de_motocyclisme_(fim)",
+      "fia_asia-pacific",
+      "fia_africa",
+      "fia_europe",
+      "fia_americas",
+      "fim_europe",
+      "fim_asia",
+      "fim_africa",
+      "fim_latin_america",
+      "fim_north_america"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "strategic_review"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "motorsport_top_tier_promoters",
+    "cluster_name": "Top-Tier Global Championships & Promoters",
+    "cluster_description": "Premier international series (F1, WEC, MotoGP, NASCAR). These entities function as commercial rights holders and promoters. They possess high revenue and digital maturity. Procurement is centralized for series-wide sponsors, broadcast tech, and platform infrastructure.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "tournament"
+      ],
+      "governance_models": [
+        "commercial_rights_holder"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "High volume of RFPs for marketing agencies, broadcast technology, data analytics, and fan engagement platforms. Signals often appear in trade press regarding major tech overhauls.",
+    "example_entities": [
+      "fia_formula_1_world_championship",
+      "fia_world_endurance_championship_(wec)",
+      "fia_world_rally_championship_(wrc)",
+      "motogp_world_championship",
+      "nascar_cup_series",
+      "ntt_indycar_series",
+      "imsa_weathertech_sportscar_championship",
+      "24_hours_of_le_mans",
+      "dakar_rally"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "vendor_switch"
+    ],
+    "entity_count": 9
+  },
+  {
+    "cluster_id": "motorsport_factory_works_teams",
+    "cluster_name": "OEM Factory & Manufacturer Teams",
+    "cluster_description": "High-budget teams directly backed by automotive manufacturers (Ferrari, Mercedes, Toyota, Porsche) or major conglomerates. These entities operate as specialized marketing/technical arms of large corporations. Procurement is often decentralized or follows strict corporate parent policies, with high technical requirements for engineering and simulation software.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "corporate_subsidiary"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "press"
+    ],
+    "procurement_behavior_summary": "Heavy reliance on vendor relationships established via the parent company (e.g., SAP, Oracle, AWS). Signals include specialized engineering hires, HPC/cloud infrastructure upgrades, and sponsorship acquisition roles.",
+    "example_entities": [
+      "scuderia_ferrari_hp",
+      "mercedes-amg_petronas_formula_one_team",
+      "toyota_gazoo_racing",
+      "ferrari_af_corse",
+      "hyundai_motorsport",
+      "toyota_gazoo_racing_wrt",
+      "porsche_penske_motorsport",
+      "cadillac_racing",
+      "bmw_m_team_rll",
+      "alpine_f1_team"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 10
+  },
+  {
+    "cluster_id": "motorsport_privateer_teams",
+    "cluster_name": "Independent Privateer & Mid-Tier Teams",
+    "cluster_description": "Teams operating without direct factory backing (or with partial backing), relying on sponsorship and prize money. Includes F1 midfield/backmarkers, IndyCar teams, and GT teams. Revenue is medium/low. Procurement is decentralized and opportunistic, driven heavily by sponsorship cycles and cost-cap constraints.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "private_entity"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "job_boards",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "High sensitivity to cost. Signals often involve 'Commercial Director' hires (seeking new sponsors) or requests for cost-effective SaaS tools (CRM, marketing automation). Less likely to issue formal RFPs, more likely to solicit direct referrals.",
+    "example_entities": [
+      "williams_racing",
+      "visa_cash_app_rb_formula_1_team_(vcarb)",
+      "kick_sauber_f1_team",
+      "moneygram_haas_f1_team",
+      "arrow_mclaren_indycar_team",
+      "rahal_letterman_lanigan_racing",
+      "hendrick_motorsports",
+      "joe_gibbs_racing",
+      "stewart-haas_racing",
+      "trackhouse_racing",
+      "23xi_racing",
+      "rfk_racing",
+      "front_row_motorsports",
+      "richard_childress_racing",
+      "spire_motorsports",
+      "kaulig_racing",
+      "corvette_racing_by_pratt_miller_motorsports",
+      "wayne_taylor_racing",
+      "pfaff_motorsports",
+      "ao_racing",
+      "proton_competition",
+      "united_autosports",
+      "dams_lucas_oil",
+      "art_grand_prix",
+      "prema_racing",
+      "m-sport_ford_world_rally_team",
+      "carlin_motorsport",
+      "af_corse",
+      "jota_sport",
+      "dragonspeed",
+      "heart_of_racing_team",
+      "cetilar_racing",
+      "era_motorsport"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "vendor_switch",
+      "strategic_review"
+    ],
+    "entity_count": 33
+  },
+  {
+    "cluster_id": "motorsport_development_series",
+    "cluster_name": "Development & Support Series",
+    "cluster_description": "Feeder series (F2, F3, Moto2, Moto3) and regional championships. These entities focus on talent development. Revenue is lower than top-tier. Procurement is centralized but lean, often inheriting platforms from parent series or seeking low-cost solutions for timing and streaming.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "tournament"
+      ],
+      "governance_models": [
+        "sanctioning_body"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Often bundled with top-tier series for major contracts (e.g., 'F1 and F2 streaming'). Independent signals include niche data providers and junior-specific marketing agencies.",
+    "example_entities": [
+      "fia_formula_2_championship",
+      "fia_formula_3_championship",
+      "fia_world_rallycross_championship_(wrx)",
+      "fia_european_rallycross_championship",
+      "nascar_xfinity_series",
+      "nascar_whelen_modified_tour",
+      "imsa_michelin_pilot_challenge",
+      "imsa_vp_racing_sportscar_challenge",
+      "moto2_world_championship",
+      "moto3_world_championship",
+      "world_superbike_championship_(worldsbk)",
+      "world_supersport_championship",
+      "world_supersport_300_championship",
+      "red_bull_rookies_cup",
+      "fim_juniorgp_world_championship",
+      "dtm_(deutsche_tourenwagen_masters)",
+      "gt_world_challenge_europe",
+      "gt_world_challenge_europe_endurance_cup",
+      "gt_world_challenge_europe_sprint_cup",
+      "gt_world_challenge_asia",
+      "gt_world_challenge_australia",
+      "intercontinental_gt_challenge",
+      "british_gt_championship",
+      "british_touring_car_championship_(btcc)",
+      "repco_supercars_championship",
+      "super_formula_championship",
+      "tcr_world_tour",
+      "european_le_mans_series_(elms)",
+      "asian_le_mans_series",
+      "24h_series",
+      "race_of_champions"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration"
+    ],
+    "entity_count": 31
+  },
+  {
+    "cluster_id": "nat_motor_gov_body",
+    "cluster_name": "National Motorsport Governing Bodies",
+    "cluster_description": "Official National Sporting Authorities (ASNs) sanctioned by the FIA. These entities are membership-based federations responsible for regulatory governance, safety standards, and license issuance. They exhibit non-profit or semi-public governance structures.",
+    "cluster_signature": {
+      "sport_types": [
+        "Motorsport"
+      ],
+      "org_types": [
+        "federation"
+      ],
+      "governance_models": [
+        "membership_based",
+        "regulatory"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "tender_portals",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is driven by regulatory cycles, national championship hosting requirements, and administrative needs. They are highly sensitive to official vendor lists and government funding cycles. Signals often appear as administrative updates or 'host city' readiness reports.",
+    "example_entities": [
+      "automobile_club_albania_(aca)",
+      "argentine_automobile_club_(aca)",
+      "bahrain_motor_federation_(bmf)",
+      "deutscher_motor_sport_bund_(dmsb)",
+      "motorsport_uk",
+      "saudi_automobile_and_motorcycle_federation_(samf)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "uci_worldteam",
+    "cluster_name": "UCI WorldTour Cycling Teams",
+    "cluster_description": "Elite-level professional cycling teams holding UCI WorldTour status. These are high-revenue, commercially driven entities reliant on major corporate sponsorship. They function as B2B marketing vehicles for sponsors.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cycling"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "private",
+        "corporate_sponsorship"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Procurement is tied to sponsorship renewal cycles and performance optimization. High demand for performance technology, data analytics, and logistics. Signals are often found in sponsor press releases or specialized job postings for technical directors.",
+    "example_entities": [
+      "ineos_grenadiers",
+      "red_bull\u0096bora\u0096hansgrohe",
+      "soudal\u0096quick-step",
+      "uae_team_emirates_xrg",
+      "team_visma"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "strategic_review",
+      "leadership_hire"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "uci_protour_women",
+    "cluster_name": "UCI ProTeam & Women's WorldTour",
+    "cluster_description": "Professional cycling teams competing at the ProTeam (Men's) or WorldTeam (Women's) level. While commercially driven, they operate with tighter budgets than top-tier Men's WorldTour teams and are more sensitive to cost-effective solutions.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cycling"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "private",
+        "ownership_group"
+      ],
+      "revenue_band": [
+        "medium"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Focus on roster management and essential technical gear. Procurement signals are often linked to title sponsor changes or the search for 'equipment suppliers' and 'performance partners'.",
+    "example_entities": [
+      "team_jayco_alula",
+      "ef_education\u0096easypost",
+      "team_sd_worx\u0096protime",
+      "movistar_team_women",
+      "uno-x_mobility"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "explicit_rfp"
+    ],
+    "entity_count": 5
+  },
+  {
+    "cluster_id": "elite_tour_organizers",
+    "cluster_name": "Elite Tour Organizers",
+    "cluster_description": "Organizers of top-tier 'WorldTour' and 'WorldTour Femmes' cycling events. These entities operate as commercial businesses with high revenue from sponsorship and broadcasting. They require sophisticated event management, timing/scoring, and fan engagement tech.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cycling"
+      ],
+      "org_types": [
+        "tournament",
+        "event organizer"
+      ],
+      "governance_models": [
+        "private",
+        "private-public"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "league_sites"
+    ],
+    "procurement_behavior_summary": "Commercially driven procurement with a focus on ROI and fan experience. High propensity for vendor switching if technology fails during live events. Strong signal correlation with annual event dates.",
+    "example_entities": [
+      "tour_de_france",
+      "giro_d\u0092italia",
+      "la_vuelta_ciclista_a_espa\u00f1a",
+      "tour_de_france_femmes",
+      "giro_d\u0092italia_women",
+      "vuelta_femenina",
+      "paris\u0096roubaix",
+      "tour_of_flanders",
+      "milano\u0096sanremo",
+      "strade_bianche",
+      "amstel_gold_race",
+      "gent\u0096wevelgem",
+      "tour_de_suisse",
+      "tour_de_romandie",
+      "volta_ciclista_a_catalunya",
+      "itzulia_basque_country",
+      "paris\u0096nice",
+      "tirreno\u0096adriatico",
+      "e3_saxo_classic",
+      "dwars_door_vlaanderen",
+      "classic_brugge\u0096de_panne",
+      "renewi_tour",
+      "bretagne_classic_-_ouest-france",
+      "donostia_san_sebastian_klasikoa",
+      "cyclassics_hamburg",
+      "il_lombardia",
+      "gree-tour_of_guangxi",
+      "copenhagen_sprint",
+      "tour_de_pologne",
+      "paris\u0096roubaix_femmes",
+      "gent\u0096wevelgem_women",
+      "tour_of_flanders_women",
+      "strade_bianche_donne",
+      "milan\u0096san_remo_women",
+      "amstel_gold_race_ladies_edition"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "explicit_rfp"
+    ],
+    "entity_count": 35
+  },
+  {
+    "cluster_id": "franchise_leagues",
+    "cluster_name": "Major Franchise Leagues",
+    "cluster_description": "Top-tier, closed or semi-closed professional leagues (NBA, MLB, IPL, etc.). These entities possess high digital maturity and centralized procurement power. They are prime targets for enterprise software, data analytics, and media rights solutions.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball",
+        "Baseball",
+        "Cricket",
+        "Australian Rules Football"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "corporate"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Sophisticated procurement with long sales cycles. Strong focus on data-driven decision-making and fan engagement platforms. Signals often include 'Chief Digital Officer' hires or strategic partnership announcements.",
+    "example_entities": [
+      "nba",
+      "wnba",
+      "mlb",
+      "ipl",
+      "bbl",
+      "psl",
+      "cpl",
+      "sa20",
+      "the_hundred_(men)",
+      "major_league_cricket_(mlc)",
+      "ilt20",
+      "bpl",
+      "lpl",
+      "afl",
+      "euroleague",
+      "npb",
+      "kbo_league",
+      "cpbl",
+      "lmb_(mexican_league)",
+      "b1_league",
+      "cba_(china)"
+    ],
+    "expected_signal_types": [
+      "strategic_review",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 21
+  },
+  {
+    "cluster_id": "domestic_leagues",
+    "cluster_name": "Tier 1 Domestic Leagues",
+    "cluster_description": "Top-tier domestic leagues in specific regions (e.g., European Basketball leagues). While commercially significant, procurement is often more decentralized than major global franchises, relying heavily on individual club spending or centralized league marketing deals.",
+    "cluster_signature": {
+      "sport_types": [
+        "Basketball"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "federation"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Mixed procurement model. Centralized for broadcast/data rights, decentralized for club-level kit and training equipment. Signals vary by league maturity.",
+    "example_entities": [
+      "liga_acb_(spain)",
+      "lnb_pro_a_(france)",
+      "bbl_(germany)",
+      "lega_basket_serie_a_(italy)",
+      "bsl_(t\u00fcrkiye)",
+      "nbl_(australia)",
+      "lkl_(lithuanian_basketball_league)"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "professional_cycling_teams",
+    "cluster_name": "Professional Cycling Teams (UCI)",
+    "cluster_description": "Trade teams competing at WorldTour and ProTeam levels. These are B2B entities heavily reliant on title sponsorship. Procurement is driven by sponsorship budgets and performance needs (equipment, software, travel).",
+    "cluster_signature": {
+      "sport_types": [
+        "Cycling"
+      ],
+      "org_types": [
+        "team"
+      ],
+      "governance_models": [
+        "private",
+        "company-owned"
+      ],
+      "revenue_band": [
+        "medium",
+        "high"
+      ],
+      "digital_maturity": [
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "social_media"
+    ],
+    "procurement_behavior_summary": "Highly volatile due to sponsorship dependence. 'Vendor Switch' is the most common signal (new sponsor = new kit supplier, new bike brand, new software). RFPs are rare and informal.",
+    "example_entities": [
+      "team_visma",
+      "uae_team_adq",
+      "uno-x_mobility",
+      "team_dsm\u0096firmenich_postnl",
+      "ark\u00e9a\u0096b&b_hotels_women",
+      "cofidis_women_team",
+      "ef_education\u0096oatly",
+      "laboral_kutxa\u0096fundaci\u00f3n_euskadi",
+      "st_michel\u0096mavic\u0096auber93",
+      "volkerwessels_women\u0092s_pro_cycling_team",
+      "winspace_orange_seal"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 11
+  },
+  {
+    "cluster_id": "event_organizers",
+    "cluster_name": "Event Organizers (ProSeries & Emerging)",
+    "cluster_description": "Organizers of UCI ProSeries, Continental tours, and standalone events. These entities have lower digital maturity and smaller budgets than WorldTour organizers.",
+    "cluster_signature": {
+      "sport_types": [
+        "Cycling"
+      ],
+      "org_types": [
+        "tournament"
+      ],
+      "governance_models": [
+        "private",
+        "local_promoter"
+      ],
+      "revenue_band": [
+        "low",
+        "medium"
+      ],
+      "digital_maturity": [
+        "low",
+        "medium"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "local_press"
+    ],
+    "procurement_behavior_summary": "Informal procurement. Focus on basic event management and local sponsorship. Signals are hard to detect digitally; often require local news scraping.",
+    "example_entities": [
+      "santos_tour_down_under",
+      "cadel_evans_great_ocean_road_race",
+      "uae_tour",
+      "omloop_het_nieuwsblad",
+      "tour_of_valencia",
+      "volta_ao_algarve",
+      "uci_road_world_championships"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "global_governance_federations",
+    "cluster_name": "Global Governing Bodies & Multi-Sport Orgs",
+    "cluster_description": "International federations (IFs) and multi-sport organizers (e.g., IOC, IPC) responsible for global regulation, event oversight, and development. These entities prioritize long-term strategic partnerships, integrity services, and global technology implementations over short-term procurement cycles.",
+    "cluster_signature": {
+      "sport_types": [
+        "Multisport",
+        "Olympic Disciplines",
+        "Non-Olympic Disciplines"
+      ],
+      "org_types": [
+        "international federation"
+      ],
+      "governance_models": [
+        "federation",
+        "non-profit"
+      ],
+      "revenue_band": [
+        "high",
+        "medium"
+      ],
+      "digital_maturity": [
+        "medium",
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Highly centralized, long-cycle procurement (12-24 months). Driven by quadrennial event planning (Olympics/World Cups). RFPs are rare, formal, and usually for global platforms (e.g., timing, scoring, data, broadcast). Strong preference for established vendors with global compliance capabilities.",
+    "example_entities": [
+      "international_olympic_committee_(ioc)",
+      "international_paralympic_committee_(ipc)",
+      "fifa",
+      "world_athletics",
+      "world_aquatics",
+      "union_cycliste_internationale_(uci)",
+      "international_basketball_federation_(fiba)",
+      "international_cricket_council_(icc)",
+      "f\u00e9d\u00e9ration_internationale_de_l'automobile_(fia)",
+      "badminton_world_federation_(bwf)",
+      "international_gymnastics_federation_(fig)",
+      "international_handball_federation_(ihf)",
+      "international_hockey_federation_(fih)"
+    ],
+    "expected_signal_types": [
+      "strategic_review",
+      "platform_migration",
+      "explicit_rfp"
+    ],
+    "entity_count": 13
+  },
+  {
+    "cluster_id": "continental_confederations",
+    "cluster_name": "Continental Confederations",
+    "cluster_description": "Regional governing bodies (e.g., UEFA, CONMEBOL) that sit between global federations and national associations. They manage high-value continental competitions and act as primary commercial rights holders for their regions.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football"
+      ],
+      "org_types": [
+        "continental federation"
+      ],
+      "governance_models": [
+        "confederation"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "tender_portals"
+    ],
+    "procurement_behavior_summary": "Commercially aggressive procurement focused on media rights, data analytics, and marketing technology. Signals often relate to tournament commercialization or digital infrastructure upgrades.",
+    "example_entities": [
+      "uefa",
+      "conmebol",
+      "concacaf",
+      "caf",
+      "afc",
+      "ofc"
+    ],
+    "expected_signal_types": [
+      "vendor_switch",
+      "platform_migration",
+      "explicit_rfp"
+    ],
+    "entity_count": 6
+  },
+  {
+    "cluster_id": "tier_1_professional_leagues",
+    "cluster_name": "Tier 1 Professional Leagues",
+    "cluster_description": "Top-tier national and international professional leagues (e.g., Premier League, NFL, NBA, MLB equivalents). These are high-revenue, commercially mature entities with complex digital and data needs.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football",
+        "Cricket",
+        "Basketball",
+        "Baseball",
+        "Rugby"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "association"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "centralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Sophisticated procurement teams. High frequency of RFPs for broadcast tech, fan engagement platforms, cybersecurity, and AI-driven analytics. Very high signal-to-noise ratio for job postings (Tech/Digital Directors).",
+    "example_entities": [
+      "premier_league",
+      "laliga",
+      "serie_a",
+      "bundesliga",
+      "ligue_1",
+      "mls",
+      "women's_premier_league_(wpl)",
+      "nrl",
+      "super_rugby"
+    ],
+    "expected_signal_types": [
+      "explicit_rfp",
+      "vendor_switch",
+      "platform_migration",
+      "leadership_hire"
+    ],
+    "entity_count": 9
+  },
+  {
+    "cluster_id": "tier_2_professional_leagues",
+    "cluster_name": "Tier 2 & Development Leagues",
+    "cluster_description": "Second-tier national leagues, feeder leagues, or lower-revenue top-tier leagues. Procurement is less centralized and more budget-conscious than Tier 1.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football",
+        "Cricket",
+        "Ice Hockey",
+        "Rugby"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "private",
+        "association"
+      ],
+      "revenue_band": [
+        "medium",
+        "low"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "league_sites",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Focus on cost-effective solutions, streaming platforms for lower-tier rights, and operational software. Signals are often less formal (e.g., job postings for 'Head of Digital' indicating a readiness to upgrade).",
+    "example_entities": [
+      "efl_championship",
+      "2._bundesliga",
+      "ligue_2",
+      "serie_b",
+      "liga_portugal_2",
+      "sheffield_shield",
+      "county_championship",
+      "a-league",
+      "scottish_premiership",
+      "eredivisie",
+      "ligue_1",
+      "bundesliga",
+      "serie_a",
+      "laliga"
+    ],
+    "expected_signal_types": [
+      "platform_migration",
+      "vendor_switch",
+      "leadership_hire"
+    ],
+    "entity_count": 14
+  },
+  {
+    "cluster_id": "emerging_league_franchises",
+    "cluster_name": "Emerging & Specialized Leagues",
+    "cluster_description": "Leagues in developing markets, niche sports, or women's sports divisions. These entities are characterized by rapid growth, state-backed ownership, or reliance on centralized federation support.",
+    "cluster_signature": {
+      "sport_types": [
+        "Football",
+        "Rugby",
+        "Esports",
+        "Olympic Sports Leagues"
+      ],
+      "org_types": [
+        "league"
+      ],
+      "governance_models": [
+        "state-backed",
+        "private",
+        "federation-backed"
+      ],
+      "revenue_band": [
+        "medium",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "medium",
+        "low"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press",
+      "job_boards"
+    ],
+    "procurement_behavior_summary": "Highly variable. Often driven by government investment or specific franchise owners. Signals include 'league formation' news, sponsorships requiring tech fulfillment, and rapid hiring for digital ops.",
+    "example_entities": [
+      "saudi_pro_league",
+      "chinese_super_league_(csl)",
+      "major_league_rugby_(mlr)",
+      "women's_super_league_(wsl)",
+      "nwsl",
+      "j1_league",
+      "k_league_1"
+    ],
+    "expected_signal_types": [
+      "leadership_hire",
+      "platform_migration",
+      "strategic_review"
+    ],
+    "entity_count": 7
+  },
+  {
+    "cluster_id": "niche_international_federations",
+    "cluster_name": "Niche International Federations",
+    "cluster_description": "IFs for non-mainstream Olympic sports or independent sports (e.g., Floorball, Dodgeball, Minigolf). Limited resources, often volunteer-heavy administration.",
+    "cluster_signature": {
+      "sport_types": [
+        "Minority Sports",
+        "Emerging Sports"
+      ],
+      "org_types": [
+        "international federation"
+      ],
+      "governance_models": [
+        "federation",
+        "non-profit"
+      ],
+      "revenue_band": [
+        "low",
+        "unknown"
+      ],
+      "digital_maturity": [
+        "low"
+      ],
+      "procurement_style": "decentralized"
+    },
+    "typical_signal_channels": [
+      "official_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement is ad-hoc and often reliant on in-kind sponsorship or volunteer expertise. RFPs are extremely rare. Signals are usually related to major event hosting requirements.",
+    "example_entities": [
+      "international_floorball_federation_(iff)",
+      "world_dodgeball_association_(wda)",
+      "world_minigolf_sport_federation_(wmf)",
+      "international_korfball_federation_(ikf)",
+      "world_bowls",
+      "international_federation_of_sport_climbing_(ifsc)",
+      "world_dancesport_federation_(wdsf)"
+    ],
+    "expected_signal_types": [
+      "strategic_review",
+      "platform_migration"
+    ],
+    "entity_count": 7
+  }
+]

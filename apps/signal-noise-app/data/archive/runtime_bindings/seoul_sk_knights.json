@@ -1,0 +1,181 @@
+{
+  "entity_id": "seoul_sk_knights",
+  "entity_name": "Seoul SK Knights",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "globalsportsarchive.com",
+    "prepsportswear.com",
+    "basketball.asia-basket.com",
+    "koreajoongangdaily.joins.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "seoul_sk_knights",
+      "entity_name": "Seoul SK Knights",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://koreajoongangdaily.joins.com",
+        "https://globalsportsarchive.com",
+        "https://prepsportswear.com",
+        "https://basketball.asia-basket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Seoul SK Knights may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:38:45.645207",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports taxonomy",
+            "Global competition indexing",
+            "No entity-specific data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.3887197971343994
+            }
+          ],
+          "reasoning": "The provided content is a generic navigation menu for 'Global Sports Archive' listing soccer leagues and competitions worldwide (UEFA, AFC, CONCACAF, etc.). There is absolutely no mention of 'Seoul SK Knights', basketball, or any specific business operations, technology stacks, or procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:38:57.158109",
+          "domain_explored": "https://prepsportswear.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic E-commerce Platform",
+              "Print-on-Demand (POD) Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic e-commerce taxonomy",
+            "Direct-to-consumer (DTC) retail model",
+            "Print-on-demand (POD) fulfillment",
+            "US-centric market focus (High School/College)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 212,
+              "elapsed_seconds": 6.2344069480896
+            }
+          ],
+          "reasoning": "The content is scraped from a US-based retail platform (Prep Sportswear) that aggregates fan gear for high schools and colleges. It is a B2C marketplace, not a B2B procurement portal. There is no connection to the Seoul SK Knights entity, Korean professional basketball, or corporate governance/technology acquisition patterns."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:39:07.183384",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "League-wide statistical indexing",
+            "Player performance focus",
+            "Historical game results",
+            "No entity-specific governance data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 233,
+              "elapsed_seconds": 3.2260379791259766
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com is a generic news aggregator for Asian basketball leagues. While it mentions the 'South Korean KBL' and briefly references a player 'ex Knights' (Jordan Tolbert), it contains no specific information regarding the Seoul SK Knights' internal operations, procurement needs, technology stack, or decision-making structure. It is focused on game results, player stats, and league standings, which are irrelevant to the procurement intelligence objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:39:19.187631",
+          "domain_explored": "https://koreajoongangdaily.joins.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Financial market reporting",
+            "Pop culture coverage",
+            "National politics focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 177,
+              "elapsed_seconds": 5.4024269580841064
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a major national newspaper (Korea JoongAng Daily). The text consists of general news headlines covering politics, finance, K-pop, and lifestyle. There is no mention of 'Seoul SK Knights', no procurement-specific sections, and no entity-relevant data within the provided text sample."
+        }
+      ],
+      "total_input_tokens": 5746,
+      "total_output_tokens": 792,
+      "estimated_cost_usd": 0.029117999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Seoul SK Knights may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:39:19.188956"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216889",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:08.060028"
+}

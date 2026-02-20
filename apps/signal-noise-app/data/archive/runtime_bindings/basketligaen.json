@@ -1,0 +1,212 @@
+{
+  "entity_id": "basketligaen",
+  "entity_name": "Basketligaen",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "basketligaen.dk",
+    "zoominfo.com",
+    "europeanbasketballleagues.eu",
+    "flashscore.ph",
+    "eurobasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "basketligaen",
+      "entity_name": "Basketligaen",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://europeanbasketballleagues.eu",
+        "https://eurobasket.com",
+        "https://basketligaen.dk",
+        "https://flashscore.ph",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Basketligaen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:41:46.246384",
+          "domain_explored": "https://basketligaen.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Journalism / Game Recaps",
+            "Event Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.437993049621582
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, game results (Randers Cimbria vs. V\u00e6rl\u00f8se), and event recaps (Pokalfinale) from January 2026. There is no presence of corporate information, vendor lists, technology infrastructure details, or organizational governance signals. The content is purely consumer-facing sports media."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:41:53.109795",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "B2B Data Platform",
+            "Sales Intelligence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.629974126815796
+            }
+          ],
+          "reasoning": "The content analyzed is from ZoomInfo's homepage, a B2B data and sales intelligence vendor. It describes ZoomInfo's products (GTM platform, Copilot, etc.) and benefits for sales teams. It contains no information regarding Basketligaen's internal operations, technology stack, or procurement activities. This is irrelevant vendor noise, not a signal from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:42:10.417878",
+          "domain_explored": "https://europeanbasketballleagues.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership in European Basketball Leagues (formerly ULEB)",
+              "Participation in 'Media & Innovation Seminar' with industry partners",
+              "Engagement with 'Executive Committee' and 'General Assembly' governance structures"
+            ]
+          },
+          "patterns_found": [
+            "Industry Association Membership",
+            "Strategic Partnerships",
+            "Media & Innovation Seminars",
+            "Governance / Executive Committees"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 299,
+              "elapsed_seconds": 9.975834131240845
+            }
+          ],
+          "reasoning": "While the content is primarily informational and organizational, it identifies Basketligaen as a member of a larger European governing body (European Basketball Leagues). The mention of 'Media & Innovation Seminars' and 'Key Industry Partners' suggests a collaborative environment where technology and media procurement strategies may be influenced or shared. It confirms the entity operates within a professional ecosystem that requires governance and coordination, hinting at potential centralized or standardized vendor needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:42:21.474955",
+          "domain_explored": "https://flashscore.ph",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Unrelated Content (Football Focus)",
+            "Placeholder/Loading Text",
+            "Advertisement Heavy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 527,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.8518807888031006
+            }
+          ],
+          "reasoning": "The content is from a generic sports results aggregator (Flashscore) focused on football and contains repetitive 'Loading' placeholders and advertisements. It provides zero information regarding Basketligaen's internal operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:42:31.626391",
+          "domain_explored": "https://eurobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Aggregation",
+            "Roster Transactions & Transfers",
+            "Game Recaps & Statistics",
+            "Subscription-Based Content Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.9951071739196777
+            }
+          ],
+          "reasoning": "The content is scraped from Eurobasket.com, a global news aggregator for basketball. While it mentions 'Basketligan' in a game recap headline, the content focuses on player transfers (Justin Cobbs, Julian Larry) and game results. There is no information regarding the internal operations, technology stack, or procurement activities of the Basketligaen organization itself."
+        }
+      ],
+      "total_input_tokens": 6277,
+      "total_output_tokens": 1005,
+      "estimated_cost_usd": 0.033906
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Basketligaen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:42:31.627869"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.239073",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:44.108827"
+}

@@ -1,0 +1,115 @@
+{
+  "entity_id": "bakken_bears",
+  "entity_name": "Bakken Bears",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "bakkenbears.com",
+    "basketligaen.dk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bakken_bears",
+      "entity_name": "Bakken Bears",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bakkenbears.com",
+        "https://basketligaen.dk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bakken Bears may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:56:37.296036",
+          "domain_explored": "https://bakkenbears.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Operations: Reliance on 'Sparekassen Danmark Basketball Center' and 'Rise Sparekasse Arena' indicates facility management/leasing dependencies, but no active procurement signal detected."
+            ]
+          },
+          "patterns_found": [
+            "Standard sports club content management",
+            "Fan engagement focus",
+            "Scheduling/Operations data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 233,
+              "elapsed_seconds": 4.725213050842285
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news updates (match results, upcoming games) and historical game schedules. There are no explicit mentions of technology vendors, job openings, or organizational restructuring that would indicate procurement activity. The content is operational (game results) rather than administrative or strategic."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:56:46.376601",
+          "domain_explored": "https://basketligaen.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Sports journalism and results reporting",
+            "Event promotion (Pokalfinale)",
+            "Competitor focus (Randers Cimbria, Team FOG N\u00e6stved)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 213,
+              "elapsed_seconds": 5.039395093917847
+            }
+          ],
+          "reasoning": "The scraped content from basketligaen.dk is a news feed for the Danish Basketball League (Basketligaen). While Bakken Bears participates in this league, the content focuses on league-wide events, game results, and competitor news (specifically Randers Cimbria's victory). There are no specific procurement signals, technology stacks, or organizational decisions related to the Bakken Bears entity on this page."
+        }
+      ],
+      "total_input_tokens": 2763,
+      "total_output_tokens": 446,
+      "estimated_cost_usd": 0.014979
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bakken Bears may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:56:46.379242"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227360",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:04.425966"
+}

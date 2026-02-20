@@ -1,0 +1,212 @@
+{
+  "entity_id": "budivelnyk_kyiv",
+  "entity_name": "Budivelnyk Kyiv",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "balkanleague.net",
+    "wikidata.org",
+    "kids.kiddle.co",
+    "basketnews.com",
+    "commons.wikimedia.org",
+    "basketball-reference.com",
+    "vault.nimc.gov.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "budivelnyk_kyiv",
+      "entity_name": "Budivelnyk Kyiv",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://commons.wikimedia.org",
+        "https://basketball-reference.com",
+        "https://basketnews.com",
+        "https://balkanleague.net",
+        "https://wikidata.org",
+        "https://vault.nimc.gov.ng"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Budivelnyk Kyiv may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:42:58.745518",
+          "domain_explored": "https://balkanleague.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant domain content",
+            "Sports league statistics",
+            "No corporate entity presence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 185,
+              "elapsed_seconds": 4.336069107055664
+            }
+          ],
+          "reasoning": "The scraped content belongs to the Balkan International Basketball League (BIBL), a regional sports competition. It contains game schedules, player statistics, and league news. There is absolutely no mention of 'Budivelnyk Kyiv', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:43:01.584099",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:43:08.380483",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational encyclopedia content",
+            "General knowledge categories (Science, History, Geography)",
+            "Homework help resources",
+            "Attribution-ShareAlike licensing references"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.4146528244018555
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kiddle', a children's encyclopedia. It contains a sitemap of general educational topics (astronomy, biology, history) and has no relation to the corporate entity 'Budivelnyk Kyiv', professional basketball operations, or business procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:43:11.263128",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:43:14.027624",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:43:20.309131",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Marketing Manager, Content & Creative",
+                "entity": "Sports Reference (Publisher)",
+                "relevance": "None - Publisher hiring, not target entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports statistics database",
+            "Historical player/team records",
+            "Consumer-facing subscription services (Stathead)",
+            "General sports content (NBA, WNBA, EuroLeague)",
+            "Irrelevant hiring (Marketing Manager for the website publisher)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 286,
+              "elapsed_seconds": 3.25003719329834
+            }
+          ],
+          "reasoning": "The scraped content is from Basketball Reference, a sports statistics website. While it mentions a job posting for a Marketing Manager, this is for the publisher of the website (Sports Reference), not for Budivelnyk Kyiv. The content consists of general basketball statistics, scores, and history, with no connection to the corporate entity, procurement needs, or technology stack of Budivelnyk Kyiv."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:43:52.973265",
+          "domain_explored": "https://vault.nimc.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4342,
+      "total_output_tokens": 652,
+      "estimated_cost_usd": 0.022806
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Budivelnyk Kyiv may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:43:52.974522"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:27:22.566208"
+}

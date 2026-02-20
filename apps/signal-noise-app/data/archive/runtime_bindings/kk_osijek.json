@@ -1,0 +1,182 @@
+{
+  "entity_id": "kk_osijek",
+  "entity_name": "KK Osijek",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "kkzapresic.hr",
+    "grokipedia.com",
+    "portal.wnba-nbc.com",
+    "weareiowa.com",
+    "sportskiobjekti.hr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kk_osijek",
+      "entity_name": "KK Osijek",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sportskiobjekti.hr",
+        "https://kkzapresic.hr",
+        "https://grokipedia.com",
+        "https://weareiowa.com",
+        "https://portal.wnba-nbc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KK Osijek may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:07:05.664939",
+          "domain_explored": "https://kkzapresic.hr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:07:08.741743",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:07:14.948250",
+          "domain_explored": "https://portal.wnba-nbc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Login Portal",
+            "User Credential Input"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 470,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.2771661281585693
+            }
+          ],
+          "reasoning": "The target URL (portal.wnba-nbc.com) is a generic login portal requiring authentication. It is unrelated to KK Osijek (a Croatian basketball club) and contains no accessible content regarding procurement, technology stacks, or governance. The domain suggests a connection to the WNBA or NBC, which is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:07:21.292743",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Wall",
+            "Google Services Login",
+            "YouTube Platform Wrapper",
+            "Generic Language Selector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.6302008628845215
+            }
+          ],
+          "reasoning": "The scraped content is exclusively a Google/YouTube authentication and cookie consent wall. It contains no information regarding KK Osijek, procurement activities, or relevant business operations. The domain 'weareiowa.com' appears to be a media/news entity unrelated to the target Croatian basketball club."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:07:29.690332",
+          "domain_explored": "https://sportskiobjekti.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "Event Booking Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Javna nabava (Public Procurement) section",
+              "Mogu\u0107nost najma (Rental/Hiring capabilities)",
+              "Cjenici (Pricing lists indicating vendor/service rates)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Entity (Sports Facilities)",
+            "Javna nabava (Public Procurement) Link",
+            "Venue Rental/Hiring Infrastructure",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 317,
+              "elapsed_seconds": 4.788481712341309
+            }
+          ],
+          "reasoning": "The content represents the navigation structure of 'Sportski objekti' (Sports Facilities), a public entity managing multiple venues in Zagreb (Jarun, Mladost, \u0160alata, etc.). While it is not KK Osijek, it establishes the operational ecosystem of Croatian sports centers. The presence of a 'Javna nabava' (Public Procurement) link indicates active procurement processes. This provides a reference model for how similar entities (like KK Osijek) operate and procure services (maintenance, events, IT), justifying a weak acceptance for context building."
+        }
+      ],
+      "total_input_tokens": 3421,
+      "total_output_tokens": 652,
+      "estimated_cost_usd": 0.020043
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KK Osijek may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:07:29.690914"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.226317",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:27.249644"
+}

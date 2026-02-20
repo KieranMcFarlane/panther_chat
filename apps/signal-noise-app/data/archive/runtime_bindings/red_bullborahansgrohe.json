@@ -1,0 +1,95 @@
+{
+  "entity_id": "red_bull\u0096bora\u0096hansgrohe",
+  "entity_name": "Red Bull\u0096Bora\u0096Hansgrohe",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "uci_worldteam",
+  "discovered_domains": [
+    "redbullborahansgrohe.com",
+    "redbull.com",
+    "redbullshopus.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "red_bull\u0096bora\u0096hansgrohe",
+      "entity_name": "Red Bull\u0096Bora\u0096Hansgrohe",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://redbull.com",
+        "https://redbullborahansgrohe.com",
+        "https://redbullshopus.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Red Bull\u0096Bora\u0096Hansgrohe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:20:20.539661",
+          "domain_explored": "https://redbullborahansgrohe.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:20:22.697518",
+          "domain_explored": "https://redbull.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:20:24.831211",
+          "domain_explored": "https://redbullshopus.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "estimated_cost_usd": 0.0
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Red Bull\u0096Bora\u0096Hansgrohe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:20:24.831879"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.381901",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:42.255592"
+}

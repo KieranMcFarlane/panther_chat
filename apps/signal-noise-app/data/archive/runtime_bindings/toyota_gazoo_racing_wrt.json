@@ -1,0 +1,192 @@
+{
+  "entity_id": "toyota_gazoo_racing_wrt",
+  "entity_name": "Toyota Gazoo Racing WRT",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "tgr-wrt.com",
+    "toyotagazooracing.com",
+    "toyotagazooracingstore.com",
+    "global.toyota"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toyota_gazoo_racing_wrt",
+      "entity_name": "Toyota Gazoo Racing WRT",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://toyotagazooracingstore.com",
+        "https://toyotagazooracing.com",
+        "https://global.toyota",
+        "https://tgr-wrt.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toyota Gazoo Racing WRT may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:32:20.996280",
+          "domain_explored": "https://tgr-wrt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Expansion: Mention of 'GR Corolla rally car to compete on American soil in 2026' suggests potential future supply chain or logistics needs in the US market, though this is currently a weak signal."
+            ]
+          },
+          "patterns_found": [
+            "Generic Marketing Content",
+            "Sports News Aggregation",
+            "Hero Section Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 257,
+              "elapsed_seconds": 3.19283390045166
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the website's hero section text ('Welcome behind the scenes...') and a list of news headlines regarding race results and driver lineups for 2026. There are no explicit procurement signals, technology stack details, or job postings visible in this specific text segment. The content is purely informational and promotional, focused on motorsport outcomes rather than corporate operations or vendor acquisition."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:32:26.535995",
+          "domain_explored": "https://toyotagazooracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Hero Section Repetition",
+            "Generic Marketing Content",
+            "Brand Philosophy Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.1902048587799072
+            }
+          ],
+          "reasoning": "The scraped content consists of repeated hero section text ('Evolution is all about pushing the limits') and generic brand philosophy statements. There are no specific details regarding technology stacks, job openings, or procurement needs. The content is purely promotional and lacks actionable intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:32:33.450233",
+          "domain_explored": "https://toyotagazooracingstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from 'cart', 'collections', and product listing structure)",
+              "Payment Gateway (Implied for transaction processing)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Apparel Manufacturing Procurement (Jackets, Caps, Hoodies)",
+              "Promotional Merchandise Sourcing (Notebooks, Sunglasses, Keyrings)",
+              "Scale Model/Die-cast Vendor Management",
+              "Global Shipping & Logistics Services",
+              "E-commerce Platform Licensing/Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Structure",
+            "Merchandise Inventory Management",
+            "Global Logistics Indicators",
+            "Digital Sales Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.778449296951294
+            }
+          ],
+          "reasoning": "The content represents the official Toyota Gazoo Racing e-commerce storefront. While primarily consumer-facing, the existence of a dedicated global merchandise store indicates procurement activities related to supply chain management (apparel, hard goods), inventory warehousing, and e-commerce infrastructure maintenance (hosting, payment processing). The 'Sale' section suggests inventory liquidation cycles."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:32:46.793747",
+          "domain_explored": "https://global.toyota",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "GR GT3 Concept Launch (Marketing Signal)",
+              "Sustainability Data Book Updates (Governance Signal)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate News Aggregation",
+            "Product Launch Announcements",
+            "Global Mobility Initiatives",
+            "Sustainability Reporting",
+            "Content Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 278,
+              "elapsed_seconds": 10.171769857406616
+            }
+          ],
+          "reasoning": "The scraped content from global.toyota represents the top-level corporate news portal. While it mentions 'GR GT' and 'GR GT3' concepts, these are consumer-facing marketing announcements (Tokyo Auto Salon) rather than operational signals for the Toyota Gazoo Racing WRT (World Rally Team) entity. The content focuses on general corporate sustainability, new business creation (BE creation), and consumer vehicle launches (RAV4). There are no specific procurement signals, vendor lists, or technology stacks related to the WRT division's rally operations."
+        }
+      ],
+      "total_input_tokens": 5742,
+      "total_output_tokens": 1039,
+      "estimated_cost_usd": 0.032811
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toyota Gazoo Racing WRT may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:32:46.795962"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.370189",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:29.593064"
+}

@@ -1,0 +1,144 @@
+{
+  "entity_id": "anguilla_football_association",
+  "entity_name": "Anguilla Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "anguillafa.com",
+    "inside.fifa.com",
+    "anguillalistings.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "anguilla_football_association",
+      "entity_name": "Anguilla Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://anguillafa.com",
+        "https://inside.fifa.com",
+        "https://anguillalistings.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Anguilla Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:19:55.893784",
+          "domain_explored": "https://anguillafa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Placeholder Page",
+            "Under Construction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 367,
+              "output_tokens": 127,
+              "elapsed_seconds": 2.495471954345703
+            }
+          ],
+          "reasoning": "The scraped content indicates the website is currently offline or under construction ('Be Back Soon!'). There is zero accessible content to analyze regarding technology, governance, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:20:02.644224",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding Program (Global Context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Federation Content",
+            "FIFA Forward Program",
+            "Infrastructure Development"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 222,
+              "elapsed_seconds": 3.7327277660369873
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal (inside.fifa.com), not the Anguilla Football Association's domain. While it mentions the 'FIFA Forward' program\u2014which is a known funding mechanism for member associations like Anguilla\u2014the content describes global initiatives (Women's Champions Cup, Burundi stadium) rather than specific procurement activities, technology stacks, or governance decisions for the Anguilla FA. This represents a drift in target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:20:09.399363",
+          "domain_explored": "https://anguillalistings.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local Business Directory",
+            "SMB Marketing Services",
+            "Generic E-commerce Listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.464478015899658
+            }
+          ],
+          "reasoning": "The content is from a general local business directory ('Anguilla Listings') offering marketing and listing services to small businesses. There is no specific mention of the Anguilla Football Association, nor are there any signals regarding their specific procurement, technology stack, or governance needs."
+        }
+      ],
+      "total_input_tokens": 3220,
+      "total_output_tokens": 514,
+      "estimated_cost_usd": 0.01737
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Anguilla Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:20:09.399942"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.201107",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:09.491010"
+}

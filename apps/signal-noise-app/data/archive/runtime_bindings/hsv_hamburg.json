@@ -1,0 +1,360 @@
+{
+  "entity_id": "hsv_hamburg",
+  "entity_name": "HSV Hamburg",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "bundesliga.com",
+    "old.eurohandball.com",
+    "tripadvisor.com.au",
+    "official-vip.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/ontop-jobs-worldwide",
+      "https://de.linkedin.com/jobs/view/ocean-export-operator-hamburg-remote-hybrid-at-freight-appointments-4328112253",
+      "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-hsv-hamburg-at-kinexon-4263629581",
+      "https://de.linkedin.com/jobs/view/ocean-export-operator-at-freight-appointments-4349543516",
+      "https://de.linkedin.com/jobs/view/sea-export-operator-at-altius-talent-freight-forwarding-recruitment-4330614829",
+      "https://de.linkedin.com/jobs/operator-stellen-hamburg",
+      "https://de.linkedin.com/jobs/view/ocean-import-operator-at-freight-appointments-4354904076",
+      "https://de.linkedin.com/jobs/view/operator-operations-manager-m-w-d-at-interscan-schiffahrtsgesellschaft-mbh-4361221912"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hsv_hamburg",
+      "entity_name": "HSV Hamburg",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://old.eurohandball.com",
+        "https://tripadvisor.com.au",
+        "https://official-vip.com",
+        "https://www.linkedin.com/jobs/ontop-jobs-worldwide",
+        "https://de.linkedin.com/jobs/view/sea-export-operator-at-altius-talent-freight-forwarding-recruitment-4330614829",
+        "https://de.linkedin.com/jobs/view/ocean-export-operator-hamburg-remote-hybrid-at-freight-appointments-4328112253",
+        "https://bundesliga.com",
+        "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-hsv-hamburg-at-kinexon-4263629581",
+        "https://de.linkedin.com/jobs/view/ocean-export-operator-at-freight-appointments-4349543516"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Entity Association (HSV Hamburg)",
+        "Vendor Partnership Model (KINEXON)",
+        "Sports Technology Procurement (Player Tracking/IoT)",
+        "Operational Staffing (Freelance/Minijob)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HSV Hamburg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:03:52.074465",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news content",
+            "Irrelevant domain context (League vs. Club)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 461,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.766901731491089
+            }
+          ],
+          "reasoning": "The provided content is a generic news headline about the Bundesliga transfer window from the league's official website. It contains no specific information regarding HSV Hamburg's internal operations, procurement needs, or technology stack. The entity context is too broad (League level) and lacks actionable procurement signals for the specific target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:03:59.334011",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic calendar navigation structure",
+            "Irrelevant domain context (European Handball Federation vs. HSV Hamburg)",
+            "Absence of entity-specific content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.61982798576355
+            }
+          ],
+          "reasoning": "The scraped content is a generic calendar widget from the European Handball Federation (EHF) website. It contains no text, links, or data related to HSV Hamburg, nor does it contain any procurement signals, job postings, or technology stack information. The domain is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:04:09.781572",
+          "domain_explored": "https://tripadvisor.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic consumer travel booking interface",
+            "B2C navigation elements (Hotels, Things to Do, Restaurants)",
+            "Promotional content (Whale watching, tours, small business donations)",
+            "Absence of corporate entity identifiers (HSV Hamburg)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.1128907203674316
+            }
+          ],
+          "reasoning": "The scraped content is from the TripAdvisor homepage, a consumer-facing travel platform. It contains generic travel listings, promotional banners, and user interface elements. There is absolutely no content related to HSV Hamburg, sports management, or corporate procurement activities. This domain is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:04:20.394986",
+          "domain_explored": "https://official-vip.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C ticket marketplace interface",
+            "Third-party event aggregation",
+            "High-value hospitality pricing (VIP tickets)",
+            "Generic event calendar structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.112046003341675
+            }
+          ],
+          "reasoning": "The content is scraped from a third-party ticket resale platform (official-vip.com). While it lists an HSV Hamburg event, the context is purely consumer-facing (selling tickets) rather than indicative of HSV's internal procurement operations, technology stack, or business partnerships. The domain is an intermediary, not the entity itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:04:43.891739",
+          "domain_explored": "https://www.linkedin.com/jobs/ontop-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board interface elements (Sign in, Join now)",
+            "Irrelevant keyword matching (\"Ontop\" vs HSV Hamburg)",
+            "Geographic mismatch (Venezuela, Chicago, LATAM)",
+            "Entity mismatch (Azkait, KINEXON)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 196,
+              "elapsed_seconds": 17.883219957351685
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the keyword 'Ontop'. There is no mention of HSV Hamburg, Handball, or the club's procurement activities. The job listings (Azkait, KINEXON) and locations (Venezuela, Chicago) are unrelated to the target entity in Hamburg, Germany."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:04:53.207292",
+          "domain_explored": "https://de.linkedin.com/jobs/view/ocean-export-operator-hamburg-remote-hybrid-at-freight-appointments-4328112253",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board error message",
+            "Geographic mismatch (United States vs Germany)",
+            "Keyword mismatch (Dis Ag vs HSV Hamburg)",
+            "Absence of entity-specific content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 732,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.329451084136963
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn error page indicating no search results were found for 'Dis Ag jobs in United States'. There is no content related to HSV Hamburg, handball, sports management, or procurement activities. The URL and content are entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:05:04.358375",
+          "domain_explored": "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-hsv-hamburg-at-kinexon-4263629581",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "KINEXON System (Player Tracking/Performance Analysis)",
+              "IoT (Internet of Things)",
+              "LPS (Local Positioning Systems implied)"
+            ],
+            "job_postings": [
+              "Tracking Operator (m/f/d) - HSV Hamburg (via KINEXON)"
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership: KINEXON provides technology and personnel for HSV Hamburg match days.",
+              "Service Contract: 'Tracking Operator' role implies a service level agreement for data collection.",
+              "Technology Investment: Adoption of precision sports analytics for league and media use.",
+              "Staffing Model: Use of Freelancer/Minijob contracts for event-based operations."
+            ]
+          },
+          "patterns_found": [
+            "Direct Entity Association (HSV Hamburg)",
+            "Vendor Partnership Model (KINEXON)",
+            "Sports Technology Procurement (Player Tracking/IoT)",
+            "Operational Staffing (Freelance/Minijob)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 386,
+              "elapsed_seconds": 4.799117803573608
+            }
+          ],
+          "reasoning": "The content provides direct evidence of HSV Hamburg's procurement activities. The job posting confirms an active partnership with KINEXON for sports performance tracking technology (IoT/LPS). It reveals the operational structure of this procurement, where HSV utilizes the vendor's staff (Tracking Operator) to manage the technology during match days. This signals investment in digital infrastructure and data analytics."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:05:13.679849",
+          "domain_explored": "https://de.linkedin.com/jobs/view/ocean-export-operator-at-freight-appointments-4349543516",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board error message",
+            "Geographic mismatch (United States vs Germany)",
+            "Keyword mismatch (Dis Ag vs HSV Hamburg)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 883,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.767681837081909
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'No results found' error page on LinkedIn for a search query unrelated to HSV Hamburg. The keywords 'Dis Ag' and the location 'United States' confirm this is irrelevant data, likely a result of a crawler misdirection or malformed URL."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:05:35.210348",
+          "domain_explored": "https://de.linkedin.com/jobs/view/sea-export-operator-at-altius-talent-freight-forwarding-recruitment-4330614829",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board interface elements",
+            "Geographic mismatch (United States vs Germany)",
+            "Keyword mismatch (Lagerleiter/Warehouse roles vs HSV Hamburg context)",
+            "Absence of entity-specific content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1922,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.483285903930664
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Lagerleiter' (Warehouse Supervisor) roles, primarily located in the United States (e.g., Jurupa Valley, CA; Richmond Hill, GA; Bentonville, AR). There is no mention of HSV Hamburg, the handball club, or any related procurement activities. The URL slug suggests a specific job posting (Sea Export Operator), but the scraped content is a generic listing page completely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 11778,
+      "total_output_tokens": 1920,
+      "estimated_cost_usd": 0.064134
+    },
+    "procurement_signals": [
+      "Direct Entity Association (HSV Hamburg)",
+      "Vendor Partnership Model (KINEXON)",
+      "Sports Technology Procurement (Player Tracking/IoT)",
+      "Operational Staffing (Freelance/Minijob)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HSV Hamburg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:05:35.212345"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349311",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:59.471704"
+}

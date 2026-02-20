@@ -1,0 +1,157 @@
+{
+  "entity_id": "grand_rapids_rise",
+  "entity_name": "Grand Rapids Rise",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "provolleyball.com",
+    "vanandelarena.com",
+    "grriseacademy.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "grand_rapids_rise",
+      "entity_name": "Grand Rapids Rise",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://provolleyball.com",
+        "https://grriseacademy.com",
+        "https://vanandelarena.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Grand Rapids Rise may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:43:34.395344",
+          "domain_explored": "https://provolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partner: Franklin Sports (Equipment)",
+              "Corporate Partner: REN Athletics (Apparel)",
+              "Corporate Partner: Spalding (Balls)",
+              "Corporate Partner: USA Volleyball (Governing Body)"
+            ]
+          },
+          "patterns_found": [
+            "League-wide Corporate Partnerships",
+            "Equipment & Apparel Sourcing",
+            "League Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 815,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.4182510375976562
+            }
+          ],
+          "reasoning": "The content identifies Grand Rapids Rise as a franchise entity within the Pro Volleyball Federation. While no direct procurement signals for the Rise specifically were found, the 'Corporate Partners' section (Franklin Sports, REN Athletics, Spalding) reveals the league's approved vendor ecosystem for equipment and apparel. This indicates a potential centralized procurement structure or preferred vendor list that the Rise likely utilizes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:43:44.994518",
+          "domain_explored": "https://vanandelarena.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET (doPostBack)",
+              "Facebook/Twitter Social Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legends Global Hospitality (Venue/Food Service Partner)"
+            ]
+          },
+          "patterns_found": [
+            "Venue Management Partnership",
+            "Email Marketing Platform (ASP.NET)",
+            "Social Media Integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 659,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.7167580127716064
+            }
+          ],
+          "reasoning": "The scraped content from Van Andel Arena is dominated by repetitive UI elements for 'Legends Global Grand Rapids' email signups and social media icons. There is no specific mention of 'Grand Rapids Rise', nor are there direct procurement signals such as RFPs, job postings, or vendor sourcing specific to the Rise team. While Legends is a key partner, this content represents generic venue marketing noise rather than actionable procurement intelligence for the specific entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:43:55.903738",
+          "domain_explored": "https://grriseacademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational Scope: Youth Academy Management",
+              "Contact Method: Direct Phone Line (616-608-5905)"
+            ]
+          },
+          "patterns_found": [
+            "Youth Sports Program Management",
+            "Seasonal Tryout Scheduling",
+            "Manual Contact Management (Phone)",
+            "Program Tiering (Academy vs. Regional vs. Premier)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 258,
+              "elapsed_seconds": 3.765864133834839
+            }
+          ],
+          "reasoning": "The content is exclusively focused on youth volleyball operations (tryouts, team formation, and season schedules) for 'Rise Academy'. While this establishes the entity as an operational sports organization, it contains zero signals regarding B2B procurement, enterprise technology adoption, or vendor partnerships. The reliance on a phone number for availability checks suggests a lack of digital CRM maturity, but this is operational context rather than a procurement signal."
+        }
+      ],
+      "total_input_tokens": 2936,
+      "total_output_tokens": 774,
+      "estimated_cost_usd": 0.020418
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Grand Rapids Rise may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:43:55.906958"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324517",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:56.011641"
+}

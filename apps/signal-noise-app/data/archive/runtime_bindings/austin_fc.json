@@ -1,0 +1,319 @@
+{
+  "entity_id": "austin_fc",
+  "entity_name": "Austin FC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "austinfc.com",
+    "mlssoccer.com",
+    "mlsnextpro.com",
+    "losverdesatx.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/austin-fc-jobs",
+      "https://www.linkedin.com/posts/teamwork-online-llc_sports-jobs-and-careers-with-austin-fc-activity-7151212815440113664-dKpj",
+      "https://www.linkedin.com/posts/jason-grubb-9794bba1_sports-jobs-and-careers-with-austin-fc-activity-7136070984859598849-ZjjW?trk=public_profile_like_view",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-austin-fc-seeks-a-director-activity-7227675175821979648-H3x4"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austin_fc",
+      "entity_name": "Austin FC",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/jason-grubb-9794bba1_sports-jobs-and-careers-with-austin-fc-activity-7136070984859598849-ZjjW?trk=public_profile_like_view",
+        "https://austinfc.com",
+        "https://losverdesatx.org",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/posts/teamwork-online-llc_sports-jobs-and-careers-with-austin-fc-activity-7151212815440113664-dKpj",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-austin-fc-seeks-a-director-activity-7227675175821979648-H3x4",
+        "https://mlsnextpro.com",
+        "https://www.linkedin.com/jobs/austin-fc-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austin FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:49:04.806898",
+          "domain_explored": "https://austinfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Fan Engagement Content",
+            "Sports Operations Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 142,
+              "elapsed_seconds": 1.9498169422149658
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive sports news regarding match results and player press conferences. There is no mention of technology vendors, job openings, or strategic initiatives that indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:49:12.685934",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Content",
+            "Competitor Intelligence",
+            "Player Transfer Activity",
+            "Content Repetition"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 192,
+              "elapsed_seconds": 4.415934085845947
+            }
+          ],
+          "reasoning": "The scraped content is from mlssoccer.com, the league's central hub, rather than Austin FC's specific domain. It focuses exclusively on player transfer activities for other teams (Red Bull New York, Inter Miami, San Jose, etc.) and contains no information regarding Austin FC's procurement, technology stack, or business operations. The content is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:49:20.118547",
+          "domain_explored": "https://mlsnextpro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Operations",
+            "Competitor Intelligence",
+            "Sports Scheduling",
+            "Coaching Appointments"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.827578067779541
+            }
+          ],
+          "reasoning": "The content is focused on league-wide operations for MLS NEXT Pro (schedule announcements, new clubs, coaching changes) rather than Austin FC's specific procurement activities. While Austin FC II operates in this league, this page does not contain specific signals regarding Austin FC's technology stack, job openings, or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:49:26.094881",
+          "domain_explored": "https://losverdesatx.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Supporter Group Content",
+            "Fan Culture Focus",
+            "Content Repetition",
+            "Non-Operational Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 174,
+              "elapsed_seconds": 1.9117100238800049
+            }
+          ],
+          "reasoning": "The scraped content originates from 'Los Verdes', an independent supporters group for Austin FC, rather than the club's corporate entity. The text is purely promotional regarding fan culture, mission statements, and matchday attendance. It contains no corporate governance, technology infrastructure, or procurement-related data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:49:51.377057",
+          "domain_explored": "https://www.linkedin.com/jobs/austin-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Mismatch",
+            "Geographic Noise",
+            "Unrelated Industry Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 185,
+              "elapsed_seconds": 21.864102125167847
+            }
+          ],
+          "reasoning": "The search query 'Austin FC' on LinkedIn is returning false positives based on the geographic location 'Austin, TX' rather than the specific entity 'Austin FC'. The results listed (US Acute Care Solutions, Baylor Scott & White Health, Jabil) are healthcare and technology employers in Austin, completely unrelated to the soccer club or its operations. No procurement signals relevant to Austin FC were found."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:49:58.254771",
+          "domain_explored": "https://www.linkedin.com/posts/teamwork-online-llc_sports-jobs-and-careers-with-austin-fc-activity-7151212815440113664-dKpj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Tools (Potential)",
+              "Content Strategy Platforms (Potential)"
+            ],
+            "job_postings": [
+              {
+                "title": "Director, Social Content & Strategy",
+                "source": "TeamWork Online / LinkedIn",
+                "recency": "2 years ago",
+                "implications": "Leadership role responsible for platform strategy; may influence budget for marketing technology."
+              }
+            ],
+            "procurement_indicators": [
+              "Organizational Growth (Hiring)",
+              "Marketing Strategy Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting Aggregation",
+            "Marketing Leadership Role",
+            "Social Media Strategy Focus"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 338,
+              "elapsed_seconds": 3.3432891368865967
+            }
+          ],
+          "reasoning": "The content confirms Austin FC is actively hiring for a Director-level position in Social Content & Strategy. While this is a direct hiring signal rather than a vendor procurement signal, high-level marketing roles often dictate technology stack choices (e.g., selecting new social media management tools, analytics platforms, or content management systems). This indicates potential for future software procurement decisions driven by this new hire."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:50:07.615400",
+          "domain_explored": "https://www.linkedin.com/posts/jason-grubb-9794bba1_sports-jobs-and-careers-with-austin-fc-activity-7136070984859598849-ZjjW?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Content Unavailability",
+            "Platform Restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1324,
+              "output_tokens": 157,
+              "elapsed_seconds": 5.754601001739502
+            }
+          ],
+          "reasoning": "The content provided is a LinkedIn login wall ('Sign in or join now to see Jason Grubb\u2019s post'). The actual text of the post regarding hiring at Austin FC is not visible in the provided text. Therefore, no procurement signals, job details, or technology stack information can be extracted."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:50:14.450900",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-austin-fc-seeks-a-director-activity-7227675175821979648-H3x4",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Academy Goalkeeping"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Operations Focus",
+            "Youth Academy Recruitment",
+            "Technical Certification Requirements",
+            "Aggregator Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1776,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.5532548427581787
+            }
+          ],
+          "reasoning": "The content describes a vacancy for a 'Director of Academy Goalkeeping,' a role strictly related to sporting operations and technical coaching staff. This position focuses on personnel acquisition (coaches) and player development rather than organizational procurement, technology acquisition, or vendor management. It does not meet the criteria for procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 11925,
+      "total_output_tokens": 1570,
+      "estimated_cost_usd": 0.059325
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austin FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:50:14.453002"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.153658",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:11.676969"
+}

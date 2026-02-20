@@ -1,0 +1,209 @@
+{
+  "entity_id": "ok_salonit_anhovo",
+  "entity_name": "OK Salonit Anhovo",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "playmakerstats.com",
+    "volleybox.net",
+    "volleyball-agency.com",
+    "volleytimes.com",
+    "si.gigexchange.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ok_salonit_anhovo",
+      "entity_name": "OK Salonit Anhovo",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://playmakerstats.com",
+        "https://si.gigexchange.com",
+        "https://volleyball-agency.com",
+        "https://volleytimes.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "OK Salonit Anhovo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:17:00.714247",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "sports_statistics_aggregation",
+            "gambling_affiliation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 160,
+              "elapsed_seconds": 3.148259162902832
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to football (soccer) statistics, match results, and sports betting (GambleAware). There is absolutely no mention of OK Salonit Anhovo, construction materials, cement, or corporate procurement activities. This domain is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:17:09.286709",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_statistics_aggregation",
+            "player_transfers_market",
+            "fan_community_engagement",
+            "irrelevant_domain_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.292998790740967
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is exclusively focused on volleyball sports statistics, player transfers, and community forums. There is no content related to corporate procurement, industrial manufacturing, or business operations relevant to OK Salonit Anhovo."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:17:34.158435",
+          "domain_explored": "https://volleyball-agency.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_player_management",
+            "athlete_recruitment_agency",
+            "video_highlights_hosting",
+            "irrelevant_domain_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 198,
+              "elapsed_seconds": 16.994234800338745
+            }
+          ],
+          "reasoning": "The scraped content from 'volleyball-agency.com' identifies the entity as a sports management agency focused on player recruitment, transfers, and career management. There is no connection to OK Salonit Anhovo (a cement/concrete manufacturer) or industrial procurement activities such as RFPs, ERP systems, or raw material sourcing. The content is entirely irrelevant to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:17:50.960708",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregation",
+            "match_results_reporting",
+            "player_transfer_news",
+            "editorial_content_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 178,
+              "elapsed_seconds": 10.35802698135376
+            }
+          ],
+          "reasoning": "The content is exclusively focused on volleyball match results, league standings, and player transfers across various European countries (Italy, France, Poland, Turkey, Greece). There is no presence of corporate operations, technology infrastructure, or procurement activities relevant to a manufacturing entity like OK Salonit Anhovo."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:17:59.598448",
+          "domain_explored": "https://si.gigexchange.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gig_economy_platform",
+            "freelance_marketplace",
+            "generic_recruitment_advertising",
+            "b2c_service_model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.185997247695923
+            }
+          ],
+          "reasoning": "The content represents a generic freelance marketplace (gigexchange) targeting the Slovenian market for gig workers and digital nomads. While it offers a mechanism for hiring, it is a horizontal platform for individual tasks rather than a source of strategic procurement intelligence, corporate RFPs, or enterprise vendor partnerships for OK Salonit Anhovo."
+        }
+      ],
+      "total_input_tokens": 7269,
+      "total_output_tokens": 883,
+      "estimated_cost_usd": 0.035052
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "OK Salonit Anhovo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:17:59.601506"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326180",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:07.489599"
+}

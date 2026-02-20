@@ -1,0 +1,332 @@
+{
+  "entity_id": "la_galaxy",
+  "entity_name": "LA Galaxy",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "lagalaxy.com",
+    "mlsstore.com",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/la-galaxy-jobs",
+      "https://www.linkedin.com/jobs/view/la-galaxy-inside-sales-representative-part-time-at-aeg-4278388237",
+      "https://www.linkedin.com/jobs/view/la-galaxy-youth-programs-coach-part-time-at-aeg-4206683597",
+      "https://www.linkedin.com/jobs/major-league-soccer-jobs",
+      "https://www.linkedin.com/jobs/game-day-operations-jobs-los-angeles-metropolitan-area",
+      "https://www.linkedin.com/jobs/view/la-galaxy-youth-programs-coach-juniors-and-skills-at-aeg-worldwide-inc-4250720119",
+      "https://www.linkedin.com/jobs/los-angeles-lakers-jobs",
+      "https://www.linkedin.com/jobs/dignity-health-sports-park-jobs-carson-ca",
+      "https://www.linkedin.com/company/aeg/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "la_galaxy",
+      "entity_name": "LA Galaxy",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/la-galaxy-youth-programs-coach-part-time-at-aeg-4206683597",
+        "https://lagalaxy.com",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/jobs/game-day-operations-jobs-los-angeles-metropolitan-area",
+        "https://www.linkedin.com/jobs/view/la-galaxy-inside-sales-representative-part-time-at-aeg-4278388237",
+        "https://mlsstore.com",
+        "https://www.linkedin.com/jobs/major-league-soccer-jobs",
+        "https://www.linkedin.com/jobs/la-galaxy-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LA Galaxy may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:46:22.806009",
+          "domain_explored": "https://lagalaxy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Survey Platforms (Potential)",
+              "CRM / Fan Database (Potential)",
+              "Web Forms (Application Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Fan Council Application Process (2026)",
+              "Partnership with Dignity Health Sports Park (Venue Management)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement & Governance",
+            "Community Feedback Loops",
+            "Digital Application Processes"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 296,
+              "elapsed_seconds": 5.585706949234009
+            }
+          ],
+          "reasoning": "The content highlights the 'LA Galaxy Fan Council' for the 2026 season. While primarily a marketing/community initiative, the mention of an application process for the council indicates a structured approach to gathering fan feedback. This suggests a potential need for or use of Customer Relationship Management (CRM) tools, survey platforms, or community management software to manage these relationships. It signals an organizational focus on 'Voice of the Customer' (VoC) which often drives procurement of analytics and feedback tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:46:27.088453",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:46:34.570041",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Content Aggregation",
+            "Player Transfer Tracking",
+            "Sports News Journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 183,
+              "elapsed_seconds": 4.322914123535156
+            }
+          ],
+          "reasoning": "The scraped content from mlssoccer.com focuses entirely on league-wide player transfers, sports journalism, and competitive events (e.g., Red Bull New York, Inter Miami). It contains zero information regarding LA Galaxy's corporate operations, technology stack, or procurement needs. This is irrelevant to the objective of finding B2B procurement signals for the specific entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:46:43.911468",
+          "domain_explored": "https://www.linkedin.com/jobs/la-galaxy-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (implied for Inside Sales)",
+              "Ticketing Systems"
+            ],
+            "job_postings": [
+              "Inside Sales Representative (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Parent Company Governance: AEG Worldwide Inc",
+              "Sales Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Sales Operations & Ticketing",
+            "Corporate Affiliation (AEG Worldwide)",
+            "Recruitment Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 277,
+              "elapsed_seconds": 5.152554988861084
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for an 'Inside Sales Representative' directly affiliated with LA Galaxy. Although the role is operational/sales focused rather than procurement-specific, it confirms active hiring and business growth. The listing identifies 'AEG Worldwide Inc' as the parent company, which is a critical finding for procurement intelligence, suggesting that vendor management and contracts may be handled at the AEG corporate level rather than the individual team level."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:46:53.005302",
+          "domain_explored": "https://www.linkedin.com/jobs/view/la-galaxy-inside-sales-representative-part-time-at-aeg-4278388237",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Excel",
+              "Microsoft Outlook",
+              "Microsoft Word",
+              "Proprietary Ticketing/Sales CRM (Implied by 'required business systems')"
+            ],
+            "job_postings": [
+              "Inside Sales Representative (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "AEG Corporate Affiliation (Centralized Governance)",
+              "Sales Training Program Investment",
+              "Commission-based Revenue Structure"
+            ]
+          },
+          "patterns_found": [
+            "Sales Operations & Ticketing",
+            "Corporate Affiliation (AEG Worldwide)",
+            "CRM Utilization (Implicit)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 316,
+              "elapsed_seconds": 5.257396936416626
+            }
+          ],
+          "reasoning": "The job description confirms the use of specific business systems for sales and account management, indicating an active operational environment. However, as an entry-level role focused on individual sales execution rather than strategic procurement or vendor management, the signal regarding *new* procurement opportunities is indirect. The mention of AEG suggests centralized procurement control, reducing the likelihood of autonomous Galaxy-specific vendor selection."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:47:04.185130",
+          "domain_explored": "https://www.linkedin.com/jobs/view/la-galaxy-youth-programs-coach-part-time-at-aeg-4206683597",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Incident Reporting/Documentation Systems"
+            ],
+            "job_postings": [
+              "LA Galaxy Youth Programs Coach (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Apparel and Equipment Procurement (LA Galaxy issued gear)",
+              "Program Supply Chain (Set-up/break-down of camps, clinics, classes)",
+              "Administrative Software (Incident logging/documentation)"
+            ]
+          },
+          "patterns_found": [
+            "Community Engagement Operations",
+            "Program Management Infrastructure",
+            "AEG Corporate Affiliation",
+            "Incident Reporting & Documentation Protocols"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.7818310260772705
+            }
+          ],
+          "reasoning": "While this is a coaching role, the 'Essential Functions' reveal operational requirements for procurement, specifically the need for 'LA Galaxy issued gear' (apparel/equipment procurement) and 'adequate documentation' systems for incident reporting. It confirms the AEG governance structure and highlights the operational scale of the Youth Programs department, which requires vendor support for camps, clinics, and tournaments."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:47:10.784753",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-soccer-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Academy Scout (Red Bull New York)",
+              "Director, Events (Major League Soccer - NY)"
+            ],
+            "procurement_indicators": [
+              "League-level hiring (irrelevant to club-specific procurement)",
+              "Competitor club activity (Red Bull)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Aggregation",
+            "Entity Scope Mismatch",
+            "Generic Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1684,
+              "output_tokens": 275,
+              "elapsed_seconds": 2.8424389362335205
+            }
+          ],
+          "reasoning": "The scraped content represents a job search results page for 'Major League Soccer' (the league entity), not LA Galaxy (the specific club entity). While previous iterations established that LA Galaxy operates under AEG, this page lists roles for other distinct entities (e.g., Red Bull New York) and league-level roles in New York, NY. This indicates a scope drift from the target entity (LA Galaxy) to the broader ecosystem, diluting the relevance of procurement signals specific to LA Galaxy's operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:47:17.593220",
+          "domain_explored": "https://www.linkedin.com/jobs/game-day-operations-jobs-los-angeles-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Manager, Ticket Operations & Box Office (Los Angeles Football Club - LAFC)",
+              "Athletics Facilities and Events Assistant (California State University, Los Angeles)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Scope Mismatch",
+            "Competitor Identification (LAFC)",
+            "Generic Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1745,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.053612232208252
+            }
+          ],
+          "reasoning": "The search results for 'Game Day Operations' in Los Angeles returned listings for competitors (LAFC), universities (Cal State LA), and gaming companies (Blizzard), but no specific listings for the LA Galaxy entity. The content is generic noise unrelated to the target entity's procurement activities."
+        }
+      ],
+      "total_input_tokens": 10876,
+      "total_output_tokens": 1865,
+      "estimated_cost_usd": 0.060603
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LA Galaxy may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:47:17.595391"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.155458",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:17:56.212430"
+}

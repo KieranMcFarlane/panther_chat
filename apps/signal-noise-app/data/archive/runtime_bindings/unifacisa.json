@@ -1,0 +1,203 @@
+{
+  "entity_id": "unifacisa",
+  "entity_name": "Unifacisa",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "unifacisa.edu.br",
+    "basqueteunifacisa.com.br",
+    "zoominfo.com",
+    "maastrichtuniversity.nl",
+    "en.flamengo.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "unifacisa",
+      "entity_name": "Unifacisa",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://unifacisa.edu.br",
+        "https://maastrichtuniversity.nl",
+        "https://basqueteunifacisa.com.br",
+        "https://zoominfo.com",
+        "https://en.flamengo.com.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Unifacisa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:36:16.753428",
+          "domain_explored": "https://unifacisa.edu.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy Student Information System (SIS)",
+              "Admissions Tracking Portal",
+              "Alumni Portal (Portal do Egresso)"
+            ],
+            "job_postings": [
+              "Link detected: 'Trabalhe Conosco' (Work with Us) - Indicates active recruitment channel."
+            ],
+            "procurement_indicators": [
+              "Legacy System Maintenance: Active link to 'old.unifacisa.edu.br' suggests ongoing need for legacy support or migration services.",
+              "Digital Admissions: 'Acompanhe sua Inscri\u00e7\u00e3o' indicates use of digital enrollment tracking tools.",
+              "CRM Needs: High volume of calls to action ('Inscreva-se', 'Restam apenas 198 vagas') suggests a need for marketing automation and lead management tools."
+            ]
+          },
+          "patterns_found": [
+            "Legacy System Integration",
+            "Student Information System (SIS)",
+            "CRM/Admissions Funnel"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 370,
+              "elapsed_seconds": 3.983107089996338
+            }
+          ],
+          "reasoning": "The content reveals the navigation structure and core operational links of Unifacisa. While no direct RFPs are visible, the presence of a specific link to 'old.unifacisa.edu.br' for tracking applications ('Acompanhe sua Inscri\u00e7\u00e3o') strongly indicates a hybrid IT environment involving legacy data migration or maintenance. The 'Portal do Egresso' and 'Trabalhe Conosco' links indicate active HR and Alumni management needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:36:26.554992",
+          "domain_explored": "https://basqueteunifacisa.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Social Project Investment (General CSR, not specific IT procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Brand Marketing",
+            "Sports Management",
+            "Social Legacy/CSR"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 785,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.125251054763794
+            }
+          ],
+          "reasoning": "The scraped content is a news article celebrating the 14th anniversary of the 'Basquete Unifacisa' team. It focuses on sports history, social legacy, and brand marketing. There are no technical signals, job postings, or procurement indicators (RFPs, technology investments) present in this text. It does not advance the hypothesis of IT procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:36:29.674450",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:36:36.620182",
+          "domain_explored": "https://maastrichtuniversity.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Academic Partnership Agreement (Zuyd University)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Geographic Mismatch",
+            "Academic Partnerships"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.259424924850464
+            }
+          ],
+          "reasoning": "The scraped content is from Maastricht University (Netherlands), which is a completely different entity from the target, Unifacisa (Brazil). While the content mentions academic partnerships and events, these are not relevant to the target entity's procurement activities. This indicates a misalignment in the scraping or search process."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:36:42.892919",
+          "domain_explored": "https://en.flamengo.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Sports Entertainment",
+            "Geographic/Market Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 602,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.8732290267944336
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Clube de Regatas do Flamengo, a major Brazilian sports club. This entity is completely unrelated to Unifacisa (an educational institution). The content focuses on match schedules, betting, and sports entertainment, offering zero procurement intelligence regarding Unifacisa's operations, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 4220,
+      "total_output_tokens": 919,
+      "estimated_cost_usd": 0.026445
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Unifacisa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:36:42.894895"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.234280",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:38:34.864439"
+}

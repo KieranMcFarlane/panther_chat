@@ -1,0 +1,291 @@
+{
+  "entity_id": "cook_islands_volleyball_association",
+  "entity_name": "Cook Islands Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cookislandsnews.com",
+    "gazette.govt.nz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/youth-beach-volleyball-lead-competitive-coach-at-qbk-sports-4366238029",
+      "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york",
+      "https://www.linkedin.com/jobs/view/middle-school-girls-volleyball-coach-at-spring-education-group-4366334355",
+      "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york-ny",
+      "https://www.linkedin.com/jobs/view/volleyball-coach-and-camp-counselor-at-island-lake-camp-4350233588",
+      "https://www.linkedin.com/jobs/volleyball-coach-jobs-south-carolina",
+      "https://www.linkedin.com/jobs/view/boys-volleyball-coach-at-kamehameha-schools-4365371859",
+      "https://www.linkedin.com/jobs/view/high-school-volleyball-coach-at-east-harlem-tutorial-program-4356262021",
+      "https://www.linkedin.com/jobs/view/middle-school-girls-volleyball-coach-at-the-rhoades-school-4341273451"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cook_islands_volleyball_association",
+      "entity_name": "Cook Islands Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york",
+        "https://www.linkedin.com/jobs/view/middle-school-girls-volleyball-coach-at-spring-education-group-4366334355",
+        "https://gazette.govt.nz",
+        "https://cookislandsnews.com",
+        "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york-ny",
+        "https://www.linkedin.com/jobs/view/youth-beach-volleyball-lead-competitive-coach-at-qbk-sports-4366238029",
+        "https://www.linkedin.com/jobs/view/volleyball-coach-and-camp-counselor-at-island-lake-camp-4350233588"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cook Islands Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:11:03.589726",
+          "domain_explored": "https://cookislandsnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inaugural Pickleball Cook Islands Open (Potential equipment/surface procurement)",
+              "OFC Men\u2019s Champions League Qualifiers (Travel/Logistics/Kit procurement)",
+              "CIFA Scholarship Programme (Education/Travel vendor management)"
+            ]
+          },
+          "patterns_found": [
+            "Event Infrastructure Demand",
+            "Venue Utilization (National Sports Arena)",
+            "Sports Development Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 294,
+              "elapsed_seconds": 7.1712470054626465
+            }
+          ],
+          "reasoning": "While there are no explicit tenders or RFPs in this news feed, the coverage of the 'First Pickleball Open' and 'OFC Men\u2019s Champions League' qualifiers indicates active utilization of sports facilities and the launch of new events. These activities often correlate with future needs for equipment procurement, venue maintenance services, and event management software. The mention of 'CIFA\u2019s Scholarship Programme' also suggests ongoing administrative activities that may require educational or travel-related vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:11:11.848918",
+          "domain_explored": "https://gazette.govt.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Jurisdictional Mismatch",
+            "General Administrative Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.5084800720214844
+            }
+          ],
+          "reasoning": "The content is from the New Zealand Gazette (gazette.govt.nz), which is the official publication of the New Zealand Government. The Cook Islands Volleyball Association is a separate entity within the Cook Islands, a self-governing territory in free association with New Zealand. While there are constitutional ties, the Cook Islands has its own legal system and official publications (Cook Islands Gazette). This source is irrelevant for specific procurement signals regarding the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:11:17.833407",
+          "domain_explored": "https://www.linkedin.com/jobs/view/youth-beach-volleyball-lead-competitive-coach-at-qbk-sports-4366238029",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Youth Beach Volleyball Lead Competitive Coach at QBK Sports (New York, NY)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Private Sector Entity",
+            "Coaching/Operations Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.4311301708221436
+            }
+          ],
+          "reasoning": "The content is a job posting for QBK Sports, a private entity based in New York, NY. This is completely irrelevant to the Cook Islands Volleyball Association (CIVA) due to geographic and entity mismatches. There are no procurement signals, technology stacks, or governance patterns applicable to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:11:25.076957",
+          "domain_explored": "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Afterschool Volleyball Coach - Amazing Athletes (New York, NY)",
+              "Volleyball Coach (Private) - TeachMe.To (New York, NY)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Private Sector Focus",
+            "Gig Economy/Contracting Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.7399768829345703
+            }
+          ],
+          "reasoning": "The scraped content lists coaching jobs specifically located in New York, USA. This is geographically disjointed from the target entity, Cook Islands Volleyball Association (CIVA). The roles are primarily for private coaching (TeachMe.To) or after-school programs (Amazing Athletes), which are individual employment opportunities rather than organizational procurement signals for CIVA. There is no intersection with the target entity's operations or supply chain."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:11:31.262285",
+          "domain_explored": "https://www.linkedin.com/jobs/view/middle-school-girls-volleyball-coach-at-spring-education-group-4366334355",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Middle School Girls Volleyball Coach",
+              "Head Coach"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Private Sector Entity",
+            "Educational Institution Hiring",
+            "Operational Role (Coaching)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.6879868507385254
+            }
+          ],
+          "reasoning": "The content describes a coaching position for BASIS Independent Schools (Spring Education Group) located in Brooklyn, NY. This is a private educational institution in the United States, completely unrelated to the Cook Islands Volleyball Association. It represents an operational hiring decision rather than a procurement signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:11:44.482868",
+          "domain_explored": "https://www.linkedin.com/jobs/volleyball-coach-jobs-new-york-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Afterschool Volleyball Coach - Amazing Athletes (New York, NY)",
+              "Basketball Coach (Private) - TeachMe.To (Jersey City, NJ)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Private Sector Focus",
+            "Gig Economy/Contracting Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1663,
+              "output_tokens": 233,
+              "elapsed_seconds": 8.698112964630127
+            }
+          ],
+          "reasoning": "The content is a generic job listing page for 'Volleyball Coach' roles specifically located in New York, NY (and Jersey City). This is completely irrelevant to the Cook Islands Volleyball Association. The roles listed (e.g., 'Afterschool Volleyball Coach' at 'Amazing Athletes') are private sector or gig-economy coaching positions, not procurement signals or organizational developments for the target entity in the Cook Islands."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:11:51.230994",
+          "domain_explored": "https://www.linkedin.com/jobs/view/volleyball-coach-and-camp-counselor-at-island-lake-camp-4350233588",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Volleyball Coach and Camp Counselor - Island Lake Camp (Starrucca, PA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance",
+            "Private Sector Entity",
+            "Seasonal/Temporary Employment",
+            "Educational/Recreational Facility Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1729,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.390216827392578
+            }
+          ],
+          "reasoning": "The content describes a seasonal job opening for a Volleyball Coach and Camp Counselor at Island Lake Camp, located in Starrucca, Pennsylvania. This is geographically irrelevant to the Cook Islands Volleyball Association (CIVA). The entity is a private recreational facility, and the role is an entry-level internship/counselor position focused on youth childcare and sports instruction, rather than organizational procurement, technology investment, or administrative governance."
+        }
+      ],
+      "total_input_tokens": 10814,
+      "total_output_tokens": 1611,
+      "estimated_cost_usd": 0.056607
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cook Islands Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:11:51.233820"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337346",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:30:00.339624"
+}

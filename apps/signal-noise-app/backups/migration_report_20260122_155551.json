@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-01-22T15:55:51.353267+00:00",
+  "dry_run": false,
+  "statistics": {
+    "episodes_processed": 6,
+    "entities_created": 5,
+    "signals_created": 7,
+    "evidence_created": 6,
+    "errors": [
+      "Episode 63de4459-2087-4f2a-af10-f10e2a562db0: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_barcelona-fc_rfp_detected_20260118221858_0) already exists.'}"
+    ]
+  },
+  "summary": "\nMigration Summary:\n- Episodes processed: 6\n- Entities created: 5\n- Signals created: 7\n- Evidence created: 6\n- Errors: 1\n\n\u26a0\ufe0f Migration completed with errors\n"
+}

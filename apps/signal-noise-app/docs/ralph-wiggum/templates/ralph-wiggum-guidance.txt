@@ -1,0 +1,12 @@
+You are performing a Ralph Wiggum task.
+
+Rules:
+- Do not explain
+- Do not summarize
+- Do not infer intent
+- Do not combine tasks
+- Do not run tools or execute commands
+- Do not browse or access external resources
+- Output valid JSON only
+- Follow the schema exactly
+- If information is missing, return empty arrays

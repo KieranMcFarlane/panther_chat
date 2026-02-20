@@ -1,0 +1,200 @@
+{
+  "entity_id": "german_basketball_federation",
+  "entity_name": "German Basketball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "deutschland.de",
+    "play.google.com",
+    "news.adidas.com",
+    "sportspro.com",
+    "sponsorship.sportbusiness.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_basketball_federation",
+      "entity_name": "German Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://sportspro.com",
+        "https://news.adidas.com",
+        "https://sponsorship.sportbusiness.com",
+        "https://deutschland.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:46:55.907127",
+          "domain_explored": "https://deutschland.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Irrelevance",
+            "General Sports Journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.4955921173095703
+            }
+          ],
+          "reasoning": "The scraped content from deutschland.de focuses exclusively on Winter Sports, the 2026 Olympics, and general leisure topics (skiing, bobsleigh). There is absolutely no mention of the German Basketball Federation (DBB), basketball operations, or related organizational activities. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:47:04.509889",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Mobile Gaming",
+            "App Store Aggregation",
+            "Entertainment Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 159,
+              "elapsed_seconds": 5.209122180938721
+            }
+          ],
+          "reasoning": "The content is a standard listing of mobile games and applications from the Google Play Store. It contains consumer-facing entertainment software (Candy Crush, PUBG, etc.) and lacks any connection to the German Basketball Federation, enterprise governance, or organizational procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:47:07.310105",
+          "domain_explored": "https://news.adidas.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:47:14.597573",
+          "domain_explored": "https://sportspro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered premium streaming",
+              "Data analytics platforms",
+              "Shared reality (VR/AR)",
+              "Biometric data tracking"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic interest in digital fan engagement",
+              "Future investment in data infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Future Technology Forecasting",
+            "AI & Analytics Trends",
+            "Digital Transformation in Sports"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 782,
+              "output_tokens": 260,
+              "elapsed_seconds": 4.205788850784302
+            }
+          ],
+          "reasoning": "While the content is industry analysis rather than a direct procurement signal from the German Basketball Federation, it highlights high-value technology categories (AI, streaming, data platforms) that are likely to be on the strategic roadmap for a modernizing federation. It provides context on *what* technologies are relevant, even if it doesn't show *who* is buying them right now."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:47:22.634305",
+          "domain_explored": "https://sponsorship.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "NBA Jersey Patch Revenue Trends (Market Intelligence)",
+              "Sponsorship Activation Strategies (General)"
+            ]
+          },
+          "patterns_found": [
+            "Global Sports Sponsorship News",
+            "B2B Media Content Aggregation",
+            "Commercial Partnership Analysis",
+            "General Industry Trends"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 244,
+              "elapsed_seconds": 4.7810890674591064
+            }
+          ],
+          "reasoning": "The content is a B2B news feed for the global sports sponsorship industry (SportBusiness). While it mentions 'Basketball' in the context of NBA jersey patches and revenue, it focuses on high-level sponsorship deals (e.g., Am\u00e9rica M\u00f3vil, Toyota) rather than the procurement operations of the German Basketball Federation. There is no specific mention of the DBB, German vendors, or operational procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5078,
+      "total_output_tokens": 823,
+      "estimated_cost_usd": 0.027579
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:47:22.635908"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269631",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:43.818556"
+}

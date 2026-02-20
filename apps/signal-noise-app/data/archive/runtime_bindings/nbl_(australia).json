@@ -1,0 +1,139 @@
+{
+  "entity_id": "nbl_(australia)",
+  "entity_name": "NBL (Australia)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "livescore.com",
+    "basketball-reference.com",
+    "365scores.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nbl_(australia)",
+      "entity_name": "NBL (Australia)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://365scores.com",
+        "https://livescore.com",
+        "https://basketball-reference.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NBL (Australia) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:04:14.545718",
+          "domain_explored": "https://livescore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Clarity (Analytics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Generic Sports Data Aggregation",
+            "Cookie Policy Compliance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.918828010559082
+            }
+          ],
+          "reasoning": "The provided content is from LiveScore.com, a sports news and results aggregator. It contains no information regarding NBL (National Basketball League) Australia's internal operations, procurement needs, or technology stack. The mention of 'Betting' and 'Casino' links indicates this is a consumer-facing publisher site, not a corporate procurement portal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:04:24.205056",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              {
+                "title": "Marketing Manager, Content & Creative",
+                "employer": "Sports Reference (Publisher)",
+                "relevance": "None - Not NBL specific"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Generic Sports Data Aggregation",
+            "Historical Statistics Database",
+            "Third-Party Publisher (Sports Reference)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.314525842666626
+            }
+          ],
+          "reasoning": "The content is from Basketball-Reference.com, a third-party statistics aggregator. While it mentions 'NBL' as a league classification for players, it is a historical data repository, not the official entity or a procurement channel for the National Basketball League (Australia). The job posting found is for the website publisher (Sports Reference), not NBL."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:04:32.458092",
+          "domain_explored": "https://365scores.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2764,
+      "total_output_tokens": 453,
+      "estimated_cost_usd": 0.015087
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NBL (Australia) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:04:32.459172"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416303",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:06.075295"
+}

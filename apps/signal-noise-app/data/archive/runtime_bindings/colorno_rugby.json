@@ -1,0 +1,288 @@
+{
+  "entity_id": "colorno_rugby",
+  "entity_name": "Colorno Rugby",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "pitchero.com",
+    "leicestertigers.com",
+    "sport.unimore.it",
+    "wikiwand.com",
+    "flashscore.fr",
+    "livesport.com",
+    "rugbytours.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colorno_rugby",
+      "entity_name": "Colorno Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://flashscore.fr",
+        "https://pitchero.com",
+        "https://wikiwand.com",
+        "https://livesport.com",
+        "https://leicestertigers.com",
+        "https://rugbytours.co.uk",
+        "https://sport.unimore.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colorno Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:28:50.014667",
+          "domain_explored": "https://pitchero.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pitchero (Club Management Platform)",
+              "Pitchero Mobile Apps (iOS/Android)",
+              "Pitchero GPS Trackers",
+              "Online Payment Gateways (via Pitchero)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Interest in 'All-in-one' club management solutions (Website + App + Membership)",
+              "Requirement for digital payment collection (Membership/Match fees)",
+              "Interest in performance tracking technology (GPS Trackers)",
+              "Need to reduce administrative burden (volunteer time saving)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Discovery",
+            "Digital Transformation Indicators",
+            "Operational Efficiency Drivers"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 346,
+              "elapsed_seconds": 5.0404088497161865
+            }
+          ],
+          "reasoning": "The content is a vendor landing page (Pitchero) rather than a direct signal from Colorno Rugby. However, it identifies a specific technology stack (Pitchero) that matches the target entity's profile (sports club management). The presence of this page in the dataset implies Colorno Rugby is either a customer, a prospect, or researching this specific solution for website, membership, and payment management. This signals a potential procurement intent for club management solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:28:59.686155",
+          "domain_explored": "https://leicestertigers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Entity Mismatch",
+            "Consumer-Facing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.377408027648926
+            }
+          ],
+          "reasoning": "The scraped content is from 'leicestertigers.com', which is a different entity (Leicester Tigers) than the target entity (Colorno Rugby). The content consists of sports news, match reports, and team announcements. There are no procurement signals, technology stacks, or governance patterns relevant to Colorno Rugby present in this data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:29:13.610795",
+          "domain_explored": "https://sport.unimore.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Reggiana Calcio (Women's team)",
+              "Collaboration with CUS More",
+              "CONI Agreement support structure",
+              "Sponsorship/Donation 'Unimore Sport Excellence'"
+            ]
+          },
+          "patterns_found": [
+            "Academic Partnership Ecosystem",
+            "Dual Career Program Structure",
+            "Regional Sports Collaboration (CUS More/Reggiana)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 327,
+              "elapsed_seconds": 4.7354350090026855
+            }
+          ],
+          "reasoning": "While this page belongs to the University of Modena and Reggio Emilia (Unimore) and not Colorno Rugby directly, it establishes a critical regional ecosystem. Colorno Rugby operates in the same province (Parma/Emilia-Romagna) and interacts with similar academic and sporting bodies (CUS). The page details the 'Unimore Sport Excellence' program, which supports high-level student-athletes. This indicates a structured regional approach to sports management and potential procurement for services supporting 'dual career' athletes, sports science research (Sport Lab), and event management (Festa dello Sport). Colorno Rugby may be a beneficiary or partner of such regional university initiatives."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:29:22.125460",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Interface",
+            "Irrelevant Historical Content",
+            "Consumer-Facing Tooling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.4361917972564697
+            }
+          ],
+          "reasoning": "The scraped content consists of generic marketing copy and user interface elements from Wikiwand, a Wikipedia wrapper tool. The text discusses features like 'Top Questions' and 'Timelines' using examples like Abraham Lincoln and Usain Bolt. There is absolutely no mention of Colorno Rugby, procurement activities, or relevant technology stacks specific to the entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:29:37.321222",
+          "domain_explored": "https://flashscore.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "Consumer-Facing Content",
+            "Gambling/Advertising Indicators",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 665,
+              "output_tokens": 179,
+              "elapsed_seconds": 8.517014026641846
+            }
+          ],
+          "reasoning": "The scraped content from Flashscore is a generic sports results aggregator containing gambling warnings and navigation menus. It provides no specific information regarding Colorno Rugby's internal operations, technology stack, or procurement activities. The content is purely consumer-facing and irrelevant to B2B intelligence gathering."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:29:46.379030",
+          "domain_explored": "https://livesport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "Consumer-Facing Content",
+            "High-Volume Data Stream",
+            "B2C Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 620,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.4132490158081055
+            }
+          ],
+          "reasoning": "The content consists of repetitive 'Loading...' and 'AD' markers typical of a high-frequency sports results aggregator (Livesport.com). This indicates a consumer-facing B2C platform focused on real-time scores rather than corporate procurement or B2B vendor activity. There is no signal of organizational intent or technology investment relevant to Colorno Rugby."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:29:57.037145",
+          "domain_explored": "https://rugbytours.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Sky High Sports (Rugby Tour Operator)",
+              "Service: Logistics and Travel Planning for Rugby Teams",
+              "Regional Context: Parma/Italy listed as key destination"
+            ]
+          },
+          "patterns_found": [
+            "Destination-Specific Service Provider",
+            "Sports Tourism Logistics",
+            "Regional Relevance (Parma/Italy)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1648,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.6482698917388916
+            }
+          ],
+          "reasoning": "The content identifies 'Sky High Sports' as a specialized tour operator for rugby teams. While the site is a commercial vendor site (not the target entity), it explicitly lists 'Parma' as a featured destination and 'Italy' as a key market. This indicates a potential vendor relationship or procurement need for Colorno Rugby (based in Colorno, near Parma) regarding travel logistics, hosting visiting teams, or organizing away tours. It confirms the existence of a specialized supply chain for rugby logistics in the region."
+        }
+      ],
+      "total_input_tokens": 8655,
+      "total_output_tokens": 1658,
+      "estimated_cost_usd": 0.050835
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colorno Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:29:57.038521"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281622",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:45.349468"
+}

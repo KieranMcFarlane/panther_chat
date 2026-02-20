@@ -1,0 +1,201 @@
+{
+  "entity_id": "gree-tour_of_guangxi",
+  "entity_name": "Gree-Tour of Guangxi",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "7cycling.com",
+    "protouchglobal.com",
+    "procyclingstats.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gree-tour_of_guangxi",
+      "entity_name": "Gree-Tour of Guangxi",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://7cycling.com",
+        "https://protouchglobal.com",
+        "https://procyclingstats.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Outsourced Operations Management",
+        "Financial & Controlling Services",
+        "Strategic Consulting Services",
+        "Vendor Partnership Confirmation"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gree-Tour of Guangxi may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:28:17.798550",
+          "domain_explored": "https://7cycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "7CAI (7Cycling Virtual Assistant) - AI/Chatbot",
+              "Insta360 (Camera Tech Partnership)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Title Sponsorship: COTTI COFFEE (2025 Tour of Guangxi)",
+              "Tech Partnership: Insta360 & UAE Team Emirates",
+              "Website Redesign: 'Currently in the process of redesigning and optimizing our website' indicates potential web development vendor engagement."
+            ]
+          },
+          "patterns_found": [
+            "Event Sponsorship & Branding",
+            "Media Rights & Content Distribution",
+            "Digital Transformation (AI Integration)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 292,
+              "elapsed_seconds": 5.7323009967803955
+            }
+          ],
+          "reasoning": "The content confirms the entity operates as a media entity ('7Cycling') covering the 'Tour of Guangxi'. While it is primarily a news source, the explicit mention of '7CAI-7Cycling Virtual Assistant' indicates a procurement or development activity related to AI technology. The mention of 'COTTI COFFEE' as a title sponsor confirms active sponsorship procurement cycles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:28:30.325306",
+          "domain_explored": "https://protouchglobal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Provider: ProTouchGlobal (Event Organization & Management)",
+              "Service Provider: ProTouchGlobal (Financial Services/Controlling/Accounting)",
+              "Service Provider: ProTouchGlobal (Strategic Consulting/Optimization)"
+            ]
+          },
+          "patterns_found": [
+            "Outsourced Operations Management",
+            "Financial & Controlling Services",
+            "Strategic Consulting Services",
+            "Vendor Partnership Confirmation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.6721746921539307
+            }
+          ],
+          "reasoning": "The content explicitly confirms that ProTouchGlobal is the operational partner for the 'Tour of Guangxi' (listed alongside Tour de Suisse). This is a direct procurement signal indicating that Gree-Tour of Guangxi outsources critical functions including event organization, financial controlling, and strategic consulting to this Swiss agency."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:28:41.265432",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Data Aggregation",
+            "Global Race Calendar (Non-Specific)",
+            "Consumer-Facing Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.302367925643921
+            }
+          ],
+          "reasoning": "The content from procyclingstats.com is a general results and calendar feed for global cycling (UCI races). It contains no specific references to 'Gree-Tour of Guangxi', its organizers, or local sponsors. The data is purely historical and statistical (race times, rider rankings) and does not reveal any procurement intent, technology stack, or vendor partnerships related to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:28:52.134309",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx (Event Scheduling)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Knowledge Base",
+            "Open Data Repository",
+            "Community-Driven Content",
+            "Generic Infrastructure (SPARQL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.9739949703216553
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a free and open knowledge base. While it mentions structured data and SPARQL services, these are public infrastructure features rather than specific procurement activities or business signals related to 'Gree-Tour of Guangxi'. There is no mention of the entity, specific event management vendors, or procurement cycles relevant to the target."
+        }
+      ],
+      "total_input_tokens": 5761,
+      "total_output_tokens": 957,
+      "estimated_cost_usd": 0.031638
+    },
+    "procurement_signals": [
+      "Outsourced Operations Management",
+      "Financial & Controlling Services",
+      "Strategic Consulting Services",
+      "Vendor Partnership Confirmation"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gree-Tour of Guangxi may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:28:52.136665"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.409613",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:34.494401"
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "entity_id": "test-entity-low-conf",
+    "signal_type": "RFP_DETECTED",
+    "confidence": 0.5,
+    "evidence": [
+      {
+        "source": "LinkedIn",
+        "credibility_score": 0.8
+      },
+      {
+        "source": "Perplexity",
+        "credibility_score": 0.7
+      },
+      {
+        "source": "Crunchbase",
+        "credibility_score": 0.9
+      }
+    ]
+  }
+]

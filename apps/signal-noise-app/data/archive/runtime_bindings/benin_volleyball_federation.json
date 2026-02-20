@@ -1,0 +1,218 @@
+{
+  "entity_id": "benin_volleyball_federation",
+  "entity_name": "Benin Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "theeagleonline.com.ng",
+    "triptap.com",
+    "gongnews.net",
+    "spanishdict.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ng.linkedin.com/jobs/view/volleyball-coach-at-pilgrim-africa-ltd-4221113464"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "benin_volleyball_federation",
+      "entity_name": "Benin Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ng.linkedin.com/jobs/view/volleyball-coach-at-pilgrim-africa-ltd-4221113464",
+        "https://theeagleonline.com.ng",
+        "https://gongnews.net",
+        "https://triptap.com",
+        "https://spanishdict.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Benin Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:54:51.197625",
+          "domain_explored": "https://theeagleonline.com.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Political news content",
+            "Irrelevant entity context (Nigerian politics vs. Benin Volleyball)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 710,
+              "output_tokens": 197,
+              "elapsed_seconds": 18.556791067123413
+            }
+          ],
+          "reasoning": "The provided content is a political news article from 'The Eagle Online' regarding the 2027 Nigerian presidential elections, specifically discussing the ADC party and figures like Atiku Abubakar and Peter Obi. This content is completely unrelated to the Benin Volleyball Federation, sports management, or procurement activities. It offers no actionable intelligence regarding the target entity's operations, technology stack, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:55:03.287901",
+          "domain_explored": "https://triptap.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Travel Services",
+            "Generic Destination Marketing",
+            "Consumer Booking Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 153,
+              "elapsed_seconds": 8.839257717132568
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer travel booking (flights, hotels, vacations) and destination marketing for locations like Los Angeles and Toronto. There is no mention of the Benin Volleyball Federation, sports governance, or B2B procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:55:12.042791",
+          "domain_explored": "https://gongnews.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Facebook, Instagram, Twitter, Vimeo, Youtube)",
+              "Likely WordPress or similar CMS (inferred from 'Log into your account' and category structures)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Geographic Irrelevance (Nigeria vs Benin)",
+            "Generic Content Management Structure (WordPress-like)",
+            "User Interface Artifacts (Login/Recovery loops)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.898952960968018
+            }
+          ],
+          "reasoning": "The scraped content reveals a general sports news portal focused on Nigerian events (Niger Delta Games, NVBF Super Cup). While 'NVBF' (Nigeria Volleyball Federation) appears, it is distinct from the target entity 'Benin Volleyball Federation'. The content consists of headlines and navigation elements with no technical infrastructure, procurement documentation, or specific organizational data related to Benin."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:55:19.084198",
+          "domain_explored": "https://spanishdict.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Gamification engines (Trophy/Progress tracking)",
+              "Consumer CMS",
+              "Translation APIs (Image/Document translation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Educational Interface",
+            "Gamification Elements (Trophies, Quizzes)",
+            "Consumer Marketing Language (Premium, Word of the Day)",
+            "Content Repetition (Scraping Artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.899411916732788
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing educational material (Spanish language lessons, vocabulary quizzes, and premium subscription prompts). There is no connection to the Benin Volleyball Federation, sports governance, or B2B procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:55:26.688912",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/volleyball-coach-at-pilgrim-africa-ltd-4221113464",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Volleyball Coach at Pilgrim Africa Ltd (Kaduna, Nigeria)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Nigeria vs Benin)",
+            "Entity Mismatch (Pilgrim Africa Ltd vs Benin Volleyball Federation)",
+            "B2C Recruitment Platform (LinkedIn)",
+            "Individual Profile Content (Coach Jonathan David Thaj)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.1027519702911377
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for a Volleyball Coach position located in Kaduna, Nigeria, posted by 'Pilgrim Africa Ltd'. While it mentions the 'Benin Republic' as the location of a past tournament (Africa Zone U17 Nations Championship), the entity of interest is the Benin Volleyball Federation (the governing body in Benin), not a Nigerian company or a coach who won a medal *in* Benin. There are no procurement signals, technology stacks, or governance patterns relevant to the Federation's operations or vendor needs."
+        }
+      ],
+      "total_input_tokens": 6697,
+      "total_output_tokens": 1106,
+      "estimated_cost_usd": 0.036681000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Benin Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:55:26.690329"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334227",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:09.603394"
+}

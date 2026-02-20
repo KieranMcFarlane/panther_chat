@@ -1,0 +1,120 @@
+{
+  "entity_id": "the_hundred_(men)",
+  "entity_name": "The Hundred (Men)",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "thehundred.com",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "the_hundred_(men)",
+      "entity_name": "The Hundred (Men)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://thehundred.com",
+        "https://espncricinfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "The Hundred (Men) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:17:43.635663",
+          "domain_explored": "https://thehundred.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms",
+              "CRM Systems (Fan data capture)",
+              "Web CMS (Content management for news/fixtures)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket Registration System Activation (2026 Tickets)",
+              "Operational readiness for 'Eight new look teams' (Logistics/Merchandising)",
+              "Management of 'Auction and increase salaries' (Financial/HR Systems)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing & CRM Activation",
+            "Event Management & Operational Readiness",
+            "Fan Engagement Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.1437442302703857
+            }
+          ],
+          "reasoning": "The content confirms the operational launch of the 2026 season. While there are no explicit RFPs, the 'Register your interest' call to action for tickets indicates active utilization and potential procurement needs for CRM, ticketing platforms, and marketing automation tools to handle the demand for the new look teams."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:17:54.181054",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Coverage",
+            "Live Match Scores",
+            "Editorial Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.4006478786468506
+            }
+          ],
+          "reasoning": "The scraped content is from the ESPNcricinfo homepage, which provides general cricket news, live scores, and match schedules (T20 World Cup, WPL, Ranji Trophy). There is no mention of 'The Hundred (Men)', the ECB, or any procurement-related activities such as tenders, job postings, or technology investments specific to the target entity."
+        }
+      ],
+      "total_input_tokens": 2772,
+      "total_output_tokens": 446,
+      "estimated_cost_usd": 0.015006
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "The Hundred (Men) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:17:54.182758"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417168",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:12.727702"
+}

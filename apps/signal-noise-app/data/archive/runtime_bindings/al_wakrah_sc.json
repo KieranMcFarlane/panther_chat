@@ -1,0 +1,151 @@
+{
+  "entity_id": "al_wakrah_sc",
+  "entity_name": "Al Wakrah SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "alwakrahsc.qa",
+    "snapchat.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_wakrah_sc",
+      "entity_name": "Al Wakrah SC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://snapchat.com",
+        "https://alwakrahsc.qa",
+        "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Wakrah SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:58:28.095425",
+          "domain_explored": "https://alwakrahsc.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Content Management",
+            "League Table Display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 146,
+              "elapsed_seconds": 2.383924961090088
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports operational data: match schedules, league standings (QSL Stars League), player rosters, and news updates. There are no explicit procurement signals, job postings, or technology infrastructure details visible in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:58:34.014610",
+          "domain_explored": "https://snapchat.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Social Media Platform Content",
+            "Mobile App Deep Linking",
+            "Consumer Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 527,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.4900238513946533
+            }
+          ],
+          "reasoning": "The content provided is from the public consumer-facing homepage of Snapchat (Snap Inc.), a social media platform. It contains download links, copyright notices, and app store redirection parameters. There is absolutely no relationship between this content and Al Wakrah SC, nor does it contain any procurement signals, corporate governance data, or technology stack information relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:58:41.104549",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Soccer Coach for Women's Team",
+                "entity": "Yeshiva University",
+                "location": "New York, USA",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Job Posting",
+            "Third-Party Content Aggregator",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.656132221221924
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post from 'Futboljobs.com' advertising a coaching position at Yeshiva University in New York. This is completely unrelated to Al Wakrah SC (Qatar) and contains no procurement signals, technology stack information, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3342,
+      "total_output_tokens": 549,
+      "estimated_cost_usd": 0.018261
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Wakrah SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:58:41.106425"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220684",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:17.144285"
+}

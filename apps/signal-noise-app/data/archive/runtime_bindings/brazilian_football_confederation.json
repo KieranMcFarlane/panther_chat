@@ -1,0 +1,193 @@
+{
+  "entity_id": "brazilian_football_confederation",
+  "entity_name": "Brazilian Football Confederation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "business-humanrights.org",
+    "tandfonline.com",
+    "sponsorship.sportbusiness.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brazilian_football_confederation",
+      "entity_name": "Brazilian Football Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://business-humanrights.org",
+        "https://sponsorship.sportbusiness.com",
+        "https://tandfonline.com",
+        "https://inside.fifa.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brazilian Football Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:11:57.177814",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "General Sports News Content",
+            "Global Governance Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.827974796295166
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal (inside.fifa.com) and focuses on the FIFA Women's Champions Cup and general FIFA governance initiatives (FIFA Forward). It contains no information regarding the Brazilian Football Confederation (CBF), its specific technology stack, or its procurement activities. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:12:06.596071",
+          "domain_explored": "https://business-humanrights.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "NGO/Advocacy Context",
+            "Secondary Research Source"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.830613851547241
+            }
+          ],
+          "reasoning": "The content is from the Business & Human Rights Resource Centre (BHRRC), an independent NGO focused on tracking corporate human rights abuses. While the BHRRC tracks companies globally, the content itself is a navigation hub for their research and advocacy tools, not a procurement portal or a corporate site for the Brazilian Football Confederation (CBF). There is no direct signal of CBF's purchasing intent or technology stack here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:12:39.683064",
+          "domain_explored": "https://tandfonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:12:50.363139",
+          "domain_explored": "https://sponsorship.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Secondary Market Research",
+            "Global Sports Industry News",
+            "Sponsorship Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.2097890377044678
+            }
+          ],
+          "reasoning": "The content is a general industry news feed covering global sports sponsorships (NBA, F1, Rugby, European clubs). There is no mention of the Brazilian Football Confederation (CBF), Brazilian vendors, or specific procurement activities related to the entity. The source provides market context but lacks direct signals for CBF procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:13:01.463228",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Platform Content",
+            "Community/Encyclopedic Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.6217641830444336
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage and documentation for Wikidata, a Wikimedia project. While the Brazilian Football Confederation (CBF) may have an entity page on Wikidata (e.g., Q1150315), the content analyzed describes the platform itself (SPARQL, editing, community events) rather than CBF's specific procurement activities, technology stack, or governance decisions. It is a secondary data source, not a primary source for procurement signals."
+        }
+      ],
+      "total_input_tokens": 5802,
+      "total_output_tokens": 759,
+      "estimated_cost_usd": 0.028791
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brazilian Football Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:13:01.492415"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204805",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:07.259626"
+}

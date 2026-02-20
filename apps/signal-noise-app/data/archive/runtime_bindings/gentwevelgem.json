@@ -1,0 +1,306 @@
+{
+  "entity_id": "gent\u0096wevelgem",
+  "entity_name": "Gent\u0096Wevelgem",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "gent-wevelgem.be",
+    "inflandersfieldsmiddelkerkewevelgem.be",
+    "flandersclassics.be",
+    "equipecycliste-groupama-fdj.fr",
+    "idlprocycling.com",
+    "inflandersfieldscyclo.be",
+    "cyclinginflanders.cc"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gent\u0096wevelgem",
+      "entity_name": "Gent\u0096Wevelgem",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://inflandersfieldsmiddelkerkewevelgem.be",
+        "https://equipecycliste-groupama-fdj.fr",
+        "https://cyclinginflanders.cc",
+        "https://flandersclassics.be",
+        "https://idlprocycling.com",
+        "https://gent-wevelgem.be",
+        "https://inflandersfieldscyclo.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gent\u0096Wevelgem may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:26:41.657448",
+          "domain_explored": "https://gent-wevelgem.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - likely custom or WordPress (implied by site structure)",
+              "Event Registration Platforms (implied by 'Schrijf je nu in')",
+              "Lead Generation Forms (Partner brochure download)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospitality & Catering RFPs (Implied by 'VIP formulas' and 'netwerken')",
+              "Marketing & Sponsorship Agencies (Active partner acquisition)",
+              "Infrastructure/Security Services (Long-term event contract until 2031)",
+              "Merchandising (Implied by partnership activities)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Hospitality",
+            "Long-term Strategic Planning (2031)",
+            "Sponsorship & Partnership Acquisition",
+            "Digital Marketing & Lead Generation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 389,
+              "elapsed_seconds": 4.2819859981536865
+            }
+          ],
+          "reasoning": "The content is primarily promotional for the 2026 event ('In Flanders Fields - from Middelkerke to Wevelgem'). While it does not list explicit RFPs, it reveals significant operational scale and intent. The explicit mention of a contract extension until 'at least 2031' signals long-term stability and potential for infrastructure/service contracts. The repeated calls to action for 'VIP formulas', 'partner brochures', and 'business opportunities' indicate active procurement for hospitality vendors, sponsorship management, and B2B marketing services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:26:54.401141",
+          "domain_explored": "https://inflandersfieldsmiddelkerkewevelgem.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active solicitation for VIP and Hospitality partners ('Beleef de koers als vipgast')",
+              "Distribution of 'Partner Brochure' for B2B engagement",
+              "Long-term venue contract confirmed: Wevelgem secured as arrival location until at least 2031",
+              "Route change management: Middelkerke secured as new start location for men's race",
+              "Event infrastructure planning for Cyclo-tourist event (Cyclo In Flanders Fields)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Hospitality",
+            "Long-term Strategic Planning (2031)",
+            "Sponsorship & Partnership Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 332,
+              "elapsed_seconds": 9.64780592918396
+            }
+          ],
+          "reasoning": "The content confirms the strategic importance of the event (extended to 2031) and highlights commercial activities (VIP hospitality, sponsorship). However, the text is primarily marketing copy aimed at participants and partners rather than operational procurement signals (RFPs, tech stack details). The 'Download partner brochure' and 'Contact us' calls to action indicate active commercial partnership management, but specific technology procurement signals are absent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:27:00.613154",
+          "domain_explored": "https://flandersclassics.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Goodiebag platform (Marketing Tech)",
+              "Web CMS (Site content management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RFP/Partnership solicitation: 'Partner worden' (Become a Partner) CTAs",
+              "Event Infrastructure: 2027 UCI Cyclo-cross World Championships organization",
+              "Hospitality Procurement: 'Hospitalityaanbod' management"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Hospitality",
+            "Sponsorship & Partnership Acquisition",
+            "Long-term Strategic Planning (2027)",
+            "Digital Engagement (Digital Goodiebag)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 356,
+              "elapsed_seconds": 3.006052017211914
+            }
+          ],
+          "reasoning": "The content confirms Flanders Classics as the overarching organizing body for the Gent-Wevelgem event ('In Flanders Fields - from Middelkerke to Wevelgem'). While the site is heavily B2B marketing focused (selling partnerships/hospitality), it reveals specific procurement-relevant activities: the organization of the 2027 UCI Cyclo-cross World Championships (requiring infrastructure/tech vendors) and the use of 'Digital Goodiebag' campaigns (indicating marketing technology/digital platform usage). It confirms the entity operates within a larger portfolio of events, suggesting centralized procurement opportunities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:27:05.638931",
+          "domain_explored": "https://equipecycliste-groupama-fdj.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Management",
+            "Roster Management",
+            "Event Calendar (Participation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 183,
+              "elapsed_seconds": 1.924335241317749
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Equipe Cycliste Groupama-FDJ', which is a professional cycling team (a participant in the Gent-Wevelgem race), not the race organizer (Flanders Classics). The content focuses on rider profiles, race schedules, and team news. There are no procurement signals, technology stacks, or governance patterns relevant to the organization of the Gent-Wevelgem event."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:27:12.150636",
+          "domain_explored": "https://idlprocycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Growth Editor IDL Procycling (Media/Editorial role)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News & Media",
+            "Job Postings (Media Sector)",
+            "Race Results & Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.953397035598755
+            }
+          ],
+          "reasoning": "The scraped content from idlprocycling.com is a cycling news outlet. While it contains a 'Vacancy' for a Growth Editor, this is a media role for the publisher itself, not a procurement signal for the Gent-Wevelgem event organization. The content focuses on race results (Mathieu van der Poel, Remco Evenepoel) and general cycling industry news, providing no actionable intelligence regarding Gent-Wevelgem's vendor needs, technology stack, or governance."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:27:21.291684",
+          "domain_explored": "https://inflandersfieldscyclo.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Manager (CMP)",
+              "Google Analytics (implied by 'Statistieken')",
+              "Marketing Automation/Tracking (implied by 'Marketing')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of third-party data vendors",
+              "Compliance tooling (GDPR)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Hospitality",
+            "GDPR/Compliance Management",
+            "Vendor Management (Cookie Consent)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1627,
+              "output_tokens": 264,
+              "elapsed_seconds": 6.274350881576538
+            }
+          ],
+          "reasoning": "The content is almost exclusively a Cookie Consent Management (CMP) overlay. While this indicates the entity uses digital tools and manages vendor relationships (for cookies/tracking), it provides no specific information on internal procurement, job openings, or strategic sourcing beyond the existence of a 'vendor_count' variable. It confirms the entity operates a digital presence requiring compliance tools."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:27:31.791411",
+          "domain_explored": "https://cyclinginflanders.cc",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Strava (Integration)",
+              "Social Media Widgets (Facebook, Twitter, LinkedIn, WhatsApp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External Tourism Partnerships (VisitFlanders, FlandersByBike)"
+            ]
+          },
+          "patterns_found": [
+            "Tourism & Route Promotion",
+            "Bikepacking & Leisure Cycling",
+            "Event Calendar (Consumer Facing)",
+            "External Linkage (VisitFlanders)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1681,
+              "output_tokens": 231,
+              "elapsed_seconds": 6.0028979778289795
+            }
+          ],
+          "reasoning": "The content is a consumer-facing tourism guide ('Cycling in Flanders') focused on route planning, bikepacking, and travel tips. While it mentions 'Gent-Wevelgem' as a route name, it is not the official event organizer site and shows no signs of B2B procurement activity, vendor management, or corporate governance."
+        }
+      ],
+      "total_input_tokens": 10669,
+      "total_output_tokens": 1973,
+      "estimated_cost_usd": 0.061602000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gent\u0096Wevelgem may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:27:31.793922"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.399518",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:00.860472"
+}

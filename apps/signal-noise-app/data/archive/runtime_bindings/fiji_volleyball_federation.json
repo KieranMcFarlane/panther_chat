@@ -1,0 +1,126 @@
+{
+  "entity_id": "fiji_volleyball_federation",
+  "entity_name": "Fiji Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "fijivolleyballfederation.weebly.com",
+    "fasanoc.org.fj"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiji_volleyball_federation",
+      "entity_name": "Fiji Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fasanoc.org.fj",
+        "https://fijivolleyballfederation.weebly.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fiji Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:47:59.228650",
+          "domain_explored": "https://fijivolleyballfederation.weebly.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Weebly (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static web presence (Weebly CMS)",
+            "Content focus on historical match results",
+            "Outdated website structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.239511013031006
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of historical match reports (scores, game commentary) and generic 'About' text. There is no mention of business operations, technology needs, job openings, or organizational governance. The site is built on Weebly, indicating a low-cost, non-technical setup with no immediate enterprise procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:48:16.839832",
+          "domain_explored": "https://fasanoc.org.fj",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webflow (CMS)",
+              "Website Files (CDN)"
+            ],
+            "job_postings": [
+              "International Coaching Enrichment Certificate Program (ICECP) - Nominations invited"
+            ],
+            "procurement_indicators": [
+              "FASANOC Strategic Plan 2022-2032 (PDF available)",
+              "Olympic Solidarity Funding / Scholarships",
+              "Athletes and Communities Engagement (ACE) Programme",
+              "Commonwealth Games Creative Design Call (Vendor/Contest opportunity)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Planning (2022-2032)",
+            "Olympic Solidarity (OS) Scholarship Nominations",
+            "Flagship Programme Management (ACE)",
+            "Safeguarding Officer Certification",
+            "Commonwealth Games Engagement (Design Contests)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 386,
+              "elapsed_seconds": 3.6530699729919434
+            }
+          ],
+          "reasoning": "While the target entity is the Fiji Volleyball Federation (FVF), this content represents their governing body, the Association of National Olympic Committees (FASANOC). The discovery of the 'Strategic Plan 2022-2032' and active 'Olympic Solidarity' scholarship programs indicates a structured flow of funds and technical support from the top down. Although no direct VVF procurement is visible, FASANOC acts as the primary procurement and funding hub for national federations. The 'Call for Nominations' for coaching scholarships suggests a pathway for vendor-funded training or services."
+        }
+      ],
+      "total_input_tokens": 2790,
+      "total_output_tokens": 576,
+      "estimated_cost_usd": 0.01701
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fiji Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:48:16.841518"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.340735",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:49.113043"
+}

@@ -1,0 +1,431 @@
+{
+  "entity_id": "cadillac_racing",
+  "entity_name": "Cadillac Racing",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "cadillac.com",
+    "cadillaceurope.com",
+    "cadillacvclub.com",
+    "news.cadillac.com",
+    "gmcompanystore.com",
+    "news.gm.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-lensa-4367376183",
+      "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-general-motors-4359429083",
+      "https://www.linkedin.com/jobs/view/assistant-marketing-manager-at-general-motors-4363623573"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cadillac_racing",
+      "entity_name": "Cadillac Racing",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://cadillac.com",
+        "https://cadillaceurope.com",
+        "https://www.linkedin.com/jobs/view/assistant-marketing-manager-at-general-motors-4363623573",
+        "https://news.gm.com",
+        "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-lensa-4367376183",
+        "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-general-motors-4359429083",
+        "https://cadillacvclub.com",
+        "https://news.cadillac.com",
+        "https://gmcompanystore.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Technical Resource Procurement",
+        "Propulsion Systems Calibration",
+        "Cross-Program Collaboration (Cadillac Racing)",
+        "High-Fidelity Simulation & Data Analytics",
+        "Trackside Engineering Support",
+        "Cross-Program Technical Collaboration (Corvette/Cadillac)",
+        "Propulsion Systems Calibration Procurement",
+        "Simulation-to-Track Data Correlation",
+        "High-Performance Tooling & Infrastructure (HIL/DIL)",
+        "Global Logistics & Travel Management",
+        "F1 Marketing Strategic Integration",
+        "Dealer Network Activation & Tooling",
+        "Licensing & Merchandising Management",
+        "Co-Marketing Partnership Procurement",
+        "Luxury Event Execution"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cadillac Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:55:35.566476",
+          "domain_explored": "https://cadillac.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Automation (UTM tracking detected: utm_source, utm_medium, utm_campaign, utm_key)",
+              "Partnership Management Platforms (Costco Auto Program integration)",
+              "Digital Asset Management (F1 Team Liveries)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active RFP/Contract execution for Costco Auto Program (Q1 2026 timeframe)",
+              "Investment in F1 Racing operations and branding assets",
+              "EV Infrastructure partnerships (GM PowerUp 2 Home Charger promotion)"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Partnership Activation",
+            "Consumer Incentive Program Management",
+            "F1 Brand Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 307,
+              "elapsed_seconds": 4.602460861206055
+            }
+          ],
+          "reasoning": "The content reveals an active marketing partnership with Costco Auto Program and the promotion of the Cadillac Formula 1 team. While not direct procurement of internal software, these signals indicate active investment in partnership management platforms, marketing automation for incentive tracking, and digital asset management for the F1 brand launch."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:55:47.315997",
+          "domain_explored": "https://cadillaceurope.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Pan-European Digital Infrastructure: Implies need for localized CMS/CDN, but no vendors listed."
+            ]
+          },
+          "patterns_found": [
+            "Regional Market Entry Strategy",
+            "Digital Localization",
+            "Consumer-Facing Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 882,
+              "output_tokens": 190,
+              "elapsed_seconds": 6.705654144287109
+            }
+          ],
+          "reasoning": "The content is a high-level geographic gateway page for Cadillac Europe. It focuses entirely on consumer navigation (selecting countries to view SUVs) and lacks any corporate, operational, or technical depth required to identify procurement signals, vendor stacks, or governance structures."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:55:57.327184",
+          "domain_explored": "https://cadillacvclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Flickr (Media Hosting)",
+              "Slideshows (Legacy Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "V-Performance Academy (External Event Partnership)",
+              "Logo Apparel Catalog (Merchandising)",
+              "V-Corral Access (Hospitality Management)"
+            ]
+          },
+          "patterns_found": [
+            "Community-Driven Governance",
+            "Amateur Racing Support Structure",
+            "Third-Party Event Coordination"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 283,
+              "elapsed_seconds": 5.074869155883789
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as the 'Cadillac V-Club,' an independent owner's community, not the corporate 'Cadillac Racing' division. While the site discusses Cadillac Racing results and the V-Performance Academy, it does so from the perspective of a fan club organizing amateur track events ('V-Corrals') and merchandise. There is no evidence of corporate procurement activity, supply chain management, or enterprise technology adoption; the site functions as a niche community portal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:56:04.335708",
+          "domain_explored": "https://news.cadillac.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Media Asset Management (MAM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Public Relations Content Management",
+            "Media Relations Portal",
+            "Brand Journalism Infrastructure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1006,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.6584298610687256
+            }
+          ],
+          "reasoning": "The content is exclusively focused on media relations and the 'Cadillac Pressroom'. It represents a public-facing news aggregation layer rather than a procurement or operational hub. There are no signals regarding vendor selection, supply chain management, or technology acquisition relevant to Cadillac Racing operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:56:11.275485",
+          "domain_explored": "https://gmcompanystore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify/Salesforce Commerce Cloud derived structure)",
+              "Digital Asset Management (Product Imaging)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Clearance Strategy (Sale pricing up to 30-34% off)"
+            ]
+          },
+          "patterns_found": [
+            "Direct-to-Consumer Retail Interface",
+            "Generic Branded Merchandise Catalog",
+            "Standard E-commerce Transactional Flow"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.435492992401123
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer-facing retail transactions for Chevrolet branded apparel (hoodies, t-shirts, caps). It lacks any strategic context regarding Cadillac Racing operations, high-performance engineering, or B2B procurement activities. The presence of Chevrolet products on a GM Company Store further dilutes relevance to the specific Cadillac Racing entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:56:22.030972",
+          "domain_explored": "https://news.gm.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Corporate Brand Journalism",
+            "Employee Engagement Content",
+            "Historical Asset Management",
+            "Generic CMS Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 190,
+              "elapsed_seconds": 7.340871095657349
+            }
+          ],
+          "reasoning": "The scraped content from news.gm.com is exclusively focused on corporate storytelling ('Retro Rides', 'On the Job') and public relations. It lacks specific mentions of Cadillac Racing operations, procurement needs, or vendor management. The content is high-level brand positioning rather than operational intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:56:32.276858",
+          "domain_explored": "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-lensa-4367376183",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HIL (Hardware-in-the-Loop)",
+              "DIL (Driver-in-the-Loop)",
+              "Propulsion Control Systems",
+              "Dyno Testing Equipment",
+              "Real-time Data Telemetry"
+            ],
+            "job_postings": [
+              "Motorsports Senior Race Engine Calibration, Development & Track Support Engineer (Pontiac, MI)"
+            ],
+            "procurement_indicators": [
+              "Hiring for specialized technical roles (Human Capital Procurement)",
+              "Investment in analytical tool development",
+              "Requirement for international travel logistics support",
+              "Collaboration with external partner teams"
+            ]
+          },
+          "patterns_found": [
+            "Technical Resource Procurement",
+            "Propulsion Systems Calibration",
+            "Cross-Program Collaboration (Cadillac Racing)",
+            "High-Fidelity Simulation & Data Analytics",
+            "Trackside Engineering Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1690,
+              "output_tokens": 376,
+              "elapsed_seconds": 6.35017204284668
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a Senior Race Engineer within GM's motorsports division. It explicitly mentions collaboration with 'Cadillac Racing colleagues' and outlines the procurement of specialized human capital to manage complex propulsion systems, data analysis tools, and simulation environments (HIL/DIL). This indicates active investment in the technical infrastructure required to support the racing program."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:56:41.376119",
+          "domain_explored": "https://www.linkedin.com/jobs/view/motorsports-senior-race-engine-calibration-development-track-support-engineer-at-general-motors-4359429083",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HIL (Hardware-in-the-Loop)",
+              "DIL (Driver-in-the-Loop)",
+              "Propulsion Control Systems",
+              "Data Analytics & Telemetry Platforms",
+              "Simulation Software"
+            ],
+            "job_postings": [
+              "Motorsports Senior Race Engine Calibration, Development & Track Support Engineer (Pontiac, MI)"
+            ],
+            "procurement_indicators": [
+              "Cross-program knowledge transfer between Corvette and Cadillac Racing",
+              "Procurement of dyno testing and validation facilities",
+              "Acquisition of analytical modeling tools",
+              "Vendor management for 'key internal and external partners'",
+              "Logistics procurement for extensive domestic/international travel"
+            ]
+          },
+          "patterns_found": [
+            "Cross-Program Technical Collaboration (Corvette/Cadillac)",
+            "Propulsion Systems Calibration Procurement",
+            "Simulation-to-Track Data Correlation",
+            "High-Performance Tooling & Infrastructure (HIL/DIL)",
+            "Global Logistics & Travel Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 413,
+              "elapsed_seconds": 5.014128923416138
+            }
+          ],
+          "reasoning": "The job posting explicitly mentions collaboration with 'Cadillac Racing colleagues' to share learnings, confirming a direct operational link between the Corvette GT3 and Cadillac Racing programs. It reveals a heavy reliance on specialized hardware (HIL/DIL), analytical software, and extensive logistical support for international racing events, indicating active procurement needs for engineering tools and travel services."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:57:16.926837",
+          "domain_explored": "https://www.linkedin.com/jobs/view/assistant-marketing-manager-at-general-motors-4363623573",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Marketing Manager (F1 Marketing Team) - General Motors"
+            ],
+            "procurement_indicators": [
+              "Solicitation of dealer tool kits and GTM materials",
+              "Management of external licensing partners (e.g., Hilfiger)",
+              "Evaluation of co-marketing opportunities from CF1 sponsors",
+              "Procurement of event support services (Hospitality/Vehicle display)"
+            ]
+          },
+          "patterns_found": [
+            "F1 Marketing Strategic Integration",
+            "Dealer Network Activation & Tooling",
+            "Licensing & Merchandising Management",
+            "Co-Marketing Partnership Procurement",
+            "Luxury Event Execution"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1854,
+              "output_tokens": 321,
+              "elapsed_seconds": 31.4655339717865
+            }
+          ],
+          "reasoning": "This job posting is a direct procurement signal for Cadillac Racing's F1 entry. It reveals a specific 'F1 Marketing Team' within GM/Cadillac and outlines the need for third-party services to support dealer activation, licensing (e.g., Tommy Hilfiger), and event management. The role requires managing 'co-marketing opportunities' and 'dealer tool kits,' indicating an active procurement phase for marketing vendors and materials."
+        }
+      ],
+      "total_input_tokens": 13194,
+      "total_output_tokens": 2527,
+      "estimated_cost_usd": 0.077487
+    },
+    "procurement_signals": [
+      "Technical Resource Procurement",
+      "Propulsion Systems Calibration",
+      "Cross-Program Collaboration (Cadillac Racing)",
+      "High-Fidelity Simulation & Data Analytics",
+      "Trackside Engineering Support",
+      "Cross-Program Technical Collaboration (Corvette/Cadillac)",
+      "Propulsion Systems Calibration Procurement",
+      "Simulation-to-Track Data Correlation",
+      "High-Performance Tooling & Infrastructure (HIL/DIL)",
+      "Global Logistics & Travel Management",
+      "F1 Marketing Strategic Integration",
+      "Dealer Network Activation & Tooling",
+      "Licensing & Merchandising Management",
+      "Co-Marketing Partnership Procurement",
+      "Luxury Event Execution"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cadillac Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:57:16.929930"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364423",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:14.529588"
+}

@@ -1,0 +1,118 @@
+{
+  "entity_id": "antalyaspor",
+  "entity_name": "Antalyaspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "antalyaspor.com.tr",
+    "lensdatabase.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "antalyaspor",
+      "entity_name": "Antalyaspor",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://lensdatabase.fr",
+        "https://antalyaspor.com.tr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Antalyaspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:52:24.109880",
+          "domain_explored": "https://antalyaspor.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Content Management System (CMS)",
+              "Web Server (IIS - inferred from URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Sponsorship Portfolio (Hesap.com, Alag\u00f6z Holding, Ziraat)",
+              "Marketing Operations (Match scheduling and content publishing)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Branding Integration",
+            "Content Management System (CMS) Artifacts",
+            "Seasonal Event Scheduling"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.4098150730133057
+            }
+          ],
+          "reasoning": "The content is scraped from the public-facing news section and focuses on sports results and coaching changes. However, it reveals strong commercial partnerships (Hesap.com, Alag\u00f6z Holding, Ziraat) and indicates the use of a web CMS. While there are no direct RFPs, the presence of multiple active sponsors suggests a potential for procurement related to CRM, marketing automation, or partnership management tools to manage these relationships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:52:33.529690",
+          "domain_explored": "https://lensdatabase.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Competitor Entity Data",
+            "Statistical Database"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 429,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.289402723312378
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'lensdatabase.fr', a site dedicated to the French football club RC Lens. This is completely irrelevant to the target entity, Antalyaspor. There are no procurement signals, technology stacks, or governance patterns applicable to the target."
+        }
+      ],
+      "total_input_tokens": 1785,
+      "total_output_tokens": 430,
+      "estimated_cost_usd": 0.011805
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Antalyaspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:52:33.530803"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.147747",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:13.312913"
+}

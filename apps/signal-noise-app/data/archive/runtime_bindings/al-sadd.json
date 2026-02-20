@@ -1,0 +1,204 @@
+{
+  "entity_id": "al-sadd",
+  "entity_name": "Al-Sadd",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "al-saddclub.com",
+    "portal.1969.qa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ug.linkedin.com/company/qatar-jobs-gulf-jobs?trk=public_profile_experience-item_profile-section-card_image-click",
+      "https://www.linkedin.com/jobs/view/4319282066/"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-sadd",
+      "entity_name": "Al-Sadd",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://portal.1969.qa",
+        "https://ug.linkedin.com/company/qatar-jobs-gulf-jobs?trk=public_profile_experience-item_profile-section-card_image-click",
+        "https://al-saddclub.com",
+        "https://www.linkedin.com/jobs/view/4319282066/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Sadd may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:46:28.260047",
+          "domain_explored": "https://al-saddclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Storefront)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal: Doha Bank (League Naming Rights)"
+            ]
+          },
+          "patterns_found": [
+            "Standard Sports Content Management",
+            "E-commerce Integration (ALSADD STORE)",
+            "Sponsorship Visibility (Doha Bank Starts League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.2211852073669434
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports fixtures, results, and player merchandise. While the presence of an 'ALSADD STORE' indicates an e-commerce platform, there are no explicit signals regarding new procurement, technology stack changes, or vendor partnerships in this specific dataset."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:46:34.290976",
+          "domain_explored": "https://portal.1969.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Client-side Slideshow/Carousel (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Digital Asset Management (Slideshow/Carousel)",
+            "Legacy Web Architecture (Portal Subdomain)",
+            "Historical Branding (1969 reference)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 440,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.962777853012085
+            }
+          ],
+          "reasoning": "The scraped content represents the frontend markup of a generic image slideshow (Previous/Next controls) on a 'portal' subdomain. This indicates a legacy content delivery mechanism rather than a procurement or operational system. There are no keywords, forms, or contextual data related to purchasing, hiring, or technology infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:46:43.850706",
+          "domain_explored": "https://ug.linkedin.com/company/qatar-jobs-gulf-jobs?trk=public_profile_experience-item_profile-section-card_image-click",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Procurement Engineer (Construction/General)",
+              "Project Engineer",
+              "Electrical Engineer",
+              "Coordinator (Arabic speaking)",
+              "Document Controller",
+              "Accountant",
+              "Draftsman",
+              "Quantity Surveyor",
+              "Admin",
+              "Supervisor/Manager"
+            ],
+            "procurement_indicators": [
+              "Mention of 'Procurement Engineer' role (Context: Construction/General, not Al-Sadd specific)"
+            ]
+          },
+          "patterns_found": [
+            "Generic Job Aggregator",
+            "High Volume/Low Specificity Recruitment",
+            "Third-Party URL Redirection (qatarjobseekers.com)",
+            "Unrelated Sector Roles (Construction/Admin)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 348,
+              "elapsed_seconds": 5.797560691833496
+            }
+          ],
+          "reasoning": "The analyzed content belongs to a generic job aggregation entity ('Jobs In Qatar') rather than Al-Sadd Sports Club. While the page mentions a 'Procurement engineer' role, this is within the context of large-scale construction (Project engineer context) and is not specific to Al-Sadd. The entity acts as a third-party advertiser redirecting users to an external domain (qatarjobseekers.com). There is no direct link to Al-Sadd's procurement operations, technology stack, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:46:52.096040",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4319282066/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Sales Manager",
+                "entity": "Accor / La Cigale Hotel",
+                "location": "Doha, Qatar",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Accor vs Al-Sadd)",
+            "Geographic Proximity (Al Sadd Metro Station)",
+            "Hospitality Sector Focus",
+            "Standard HR Recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.653818845748901
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Accor' (specifically La Cigale Hotel), not 'Al-Sadd'. While the description mentions proximity to 'Al Sadd Metro Station', this is a geographic reference to the district in Doha, not the sports club entity. The content is standard hospitality recruitment material with no relevance to Al-Sadd Club's procurement or technology stack."
+        }
+      ],
+      "total_input_tokens": 4849,
+      "total_output_tokens": 1008,
+      "estimated_cost_usd": 0.029667
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Sadd may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:46:52.097680"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358561",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:39.720622"
+}

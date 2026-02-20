@@ -1,0 +1,30 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "boca_juniors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "river_plate",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "racing_club",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "independiente",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_sociedad",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-01-31T22:52:53.147995",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-31T22:52:53.193656"
+}

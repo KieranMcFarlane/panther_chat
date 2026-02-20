@@ -1,0 +1,260 @@
+{
+  "entity_id": "thw_kiel",
+  "entity_name": "THW Kiel",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "thw-handball.de",
+    "thw-fanshop.de",
+    "thwkiel.de",
+    "thw-junioren.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/student-assistant-jobs-kiel",
+      "https://www.linkedin.com/jobs/student-jobs-kiel"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "thw_kiel",
+      "entity_name": "THW Kiel",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://thw-fanshop.de",
+        "https://www.linkedin.com/jobs/student-jobs-kiel",
+        "https://thw-junioren.de",
+        "https://thw-handball.de",
+        "https://thwkiel.de",
+        "https://be.linkedin.com/jobs/student-assistant-jobs-kiel"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "THW Kiel may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:03:45.371977",
+          "domain_explored": "https://thw-handball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket Sales Operations (Derby vs Flensburg)"
+            ]
+          },
+          "patterns_found": [
+            "Sports/Entertainment Content",
+            "Ticketing Operations",
+            "Sponsorship Branding (Zebra)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.379565715789795
+            }
+          ],
+          "reasoning": "The scraped content consists of sports news headlines, match results, and ticketing information. There are no explicit signals regarding procurement, technology acquisition, or corporate governance. The mention of 'Zebra' refers to a sponsorship perspective (Zebra Technologies is a known sponsor), not a procurement signal in this context."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:03:51.621876",
+          "domain_explored": "https://thw-fanshop.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure: /products/, /collections/)",
+              "PUMA (Supplier/Brand Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Operations",
+            "Merchandise Management",
+            "Inventory Liquidation (Sale)",
+            "Product Lifecycle Management (Season 25/26)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.207767963409424
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing B2C e-commerce data (product listings, prices, discounts). It confirms the entity operates a web store but provides zero insight into backend procurement, vendor selection, or technology acquisition."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:03:57.944214",
+          "domain_explored": "https://thwkiel.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy PHP parameters (mandat=...)",
+              "Static HTML structure",
+              "Social Media Sharing (Facebook, Twitter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Supporter section (Passive income, not active procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Sports Club Structure",
+            "Multi-Discipline Departments (Badminton, Tennis, etc.)",
+            "Legacy Web Presence",
+            "Sponsorship Acknowledgments"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.181903123855591
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'thwkiel.de' belongs to the 'Turnverein Hassee-Winterbek e.V. von 1904', a traditional amateur multi-sport club (Badminton, Tennis, Gymnastics, etc.), not the professional handball entity 'THW Kiel'. While the professional team is the most famous 'Handball' department historically associated with the club, this specific domain focuses on general amateur sports operations and lacks the corporate procurement signals, technology stacks, or business operations relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:04:04.805560",
+          "domain_explored": "https://thw-junioren.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Youth Academy Operations",
+            "Athlete Development & Education",
+            "Boarding School Management",
+            "Sports Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.926609754562378
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 'Jungzebras' (youth academy) and the 'Sport Campus' (athlete housing and schooling). While the Campus implies facility management needs, the content itself is informational and editorial (match reports, philosophy), lacking any procurement signals, vendor selection, or technology acquisition data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:04:15.972016",
+          "domain_explored": "https://be.linkedin.com/jobs/student-assistant-jobs-kiel",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Working Student \u2013 Digital Creative Copy (WongDoody)",
+              "Werkstudent Arbeitsvorbereitung (Rheinmetall)",
+              "Praktikanten und Werkstudenten (ACO Group)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Noise (Kiel vs. THW Kiel)",
+            "Irrelevant Corporate Entities (Rheinmetall, ACO Group)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 255,
+              "elapsed_seconds": 7.373984098434448
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn job search results page for 'Student Assistant' in the city of Kiel. None of the listings (WongDoody, Rheinmetall, ACO Group) are affiliated with THW Kiel. The entity 'THW Kiel' is a professional handball club, whereas these results reflect the broader regional job market (defense, construction, creative agencies). There is zero signal specific to the target entity's procurement or operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:04:23.997225",
+          "domain_explored": "https://www.linkedin.com/jobs/student-jobs-kiel",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Praktikanten und Werkstudenten (d/m/w) - ACO Group (Irrelevant)",
+              "Working Student \u2013 Digital Creative Copy - (Context cut off, likely irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Noise (Kiel vs. THW Kiel)",
+            "Irrelevant Corporate Entities (ACO Group)",
+            "Dynamic Content (Login Wall)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1622,
+              "output_tokens": 247,
+              "elapsed_seconds": 4.253293037414551
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Student Jobs in Kiel'. While the location matches the target entity's location, the specific listings (e.g., ACO Group) are unrelated to THW Kiel. The page is dominated by UI elements (login prompts, repeated text) and lacks specific procurement signals or technology stack information relevant to the handball club."
+        }
+      ],
+      "total_input_tokens": 8878,
+      "total_output_tokens": 1367,
+      "estimated_cost_usd": 0.047139
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "THW Kiel may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:04:23.998144"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345518",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:37.091462"
+}

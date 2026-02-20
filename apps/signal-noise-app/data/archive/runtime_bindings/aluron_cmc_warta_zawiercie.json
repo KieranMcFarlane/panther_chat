@@ -1,0 +1,126 @@
+{
+  "entity_id": "aluron_cmc_warta_zawiercie",
+  "entity_name": "Aluron CMC Warta Zawiercie",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "aluroncmc.pl",
+    "aluron.pl",
+    "bilety.aluroncmc.pl",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aluron_cmc_warta_zawiercie",
+      "entity_name": "Aluron CMC Warta Zawiercie",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://aluron.pl",
+        "https://aluroncmc.pl",
+        "https://bilety.aluroncmc.pl",
+        "https://www-old.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aluron CMC Warta Zawiercie may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:59:57.435105",
+          "domain_explored": "https://aluroncmc.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:00:00.332441",
+          "domain_explored": "https://aluron.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:00:03.614873",
+          "domain_explored": "https://bilety.aluroncmc.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:00:09.954502",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Navigation",
+            "Historical Event Schedules",
+            "Generic Footer Links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.3560330867767334
+            }
+          ],
+          "reasoning": "The scraped content is from the generic navigation menu and footer of the European Volleyball Confederation (CEV) website (www-old.cev.eu). It contains links to various volleyball competitions, historical events (e.g., 2021, 2026), and national federation links. There is no mention of 'Aluron CMC Warta Zawiercie', no specific team pages, and no procurement, technology stack, or job posting signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 1448,
+      "total_output_tokens": 196,
+      "estimated_cost_usd": 0.007284
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aluron CMC Warta Zawiercie may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:00:09.964673"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318038",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:53.466357"
+}

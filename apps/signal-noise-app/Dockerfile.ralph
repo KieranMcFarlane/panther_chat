@@ -1,0 +1,38 @@
+# Dockerfile for Ralph Loop Webhook Handler and Worker
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first (for caching)
+COPY backend/requirements.ralph.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.ralph.txt
+
+# Install anthropic SDK separately (latest)
+RUN pip install --no-cache-dir anthropic
+
+# Copy application code
+COPY backend /app/backend
+COPY src /app/src
+
+# Create logs directory
+RUN mkdir -p /app/logs
+
+# Expose port
+EXPOSE 8001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8001/health || exit 1
+
+# Run webhook handler by default (can be overridden with docker-compose command)
+CMD ["python", "-m", "backend.ralph_loop_server"]

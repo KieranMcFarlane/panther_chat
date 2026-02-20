@@ -419,7 +419,7 @@ class DiscoveryResult:
     Contains:
     - Final entity assessment
     - Total iterations and cost
-    - Hypothesis states
+    - Hypothesis states (new: maturity, activity, sales readiness)
     - Depth statistics
     - Signals discovered
     - Raw Signal objects (for Ralph Loop)
@@ -435,6 +435,7 @@ class DiscoveryResult:
     depth_stats: Dict[int, int]  # depth -> iteration count
     signals_discovered: List[Dict[str, Any]]
     raw_signals: List[Any] = field(default_factory=list)  # Signal objects for Ralph Loop
+    hypothesis_states: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Category -> state data
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -451,6 +452,7 @@ class DiscoveryResult:
             'depth_stats': self.depth_stats,
             'signals_discovered': self.signals_discovered,
             'raw_signals_count': len(self.raw_signals),  # Include count for wrapper
+            'hypothesis_states': self.hypothesis_states,  # New: hypothesis state data
             'timestamp': self.timestamp.isoformat()
         }
 
@@ -2705,6 +2707,111 @@ Return JSON:
         except Exception as e:
             logger.warning(f"⚠️ Could not store discovery episode: {e}")
 
+    def _calculate_hypothesis_states_from_iterations(
+        self,
+        state
+    ) -> Dict[str, Dict[str, Any]]:
+        """
+        Calculate hypothesis states from iteration results
+
+        Uses the new signal classification system to compute:
+        - maturity_score: from CAPABILITY signals
+        - activity_score: from PROCUREMENT_INDICATOR signals
+        - state: MONITOR/WARM/ENGAGE/LIVE based on scores
+
+        Args:
+            state: RalphState with iteration_results
+
+        Returns:
+            Dict mapping category -> {maturity_score, activity_score, state, ...}
+        """
+        from ralph_loop import classify_signal, recalculate_hypothesis_state
+
+        # Group signals by category
+        category_signals = {
+            'CAPABILITY': {},
+            'PROCUREMENT_INDICATOR': {},
+            'VALIDATED_RFP': {}
+        }
+
+        for iteration_record in state.iteration_results:
+            result = iteration_record.get('result', {})
+            decision = result.get('decision', '')
+
+            # Convert decision to RalphDecisionType
+            from schemas import RalphDecisionType
+            if decision == 'ACCEPT':
+                ralph_decision = RalphDecisionType.ACCEPT
+            elif decision == 'WEAK_ACCEPT':
+                ralph_decision = RalphDecisionType.WEAK_ACCEPT
+            else:
+                continue  # Skip REJECT, NO_PROGRESS, SATURATED
+
+            # Get confidence
+            confidence = result.get('confidence', 0.5)
+
+            # Get source URL for domain checking
+            url = result.get('url', '')
+
+            # Classify the signal
+            signal_class = classify_signal(ralph_decision, confidence, url)
+
+            if not signal_class:
+                continue
+
+            # Get hypothesis category
+            hypothesis_id = iteration_record.get('hypothesis_id', '')
+            hypothesis = None
+            for h in state.active_hypotheses:
+                if h.hypothesis_id == hypothesis_id:
+                    hypothesis = h
+                    break
+
+            if not hypothesis:
+                continue
+
+            category = hypothesis.category
+            if category not in category_signals[signal_class.value]:
+                category_signals[signal_class.value][category] = []
+
+            # Add signal to category
+            category_signals[signal_class.value][category].append({
+                'decision': decision,
+                'confidence': confidence,
+                'url': url
+            })
+
+        # Calculate hypothesis states for each category
+        hypothesis_states = {}
+
+        # Get all unique categories
+        all_categories = set()
+        for signal_type in category_signals.values():
+            all_categories.update(signal_type.keys())
+
+        for category in all_categories:
+            capability_signals = category_signals['CAPABILITY'].get(category, [])
+            procurement_indicators = category_signals['PROCUREMENT_INDICATOR'].get(category, [])
+            validated_rfps = category_signals['VALIDATED_RFP'].get(category, [])
+
+            if capability_signals or procurement_indicators or validated_rfps:
+                state_obj = recalculate_hypothesis_state(
+                    entity_id=state.entity_id,
+                    category=category,
+                    capability_signals=capability_signals,
+                    procurement_indicators=procurement_indicators,
+                    validated_rfps=validated_rfps
+                )
+
+                hypothesis_states[category] = {
+                    'maturity_score': state_obj.maturity_score,
+                    'activity_score': state_obj.activity_score,
+                    'state': state_obj.state,
+                    'last_updated': state_obj.last_updated.isoformat()
+                }
+
+        return hypothesis_states
+
     async def _build_final_result(
         self,
         state,
@@ -2723,6 +2830,15 @@ Return JSON:
         # Extract signals from iteration results
         signals_discovered = self._extract_signals_from_iterations(state)
 
+        # Calculate hypothesis states using new classification system
+        hypothesis_states = self._calculate_hypothesis_states_from_iterations(state)
+
+        # Log hypothesis states
+        logger.info(f"📊 Calculated {len(hypothesis_states)} hypothesis states:")
+        for category, state_data in hypothesis_states.items():
+            state_emoji = {'MONITOR': '👁️', 'WARM': '🌡️', 'ENGAGE': '🤝', 'LIVE': '🔥'}.get(state_data['state'], '❓')
+            logger.info(f"   {state_emoji} {category}: {state_data['state']} (M: {state_data['maturity_score']:.2f}, A: {state_data['activity_score']:.2f})")
+
         # Store discovery as temporal episode for future temporal intelligence
         await self._store_discovery_episode(state, signals_discovered)
 
@@ -2738,6 +2854,7 @@ Return JSON:
             depth_stats=state.depth_counts,
             signals_discovered=signals_discovered,
             raw_signals=getattr(state, 'raw_signals', []),  # Signal objects for Ralph Loop
+            hypothesis_states=hypothesis_states,  # New: hypothesis state data
             timestamp=datetime.now(timezone.utc)
         )
 

@@ -1,0 +1,13 @@
+[
+  {
+    "entity_id": "test-entity-reject",
+    "signal_type": "RFP_DETECTED",
+    "confidence": 0.8,
+    "evidence": [
+      {
+        "source": "LinkedIn",
+        "credibility_score": 0.8
+      }
+    ]
+  }
+]

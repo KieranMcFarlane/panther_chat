@@ -1,0 +1,180 @@
+{
+  "entity_id": "italian_rugby_federation",
+  "entity_name": "Italian Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "settoretecnico.federugby.it",
+    "hospitality.federugby.it",
+    "zebreparma.it",
+    "play.google.com",
+    "iubilaeum2025.va"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "italian_rugby_federation",
+      "entity_name": "Italian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://hospitality.federugby.it",
+        "https://zebreparma.it",
+        "https://iubilaeum2025.va",
+        "https://settoretecnico.federugby.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Italian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:03:09.641065",
+          "domain_explored": "https://settoretecnico.federugby.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:03:12.487975",
+          "domain_explored": "https://hospitality.federugby.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:03:18.705508",
+          "domain_explored": "https://zebreparma.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (Shop)",
+              "Email Marketing (Newsletter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement (Active vendor relationships)",
+              "Ticketing platform usage"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Tiers (Main, Top, Silver, Bronze)",
+            "E-commerce Integration (Merchandising/Shop)",
+            "Newsletter Marketing (Email Capture)",
+            "Match Center Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.0613460540771484
+            }
+          ],
+          "reasoning": "The content is focused on sports news, match results, and fan engagement (tickets, merch, newsletter) for the Zebre Parma franchise. While there is evidence of existing e-commerce and marketing infrastructure, there are no explicit signals regarding new procurement initiatives, technology RFPs, or job postings in this specific scrape."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:03:26.801775",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile App Store Interface",
+            "Irrelevant Gaming Content",
+            "Consumer B2C Applications"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 159,
+              "elapsed_seconds": 4.338129758834839
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com lists generic mobile games (e.g., Candy Crush, PUBG) and consumer applications. There is no content related to the Italian Rugby Federation (FIR), its governance, or its procurement activities. This URL is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:03:33.222404",
+          "domain_explored": "https://iubilaeum2025.va",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Scheduling",
+            "Public Information Announcements",
+            "Religious/Event Management Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 169,
+              "elapsed_seconds": 3.151872158050537
+            }
+          ],
+          "reasoning": "The content is exclusively related to the Vatican's 2025 Jubilee event logistics (Holy Door closures, exhibitions, prisoner jubilees). The domain 'iubilaeum2025.va' is unrelated to the Italian Rugby Federation (FIR) and contains zero procurement, technology, or business intelligence signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4444,
+      "total_output_tokens": 574,
+      "estimated_cost_usd": 0.021942
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Italian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:03:33.223483"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290820",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:37.633444"
+}

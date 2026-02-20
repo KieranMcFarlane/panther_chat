@@ -1,0 +1,149 @@
+{
+  "entity_id": "imsa_vp_racing_sportscar_challenge",
+  "entity_name": "IMSA VP Racing SportsCar Challenge",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "imsa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+      "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "imsa_vp_racing_sportscar_challenge",
+      "entity_name": "IMSA VP Racing SportsCar Challenge",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+        "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963",
+        "https://imsa.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IMSA VP Racing SportsCar Challenge may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:29:53.568887",
+          "domain_explored": "https://imsa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:30:06.038151",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fleet Management Systems (implied by logs/fuel reports)",
+              "Forklifts and Material Handling Equipment"
+            ],
+            "job_postings": [
+              "IMSA Part-Time, Transport Driver (Logistics/Operations)"
+            ],
+            "procurement_indicators": [
+              "Fleet Maintenance & Repair Services",
+              "Fuel Procurement (implied by fuel reports)",
+              "Event Equipment (Awnings, Tech Equipment)",
+              "DOT Compliance Services"
+            ]
+          },
+          "patterns_found": [
+            "Operational Logistics Procurement",
+            "Fleet Management Requirements",
+            "Event Infrastructure Sourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 312,
+              "elapsed_seconds": 4.380125045776367
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct RFP, it reveals significant procurement activities regarding the IMSA VP Racing SportsCar Challenge. The role requires the maintenance and upkeep of 'tech equipment' and transporters, indicating a supply chain for spare parts, fuel, and event infrastructure. The mention of 'truck and trailer scheduling and minor maintenance' suggests ongoing vendor relationships for fleet services and repair."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:30:42.808302",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Electronic Logging Devices (ELD)"
+            ],
+            "job_postings": [
+              "Transport Driver (Full Time) - Logistics"
+            ],
+            "procurement_indicators": [
+              "Fleet Maintenance & Repair Services",
+              "Fuel Management & Reporting Systems",
+              "Telematics/Compliance Hardware (ELD)",
+              "Event Equipment (Awnings, Tech Equipment)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Logistics Procurement",
+            "Fleet Management Requirements",
+            "Regulatory Compliance Sourcing",
+            "Event Infrastructure Sourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 319,
+              "elapsed_seconds": 28.213186025619507
+            }
+          ],
+          "reasoning": "The job description for a Transport Driver reveals specific procurement needs related to fleet operations and event logistics. Key signals include the requirement for 'Electronic Logging Devices (ELD)' indicating a need for compliance software, and general requirements for 'truck and trailer scheduling and minor maintenance' which implies a reliance on fleet management service providers. While this confirms operational procurement, it does not explicitly reveal high-level strategic sourcing or technology stack decisions."
+        }
+      ],
+      "total_input_tokens": 2886,
+      "total_output_tokens": 631,
+      "estimated_cost_usd": 0.018123
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IMSA VP Racing SportsCar Challenge may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:30:42.809407"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373985",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:29.578226"
+}

@@ -1,0 +1,277 @@
+{
+  "entity_id": "international_olympic_committee_(ioc)",
+  "entity_name": "International Olympic Committee (IOC)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "olympics.com",
+    "specialolympics.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/international-olympic-committee/jobs/",
+      "https://www.linkedin.com/jobs/international-olympic-committee-%E2%80%93-ioc-jobs-worldwide",
+      "https://au.linkedin.com/company/international-olympic-committee/jobs?trk=nav_tab_jobs",
+      "https://ca.linkedin.com/company/international-olympic-committee/jobs",
+      "https://www.linkedin.com/company/united-states-olympic-and-paralympic-committee/jobs",
+      "https://www.linkedin.com/company/la28/jobs",
+      "https://za.linkedin.com/company/international-olympic-committee/jobs",
+      "https://nz.linkedin.com/company/international-olympic-committee/jobs",
+      "https://www.linkedin.com/jobs/view/4131436643/?capColoOverride=true",
+      "https://www.linkedin.com/jobs/view/senior-account-manager-at-international-olympic-committee-%E2%80%93-ioc-4345994213"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_olympic_committee_(ioc)",
+      "entity_name": "International Olympic Committee (IOC)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/company/international-olympic-committee/jobs?trk=nav_tab_jobs",
+        "https://www.linkedin.com/jobs/international-olympic-committee-%E2%80%93-ioc-jobs-worldwide",
+        "https://www.linkedin.com/company/international-olympic-committee/jobs/",
+        "https://olympics.com",
+        "https://www.linkedin.com/company/united-states-olympic-and-paralympic-committee/jobs",
+        "https://specialolympics.org",
+        "https://ca.linkedin.com/company/international-olympic-committee/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Olympic Committee (IOC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:44:04.090289",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Augmented Reality (AR) / WebAR",
+              "E-commerce Platforms (Ticketing)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active AR campaign deployment ('Victory Selfie')",
+              "Dedicated ticketing infrastructure for Milano Cortina 2026",
+              "Merchandise e-commerce operations"
+            ]
+          },
+          "patterns_found": [
+            "Augmented Reality (AR) Campaigns",
+            "E-commerce Integration (Ticketing & Merch)",
+            "Digital Marketing Engagement (Social/Lenses)",
+            "Event-Specific Microsites (Milano Cortina 2026)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.7735118865966797
+            }
+          ],
+          "reasoning": "The content is consumer-facing marketing noise rather than corporate procurement data. However, the explicit mention of an 'AR lens' and the 'tickets.milanocortina2026.org' subdomain confirms active investment in Augmented Reality technologies and event management platforms. While no direct RFP is visible, these 'Victory Selfie' AR campaigns indicate a vendor relationship with a social AR platform (likely Meta/Facebook or TikTok) or a custom WebAR provider."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:44:14.454993",
+          "domain_explored": "https://specialolympics.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Donation Processing Forms",
+              "Content Management System (CMS)",
+              "Social Media Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Partner Listings (e.g., Founding Partner, Official Broadcast Partner)",
+              "Supplier Listings (e.g., Global Supplier of Ophthalmic Lenses)",
+              "Event Hosting (Santiago 2027)"
+            ]
+          },
+          "patterns_found": [
+            "Brand Identity Design (Logo Reveal)",
+            "Event Planning (Santiago 2027)",
+            "Fundraising/Donation Platforms",
+            "Volunteer Management",
+            "Global Partner Network (Sponsorship)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 365,
+              "elapsed_seconds": 3.4732542037963867
+            }
+          ],
+          "reasoning": "The content analyzed is from Special Olympics (specialolympics.org), a distinct and separate legal entity from the International Olympic Committee (IOC). While both organizations operate within the Olympic ecosystem, Special Olympics focuses on inclusion for athletes with intellectual disabilities and relies on a different funding and procurement model (heavily donor/partner-based rather than the commercial rights model of the IOC). The content highlights marketing (logos) and general mission statements rather than IOC-specific procurement signals (e.g., Olympic Agenda 2020/2025, IOC vendor portals, or Olympic Broadcasting Services contracts)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:44:18.499512",
+          "domain_explored": "https://www.linkedin.com/company/international-olympic-committee/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Mechanism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 503,
+              "output_tokens": 139,
+              "elapsed_seconds": 1.6185970306396484
+            }
+          ],
+          "reasoning": "The content extraction failed due to a '403 Forbidden' error, indicating that LinkedIn has blocked the scraping attempt. No data regarding job postings, technology stacks, or procurement signals could be retrieved from this source."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:44:27.149812",
+          "domain_explored": "https://www.linkedin.com/jobs/international-olympic-committee-%E2%80%93-ioc-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 31 column 9 (char 1707)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:44:36.151690",
+          "domain_explored": "https://au.linkedin.com/company/international-olympic-committee/jobs?trk=nav_tab_jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Mechanism",
+            "URL Parameter Sensitivity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 607,
+              "output_tokens": 136,
+              "elapsed_seconds": 6.5494489669799805
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error, indicating an active anti-scraping defense. The content is inaccessible, preventing the extraction of job postings or procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:44:41.257874",
+          "domain_explored": "https://ca.linkedin.com/company/international-olympic-committee/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Mechanism",
+            "URL Parameter Sensitivity",
+            "Platform-Specific Blocking (LinkedIn Canada)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 669,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.737689971923828
+            }
+          ],
+          "reasoning": "The target URL (LinkedIn Canada jobs page) returned a '403 Forbidden' error with the instruction 'Use only company name in the URL'. This indicates a continuation of the anti-scraping defenses encountered in Iterations 3, 4, and 5. The variation in regional URL (ca.linkedin.com) did not bypass the restriction. No procurement data, job postings, or technology stack information could be extracted."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:44:46.388180",
+          "domain_explored": "https://www.linkedin.com/company/united-states-olympic-and-paralympic-committee/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (USOPC vs IOC)",
+            "Access Restriction (403 Forbidden)",
+            "Platform Anti-Scraping"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 734,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.70843505859375
+            }
+          ],
+          "reasoning": "The target entity has shifted from the International Olympic Committee (IOC) to the United States Olympic and Paralympic Committee (USOPC). While related, they are distinct legal entities with separate procurement budgets and governance structures. Additionally, the content is inaccessible due to a 403 Forbidden error triggered by URL parameter restrictions, preventing data extraction."
+        }
+      ],
+      "total_input_tokens": 5309,
+      "total_output_tokens": 1346,
+      "estimated_cost_usd": 0.036116999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Olympic Committee (IOC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:44:46.390035"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.459793",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:19:01.027780"
+}

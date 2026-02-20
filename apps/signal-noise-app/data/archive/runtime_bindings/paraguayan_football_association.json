@@ -1,0 +1,250 @@
+{
+  "entity_id": "paraguayan_football_association",
+  "entity_name": "Paraguayan Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "wikidata.org",
+    "play.google.com",
+    "puma-catchup.com",
+    "beachsoccer.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paraguayan_football_association",
+      "entity_name": "Paraguayan Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://commons.wikimedia.org",
+        "https://wikidata.org",
+        "https://inside.fifa.com",
+        "https://beachsoccer.com",
+        "https://puma-catchup.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paraguayan Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:45:51.420254",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports governance news",
+            "Women's football development initiatives",
+            "Infrastructure funding (FIFA Forward)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.3941938877105713
+            }
+          ],
+          "reasoning": "The content provided is from FIFA's global news portal and focuses on high-level governance, the FIFA Women's Champions Cup, and general infrastructure funding in Burundi. There is no specific mention of the Paraguayan Football Association (APF), nor are there any specific procurement signals, job postings, or technology adoption details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:46:03.992238",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge base content",
+            "Community event announcements (WikidataCon)",
+            "Platform feature updates (Mobile editing, Search by entity type)",
+            "Open source contribution calls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.2138831615448
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a global open-data platform. It contains no information regarding the Paraguayan Football Association (APF), its specific technology stack, or its procurement activities. The content focuses on general Wikidata functionality, community events, and platform updates, which are irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:46:10.963229",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer mobile gaming listings",
+            "Global entertainment app store content",
+            "Generic platform navigation elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.724062919616699
+            }
+          ],
+          "reasoning": "The content provided is a direct scrape of the Google Play Store homepage, specifically listing mobile games (e.g., Arknights, Clash of Clans, Persona 5). There is absolutely no relation to the Paraguayan Football Association, sports governance, or organizational procurement. This represents a complete disconnect from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:46:24.889166",
+          "domain_explored": "https://puma-catchup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Running Shoe Finder (Consumer Web Tool)",
+              "Digital Prototyping (Product Design)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports marketing campaigns",
+            "Consumer product storytelling (PUMA SUEDE, KING, NITRO)",
+            "Brand-sponsored athlete content",
+            "Flagship store retail news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 240,
+              "elapsed_seconds": 4.808478832244873
+            }
+          ],
+          "reasoning": "The content is a global brand news aggregator (PUMA Catchup) focused on consumer marketing, athlete sponsorships, and product launches. While it mentions 'digital prototyping' and 'Running Shoe Finder' tools, these are finished consumer-facing features, not procurement signals or vendor selection processes for the Paraguayan Football Association. There is no specific mention of APF or B2B procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:46:38.234795",
+          "domain_explored": "https://beachsoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) for news/editorials",
+              "Ranking/Database management system for global teams"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation governance (BSWW)",
+            "Event calendar management (El Salvador, Viareggio)",
+            "Official rankings databases (National Teams/Clubs)",
+            "General sports news and editorial content",
+            "Consumer-facing merchandise (BSWW Store)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1597,
+              "output_tokens": 282,
+              "elapsed_seconds": 3.086761951446533
+            }
+          ],
+          "reasoning": "The content is exclusively related to Beach Soccer Worldwide (BSWW), a distinct global governing body for beach soccer. While it mentions 'Sportivo Luque\u00f1o' (a Paraguayan club) in the rankings, the site itself is a BSWW property focused on global event management, news, and rankings. There are no signals specific to the Paraguayan Football Association's (APF) procurement, technology stack, or vendor partnerships. The entity context is incorrect for the target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:46:48.127763",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic media repository hosting",
+            "User-generated content guidelines",
+            "Open-source community contribution portals",
+            "Non-profit Wikimedia Foundation navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1662,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.5690760612487793
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of Wikimedia Commons, a generic media repository. It contains standard navigation elements, upload guidelines, and community challenges (e.g., 'Wiki Loves Folklore'). There is no specific content related to the Paraguayan Football Association (APF), no procurement signals, and no relevant technology stack information for the target entity."
+        }
+      ],
+      "total_input_tokens": 9068,
+      "total_output_tokens": 1317,
+      "estimated_cost_usd": 0.046959
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paraguayan Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:46:48.129460"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.210160",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:29.243964"
+}

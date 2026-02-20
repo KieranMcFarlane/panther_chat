@@ -1,0 +1,228 @@
+{
+  "entity_id": "international_ice_hockey_federation_(iihf)",
+  "entity_name": "International Ice Hockey Federation (IIHF)",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "2026iihfworlds.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/it-application-manager-100%25-at-international-ice-hockey-federation-iihf-4367137009",
+      "https://ch.linkedin.com/jobs/view/finance-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4301752853",
+      "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4250297779",
+      "https://ch.linkedin.com/jobs/view/technology-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-3926519366?refId=KQXkIp42CIasNmfnopWzrg%3D%3D&trackingId=ufjHiFZ9x28hRASJd0HT8w%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_ice_hockey_federation_(iihf)",
+      "entity_name": "International Ice Hockey Federation (IIHF)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://ch.linkedin.com/jobs/view/technology-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-3926519366?refId=KQXkIp42CIasNmfnopWzrg%3D%3D&trackingId=ufjHiFZ9x28hRASJd0HT8w%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://2026iihfworlds.com",
+        "https://ch.linkedin.com/jobs/view/it-application-manager-100%25-at-international-ice-hockey-federation-iihf-4367137009",
+        "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4250297779",
+        "https://ch.linkedin.com/jobs/view/finance-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4301752853"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Posting: IT Application Manager",
+        "Technology Stack: Microsoft 365 (SharePoint, Teams, Intune)",
+        "Procurement Function: License and contract management",
+        "Digital Transformation: Digitalization projects",
+        "Governance: Reporting to Technology Director",
+        "Job Posting: Technology Manager",
+        "Procurement Function: IT Project Management & Budgeting",
+        "Procurement Function: Supplier Relationship Management",
+        "Strategic Initiative: Digitalization & Modern Workspace",
+        "Intent: Implementation of new IT applications"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Ice Hockey Federation (IIHF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:04:31.227806",
+          "domain_explored": "https://2026iihfworlds.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 23 column 9 (char 1489)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:04:49.021604",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/it-application-manager-100%25-at-international-ice-hockey-federation-iihf-4367137009",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365",
+              "SharePoint",
+              "OneDrive",
+              "Microsoft Teams",
+              "Intune"
+            ],
+            "job_postings": [
+              "IT Application Manager 100%"
+            ],
+            "procurement_indicators": [
+              "License and contract management",
+              "Coordination with software and service providers",
+              "Planning and implementing IT projects",
+              "IT security and compliance procurement"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: IT Application Manager",
+            "Technology Stack: Microsoft 365 (SharePoint, Teams, Intune)",
+            "Procurement Function: License and contract management",
+            "Digital Transformation: Digitalization projects",
+            "Governance: Reporting to Technology Director"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 338,
+              "elapsed_seconds": 5.025378704071045
+            }
+          ],
+          "reasoning": "The job posting for an IT Application Manager explicitly lists 'license and contract management' as a key responsibility, confirming direct procurement activity. It also identifies the specific technology stack (Microsoft 365) requiring management and support, indicating potential for vendor consolidation or upsell. The mention of 'digitalization projects' suggests upcoming technology investments."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:04:59.873603",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/finance-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4301752853",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 21 column 49 (char 983)"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:05:11.345965",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4250297779",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Officiating (f/m/d)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Posting: Head of Officiating",
+            "Focus: Sports Operations & Officiating",
+            "Requirement: NHL/AHL Experience",
+            "Location: Zurich, Switzerland"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 195,
+              "elapsed_seconds": 3.6929821968078613
+            }
+          ],
+          "reasoning": "The content describes a senior sports operations role focused on officiating strategy, referee development, and rule enforcement. While it confirms the IIHF's operational scale (managing ~25 championships), it does not contain signals related to technology procurement, IT infrastructure, or business systems."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:05:29.484430",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/technology-manager-f-m-d-100%25-at-international-ice-hockey-federation-iihf-3926519366?refId=KQXkIp42CIasNmfnopWzrg%3D%3D&trackingId=ufjHiFZ9x28hRASJd0HT8w%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IT Applications (General)",
+              "Modern Workspace Environment",
+              "IT Infrastructure"
+            ],
+            "job_postings": [
+              "Technology Manager (f/m/d)"
+            ],
+            "procurement_indicators": [
+              "IT Project Budgeting",
+              "Supplier/Partner Management",
+              "Business Requirement Analysis",
+              "Digital Transformation Initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Technology Manager",
+            "Procurement Function: IT Project Management & Budgeting",
+            "Procurement Function: Supplier Relationship Management",
+            "Strategic Initiative: Digitalization & Modern Workspace",
+            "Intent: Implementation of new IT applications"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1680,
+              "output_tokens": 335,
+              "elapsed_seconds": 11.878796100616455
+            }
+          ],
+          "reasoning": "The job posting explicitly outlines responsibilities for 'controlling and reporting of IT projects', 'budgeting', and 'maintaining close business relationships with the IIHF IT partners and suppliers'. It also highlights a strategic drive for 'digitalization' and the 'implementation of new IT applications', which are direct indicators of future and ongoing procurement activities involving software, infrastructure, and professional services."
+        }
+      ],
+      "total_input_tokens": 4670,
+      "total_output_tokens": 868,
+      "estimated_cost_usd": 0.02703
+    },
+    "procurement_signals": [
+      "Job Posting: IT Application Manager",
+      "Technology Stack: Microsoft 365 (SharePoint, Teams, Intune)",
+      "Procurement Function: License and contract management",
+      "Digital Transformation: Digitalization projects",
+      "Governance: Reporting to Technology Director",
+      "Job Posting: Technology Manager",
+      "Procurement Function: IT Project Management & Budgeting",
+      "Procurement Function: Supplier Relationship Management",
+      "Strategic Initiative: Digitalization & Modern Workspace",
+      "Intent: Implementation of new IT applications"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Ice Hockey Federation (IIHF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:05:29.486370"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.304565",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:09.276929"
+}

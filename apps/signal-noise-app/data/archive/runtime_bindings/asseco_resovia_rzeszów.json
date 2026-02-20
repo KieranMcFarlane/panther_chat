@@ -1,0 +1,128 @@
+{
+  "entity_id": "asseco_resovia_rzesz\u00f3w",
+  "entity_name": "Asseco Resovia Rzesz\u00f3w",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "assecoresovia.pl",
+    "eurovolley.tv",
+    "zoominfo.com",
+    "volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asseco_resovia_rzesz\u00f3w",
+      "entity_name": "Asseco Resovia Rzesz\u00f3w",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://volleybox.net",
+        "https://eurovolley.tv",
+        "https://zoominfo.com",
+        "https://assecoresovia.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asseco Resovia Rzesz\u00f3w may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:43:32.962776",
+          "domain_explored": "https://assecoresovia.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem: Entities such as Asseco, InPost, PGE, and JSW are listed as team sponsors or opponents, indicating existing corporate relationships but no active procurement intent."
+            ]
+          },
+          "patterns_found": [
+            "Sports team roster management",
+            "Match scheduling",
+            "Sponsorship visibility (Asseco, InPost, PGE, JSW)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.3135907649993896
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports match results, schedules, and player rosters for the volleyball team Asseco Resovia Rzesz\u00f3w. There is no presence of corporate procurement signals, job postings, or technology infrastructure information on this specific page."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:43:36.350617",
+          "domain_explored": "https://eurovolley.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:43:39.311521",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:43:42.307435",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 215,
+      "estimated_cost_usd": 0.007308
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asseco Resovia Rzesz\u00f3w may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:43:42.308436"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318200",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:15.913939"
+}

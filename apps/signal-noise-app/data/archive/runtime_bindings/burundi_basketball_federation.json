@@ -1,0 +1,212 @@
+{
+  "entity_id": "burundi_basketball_federation",
+  "entity_name": "Burundi Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "iwacu-burundi.org",
+    "sosmediasburundi.org",
+    "abpinfos.com",
+    "africa-press.net",
+    "en.irisnews.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "burundi_basketball_federation",
+      "entity_name": "Burundi Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.irisnews.org",
+        "https://sosmediasburundi.org",
+        "https://abpinfos.com",
+        "https://africa-press.net",
+        "https://iwacu-burundi.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Burundi Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:21:29.529325",
+          "domain_explored": "https://iwacu-burundi.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Presence of 'Sports' section indicates potential for future coverage, but no current signals.",
+              "Presence of 'Petites Annonces' (Classifieds) suggests a channel where local vendors might advertise, but no active federation ads found."
+            ]
+          },
+          "patterns_found": [
+            "General News Portal Structure",
+            "Subscription/Membership Models",
+            "Classified Ads (Petites Annonces)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 283,
+              "elapsed_seconds": 5.908732175827026
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage navigation and header structure of Iwacu, a general news outlet in Burundi. While it contains a 'Sports' section and 'Petites Annonces' (Classified Ads), there is no specific mention of the Burundi Basketball Federation (FEBABAB), no specific calls for tender related to basketball, and no technology stack details relevant to the federation's procurement. The content is too generic to derive specific procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:21:37.121254",
+          "domain_explored": "https://sosmediasburundi.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal Structure",
+            "Humanitarian & Security Focus",
+            "Geopolitical Reporting (DRC, Tanzania borders)",
+            "Public Safety & Legal Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 210,
+              "elapsed_seconds": 4.3920042514801025
+            }
+          ],
+          "reasoning": "The scraped content from 'SOS M\u00e9dias Burundi' consists entirely of general news headlines and snippets focusing on humanitarian crises, security issues in the DRC, and domestic legal matters. There is no content related to the Burundi Basketball Federation, sports governance, or administrative/procurement activities. The source is a general news outlet, not a specialized procurement or sports governance portal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:21:47.159065",
+          "domain_explored": "https://abpinfos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal Structure",
+            "Political & General Reporting",
+            "Content Maintenance Mode"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 477,
+              "output_tokens": 175,
+              "elapsed_seconds": 7.079207181930542
+            }
+          ],
+          "reasoning": "The scraped content from abpinfos.com indicates a general news portal with a focus on political and general reporting. The 'maintenance' tag and lack of specific keywords related to basketball, federation governance, or technology procurement suggest this source is irrelevant to the Burundi Basketball Federation's procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:21:55.418386",
+          "domain_explored": "https://africa-press.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Pan-African News Aggregator",
+            "Syndicated Content Model",
+            "Static Navigation Structure",
+            "General Sports Reporting (AFCON, Handball)",
+            "Geopolitical Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.8525521755218506
+            }
+          ],
+          "reasoning": "The scraped content from Africa Press is a general news portal covering continental politics, economy, and sports. While 'Burundi' is listed in the French section navigation, the content is high-level geopolitical reporting (e.g., tensions in Niger, Libya funds) and general sports results (AFCON). There are no specific mentions of the Burundi Basketball Federation, local tenders, or federation-specific governance/technology signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:22:06.275839",
+          "domain_explored": "https://en.irisnews.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Health Sector Reporting Focus",
+            "NGO/Civil Society Coverage (NCD Alliance)",
+            "General News Portal Structure",
+            "Event Reporting (Kigali Forum)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.156942129135132
+            }
+          ],
+          "reasoning": "The scraped content from IRIS News is exclusively focused on public health topics (Mpox, NCDs) and civil society advocacy. There are no mentions of the Burundi Basketball Federation, sports infrastructure, or related governance/procurement activities. The content is syndicated news reporting rather than organizational announcements."
+        }
+      ],
+      "total_input_tokens": 6359,
+      "total_output_tokens": 1075,
+      "estimated_cost_usd": 0.035202
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Burundi Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:22:06.277093"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.257627",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:11.418386"
+}

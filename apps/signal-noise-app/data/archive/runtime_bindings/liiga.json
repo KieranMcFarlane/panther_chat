@@ -1,0 +1,277 @@
+{
+  "entity_id": "liiga",
+  "entity_name": "Liiga",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "liiga.fi",
+    "fliiga.com",
+    "kansallinenliiga.fi",
+    "play.google.com",
+    "icehockey24.com",
+    "oreateai.com",
+    "ciss-journal.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liiga",
+      "entity_name": "Liiga",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://icehockey24.com",
+        "https://ciss-journal.org",
+        "https://kansallinenliiga.fi",
+        "https://oreateai.com",
+        "https://fliiga.com",
+        "https://liiga.fi"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liiga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:03:54.400218",
+          "domain_explored": "https://liiga.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-side rendering (JavaScript requirement)",
+            "Content blocking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 362,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.5964701175689697
+            }
+          ],
+          "reasoning": "The target content is a Single Page Application (SPA) that requires JavaScript to render. The raw HTML provided ('You need to enable JavaScript to run this app.') contains no semantic data, links, or text regarding procurement, technology stacks, or governance. The scraper failed to extract the DOM."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:04:04.955023",
+          "domain_explored": "https://fliiga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Data (F-liiga)",
+            "Schedule and Results Display",
+            "Finnish Language Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.0026519298553467
+            }
+          ],
+          "reasoning": "The content provided is a raw dump of sports statistics, specifically game schedules, scores, and attendance figures for the 'F-liiga' (Floorball Finnish League) for September-November 2025. This data is operational (game results) rather than administrative or strategic. There are no procurement signals, job postings, or technology stack indicators present in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:04:14.908739",
+          "domain_explored": "https://kansallinenliiga.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Data (Kansallinen Liiga)",
+            "Schedule and Results Display",
+            "Finnish Language Content",
+            "Static Content Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.2195520401000977
+            }
+          ],
+          "reasoning": "The scraped content from kansallinenliiga.fi consists entirely of a match schedule (Ottelukalenteri) for the women's football league. There are no links to corporate governance, technology vendors, career opportunities, or procurement documents. The content is purely operational sports data."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:04:27.035691",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Play Store Platform",
+              "Android Mobile OS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Mobile Application Storefront",
+            "Gaming and Entertainment Content",
+            "Russian Language Interface",
+            "App Store Metadata (Ratings, Categories, 'Install' CTAs)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 215,
+              "elapsed_seconds": 6.527864217758179
+            }
+          ],
+          "reasoning": "The scraped content is from the Google Play Store homepage (or a localized variant thereof), listing consumer mobile games and apps. There is absolutely no content related to the entity 'Liiga' (Finnish Ice Hockey league), corporate governance, or B2B procurement. This represents a complete deviation from the target entity and objective."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:04:38.146949",
+          "domain_explored": "https://icehockey24.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Sports Aggregation",
+            "Loading Indicators (Client-Side Rendering)",
+            "Advertisement Presence",
+            "Generic Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 575,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.8208107948303223
+            }
+          ],
+          "reasoning": "The scraped content from icehockey24.com represents a consumer-facing sports statistics and results portal. The presence of 'AD' markers, 'Loading...' states, and generic 'Hockey' labels indicates a site focused on content consumption rather than corporate operations or governance. There is no inherent connection to the 'Liiga' entity's internal procurement, vendor selection, or technology infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:04:48.131084",
+          "domain_explored": "https://oreateai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Marketing Copy",
+            "Repetitive Content Structure",
+            "Essay Writing Services",
+            "AI Tool Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 705,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.8858532905578613
+            }
+          ],
+          "reasoning": "The content is marketing material for an AI essay writing service ('Your Best AI Essay Writing Partner!'). It is entirely unrelated to Liiga (the Finnish ice hockey league) or any procurement activities. It contains no corporate governance, technology stack, or purchasing signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:04:56.510885",
+          "domain_explored": "https://ciss-journal.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Open Journal Systems (OJS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Journal Publishing",
+            "Peer-Reviewed Content",
+            "Open Access Platform (OJS)",
+            "University Affiliation (University of Bern)",
+            "Research Submission Guidelines"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1647,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.176547050476074
+            }
+          ],
+          "reasoning": "The content is from an academic journal (Current Issues in Sport Science) focused on research publication. It displays no procurement activities, vendor solicitations, or corporate governance signals relevant to the Liiga sports league entity."
+        }
+      ],
+      "total_input_tokens": 7625,
+      "total_output_tokens": 1287,
+      "estimated_cost_usd": 0.042179999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liiga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:04:56.512887"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.448372",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:27:27.307662"
+}

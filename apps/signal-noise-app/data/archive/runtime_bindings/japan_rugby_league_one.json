@@ -1,0 +1,137 @@
+{
+  "entity_id": "japan_rugby_league_one",
+  "entity_name": "Japan Rugby League One",
+  "template_id": "tpl_rugby_governance_ecosystem_v1",
+  "cluster_id": "rugby_league_admin",
+  "discovered_domains": [
+    "league-one.jp",
+    "en.rugby-japan.jp",
+    "rugby-japan.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_rugby_league_one",
+      "entity_name": "Japan Rugby League One",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rugby-japan.jp",
+        "https://en.rugby-japan.jp",
+        "https://league-one.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Rugby League One may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:25:40.929529",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform: ticketrugby.jp (External dependency)",
+              "CMS: Dynamic routing (e.g., /match/29293) indicates a database-driven CMS (likely WordPress or a custom framework)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Confirmed usage of 'ticketrugby.jp' for all ticketing operations.",
+              "Digital Infrastructure: Evidence of structured data management for match fixtures and results."
+            ]
+          },
+          "patterns_found": [
+            "Centralized Ticketing Operations",
+            "Third-Party Platform Dependency",
+            "URL Structure Analysis"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.967656135559082
+            }
+          ],
+          "reasoning": "The content is a list of match fixtures and scores, not a direct procurement source. However, the repeated external links to 'ticketrugby.jp' confirm a dependency on a centralized ticketing vendor. The internal URL structure (/match/ID) suggests a dynamic content management system (CMS) is in use. This confirms operational capability but provides only weak signals regarding new procurement intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:25:56.787999",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External E-commerce Platform: shop.rugby-japan.jp",
+              "Fan Club Platform: japanrugby-sakuraclub.jp",
+              "Video Hosting: YouTube (user/jrfuofficial)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Japan Rugby Football Union vs. League One)",
+            "Consumer-Facing Content (News, Shop, Fan Club)",
+            "Static Navigation Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 683,
+              "output_tokens": 257,
+              "elapsed_seconds": 10.74026894569397
+            }
+          ],
+          "reasoning": "The scraped content is from the Japan Rugby Football Union (JRFU) website, which is the governing body for the sport in Japan, distinct from the professional league entity 'Japan Rugby League One'. The content consists primarily of navigation links, news headlines, and consumer calls-to-action (Online Shop, TV, Sakura Club). There are no technology stacks, job postings, or procurement signals relevant to the League One entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:26:11.653922",
+          "domain_explored": "https://rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2043,
+      "total_output_tokens": 555,
+      "estimated_cost_usd": 0.014454000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Rugby League One may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:26:11.654759"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449676",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:45.513517"
+}

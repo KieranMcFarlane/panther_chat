@@ -1,0 +1,274 @@
+{
+  "entity_id": "aruba_football_federation",
+  "entity_name": "Aruba Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "futboljobs.com",
+    "zoominfo.com",
+    "kids.kiddle.co",
+    "verlete.com",
+    "en-academic.com",
+    "cleanpng.com",
+    "dsbaike.com-cn.bsportsfan.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_international-technical-director-for-the-activity-7376254045482745856-W3H_"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aruba_football_federation",
+      "entity_name": "Aruba Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://www.linkedin.com/posts/futboljobs.com_international-technical-director-for-the-activity-7376254045482745856-W3H_",
+        "https://verlete.com",
+        "https://futboljobs.com",
+        "https://dsbaike.com-cn.bsportsfan.com",
+        "https://zoominfo.com",
+        "https://cleanpng.com",
+        "https://en-academic.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aruba Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:42:23.863219",
+          "domain_explored": "https://futboljobs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Generic listings for FIFA 2026, DBU (Denmark), and various international clubs (unrelated to Aruba)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Content",
+            "Global Football Market Scope",
+            "User Registration Flows"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 224,
+              "elapsed_seconds": 6.135519027709961
+            }
+          ],
+          "reasoning": "The content provided is the homepage text of 'FutbolJobs', a third-party job board platform. While it lists various football-related opportunities (FIFA 2026, DBU Denmark, etc.), there is no specific mention of the 'Aruba Football Federation' (AVB) or any specific procurement activities (RFPs, tenders, technology investments) related to Aruba. The content is generic marketing copy for the job board service itself."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:42:30.457647",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B Marketing Copy",
+            "Vendor Testimonials (Sales Use Cases)",
+            "Product Feature Promotions (AI/Copilot)",
+            "Landing Page CTAs (Free Trial)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.388547897338867
+            }
+          ],
+          "reasoning": "The content provided is the homepage marketing copy of ZoomInfo, a B2B data vendor. It describes ZoomInfo's product features (AI, sales intelligence) and contains testimonials from other companies (Seismic, McGriff). There is absolutely no information regarding the Aruba Football Federation's internal operations, technology stack, or procurement activities. This is irrelevant vendor noise, not a signal of the target entity's intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:43:04.167364",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Educational Content",
+            "Encyclopedia Structure (Kiddle/Kpedia)",
+            "General Knowledge Categories (Science, History, Geography)",
+            "Attribution-ShareAlike Licensing References",
+            "Homework/School Resource Targeting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 217,
+              "elapsed_seconds": 27.878063917160034
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kiddle' (kids.kiddle.co), a children's encyclopedia. It contains a sitemap of general knowledge topics (astronomy, biology, history) and standard site navigation. There is absolutely no content related to the Aruba Football Federation, business operations, procurement, or technology stacks. This is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:43:12.473436",
+          "domain_explored": "https://verlete.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Navigation Structure",
+            "Categorical Browsing Interface",
+            "Lack of Specific Entity Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 552,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.013111114501953
+            }
+          ],
+          "reasoning": "The provided content is a generic navigation menu (Explore Categories: Sports, Countries, Roles) typical of a directory or job board homepage. It contains no specific information regarding the Aruba Football Federation, no procurement signals, and no technology stack details. It is structural noise rather than signal data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:43:26.785702",
+          "domain_explored": "https://en-academic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Dictionary/Encyclopedia Interface",
+            "Massive Language Selector List",
+            "Static Reference Content Titles (e.g., 'Law dictionary', 'Financial and business terms')",
+            "Absence of Dynamic Business Data (No RFPs, Jobs, or Vendor Lists)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 191,
+              "elapsed_seconds": 4.7821080684661865
+            }
+          ],
+          "reasoning": "The content is a generic academic dictionary and encyclopedia aggregator. It contains static reference definitions and language selection menus. There is no content related to the Aruba Football Federation, procurement activities, or business operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:43:59.488392",
+          "domain_explored": "https://cleanpng.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:44:15.424129",
+          "domain_explored": "https://dsbaike.com-cn.bsportsfan.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:44:37.410330",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_international-technical-director-for-the-activity-7376254045482745856-W3H_",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting Error Message",
+            "Platform Constraint Notification",
+            "Scraping Block/Throttle"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 757,
+              "output_tokens": 158,
+              "elapsed_seconds": 18.867425203323364
+            }
+          ],
+          "reasoning": "The content provided is a system error message indicating a rate limit has been exceeded on LinkedIn. It contains no information regarding the Aruba Football Federation, procurement signals, or job postings. No analysis of the target entity can be performed from this text."
+        }
+      ],
+      "total_input_tokens": 7117,
+      "total_output_tokens": 1175,
+      "estimated_cost_usd": 0.038976
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aruba Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:44:37.411895"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.201662",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:11.673212"
+}

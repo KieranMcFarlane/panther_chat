@@ -1,0 +1,380 @@
+{
+  "entity_id": "allsvenskan",
+  "entity_name": "Allsvenskan",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "allsvenskan.se",
+    "svenskelitfotboll.se",
+    "svenskfotboll.se",
+    "play.google.com",
+    "fotbollskanalen.se",
+    "transfermarkt.us",
+    "football.fandom.com",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+      "https://fr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "allsvenskan",
+      "entity_name": "Allsvenskan",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://allsvenskan.se",
+        "https://play.google.com",
+        "https://svenskelitfotboll.se",
+        "https://svenskfotboll.se",
+        "https://transfermarkt.us",
+        "https://onefootball.com",
+        "https://fotbollskanalen.se",
+        "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+        "https://fr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Allsvenskan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:16:23.975280",
+          "domain_explored": "https://allsvenskan.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Analytics (implied by site structure)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship revenue utilization (Unibet)",
+              "Community engagement funding distribution",
+              "Arena security and safety operations",
+              "Match scheduling and logistics"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Management (Unibet)",
+            "Social Responsibility Funding (CSR)",
+            "Operational Logistics (Scheduling/Security)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.6867949962615967
+            }
+          ],
+          "reasoning": "The content reveals active sponsorship and CSR funding flows (Unibet) and operational initiatives (security, scheduling). While not direct IT procurement, these areas often require supporting software (CRM for sponsors, reporting tools for CSR) or security services, indicating a healthy operational budget and active vendor engagement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:16:34.514422",
+          "domain_explored": "https://svenskelitfotboll.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms",
+              "Access Control Systems (RFID/NFC)",
+              "Mobile Ticketing Solutions"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized Away Match Ticketing (Bortakortet 2026)",
+              "Cross-arena Access Agreements",
+              "Fan Distribution Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing & Access Control Systems",
+            "Inter-organizational Collaboration (SEF)",
+            "Fan Experience Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 539,
+              "output_tokens": 257,
+              "elapsed_seconds": 3.2336173057556152
+            }
+          ],
+          "reasoning": "The content reveals the 'Bortakortet 2026' initiative, a unified ticket for away matches managed by 'Svensk Elitfotboll' (SEF). This indicates a centralized procurement function for ticketing platforms, access control hardware, and distribution logistics capable of handling multi-stadium agreements. It signals intent for vendors in sports IT solutions."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:16:43.626012",
+          "domain_explored": "https://svenskfotboll.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Min Fotboll (Mobile App)",
+              "Ticketing Platforms (implied by Biljetter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Security & Safety Consulting (Government meeting on crime)",
+              "Facility Construction/Development (Angered project)",
+              "Sales Training & Commercial Services",
+              "Event Management Services (Beach Soccer organizer search)"
+            ]
+          },
+          "patterns_found": [
+            "Event Security & Governance (Government Collaboration)",
+            "Digital Fan Engagement (Mobile App 'Min Fotboll')",
+            "Ticketing & Access Management (VM-kval)",
+            "Sports Infrastructure Projects (Angered Arena)",
+            "Commercial Education (District Training)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 353,
+              "elapsed_seconds": 4.164535045623779
+            }
+          ],
+          "reasoning": "The content reveals several indirect procurement signals. The government meeting on 'ordningsst\u00f6rningar' (disturbances) signals a need for security consulting or surveillance tech. The promotion of the 'Min Fotboll' app indicates an active digital ecosystem requiring maintenance/development. The specific mention of 'Angered' longing for a new home suggests a future infrastructure/construction procurement. Additionally, 'Marknadsresan' (Market journey) indicates investment in sales training tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:16:50.488935",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Ecosystem",
+            "Consumer App Storefront",
+            "General Entertainment Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.808159351348877
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com is a generic listing of mobile games and applications (e.g., Arknights, Clash of Clans, Persona 5). It contains no information regarding the entity 'Allsvenskan', its operations, governance, or procurement activities. This represents a false positive in the scraping process or irrelevant noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:16:57.348542",
+          "domain_explored": "https://fotbollskanalen.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Media",
+            "Transfer Market Analysis",
+            "Sports Commentary & Opinion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 145,
+              "elapsed_seconds": 2.391329050064087
+            }
+          ],
+          "reasoning": "The content is exclusively sports journalism, focusing on player transfers, match previews, and opinion pieces. It lacks corporate governance, technology infrastructure, or operational procurement signals relevant to the Allsvenskan entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:17:03.493982",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer Market Data",
+            "Global Football News Aggregation",
+            "Player Valuation Analytics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1627,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.0094900131225586
+            }
+          ],
+          "reasoning": "The content is exclusively focused on international football transfer news, player market values, and rumors. It is a media outlet (Transfermarkt) covering global football (Premier League, MLS, etc.) and contains no information regarding the Swedish Allsvenskan's internal operations, procurement needs, or technology stack."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:17:11.693552",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Discord (Community Chat)",
+              "Mozilla Firefox (Browser Optimization)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-Generated Content (UGC) Platform",
+            "General Football Encyclopedia",
+            "Fan Community Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1678,
+              "output_tokens": 196,
+              "elapsed_seconds": 5.384603023529053
+            }
+          ],
+          "reasoning": "The content is from a generic fan-maintained wiki (Fandom/Wikia). It focuses on encyclopedic knowledge about players, clubs, and leagues rather than the operational or business aspects of the Allsvenskan organization. There is no procurement intent, vendor management, or corporate technology stack information present."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:17:15.177532",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:17:26.442436",
+          "domain_explored": "https://uk.linkedin.com/company/futboljobs.com?trk=ppro_cprof",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "J6 Football Team & Futsal Team (Japan) - Player Recruitment (via Futboljobs)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Job Aggregation",
+            "Global Football Recruitment",
+            "Niche Labor Market Exchange"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1767,
+              "output_tokens": 224,
+              "elapsed_seconds": 3.8360581398010254
+            }
+          ],
+          "reasoning": "The analyzed content belongs to Futboljobs.com, a third-party job board and recruitment platform for the football industry. While it lists opportunities within the football sector (e.g., players for Japan), it is an intermediary marketplace, not the primary entity (Allsvenskan) or a direct procurement signal from Allsvenskan's operations. It does not reveal Allsvenskan's internal technology stack, governance, or direct vendor partnerships."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T10:17:35.306099",
+          "domain_explored": "https://fr.linkedin.com/company/futboljobs.com?trk=organization-update_share-update_actor-text",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Footballers in Japan (J6 League/Futsal)",
+              "General coaching and staff roles (implied by platform nature)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Job Aggregation",
+            "Global Football Recruitment",
+            "Niche Labor Market Exchange"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1834,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.764456033706665
+            }
+          ],
+          "reasoning": "The analyzed content is the company profile for 'Futboljobs.com', a third-party job board and recruitment platform for the football industry. While it lists job opportunities (e.g., in Japan), it is an intermediary platform, not the entity 'Allsvenskan' or its direct procurement arm. The content does not contain specific procurement signals, technology stacks, or RFPs related to Allsvenskan's operations. It is a marketplace for labor, not a source for Allsvenskan's vendor selection."
+        }
+      ],
+      "total_input_tokens": 13382,
+      "total_output_tokens": 2026,
+      "estimated_cost_usd": 0.070536
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Allsvenskan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:17:35.308154"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.446737",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:35.756693"
+}

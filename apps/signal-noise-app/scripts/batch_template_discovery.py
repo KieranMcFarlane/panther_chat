@@ -111,7 +111,7 @@ class BatchDiscoveryOrchestrator:
         """Load all 2,921 entities from data/all_entities.json"""
         logger.info("📂 Loading all entities...")
 
-        entities_file = self.data_dir / "all_entities.json"
+        entities_file = self.data_dir / "all_entities_flat.json"
 
         if not entities_file.exists():
             raise FileNotFoundError(f"Entities file not found: {entities_file}")
@@ -126,7 +126,7 @@ class BatchDiscoveryOrchestrator:
         """Load production clusters"""
         logger.info("📂 Loading production clusters...")
 
-        clusters_file = self.data_dir / "production_clusters.json"
+        clusters_file = self.data_dir / "production_clusters_dict.json"
 
         if not clusters_file.exists():
             logger.warning("⚠️  Clusters file not found, using empty dict")
@@ -142,7 +142,7 @@ class BatchDiscoveryOrchestrator:
         """Load production templates"""
         logger.info("📂 Loading production templates...")
 
-        templates_file = self.data_dir / "production_templates.json"
+        templates_file = self.data_dir / "production_templates_dict.json"
 
         if not templates_file.exists():
             logger.warning("⚠️  Templates file not found, using empty dict")

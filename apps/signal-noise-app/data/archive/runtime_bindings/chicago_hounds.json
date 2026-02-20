@@ -1,0 +1,141 @@
+{
+  "entity_id": "chicago_hounds",
+  "entity_name": "Chicago Hounds",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "chicagohounds.com",
+    "sites.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/content-creator-at-chicago-hounds-rugby-4031245703"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chicago_hounds",
+      "entity_name": "Chicago Hounds",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/content-creator-at-chicago-hounds-rugby-4031245703",
+        "https://chicagohounds.com",
+        "https://sites.google.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chicago Hounds may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:49:07.842901",
+          "domain_explored": "https://chicagohounds.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:49:13.939234",
+          "domain_explored": "https://sites.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Sites",
+              "Google Drive"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Google Workspace / G-Suite"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 903,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.3475592136383057
+            }
+          ],
+          "reasoning": "The scraped content represents a Google Drive/Google Sites login page (authentication gate) rather than the actual content of a Chicago Hounds site. No public-facing procurement signals, job postings, or technology stack details are accessible from this view."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:49:21.884822",
+          "domain_explored": "https://www.linkedin.com/jobs/view/content-creator-at-chicago-hounds-rugby-4031245703",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (implied)",
+              "Content Creation Tools (implied: Adobe Creative Cloud, Canva, etc.)",
+              "Video Editing Software"
+            ],
+            "job_postings": [
+              "Content Creator (Entry Level, Full-time, Marketing/PR)"
+            ],
+            "procurement_indicators": [
+              "Hiring for content creation suggests future procurement needs for stock media, editing software, or social media scheduling tools.",
+              "Focus on 'fan first' content implies investment in CRM or Fan Engagement platforms."
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Marketing/Content",
+            "Organizational Growth",
+            "Digital Presence Investment",
+            "Fan Engagement Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 320,
+              "elapsed_seconds": 4.423622131347656
+            }
+          ],
+          "reasoning": "The discovery of a 'Content Creator' job posting confirms the organization is actively investing in its digital marketing and fan engagement capabilities. While this is a personnel investment rather than a direct technology procurement, it indicates a growing need for supporting software, creative tools, and potentially social media management platforms to support this new hire."
+        }
+      ],
+      "total_input_tokens": 2345,
+      "total_output_tokens": 479,
+      "estimated_cost_usd": 0.01422
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chicago Hounds may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:49:21.886520"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.272866",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:13.228097"
+}

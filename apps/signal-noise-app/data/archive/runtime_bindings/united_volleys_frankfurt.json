@@ -1,0 +1,281 @@
+{
+  "entity_id": "united_volleys_frankfurt",
+  "entity_name": "United Volleys Frankfurt",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "volleytimes.com",
+    "commons.wikimedia.org",
+    "volleybox.net",
+    "worldofvolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "united_volleys_frankfurt",
+      "entity_name": "United Volleys Frankfurt",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://commons.wikimedia.org",
+        "https://worldofvolley.com",
+        "https://globalsportsarchive.com",
+        "https://volleytimes.com",
+        "https://wikidata.org",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "United Volleys Frankfurt may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:31:19.007256",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports federation navigation structure",
+            "Historical event listings (EuroVolley, CEV Cup)",
+            "Generic footer links (Privacy Policy, Webmaster)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 186,
+              "elapsed_seconds": 1.947957992553711
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu and event listing from the Confederation Europ\u00e9enne de Volleyball (CEV) website. It contains no specific information regarding United Volleys Frankfurt, their local operations, technology stack, or procurement activities. The entity of interest is not mentioned in the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:31:29.366294",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx (Event scheduling)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wikimedia project landing page",
+            "Community event listings (WikidataCon 2025)",
+            "Developer documentation links (SPARQL, Wikibase)",
+            "Standard open data licensing information"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 247,
+              "elapsed_seconds": 2.9740922451019287
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a Wikimedia Foundation project. It contains general information about the platform, community events, and documentation. There is no specific content related to 'United Volleys Frankfurt', nor are there any procurement signals, vendor solicitations, or specific technology stack details relevant to the target entity. The page is a general knowledge base entry point."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:31:40.358514",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Extensive league listings (Soccer, Basketball, etc.)",
+            "Standard footer links (Privacy Policy, About Us)",
+            "No entity-specific content (United Volleys Frankfurt)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.3531699180603027
+            }
+          ],
+          "reasoning": "The scraped content represents a generic sports aggregation landing page (Global Sports Archive). It lists global leagues (UEFA, CONCACAF, etc.) and standard site navigation but contains zero information regarding 'United Volleys Frankfurt', their internal operations, technology stack, or procurement activities. This is irrelevant noise for the specific entity being targeted."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:31:49.783860",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news feed structure",
+            "High-volume content aggregation (Italy, France, Poland leagues)",
+            "Standardized sports reporting templates (Match results, Transfers)",
+            "Multimedia gallery links (Photogallery)",
+            "Author bylines (Danilo, Anya, Ivan, Danijel90)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 260,
+              "elapsed_seconds": 3.0018978118896484
+            }
+          ],
+          "reasoning": "The scraped content represents a general volleyball news aggregator covering international leagues (Italy, France, Poland, Turkey) and European Cups. The content focuses exclusively on match results, player transfers, and league standings. There is no mention of United Volleys Frankfurt, nor are there any signals regarding business operations, technology procurement, or job vacancies. The site is a pure media outlet with no apparent connection to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:31:58.506867",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wikimedia project landing page structure",
+            "Media repository navigation (Images, Videos, Sounds)",
+            "Standardized contribution workflows (Upload, Create account)",
+            "Broad categorical taxonomy (By topic, By location, By license)",
+            "Multi-language support interface"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.407413959503174
+            }
+          ],
+          "reasoning": "The content is the generic landing page for Wikimedia Commons, a media repository. It contains no information regarding United Volleys Frankfurt, volleyball operations, or organizational procurement activities. It is a utility page for media file management."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:32:09.604364",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports transfer market data",
+            "Player roster aggregation",
+            "Generic community forum structure",
+            "Dynamic content loading (JavaScript heavy)",
+            "Standardized sports database navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1695,
+              "output_tokens": 241,
+              "elapsed_seconds": 4.752949953079224
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net indicates a platform focused on global volleyball player transfers, rankings, and community statistics. While 'Transfers market' and 'Done deals' are present, these refer to athlete roster moves (sports management), not organizational procurement or vendor contracts. The content is generic to the sport of volleyball and does not contain specific references to 'United Volleys Frankfurt' or their corporate technology stack, job openings, or RFPs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:32:19.236633",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "High-volume match results reporting",
+            "Transfer market news ('Done deals')",
+            "Generic league navigation (Italy, Poland, Turkey, Germany)",
+            "Standardized sports reporting templates"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1748,
+              "output_tokens": 219,
+              "elapsed_seconds": 3.0257809162139893
+            }
+          ],
+          "reasoning": "The content is a global volleyball news feed focusing on match results, league standings, and player transfers. While it mentions German teams (Berlin, L\u00fcneburg, Stuttgart, Dresden), it contains no specific information regarding 'United Volleys Frankfurt' or any procurement, technology, or organizational governance signals. The entity is not mentioned in the provided text."
+        }
+      ],
+      "total_input_tokens": 10899,
+      "total_output_tokens": 1571,
+      "estimated_cost_usd": 0.05626199999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "United Volleys Frankfurt may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:32:19.238382"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321645",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:54.156298"
+}

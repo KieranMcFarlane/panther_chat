@@ -1,0 +1,179 @@
+{
+  "entity_id": "eredivisie",
+  "entity_name": "Eredivisie",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "eredivisie.eu",
+    "eredivisie.nl"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/footballbusinessinside_this-weeks-fbin-careers-update-has-arrived-activity-7419650033572270080-eFbf",
+      "https://www.linkedin.com/jobs/view/sports-translator-english-flemish-at-europe-language-jobs-219661521"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eredivisie",
+      "entity_name": "Eredivisie",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/sports-translator-english-flemish-at-europe-language-jobs-219661521",
+        "https://eredivisie.nl",
+        "https://eredivisie.eu",
+        "https://www.linkedin.com/posts/footballbusinessinside_this-weeks-fbin-careers-update-has-arrived-activity-7419650033572270080-eFbf"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eredivisie may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:02:48.543784",
+          "domain_explored": "https://eredivisie.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of physical product line (Sticker collection)",
+              "Season planning (2026/27 calendar confirmation)",
+              "Awards and event management (Rinus Michels Manager of the Month)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Product Expansion",
+            "Fan Engagement Initiatives",
+            "Annual Planning Cycles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 250,
+              "elapsed_seconds": 4.566586971282959
+            }
+          ],
+          "reasoning": "The content reveals the launch of a 'sticker collection' product line, indicating commercial procurement activities related to physical manufacturing, distribution, and potential digital integration. The confirmation of the 2026/27 match calendar suggests the organization is in the operational planning phase for the upcoming season, which often triggers vendor renewals or service procurement for logistics and broadcasting."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:02:56.033005",
+          "domain_explored": "https://eredivisie.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VriendenLoterij Eredivisie App",
+              "ESPN Fantasy Voetbal Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with VriendenLoterij (Sponsorship)",
+              "Partnership with ESPN (Content/Media)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platforms",
+            "Content Marketing Partnerships",
+            "Sponsorship Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 231,
+              "elapsed_seconds": 4.4913530349731445
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of consumer-facing news articles, match schedules, and fantasy football updates. While it confirms the existence of the 'VriendenLoterij Eredivisie' app and partnership with ESPN, it contains no actionable procurement signals such as RFPs, technology stack details, or strategic vendor management information."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:03:03.111323",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_this-weeks-fbin-careers-update-has-arrived-activity-7419650033572270080-eFbf",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "New Role (Title Truncated)",
+                "entity": "Eredivisie CV",
+                "person": "Saoed Habieb",
+                "source": "FBIN Careers Update / LinkedIn"
+              }
+            ],
+            "procurement_indicators": [
+              "Personnel movement often signals new budget authority or strategic direction changes."
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Changes",
+            "Organizational Restructuring",
+            "Strategic Role Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 266,
+              "elapsed_seconds": 3.043146848678589
+            }
+          ],
+          "reasoning": "The content confirms a specific personnel change (Saoed Habieb) at Eredivisie CV. While the specific role title is truncated in the snippet, executive movements often precede shifts in procurement strategy or vendor selection. This validates the entity's active operational status but provides only weak direct procurement intent without the specific job title."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:03:06.449346",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sports-translator-english-flemish-at-europe-language-jobs-219661521",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4235,
+      "total_output_tokens": 747,
+      "estimated_cost_usd": 0.02391
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eredivisie may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:03:06.449827"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418622",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:08.078563"
+}

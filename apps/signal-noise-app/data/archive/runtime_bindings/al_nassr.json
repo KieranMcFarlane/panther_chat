@@ -1,0 +1,308 @@
+{
+  "entity_id": "al_nassr",
+  "entity_name": "Al Nassr",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "alnassrfc.com",
+    "alnassr.sa",
+    "nassracademy.com",
+    "membership.alnassr.sa",
+    "alnasrclub.com",
+    "sportfive.com",
+    "saudipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_nassr",
+      "entity_name": "Al Nassr",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.2,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "explored_domains": [
+        "https://membership.alnassr.sa",
+        "https://saudipedia.com",
+        "https://nassracademy.com",
+        "https://sportfive.com",
+        "https://alnassr.sa",
+        "https://alnassrfc.com",
+        "https://alnasrclub.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Sports Tech Procurement (Player Management)",
+        "Facility Operations & Security Procurement",
+        "Digital Payment Infrastructure",
+        "Academy Management Systems",
+        "Fan Membership & CRM Infrastructure",
+        "Digital Ticketing & Access Control",
+        "Tiered Subscription Management",
+        "Digital Asset Delivery (Welcome Packs)",
+        "Third-Party Ticketing Vendor (Platinumlist)",
+        "Digital Scouting & Recruitment Infrastructure",
+        "Multi-Sport Operational Structure",
+        "Corporate Governance Segmentation (Investment vs. Sports Companies)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Nassr may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:51:23.464084",
+          "domain_explored": "https://alnassrfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (External: alnassrstore.com)",
+              "Forum Software (External: nassr.com)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in digital sales channels (Online Shop)",
+              "Investment in community infrastructure (Official Forum)",
+              "Media management capabilities (Media Centre)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Presence",
+            "Digital Asset Management (Media Centre)",
+            "Fan Engagement Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 300,
+              "elapsed_seconds": 4.288654088973999
+            }
+          ],
+          "reasoning": "The content confirms the existence of an 'Online Shop' (alnassrstore.com) and an 'Official Forum' (nassr.com), indicating active procurement for e-commerce and community platforms. The presence of a 'Media Centre' and 'Downloads' section suggests a need for Digital Asset Management (DAM) or CMS solutions. While no active RFPs are visible, the structural links to these sub-domains validate the organization's investment in digital infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:52:26.606498",
+          "domain_explored": "https://alnassr.sa",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:52:41.081170",
+          "domain_explored": "https://nassracademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "360Player (Sports Management Platform)",
+              "Surveillance Systems",
+              "Digital Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: 360Player for academy management",
+              "Security Procurement: 'Specialized teams ensuring safety... through high standard surveillance'",
+              "Facilities Partnership: Koora Park (Venue leasing/management)",
+              "Payment Infrastructure: Requirement for card-only payment terminals"
+            ]
+          },
+          "patterns_found": [
+            "Sports Tech Procurement (Player Management)",
+            "Facility Operations & Security Procurement",
+            "Digital Payment Infrastructure",
+            "Academy Management Systems"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 323,
+              "elapsed_seconds": 3.5906009674072266
+            }
+          ],
+          "reasoning": "The content reveals a specific technology procurement ('Powered By 360Player') and operational requirements for the Al Nassr Academy. It explicitly mentions 'high standard surveillance' (security procurement), 'seamless technology integration', and 'card payments only' (fintech infrastructure). This moves beyond general marketing into specific vendor usage and operational needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:52:51.713872",
+          "domain_explored": "https://membership.alnassr.sa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management System",
+              "Digital Card Issuance",
+              "Payment Gateway Integration (SAR/VAT handling)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Membership Platform (membership.alnassr.sa)",
+              "Digital 'Welcome Packs' procurement",
+              "Voting/Governance system infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Fan Membership & CRM Infrastructure",
+            "Digital Ticketing & Access Control",
+            "Tiered Subscription Management",
+            "Digital Asset Delivery (Welcome Packs)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.0413618087768555
+            }
+          ],
+          "reasoning": "The content reveals a structured, multi-tiered membership program (Fan, Nasrawi, Global, Gold, Platinum) managed via a dedicated portal. This indicates a clear procurement need for CRM systems, payment gateways, and digital membership card technology to manage user data, voting rights, and benefit distribution."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:53:05.460541",
+          "domain_explored": "https://alnasrclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Platinumlist (Ticketing Platform)",
+              "E-N45 Scouting (Digital Recruitment Tool)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Digital Scouting Forms (Player/Coach)",
+              "Corporate Segmentation (Investment vs Sports)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Ticketing Vendor (Platinumlist)",
+            "Digital Scouting & Recruitment Infrastructure",
+            "Multi-Sport Operational Structure",
+            "Corporate Governance Segmentation (Investment vs. Sports Companies)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.252263307571411
+            }
+          ],
+          "reasoning": "The content reveals specific vendor partnerships and structural procurement needs. The explicit link to Platinumlist.net confirms an outsourced ticketing solution. The presence of 'E-N45 Scouting' forms indicates a digital workflow for talent acquisition. The navigation structure distinguishes between the 'Club', 'Investment Company', and 'Sports Company', suggesting a complex corporate governance model that requires segmented ERP or procurement systems."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:53:13.515120",
+          "domain_explored": "https://sportfive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.994196891784668
+            }
+          ],
+          "reasoning": "The scraped content is almost entirely composed of cookie consent dialogs and generic marketing slogans ('We Are Leaders In Sports Marketing'). There is no visible text linking Al Nassr to SPORTFIVE, no specific case studies, and no procurement-related data (RFPs, tech stack, job postings) in the provided snippet. The content is effectively empty of intelligence signals."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:53:25.568852",
+          "domain_explored": "https://saudipedia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Knowledge Content",
+            "National Vision 2030 Context",
+            "Irrelevant Navigation Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 158,
+              "elapsed_seconds": 3.313624858856201
+            }
+          ],
+          "reasoning": "The scraped content from Saudipedia consists entirely of general navigation menus and article titles related to Saudi history and Vision 2030. There is no mention of Al Nassr FC, specific procurement activities, or technology stacks relevant to the entity's operations."
+        }
+      ],
+      "total_input_tokens": 9067,
+      "total_output_tokens": 1505,
+      "estimated_cost_usd": 0.049776
+    },
+    "procurement_signals": [
+      "Sports Tech Procurement (Player Management)",
+      "Facility Operations & Security Procurement",
+      "Digital Payment Infrastructure",
+      "Academy Management Systems",
+      "Fan Membership & CRM Infrastructure",
+      "Digital Ticketing & Access Control",
+      "Tiered Subscription Management",
+      "Digital Asset Delivery (Welcome Packs)",
+      "Third-Party Ticketing Vendor (Platinumlist)",
+      "Digital Scouting & Recruitment Infrastructure",
+      "Multi-Sport Operational Structure",
+      "Corporate Governance Segmentation (Investment vs. Sports Companies)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Nassr may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:53:25.570943"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.136999",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:19:05.306896"
+}

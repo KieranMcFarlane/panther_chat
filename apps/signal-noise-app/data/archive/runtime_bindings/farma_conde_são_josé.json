@@ -1,0 +1,184 @@
+{
+  "entity_id": "farma_conde_s\u00e3o_jos\u00e9",
+  "entity_name": "Farma Conde S\u00e3o Jos\u00e9",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "farmacondearena.com.br",
+    "meon.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://br.linkedin.com/jobs/view/analista-de-tesouraria-at-farma-conde-4364991267"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "farma_conde_s\u00e3o_jos\u00e9",
+      "entity_name": "Farma Conde S\u00e3o Jos\u00e9",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://meon.com.br",
+        "https://farmacondearena.com.br",
+        "https://br.linkedin.com/jobs/view/analista-de-tesouraria-at-farma-conde-4364991267"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Treasury Management Hiring",
+        "ERP System Requirement",
+        "Financial Operations Expansion",
+        "Exchange Rate Operations (Import/Export Indicator)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Farma Conde S\u00e3o Jos\u00e9 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:53:53.021744",
+          "domain_explored": "https://farmacondearena.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Player (HTML5)",
+              "Event Ticketing Platform (Custom/Third-party)",
+              "Email Marketing (Newsletter Capture)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue capacity (8,000 pax) implies significant security and staffing contracts",
+              "Newsletter signup implies CRM/Marketing Automation needs",
+              "Event booking flow ('Fa\u00e7a seu evento') implies B2B sales tools"
+            ]
+          },
+          "patterns_found": [
+            "Event Ticketing System",
+            "Newsletter Marketing Capture",
+            "Video Content Hosting",
+            "Multi-purpose Venue Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.310445070266724
+            }
+          ],
+          "reasoning": "The content confirms the entity operates a large-scale venue (Farma Conde Arena) requiring ticketing, marketing, and AV infrastructure. While no direct RFPs are visible, the scale (8,000 capacity) implies a need for enterprise-grade event management, CRM (newsletter), and security services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:54:02.917042",
+          "domain_explored": "https://meon.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal",
+            "Local Journalism",
+            "Public Safety Announcements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.468472003936768
+            }
+          ],
+          "reasoning": "The target URL (meon.com.br) is a regional news portal for the Vale do Para\u00edba region and not the corporate entity of Farma Conde S\u00e3o Jos\u00e9. The content consists of weather alerts, traffic updates, and general news. There is no correlation between this content source and the procurement activities or technology stack of the target pharmacy chain."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:54:15.846480",
+          "domain_explored": "https://br.linkedin.com/jobs/view/analista-de-tesouraria-at-farma-conde-4364991267",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP Systems (Generic requirement)",
+              "Excel (Advanced)"
+            ],
+            "job_postings": [
+              {
+                "title": "Analista de Tesouraria",
+                "location": "S\u00e3o Jos\u00e9 dos Campos, SP",
+                "salary": "R$ 3.557,90",
+                "requirements": [
+                  "Ensino superior completo",
+                  "Conhecimento em sistemas ERP",
+                  "Excel avan\u00e7ado",
+                  "Opera\u00e7\u00f5es de c\u00e2mbio"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Financial Department Expansion",
+              "Digital Banking/ERP Utilization",
+              "Foreign Exchange (Forex) Activity"
+            ]
+          },
+          "patterns_found": [
+            "Treasury Management Hiring",
+            "ERP System Requirement",
+            "Financial Operations Expansion",
+            "Exchange Rate Operations (Import/Export Indicator)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 346,
+              "elapsed_seconds": 9.308759927749634
+            }
+          ],
+          "reasoning": "The discovery of a dedicated 'Analista de Tesouraria' (Treasury Analyst) position is a strong procurement signal. The specific requirement for 'ERP systems' and 'Exchange operations' indicates active financial management and potential international trade activity, necessitating software tools and banking services."
+        }
+      ],
+      "total_input_tokens": 4237,
+      "total_output_tokens": 790,
+      "estimated_cost_usd": 0.024561
+    },
+    "procurement_signals": [
+      "Treasury Management Hiring",
+      "ERP System Requirement",
+      "Financial Operations Expansion",
+      "Exchange Rate Operations (Import/Export Indicator)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Farma Conde S\u00e3o Jos\u00e9 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:54:15.848431"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320819",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:42.137229"
+}

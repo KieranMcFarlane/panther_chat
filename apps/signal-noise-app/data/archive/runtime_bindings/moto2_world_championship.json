@@ -1,0 +1,306 @@
+{
+  "entity_id": "moto2_world_championship",
+  "entity_name": "Moto2 World Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "yamaha-racing.com",
+    "motogp.com",
+    "pramacracing.com",
+    "triumphmotorcycles.com",
+    "global.yamaha-motor.com",
+    "triumph-mediakits.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/mt-helmets-group_mtgroup-careers-activity-7418982847157325825-AYSM"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "moto2_world_championship",
+      "entity_name": "Moto2 World Championship",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://yamaha-racing.com",
+        "https://pramacracing.com",
+        "https://triumphmotorcycles.com",
+        "https://www.linkedin.com/posts/mt-helmets-group_mtgroup-careers-activity-7418982847157325825-AYSM",
+        "https://motogp.com",
+        "https://global.yamaha-motor.com",
+        "https://triumph-mediakits.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Leadership Hiring (C-Suite/Director Level)",
+        "Digital Transformation & Modernization Initiatives",
+        "ERP & Platform Migration Signals",
+        "Budget Ownership & Strategic Planning",
+        "Cybersecurity Governance"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Moto2 World Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:35:14.475633",
+          "domain_explored": "https://yamaha-racing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)",
+              "Client-side Rendering Framework (e.g., React, Vue, or Angular - suspected but not confirmed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript-heavy SPA (Single Page Application)",
+            "Client-side rendering dependency"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 374,
+              "output_tokens": 237,
+              "elapsed_seconds": 7.217923164367676
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a shell HTML instruction ('You need to enable JavaScript to run this app'). This indicates the site is a Single Page Application (SPA) where the actual content (procurement signals, job postings, technology stack details) is rendered dynamically via JavaScript after the initial load. Since the scraper only captured the initial shell and not the rendered DOM, no actionable procurement intelligence is available."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:35:22.049326",
+          "domain_explored": "https://motogp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VideoPass (Proprietary OTT Platform)",
+              "TimingPass (Proprietary Data Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship renewals (e.g., Castrol, BK8)",
+              "Broadcasting rights management (VideoPass promotion)"
+            ]
+          },
+          "patterns_found": [
+            "Content is consumer-facing media (B2C)",
+            "Heavy focus on VideoPass/TimingPass subscription models",
+            "Sports journalism structure (Headlines, Video duration, 'Read Now' CTAs)",
+            "Sponsorship visibility (Castrol, BK8, Pro Honda)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.528079986572266
+            }
+          ],
+          "reasoning": "The scraped content from motogp.com is entirely focused on race coverage, rider transfers (e.g., Bezzecchi, Quartararo), and team launches for the 2026 season. While 'VideoPass' and 'TimingPass' are mentioned, these are established consumer subscription products, not new procurement signals. There is no presence of corporate governance, vendor RFPs, or technology infrastructure investment details suitable for B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:35:31.877733",
+          "domain_explored": "https://pramacracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Augmented Reality (AR) - indicated by 'Pramac Racing Hub' link structure",
+              "Event Management Software (implied by calendar data structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Fan Engagement Content",
+            "Future Event Scheduling (2026)",
+            "AR/VR Integration (Pramac Racing Hub)",
+            "Repetitive DOM Structure (Accessibility/Scraping noise)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 858,
+              "output_tokens": 239,
+              "elapsed_seconds": 5.052452087402344
+            }
+          ],
+          "reasoning": "The content is entirely consumer-focused, promoting a future team presentation and an Augmented Reality (AR) fan experience hub. There are no signals regarding vendor selection, supply chain management, or corporate infrastructure procurement. The text appears to be a raw scrape of a calendar or promotional widget with significant repetition."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:35:34.841425",
+          "domain_explored": "https://triumphmotorcycles.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:35:43.550334",
+          "domain_explored": "https://global.yamaha-motor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Announcement of Personnel Changes (Jan 30, 2026)"
+            ],
+            "procurement_indicators": [
+              "Investor Relations (Financial Data/Corporate Publications)",
+              "Global Public Relations Strategy (Newsletter)",
+              "Sustainability Initiatives (Potential vendor engagement)"
+            ]
+          },
+          "patterns_found": [
+            "Global Corporate Navigation Structure",
+            "Investor Relations (IR) Portal",
+            "Sustainability Reporting",
+            "Corporate Communications / PR Strategy",
+            "Racing Sub-domain Segregation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 301,
+              "elapsed_seconds": 4.306787967681885
+            }
+          ],
+          "reasoning": "While the specific page content is primarily navigational and B2C focused, the presence of a dedicated 'Investor Relations' link and explicit references to 'Global Public Relations Strategy' and 'Personnel Changes' indicates a structured corporate governance layer. This moves the analysis from pure consumer media (Iteration 2) towards corporate transparency. However, specific procurement signals (RFPs, Tech Stack) are still absent from this text snippet."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:35:50.227069",
+          "domain_explored": "https://triumph-mediakits.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript-heavy rendering (requires JS enabled)",
+              "Static HTML structure for news aggregation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "None detected"
+            ]
+          },
+          "patterns_found": [
+            "B2C Marketing / Press Release Aggregation",
+            "Media Kit / Asset Distribution Focus",
+            "Product Launch Cycles (2026 Model Updates)",
+            "JavaScript Rendering Dependency"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.501739025115967
+            }
+          ],
+          "reasoning": "The content is explicitly from a 'Media Kit' subdomain (triumph-mediakits.com), which functions as a distribution channel for press releases and marketing assets. The text focuses entirely on consumer product launches (e.g., 'Speed Twin Cafe Racer', 'Trident 660') and entertainment partnerships ('Springsteen' movie). There are no signals of corporate procurement, vendor management, or B2B operations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:35:59.531309",
+          "domain_explored": "https://www.linkedin.com/posts/mt-helmets-group_mtgroup-careers-activity-7418982847157325825-AYSM",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP (Enterprise Resource Planning)",
+              "B2B/B2C E-commerce Platforms",
+              "Cybersecurity Tools",
+              "Automation Systems"
+            ],
+            "job_postings": [
+              "IT Director - MT Helmets Group"
+            ],
+            "procurement_indicators": [
+              "Active search for 'IT Director' to manage IT budget",
+              "Upcoming projects for 'system modernization'",
+              "Initiatives for 'efficiency, scalability and risk management'",
+              "Focus on 'digital transformation'"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Hiring (C-Suite/Director Level)",
+            "Digital Transformation & Modernization Initiatives",
+            "ERP & Platform Migration Signals",
+            "Budget Ownership & Strategic Planning",
+            "Cybersecurity Governance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 331,
+              "elapsed_seconds": 5.997150897979736
+            }
+          ],
+          "reasoning": "The content is a direct procurement signal. MT Helmets (a key team in the Moto2/Moto3 paddock) is hiring an IT Director with explicit control over the IT budget and responsibility for core projects including ERP, B2B/B2C platforms, and system modernization. This indicates an active, high-budget procurement cycle aimed at digital transformation."
+        }
+      ],
+      "total_input_tokens": 7527,
+      "total_output_tokens": 1657,
+      "estimated_cost_usd": 0.047436
+    },
+    "procurement_signals": [
+      "Executive Leadership Hiring (C-Suite/Director Level)",
+      "Digital Transformation & Modernization Initiatives",
+      "ERP & Platform Migration Signals",
+      "Budget Ownership & Strategic Planning",
+      "Cybersecurity Governance"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Moto2 World Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:35:59.535528"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374384",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:21.756650"
+}

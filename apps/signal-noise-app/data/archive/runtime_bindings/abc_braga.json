@@ -1,0 +1,222 @@
+{
+  "entity_id": "abc_braga",
+  "entity_name": "ABC Braga",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "globalsportsarchive.com",
+    "zoominfo.com",
+    "portal.fpa.pt",
+    "slbenfica.pt",
+    "commons.wikimedia.org",
+    "old.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "abc_braga",
+      "entity_name": "ABC Braga",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://slbenfica.pt",
+        "https://commons.wikimedia.org",
+        "https://old.eurohandball.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://portal.fpa.pt",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "ABC Braga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:03:46.889772",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content domain",
+            "Sports news coverage",
+            "Cookie consent walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.454709053039551
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (eurohandball.com) and focuses exclusively on sports news (EHF EURO 2026, match results, team analysis). There is absolutely no mention of 'ABC Braga', procurement activities, or corporate technology stacks. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:03:52.932590",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports results aggregation",
+            "Generic navigation structure",
+            "Cookie consent walls (inferred from domain type)",
+            "No corporate entity presence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.5757250785827637
+            }
+          ],
+          "reasoning": "The content is a generic sitemap of global soccer leagues and tournaments. It contains no information regarding 'ABC Braga', corporate governance, or technology procurement. The domain is a sports statistics archive, which is irrelevant to B2B procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:03:55.952123",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:04:03.384724",
+          "domain_explored": "https://portal.fpa.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports competition data (Season 2013-2014)",
+            "Generic navigation (Agenda, Competi\u00e7\u00f5es, Transmiss\u00f5es)",
+            "Repetitive 'A carregar...' (Loading) placeholders",
+            "Absence of corporate or governance terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 608,
+              "output_tokens": 225,
+              "elapsed_seconds": 4.216161012649536
+            }
+          ],
+          "reasoning": "The scraped content indicates a sports results portal (likely related to Andebol or similar federations given the 'fpa.pt' domain and 'Equipa Visitada/Visitante' terminology). The presence of dated data (2013-2014) and 'Loading' placeholders suggests a static or non-functional results archive. There is zero presence of corporate procurement activities, job postings, or technology stack information relevant to 'ABC Braga'."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:04:06.562511",
+          "domain_explored": "https://slbenfica.pt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:04:09.326835",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:04:14.185263",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic calendar navigation structure",
+            "Sports event scheduling (2025-2026)",
+            "Repetitive numeric strings (dates)",
+            "Standard sports taxonomy (Tournaments, Member Federations, EHF TV)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 190,
+              "elapsed_seconds": 1.93833589553833
+            }
+          ],
+          "reasoning": "The content is exclusively a calendar view for a sports federation (European Handball Federation). It contains no governance, financial, or operational data relevant to ABC Braga's procurement activities. The domain 'old.eurohandball.com' is an archive of sports results, further confirming irrelevance."
+        }
+      ],
+      "total_input_tokens": 4971,
+      "total_output_tokens": 758,
+      "estimated_cost_usd": 0.026283
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "ABC Braga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:04:14.186295"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352634",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:07.546349"
+}

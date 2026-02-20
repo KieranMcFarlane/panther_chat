@@ -1,0 +1,182 @@
+{
+  "entity_id": "bulgarian_volleyball_federation",
+  "entity_name": "Bulgarian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "mikasasports.eu",
+    "inside.cev.eu",
+    "en.volleyballworld.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bulgarian_volleyball_federation",
+      "entity_name": "Bulgarian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://mikasasports.eu",
+        "https://en.volleyballworld.com",
+        "https://www-old.cev.eu",
+        "https://inside.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bulgarian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:20:40.279358",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical hosting of FIVB/CEV World Tour events in Sofia (indicates past event management capability, but not current procurement intent)"
+            ]
+          },
+          "patterns_found": [
+            "Historical Event Hosting",
+            "Federation Affiliation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.343108892440796
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event archive from the CEV (Confederation Europeenne de Volleyball) website. While it confirms Bulgaria's (BUL) active participation in European volleyball (hosting multiple '1* Sofia' events and participating in EuroVolley), it contains no specific information regarding the Bulgarian Volleyball Federation's internal procurement, technology stack, or governance. It establishes context but provides no actionable procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:20:51.623236",
+          "domain_explored": "https://mikasasports.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Supplier Status: V200W-CEV listed as 'world's exclusive FIVB match ball'",
+              "Standardized Equipment: Federation procurement likely restricted to approved match balls (V200W-CEV) and training balls (V330W, V333W)",
+              "Vendor Partnership: Direct commercial relationship between Mikasa Sports Europe and CEV/FIVB"
+            ]
+          },
+          "patterns_found": [
+            "Official Equipment Partnership",
+            "Product Catalog Standardization",
+            "Event Sponsorship Alignment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.855429172515869
+            }
+          ],
+          "reasoning": "The content confirms Mikasa as the official ball supplier for CEV (European Volleyball Confederation) and FIVB. While this is a vendor catalog rather than a direct procurement page, it establishes the 'Official Equipment' standard that the Bulgarian Volleyball Federation (as a CEV member) is contractually or operationally bound to procure. This indicates a specific supply chain relationship."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:21:07.730327",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Scouting Operations",
+            "Governmental Bid Support",
+            "High-Performance Team Structuring"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 191,
+              "elapsed_seconds": 9.701092004776001
+            }
+          ],
+          "reasoning": "The scraped content from 'inside.cev.eu' focuses on general European volleyball news (Azerbaijan scouting, Montenegro EuroVolley bid, OSCG staffing). While it indicates regional activity and structural development, it contains no specific references to the Bulgarian Volleyball Federation, nor does it reveal procurement signals, technology stacks, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:21:19.000553",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VolleyballWorld TV (OTT Platform)",
+              "Global Ranking Database"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Competition Scheduling",
+            "FIVB World Ranking System",
+            "OTT Streaming Infrastructure (VolleyballWorld TV)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 253,
+              "elapsed_seconds": 4.340893745422363
+            }
+          ],
+          "reasoning": "The scraped content represents the public-facing broadcast and results portal for global volleyball competitions. While it confirms the existence of a centralized digital platform (VolleyballWorld TV) and ranking infrastructure, it contains no specific signals regarding the Bulgarian Volleyball Federation's internal procurement activities, technology stack, or vendor selection process. The content is purely informational (scores, schedules) and does not reveal B2B relationships or decision-making patterns for the target entity."
+        }
+      ],
+      "total_input_tokens": 5738,
+      "total_output_tokens": 962,
+      "estimated_cost_usd": 0.031644
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bulgarian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:21:19.003435"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335168",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:09.840709"
+}

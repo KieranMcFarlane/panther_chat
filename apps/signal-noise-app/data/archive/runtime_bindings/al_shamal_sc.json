@@ -1,0 +1,222 @@
+{
+  "entity_id": "al_shamal_sc",
+  "entity_name": "Al Shamal SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "transfermarkt.us",
+    "duhailsc.qa",
+    "footballdatabase.com",
+    "wikidocumentaries-demo.wmcloud.org",
+    "footballdatabase.eu",
+    "footystats.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_shamal_sc",
+      "entity_name": "Al Shamal SC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://transfermarkt.us",
+        "https://wikidocumentaries-demo.wmcloud.org",
+        "https://footystats.org",
+        "https://duhailsc.qa",
+        "https://footballdatabase.eu",
+        "https://footballdatabase.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Shamal SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:19:18.378174",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Global transfer market data",
+            "Irrelevant entity mentions (Liverpool, Arsenal, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.179103136062622
+            }
+          ],
+          "reasoning": "The provided content is a general news feed from Transfermarkt covering global football transfers and rumors (e.g., Liverpool, Arsenal, Brighton). There is absolutely no mention of 'Al Shamal SC', nor are there any procurement signals, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:19:29.137860",
+          "domain_explored": "https://duhailsc.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Match (Al Duhail SC vs Al Shamal SC)",
+            "Sports News Aggregation",
+            "League Table Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.3158490657806396
+            }
+          ],
+          "reasoning": "The scraped content is exclusively from Al Duhail SC (duhailsc.qa), a rival club in the Qatari League. While the content mentions 'Al Shamal SC' in the league standings, it provides no information regarding Al Shamal's internal operations, procurement needs, or technology stack. The content is purely sports journalism (match reports, player transfers) and league statistics."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:19:38.150785",
+          "domain_explored": "https://footballdatabase.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports data aggregation",
+            "Generic club rankings (Arsenal, Bayern Munich, etc.)",
+            "No mention of Al Shamal SC",
+            "No procurement or technology signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 186,
+              "elapsed_seconds": 5.899939060211182
+            }
+          ],
+          "reasoning": "The scraped content from footballdatabase.com consists of generic global football rankings and match scores for major international clubs (Arsenal, Barcelona, etc.). There is no mention of the target entity 'Al Shamal SC', nor are there any signals related to procurement, technology infrastructure, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:19:41.331338",
+          "domain_explored": "https://wikidocumentaries-demo.wmcloud.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:19:46.850358",
+          "domain_explored": "https://footballdatabase.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports data aggregation",
+            "Generic club rankings (Arsenal, Bayern Munich, etc.)",
+            "No mention of Al Shamal SC"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 569,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.4226107597351074
+            }
+          ],
+          "reasoning": "The content is a generic sports statistics database. It focuses on global rankings, live results, and confirmed transfers for major international clubs. There is no specific information regarding Al Shamal SC's operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:20:06.022187",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports data aggregation",
+            "Generic league tables and odds",
+            "No mention of Al Shamal SC",
+            "Irrelevant entity mentions (Sunderland, Burnley, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1610,
+              "output_tokens": 182,
+              "elapsed_seconds": 15.996684074401855
+            }
+          ],
+          "reasoning": "The scraped content from footystats.org is a generic sports statistics dashboard listing global leagues and odds (e.g., Sunderland vs Burnley, Serie A, Liga NOS). There is no mention of Al Shamal SC, the Qatari league, or any procurement-related signals such as vendor partnerships or technology stacks."
+        }
+      ],
+      "total_input_tokens": 6411,
+      "total_output_tokens": 889,
+      "estimated_cost_usd": 0.032568
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Shamal SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:20:06.024611"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220594",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:35.107114"
+}

@@ -1,0 +1,326 @@
+{
+  "entity_id": "women's_super_league_(wsl)",
+  "entity_name": "Women's Super League (WSL)",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "wslfootball.com",
+    "newsnow.co.uk",
+    "allforxi.com",
+    "football.miraheze.org",
+    "worldsoccertalk.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/player-services-executive-women-s-football-at-professional-footballers-%E2%80%8B-association-pfa-4357608685",
+      "https://uk.linkedin.com/jobs/view/warehouse-driver-online-store-assistant-at-west-ham-united-fc-4299415713",
+      "https://www.linkedin.com/posts/evenbreak_inclusivecareers-accessibleemployment-activity-7420084086787973120-e-up"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "women's_super_league_(wsl)",
+      "entity_name": "Women's Super League (WSL)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://wslfootball.com",
+        "https://football.miraheze.org",
+        "https://www.linkedin.com/posts/evenbreak_inclusivecareers-accessibleemployment-activity-7420084086787973120-e-up",
+        "https://uk.linkedin.com/jobs/view/warehouse-driver-online-store-assistant-at-west-ham-united-fc-4299415713",
+        "https://worldsoccertalk.com",
+        "https://uk.linkedin.com/jobs/view/player-services-executive-women-s-football-at-professional-footballers-%E2%80%8B-association-pfa-4357608685",
+        "https://newsnow.co.uk",
+        "https://allforxi.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Leadership Hiring",
+        "Direct League Governance Role",
+        "Operational Expansion Signal"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Women's Super League (WSL) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:24:17.874797",
+          "domain_explored": "https://wslfootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Data Aggregation Tools (Transfer data)",
+              "Fan Engagement Platforms (Voting mechanisms for 'Save of the Month')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deliverables: British Gas campaign execution",
+              "Legacy Planning: FIFA Women\u2019s Champions Cup 2026 coach development",
+              "Content Operations: High-volume transfer news publishing"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Activation (British Gas)",
+            "Legacy Program Management (FIFA WCC 2026)",
+            "High-Frequency Data Publishing (Transfers)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.926427841186523
+            }
+          ],
+          "reasoning": "While the content is primarily editorial, the 'British Gas Save of the Month' indicates an active sponsorship fulfillment cycle requiring data collection and voting mechanisms. The 'FIFA Women\u2019s Champions Cup 2026' legacy program suggests upcoming governance and training procurements. The transfer news section demonstrates a robust content management system handling structured data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:24:25.584199",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevance to Entity",
+            "General News Aggregation",
+            "Political/Financial Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 153,
+              "elapsed_seconds": 4.65367317199707
+            }
+          ],
+          "reasoning": "The provided content from NewsNow is a general news feed covering UK politics, international crime, and financial markets. There is zero mention of the Women's Super League (WSL), football, or sports procurement. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:24:35.063630",
+          "domain_explored": "https://allforxi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "NWSL Transfer Activity",
+            "General Sports News Aggregation",
+            "Community Forum Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 175,
+              "elapsed_seconds": 6.414881944656372
+            }
+          ],
+          "reasoning": "The scraped content from allforxi.com focuses exclusively on the National Women's Soccer League (NWSL) and Liga MX Femenil, covering player transfers, injuries, and general sports news. There is no mention of the Women's Super League (WSL), the English football structure, or any associated procurement/technology signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:24:41.330804",
+          "domain_explored": "https://football.miraheze.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Knowledge Repository",
+            "User-Generated Content",
+            "Low Data Density",
+            "Non-Commercial Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 834,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.65451979637146
+            }
+          ],
+          "reasoning": "The target is a generic, user-generated wiki encyclopedia (Miraheze) with only 126 articles. It lacks the organizational authority, commercial activity, or operational depth required to reveal procurement signals for the Women's Super League (WSL). It is a secondary information source, not a primary business source."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:24:57.909710",
+          "domain_explored": "https://worldsoccertalk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant League Scheduling (La Liga, Liga MX)",
+            "Data Repetition",
+            "No Entity Mention (WSL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 175,
+              "elapsed_seconds": 13.715136051177979
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of repetitive TV schedule data for Spanish La Liga and Mexican Liga MX. There is absolutely no mention of the Women's Super League (WSL), the FA, or any associated procurement activities such as tenders, technology investments, or job postings. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:25:06.200708",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/player-services-executive-women-s-football-at-professional-footballers-%E2%80%8B-association-pfa-4357608685",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Player Services Executive - Women's Football (PFA) - [Inaccessible/Not in Content]"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Scraping Noise",
+            "Irrelevant Job Recommendations (Healthcare)",
+            "Authentication Barrier",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.8244211673736572
+            }
+          ],
+          "reasoning": "The scraped content is dominated by UI noise (login prompts, password recovery) and irrelevant job recommendations for 'Senior Occupational Therapist' roles in the US healthcare sector (Emory Healthcare, Mount Sinai). While the URL indicates a target role ('Player Services Executive - Women's Football' at the PFA), the actual text content provided does not contain the job description, requirements, or procurement signals. The content fails to validate the entity (WSL) or provide accessible procurement data."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:25:14.596865",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/warehouse-driver-online-store-assistant-at-west-ham-united-fc-4299415713",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Board Scraping Noise",
+            "Geographic Irrelevance (US-based listings)",
+            "Entity Mismatch (West Ham United vs WSL)",
+            "Generic Labor Listings (Delivery, Transport, Manual Labor)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1712,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.5182571411132812
+            }
+          ],
+          "reasoning": "The URL targets a specific role at West Ham United FC (a men's Premier League club with a separate women's team), but the scraped content is entirely composed of irrelevant LinkedIn job recommendations for US-based positions (e.g., Insomnia Cookies, Artisan Direct, Devon Energy). There is no content related to the target entity (WSL) or the specific job title mentioned in the URL. The page represents scraping noise with zero intelligence value for WSL procurement."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:25:21.456600",
+          "domain_explored": "https://www.linkedin.com/posts/evenbreak_inclusivecareers-accessibleemployment-activity-7420084086787973120-e-up",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of Football Development for Women\u2019s Super League (WSL)"
+            ],
+            "procurement_indicators": [
+              "Governance & Strategy Investment",
+              "League Operations Management"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Leadership Hiring",
+            "Direct League Governance Role",
+            "Operational Expansion Signal"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1790,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.6470258235931396
+            }
+          ],
+          "reasoning": "The content identifies a specific, high-level vacancy ('Head of Football Development for Women\u2019s Super League') directly associated with the target entity (WSL). This indicates active recruitment for a role that likely holds budgetary authority and oversight for league-wide initiatives, including technical standards, officiating, and youth development\u2014areas that often drive procurement decisions for software, training, and consultancy services."
+        }
+      ],
+      "total_input_tokens": 11791,
+      "total_output_tokens": 1704,
+      "estimated_cost_usd": 0.060933
+    },
+    "procurement_signals": [
+      "Strategic Leadership Hiring",
+      "Direct League Governance Role",
+      "Operational Expansion Signal"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Women's Super League (WSL) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:25:21.457040"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447422",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:52.571785"
+}

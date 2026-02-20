@@ -1,0 +1,224 @@
+{
+  "entity_id": "amstel_gold_race_ladies_edition",
+  "entity_name": "Amstel Gold Race Ladies Edition",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "amstel.nl",
+    "procyclingstats.com",
+    "assets.ctfassets.net",
+    "totallympics.com",
+    "cyclingnews.com",
+    "cyclingfans.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "amstel_gold_race_ladies_edition",
+      "entity_name": "Amstel Gold Race Ladies Edition",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://totallympics.com",
+        "https://assets.ctfassets.net",
+        "https://amstel.nl",
+        "https://procyclingstats.com",
+        "https://cyclingfans.com",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Amstel Gold Race Ladies Edition may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:52:36.288310",
+          "domain_explored": "https://amstel.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing content",
+            "Product portfolio focus",
+            "B2C navigation structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.95003080368042
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (beer descriptions, product variants) and general navigation. There are no corporate governance signals, technology stack details, or procurement opportunities relevant to the 'Amstel Gold Race Ladies Edition' entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:52:46.628709",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race results data",
+            "UCI race calendar",
+            "Team rosters",
+            "Consumer sports statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 168,
+              "elapsed_seconds": 3.8445870876312256
+            }
+          ],
+          "reasoning": "The scraped content from procyclingstats.com is a sports data aggregation site displaying race results, rider rankings, and event calendars. It contains no information regarding the Amstel Gold Race Ladies Edition organization, its internal operations, or its procurement activities. This is irrelevant vendor data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:52:55.160844",
+          "domain_explored": "https://assets.ctfassets.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "404 Error Page",
+            "Dead Link",
+            "Content Delivery Network (CTF Assets)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 476,
+              "output_tokens": 136,
+              "elapsed_seconds": 2.375446081161499
+            }
+          ],
+          "reasoning": "The target URL returned a 404 'NotFound' error. This indicates a broken or invalid link within the dataset. No content, procurement signals, or technology stack information can be extracted from an error page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:53:06.701636",
+          "domain_explored": "https://totallympics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-generated content",
+            "Forum navigation structure",
+            "Fan discussion threads",
+            "Olympic sports focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.5952999591827393
+            }
+          ],
+          "reasoning": "The content is clearly from a fan forum (Totallympics) focused on Olympic sports discussion, results, and prediction games. It lacks any organizational, commercial, or governance structure related to the Amstel Gold Race Ladies Edition entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:53:17.249634",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism",
+            "Race results reporting",
+            "Editorial news feed",
+            "Consumer-focused content",
+            "General cycling industry coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1542,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.5685949325561523
+            }
+          ],
+          "reasoning": "The content provided is a standard news feed from 'Cyclingnews.com', a sports media outlet. The articles focus on race results (e.g., Mathieu van der Poel's win, Cadel Evans Great Ocean Road Race), rider interviews, and equipment galleries. There is no content related to the business operations, governance, or procurement activities of the Amstel Gold Race Ladies Edition organization. This source is irrelevant for identifying procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:53:50.613480",
+          "domain_explored": "https://cyclingfans.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6289,
+      "total_output_tokens": 833,
+      "estimated_cost_usd": 0.031362
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Amstel Gold Race Ladies Edition may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:53:50.629173"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.410302",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:27.488320"
+}

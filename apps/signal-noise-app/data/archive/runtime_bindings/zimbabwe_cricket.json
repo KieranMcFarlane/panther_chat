@@ -1,0 +1,128 @@
+{
+  "entity_id": "zimbabwe_cricket",
+  "entity_name": "Zimbabwe Cricket",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "zimcricket.org",
+    "zimcricketforums.com",
+    "cricheroes.com",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "zimbabwe_cricket",
+      "entity_name": "Zimbabwe Cricket",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zimcricket.org",
+        "https://cricheroes.com",
+        "https://zimcricketforums.com",
+        "https://espncricinfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Zimbabwe Cricket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:14:59.848557",
+          "domain_explored": "https://zimcricket.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:15:11.540485",
+          "domain_explored": "https://zimcricketforums.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "phpBB (Forum Software)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Forum-based community engagement",
+            "User-generated content (UGC) platform",
+            "Standard phpBB implementation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 202,
+              "elapsed_seconds": 7.9874348640441895
+            }
+          ],
+          "reasoning": "The scraped content confirms that zimcricketforums.com is a third-party community discussion board powered by phpBB, not an official corporate entity or procurement portal for Zimbabwe Cricket. While it contains discussions *about* Zimbabwe Cricket, it lacks direct governance, job postings, or official procurement signals. It serves only as a secondary source for sentiment analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:15:14.343616",
+          "domain_explored": "https://cricheroes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:15:18.335279",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1388,
+      "total_output_tokens": 202,
+      "estimated_cost_usd": 0.007194000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Zimbabwe Cricket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:15:18.335632"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299739",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:01.431365"
+}

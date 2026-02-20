@@ -1,0 +1,178 @@
+{
+  "entity_id": "irish_rugby_football_union",
+  "entity_name": "Irish Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "irishrugby.ie"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/jobs/view/financial-reporting-executive-at-irish-rugby-football-union-irfu-4262225093",
+      "https://ie.linkedin.com/jobs/view/irish-rugby-videographer-at-irish-rugby-football-union-irfu-4324159444"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "irish_rugby_football_union",
+      "entity_name": "Irish Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ie.linkedin.com/jobs/view/irish-rugby-videographer-at-irish-rugby-football-union-irfu-4324159444",
+        "https://irishrugby.ie",
+        "https://ie.linkedin.com/jobs/view/financial-reporting-executive-at-irish-rugby-football-union-irfu-4262225093"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Irish Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:08:29.500112",
+          "domain_explored": "https://irishrugby.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Ad Manager (Ad Inventory Management)",
+              "Vodafone (Connectivity/Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Fab for female-friendly initiatives",
+              "Energia All-Ireland League sponsorship",
+              "Vodafone 'Connected To Camp' digital content series"
+            ]
+          },
+          "patterns_found": [
+            "AdTech Infrastructure (Google Ad Manager)",
+            "Sponsorship Activation (Vodafone)",
+            "Corporate Social Responsibility Initiatives (Fab, Energia)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.9508819580078125
+            }
+          ],
+          "reasoning": "The content is primarily news and editorial, but the HTML source reveals specific infrastructure usage (Google Ad Manager) and active commercial partnerships. While no direct RFPs are present, the 'Period Supportive' movement indicates active procurement of services from partners like Fab, and the 'Connected To Camp' series confirms ongoing digital content investments with Vodafone."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:08:41.696226",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/financial-reporting-executive-at-irish-rugby-football-union-irfu-4262225093",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Consolidation Software",
+              "General Ledger (GL) Systems",
+              "ERP (Enterprise Resource Planning)",
+              "Reporting & Analytics Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Financial Reporting Executive",
+                "location": "Dublin 4, County Dublin",
+                "type": "Full-time, Permanent",
+                "focus": "Statutory Consolidated Financial Statements, Balance Sheet reconciliations, Month/Year end close"
+              }
+            ],
+            "procurement_indicators": [
+              "Potential future procurement of financial reporting tools or ERP upgrades to support the new executive's workload.",
+              "Requirement for audit and advisory services related to statutory reporting.",
+              "Investment in headcount suggests budget availability for operational efficiency tools."
+            ]
+          },
+          "patterns_found": [
+            "Financial Systems Expansion",
+            "Statutory Reporting Compliance",
+            "Internal Finance Capability Building"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 435,
+              "elapsed_seconds": 3.5291898250579834
+            }
+          ],
+          "reasoning": "The hiring of a Financial Reporting Executive indicates a need to strengthen internal financial controls and reporting infrastructure. While this is a back-office hire, it suggests an organization maturing its financial governance, which often precedes or accompanies investments in ERP systems, financial management software, or external audit services. The role specifically mentions 'Statutory Consolidated Financial Statements' and 'Annual Report' preparation, signaling a requirement for robust data aggregation tools."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:08:54.595948",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/irish-rugby-videographer-at-irish-rugby-football-union-irfu-4324159444",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite",
+              "Adobe Premiere Pro"
+            ],
+            "job_postings": [
+              "Irish Rugby Videographer"
+            ],
+            "procurement_indicators": [
+              "Investment in video production equipment (stabilization, lighting, sound)",
+              "Focus on 'Grassroots game', 'Sponsorship', and 'CSR' content delivery",
+              "Requirement for rapid turnaround workflows (match day deadlines)"
+            ]
+          },
+          "patterns_found": [
+            "In-House Creative Capability Expansion",
+            "Digital Content Production Investment",
+            "Sponsorship Activation Support",
+            "Adobe Creative Suite Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 333,
+              "elapsed_seconds": 6.22475790977478
+            }
+          ],
+          "reasoning": "The job posting confirms the IRFU is investing in internal digital media capabilities to support commercial and marketing objectives. While this is a hiring signal rather than a direct vendor procurement signal, it indicates a strategy to bring production in-house, which implies a potential reduction in external creative agency spend or a need for vendors who can support high-volume production workflows (software/hardware). The explicit mention of 'Adobe Creative Suite' and 'Premier Pro' confirms the technology stack."
+        }
+      ],
+      "total_input_tokens": 4329,
+      "total_output_tokens": 1045,
+      "estimated_cost_usd": 0.028662
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Irish Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:08:54.597674"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290741",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:09.861458"
+}

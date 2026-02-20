@@ -1,0 +1,239 @@
+{
+  "entity_id": "rk_metaloplastika",
+  "entity_name": "RK Metaloplastika",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rkmetaloplastika.com",
+    "eurohandball.com",
+    "grokipedia.com",
+    "play.google.com",
+    "globalsportsarchive.com",
+    "wikidata.org",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_metaloplastika",
+      "entity_name": "RK Metaloplastika",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://rkmetaloplastika.com",
+        "https://commons.wikimedia.org",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://grokipedia.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Metaloplastika may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:03:48.165303",
+          "domain_explored": "https://rkmetaloplastika.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:03:59.863687",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "cookie_consent_walls",
+            "sports_news_aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 156,
+              "elapsed_seconds": 3.3946969509124756
+            }
+          ],
+          "reasoning": "The scraped content is entirely related to the European Handball Federation (EHF) sports news, match results, and tournament schedules. There is absolutely no mention of RK Metaloplastika, manufacturing, procurement, or corporate governance. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:04:07.314683",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:04:15.525510",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "consumer_app_store_interface",
+            "gaming_content",
+            "irrelevant_navigation_elements",
+            "high_noise_ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.44124698638916
+            }
+          ],
+          "reasoning": "The scraped content is the raw HTML/Text of the Google Play Store homepage, specifically the 'Games' section. It lists consumer video games (e.g., Arknights, Clash of Clans) and device categories (Windows, Android, XR). There is absolutely no content related to RK Metaloplastika, manufacturing, procurement, or corporate governance. This URL is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:04:28.132841",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregation",
+            "tournament_statistics",
+            "irrelevant_navigation_structure",
+            "cookie_consent_walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.120007038116455
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports league listings, tournament fixtures, and navigation menus for a sports statistics website (Global Sports Archive). There is no content related to RK Metaloplastika, corporate procurement, job postings, or technology stacks. This domain is irrelevant to the procurement investigation."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:04:39.828241",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_knowledge_base_content",
+            "community_news_aggregation",
+            "open_source_project_structure",
+            "irrelevant_event_announcements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.276695251464844
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a free knowledge base. It contains general information about the platform, community news (birthdays, conferences), and documentation links. There is no specific information regarding 'RK Metaloplastika', nor are there any procurement signals, technology stack details, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:04:48.648003",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_media_repository_interface",
+            "non_profit_project_structure",
+            "user_generated_content_platform",
+            "irrelevant_navigation_categories"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.0805609226226807
+            }
+          ],
+          "reasoning": "The content is the generic homepage for Wikimedia Commons, a media file repository. It contains no information regarding RK Metaloplastika, procurement activities, or corporate governance. It is a standard interface for a digital archive unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 7522,
+      "total_output_tokens": 889,
+      "estimated_cost_usd": 0.035901
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Metaloplastika may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:04:48.655127"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.353379",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:33:03.290097"
+}

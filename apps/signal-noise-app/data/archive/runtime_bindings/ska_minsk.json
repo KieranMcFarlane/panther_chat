@@ -1,0 +1,276 @@
+{
+  "entity_id": "ska_minsk",
+  "entity_name": "SKA Minsk",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "ska-minsk.by",
+    "grokipedia.com",
+    "eurohandball.com",
+    "globalsportsarchive.com",
+    "handball-planet.com",
+    "ehfec.eurohandball.com",
+    "commons.wikimedia.org",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ska_minsk",
+      "entity_name": "SKA Minsk",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ehfec.eurohandball.com",
+        "https://commons.wikimedia.org",
+        "https://flashscore.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://ska-minsk.by",
+        "https://grokipedia.com",
+        "https://handball-planet.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SKA Minsk may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:40:56.574332",
+          "domain_explored": "https://ska-minsk.by",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership: SEHA \u2013 Gazprom League (League sponsor, not direct procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club content structure (Teams, Calendar, Stats)",
+            "Sponsorship visibility (Gazprom League)",
+            "Media/News aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.6545138359069824
+            }
+          ],
+          "reasoning": "The scraped content consists of navigation menus, sports statistics (match results, standings), and news headlines related to handball games. There are no explicit mentions of procurement activities, technology stacks, job postings, or corporate governance structures in the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:40:59.389009",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:41:06.421887",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Cookie consent walls",
+            "Tournament schedules (EHF EURO, Champions League)",
+            "Sponsorship visibility (Machineseeker)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 226,
+              "elapsed_seconds": 3.830893039703369
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation's general news portal. It focuses on high-level tournament results (Denmark, Croatia), player awards (Gidsel), and future event schedules. There is no mention of the specific entity 'SKA Minsk', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity. The content is purely informational and unrelated to the specific procurement intelligence goals for SKA Minsk."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:41:12.975833",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports aggregation",
+            "Global tournament indexing",
+            "Cookie consent walls",
+            "Static navigation structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.0992870330810547
+            }
+          ],
+          "reasoning": "The content is a generic sports archive listing global soccer tournaments (UEFA, CONCACAF, etc.). It lacks specific organizational data regarding SKA Minsk, internal governance, or procurement activities. It is a data source, not a target for procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:41:20.145146",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Tournament results (EHF EURO, Asian Championship)",
+            "Player transfer rumors",
+            "Editorial content (Blogs, Awards)",
+            "Video galleries",
+            "Cookie consent walls (implied by standard media structure)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.7124998569488525
+            }
+          ],
+          "reasoning": "The content is exclusively focused on high-level handball news, tournament results (EHF EURO 2026, Asian Championships), player transfers, and awards. There is no mention of SKA Minsk, internal club operations, or procurement-related activities such as RFPs, job postings, or technology investments. This is a general media outlet irrelevant to the specific procurement intelligence of the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:41:26.799584",
+          "domain_explored": "https://ehfec.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports federation content",
+            "Tournament schedule management",
+            "E-commerce merchandising (Shop now)",
+            "News aggregation for European Cup",
+            "Cookie/Consent walls (implied by standard EU sports site structure)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.3843190670013428
+            }
+          ],
+          "reasoning": "The content is strictly related to the European Handball Federation (EHF) European Cup tournament management, schedules, and merchandise. It contains no information regarding SKA Minsk's internal operations, procurement needs, or technology stack. It is a generic sports governing body page."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:41:29.588453",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:41:35.466473",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gambling addiction warnings (Responsible Gaming)",
+            "Multi-language localization (FR, DE, PT, RU, UA)",
+            "Sports aggregation interface (Flashscore structure)",
+            "Cookie/Ad placeholders"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 868,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.9523849487304688
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from a global sports live-score aggregator (Flashscore). It contains standard responsible gambling warnings in multiple languages and generic UI loading states. There is no content related to SKA Minsk's internal operations, procurement needs, or technology stack. This is irrelevant noise for B2B procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 8302,
+      "total_output_tokens": 1216,
+      "estimated_cost_usd": 0.043146000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SKA Minsk may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:41:35.467964"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.354261",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:40:00.099252"
+}

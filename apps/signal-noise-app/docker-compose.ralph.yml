@@ -1,0 +1,144 @@
+version: '3.8'
+
+services:
+  # FalkorDB - Graph database
+  falkordb:
+    image: falkordb/falkordb:latest
+    ports:
+      - "7687:7687"  # BOLT protocol
+    environment:
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+    volumes:
+      - falkordb_data:/data
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: falkordb-graph
+    healthcheck:
+      test: ["CMD", "timeout", "5", "bash", "-c", "cat < /dev/tcp/localhost/7687"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Cache and Celery broker
+  redis:
+    image: redis:7-alpine
+    # No port mapping - only used internally by containers
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: redis-cache
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Webhook Handler - FastAPI service for real-time signal ingestion
+  webhook-handler:
+    build:
+      context: .
+      dockerfile: Dockerfile.ralph
+    ports:
+      - "8001:8001"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
+      - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
+      - FALKORDB_URI=bolt://falkordb:7687
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+      - REDIS_URL=redis://redis:6379
+      - RALPH_LOOP_MIN_EVIDENCE=3
+      - RALPH_LOOP_MIN_CONFIDENCE=0.7
+      - RALPH_LOOP_ENABLE_CONFIDENCE_VALIDATION=true
+      - RALPH_LOOP_MAX_CONFIDENCE_ADJUSTMENT=0.15
+      - MODEL_CASCADE_HAIKU_MODEL=claude-3-5-haiku-20241022
+      - MODEL_CASCADE_SONNET_MODEL=claude-3-5-sonnet-20241022
+    depends_on:
+      - falkordb
+      - redis
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: webhook-handler
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./backend:/app/backend
+      - ./src:/app/src
+
+  # Ralph Loop Worker - Background processing for scheduled validation
+  ralph-loop-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.ralph
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL}
+      - ANTHROPIC_AUTH_TOKEN=${ANTHROPIC_AUTH_TOKEN}
+      - FALKORDB_URI=bolt://falkordb:7687
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD:-falkordb123}
+      - REDIS_URL=redis://redis:6379
+      - WORKER_MODE=cron
+      - CRON_SCHEDULE=0 0 * * *  # Daily at midnight
+    depends_on:
+      - falkordb
+      - redis
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: ralph-loop-worker
+    volumes:
+      - ./backend:/app/backend
+      - ./logs:/app/logs
+
+  # Grafana - Monitoring dashboard
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: grafana-dashboard
+
+  # Prometheus - Metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - ralph-network
+    container_name: prometheus
+
+networks:
+  ralph-network:
+    driver: bridge
+
+volumes:
+  falkordb_data:
+  redis_data:
+  grafana_data:
+  prometheus_data:

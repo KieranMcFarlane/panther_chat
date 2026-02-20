@@ -1,0 +1,362 @@
+{
+  "entity_id": "philippine_football_federation",
+  "entity_name": "Philippine Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ph.linkedin.com/jobs/view/hr-assistant-at-philippine-football-federation-4360854701",
+      "https://ph.linkedin.com/jobs/view/legal-officer-at-philippine-football-federation-4367239732",
+      "https://ch.linkedin.com/company/allsportseventsjobs",
+      "https://ph.linkedin.com/jobs/view/broadcast-manager-at-philippine-football-federation-4320180641",
+      "https://ph.linkedin.com/jobs/view/media-assistant-at-philippine-football-federation-4130046766",
+      "https://ph.linkedin.com/jobs/view/service-driver-at-philippine-football-federation-4366485271",
+      "https://www.linkedin.com/jobs/view/3810145270/",
+      "https://ph.linkedin.com/jobs/view/sport-marketing-manager-at-philippine-football-federation-3763864392"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "philippine_football_federation",
+      "entity_name": "Philippine Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.18
+      ],
+      "explored_domains": [
+        "https://ch.linkedin.com/company/allsportseventsjobs",
+        "https://inside.fifa.com",
+        "https://ph.linkedin.com/jobs/view/hr-assistant-at-philippine-football-federation-4360854701",
+        "https://ph.linkedin.com/jobs/view/legal-officer-at-philippine-football-federation-4367239732",
+        "https://ph.linkedin.com/jobs/view/broadcast-manager-at-philippine-football-federation-4320180641",
+        "https://zoominfo.com",
+        "https://ph.linkedin.com/jobs/view/media-assistant-at-philippine-football-federation-4130046766"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Dedicated Procurement Officer Hiring",
+        "FIFA World Cup Event Infrastructure",
+        "Logistics & Supply Chain Expansion",
+        "IT & Technical Services Procurement",
+        "Sustainability Compliance Integration",
+        "Direct Procurement Authority",
+        "Infrastructure & Power Procurement",
+        "Broadcast Technology Acquisition",
+        "Event Logistics & Vendor Management",
+        "FIFA Standard Compliance"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Philippine Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:17:00.018604",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Generic FIFA governance topics",
+            "Future-dated content (2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.132699966430664
+            }
+          ],
+          "reasoning": "The content is a generic news feed from FIFA.com regarding global events (FIFA Women's Champions Cup, Burundi stadium). It contains no specific information regarding the Philippine Football Federation (PFF), its local procurement activities, technology stack, or governance patterns. The entity of interest (PFF) is not mentioned in the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:17:06.550531",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B SaaS marketing copy",
+            "Third-party testimonial aggregation",
+            "Sales tool vendor landing page"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.289275884628296
+            }
+          ],
+          "reasoning": "The content provided is the homepage marketing copy for ZoomInfo, a B2B sales intelligence platform. It contains generic testimonials, product feature descriptions, and calls to action for a free trial. There is no specific information regarding the Philippine Football Federation (PFF), their procurement activities, technology stack, or internal governance. This content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:17:19.493430",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/hr-assistant-at-philippine-football-federation-4360854701",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Recruitment Officer (Contract) - Philippine Football Federation (Pasig) - Focus: FIFA Futsal Women's World Cup 2025"
+            ],
+            "procurement_indicators": [
+              "Event-driven workforce expansion",
+              "Contract employment structure",
+              "Talent acquisition operational needs"
+            ]
+          },
+          "patterns_found": [
+            "Event-based contract hiring",
+            "Recruitment capacity expansion",
+            "Project-specific HR scaling"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.5312180519104
+            }
+          ],
+          "reasoning": "The content confirms active hiring for a 'Recruitment Officer' (contract role) specifically for the FIFA Futsal Women's World Cup 2025. While this is an HR role rather than a direct procurement role, the need to scale recruitment capacity indicates organizational growth and potential future procurement needs for HR tech, payroll services, or staffing vendors to support the event."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:17:29.829122",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/legal-officer-at-philippine-football-federation-4367239732",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "Document Management Systems (implied by 'managing & securing integrity of documentation')"
+            ],
+            "job_postings": [
+              {
+                "role": "Legal Officer",
+                "type": "Full-time",
+                "location": "Pasig, NCR (relocating to Carmona, Cavite)",
+                "requirements": "Legal compliance, contract drafting, external counsel liaison"
+              }
+            ],
+            "procurement_indicators": [
+              "Corporate relocation project (Pasig to Carmona, Cavite)",
+              "Engagement of external legal counsel/vendors",
+              "Procurement of office supplies/equipment for new site",
+              "Potential procurement of compliance/legal software tools"
+            ]
+          },
+          "patterns_found": [
+            "Organizational scaling & capacity building",
+            "Infrastructure relocation (Pasig to Carmona, Cavite)",
+            "Vendor management & external counsel coordination",
+            "Compliance & governance formalization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 397,
+              "elapsed_seconds": 3.5270838737487793
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct tender, it reveals significant organizational changes that drive procurement. Specifically, the relocation to Carmona, Cavite, and the need to coordinate with external counsel indicate upcoming requirements for logistics, moving services, and legal services. The role also implies a need for better document management systems to 'secure the integrity of documentation'."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:17:36.905679",
+          "domain_explored": "https://ch.linkedin.com/company/allsportseventsjobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Procurement Software (implied by 'managing purchase orders')",
+              "Logistics Management Systems",
+              "IT Infrastructure"
+            ],
+            "job_postings": [
+              "Procurement Officer",
+              "Logistic Officer",
+              "Project Secretariat Manager",
+              "Sustainability and Human Rights Officer",
+              "Infrastructure and Technical Services Manager"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for contract negotiation",
+              "Supply chain management for a global event",
+              "Technical infrastructure procurement",
+              "Vendor management for event services"
+            ]
+          },
+          "patterns_found": [
+            "Dedicated Procurement Officer Hiring",
+            "FIFA World Cup Event Infrastructure",
+            "Logistics & Supply Chain Expansion",
+            "IT & Technical Services Procurement",
+            "Sustainability Compliance Integration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 372,
+              "elapsed_seconds": 3.0365078449249268
+            }
+          ],
+          "reasoning": "The content is a direct repost of a PFF job announcement for the FIFA Futsal Women's World Cup 2025. It explicitly lists a 'Procurement Officer' role responsible for 'managing purchase orders' and 'negotiating contracts', alongside roles for 'Logistics Officer' and 'Infrastructure and Technical Services Manager'. This confirms active procurement operations and infrastructure build-out."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:17:55.650866",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/broadcast-manager-at-philippine-football-federation-4320180641",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Broadcast Infrastructure (HBS/Host Broadcast)",
+              "Power Generators & Cabling",
+              "RF Transmission Equipment",
+              "Technical Production Rooms",
+              "IT & Network Services"
+            ],
+            "job_postings": [
+              "Broadcast Manager"
+            ],
+            "procurement_indicators": [
+              "Procurement of broadcast infrastructure equipment",
+              "FFE (Furniture, Fixtures, Equipment) planning",
+              "Power contractor management & fuel procurement",
+              "Logistics & customs clearance for imported equipment",
+              "Technical services vendor coordination"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Authority",
+            "Infrastructure & Power Procurement",
+            "Broadcast Technology Acquisition",
+            "Event Logistics & Vendor Management",
+            "FIFA Standard Compliance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1699,
+              "output_tokens": 350,
+              "elapsed_seconds": 11.312739133834839
+            }
+          ],
+          "reasoning": "The job description explicitly assigns 'Control and coordination of procurement of broadcast infrastructure-related equipment' and 'Planning of Furniture, Fixtures and Equipment (FFE)' to this role. It signals significant upcoming capital expenditure (CapEx) on broadcast technology, power generators, and IT infrastructure required for FIFA-standard events."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:18:12.745979",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/media-assistant-at-philippine-football-federation-4130046766",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Tools (e.g., Hootsuite, Meta Business Suite)",
+              "Media Monitoring Software",
+              "Creative Editing Software (e.g., Adobe Creative Cloud)",
+              "CRM/Database Systems"
+            ],
+            "job_postings": [
+              "Media Assistant (Contract, Entry Level)"
+            ],
+            "procurement_indicators": [
+              "External vendor communication",
+              "Media database management",
+              "Media planning and buying support",
+              "Technical software troubleshooting"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Procurement",
+            "Media Monitoring & Analytics Tools",
+            "Vendor & Database Management",
+            "Social Media Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1768,
+              "output_tokens": 316,
+              "elapsed_seconds": 8.731150150299072
+            }
+          ],
+          "reasoning": "While this is an entry-level role, the responsibilities explicitly mention handling communication with external vendors, managing media databases, and utilizing analytics tools. This indicates a need for software subscriptions (media monitoring, social media scheduling) and creative services, signaling indirect procurement activities within the media department."
+        }
+      ],
+      "total_input_tokens": 10912,
+      "total_output_tokens": 2067,
+      "estimated_cost_usd": 0.063741
+    },
+    "procurement_signals": [
+      "Dedicated Procurement Officer Hiring",
+      "FIFA World Cup Event Infrastructure",
+      "Logistics & Supply Chain Expansion",
+      "IT & Technical Services Procurement",
+      "Sustainability Compliance Integration",
+      "Direct Procurement Authority",
+      "Infrastructure & Power Procurement",
+      "Broadcast Technology Acquisition",
+      "Event Logistics & Vendor Management",
+      "FIFA Standard Compliance"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Philippine Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:18:12.747568"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.210758",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:55:46.411905"
+}

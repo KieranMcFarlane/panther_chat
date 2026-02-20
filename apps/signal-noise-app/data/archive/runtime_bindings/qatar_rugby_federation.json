@@ -1,0 +1,135 @@
+{
+  "entity_id": "qatar_rugby_federation",
+  "entity_name": "Qatar Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "asiarugby.com",
+    "fijirugby.com",
+    "sportandhealth.moph.gov.qa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "qatar_rugby_federation",
+      "entity_name": "Qatar Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportandhealth.moph.gov.qa",
+        "https://fijirugby.com",
+        "https://asiarugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Qatar Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:14:00.682734",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:14:09.397917",
+          "domain_explored": "https://fijirugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (shop.fijirugby.com.fj)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with AIA for 'Elite Player Analysis' (Technology/Service procurement in Fiji)",
+              "Partnership with Red Tiger Marketing (Marketing procurement in Fiji)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Fiji Rugby vs Qatar Rugby)",
+            "Sponsorship/Partnership Announcements",
+            "E-commerce Integration (Shop link)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.708184003829956
+            }
+          ],
+          "reasoning": "The scraped content is from Fiji Rugby (fijirugby.com), not the target entity Qatar Rugby Federation. While the content mentions partnerships (AIA, Red Tiger Marketing) which are relevant to the sports domain, there is no procurement signal specific to Qatar. The content is primarily navigation, fixtures, and general sports news."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:14:19.566865",
+          "domain_explored": "https://sportandhealth.moph.gov.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft SharePoint 2013 (Detected via '_layouts/15/Authenticate.aspx' URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Ministry of Public Health vs Qatar Rugby Federation)",
+            "Legacy Event Content (FIFA World Cup 2022)",
+            "Public Health Campaigning",
+            "Strategic Partnership (WHO, FIFA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.648653984069824
+            }
+          ],
+          "reasoning": "The content is explicitly from the Ministry of Public Health (MOPH) and focuses on the FIFA World Cup 2022 legacy. While it mentions 'sports stakeholders,' it is a public health policy page, not a procurement or operational page for the Qatar Rugby Federation. There is no signal of QRF purchasing activity or technology stack."
+        }
+      ],
+      "total_input_tokens": 2839,
+      "total_output_tokens": 470,
+      "estimated_cost_usd": 0.015567000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Qatar Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:14:19.568748"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291567",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:02.083006"
+}

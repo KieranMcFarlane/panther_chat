@@ -1,0 +1,275 @@
+{
+  "entity_id": "auckland_fc",
+  "entity_name": "Auckland FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "aucklandfc.co.nz",
+    "aleagues.com.au",
+    "nzfootball.co.nz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+      "https://nz.linkedin.com/jobs/view/event-coordinator-at-auckland-council-4257372637"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "auckland_fc",
+      "entity_name": "Auckland FC",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.13999999999999999,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.13999999999999999
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+        "https://nzfootball.co.nz",
+        "https://aucklandfc.co.nz",
+        "https://aleagues.com.au",
+        "https://nz.linkedin.com/jobs/view/event-coordinator-at-auckland-council-4257372637"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Sales Infrastructure Investment",
+        "CRM & Ticketing Stack Requirements",
+        "Premium Hospitality Revenue Stream",
+        "Foley Entertainment Group Ecosystem Integration"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Auckland FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:09:17.925822",
+          "domain_explored": "https://aucklandfc.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Ticketing Platform)",
+              "Linktree (Social Media/Bio Link)",
+              "Custom E-commerce Platform (Hosted on shop.aucklandfc.co.nz)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing vendor: Ticketmaster",
+              "E-commerce vendor: Likely a specialized sports merchandiser (e.g., Revetee, Edge, or similar) given the subdomain structure",
+              "Retail Logistics: Requirement for pop-up store fit-out and inventory management"
+            ]
+          },
+          "patterns_found": [
+            "Ticketmaster Integration (Ticketing)",
+            "Dedicated E-commerce Domain (shop.aucklandfc.co.nz)",
+            "Linktree Usage (Digital Marketing)",
+            "Pop-up Retail Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 311,
+              "elapsed_seconds": 6.368622064590454
+            }
+          ],
+          "reasoning": "The content confirms active commercial operations and identifies specific technology partners (Ticketmaster) and infrastructure (dedicated shop domain). While no direct procurement intent is stated, the existence of these systems confirms the capability and vendor ecosystem. The 'Pop-Up Store' indicates short-term retail procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:09:26.139472",
+          "domain_explored": "https://aleagues.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Opta (Sports Data/Analytics)",
+              "A-Leagues Digital Platform (Centralized CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inherited League Partnerships (Opta)",
+              "Centralized Web Hosting (No independent web infrastructure procurement)"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide Technology Stack",
+            "Opta Data Integration",
+            "Centralized Digital Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 237,
+              "elapsed_seconds": 4.5973219871521
+            }
+          ],
+          "reasoning": "The content confirms Auckland FC operates within the A-Leagues centralized digital ecosystem (aleagues.com.au). This implies reliance on league-level technology vendors rather than independent procurement for core digital infrastructure. The explicit mention of 'Opta' confirms the use of advanced sports data analytics services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:09:38.613873",
+          "domain_explored": "https://nzfootball.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (implied by dynamic news/blog structure)",
+              "Email Marketing (Newsletter signup functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Shared Facilities: Physical presence at North Harbour Stadium indicates potential shared services or facility management contracts.",
+              "Operational Segmentation: Distinct email address (registrations@) suggests specific software procurement for membership/database management."
+            ]
+          },
+          "patterns_found": [
+            "Shared Infrastructure (North Harbour Stadium)",
+            "Federated Governance Model",
+            "Dedicated Registration Contact Channel"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 328,
+              "elapsed_seconds": 7.026838064193726
+            }
+          ],
+          "reasoning": "While the scraped content is largely repetitive navigation text, it reveals critical organizational proximity and infrastructure sharing. The location at 'Football House, North Harbour Stadium' suggests a shared facility ecosystem, implying potential joint procurement or shared services agreements. The explicit listing of a 'registrations@' email address indicates a dedicated operational workflow for player/fan management, likely supported by specific CRM or database software."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:09:59.617419",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "HubSpot",
+              "Microsoft CRM",
+              "Ticketmaster",
+              "Archtics"
+            ],
+            "job_postings": [
+              {
+                "role": "Account Executive",
+                "department": "Ticketing & Membership",
+                "reports_to": "Head of Ticketing and Membership",
+                "focus": "B2B Sales, Premium Hospitality, Group Tickets"
+              }
+            ],
+            "procurement_indicators": [
+              "Head of Ticketing and Membership (Key Decision Maker identified)",
+              "Investment in CRM software licenses",
+              "Procurement of Premium Hospitality inventory/suites",
+              "Adoption of Foley Entertainment Group operating procedures"
+            ]
+          },
+          "patterns_found": [
+            "Direct Sales Infrastructure Investment",
+            "CRM & Ticketing Stack Requirements",
+            "Premium Hospitality Revenue Stream",
+            "Foley Entertainment Group Ecosystem Integration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 378,
+              "elapsed_seconds": 17.449681043624878
+            }
+          ],
+          "reasoning": "The job posting for an Account Executive confirms active procurement and implementation of specific sales technology. It explicitly names Salesforce/HubSpot and Ticketmaster/Archtics as required tools, validating the technology stack hypothesis. Furthermore, the focus on 'premium hospitality packages' and 'event suites' signals a B2B procurement intent beyond general ticketing."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:10:07.281101",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/event-coordinator-at-auckland-council-4257372637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Event Coordinator",
+                "employer": "Auckland Council (Auckland Stadiums)",
+                "focus": "Venue operations for Auckland FC, Warriors, Moana Pasifika",
+                "location": "Go Media Stadium / Western Springs",
+                "salary": "65k - 75k NZD"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Operational Dependency",
+                "detail": "Auckland FC event delivery is managed by Auckland Council staff."
+              },
+              {
+                "type": "Vendor Framework",
+                "detail": "Use of internal teams (security, property services) suggests procurement is centralized within Council supply chains."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Venue Management Outsourcing",
+            "Shared Infrastructure Utilization",
+            "Event Operations Staffing",
+            "Multi-Stakeholder Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 415,
+              "elapsed_seconds": 4.044895887374878
+            }
+          ],
+          "reasoning": "This job posting confirms that Auckland FC relies on Auckland Council (T\u0101taki Auckland Unlimited) for venue operations and event coordination at key stadiums (Go Media Stadium, Western Springs). While this is an operational role rather than a direct procurement signal, it validates the 'Shared Infrastructure' hypothesis and indicates that event-related procurement (e.g., security, cleaning, contractors) is likely handled through the Council's existing vendor frameworks rather than directly by Auckland FC."
+        }
+      ],
+      "total_input_tokens": 7382,
+      "total_output_tokens": 1669,
+      "estimated_cost_usd": 0.047181
+    },
+    "procurement_signals": [
+      "Direct Sales Infrastructure Investment",
+      "CRM & Ticketing Stack Requirements",
+      "Premium Hospitality Revenue Stream",
+      "Foley Entertainment Group Ecosystem Integration"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Auckland FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:10:07.282650"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.189074",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:23.749673"
+}

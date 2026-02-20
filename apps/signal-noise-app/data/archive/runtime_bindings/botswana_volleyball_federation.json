@@ -1,0 +1,102 @@
+{
+  "entity_id": "botswana_volleyball_federation",
+  "entity_name": "Botswana Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "meacsports.com",
+    "bringitusa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "botswana_volleyball_federation",
+      "entity_name": "Botswana Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://bringitusa.com",
+        "https://meacsports.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Botswana Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:55:30.825790",
+          "domain_explored": "https://meacsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:55:43.955506",
+          "domain_explored": "https://bringitusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Provider: Bring It Promotions (Volleyball Travel Agency)",
+              "Service Scope: International tours, match coordination, logistics (lodging, transport, meals)",
+              "Target Audience: Clubs, Universities, National Teams (Relevant to BVF)",
+              "Geographic Reach: Europe, Costa Rica, South America, Asia"
+            ]
+          },
+          "patterns_found": [
+            "International Travel & Logistics Services",
+            "Sports Event Management",
+            "Custom Tour Coordination",
+            "Global Sports Networking"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 341,
+              "elapsed_seconds": 6.028632879257202
+            }
+          ],
+          "reasoning": "The content describes 'Bring It Promotions' (BIP), a specialized travel agency for volleyball teams. While this is not a direct procurement signal for the Botswana Volleyball Federation (BVF) purchasing technology or office supplies, it represents a potential vendor relationship for international travel, tours, and event participation. BVF may procure these services to facilitate team travel abroad or host international teams. This establishes a 'Weak Accept' as it identifies a service provider relevant to BVF's operational needs (sports logistics), even if no immediate intent to purchase is shown."
+        }
+      ],
+      "total_input_tokens": 1393,
+      "total_output_tokens": 341,
+      "estimated_cost_usd": 0.009294
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Botswana Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:55:43.958855"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334852",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:31.243394"
+}

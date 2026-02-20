@@ -1,0 +1,387 @@
+{
+  "entity_id": "24_hours_of_le_mans",
+  "entity_name": "24 Hours of Le Mans",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "24h-lemans.com",
+    "ticket.24h-lemans.com",
+    "24h-karting.com",
+    "lemansultimate.com",
+    "lemans-musee24h.com",
+    "boutique.lemans.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/transport-driver-hospitality-at-chip-ganassi-racing-4351616493",
+      "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&currentJobId=4003259111&f_TPR=r604800&geoId=92000000&keywords=motorsport&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=R&spellCorrectionEnabled=true"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "24_hours_of_le_mans",
+      "entity_name": "24 Hours of Le Mans",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.28,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.12,
+        0.12,
+        0.13999999999999999,
+        0.19999999999999998,
+        0.26,
+        0.28,
+        0.28
+      ],
+      "explored_domains": [
+        "https://24h-karting.com",
+        "https://24h-lemans.com",
+        "https://lemans-musee24h.com",
+        "https://boutique.lemans.org",
+        "https://ticket.24h-lemans.com",
+        "https://www.linkedin.com/jobs/view/transport-driver-hospitality-at-chip-ganassi-racing-4351616493",
+        "https://lemansultimate.com",
+        "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&currentJobId=4003259111&f_TPR=r604800&geoId=92000000&keywords=motorsport&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=R&spellCorrectionEnabled=true"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Major Capital Project (M24 Museum)",
+        "Infrastructure Development",
+        "Sustainability/Environmental Compliance",
+        "Ticketing Platform Management",
+        "E-commerce Operations",
+        "SaaS Ticketing Platform (Secutix/TnJS)",
+        "Data Analytics & Marketing Automation (Google Tag Manager)",
+        "Privacy Compliance (OneTrust)",
+        "Custom Frontend Development (React/JS)",
+        "Digital Transaction Processing",
+        "Major Capital Project (M24 Museum Construction)",
+        "Interim Infrastructure (Temporary Structures)",
+        "Ticketing & Booking Systems (Billetterie)",
+        "Newsletter Marketing (Email Communication)",
+        "Digital Engagement (Virtual Tours)",
+        "E-commerce Platform (Magento/Adobe Commerce)",
+        "Customer Account Management (Wishlist/Favorites)",
+        "Merchandising & Inventory Management",
+        "Dynamic Pricing & Promotions (Member pricing logic)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "24 Hours of Le Mans may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:04:56.745622",
+          "domain_explored": "https://24h-lemans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Custom/Proprietary based on URL structure)",
+              "E-commerce Platform (Boutique subdomain)",
+              "CMS (Content Management System for news/actualites)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "M24 Museum Construction & Architecture Services",
+              "Environmental/Sustainability Consulting for Infrastructure",
+              "Ticketing System Vendors/Support",
+              "Merchandise/E-commerce Logistics",
+              "Event Management Services (Michelin Le Mans Cup support)"
+            ]
+          },
+          "patterns_found": [
+            "Major Capital Project (M24 Museum)",
+            "Infrastructure Development",
+            "Sustainability/Environmental Compliance",
+            "Ticketing Platform Management",
+            "E-commerce Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 325,
+              "elapsed_seconds": 2.7842791080474854
+            }
+          ],
+          "reasoning": "The content reveals a major active infrastructure project (M24 Museum) requiring architectural and construction services, alongside ongoing ticketing and e-commerce operations. The specific mention of 'responsible architecture' and 'environmental requirements' signals a need for specialized vendors in green building and compliance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:05:07.216325",
+          "domain_explored": "https://ticket.24h-lemans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Secutix (Ticketing Platform - TnJS)",
+              "Google Tag Manager (GTM-WN5KQM6)",
+              "OneTrust (Cookie Consent)",
+              "React (Frontend Framework)",
+              "Open Sans (Typography)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SaaS Subscription: Secutix Ticketing System",
+              "License: OneTrust Consent Management",
+              "Service: Custom CSS/Theming Development (ACO_TS24M)",
+              "Infrastructure: Content Delivery/Hosting for ticketing portal"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Ticketing Platform (Secutix/TnJS)",
+            "Data Analytics & Marketing Automation (Google Tag Manager)",
+            "Privacy Compliance (OneTrust)",
+            "Custom Frontend Development (React/JS)",
+            "Digital Transaction Processing"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 348,
+              "elapsed_seconds": 3.2418832778930664
+            }
+          ],
+          "reasoning": "The scraped content from the ticketing subdomain reveals the core technology stack used for revenue generation and fan engagement. The presence of 'Secutix' (identified via 'TnJS' and 'secutix' objects) confirms a major B2B SaaS partnership for ticketing operations. The implementation of Google Tag Manager (GTM-WN5KQM6) and OneTrust indicates active investment in data analytics and compliance infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:05:22.305247",
+          "domain_explored": "https://24h-karting.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:05:32.458238",
+          "domain_explored": "https://lemansultimate.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Steam (Distribution Platform)",
+              "RaceControl (Multiplayer Technology)",
+              "Zendesk (Inferred from 'guide.lemansultimate.com' structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Licensing Agreement (FIA WEC / 24 Hours of Le Mans)",
+              "Development Partnership (Studio 397 / Motorsport Games)",
+              "Manufacturer Licensing (Hypercar/LMGT3 rights)"
+            ]
+          },
+          "patterns_found": [
+            "Licensing & IP Management",
+            "Digital Distribution Partnership (Steam)",
+            "Game Development Outsourcing (Studio 397)",
+            "Community Management Platform (Zendesk/Guide)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 323,
+              "elapsed_seconds": 2.8106110095977783
+            }
+          ],
+          "reasoning": "The content reveals a digital product extension (Official Game) involving complex licensing agreements with FIA/WEC and manufacturers (Toyota, Ferrari, etc.). It identifies key technology partners: Studio 397 (development) and Steam (distribution). The presence of a 'Guide' subdomain suggests a customer support infrastructure investment. While not direct procurement for the main event, it indicates active management of digital vendor partnerships."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:05:46.195141",
+          "domain_explored": "https://lemans-musee24h.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Ticketing Platform",
+              "Email Marketing Platform (Newsletter signup)",
+              "CMS (Content Management System for Agenda/Articles)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Construction Project: M24 Museum (Start date 01/07/2025)",
+              "Temporary Infrastructure: 1,200m\u00b2 structure at Porte Sud",
+              "Operational Services: Guided tour management",
+              "Exhibition Services: 'Champions du Monde' setup and curation"
+            ]
+          },
+          "patterns_found": [
+            "Major Capital Project (M24 Museum Construction)",
+            "Interim Infrastructure (Temporary Structures)",
+            "Ticketing & Booking Systems (Billetterie)",
+            "Newsletter Marketing (Email Communication)",
+            "Digital Engagement (Virtual Tours)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 371,
+              "elapsed_seconds": 4.396317005157471
+            }
+          ],
+          "reasoning": "The content confirms the active construction phase of the 'M24' museum project (referenced as 'La premi\u00e8re pierre du M24' and 'mus\u00e9e est actuellement ferm\u00e9 pour travaux'). This is a major capital expenditure project involving construction, fit-out, and eventual operational services. The presence of a temporary structure ('structure temporaire') indicates interim facility management needs. The site also utilizes e-commerce ('Billetterie') and email marketing platforms, reinforcing digital procurement needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:06:00.107798",
+          "domain_explored": "https://boutique.lemans.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Magento (Likely: inferred from 'Ajouter \u00e0 mes favoris' and 'Achat express' button text common in Magento 2 themes)",
+              "Customer Account System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Physical Goods Sourcing (Apparel: Polos, Sweatshirts, Caps)",
+              "Inventory Management (Stock management for seasonal collections)",
+              "E-commerce Platform Licensing/Maintenance",
+              "Payment Gateway Processing"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Magento/Adobe Commerce)",
+            "Customer Account Management (Wishlist/Favorites)",
+            "Merchandising & Inventory Management",
+            "Dynamic Pricing & Promotions (Member pricing logic)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 333,
+              "elapsed_seconds": 4.755969762802124
+            }
+          ],
+          "reasoning": "The content reveals a fully operational official e-commerce platform. The presence of 'Achat express', 'Cr\u00e9er un compte', and 'Ajouter \u00e0 mes favoris' indicates a deployed digital commerce stack. The specific pricing logic (Base Price vs Member Price) suggests the use of a CRM or loyalty system integration. This confirms procurement activity related to retail infrastructure, inventory procurement, and e-commerce maintenance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:06:08.922927",
+          "domain_explored": "https://www.linkedin.com/jobs/view/transport-driver-hospitality-at-chip-ganassi-racing-4351616493",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Transport Driver - Hospitality (Chip Ganassi Racing)"
+            ],
+            "procurement_indicators": [
+              "Semi-truck and trailer logistics for event assets",
+              "Hospitality structure setup and teardown services",
+              "Catering and temporary staff coordination",
+              "Corporate partnerships (DHL, PNC Bank, Honda, Target)"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics & Transport Outsourcing",
+            "Hospitality Infrastructure Management",
+            "Vendor Partnerships (DHL, PNC Bank, Honda)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1702,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.248380184173584
+            }
+          ],
+          "reasoning": "While the job posting is for a team (Chip Ganassi Racing) and not the ACO directly, it provides high-value intelligence into the operational ecosystem of the 24 Hours of Le Mans. It reveals the specific logistics requirements for 'Hospitality Assets' transported via semi-trailer, indicating a need for heavy transport and temporary infrastructure procurement. It also validates the involvement of major commercial partners (DHL, etc.) who likely have vendor/sponsorship arrangements with the event."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:06:18.306988",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&currentJobId=4003259111&f_TPR=r604800&geoId=92000000&keywords=motorsport&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=R&spellCorrectionEnabled=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Aerodynamicist - Non F1 (Mercedes-AMG PETRONAS Formula One Team)",
+              "Senior Partnership Manager (Audi Revolut F1 Team)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Motorsport Market Data",
+            "Authentication Barrier"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1806,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.417567014694214
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the keyword 'Motorsport'. While it lists 503 jobs, the visible text is truncated and primarily consists of login prompts and repeated headers. The specific job listings visible (Mercedes-AMG, Audi F1) are for competitors/Formula 1 entities, not the Automobile Club de l'Ouest (ACO) or 24 Hours of Le Mans specifically. There is no actionable procurement signal for the target entity in this generic dataset."
+        }
+      ],
+      "total_input_tokens": 10967,
+      "total_output_tokens": 2248,
+      "estimated_cost_usd": 0.066621
+    },
+    "procurement_signals": [
+      "Major Capital Project (M24 Museum)",
+      "Infrastructure Development",
+      "Sustainability/Environmental Compliance",
+      "Ticketing Platform Management",
+      "E-commerce Operations",
+      "SaaS Ticketing Platform (Secutix/TnJS)",
+      "Data Analytics & Marketing Automation (Google Tag Manager)",
+      "Privacy Compliance (OneTrust)",
+      "Custom Frontend Development (React/JS)",
+      "Digital Transaction Processing",
+      "Major Capital Project (M24 Museum Construction)",
+      "Interim Infrastructure (Temporary Structures)",
+      "Ticketing & Booking Systems (Billetterie)",
+      "Newsletter Marketing (Email Communication)",
+      "Digital Engagement (Virtual Tours)",
+      "E-commerce Platform (Magento/Adobe Commerce)",
+      "Customer Account Management (Wishlist/Favorites)",
+      "Merchandising & Inventory Management",
+      "Dynamic Pricing & Promotions (Member pricing logic)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "24 Hours of Le Mans may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:06:18.308661"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373021",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:33:07.480427"
+}

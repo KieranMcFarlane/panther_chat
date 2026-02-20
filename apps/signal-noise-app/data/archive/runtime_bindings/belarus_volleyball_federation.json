@@ -1,0 +1,207 @@
+{
+  "entity_id": "belarus_volleyball_federation",
+  "entity_name": "Belarus Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "inside.cev.eu",
+    "teknikum.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/devops-%28with-powershell%29-at-emerline-554545182"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belarus_volleyball_federation",
+      "entity_name": "Belarus Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://teknikum.com",
+        "https://www-old.cev.eu",
+        "https://www.linkedin.com/jobs/view/devops-%28with-powershell%29-at-emerline-554545182"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belarus Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:07:54.270524",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (EuroVolley, CEV Cups)",
+            "Standard footer links (Privacy Policy, Terms of use)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.597511053085327
+            }
+          ],
+          "reasoning": "The provided content is a navigation menu and event listing dump from the CEV (Confederation Europeenne de Volleyball) website, not the Belarus Volleyball Federation (BVF). While BVF is a member nation, this content contains no specific data regarding BVF's internal procurement, technology stack, or governance. It lists generic European competitions and historical dates (e.g., 2021, 2018) which do not constitute current procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:08:01.829633",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Funding Opportunity",
+                "description": "CEV Solidarity Fund applications open (Feb 2026). This is a primary source of revenue for National Federations to procure equipment, technology, or services.",
+                "source_url": "https://inside.cev.eu/articles/cev/applications-for-revolutionary-cev-solidarity-fund-now-open/"
+              },
+              {
+                "type": "Development Project",
+                "description": "OSCG establishes Strength and Conditioning Team. Indicates potential for future procurement of S&C equipment, monitoring software, or specialist training.",
+                "source_url": "https://inside.cev.eu"
+              }
+            ]
+          },
+          "patterns_found": [
+            "CEV Solidarity Fund (Grant/Financing mechanism)",
+            "Federation Development Activities (Scouting, S&C Teams)",
+            "Event Hosting Bids (EuroVolley 2028)",
+            "News Aggregation Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 414,
+              "elapsed_seconds": 4.480911016464233
+            }
+          ],
+          "reasoning": "The content reveals the existence of the 'CEV Solidarity Fund' and active development projects (scouting, S&C teams). While this is not a direct procurement tender for the Belarus Volleyball Federation, it identifies a funding mechanism and ecosystem that the target entity likely interacts with. The 'Solidarity Fund' is a key procurement vehicle for federations to access technology or services. This shifts the search from direct buying signals to funding application signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:08:08.917133",
+          "domain_explored": "https://teknikum.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Product Catalog (Industrial Hoses, Foam Parts)",
+            "Service Listings (Contract Manufacturing, Mill Lining)",
+            "Customer Success Stories (Arctic Machine, TYKS Hospital)",
+            "Corporate Navigation (About, Products, Services)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.3846240043640137
+            }
+          ],
+          "reasoning": "The scraped content from 'teknikum.com' identifies the entity as 'Teknikum Group', an industrial polymer manufacturer, rather than the 'Belarus Volleyball Federation'. The content focuses on B2B product sales (hoses, linings) and manufacturing services. There is no semantic relationship to volleyball, sports governance, or federation procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:08:16.903102",
+          "domain_explored": "https://www.linkedin.com/jobs/view/devops-%28with-powershell%29-at-emerline-554545182",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft System Center",
+              "Azure",
+              "AWS",
+              "PowerShell",
+              "Hyper-V",
+              "VMware",
+              "Kubernetes",
+              "Jira",
+              "Confluence"
+            ],
+            "job_postings": [
+              {
+                "role": "DevOps (with PowerShell)",
+                "company": "Emerline",
+                "location": "Belarus",
+                "age": "8 years ago",
+                "relevance": "Low"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "IT Service Provider Recruitment",
+            "Generic Employee Benefits",
+            "Irrelevant Technology Stack (DevOps/Cloud)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 289,
+              "elapsed_seconds": 4.210740089416504
+            }
+          ],
+          "reasoning": "The content is a job posting for Emerline, an IT consulting firm, seeking a DevOps engineer. While it mentions 'volleyball' as a generic employee perk, it is not a procurement signal for the Belarus Volleyball Federation. The entity is a vendor/supplier, not the federation itself, and the content is 8 years old."
+        }
+      ],
+      "total_input_tokens": 5864,
+      "total_output_tokens": 1139,
+      "estimated_cost_usd": 0.034677
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belarus Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:08:16.904889"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.333329",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:01.177692"
+}

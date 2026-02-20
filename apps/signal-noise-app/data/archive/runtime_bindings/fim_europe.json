@@ -1,0 +1,352 @@
+{
+  "entity_id": "fim_europe",
+  "entity_name": "FIM Europe",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fim-europe.com",
+    "fim-moto.com",
+    "superenduro.org",
+    "speedway.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/client-account-manager-in-global-wealth-fim-europe-ch-at-ubs-4302179863",
+      "https://ch.linkedin.com/jobs/view/specialist-accounts-receivable-german-english-speaking-at-bof-careers-4154135144",
+      "https://ch.linkedin.com/jobs/view/account-manager-at-nextlane-4183842837",
+      "https://ch.linkedin.com/jobs/view/wholesale-account-specialist-vetements-at-bof-careers-4259975779",
+      "https://ch.linkedin.com/jobs/view/senior-key-account-managerin-a-80-100%25-at-helsana-insurance-company-ltd-4143595952",
+      "https://ch.linkedin.com/jobs/view/teamlead-account-manager-a-100-%25-at-ch-media-4091527307?refId=DnvTX7yW0m9ePycQjqavtQ%3D%3D&trackingId=va2PlOgcsDDL2mog0DtVyg%3D%3D"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_europe",
+      "entity_name": "FIM Europe",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://ch.linkedin.com/jobs/view/specialist-accounts-receivable-german-english-speaking-at-bof-careers-4154135144",
+        "https://fim-moto.com",
+        "https://ch.linkedin.com/jobs/view/wholesale-account-specialist-vetements-at-bof-careers-4259975779",
+        "https://fim-europe.com",
+        "https://speedway.org",
+        "https://ch.linkedin.com/jobs/view/client-account-manager-in-global-wealth-fim-europe-ch-at-ubs-4302179863",
+        "https://superenduro.org",
+        "https://ch.linkedin.com/jobs/view/senior-key-account-managerin-a-80-100%25-at-helsana-insurance-company-ltd-4143595952",
+        "https://ch.linkedin.com/jobs/view/account-manager-at-nextlane-4183842837"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:08:09.596532",
+          "domain_explored": "https://fim-europe.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:08:42.226965",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System) - evident from document publishing structure",
+              "Translation Management (English/French document workflows)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Safety & Homologations: Updates on 'Circuit Racing homologated helmets' indicate reliance on third-party testing/certification vendors.",
+              "Sustainability Commission: Active commission suggests potential vendors for environmental consulting or carbon offset programs.",
+              "FIM Quality Product: Marketing program implies a need for branding or licensing management services."
+            ]
+          },
+          "patterns_found": [
+            "Technical_Homologation_Cycles",
+            "Safety_Equipment_Standards",
+            "Sustainability_Commission_Activity",
+            "Digital_Document_Publishing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 381,
+              "elapsed_seconds": 28.824212074279785
+            }
+          ],
+          "reasoning": "The content confirms FIM (International) as the governing body for technical regulations and safety. While no direct procurement intent is found, the 'Safety & Homologations' section and specific 'Helmet Homologation' updates indicate a recurring operational need for testing services and safety equipment certification. The presence of 'Sustainability' and 'Mobility' commissions suggests potential future RFPs for green technologies or infrastructure consulting, though current activity is limited to regulatory publishing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:09:03.834498",
+          "domain_explored": "https://superenduro.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VideoPass (OTT Platform)",
+              "Ticketing Systems (implied by 'BUY TICKETS' calls to action)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue and Event Management (7 international rounds listed)",
+              "Digital Broadcasting Services (VideoPass)",
+              "Series Organization (FIM Europe SuperEnduro Cup)"
+            ]
+          },
+          "patterns_found": [
+            "Event_Operations_Sourcing",
+            "Digital_Monetization_VideoPass",
+            "FIM_Europe_Series_Overlap"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 267,
+              "elapsed_seconds": 18.40369486808777
+            }
+          ],
+          "reasoning": "While the page is primarily consumer-facing (news, standings), it reveals specific procurement-relevant activities. The 'FIM Europe SuperEnduro Cup' explicitly links the entity to event organization, implying procurement needs for venue services and logistics. The presence of 'VideoPass' indicates a digital content supply chain or partnership requiring technical vendor management."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:09:06.781458",
+          "domain_explored": "https://speedway.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:09:17.965647",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/client-account-manager-in-global-wealth-fim-europe-ch-at-ubs-4302179863",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Client Account Manager in Global Wealth FIM Europe CH",
+                "entity": "UBS",
+                "location": "Zurich, Switzerland",
+                "relevance": "False Positive - Financial Sector"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Confusion_False_Positive",
+            "Financial_Wealth_Management_Context",
+            "UBS_Entity_Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 293,
+              "elapsed_seconds": 7.596623182296753
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for UBS (Union Bank of Switzerland) for a 'Client Account Manager in Global Wealth FIM Europe CH'. The acronym 'FIM' in this context refers to 'Financial Institutions & Markets' or a specific UBS business unit (Fund/Investment Management), not the 'F\u00e9d\u00e9ration Internationale de Motocyclisme' (FIM Europe). The content describes wealth management, asset managers, and banking services, which are completely unrelated to motorcycle racing governance or sports procurement. This is a false positive entity match."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:09:25.846981",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/specialist-accounts-receivable-german-english-speaking-at-bof-careers-4154135144",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Specialist - Accounts Receivable (German & English speaking) at On (via BoF Careers)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Confusion_False_Positive",
+            "Commercial_Sector_Mismatch",
+            "BoF_Careers_Aggregator_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 201,
+              "elapsed_seconds": 4.149374961853027
+            }
+          ],
+          "reasoning": "The job posting is for a position at 'On' (the Swiss running shoe company), posted via 'BoF Careers' (Business of Fashion). While 'On' is a sports entity, it is not 'FIM Europe' (the motorcycle racing federation). The content describes accounts receivable for a commercial retail/DTC business, not federation procurement or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:09:35.162110",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/account-manager-at-nextlane-4183842837",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "B2B SaaS",
+              "DMS (Dealer Management Systems)",
+              "CRM"
+            ],
+            "job_postings": [
+              {
+                "title": "Account Manager",
+                "company": "Nextlane",
+                "location": "Z\u00fcrich, Schweiz",
+                "focus": "B2B SaaS and IT solutions for the automotive industry"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Confusion_False_Positive",
+            "Automotive_Software_Vendor_Context",
+            "Nextlane_Brand_Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 276,
+              "elapsed_seconds": 5.88916802406311
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'Account Manager' at Nextlane, a software company for the automotive industry. While the automotive domain overlaps with FIM Europe's motorcycle industry, Nextlane is a distinct commercial entity (B2B SaaS vendor) and not the governing body FIM Europe. There is no evidence of procurement activity by FIM Europe in this content."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:09:44.379831",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/wholesale-account-specialist-vetements-at-bof-careers-4259975779",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Joor",
+              "Le New Black",
+              "Zedonk"
+            ],
+            "job_postings": [
+              "Wholesale Account Specialist VETEMENTS"
+            ],
+            "procurement_indicators": [
+              "Wholesale order management",
+              "Stockist evaluation"
+            ]
+          },
+          "patterns_found": [
+            "Entity_Confusion_False_Positive",
+            "Luxury_Fashion_Sector_Mismatch",
+            "BoF_Careers_Aggregator_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1737,
+              "output_tokens": 234,
+              "elapsed_seconds": 5.557857990264893
+            }
+          ],
+          "reasoning": "The content describes a 'Wholesale Account Specialist' role for 'VETEMENTS', a luxury fashion brand, aggregated by BoF (Business of Fashion) Careers. There is no relation to FIM Europe (motorcycle racing governing body). The context is entirely commercial fashion sales (boutiques, department stores), not sports governance or event procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:09:51.550422",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/senior-key-account-managerin-a-80-100%25-at-helsana-insurance-company-ltd-4143595952",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Senior Key Account Managerin",
+                "company": "Helsana Versicherungen AG",
+                "sector": "Insurance",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Confusion_False_Positive",
+            "Health_Insurance_Sector_Mismatch",
+            "Helsana_Entity_Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1812,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.690531015396118
+            }
+          ],
+          "reasoning": "The content is a job posting for Helsana Versicherungen AG (Health Insurance), which is unrelated to FIM Europe (Motorcycle Racing governing body). The acronym 'FIM' likely appeared in the URL or metadata as a false positive match, but the context is entirely B2B insurance sales and key account management."
+        }
+      ],
+      "total_input_tokens": 11173,
+      "total_output_tokens": 1875,
+      "estimated_cost_usd": 0.061644000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:09:51.551137"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.379286",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:32.300280"
+}

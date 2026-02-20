@@ -1,0 +1,247 @@
+{
+  "entity_id": "sa20",
+  "entity_name": "SA20",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "sa20.co.za",
+    "sa20.in",
+    "sa20.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/sa20league_jobs-work-recruitment-activity-7062363438362034176-V_t7",
+      "https://www.linkedin.com/posts/sa20league_digitalcontent-jobs-applynow-activity-7072577560865325057-NY03"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sa20",
+      "entity_name": "SA20",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/sa20league_jobs-work-recruitment-activity-7062363438362034176-V_t7",
+        "https://sa20.net",
+        "https://www.linkedin.com/posts/sa20league_digitalcontent-jobs-applynow-activity-7072577560865325057-NY03",
+        "https://sa20.in",
+        "https://sa20.co.za"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SA20 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:00:43.523055",
+          "domain_explored": "https://sa20.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Incrowd Sports (Marketing/Tracking)",
+              "Cricket Company Store (E-commerce/Merchandising)",
+              "Login.sa20.co.za (Identity Management/CRM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise fulfillment partnership (Cricket Company Store)",
+              "Fan data personalization tools ('Choose my team' feature)",
+              "Marketing attribution tracking (Incrowd Sports URL parameters)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Marketing Technology Stack",
+            "Fan Engagement/CRM Integration",
+            "Merchandise Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1070,
+              "output_tokens": 288,
+              "elapsed_seconds": 4.569714069366455
+            }
+          ],
+          "reasoning": "The content reveals specific technology vendors and platforms currently in use by SA20, which indicates existing procurement relationships and potential for expansion or renewal. The presence of a 'Cricket Company Store' link and a 'Login' portal for personalization confirms the use of third-party e-commerce and identity management solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:00:52.411762",
+          "domain_explored": "https://sa20.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Scoring Systems",
+              "Broadcasting Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Operations (Newlands, Centurion, Gqeberha, etc.)",
+              "Match Day Logistics & Security",
+              "Broadcast Production Services"
+            ]
+          },
+          "patterns_found": [
+            "League Operations & Logistics",
+            "Broadcast & Digital Infrastructure",
+            "Venue Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 246,
+              "elapsed_seconds": 5.791120290756226
+            }
+          ],
+          "reasoning": "The content confirms the operational scale of the SA20 2026 season (6 teams, 30+ matches, multiple venues). While the text is informational, the management of a national sports league implies significant procurement in venue management, broadcasting technology, and event logistics. The mention of specific venues and schedules indicates active operational requirements."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:01:55.279228",
+          "domain_explored": "https://sa20.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms",
+              "Live Streaming Infrastructure",
+              "Digital Scorekeeping Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Season 4 Event Planning (2025-2026)",
+              "Multi-venue Logistics Coordination",
+              "Broadcast Rights Management"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Logistics",
+            "Broadcast & Streaming Infrastructure",
+            "Ticketing Platform Integration",
+            "Venue Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 290,
+              "elapsed_seconds": 58.7799654006958
+            }
+          ],
+          "reasoning": "The content provides a comprehensive overview of the SA20 2026 season operations, specifically highlighting the logistical scale of the tournament (34 matches across 6 venues). While it does not contain explicit RFPs, it confirms the operational necessity for vendors in ticketing, live streaming technology, and venue management services. The mention of 'Live Stream' and 'Tickets' as primary navigation elements indicates active procurement or maintenance of these platforms."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:02:03.586260",
+          "domain_explored": "https://www.linkedin.com/posts/sa20league_jobs-work-recruitment-activity-7062363438362034176-V_t7",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive and Project Assistant"
+            ],
+            "procurement_indicators": [
+              "Vendor: Nova Human Capital (Recruitment Process Outsourcing)",
+              "Contact: sa20.recruitment@nova-humancapital.co.za"
+            ]
+          },
+          "patterns_found": [
+            "HR & Recruitment Outsourcing",
+            "Organizational Scaling",
+            "Executive Support Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 265,
+              "elapsed_seconds": 4.066783905029297
+            }
+          ],
+          "reasoning": "The content confirms SA20 is actively hiring for administrative and project support roles. While this is a direct job posting rather than a vendor procurement RFP, the use of an external recruitment agency (Nova Human Capital) indicates a procurement relationship for HR services. It signals organizational growth and administrative capacity building, which are precursors to larger procurement activities, but does not show direct intent to purchase technology or services in this specific post."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:02:13.436025",
+          "domain_explored": "https://www.linkedin.com/posts/sa20league_digitalcontent-jobs-applynow-activity-7072577560865325057-NY03",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Content Management Platforms",
+              "Product Management Software"
+            ],
+            "job_postings": [
+              "Digital Content & Product Manager"
+            ],
+            "procurement_indicators": [
+              "Use of external recruitment agency (Nova Human Capital)",
+              "Investment in digital product infrastructure",
+              "Strategic focus on content delivery systems"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Management",
+            "Content Management Systems (CMS)",
+            "Recruitment Process Outsourcing (RPO)",
+            "Vendor Dependency (Nova Human Capital)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1589,
+              "output_tokens": 293,
+              "elapsed_seconds": 6.514149904251099
+            }
+          ],
+          "reasoning": "The content confirms SA20 is building internal capacity to manage digital products and content delivery. While this is a hiring signal rather than a direct procurement tender, it indicates an active phase of digital transformation and infrastructure development. The reliance on an external recruitment agency (Nova Human Capital) for talent acquisition is a confirmed vendor relationship."
+        }
+      ],
+      "total_input_tokens": 7022,
+      "total_output_tokens": 1382,
+      "estimated_cost_usd": 0.041796
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SA20 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:02:13.440468"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417074",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:16.987190"
+}

@@ -1,0 +1,206 @@
+{
+  "entity_id": "syrian_basketball_league",
+  "entity_name": "Syrian Basketball League",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "asia-basket.com",
+    "internationalmedicalcorps.org",
+    "hoopswithoutborders.com",
+    "sofascore.com",
+    "wikiwand.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "syrian_basketball_league",
+      "entity_name": "Syrian Basketball League",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://hoopswithoutborders.com",
+        "https://asia-basket.com",
+        "https://wikiwand.com",
+        "https://sofascore.com",
+        "https://internationalmedicalcorps.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Syrian Basketball League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:58:51.201675",
+          "domain_explored": "https://asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content",
+            "General_sports_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.253520965576172
+            }
+          ],
+          "reasoning": "The content provided is a general sports news feed covering basketball results in the Philippines, South Korea, UAE, Taiwan, Japan, Qatar, Kazakhstan, Lebanon, China, India, and Malaysia. There is absolutely no mention of the Syrian Basketball League, nor are there any signals regarding procurement, job openings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:59:03.703423",
+          "domain_explored": "https://internationalmedicalcorps.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content",
+            "Humanitarian_aid_focus",
+            "Geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 161,
+              "elapsed_seconds": 4.709855079650879
+            }
+          ],
+          "reasoning": "The content is from International Medical Corps, a humanitarian aid organization focused on healthcare and disaster relief (Sudan, Gaza, Syria). While it mentions 'Syria', the context is strictly civil war relief and medical services, completely unrelated to the Syrian Basketball League or sports procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:59:12.540478",
+          "domain_explored": "https://hoopswithoutborders.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic_mismatch",
+            "General_sports_news",
+            "Irrelevant_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 605,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.291619062423706
+            }
+          ],
+          "reasoning": "The content focuses on basketball in Bangladesh, which is geographically distinct from the target entity (Syrian Basketball League). The site appears to be a general sports news blog rather than a source for procurement intelligence or official league governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:59:25.007599",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content",
+            "General_sports_aggregator",
+            "Geographic_mismatch",
+            "Consumer_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.6654860973358154
+            }
+          ],
+          "reasoning": "The content is a generic sports aggregation page focused on global football (soccer) scores and leagues (UEFA, Premier League, etc.). It is a consumer-facing product (Sofascore) and does not contain information regarding the Syrian Basketball League's internal operations, technology stack, or procurement needs. The entity is purely a data consumer/publisher, not a procurement target for the League."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:59:38.882517",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content",
+            "General_knowledge_platform",
+            "Geographic_mismatch",
+            "No_procurement_signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 186,
+              "elapsed_seconds": 7.790757894515991
+            }
+          ],
+          "reasoning": "The content provided is the homepage and interface description of Wikiwand, a Wikipedia interface tool. It contains generic marketing copy about features like 'Top Questions' and 'Timelines', along with unrelated historical examples (Abraham Lincoln, Usain Bolt). There is absolutely no mention of the Syrian Basketball League, sports governance, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 6393,
+      "total_output_tokens": 853,
+      "estimated_cost_usd": 0.031974
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Syrian Basketball League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:59:38.885427"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.242336",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:45.795197"
+}

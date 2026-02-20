@@ -1,0 +1,294 @@
+{
+  "entity_id": "cska_moscow",
+  "entity_name": "CSKA Moscow",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "en.pfc-cska.com",
+    "pfc-cska.com",
+    "cskabasket.ru",
+    "en.wfccska.ru",
+    "mhccska.ru",
+    "vtb-league.com",
+    "euroleaguebasketball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cska_moscow",
+      "entity_name": "CSKA Moscow",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://en.pfc-cska.com",
+        "https://en.wfccska.ru",
+        "https://mhccska.ru",
+        "https://cskabasket.ru",
+        "https://euroleaguebasketball.net",
+        "https://pfc-cska.com",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CSKA Moscow may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:47:32.822965",
+          "domain_explored": "https://en.pfc-cska.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop functionality)",
+              "CMS (Content Management for news/fixtures)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise retail operations"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce/Merchandising presence",
+            "Content Management System (CMS) usage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.7847938537597656
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on match results, player statistics, and merchandise sales (e-commerce). While the presence of a 'Shop' section indicates a retail function, there are no explicit signals regarding backend technology procurement, job vacancies, or RFPs for enterprise services in this specific text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:47:45.039063",
+          "domain_explored": "https://pfc-cska.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Store.pfc-cska.com (E-commerce)",
+              "Ticketing Engine (Custom/Third-party)",
+              "Email Marketing Platform (Newsletter capture)",
+              "Video Hosting (CSKA TV)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Store subdomain usage implies e-commerce platform procurement",
+              "VIP Services and Hospitality programs imply catering/service vendor procurement",
+              "Stadium operations (VEB Arena) imply facilities management contracts"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Integration",
+            "Ticketing System Operations",
+            "Email Marketing Infrastructure",
+            "Video Content Management (CSKA TV)",
+            "VIP Hospitality Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 326,
+              "elapsed_seconds": 4.554549932479858
+            }
+          ],
+          "reasoning": "While the content is primarily fan-facing, it reveals specific technology vendors and infrastructure requirements. The presence of a dedicated store subdomain, a ticketing engine, and a newsletter signup form indicates active procurement or maintenance of SaaS platforms for e-commerce and CRM. The 'VIP Services' section suggests potential procurement for hospitality and catering."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:47:54.529766",
+          "domain_explored": "https://cskabasket.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VK Sport (Streaming Platform)",
+              "MatchTV.ru (Media Partner)",
+              "SportBox.ru (Media Partner)",
+              "WBC.VTB-League.com (League Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations Management",
+              "Media Rights/Broadcasting Partnerships",
+              "League Software Integration (VTB)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Management",
+            "Third-Party Media Partnerships",
+            "Ticketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 270,
+              "elapsed_seconds": 2.4741382598876953
+            }
+          ],
+          "reasoning": "The content is primarily sports news and match logistics, but reveals the underlying infrastructure used for operations. The presence of specific ticketing news ('\u041f\u0435\u0440\u0435\u0434 \u0431\u043e\u043b\u044c\u0448\u0438\u043c \u043f\u0435\u0440\u0435\u0440\u044b\u0432\u043e\u043c' linked to ticket announcements) and reliance on external streaming platforms (MatchTV, VK Sport) indicates a procurement dependency on digital services and media rights platforms."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:48:05.752807",
+          "domain_explored": "https://en.wfccska.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Video Streaming/Broadcasting Infrastructure"
+            ],
+            "job_postings": [
+              "General Director (Maria Afanasyeva - Appointed Aug 2024)"
+            ],
+            "procurement_indicators": [
+              "Executive Leadership Change (New CEO appointment)",
+              "Title Sponsor Partnership (Winline - Telecom/Tech provider)",
+              "League Operations Management (Superliga table integration)"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Transition",
+            "Sponsorship Integration (Winline)",
+            "Digital Asset Management (Video/Gallery)",
+            "League Management Operations (Superliga)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 351,
+              "elapsed_seconds": 4.304270029067993
+            }
+          ],
+          "reasoning": "The content reveals a significant governance event with the appointment of a new General Director (Maria Afanasyeva) and the departure of the former CEO. Such executive transitions often trigger strategic reviews and new procurement cycles, particularly for administrative and operational services. Additionally, the explicit mention of the title sponsor 'Winline' (a major telecom) indicates active commercial partnership management, while the structured media sections (Video, Galleries, Standings) imply the use of a digital content management system."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:48:12.667486",
+          "domain_explored": "https://mhccska.ru",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:48:21.785476",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "League Management Platform (Custom/Proprietary)",
+              "Video Streaming Infrastructure (Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide sponsorship standardization (Winline, Betsiti, Parimatch)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Digital Ecosystem",
+            "Sponsorship Aggregation (Winline/Betsiti)",
+            "Centralized Content Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.3576502799987793
+            }
+          ],
+          "reasoning": "The content represents the VTB United League's official website, a governing body for basketball, rather than CSKA Moscow's corporate entity. While CSKA is listed as a member team, the site focuses on league-wide statistics, standings, and media. It confirms CSKA's participation in the league but offers no direct insight into CSKA's internal procurement operations, technology stack, or decision-making governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:48:31.618644",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (OTT)",
+              "Digital Asset Management (Video)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Governance",
+            "Digital Media Rights Management",
+            "Sponsorship Aggregation (Motorola, BKT)",
+            "OTT Platform Operations (EuroLeague TV)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.7081782817840576
+            }
+          ],
+          "reasoning": "The content is focused on league-wide governance (CEO appointment), game highlights, and media rights. While it confirms the digital ecosystem (streaming, video content) in which CSKA operates, it provides no specific signals regarding CSKA Moscow's internal procurement activities, technology stack, or vendor selection processes."
+        }
+      ],
+      "total_input_tokens": 8935,
+      "total_output_tokens": 1623,
+      "estimated_cost_usd": 0.05115
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CSKA Moscow may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:48:31.620457"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.210966",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:42.556008"
+}

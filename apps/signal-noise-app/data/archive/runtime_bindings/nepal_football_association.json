@@ -1,0 +1,247 @@
+{
+  "entity_id": "nepal_football_association",
+  "entity_name": "Nepal Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "the-anfa.com",
+    "inside.fifa.com",
+    "fifafoundation.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_job-soccerjobs-joboffer-activity-7404958166083395584-VYBG"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nepal_football_association",
+      "entity_name": "Nepal Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.16,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.16
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://www.linkedin.com/posts/futboljobs.com_job-soccerjobs-joboffer-activity-7404958166083395584-VYBG",
+        "https://fifafoundation.org",
+        "https://the-anfa.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Notices",
+        "Subdomain Technology Usage (Player Registration System)",
+        "Commercial Rights Outsourcing",
+        "FIFA Forward Project Framework",
+        "High-Profile Personnel Recruitment",
+        "Contract-Based Employment Model",
+        "Third-Party Recruitment Utilization",
+        "Global Talent Search"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nepal Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:26:16.955622",
+          "domain_explored": "https://the-anfa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Player Registration System (prs.the-anfa.com)",
+              "Content Management System (CMS) for the main site"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Tender/Notice",
+                "title": "Supply of hatchback car",
+                "source": "Naya Patrika via ANFA",
+                "date": "20th January, 2026"
+              },
+              {
+                "type": "RFP/Commercial",
+                "title": "A Division Commercial rights",
+                "description": "Likely a bid for marketing/broadcasting rights"
+              },
+              {
+                "type": "Project Framework",
+                "title": "FIFA Forward Projects",
+                "description": "Funding mechanism for infrastructure and development"
+              },
+              {
+                "type": "Governance/Compliance",
+                "title": "Club Licensing Body",
+                "description": "Indicates need for compliance tracking software"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Notices",
+            "Subdomain Technology Usage (Player Registration System)",
+            "Commercial Rights Outsourcing",
+            "FIFA Forward Project Framework"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 469,
+              "elapsed_seconds": 7.055383920669556
+            }
+          ],
+          "reasoning": "The content provides explicit evidence of procurement activities via the 'Notice' section, specifically for a 'Supply of hatchback car' and 'A Division Commercial rights'. Additionally, the 'Player Registration' link points to a subdomain (prs.the-anfa.com), indicating an existing technology stack for transfer management. The mention of 'FIFA Forward' projects suggests a structured budget for development, while 'Club Licensing' implies compliance software needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:26:23.499990",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding (Infrastructure Refurbishment)",
+              "Stadium Development Projects",
+              "Women's Game Development Initiatives"
+            ]
+          },
+          "patterns_found": [
+            "FIFA Forward Program Funding",
+            "Infrastructure Development Signals",
+            "Women's Football Investment Focus"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.747575044631958
+            }
+          ],
+          "reasoning": "While the content is from FIFA's global site and not specific to ANFA, the explicit mention of the 'FIFA Forward-funded refurbishment' for Burundi's stadium indicates a clear funding mechanism for infrastructure projects that ANFA can access. This signals a procurement pathway for stadium construction, renovation, and related sports infrastructure vendors within Nepal, contingent on ANFA applying for or utilizing these funds."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:26:35.067714",
+          "domain_explored": "https://fifafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Education Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Foundation Endowment Fund for infrastructure reconstruction",
+              "Digital Education Programme funding",
+              "Refugee Programme support"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Reconstruction Grants",
+            "Digital Education Programme",
+            "Refugee Programme Implementation",
+            "Endowment Fund Allocation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 252,
+              "elapsed_seconds": 2.8316400051116943
+            }
+          ],
+          "reasoning": "While the FIFA Foundation site is primarily informational and philanthropic, it confirms specific funding streams that directly benefit member associations like Nepal. The 'Digital Education Programme' and 'infrastructure reconstruction' initiatives represent potential procurement channels for ANFA to receive funds for technology and facility upgrades, respectively."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:26:44.159256",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_job-soccerjobs-joboffer-activity-7404958166083395584-VYBG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)",
+              "Ow.ly (Link Shortener/Analytics)",
+              "Futboljobs.com (Niche Job Aggregator)"
+            ],
+            "job_postings": [
+              {
+                "role": "Head Coach - Men's Senior National Team",
+                "type": "Full-time / Contract",
+                "requirements": "Professional license holder, proven track record at national or professional level",
+                "source": "Futboljobs.com / LinkedIn"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced recruitment advertising",
+              "Contract-based senior management hiring",
+              "International search for specialized technical roles"
+            ]
+          },
+          "patterns_found": [
+            "High-Profile Personnel Recruitment",
+            "Contract-Based Employment Model",
+            "Third-Party Recruitment Utilization",
+            "Global Talent Search"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 354,
+              "elapsed_seconds": 3.626094102859497
+            }
+          ],
+          "reasoning": "The content confirms active procurement of human capital. ANFA is utilizing the platform Futboljobs.com to source a Head Coach for the men's national team. This indicates a structured recruitment process involving external job aggregators to reach a global talent pool, signifying active operational expenditure and vendor usage for talent acquisition."
+        }
+      ],
+      "total_input_tokens": 5798,
+      "total_output_tokens": 1318,
+      "estimated_cost_usd": 0.037164
+    },
+    "procurement_signals": [
+      "Direct Procurement Notices",
+      "Subdomain Technology Usage (Player Registration System)",
+      "Commercial Rights Outsourcing",
+      "FIFA Forward Project Framework",
+      "High-Profile Personnel Recruitment",
+      "Contract-Based Employment Model",
+      "Third-Party Recruitment Utilization",
+      "Global Talent Search"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nepal Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:26:44.160621"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.206459",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:21.934812"
+}

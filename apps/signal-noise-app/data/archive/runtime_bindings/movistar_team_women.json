@@ -1,0 +1,187 @@
+{
+  "entity_id": "movistar_team_women",
+  "entity_name": "Movistar Team Women",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "uci_protour_women",
+  "discovered_domains": [
+    "movistarteam.com",
+    "la-fleche-wallonne-femmes.be",
+    "commons.wikimedia.org",
+    "bobshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "movistar_team_women",
+      "entity_name": "Movistar Team Women",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://movistarteam.com",
+        "https://bobshop.com",
+        "https://commons.wikimedia.org",
+        "https://la-fleche-wallonne-femmes.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Movistar Team Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:14:39.952731",
+          "domain_explored": "https://movistarteam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Canyon Aeroad CFR (High-performance cycling hardware)",
+              "Movistar Plus+ (Media/Broadcasting platform)"
+            ],
+            "job_postings": [
+              "Sports Director (Juan Carlos Esc\u00e1mez hired 23.12.2025)"
+            ],
+            "procurement_indicators": [
+              "New Sponsor Agreement: CUPRA (Official Car for Men's and Women's World Tour)",
+              "Kit Procurement: New 2026 kit by GOBIK",
+              "Media Production: New series 'El d\u00eda menos pensado' and 'Te Pill\u00f3 El Corte'",
+              "Technical Equipment: Canyon bikes and associated high-tech materials"
+            ]
+          },
+          "patterns_found": [
+            "New Sponsor Partnership (CUPRA)",
+            "New Executive Hire (Sports Director)",
+            "Content Production & Media (Movistar Plus+)",
+            "Technical Vendor Partnerships (Canyon, Gobik)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 361,
+              "elapsed_seconds": 4.026594161987305
+            }
+          ],
+          "reasoning": "The content reveals significant organizational changes and new partnerships for the 2026 season. The announcement of CUPRA as the official car sponsor and the hiring of a new Sports Director indicate active vendor management and HR procurement. While specific RFPs are not listed, the renewal of technical suppliers (Canyon, Gobik) and the launch of new media series suggest ongoing investment in performance technology and content production capabilities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:14:54.917891",
+          "domain_explored": "https://la-fleche-wallonne-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race Results Data",
+            "Event Media Coverage",
+            "Competitor Performance (Fenix-Deceuninck, Canyon//SRAM, FDJ-SUEZ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 180,
+              "elapsed_seconds": 7.780244827270508
+            }
+          ],
+          "reasoning": "The content is entirely focused on the results, media gallery, and route details of the La Fl\u00e8che Wallonne Femmes cycling race. It mentions competitor teams (Fenix-Deceuninck, Canyon//SRAM, EF Education-Oatly, FDJ-SUEZ) but contains no information regarding Movistar Team Women's internal operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:15:21.015084",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "User-Generated Content",
+            "Open Source Licensing (Creative Commons)",
+            "Non-Profit Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 160,
+              "elapsed_seconds": 22.454477787017822
+            }
+          ],
+          "reasoning": "The content is the generic homepage text of Wikimedia Commons, a media file repository. It contains no specific information regarding 'Movistar Team Women', its operations, or its procurement activities. It is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:15:33.455089",
+          "domain_explored": "https://bobshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-Commerce Retail Interface",
+            "Consumer Product Catalog (B2C)",
+            "Seasonal Sales Promotions",
+            "Competitor Merchandising (UAE Team Emirates, INEOS Grenadiers)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 218,
+              "elapsed_seconds": 4.122459888458252
+            }
+          ],
+          "reasoning": "The content is scraped from 'bobshop.com', a B2C e-commerce platform for cycling apparel. It displays product listings, prices, and consumer discounts. While it mentions 'Profiteams' (UAE Team Emirates-XRG, INEOS Grenadiers), this represents retail merchandise availability, not the procurement operations or vendor partnerships of Movistar Team Women. There are no signals of internal buying intent, RFPs, or corporate technology investments."
+        }
+      ],
+      "total_input_tokens": 5781,
+      "total_output_tokens": 919,
+      "estimated_cost_usd": 0.031128000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Movistar Team Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:15:33.455952"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.383786",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:45.847392"
+}

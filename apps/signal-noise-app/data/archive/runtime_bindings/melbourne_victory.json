@@ -1,0 +1,304 @@
+{
+  "entity_id": "melbourne_victory",
+  "entity_name": "Melbourne Victory",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "melbournevictory.com.au",
+    "gomvfc.com.au",
+    "victoryshop.com.au",
+    "transfermarkt.co.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/airmasteraustralia_hvac-victoryrising-tradescareers-activity-7381560168775372800-cpWr",
+      "https://au.linkedin.com/company/footballaus/jobs",
+      "https://au.linkedin.com/jobs/view/head-coach-senior-metro-squad-at-melbourne-rovers-soccer-club-4326161858"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "melbourne_victory",
+      "entity_name": "Melbourne Victory",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/company/footballaus/jobs",
+        "https://au.linkedin.com/jobs/view/head-coach-senior-metro-squad-at-melbourne-rovers-soccer-club-4326161858",
+        "https://victoryshop.com.au",
+        "https://transfermarkt.co.in",
+        "https://gomvfc.com.au",
+        "https://melbournevictory.com.au",
+        "https://www.linkedin.com/posts/airmasteraustralia_hvac-victoryrising-tradescareers-activity-7381560168775372800-cpWr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Corporate Social Responsibility (CSR) Partnership",
+        "Associate Partner Acquisition",
+        "Community Program Implementation",
+        "Workforce Development Initiative",
+        "ESG/Sustainability Alignment",
+        "Multi-season Contracting (3 seasons)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Melbourne Victory may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:49:44.768415",
+          "domain_explored": "https://melbournevictory.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketek (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketek integration for 'Victory v Roar' event",
+              "Community pathway programs requiring management tools",
+              "Fan engagement initiatives (voting, design contests)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage",
+            "Community Program Management",
+            "Fan Engagement Campaigns"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.6428518295288086
+            }
+          ],
+          "reasoning": "The content confirms active usage of Ticketek for ticketing and indicates ongoing community programs (Masterclass) and fan engagement campaigns (Player Card design). While this confirms operational capabilities, it does not explicitly signal new procurement intent, hence a WEAK_ACCEPT for identifying vendor relationships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:49:52.652134",
+          "domain_explored": "https://gomvfc.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Azure Blob Storage (jsrmtph001.blob.core.windows.net)",
+              "Typeform (Newsletter capture)",
+              "Custom Membership Portal (membership.gomvfc.com.au)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Merchandise Platform (victoryshop.com.au)",
+              "Membership/Ticketing Platform Usage"
+            ]
+          },
+          "patterns_found": [
+            "Membership Management Platform",
+            "Cloud Infrastructure (Azure)",
+            "Third-Party Merchandising",
+            "Data Collection (Typeform)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 301,
+              "elapsed_seconds": 3.329355001449585
+            }
+          ],
+          "reasoning": "The content reveals the technology stack supporting the membership and ticketing operations. The presence of a dedicated membership subdomain (membership.gomvfc.com.au), Azure blob hosting for assets, and a Typeform integration for newsletter signups indicates active investment in digital customer experience tools. While not a direct procurement signal, it identifies the existing vendor ecosystem and potential points of integration for future CRM or marketing automation procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:49:56.428544",
+          "domain_explored": "https://victoryshop.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:50:03.813193",
+          "domain_explored": "https://transfermarkt.co.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor League Analysis (Indian Super League)",
+            "Player Transfer Data",
+            "General Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.1118381023406982
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt is focused on the Indian Super League (ISL), player transfers, and general football market values. It contains no information regarding Melbourne Victory's operations, technology stack, or procurement activities. This is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:50:19.379379",
+          "domain_explored": "https://www.linkedin.com/posts/airmasteraustralia_hvac-victoryrising-tradescareers-activity-7381560168775372800-cpWr",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Acquisition",
+                "details": "Airmaster signed as Associate Partner for 3 seasons",
+                "source": "LinkedIn: Melbourne Victory Official Post"
+              },
+              {
+                "type": "Community Program Procurement",
+                "details": "Launch of 'Victory Rising' initiative involving mentoring, workshops, and career expos",
+                "source": "LinkedIn: Airmaster / Melbourne Victory"
+              },
+              {
+                "type": "Executive Governance",
+                "details": "Partnership involves Managing Directors (Caroline Carnegie, Wayne Bover) and Senior Management (Marko Gluscevic, Simon Rodder)",
+                "source": "LinkedIn Comments"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Corporate Social Responsibility (CSR) Partnership",
+            "Associate Partner Acquisition",
+            "Community Program Implementation",
+            "Workforce Development Initiative",
+            "ESG/Sustainability Alignment",
+            "Multi-season Contracting (3 seasons)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 415,
+              "elapsed_seconds": 11.893679141998291
+            }
+          ],
+          "reasoning": "The content confirms a new commercial partnership (procurement) with Airmaster as an 'Associate Partner' for a 3-season term. It explicitly details the procurement of services for the 'Victory Rising' initiative, focusing on community engagement, workshops, and mentoring. This indicates active vendor management and partnership acquisition strategies."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:50:25.826516",
+          "domain_explored": "https://au.linkedin.com/company/footballaus/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Club Licensing Bodies (Football Australia)"
+            ],
+            "procurement_indicators": [
+              "Regulatory compliance framework implementation"
+            ]
+          },
+          "patterns_found": [
+            "Governing Body Operations",
+            "Regulatory Compliance (Club Licensing)",
+            "Competitor Identification"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1628,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.026663064956665
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn page of Football Australia, the national governing body, not Melbourne Victory. While it lists Melbourne Victory as a 'similar page' (competitor), the specific job posting for 'Club Licensing Bodies' relates to regulatory governance at the national level rather than direct procurement or operational signals for the target entity (Melbourne Victory). This represents a drift in target entity focus."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:50:35.868283",
+          "domain_explored": "https://au.linkedin.com/jobs/view/head-coach-senior-metro-squad-at-melbourne-rovers-soccer-club-4326161858",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Board Noise",
+            "Geographic Irrelevance",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1700,
+              "output_tokens": 175,
+              "elapsed_seconds": 5.466540098190308
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job search results page for 'Software Sales Consultant' roles in the United States (Canva, Square, etc.). It does not contain any information regarding Melbourne Victory, nor does it relate to the URL provided in the prompt (which references 'Melbourne Rovers Soccer Club'). There is zero procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 9153,
+      "total_output_tokens": 1526,
+      "estimated_cost_usd": 0.050349000000000005
+    },
+    "procurement_signals": [
+      "Corporate Social Responsibility (CSR) Partnership",
+      "Associate Partner Acquisition",
+      "Community Program Implementation",
+      "Workforce Development Initiative",
+      "ESG/Sustainability Alignment",
+      "Multi-season Contracting (3 seasons)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Melbourne Victory may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:50:35.869922"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.188727",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:10.186505"
+}

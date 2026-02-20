@@ -1,0 +1,426 @@
+{
+  "entity_id": "narbonne",
+  "entity_name": "Narbonne",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "narbonne.fr",
+    "cotedumidi.com",
+    "visit-occitanie.com",
+    "hotelnarbonne.com",
+    "chateaucapitoul.com",
+    "rcnarbonnais.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?currentJobId=3111628379&f_C=134282&geoId=92000000",
+      "https://www.linkedin.com/jobs/g%C3%A9rard-bertrand-wines-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/en-to-french-france-freelance-translator-multi-fields-at-rws-group-4354552171",
+      "https://www.linkedin.com/jobs/jobs-in-b%C3%A9ziers?trk=guest_job_search_related_jserp_link",
+      "https://www.linkedin.com/jobs/nuit%C3%A9e-jobs-worldwide",
+      "https://www.linkedin.com/jobs/dekra-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/dekra-jobs-worldwide",
+      "https://www.linkedin.com/jobs/attila-jobs-worldwide",
+      "https://www.linkedin.com/jobs/vinci-autoroutes-jobs-worldwide",
+      "https://www.linkedin.com/jobs/la-montagne-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "narbonne",
+      "entity_name": "Narbonne",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://narbonne.fr",
+        "https://rcnarbonnais.fr",
+        "https://www.linkedin.com/jobs/view/en-to-french-france-freelance-translator-multi-fields-at-rws-group-4354552171",
+        "https://hotelnarbonne.com",
+        "https://visit-occitanie.com",
+        "https://cotedumidi.com",
+        "https://www.linkedin.com/jobs/jobs-in-b%C3%A9ziers?trk=guest_job_search_related_jserp_link",
+        "https://www.linkedin.com/jobs/nuit%C3%A9e-jobs-worldwide",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3111628379&f_C=134282&geoId=92000000",
+        "https://chateaucapitoul.com",
+        "https://www.linkedin.com/jobs/g%C3%A9rard-bertrand-wines-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Narbonne may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:10:33.355800",
+          "domain_explored": "https://narbonne.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webcam infrastructure",
+              "Interactive mapping (Plan interactif)",
+              "Online payment processing (Billetterie en ligne)",
+              "Citizen portal (Espace Citoyens)",
+              "Digital identity management (France Identit\u00e9)"
+            ],
+            "job_postings": [
+              "Recrutement (General hiring portal link detected)"
+            ],
+            "procurement_indicators": [
+              "Appels \u00e0 Projet (Calls for Projects)",
+              "March\u00e9s publics (Public markets - implied via 'Finances et budget')",
+              "Concours (Competitions/Tenders)",
+              "Stages (Internships)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Service Delivery (E-services)",
+            "Citizen Engagement Platforms",
+            "Cultural Ticketing Systems",
+            "Open Data Initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 361,
+              "elapsed_seconds": 5.027713060379028
+            }
+          ],
+          "reasoning": "The content is a high-level navigation menu and site map of the Narbonne municipal website. While it does not contain explicit RFPs or job postings, it reveals a mature digital infrastructure requiring ongoing maintenance and potential procurement. Key areas of interest include the 'Billetterie en ligne' (Online Ticketing) for events, 'Espace Citoyens' (Citizen Portal) for administrative tasks, and 'Publications r\u00e9glementaires' which often house procurement notices."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:10:43.916362",
+          "domain_explored": "https://cotedumidi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (implied by dynamic content/blog structure)",
+              "Web Hosting/Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Staffing Structure: Identification of 'Charg\u00e9e de mission RH/Finances and Webmaster' role indicating potential for HR/Finance software or Web support tools.",
+              "Service Scope: 'On a test\u00e9 pour vous' indicates investment in content creation and local experience curation."
+            ]
+          },
+          "patterns_found": [
+            "Content Management System (CMS) Usage",
+            "Digital Asset Management (DAM)",
+            "Tourism Marketing & Promotion",
+            "Staff Role Identification (HR/Finance/Webmaster)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 334,
+              "elapsed_seconds": 3.0835840702056885
+            }
+          ],
+          "reasoning": "The content is from the local tourism office (C\u00f4te du Midi), which is a key entity for Narbonne's promotion. While it is consumer-facing, it confirms the use of a Content Management System (CMS) and highlights a specific staff member (V\u00e9ronique Magne) holding a dual 'RH/Finances and Webmaster' role. This suggests a need for simplified, all-in-one management tools rather than complex enterprise stacks. It confirms the entity's digital presence but lacks direct procurement intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:10:55.471639",
+          "domain_explored": "https://visit-occitanie.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership model: Regional tourism board (CRT Occitanie) promoting regional assets",
+              "Service integration: Linking tourism content with regional public transport (liO)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Tourism Marketing",
+            "Transportation Partnerships (liO Train)",
+            "Consumer-Facing Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 253,
+              "elapsed_seconds": 3.7254741191864014
+            }
+          ],
+          "reasoning": "The content is from 'visit-occitanie.com', a regional tourism marketing site. While it mentions 'liO Train' (regional transport), the context is strictly promotional for end-users (travel suggestions, itineraries) rather than operational procurement or B2B vendor selection. It does not serve as a direct source for Narbonne's specific procurement signals, which are more likely to be found on municipal or departmental tender portals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:11:09.875852",
+          "domain_explored": "https://hotelnarbonne.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:11:21.178990",
+          "domain_explored": "https://chateaucapitoul.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine (Custom)",
+              "Video Content Delivery",
+              "Virtual Tour Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Rental (Event Space)",
+              "Private Sector Vendor Status"
+            ]
+          },
+          "patterns_found": [
+            "Private Hospitality Sector Entity",
+            "Luxury Resort Management",
+            "Direct-to-Consumer Booking Engine"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.6619832515716553
+            }
+          ],
+          "reasoning": "The scraped content confirms that Ch\u00e2teau Capitoul is a private luxury hotel, spa, and villa resort (part of the Vignobles Bonfils group). It is a commercial entity selling hospitality services (B2C), not a public administrative body or a direct procurement channel for the City of Narbonne. While the city might utilize this venue for events, the website itself contains no procurement signals, RFPs, or governance information relevant to public sector purchasing."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:11:28.141307",
+          "domain_explored": "https://rcnarbonnais.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:11:35.933347",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3111628379&f_C=134282&geoId=92000000",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Commercial Assurance",
+              "Responsable du Centre de services IT",
+              "Analyste/ Contr\u00f4leur financier Groupe",
+              "Charge d'Etudes Actuarielles"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Insurance Sector Entity",
+            "National Recruitment Scope",
+            "Irrelevant Geographic Focus (Paris/Toulouse vs Narbonne)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.4826371669769287
+            }
+          ],
+          "reasoning": "The scraped content lists job postings for PR\u00c9VOIR, a private insurance group (Groupe Pr\u00e9voir). The positions are located in Paris, Chalon-sur-Sa\u00f4ne, and Toulouse. There is no connection to the City of Narbonne or its procurement ecosystem. The entity is a private mutual insurance company, not a public sector body relevant to the Narbonne target."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:11:44.427655",
+          "domain_explored": "https://www.linkedin.com/jobs/g%C3%A9rard-bertrand-wines-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Directeur Administratif et Financier (H/F)",
+              "Responsable Salles / Bars (H/F)",
+              "Ambassadeur CHR - Ile-de-France (H/F)",
+              "CANDIDATURE SPONTANEE"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Entity (Wine & Spirits)",
+            "Operational & Hospitality Recruitment",
+            "Geographic Mismatch (HQ in Narbonne, but commercial roles elsewhere)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 253,
+              "elapsed_seconds": 3.347113847732544
+            }
+          ],
+          "reasoning": "G\u00e9rard Bertrand Wines is a private sector entity (wine producer) headquartered in Narbonne. While located in the target city, the job postings (Finance Director, Bar Manager, Sales Ambassador) indicate operational hiring rather than public procurement or government digital transformation signals. The entity does not fit the profile of a public authority procuring civic tech infrastructure."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:11:53.559923",
+          "domain_explored": "https://www.linkedin.com/jobs/view/en-to-french-france-freelance-translator-multi-fields-at-rws-group-4354552171",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CAT tools",
+              "Machine Translation (MT)",
+              "Terminology Management Tools"
+            ],
+            "job_postings": [
+              "English to French (France) Freelance Translator (multi-fields) at RWS Group"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Entity (Language Services)",
+            "Global Recruitment Scope (APAC focus)",
+            "Freelance/Contractor Model",
+            "Vendor-side Hiring (RWS acts as a vendor)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1795,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.8522698879241943
+            }
+          ],
+          "reasoning": "The job posting is from RWS Group, a UK-based multinational language service provider, not the Narbonne municipal government. While the role requires French (France) proficiency, the operational preference is for APAC time zones, and the role is for a freelance contractor position. This represents a vendor's staffing activity, not a procurement signal from the target entity (Narbonne)."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:12:08.192848",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-b%C3%A9ziers?trk=guest_job_search_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable Salles / Bars (H/F) - G\u00e9rard Bertrand",
+              "Equipier \u00e9tage Polyvalent - Ch\u00e2teau L'Hospitalet",
+              "Assistant(e) RH/PAYE - Domaine & Demeure"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Hospitality Sector Entity",
+            "Operational Recruitment (Hospitality Focus)",
+            "Geographic Mismatch (B\u00e9ziers vs Narbonne)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1866,
+              "output_tokens": 261,
+              "elapsed_seconds": 9.934560060501099
+            }
+          ],
+          "reasoning": "The search results are filtered for 'Jobs in B\u00e9ziers', which falls outside the primary target scope of Narbonne. The visible listings are dominated by G\u00e9rard Bertrand Wines (a private entity previously rejected) and Domaine & Demeure (private hospitality in B\u00e9ziers). The roles are operational (Bar/Room Managers, Housekeeping, HR/Payroll assistants) and do not indicate public sector procurement or digital transformation signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:12:15.867291",
+          "domain_explored": "https://www.linkedin.com/jobs/nuit%C3%A9e-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SaaS Platforms",
+              "Booking Engine Technology"
+            ],
+            "job_postings": [
+              "Executive Assistant to Chief Executive Officer (Barcelona, Spain)",
+              "Sourcing Manager (Spain)",
+              "Business Development Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Entity (SaaS/Tech)",
+            "Geographic Mismatch (Barcelona vs Narbonne)",
+            "Hospitality/Tourism Tech Vendor",
+            "Recruitment Scope (Global/Remote)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1932,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.0559122562408447
+            }
+          ],
+          "reasoning": "The scraped content reveals job postings for 'Nuit\u00e9e', a private SaaS company specializing in hotel booking engines. The primary location listed is Barcelona, Spain, with no direct connection to the municipal entity of Narbonne. While Nuit\u00e9e operates in the tourism sector relevant to Narbonne's economy, this page represents a vendor's recruitment activity, not procurement signals or intent from the Narbonne government itself."
+        }
+      ],
+      "total_input_tokens": 14702,
+      "total_output_tokens": 2492,
+      "estimated_cost_usd": 0.081486
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Narbonne may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:12:15.869273"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277362",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:38.548543"
+}

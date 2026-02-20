@@ -1,0 +1,168 @@
+{
+  "entity_id": "bolivian_volleyball_federation",
+  "entity_name": "Bolivian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "iapesgw.com",
+    "worldofvolley.com",
+    "jasmin7.com.my"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/line-cook-winding-river-grille-at-greatlife-golf-4367064426"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bolivian_volleyball_federation",
+      "entity_name": "Bolivian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/line-cook-winding-river-grille-at-greatlife-golf-4367064426",
+        "https://jasmin7.com.my",
+        "https://worldofvolley.com",
+        "https://iapesgw.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bolivian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:00:58.093603",
+          "domain_explored": "https://iapesgw.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:01:04.071333",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International sports news aggregation",
+            "Global league coverage (Brazil, Italy, Poland, Turkey, Germany, France)",
+            "Transfer/transaction news ('Done deals')"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 214,
+              "elapsed_seconds": 3.0471439361572266
+            }
+          ],
+          "reasoning": "The scraped content from WorldofVolley is a sports news feed covering international volleyball leagues (Italy, Turkey, Poland, etc.) and European competitions. There is zero mention of the Bolivian Volleyball Federation, Bolivian clubs, or domestic Bolivian procurement activities. The content focuses on match results and international player transfers, which do not provide procurement intelligence signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:01:11.034141",
+          "domain_explored": "https://jasmin7.com.my",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content spam/SEO farm structure",
+            "Irrelevant sports topics (NBA, NFL, F1)",
+            "Generic entertainment news",
+            "Malaysian TLD (.my) targeting Bolivian entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.6734700202941895
+            }
+          ],
+          "reasoning": "The scraped content from jasmin7.com.my is a low-quality content farm displaying generic sports and entertainment news (NBA, Spotify, Foo Fighters) with no connection to the Bolivian Volleyball Federation. There are no governance, procurement, or technical signals present. The domain is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:01:17.828914",
+          "domain_explored": "https://www.linkedin.com/jobs/view/line-cook-winding-river-grille-at-greatlife-golf-4367064426",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Line Cook",
+                "entity": "GreatLIFE Golf",
+                "location": "Bolivia, NC (USA)",
+                "relevance": "False Positive (Geographic)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic mismatch (Bolivia, North Carolina vs. Bolivia country)",
+            "Hospitality sector role (Line Cook)",
+            "Golf course management context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.101322889328003
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a Line Cook at 'Winding River Grille' located in Bolivia, North Carolina (USA), managed by GreatLIFE Golf. This is a false positive match on the keyword 'Bolivia'. The entity (GreatLIFE Golf) and the role (hospitality/food service) are unrelated to the Bolivian Volleyball Federation or sports governance procurement."
+        }
+      ],
+      "total_input_tokens": 4383,
+      "total_output_tokens": 648,
+      "estimated_cost_usd": 0.022869
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bolivian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:01:17.829530"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334503",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:38.624159"
+}

@@ -1,0 +1,142 @@
+{
+  "entity_id": "ystads_if_hf",
+  "entity_name": "Ystads IF HF",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "wikidata.org",
+    "commons.wikimedia.org",
+    "goteborg.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ystads_if_hf",
+      "entity_name": "Ystads IF HF",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://goteborg.com",
+        "https://eurohandball.com",
+        "https://commons.wikimedia.org",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ystads IF HF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:01:56.337422",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Cookie consent/privacy gating",
+            "Event calendar listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.9831597805023193
+            }
+          ],
+          "reasoning": "The provided content is from the European Handball Federation's general news portal (eurohandball.com). It focuses on macro-level event results (Denmark, Croatia) and future EHF tournament calendars. There is no mention of the specific entity 'Ystads IF HF', nor are there any localized procurement signals, technology investments, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:01:59.254060",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:02:02.034901",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:02:08.395718",
+          "domain_explored": "https://goteborg.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General tourism and event listings",
+            "Venue promotions (Scandinavium, Liseberg, etc.)",
+            "Generic city navigation and sustainability branding"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.981775999069214
+            }
+          ],
+          "reasoning": "The content is a general tourism portal for the city of Gothenburg (goteborg.com), listing events, hotels, and restaurants. It contains no information regarding Ystads IF HF, its internal operations, technology stack, or procurement activities. The entity of interest is not mentioned in the provided text."
+        }
+      ],
+      "total_input_tokens": 2820,
+      "total_output_tokens": 364,
+      "estimated_cost_usd": 0.01392
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ystads IF HF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:02:08.396470"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.356358",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:23.094681"
+}

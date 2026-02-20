@@ -1,0 +1,159 @@
+{
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "timestamp": "2026-02-07T12:44:12.975126",
+  "phases": {
+    "post_signals": {
+      "posts_analyzed": 0,
+      "signals_detected": {},
+      "opportunities": 6,
+      "high_confidence_opps": 0,
+      "opportunity_types": {
+        "TECHNOLOGY_NEED": 2,
+        "PARTNERSHIP_OPPORTUNITY": 4
+      },
+      "top_opportunities": [
+        {
+          "type": "TECHNOLOGY_NEED",
+          "confidence": 0.7,
+          "context": "ill also see Paramount+ across Emirates Stadium on matchdays for our men\u2019s and women\u2019s teams.\nWe\u2019re looking forward to what we\u2019ll create together.\u00a0\ud83d\udd34\u26aa\ufe0f"
+        },
+        {
+          "type": "PARTNERSHIP_OPPORTUNITY",
+          "confidence": 0.7,
+          "context": "day we came together with our Jewish community at Emirates Stadium to celebrate Chanukah.\nHosted in collaboration with Jewish Gooners, the evening bro"
+        },
+        {
+          "type": "TECHNOLOGY_NEED",
+          "confidence": 0.7,
+          "context": "ill also see Paramount+ across Emirates Stadium on matchdays for our men\u2019s and women\u2019s teams.\nWe\u2019re looking forward to what we\u2019ll create together.\u00a0\ud83d\udd34\u26aa\ufe0f"
+        },
+        {
+          "type": "PARTNERSHIP_OPPORTUNITY",
+          "confidence": 0.7,
+          "context": "day we came together with our Jewish community at Emirates Stadium to celebrate Chanukah.\nHosted in collaboration with Jewish Gooners, the evening bro"
+        },
+        {
+          "type": "PARTNERSHIP_OPPORTUNITY",
+          "confidence": 0.7,
+          "context": "th a newly announced Euro 2025 sponsorship \ud83e\udd1d;Nikehas launched theNike\u201cUnited\u201d boot pack, created in collaboration with some of the biggest names in wo"
+        }
+      ]
+    },
+    "mutual_connections": {
+      "entities_checked": 0,
+      "total_connections": 0,
+      "strong_connections": 0,
+      "medium_connections": 0,
+      "top_connections": []
+    },
+    "strategic_positioning": {
+      "positioning_strategy": {
+        "strategy": "INNOVATION_PARTNER",
+        "approach": "Co-creation Mode",
+        "timing": "Within 1 week",
+        "channel": "LinkedIn respond + Email",
+        "expected_response_rate": "40%",
+        "urgency": "MEDIUM",
+        "rationale": "Seeking partners - collaborative approach works best"
+      },
+      "outreach_recommendations": {
+        "template_type": "GENERAL_VALUE_PROPOSITION",
+        "subject": "Sports Intelligence Platform for Arsenal FC",
+        "body_template": "Hi [Name],\n\nI've been following Arsenal's work in [specific area].\n\nYellow Panther helps clubs like Arsenal:\n\u2022 [Benefit 1]\n\u2022 [Benefit 2]\n\u2022 [Benefit 3]\n\nOpen to a brief call to explore how we could support your goals?\n\nBest,\n[Your Name]",
+        "key_talking_points": [
+          "Relevant case study from similar club",
+          "Specific ROI metrics",
+          "Phased implementation approach",
+          "Quick wins in Phase 1"
+        ]
+      },
+      "signal_analysis": {
+        "signals": {},
+        "opportunities": {
+          "TECHNOLOGY_NEED": 2,
+          "PARTNERSHIP_OPPORTUNITY": 4
+        },
+        "mutual_connection_count": 0
+      }
+    }
+  },
+  "linkedin_posts": [],
+  "opportunities": [
+    {
+      "opportunity_type": "TECHNOLOGY_NEED",
+      "pattern_matched": "looking for",
+      "context": "ill also see Paramount+ across Emirates Stadium on matchdays for our men\u2019s and women\u2019s teams.\nWe\u2019re looking forward to what we\u2019ll create together.\u00a0\ud83d\udd34\u26aa\ufe0f\u2026more2,92646 CommentsLikeCommentShareArsenal Football Club265,346 followers2moReport this post\ud835\uddea\ud835\uddff\ud835\uddf6\ud835\ude01\ud835\ude01\ud835\uddf2\ud835\uddfb \ud835\uddf6\ud835\uddfb\ud835\ude01\ud835\uddfc \ud835\udddc\ud835\ude00\ud835\uddf9\ud835\uddf6\ud835\uddfb\ud835\uddf4\ud835\ude01\ud835\uddfc\ud835\uddfb \ud835\uddf5\ud835\uddf6\ud835\ude00\ud835\ude01\ud835\uddfc\ud835\uddff\ud835\ude06 \ud83d\udd34\u26aa\nOur women\u2019s team have",
+      "source_url": "https://mm.linkedin.com/company/arsenal-f-c?trk=ppro_cprof",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:28.896994+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "PARTNERSHIP_OPPORTUNITY",
+      "pattern_matched": "collaboration",
+      "context": "day we came together with our Jewish community at Emirates Stadium to celebrate Chanukah.\nHosted in collaboration with Jewish Gooners, the evening brought together supporters and members of the wider Jewish community to mark the Jewish Festival of Lights, a celebration of dedication, resilience and",
+      "source_url": "https://mm.linkedin.com/company/arsenal-f-c?trk=ppro_cprof",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:28.897172+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "TECHNOLOGY_NEED",
+      "pattern_matched": "looking for",
+      "context": "ill also see Paramount+ across Emirates Stadium on matchdays for our men\u2019s and women\u2019s teams.\nWe\u2019re looking forward to what we\u2019ll create together.\u00a0\ud83d\udd34\u26aa\ufe0f\u2026more2,92646 CommentsLikeCommentShareArsenal Football Club265,346 followers2moReport this post\ud835\uddea\ud835\uddff\ud835\uddf6\ud835\ude01\ud835\ude01\ud835\uddf2\ud835\uddfb \ud835\uddf6\ud835\uddfb\ud835\ude01\ud835\uddfc \ud835\udddc\ud835\ude00\ud835\uddf9\ud835\uddf6\ud835\uddfb\ud835\uddf4\ud835\ude01\ud835\uddfc\ud835\uddfb \ud835\uddf5\ud835\uddf6\ud835\ude00\ud835\ude01\ud835\uddfc\ud835\uddff\ud835\ude06 \ud83d\udd34\u26aa\nOur women\u2019s team have",
+      "source_url": "https://ae.linkedin.com/company/arsenal-f-c?trk=ppro_cprof",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:30.947991+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "PARTNERSHIP_OPPORTUNITY",
+      "pattern_matched": "collaboration",
+      "context": "day we came together with our Jewish community at Emirates Stadium to celebrate Chanukah.\nHosted in collaboration with Jewish Gooners, the evening brought together supporters and members of the wider Jewish community to mark the Jewish Festival of Lights, a celebration of dedication, resilience and",
+      "source_url": "https://ae.linkedin.com/company/arsenal-f-c?trk=ppro_cprof",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:30.948400+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "PARTNERSHIP_OPPORTUNITY",
+      "pattern_matched": "collaboration",
+      "context": "th a newly announced Euro 2025 sponsorship \ud83e\udd1d;Nikehas launched theNike\u201cUnited\u201d boot pack, created in collaboration with some of the biggest names in women\u2019s football \ud83d\udc5f; and more!\nLet us know what you think in the comments, make sure to subscribe and keep your eyes peeled for the next one out the 26th",
+      "source_url": "https://th.linkedin.com/company/90min",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:32.797654+00:00",
+      "confidence": 0.7
+    },
+    {
+      "opportunity_type": "PARTNERSHIP_OPPORTUNITY",
+      "pattern_matched": "collaboration",
+      "context": "th a newly announced Euro 2025 sponsorship \ud83e\udd1d;Nikehas launched theNike\u201cUnited\u201d boot pack, created in collaboration with some of the biggest names in women\u2019s football \ud83d\udc5f; and more!\nLet us know what you think in the comments, make sure to subscribe and keep your eyes peeled for the next one out the 26th",
+      "source_url": "https://uk.linkedin.com/company/90min",
+      "entity_name": "Arsenal FC",
+      "detected_at": "2026-02-07T12:44:34.983366+00:00",
+      "confidence": 0.7
+    }
+  ],
+  "mutual_connections": {},
+  "positioning": {
+    "strategy": "INNOVATION_PARTNER",
+    "approach": "Co-creation Mode",
+    "timing": "Within 1 week",
+    "channel": "LinkedIn respond + Email",
+    "expected_response_rate": "40%",
+    "urgency": "MEDIUM",
+    "rationale": "Seeking partners - collaborative approach works best"
+  },
+  "outreach": {
+    "template_type": "GENERAL_VALUE_PROPOSITION",
+    "subject": "Sports Intelligence Platform for Arsenal FC",
+    "body_template": "Hi [Name],\n\nI've been following Arsenal's work in [specific area].\n\nYellow Panther helps clubs like Arsenal:\n\u2022 [Benefit 1]\n\u2022 [Benefit 2]\n\u2022 [Benefit 3]\n\nOpen to a brief call to explore how we could support your goals?\n\nBest,\n[Your Name]",
+    "key_talking_points": [
+      "Relevant case study from similar club",
+      "Specific ROI metrics",
+      "Phased implementation approach",
+      "Quick wins in Phase 1"
+    ]
+  }
+}

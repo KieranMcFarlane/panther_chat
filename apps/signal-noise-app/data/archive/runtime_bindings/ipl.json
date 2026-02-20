@@ -1,0 +1,337 @@
+{
+  "entity_id": "ipl",
+  "entity_name": "IPL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "mumbaiindians.com",
+    "gujarattitansipl.com",
+    "lucknowsupergiants.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/international-produce/jobs",
+      "https://in.linkedin.com/jobs/ipl-jobs",
+      "https://www.linkedin.com/jobs/schoeller-allibert-jobs-worldwide",
+      "https://www.linkedin.com/jobs/ipl-biologicals-limited-jobs-worldwide",
+      "https://ie.linkedin.com/jobs/view/talent-acquisition-lead-at-ipl-2622952901?trk=public_post_main-feed-card_feed-job-posting-content",
+      "https://ie.linkedin.com/jobs/view/apprentice-sales-support-specialist-at-ipl-group-4266726017",
+      "https://ie.linkedin.com/jobs/view/financial-accountant-at-ipl-4041006075",
+      "https://ie.linkedin.com/jobs/view/talent-acquisition-director-at-ipl-4165783145"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ipl",
+      "entity_name": "IPL",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/company/international-produce/jobs",
+        "https://lucknowsupergiants.in",
+        "https://www.linkedin.com/jobs/schoeller-allibert-jobs-worldwide",
+        "https://www.linkedin.com/jobs/ipl-biologicals-limited-jobs-worldwide",
+        "https://mumbaiindians.com",
+        "https://ie.linkedin.com/jobs/view/talent-acquisition-lead-at-ipl-2622952901?trk=public_post_main-feed-card_feed-job-posting-content",
+        "https://gujarattitansipl.com",
+        "https://in.linkedin.com/jobs/ipl-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IPL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:27:42.456900",
+          "domain_explored": "https://mumbaiindians.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Seasonal content cycle",
+            "Fan engagement messaging"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 568,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.3952958583831787
+            }
+          ],
+          "reasoning": "The content is a post-match wrap-up message regarding the Women's Premier League (WPL) 2026 season. It is purely narrative and emotional in nature ('It wasn't our season', 'We fought'). There are absolutely no technical specifications, vendor requirements, job descriptions, or strategic business indicators present in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:27:52.677982",
+          "domain_explored": "https://gujarattitansipl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising supply chain active (2025 inventory)",
+              "Digital commerce platform utilization"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce product listings",
+            "Merchandise inventory management",
+            "Direct-to-consumer (DTC) retail structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.9502768516540527
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of consumer-facing product listings (jerseys) and 'Buy Now' calls to action. While this indicates active retail operations, it does not contain specific procurement signals such as vendor names, technology stack details, or organizational intent to purchase B2B services. It confirms the existence of a shop but not the underlying procurement mechanisms."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:28:02.957278",
+          "domain_explored": "https://lucknowsupergiants.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive content structure",
+            "Seasonal event cycle (IPL 2026 Auction)",
+            "Fan engagement news aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.091295957565308
+            }
+          ],
+          "reasoning": "The scraped content is highly repetitive and focuses exclusively on the 'TATA IPL 2026 Auction' news cycle. There are no visible procurement signals, technology stacks, or governance indicators in this text segment. The content represents standard sports team news updates rather than corporate operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:28:10.452884",
+          "domain_explored": "https://uk.linkedin.com/company/international-produce/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Multi Skilled Engineer",
+              "Hygienist",
+              "Buying Manager - Protein",
+              "Packaging Technology Manager",
+              "Demand Planner"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for supply chain roles",
+              "Focus on food safety and manufacturing efficiency"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (IPL = International Procurement and Logistics)",
+            "FMCG Supply Chain Operations",
+            "Manufacturing and Engineering Roles",
+            "Asda Supplier Relationship"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.72603702545166
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'IPL' in this context refers to 'International Procurement and Logistics', a UK-based food and beverage services company sourcing for Asda. This is a distinct entity from the Indian Premier League (IPL) or its franchises. The job listings (Multi Skilled Engineer, Hygienist, Buying Manager - Protein) are relevant to logistics and food manufacturing but do not constitute procurement signals for the target entity (Cricket/Sports)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:28:18.020937",
+          "domain_explored": "https://in.linkedin.com/jobs/ipl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Medical Officer at Reliance Industries Limited",
+              "Event Management Internship at CORE CHANGEMAKERS"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Ambiguity (Acronym Collision)",
+            "Entity Mismatch (Reliance Industries)",
+            "Generic Internship Aggregators",
+            "Irrelevant Functional Roles (Medical Officer)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.8896570205688477
+            }
+          ],
+          "reasoning": "The search query 'IPL jobs' returns results based on the acronym 'IPL' rather than the specific cricket league entity. The primary listing is from Reliance Industries (Medical Officer), and secondary listings are generic event management internships unrelated to the league's central procurement operations. There is no signal of BCCI, franchise-specific, or league-level procurement activity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:28:24.877244",
+          "domain_explored": "https://www.linkedin.com/jobs/schoeller-allibert-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Engineering Manager",
+              "Senior Cell Leader"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (IPL Schoeller vs. Indian Premier League)",
+            "Manufacturing Sector Roles (Engineering, Cell Leadership)",
+            "Acronym Collision (IPL = Integrated Plastics/Logistics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.0384199619293213
+            }
+          ],
+          "reasoning": "The scraped content reveals job postings for 'IPL Schoeller' (a UK-based manufacturing/logistics company) in Tamworth, England. The roles (Engineering Manager, Senior Cell Leader) are operational manufacturing positions, not sports management or procurement for the Indian Premier League. This confirms an entity mismatch."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:28:30.611711",
+          "domain_explored": "https://www.linkedin.com/jobs/ipl-biologicals-limited-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Store Manager (Vadodara)",
+              "Manager (Gurugram)",
+              "Regional Manager (Tinsukia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (IPL Biologicals vs. Indian Premier League)",
+            "Agro-Biotechnology Sector Operations",
+            "Regional Sales and Distribution Management",
+            "Acronym Collision (IPL = Independent/Integrated Private Limited)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1322,
+              "output_tokens": 260,
+              "elapsed_seconds": 2.5869669914245605
+            }
+          ],
+          "reasoning": "The scraped content pertains to 'IPL Biologicals Limited,' an agro-biotechnology company specializing in biological solutions for agriculture. The job listings (Store Manager, Regional Manager) and location context (Vadodara, Assam) confirm operations in agricultural inputs distribution, not sports management or cricket league administration. This is a definitive entity mismatch with the target 'IPL' (Indian Premier League)."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:28:37.982569",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/talent-acquisition-lead-at-ipl-2622952901?trk=public_post_main-feed-card_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ATS (Applicant Tracking System)",
+              "HR Software",
+              "Job Boards"
+            ],
+            "job_postings": [
+              "Talent Acquisition Lead (Dublin, Ireland) - HR & Manufacturing Sector"
+            ],
+            "procurement_indicators": [
+              "HR Tool Procurement (ATS, Career Website)",
+              "Global Recruitment Strategy Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (IPL = International Packaging Limited / IPL Global)",
+            "Manufacturing Sector Operations (Rigid Packaging, Plastics)",
+            "Global HR Expansion (Talent Acquisition Lead)",
+            "Acronym Collision (IPL vs Indian Premier League)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1813,
+              "output_tokens": 349,
+              "elapsed_seconds": 3.3194711208343506
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a 'Talent Acquisition Lead' at IPL, based in Dublin, Ireland. The description explicitly identifies IPL as a 'Global leading sustainable packaging solutions provider' specializing in 'specialty rigid packaging products' within the plastics manufacturing industry. This confirms an entity mismatch with the target entity (Indian Premier League/IPL Cricket). While the role involves procuring HR tools (ATS, Career Pages), it is an operational HR role for a manufacturing firm, not a procurement signal for the cricket league."
+        }
+      ],
+      "total_input_tokens": 11278,
+      "total_output_tokens": 1919,
+      "estimated_cost_usd": 0.06261900000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IPL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:28:37.983309"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416773",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:06.088183"
+}

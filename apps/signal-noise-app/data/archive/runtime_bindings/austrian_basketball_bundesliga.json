@@ -1,0 +1,160 @@
+{
+  "entity_id": "austrian_basketball_bundesliga",
+  "entity_name": "Austrian Basketball Bundesliga",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "wikipedia.nucleos.com",
+    "turbovpn.com",
+    "freeimages.com",
+    "kids.kiddle.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_basketball_bundesliga",
+      "entity_name": "Austrian Basketball Bundesliga",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://turbovpn.com",
+        "https://wikipedia.nucleos.com",
+        "https://freeimages.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Basketball Bundesliga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:46:31.016715",
+          "domain_explored": "https://wikipedia.nucleos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static content wrapper",
+            "Offline reader interface (Kiwix)",
+            "No dynamic data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 398,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.821958303451538
+            }
+          ],
+          "reasoning": "The provided content consists solely of UI chrome and navigation elements from a Kiwix-powered Wikipedia mirror (offline reader). It contains no text, metadata, or links related to the Austrian Basketball Bundesliga, its operations, or its procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:46:38.089537",
+          "domain_explored": "https://turbovpn.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer B2C marketing language",
+            "Standard VPN service provider content",
+            "Irrelevant entity context (TurboVPN vs Austrian Basketball Bundesliga)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 184,
+              "elapsed_seconds": 4.168354034423828
+            }
+          ],
+          "reasoning": "The scraped content from turbovpn.com is entirely unrelated to the target entity (Austrian Basketball Bundesliga). It consists of generic consumer-facing marketing copy for a Virtual Private Network service. There are no governance structures, job postings, or technology procurement signals relevant to the basketball league."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:46:41.322489",
+          "domain_explored": "https://freeimages.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:46:48.014251",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational content structure (Kiddle Encyclopedia)",
+            "General knowledge categories (Science, History, Geography)",
+            "Static sitemap/index page",
+            "Attribution-ShareAlike licensing references",
+            "Homework/School help context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.3283958435058594
+            }
+          ],
+          "reasoning": "The scraped content is from 'kids.kiddle.co', a children's encyclopedia. It contains a static index of general knowledge topics (Science, History, Geography) and standard site navigation. There is absolutely no connection to the Austrian Basketball Bundesliga, nor are there any signals regarding business operations, technology stacks, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 3315,
+      "total_output_tokens": 553,
+      "estimated_cost_usd": 0.01824
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Basketball Bundesliga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:46:48.015603"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.240001",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:34.623466"
+}

@@ -1,0 +1,204 @@
+{
+  "entity_id": "rugby_europe",
+  "entity_name": "Rugby Europe",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "rugbyeurope.eu",
+    "world.rugby",
+    "rugbyunion.cz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/pebetremieux_jobinsport-sportsjobs-sportbusiness-activity-7294971593129115648-7xVX"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_europe",
+      "entity_name": "Rugby Europe",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://rugbyunion.cz",
+        "https://world.rugby",
+        "https://www.linkedin.com/posts/pebetremieux_jobinsport-sportsjobs-sportbusiness-activity-7294971593129115648-7xVX",
+        "https://rugbyeurope.eu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Posting (Competitions Operations Coordinator)",
+        "Technology Stack Discovery (SportLoMo)",
+        "Operational Scope (Logistics, Scoring Systems, Databases)",
+        "Partnership Usage (Headhunting Agency: BOOST)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:17:21.977196",
+          "domain_explored": "https://rugbyeurope.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "O'Neill's E-commerce Platform (External)",
+              "Video Streaming Platform (for 'Watch replay')",
+              "Social Media Integration (Facebook sharing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Vendor: O'Neill's (via 'VISIT OUR E-SHOP' link)",
+              "Ticketing Operations: 'Buy Your Tickets' (implies ticketing platform usage)",
+              "Digital Rights Management: 'Watch replay' availability for Super Cup matches"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Partnership (O'Neill's)",
+            "Event Ticketing Operations",
+            "Digital Content Management (News/Replay)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.642637014389038
+            }
+          ],
+          "reasoning": "The content reveals an active e-commerce partnership with O'Neill's for merchandise and a 'Watch replay' feature for the Super Cup, indicating a reliance on third-party platforms for retail and streaming. While no direct RFP is visible, the operational scale (Super Cup, Championship XV) suggests ongoing vendor relationships for ticketing, streaming infrastructure, and content delivery."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:17:28.103344",
+          "domain_explored": "https://world.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Results Reporting",
+            "Event Coverage",
+            "Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 543,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.605742931365967
+            }
+          ],
+          "reasoning": "The content provided is a sports news article reporting on match results from the HSBC SVNS series involving Fiji, New Zealand, France, and Australia. It contains no information regarding Rugby Europe's internal operations, technology stack, or procurement activities. This is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:17:34.301999",
+          "domain_explored": "https://rugbyunion.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Results Reporting",
+            "Domestic League Scheduling",
+            "Non-English Content (Czech)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.9607291221618652
+            }
+          ],
+          "reasoning": "The content is scraped from 'rugbyunion.cz', which is the website of the Czech Rugby Union (\u010cSR), a distinct entity from the target organization 'Rugby Europe'. The data consists solely of domestic match schedules and scores for Czech youth and men's leagues (U14, U16, U19, Extraliga). There is no information regarding Rugby Europe's procurement, governance, or technology stack."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:17:41.354911",
+          "domain_explored": "https://www.linkedin.com/posts/pebetremieux_jobinsport-sportsjobs-sportbusiness-activity-7294971593129115648-7xVX",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SportLoMo (Competition Management System)",
+              "Scoring Systems (Hardware/Software implied)"
+            ],
+            "job_postings": [
+              "Competitions Operations Coordinator (Permanent, Paris-based)"
+            ],
+            "procurement_indicators": [
+              "Use of external headhunting agency (BOOST) for recruitment",
+              "Direct management of player and competition databases",
+              "Logistics procurement (Match officials, trophies, scoring equipment)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Competitions Operations Coordinator)",
+            "Technology Stack Discovery (SportLoMo)",
+            "Operational Scope (Logistics, Scoring Systems, Databases)",
+            "Partnership Usage (Headhunting Agency: BOOST)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.575587272644043
+            }
+          ],
+          "reasoning": "The content is a direct procurement signal via HR recruitment. It confirms Rugby Europe is actively investing in operational capacity and explicitly identifies their core competition management technology (SportLoMo). This validates the entity's operational structure and provides a specific technology vendor to target."
+        }
+      ],
+      "total_input_tokens": 4871,
+      "total_output_tokens": 957,
+      "estimated_cost_usd": 0.028968
+    },
+    "procurement_signals": [
+      "Job Posting (Competitions Operations Coordinator)",
+      "Technology Stack Discovery (SportLoMo)",
+      "Operational Scope (Logistics, Scoring Systems, Databases)",
+      "Partnership Usage (Headhunting Agency: BOOST)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:17:41.355836"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.283857",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:26.111472"
+}

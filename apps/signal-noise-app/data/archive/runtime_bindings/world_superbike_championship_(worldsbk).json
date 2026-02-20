@@ -1,0 +1,272 @@
+{
+  "entity_id": "world_superbike_championship_(worldsbk)",
+  "entity_name": "World Superbike Championship (WorldSBK)",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "worldsbk.com",
+    "wsbkjerez.com",
+    "wsbkmost.com",
+    "wsbkassen.com",
+    "wsbkportugal.com",
+    "wsbkaustralia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://es.linkedin.com/jobs/view/tv-journalist-at-worldsbk-dwo-4343512056"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_superbike_championship_(worldsbk)",
+      "entity_name": "World Superbike Championship (WorldSBK)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://worldsbk.com",
+        "https://wsbkjerez.com",
+        "https://wsbkassen.com",
+        "https://wsbkaustralia.com",
+        "https://es.linkedin.com/jobs/view/tv-journalist-at-worldsbk-dwo-4343512056",
+        "https://wsbkmost.com",
+        "https://wsbkportugal.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Superbike Championship (WorldSBK) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:01:30.864525",
+          "domain_explored": "https://worldsbk.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:01:41.792638",
+          "domain_explored": "https://wsbkjerez.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "tickets.gp (Ticketing vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local event promotion (Jerez 2026)",
+            "Ticketing platform integration (tickets.gp)",
+            "Visitor information management (Travel/Map/Contact)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.4851369857788086
+            }
+          ],
+          "reasoning": "The content is strictly consumer-facing event information for the Jerez round of the championship. It focuses on ticket sales, logistics, and schedules. There are no corporate signals regarding technology procurement, organizational structure, or vendor partnerships relevant to WorldSBK's central operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:01:58.885212",
+          "domain_explored": "https://wsbkmost.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "tickets.gp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local event promotion (Autodrom Most 2026)",
+            "Ticketing platform integration (tickets.gp)",
+            "Visitor information management (Travel/Map/Contact)",
+            "Standardized event website template"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 233,
+              "elapsed_seconds": 7.621786117553711
+            }
+          ],
+          "reasoning": "The content is exclusively focused on fan engagement, ticket sales, and logistical information for the Autodrom Most round of the championship. It mirrors the structure found in the previous iteration (Jerez), relying on the centralized 'tickets.gp' platform. There are no signals regarding organizational procurement, technology investments, or vendor partnerships beyond the operational use of the ticketing engine."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:03:22.566716",
+          "domain_explored": "https://wsbkassen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "tickets.gp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local event promotion (Assen 2026)",
+            "Ticketing platform integration (tickets.gp)",
+            "Visitor information management (Travel/Map/Contact)",
+            "Standardized event website template"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 228,
+              "elapsed_seconds": 75.31822681427002
+            }
+          ],
+          "reasoning": "The content is a localized event page for the Assen round of the championship. It focuses exclusively on visitor logistics (tickets, maps, travel, accommodation) and uses the same centralized ticketing platform (tickets.gp) observed in previous iterations. There are no signals regarding organizational procurement, technology stack decisions, or vendor selection processes for the championship itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:03:33.510949",
+          "domain_explored": "https://wsbkportugal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "tickets.gp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local event promotion (Portimao/Algarve 2026)",
+            "Ticketing platform integration (tickets.gp)",
+            "Visitor information management (Travel/Map/Contact/FAQ)",
+            "Standardized event website template structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1583,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.771193027496338
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer-facing information for the 2026 Portuguese round (tickets, travel, maps, accommodation). It utilizes the same standardized template and ticketing vendor (tickets.gp) observed in previous iterations (Jerez, Most, Assen). There are no signals regarding organizational procurement, technology stack decisions, or vendor selection processes for the championship itself."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:04:03.017663",
+          "domain_explored": "https://wsbkaustralia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "tickets.gp (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local event promotion (Phillip Island 2026)",
+            "Ticketing platform integration (tickets.gp)",
+            "Visitor information management (Travel/Map/Accommodation)",
+            "Footer navigation structure (Calendar/Weather/FAQ)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1649,
+              "output_tokens": 211,
+              "elapsed_seconds": 18.513362884521484
+            }
+          ],
+          "reasoning": "The content is exclusively focused on fan engagement, ticket sales, and logistical information for the Phillip Island event. It mirrors the structure of previous local event sites (Jerez, Most, Assen, Portimao) and contains no corporate governance, technology infrastructure, or procurement-related data."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:04:15.947160",
+          "domain_explored": "https://es.linkedin.com/jobs/view/tv-journalist-at-worldsbk-dwo-4343512056",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "TV Journalist at WorldSBK (DWO)"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in Media/Content division",
+              "Potential future need for production equipment or software licenses"
+            ]
+          },
+          "patterns_found": [
+            "Job posting (TV Journalist)",
+            "HR/Recruitment activity",
+            "Content creation investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1727,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.721714973449707
+            }
+          ],
+          "reasoning": "The content confirms active recruitment by WorldSBK (Dorna) for a 'TV Journalist' role. While this is a direct hiring signal rather than a vendor procurement signal, it indicates organizational growth and investment in media production capabilities, which often correlates with increased technology and service vendor needs."
+        }
+      ],
+      "total_input_tokens": 9335,
+      "total_output_tokens": 1322,
+      "estimated_cost_usd": 0.047835
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Superbike Championship (WorldSBK) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:04:15.949274"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374574",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:53:09.762074"
+}

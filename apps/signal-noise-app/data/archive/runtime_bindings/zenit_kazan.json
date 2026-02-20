@@ -1,0 +1,145 @@
+{
+  "entity_id": "zenit_kazan",
+  "entity_name": "Zenit Kazan",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "zenit-kazan.com",
+    "old.zenit-kazan.com",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "zenit_kazan",
+      "entity_name": "Zenit Kazan",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://old.zenit-kazan.com",
+        "https://zenit-kazan.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Zenit Kazan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:41:28.907634",
+          "domain_explored": "https://zenit-kazan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Match results reporting",
+            "Player transfer/loan announcements",
+            "Community engagement/PR events"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.0636188983917236
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match results (e.g., 'Zenit vs Gazprom-Yugra'), player movements (loans), and community events ('Student of the Year'). There are no keywords, links, or structural elements indicating corporate procurement, technology adoption, or job vacancies."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:41:35.741077",
+          "domain_explored": "https://old.zenit-kazan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legacy/Archival web structure",
+            "Static content delivery",
+            "Language localization (Russian/English)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 492,
+              "output_tokens": 162,
+              "elapsed_seconds": 3.4252560138702393
+            }
+          ],
+          "reasoning": "The content provided is truncated boilerplate text ('Official site of VC Zenit-Kazan') and navigation elements from a legacy domain (old.zenit-kazan.com). There is no visible content regarding operations, technology stacks, or procurement needs within the provided text fragment."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:41:42.037694",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports federation navigation structure",
+            "Event calendar aggregation",
+            "Global affiliate link listings (FIVB, AVC, CAVB, etc.)",
+            "Generic legacy web footer (Copyright 2011)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.318310260772705
+            }
+          ],
+          "reasoning": "The scraped content is from the Confederation Europ\u00e9enne de Volleyball (CEV) website, specifically a legacy or sitemap view. It contains navigation menus for various volleyball tournaments (Champions League, EuroVolley), global federation links, and copyright dates from 2011. There is absolutely no content related to 'Zenit Kazan', its internal operations, technology stack, or procurement activities. This is a false positive in the crawling process (likely a link from Zenit's history in European competitions)."
+        }
+      ],
+      "total_input_tokens": 3307,
+      "total_output_tokens": 581,
+      "estimated_cost_usd": 0.018636
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Zenit Kazan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:41:42.038956"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319593",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:54.320597"
+}

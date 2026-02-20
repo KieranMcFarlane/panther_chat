@@ -1,0 +1,281 @@
+{
+  "entity_id": "rapid_wien",
+  "entity_name": "Rapid Wien",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "skrapid.at",
+    "sk-rapid.at",
+    "transfermarkt.co.in",
+    "basketrapid.at",
+    "fk-austria.at",
+    "haemo-pharma.at"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rapid_wien",
+      "entity_name": "Rapid Wien",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://haemo-pharma.at",
+        "https://transfermarkt.co.in",
+        "https://basketrapid.at",
+        "https://fk-austria.at",
+        "https://sk-rapid.at",
+        "https://skrapid.at"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Major Infrastructure Investment",
+        "Sports Facility Procurement",
+        "High-Performance Equipment Acquisition",
+        "Professional Services Hiring",
+        "Venue Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rapid Wien may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:57:12.448290",
+          "domain_explored": "https://skrapid.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (External: rapidshop.at)",
+              "Content Management System (CMS) for News/TV",
+              "Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Procurement: Active sale of 2025/26 kits (Puma partnership)",
+              "Retail Operations: Management of 'Most Wanted' inventory",
+              "Partnership Sales: 'Business Club' offerings indicate vendor relationship management"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Integration",
+            "Merchandise Supply Chain",
+            "Content Management Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 299,
+              "elapsed_seconds": 2.8025569915771484
+            }
+          ],
+          "reasoning": "The content is primarily navigation and consumer-facing (tickets, shop, news), providing limited direct procurement intelligence. However, the explicit listing of 'Most Wanted' items for the 2025/26 season and the link to the external 'RapidShop' confirms active merchandise procurement cycles and e-commerce dependencies. The 'Business Club' link suggests B2B partnership capabilities, though no active RFP is visible."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:57:28.775957",
+          "domain_explored": "https://sk-rapid.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Payment Processing Gateways (implied)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Vendor Partnership: Puma (Sportswear manufacturing)",
+              "Logistics & Shipping: 'Free shipping over \u20ac55' implies 3PL or courier contracts",
+              "Retail Operations: High SKU turnover for seasonal kits (2025/26)"
+            ]
+          },
+          "patterns_found": [
+            "Merchandise Supply Chain",
+            "E-commerce Integration",
+            "Inventory Management",
+            "Vendor Partnership (Puma)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.05612587928772
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the e-commerce product catalog. While it confirms the existence of a retail operation and a partnership with Puma (kit supplier), it does not contain explicit procurement signals like RFPs or technology investments. However, the management of an online store with variable inventory implies backend procurement for logistics, warehousing, and platform maintenance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:57:38.812661",
+          "domain_explored": "https://transfermarkt.co.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Market Data Aggregation",
+            "Competitor League Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.4362740516662598
+            }
+          ],
+          "reasoning": "The scraped content is from Transfermarkt, a third-party sports data aggregator, and focuses exclusively on the Indian Super League (ISL), player transfers, and market values. There is absolutely no mention of Rapid Wien, Austrian football, or corporate operations relevant to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:58:22.350944",
+          "domain_explored": "https://basketrapid.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cryotherapy Chambers (K\u00e4ltekammer)",
+              "Infrared Cabins (Infrarotkabine)",
+              "Performance Analytics (implied by professional level)",
+              "Access Control Systems (implied by 3,000 capacity venue)"
+            ],
+            "job_postings": [
+              "Head Coach (\u017delko Vasiljevi\u0107 appointed)",
+              "Support Staff (implied by new structures)"
+            ],
+            "procurement_indicators": [
+              "Lease/Management Contract for Sport Arena Wien (3,000 capacity)",
+              "Procurement of Fitness Equipment (Gym/Kardio)",
+              "Procurement of Regeneration Technology (Cold chambers/Infrared)",
+              "Event Management Services (for events/tournaments)",
+              "Construction/Renovation Services (Seminarr\u00e4ume, infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Major Infrastructure Investment",
+            "Sports Facility Procurement",
+            "High-Performance Equipment Acquisition",
+            "Professional Services Hiring",
+            "Venue Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 393,
+              "elapsed_seconds": 35.040939807891846
+            }
+          ],
+          "reasoning": "The content reveals a significant organizational milestone with the move to the 'Sport Arena Wien' and promotion to the Bundesliga. This confirms active procurement in facility management, high-performance sports technology (Kryokammer, Infrarotkabine), and professional coaching services. The explicit mention of specific equipment and facility features constitutes a strong procurement signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:58:32.289152",
+          "domain_explored": "https://fk-austria.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Entity",
+            "Irrelevant Content",
+            "Brand Misalignment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.328932046890259
+            }
+          ],
+          "reasoning": "The scraped content is from FK Austria Wien (fk-austria.at), the arch-rival of Rapid Wien. While the site structure is similar (indicating industry standards), the content focuses on Austria Wien's matches, memberships, and sponsors. This provides zero procurement intelligence for Rapid Wien and contradicts the search target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:58:43.489034",
+          "domain_explored": "https://haemo-pharma.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Pharmaceutical/Biotech Sector",
+            "B2C Product Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.715791702270508
+            }
+          ],
+          "reasoning": "The content is entirely focused on regenerative medicine, pharmaceutical products (Spherox, Cingal), and medical therapies. There is no connection to Rapid Wien, football operations, or general business procurement relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 8825,
+      "total_output_tokens": 1470,
+      "estimated_cost_usd": 0.048525
+    },
+    "procurement_signals": [
+      "Major Infrastructure Investment",
+      "Sports Facility Procurement",
+      "High-Performance Equipment Acquisition",
+      "Professional Services Hiring",
+      "Venue Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rapid Wien may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:58:43.490575"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.174885",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:40.946936"
+}

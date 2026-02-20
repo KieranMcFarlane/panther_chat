@@ -1,0 +1,189 @@
+{
+  "entity_id": "rana_verona",
+  "entity_name": "Rana Verona",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "veronavolley.it",
+    "legavolley.it",
+    "en.volleyballworld.com",
+    "lubevolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rana_verona",
+      "entity_name": "Rana Verona",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://en.volleyballworld.com",
+        "https://veronavolley.it",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rana Verona may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:42:36.760634",
+          "domain_explored": "https://veronavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DAZN (Streaming/Media Platform)",
+              "Ticketing System (Implied by 'Biglietti... non pi\u00f9 disponibili')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship renewals/partnerships (Cucine Lube, AGSM AIM)",
+              "Media production procurement (Docu-reality creation)"
+            ]
+          },
+          "patterns_found": [
+            "Sports team content (Volleyball news, match results, game previews)",
+            "Sponsorship visibility (Cucine Lube, AGSM AIM, Unipol Arena)",
+            "Media production (Docu-reality on DAZN)",
+            "Ticketing operations (Sales status updates)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 321,
+              "elapsed_seconds": 3.089783191680908
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news updates, match results, and promotional articles related to the Rana Verona volleyball team. There are no explicit mentions of procurement activities, enterprise technology adoption, or corporate job postings. While the presence of a docu-reality and ticketing systems implies underlying technology usage (Video Production/Streaming, Ticketing Platforms), there is no direct signal of active procurement or vendor selection processes in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:42:51.981293",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Login Portal (Likely CMS or custom League Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Sponsorship Agreements (e.g., Credem Banca, Del Monte)",
+              "Standardized Documentation (Cartelle Stampa, Documenti)"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Structure",
+            "Sponsorship Ecosystem",
+            "Digital Media Assets"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 249,
+              "elapsed_seconds": 12.214546918869019
+            }
+          ],
+          "reasoning": "The content is the navigation structure of the Italian Volleyball Federation (Lega Pallavolo Serie A). While it confirms Rana Verona's participation in the top tier (SuperLega), it offers no direct insight into Rana Verona's internal procurement operations, technology stack, or vendor selection processes. The site is a regulatory and informational hub for the league, not a corporate procurement portal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:42:58.054557",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism / Match Reporting",
+            "League Standings & Statistics",
+            "Global Federation Content Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.759547710418701
+            }
+          ],
+          "reasoning": "The content is a standard sports news article reporting on a match result between Lube and Verona, supplemented by global ranking tables. It focuses on athletic performance (Nikolov) and points. There are no technical infrastructure details, business operations, or procurement signals present in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:43:04.553371",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: Mention of 'accordo triennale' (triennial agreement) with Catalan talents (Sports/Scouting context)"
+            ]
+          },
+          "patterns_found": [
+            "Competitive Intelligence (Match Reports)",
+            "Fan Engagement (Ticket Sales)",
+            "Strategic Partnerships (Triennial Agreement)",
+            "Sports Journalism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 226,
+              "elapsed_seconds": 3.3415729999542236
+            }
+          ],
+          "reasoning": "The content is focused on sports news, match results, and ticketing for Lube Volley (a competitor/partner team). While it mentions a 'triennial agreement' regarding talent scouting, this is a sports partnership, not a procurement signal for Rana Verona. There are no technology stacks, job postings, or RFPs related to the target entity."
+        }
+      ],
+      "total_input_tokens": 5785,
+      "total_output_tokens": 968,
+      "estimated_cost_usd": 0.031875
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rana Verona may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:43:04.554670"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.316921",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:27.482333"
+}

@@ -1,0 +1,219 @@
+{
+  "entity_id": "deportivo_cali",
+  "entity_name": "Deportivo Cali",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "deportivocali.com.co",
+    "tiendadeportivocali.com.co",
+    "deportivocaliusa.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/deporte-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "deportivo_cali",
+      "entity_name": "Deportivo Cali",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://deportivocali.com.co",
+        "https://tiendadeportivocali.com.co",
+        "https://deportivocaliusa.com",
+        "https://www.linkedin.com/company/deporte-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Deportivo Cali may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:31:23.927401",
+          "domain_explored": "https://deportivocali.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Ticketing)",
+              "CMS (Content Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Project 2026 (Potential future planning)",
+              "Online Ticketing Operations (Active vendor relationship)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce capability (Ticketing & Merchandise)",
+            "Content Management System usage",
+            "Institutional Project Planning (2026)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 260,
+              "elapsed_seconds": 22.139705896377563
+            }
+          ],
+          "reasoning": "The content confirms the use of digital sales channels for tickets and merchandise ('Compra tu Entrada', 'TIENDA DEPORTIVO CALI'), indicating an active e-commerce stack. However, the specific technologies (CRM, Payment Gateways) are not exposed in the HTML. The mention of 'Proyecto Institucional 2026' suggests strategic planning but no explicit procurement signals (RFPs) are present in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:31:27.054905",
+          "domain_explored": "https://tiendadeportivocali.com.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:31:37.361371",
+          "domain_explored": "https://deportivocaliusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Management Systems",
+              "Video Analysis Software",
+              "Payment Gateways (for 'register now')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue procurement for Camps (Spring, Summer, Winter)",
+              "Logistics procurement for 'Intercambios deportivos' (Sports exchanges)",
+              "Vendor management for 'Patrocinadores T\u00e9cnicos' (Technical Sponsors)",
+              "Service procurement for 'Video an\u00e1lisis' infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "International Expansion Operations",
+            "Customer Registration Systems",
+            "Sponsorship Ecosystem",
+            "Service Delivery Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 299,
+              "elapsed_seconds": 6.968398809432983
+            }
+          ],
+          "reasoning": "The content reveals Deportivo Cali's international subsidiary (Academia USA) which necessitates distinct procurement for local operations, venue rentals, and cross-border logistics. The explicit mention of 'Registration' and 'Sponsors' indicates a functional commercial ecosystem requiring CRM and payment processing vendors."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:31:44.735196",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Gaming Content",
+            "Irrelevant Third-Party Advertisements",
+            "Consumer Entertainment (B2C)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 218,
+              "elapsed_seconds": 4.017190933227539
+            }
+          ],
+          "reasoning": "The scraped content from the Google Play Store is entirely composed of generic mobile gaming listings (e.g., Candy Crush, PUBG Mobile), unrelated advertisements, and consumer apps. There is absolutely no content related to Deportivo Cali, its operations, or its procurement activities. This represents a significant false positive in the discovery process, likely triggered by a generic keyword match (e.g., 'Cali' or 'Sports') within the app store's text. This source provides zero intelligence value."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:31:51.450242",
+          "domain_explored": "https://www.linkedin.com/company/deporte-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate & Talent Acquisition)",
+              "Job Board Aggregation Software"
+            ],
+            "job_postings": [
+              "Smart Fit Colombia: Senior Tax Analyst",
+              "Smart Fit Colombia: HR Team Talent",
+              "Confedera\u00e7\u00e3o Brasileira de Voleibol: Institutional Relations Analyst",
+              "Coritiba SAF: Nutrition Student",
+              "Ituano Futebol Clube: Goalkeeper Coach"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for operational roles (Tax, HR, Nutrition) in regional sports entities",
+              "Usage of centralized HR platforms for talent sourcing"
+            ]
+          },
+          "patterns_found": [
+            "HR Ecosystem Aggregation",
+            "Latin American Sports Market Focus",
+            "Recruitment Pipeline Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 353,
+              "elapsed_seconds": 3.208077907562256
+            }
+          ],
+          "reasoning": "While this page is for a third-party job board (Deporte Jobs) and not Deportivo Cali directly, it validates the broader HR and recruitment ecosystem within Latin American sports. It confirms the existence of specialized channels for sports management talent. Although no direct procurement signals for Cali were found in this specific snippet, the platform serves as a potential lead source for future vendor searches or staffing needs within the sector."
+        }
+      ],
+      "total_input_tokens": 5865,
+      "total_output_tokens": 1130,
+      "estimated_cost_usd": 0.034545
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Deportivo Cali may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:31:51.456158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.236504",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:38.013795"
+}

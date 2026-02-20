@@ -1,0 +1,230 @@
+{
+  "entity_id": "azerbaijan_rugby_federation",
+  "entity_name": "Azerbaijan Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "en.rugby.az",
+    "azerbaijans.com",
+    "creators.spotify.com",
+    "rugbyinternational.net",
+    "t2rugby.com",
+    "podcasts.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "azerbaijan_rugby_federation",
+      "entity_name": "Azerbaijan Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rugbyinternational.net",
+        "https://en.rugby.az",
+        "https://creators.spotify.com",
+        "https://podcasts.apple.com",
+        "https://azerbaijans.com",
+        "https://t2rugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Azerbaijan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:27:26.246381",
+          "domain_explored": "https://en.rugby.az",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (implied for content management)",
+              "Web Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Website development/overhaul in progress",
+              "Need for English localization services"
+            ]
+          },
+          "patterns_found": [
+            "Digital Presence Gap",
+            "Localization Requirement",
+            "Web Development Lifecycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 407,
+              "output_tokens": 222,
+              "elapsed_seconds": 12.574705123901367
+            }
+          ],
+          "reasoning": "The 'Under Construction' status of the English version indicates an active web development lifecycle. While no direct RFP is visible, the presence of a localized Azerbaijani version (az.rugby.az) confirms operational status and suggests a need for content management systems (CMS) or translation services to finalize the English portal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:27:32.878027",
+          "domain_explored": "https://azerbaijans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "General Informational Portal",
+            "Absence of Sports Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.4461488723754883
+            }
+          ],
+          "reasoning": "The scraped content from 'azerbaijans.com' is a general informational encyclopedia covering history, language, and politics of Azerbaijan. It contains no information regarding the Rugby Federation, sports governance, or procurement activities. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:27:38.101806",
+          "domain_explored": "https://creators.spotify.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spotify for Creators",
+              "Spotify Partner Program",
+              "Audio/Video Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "B2C Marketing Platform",
+            "Absence of Sports Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.0263547897338867
+            }
+          ],
+          "reasoning": "The content is scraped from Spotify's general creator landing page, a platform for podcast and media hosting. It contains generic marketing copy regarding audio/video tools and monetization. There is absolutely no relation to the Azerbaijan Rugby Federation, sports governance, or procurement activities. This represents a complete domain mismatch."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:27:44.790830",
+          "domain_explored": "https://rugbyinternational.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Archival/Inactive Status",
+            "Absence of Sports Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 519,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.3834869861602783
+            }
+          ],
+          "reasoning": "The domain 'rugbyinternational.net' appears to be an archival or inactive site (referencing 2007) with no connection to the Azerbaijan Rugby Federation. It lacks governance, commercial, or procurement data relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:27:47.658531",
+          "domain_explored": "https://t2rugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:27:54.544339",
+          "domain_explored": "https://podcasts.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "B2C Media Aggregator",
+            "Absence of Sports Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 160,
+              "elapsed_seconds": 3.685326099395752
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Apple Podcasts, a B2C media directory. It contains no information regarding the Azerbaijan Rugby Federation, its governance, its procurement activities, or its technology stack. The content is entirely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 5384,
+      "total_output_tokens": 898,
+      "estimated_cost_usd": 0.029622
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Azerbaijan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:27:54.545962"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.285769",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:19.159586"
+}

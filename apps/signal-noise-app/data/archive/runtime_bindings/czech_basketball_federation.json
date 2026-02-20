@@ -1,0 +1,155 @@
+{
+  "entity_id": "czech_basketball_federation",
+  "entity_name": "Czech Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "basketballpg.cz",
+    "sidelinesports.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "czech_basketball_federation",
+      "entity_name": "Czech Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sidelinesports.com",
+        "https://wikidata.org",
+        "https://basketballpg.cz"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Czech Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:35:14.857215",
+          "domain_explored": "https://basketballpg.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Data Unavailability",
+            "Placeholder Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 371,
+              "output_tokens": 134,
+              "elapsed_seconds": 2.2438430786132812
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Loading...' placeholders and indicates a token limit truncation. There is no actual text, HTML structure, or data to analyze for procurement signals, technology stacks, or governance patterns."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:35:30.144768",
+          "domain_explored": "https://sidelinesports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "XPS Platform (Sideline Sports)",
+              "Sports Analytics Software",
+              "Athlete Monitoring Systems",
+              "Communication/Planning Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor targeting Associations/Federations",
+              "Focus on 'data-driven coaching' and 'unified teams'",
+              "Free trial availability (SaaS procurement model)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Product Offering",
+            "Sports Analytics",
+            "Association/Club Management",
+            "Vendor Capability"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 324,
+              "elapsed_seconds": 11.444679021835327
+            }
+          ],
+          "reasoning": "The content is from Sideline Sports, a vendor providing the 'XPS' analytics platform. While this is not a direct procurement signal *from* the Czech Basketball Federation (CBF), it identifies a relevant vendor in the basketball technology ecosystem. The platform targets 'Associations' and 'Clubs' for organization, planning, and monitoring, which aligns with the CBF's potential needs for digital transformation. This establishes a 'Weak Accept' as it confirms the existence of relevant tools the CBF might procure, even if no intent is shown here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:35:39.371421",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Content",
+            "Community Driven Data",
+            "Open Source Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.2073066234588623
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a general-purpose knowledge base. It contains no specific information regarding the Czech Basketball Federation (\u010cBF), its procurement activities, technology stack, or governance. The content describes open data standards, community portals, and general Wikidata events, none of which constitute a procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 3222,
+      "total_output_tokens": 659,
+      "estimated_cost_usd": 0.019551
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Czech Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:35:39.373017"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.266813",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:56.190068"
+}

@@ -1,0 +1,390 @@
+{
+  "entity_id": "al_hilal",
+  "entity_name": "Al Hilal",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "alhilal.com",
+    "alhilal-store.com",
+    "alhilalbank.ae",
+    "alhilalscstore.com",
+    "cafonline.com",
+    "blustore.com",
+    "visitsaudi.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/alhilal/jobs",
+      "https://www.linkedin.com/company/alahli-club-company/jobs/",
+      "https://www.linkedin.com/posts/al-hilal-industrial-group_hiring-job-omanjobs-activity-7389568685956378625-mA4d",
+      "https://www.linkedin.com/posts/dub-job-ae-jobs_al-hilal-hospital-jobs-in-bahrain-free-activity-7422175394742726657-86Bc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_hilal",
+      "entity_name": "Al Hilal",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://alhilalscstore.com",
+        "https://blustore.com",
+        "https://www.linkedin.com/company/alhilal/jobs",
+        "https://www.linkedin.com/company/alahli-club-company/jobs/",
+        "https://www.linkedin.com/posts/dub-job-ae-jobs_al-hilal-hospital-jobs-in-bahrain-free-activity-7422175394742726657-86Bc",
+        "https://alhilalbank.ae",
+        "https://alhilal-store.com",
+        "https://alhilal.com",
+        "https://cafonline.com",
+        "https://www.linkedin.com/posts/al-hilal-industrial-group_hiring-job-omanjobs-activity-7389568685956378625-mA4d",
+        "https://visitsaudi.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Hilal may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:50:33.143127",
+          "domain_explored": "https://alhilal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news content",
+            "Duplicate content structure",
+            "Arabic language news feed"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 439,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.520019292831421
+            }
+          ],
+          "reasoning": "The provided content consists solely of repetitive sports news headlines regarding a coach's press conference ('Inzaghi' before 'Al-Ahli' match). There are no mentions of technology, job vacancies, tenders, or organizational infrastructure that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:50:44.612177",
+          "domain_explored": "https://alhilal-store.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify indicators)",
+              "Payment Gateway (Recurring/Deferred purchase logic)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Merchandising Operations",
+              "Direct-to-Consumer (DTC) Sales Strategy"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce transactional interface",
+            "B2C product catalog (Merchandise)",
+            "Inventory management signals (Sold out status)",
+            "Subscription/Recurring payment options"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.6966938972473145
+            }
+          ],
+          "reasoning": "The scraped content is from the Al Hilal e-commerce store (alhilal-store.com). It displays consumer-facing product details for jerseys, including pricing, sizing, and 'Add to Cart' functionality. While this indicates the use of an e-commerce platform (likely Shopify based on the 'Unit price/per' and modal structure), it provides zero intelligence regarding B2B procurement, enterprise technology stack (beyond the storefront), or organizational governance. This is a retail channel, not a procurement signal source."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:50:57.508186",
+          "domain_explored": "https://alhilalbank.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Bank vs Sports Club)",
+            "B2C Product Marketing",
+            "Accessibility Interface",
+            "Navigation Menus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.8230721950531006
+            }
+          ],
+          "reasoning": "The scraped content is from 'alhilalbank.ae', a banking institution, not the Al Hilal sports club. The content consists of consumer-facing marketing copy for accounts, cards, and finance, along with accessibility controls. There is zero relevance to the sports entity's procurement, technology stack, or operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:51:09.835251",
+          "domain_explored": "https://alhilalscstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from 'collections/all' and 'AddAdded' UI patterns)",
+              "Tamara (BNPL Service)",
+              "Tabby (BNPL Service)",
+              "WhatsApp Business API"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Logistics Compliance Update (National Address mandate for 2026)",
+              "Inventory Management (Sold out status on specific items)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Interface",
+            "Fintech Integration (Tamara, Tabby)",
+            "Merchandise Inventory Management",
+            "Logistics Compliance (Saudi National Address)",
+            "Duplicate Content Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 286,
+              "elapsed_seconds": 5.1758458614349365
+            }
+          ],
+          "reasoning": "The content is exclusively focused on retail operations (selling jerseys, caps, gift cards) to consumers. While it indicates the use of payment gateways (Tamara/Tabby) and logistics compliance, these are standard B2C operational tools, not signals of corporate procurement, RFPs, or enterprise technology acquisition."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:51:21.285085",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (CAF vs Al Hilal)",
+            "B2C Sports Media Content",
+            "Navigation Menu Repetition",
+            "Generic Sports League Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1119,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.9179131984710693
+            }
+          ],
+          "reasoning": "The scraped content is from the Confederation of African Football (CAF) website, not Al Hilal. While Al Hilal participates in CAF tournaments, this page is a general sports media portal (fixtures, videos, news) and does not contain procurement signals, job postings, or technology stack information specific to the target entity (Al Hilal). The content is highly repetitive navigation elements."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:51:28.511059",
+          "domain_explored": "https://blustore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:51:39.509773",
+          "domain_explored": "https://visitsaudi.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:51:44.401436",
+          "domain_explored": "https://www.linkedin.com/company/alhilal/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Platform Policy Enforcement",
+            "Target Entity: Al Hilal (LinkedIn)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 684,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.4168660640716553
+            }
+          ],
+          "reasoning": "The scraping attempt was blocked by LinkedIn's security measures (403 Forbidden), resulting in zero data retrieval. Without access to the job listings or company description, no procurement signals, technology stacks, or hiring patterns can be extracted to update the confidence score."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:51:48.740984",
+          "domain_explored": "https://www.linkedin.com/company/alahli-club-company/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Al Ahli vs Al Hilal)",
+            "Access Restriction (403 Forbidden)",
+            "Platform Policy Enforcement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 746,
+              "output_tokens": 153,
+              "elapsed_seconds": 1.9111201763153076
+            }
+          ],
+          "reasoning": "The URL targets 'alahli-club-company', which corresponds to Al Ahli (a rival entity), not Al Hilal. Additionally, the scraping attempt was blocked by a 403 Forbidden error, preventing data retrieval. This URL is invalid for the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:51:57.751282",
+          "domain_explored": "https://www.linkedin.com/posts/al-hilal-industrial-group_hiring-job-omanjobs-activity-7389568685956378625-mA4d",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "QA-QC Inspector"
+            ],
+            "procurement_indicators": [
+              "Technical Staff Expansion",
+              "Quality Control Investment"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Industrial Group vs Sports Club)",
+            "Geographic Mismatch (Oman vs Saudi Arabia)",
+            "B2B Hiring Signals (QA-QC Role)",
+            "LinkedIn Recruiting Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1810,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.177396059036255
+            }
+          ],
+          "reasoning": "The content is from 'Al Hilal Industrial Group', an entity based in Oman (indicated by #omanjobs). This constitutes a distinct entity mismatch from the target 'Al Hilal' (the Saudi sports club). While the content shows procurement-relevant activities (hiring technical staff), it applies to the wrong organization and sector."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:52:04.824776",
+          "domain_explored": "https://www.linkedin.com/posts/dub-job-ae-jobs_al-hilal-hospital-jobs-in-bahrain-free-activity-7422175394742726657-86Bc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Healthcare roles (Al Hilal Hospital, Bahrain)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Healthcare vs Sports)",
+            "Geographic Mismatch (Bahrain vs Saudi Arabia)",
+            "B2C Recruitment Content",
+            "Content Repetition (Spam Signals)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1894,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.2365529537200928
+            }
+          ],
+          "reasoning": "The content refers to 'Al Hilal Hospital' located in Bahrain, which is a distinct entity from the target 'Al Hilal' (the Saudi sports club). The content is a generic recruitment post for healthcare professionals and does not contain procurement signals relevant to the sports entity."
+        }
+      ],
+      "total_input_tokens": 11066,
+      "total_output_tokens": 1864,
+      "estimated_cost_usd": 0.061158
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Hilal may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:52:04.829005"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.135705",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:52.788299"
+}

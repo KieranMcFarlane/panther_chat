@@ -1,0 +1,198 @@
+{
+  "entity_id": "french_polynesia_handball_federation",
+  "entity_name": "French Polynesia Handball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "sidelinesports.com",
+    "sportfive.com",
+    "ehfeuro.eurohandball.com",
+    "ofcproleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_polynesia_handball_federation",
+      "entity_name": "French Polynesia Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sidelinesports.com",
+        "https://ofcproleague.com",
+        "https://sportfive.com",
+        "https://grokipedia.com",
+        "https://ehfeuro.eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Polynesia Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:56:15.025234",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:56:23.743129",
+          "domain_explored": "https://sidelinesports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "XPS Network (Sports Analytics Platform)",
+              "Performance Monitoring Tools",
+              "Team Communication Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor marketing for 'Clubs & Associations'",
+              "Focus on 'data-driven coaching decisions' and 'training load' monitoring"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Marketing",
+            "Sports Analytics Solution",
+            "Coaching & Performance Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 265,
+              "elapsed_seconds": 5.704831123352051
+            }
+          ],
+          "reasoning": "The content is a vendor landing page (Sideline Sports) promoting the 'XPS' analytics platform. While it does not show direct procurement activity by the Federation, it identifies a relevant technology category (Sports Analytics/Performance Management) that the Federation would likely procure to support coaching and player development. It establishes the 'Supply' side of the procurement equation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:56:28.972315",
+          "domain_explored": "https://sportfive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent Wall",
+            "Marketing Agency Branding",
+            "Video Content Blocking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.2723641395568848
+            }
+          ],
+          "reasoning": "The scraped content is dominated by a repetitive cookie consent overlay and generic marketing slogans ('We Are Leaders In Sports Marketing'). There is no accessible text regarding specific services, client lists, or procurement activities relevant to the French Polynesia Handball Federation. The content is effectively blocked by the site's interaction requirements."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:56:34.083767",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "European Federation Content",
+            "Tournament Schedules",
+            "Sports News Aggregation",
+            "Navigation Menus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.165870189666748
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the European Handball Federation (EHF), specifically the Men's and Women's EHF EURO tournaments. There is no mention of the French Polynesia Handball Federation, no local governance signals, and no procurement-related activities. This represents a domain mismatch with the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:56:45.785820",
+          "domain_explored": "https://ofcproleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Match Reports & Results",
+            "Ticket Sales Promotion",
+            "Oceania Football Confederation (OFC) Context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 188,
+              "elapsed_seconds": 5.3924291133880615
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to the OFC Pro League (Football/Soccer), focusing on match results, team news (Tahiti United), and ticketing. There is no mention of Handball, the French Polynesia Handball Federation, or associated procurement activities (RFPs, tech stacks, governance). The entity context does not align with the target."
+        }
+      ],
+      "total_input_tokens": 5882,
+      "total_output_tokens": 806,
+      "estimated_cost_usd": 0.029736
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Polynesia Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:56:45.787592"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362586",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:58.932796"
+}

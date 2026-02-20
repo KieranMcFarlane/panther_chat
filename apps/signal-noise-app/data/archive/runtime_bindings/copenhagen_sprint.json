@@ -1,0 +1,180 @@
+{
+  "entity_id": "copenhagen_sprint",
+  "entity_name": "Copenhagen Sprint",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "copenhagensprint.com",
+    "interreg-baltic.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://dk.linkedin.com/jobs/view/projektleder-tidsbegr%C3%A6nset-ans%C3%A6ttelse-at-copenhagen-sprint-4072590344"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "copenhagen_sprint",
+      "entity_name": "Copenhagen Sprint",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://dk.linkedin.com/jobs/view/projektleder-tidsbegr%C3%A6nset-ans%C3%A6ttelse-at-copenhagen-sprint-4072590344",
+        "https://interreg-baltic.eu",
+        "https://copenhagensprint.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Municipal Stakeholder Management",
+        "Event Logistics Coordination",
+        "Contract-based Employment (Project Lifecycle)",
+        "Inter-municipality Service Delivery"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Copenhagen Sprint may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:06:17.147098",
+          "domain_explored": "https://copenhagensprint.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Call for Commercial Partners (Vendor/Service procurement)",
+              "Volunteer Registration Open (Potential need for Volunteer Management SaaS)",
+              "Event Date Confirmation (June 2026)"
+            ]
+          },
+          "patterns_found": [
+            "Event Planning Cycle",
+            "Volunteer Management",
+            "Commercial Partnership Solicitation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.961085796356201
+            }
+          ],
+          "reasoning": "The content confirms the entity is an active event organizer ('Copenhagen Sprint') with a confirmed future date (June 2026). While no explicit RFPs are visible, the active recruitment of volunteers and commercial partners indicates operational activity that often requires supporting software (CRM, volunteer management platforms) and services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:06:41.558896",
+          "domain_explored": "https://interreg-baltic.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions of 'solid financial resources' (Context: Public Grants)",
+              "Mentions of 'thorough planning' (Context: City Climate Planning)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Development Funding",
+            "Policy Implementation",
+            "Project Partnership Models",
+            "Public Sector Cooperation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 261,
+              "elapsed_seconds": 19.4600350856781
+            }
+          ],
+          "reasoning": "The content analyzed is from Interreg Baltic Sea Region, a regional development program focused on EU funding and transnational cooperation. While it mentions 'financial resources' and 'planning', these refer to grant distribution for public sector projects (e.g., climate-neutral cities), not commercial procurement activities for an entity like 'Copenhagen Sprint'. There is no intersection between Interreg's mandate and the specific operational procurement needs of the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:06:51.149659",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/projektleder-tidsbegr%C3%A6nset-ans%C3%A6ttelse-at-copenhagen-sprint-4072590344",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)",
+              "Email (Communication: tobias.hoff@cyklingdanmark.dk)"
+            ],
+            "job_postings": [
+              {
+                "role": "Projektleder (Project Leader)",
+                "type": "Fixed-term / Contract",
+                "duration": "January 1, 2025 to June 30, 2025",
+                "hiring_manager": "Tobias Hoff (CEO)",
+                "focus": "Municipal relations, event planning, local activity implementation"
+              }
+            ],
+            "procurement_indicators": [
+              "Active recruitment for event delivery phase",
+              "Budget allocation for temporary specialized staff",
+              "Operational requirement for vehicle usage (travel budget)",
+              "Service-level agreements with local municipalities"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Stakeholder Management",
+            "Event Logistics Coordination",
+            "Contract-based Employment (Project Lifecycle)",
+            "Inter-municipality Service Delivery"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 408,
+              "elapsed_seconds": 6.333987236022949
+            }
+          ],
+          "reasoning": "The job posting confirms Copenhagen Sprint is operationalizing the event through a dedicated project management role. The requirement for a 'Project Leader' to manage activities across 'municipalities' (gennemk\u00f8rselskommuner) indicates a decentralized operational model requiring significant coordination, travel, and vendor/service management. The fixed-term nature (Jan-Jun 2025) aligns with the event lifecycle, confirming active procurement and staffing phases."
+        }
+      ],
+      "total_input_tokens": 4248,
+      "total_output_tokens": 899,
+      "estimated_cost_usd": 0.026229000000000002
+    },
+    "procurement_signals": [
+      "Municipal Stakeholder Management",
+      "Event Logistics Coordination",
+      "Contract-based Employment (Project Lifecycle)",
+      "Inter-municipality Service Delivery"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Copenhagen Sprint may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:06:51.151128"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.402220",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:12:40.978482"
+}

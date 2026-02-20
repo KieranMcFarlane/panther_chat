@@ -1,0 +1,280 @@
+{
+  "entity_id": "cricket_australia",
+  "entity_name": "Cricket Australia",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "cricket.com.au",
+    "icc-cricket.com",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/cricket-australia-jobs",
+      "https://au.linkedin.com/company/cricket-australia/jobs",
+      "https://au.linkedin.com/jobs/view/208966632",
+      "https://www.linkedin.com/posts/reubenjw_dream-jobs-in-sport-become-1000x-harder-if-activity-7284675586415902720-b0Jo",
+      "https://uk.linkedin.com/company/cricket-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cricket_australia",
+      "entity_name": "Cricket Australia",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/company/cricket-australia/jobs",
+        "https://icc-cricket.com",
+        "https://uk.linkedin.com/company/cricket-jobs",
+        "https://espncricinfo.com",
+        "https://au.linkedin.com/jobs/cricket-australia-jobs",
+        "https://au.linkedin.com/jobs/view/208966632",
+        "https://www.linkedin.com/posts/reubenjw_dream-jobs-in-sport-become-1000x-harder-if-activity-7284675586415902720-b0Jo",
+        "https://cricket.com.au"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cricket Australia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:18:45.581397",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "News Carousel Structure",
+            "Sports Journalism Content",
+            "Player Injury Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 170,
+              "elapsed_seconds": 7.149164915084839
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of homepage news headlines and sports journalism (e.g., 'Hazlewood's late arrival', 'Windies test', 'WNCL squads'). There is no presence of corporate governance, 'About Us' sections, career portals, or technology infrastructure that would indicate procurement activity or vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:18:53.715633",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Sports Journalism Structure",
+            "Tournament Fixtures/News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 178,
+              "elapsed_seconds": 4.961477756500244
+            }
+          ],
+          "reasoning": "The scraped content originates from 'icc-cricket.com', the global governing body's site, rather than 'cricket.com.au' (Cricket Australia). The content consists solely of sports news, tournament schedules, and player analysis. There are no procurement signals, technology stacks, or governance patterns relevant to Cricket Australia's specific vendor ecosystem."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:18:57.657327",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:19:08.245406",
+          "domain_explored": "https://au.linkedin.com/jobs/cricket-australia-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Dynamic Content Loading",
+            "Generic UI Text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 164,
+              "elapsed_seconds": 7.299743175506592
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's authentication interface and generic user agreement text. No specific job descriptions, role titles, or company-specific data were extracted. The page requires a login to view the actual procurement signals (job listings), rendering this specific scrape uninformative."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:19:17.115568",
+          "domain_explored": "https://au.linkedin.com/company/cricket-australia/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Size: 867 employees (indicates large enterprise procurement scale)",
+              "HQ Location: Jolimont, Victoria (confirms regional governance)"
+            ]
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Empty Job Board State",
+            "Competitor Mapping (AFL, Tennis Australia)",
+            "Corporate Entity Metadata (867 employees, Jolimont HQ)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1541,
+              "output_tokens": 235,
+              "elapsed_seconds": 5.482992887496948
+            }
+          ],
+          "reasoning": "The scraped content confirms the existence of the Cricket Australia LinkedIn entity but reveals an empty job board ('There are currently no jobs posted at Cricket Australia'). The page is largely inaccessible due to login gates and repetitive UI elements. No active procurement signals, technology stacks, or hiring intent were detected."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:19:20.460883",
+          "domain_explored": "https://au.linkedin.com/jobs/view/208966632",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:19:29.029363",
+          "domain_explored": "https://www.linkedin.com/posts/reubenjw_dream-jobs-in-sport-become-1000x-harder-if-activity-7284675586415902720-b0Jo",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Career Advice Content",
+            "Resume Optimization Tips",
+            "Generic Sports Industry Discussion",
+            "Personal Branding Strategies"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1648,
+              "output_tokens": 165,
+              "elapsed_seconds": 4.800019979476929
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn post about resume writing tips for the sports industry, authored by a third party (Reuben Williams). It contains no specific information regarding Cricket Australia's internal operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:19:35.985543",
+          "domain_explored": "https://uk.linkedin.com/company/cricket-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach \u2013 Netherlands Women\u2019s Cricket Team (KNCB)",
+              "Head of Cricket Operations (Somerset CCC)",
+              "Head Coach \u2013 Indoor Cricket Centre (MCC)",
+              "Operations Manager \u2013 Indoor Cricket Centre (MCC)",
+              "Specialist Batting Consultant (Cricket West Indies)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Job Aggregator",
+            "Global Sports Recruitment Scope",
+            "Authentication Gating",
+            "Competitor/Partner Opportunities (KNCB, Somerset, MCC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1702,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.2025790214538574
+            }
+          ],
+          "reasoning": "The target entity 'Cricket Jobs' is a third-party recruitment platform (aggregator) founded in 2023, not Cricket Australia. While the content lists high-value operational roles within the cricket ecosystem (e.g., Head of Cricket Operations at Somerset, Specialist Consultant for Cricket West Indies), these are hiring signals for *other* organizations, not procurement signals for Cricket Australia. The content is irrelevant to the specific objective of analyzing Cricket Australia's internal procurement or technology stack."
+        }
+      ],
+      "total_input_tokens": 9144,
+      "total_output_tokens": 1228,
+      "estimated_cost_usd": 0.045852000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cricket Australia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:19:35.997737"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298153",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:57.230301"
+}

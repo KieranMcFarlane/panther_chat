@@ -1,0 +1,398 @@
+{
+  "entity_id": "super_rugby",
+  "entity_name": "Super Rugby",
+  "template_id": "tpl_tier_1_professional_leagues_v1",
+  "cluster_id": "tier_1_professional_leagues",
+  "discovered_domains": [
+    "super.rugby",
+    "superrugby.co.nz",
+    "playfantasyrugby.com",
+    "rugby.com.au",
+    "chiefs.co.nz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/production-assistant-rugby-at-sky-new-zealand-4351597756",
+      "https://nz.linkedin.com/jobs/view/content-creator-at-the-blues-4037114969",
+      "https://nz.linkedin.com/jobs/view/chiefs-head-of-women-s-rugby-at-chiefs-rugby-club-3968303399",
+      "https://nz.linkedin.com/jobs/view/career-and-leadership-coach-at-the-blues-3925089439"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "super_rugby",
+      "entity_name": "Super Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/content-creator-at-the-blues-4037114969",
+        "https://playfantasyrugby.com",
+        "https://nz.linkedin.com/jobs/view/production-assistant-rugby-at-sky-new-zealand-4351597756",
+        "https://chiefs.co.nz",
+        "https://super.rugby",
+        "https://nz.linkedin.com/jobs/view/career-and-leadership-coach-at-the-blues-3925089439",
+        "https://rugby.com.au",
+        "https://superrugby.co.nz",
+        "https://nz.linkedin.com/jobs/view/chiefs-head-of-women-s-rugby-at-chiefs-rugby-club-3968303399"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Super Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:00:29.815227",
+          "domain_explored": "https://super.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High volume of repetitive anchor text",
+            "Navigation structure only",
+            "Absence of semantic content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 496,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.30935001373291
+            }
+          ],
+          "reasoning": "The provided content consists almost entirely of repeated navigation links ('Continue to Super Rugby Pacific') and UI elements ('Modal title'). There is no semantic text, job descriptions, or technical documentation present to derive procurement intelligence or technology stack details."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:00:40.435657",
+          "domain_explored": "https://superrugby.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive anchor text (DHL Super Rugby Pacific pre-season fixtures)",
+            "Sports news aggregation (Player transfers, injuries, Fantasy leagues)",
+            "Marketing campaigns (Legends XV, Fan engagement)",
+            "Sponsorship visibility (DHL)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.7600669860839844
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, player updates, and marketing campaigns. There are no semantic signals related to corporate operations, technology infrastructure, or procurement activities. The content is consumer-facing rather than business-facing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:00:50.063458",
+          "domain_explored": "https://playfantasyrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)",
+              "Single Page Application (SPA) framework (e.g., React, Angular, or Vue)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-side rendering requirement (JavaScript)",
+            "Empty DOM/Body content",
+            "Single Page Application (SPA) architecture"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 495,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.413892984390259
+            }
+          ],
+          "reasoning": "The scraped content consists solely of the instruction 'You need to enable JavaScript to run this app', indicating a Single Page Application (SPA) where the content is dynamically rendered client-side. Since the scraper provided the raw HTML without executing the JavaScript, no semantic content, links, or procurement signals are visible for analysis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:01:00.339478",
+          "domain_explored": "https://rugby.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive sports news aggregation",
+            "Match highlights and video content delivery",
+            "Player transfer and injury reporting",
+            "Pre-season trial coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 217,
+              "elapsed_seconds": 4.194928884506226
+            }
+          ],
+          "reasoning": "The scraped content from rugby.com.au is purely editorial, focusing on match results, team news (Wallabies, Wallaroos, Super Rugby Pacific), and video highlights. There is a complete absence of corporate governance information, 'About Us' pages, career sections, or technology vendor announcements. The content is highly repetitive (loops of the same headlines) and serves a fan engagement purpose rather than a B2B or procurement function."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:01:14.061152",
+          "domain_explored": "https://chiefs.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Facebook, Instagram, X, YouTube, LinkedIn)",
+              "Email Marketing Platform (Newsletter signup)",
+              "E-commerce Platform (Merchandise store)",
+              "Ticketing Platform (Ticket sales integration)"
+            ],
+            "job_postings": [
+              "Head Coach (Jono Gibbes) - Sports Operations",
+              "Squad Members (Lalakai Foketi) - Sports Operations"
+            ],
+            "procurement_indicators": [
+              "Corporate Partnership Solicitation: 'If you are interested in joining our great group of sponsors, we would love to hear from you.'",
+              "Hospitality Services Procurement: 'The Chiefs are redefining hospitality and are excited to be announcing refreshed options...'",
+              "Retail Supply Chain: '2026 Jersey Collection Available Now', 'Shop the Range'"
+            ]
+          },
+          "patterns_found": [
+            "Partnership/Sponsorship acquisition funnel ('Become a sponsor')",
+            "Hospitality service redesign ('redefining hospitality', 'refreshed options')",
+            "E-commerce and merchandising operations ('Shop the Range', '2026 Jersey Collection')",
+            "Digital engagement infrastructure ('Newsletter', 'Socials', 'Fantasy integration')"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1598,
+              "output_tokens": 430,
+              "elapsed_seconds": 8.657041072845459
+            }
+          ],
+          "reasoning": "While the site is primarily B2C (fan engagement), the explicit 'Become a sponsor' section and the mention of 'redefining hospitality' indicate active vendor management and procurement activities for corporate services and hospitality providers. This shifts the entity from a pure sports franchise to a business seeking partnerships."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:01:25.914329",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/production-assistant-rugby-at-sky-new-zealand-4351597756",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Asset Management Systems (implied by 'log and organise vision, audio, and archive content')",
+              "Broadcast Production Software (rundowns, scripts)",
+              "OB (Outside Broadcast) Equipment"
+            ],
+            "job_postings": [
+              "Production Assistant - Rugby (Sky New Zealand)"
+            ],
+            "procurement_indicators": [
+              "Active investment in Super Rugby Pacific production coverage",
+              "Supply chain involvement: Studio and Outside Broadcast logistics",
+              "Vendor ecosystem: Editors, production crews, and archive management"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Production Assistant (Rugby)",
+            "Scope: Super Rugby Pacific coverage",
+            "Entity: Sky New Zealand (Broadcaster/Rights Holder)",
+            "Operational Procurement: Studio and OB (Outside Broadcast) logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1700,
+              "output_tokens": 372,
+              "elapsed_seconds": 4.323246955871582
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, it confirms active operational investment by Sky New Zealand (a key Super Rugby stakeholder) into the production of Super Rugby Pacific. It reveals the supply chain structure: Sky procures resources for studio and OB coverage, including vision/audio logging, archiving, and asset management. This indicates a demand for broadcast technology, software for asset management, and production logistics vendors."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:01:39.358390",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/content-creator-at-the-blues-4037114969",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Video editing, design)",
+              "Social Media Analytics Tools",
+              "Digital Asset Management (implied)"
+            ],
+            "job_postings": [
+              {
+                "title": "Content Creator",
+                "entity": "The Blues",
+                "location": "Auckland, New Zealand",
+                "focus": "Digital Media, Social Media, Video Production"
+              }
+            ],
+            "procurement_indicators": [
+              "Software procurement for content creation (Adobe licenses)",
+              "Potential procurement of analytics platforms",
+              "In-house capability building reduces need for creative agency spend"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Content Creator (Marketing)",
+            "Entity: The Blues (Super Rugby Franchise)",
+            "Scope: Digital storytelling, Social media strategy",
+            "Tech Stack: Adobe Suite, Analytics tools",
+            "Commercial Support: Sponsorship content creation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 398,
+              "elapsed_seconds": 8.39808201789856
+            }
+          ],
+          "reasoning": "This content is a job posting for a Content Creator at The Blues, a Super Rugby franchise. While it is an operational role rather than a direct procurement role, it reveals the organization's investment in digital marketing infrastructure and software (Adobe Suite, analytics tools). It also highlights the need to support commercial partners through content, indicating a marketing services workflow that often involves vendor management."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:01:49.374373",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/chiefs-head-of-women-s-rugby-at-chiefs-rugby-club-3968303399",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Head of Women's Rugby",
+                "entity": "Chiefs Rugby Club",
+                "location": "Hamilton, Waikato, New Zealand",
+                "seniority": "Mid-Senior level",
+                "focus": "High-Performance Programme, Strategy Implementation"
+              }
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion (New Head of Women's Rugby role)",
+              "Direct Executive Contact (waynem@chiefs.co.nz)",
+              "Investment in Pathway Strategy (Implies future vendor needs for training/tech)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Head of Women's Rugby",
+            "Scope: High-Performance Programme & Strategy Implementation",
+            "Entity: Chiefs Rugby Club (Super Rugby Franchise)",
+            "Contact: Direct email to General Manager Rugby (waynem@chiefs.co.nz)",
+            "Similar Jobs: Head of Specialist Partnerships (Gallagher), General Manager - Digital Engineering (Datacom)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1854,
+              "output_tokens": 404,
+              "elapsed_seconds": 5.629333972930908
+            }
+          ],
+          "reasoning": "While this is a sports operations role rather than a direct procurement vacancy, it confirms the Chiefs Rugby Club is actively expanding their organizational structure and investing in new programs (Women's Rugby/Pathways). This expansion implies future procurement needs for equipment, facilities, travel, and professional services. The listing also provides a direct executive contact (GM Rugby) which is valuable for vendor engagement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:02:03.100456",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/career-and-leadership-coach-at-the-blues-3925089439",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Career and Leadership Coach"
+            ],
+            "procurement_indicators": [
+              "Human Capital Procurement",
+              "Community Programme Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Career and Leadership Coach",
+            "Entity: The Blues (Super Rugby Franchise)",
+            "Scope: Blues Charitable Trust (BCT) Career Coaching Programme",
+            "Function: Human Resources / Community Development",
+            "Direct Contact: rob.woodley@blues.rugby"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1935,
+              "output_tokens": 313,
+              "elapsed_seconds": 6.045674800872803
+            }
+          ],
+          "reasoning": "This content represents a specific job posting for a 'Career and Leadership Coach' within the Blues Charitable Trust. While it confirms the organization is actively hiring and investing in its community and HR infrastructure (a form of procurement for human capital), it does not reveal specific technology procurement, vendor selection, or enterprise software implementation patterns. It provides a direct email contact for the entity, which is a useful intelligence signal, but lacks the technical or commercial procurement specificity required for a stronger signal."
+        }
+      ],
+      "total_input_tokens": 12799,
+      "total_output_tokens": 2712,
+      "estimated_cost_usd": 0.07907700000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Super Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:02:03.101286"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449444",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:39.257780"
+}

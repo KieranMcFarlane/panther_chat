@@ -1,0 +1,283 @@
+{
+  "entity_id": "volley_sch\u00f6nenwerd",
+  "entity_name": "Volley Sch\u00f6nenwerd",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "volleyschoenenwerd.ch",
+    "volleyball.ch",
+    "www-old.cev.eu",
+    "volleybern-solothurn.ch",
+    "volleybasel.ch",
+    "volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/physiotherapeut-in-80-100%25-strengelbach-at-physioswiss-4328201156"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volley_sch\u00f6nenwerd",
+      "entity_name": "Volley Sch\u00f6nenwerd",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://volleyschoenenwerd.ch",
+        "https://volleybasel.ch",
+        "https://volleyball.ch",
+        "https://volleybern-solothurn.ch",
+        "https://ch.linkedin.com/jobs/view/physiotherapeut-in-80-100%25-strengelbach-at-physioswiss-4328201156",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volley Sch\u00f6nenwerd may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:58:04.707332",
+          "domain_explored": "https://volleyschoenenwerd.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: Mobiliar (Cup sponsor)",
+              "Venue Naming Rights: BETONCOUPEARENA",
+              "Ticket Operations: 'Einzeltickets Heimspiele' (Single match tickets sales)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Event Management",
+            "Ticket Sales",
+            "Sponsorship Display (Mobiliar, Betoncouparena)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.502633810043335
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news updates, match results, and event schedules. There are no mentions of technology infrastructure, job vacancies, or organizational restructuring that would indicate procurement activity. The entity appears to be focused on athletic operations rather than corporate expansion."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:58:13.761338",
+          "domain_explored": "https://volleyball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online-Trainingsplaner (Federation provided)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Club Management Training (Educational, not direct procurement)",
+              "Anzeigenmarkt (Classifieds for staff/players)"
+            ]
+          },
+          "patterns_found": [
+            "Federation-Level Services",
+            "Educational Resources",
+            "Generic Sports Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.6671159267425537
+            }
+          ],
+          "reasoning": "The analyzed content is from the Swiss Volley national federation website (volleyball.ch), not the specific target entity (Volley Sch\u00f6nenwerd). While the page lists services like 'Club Management' training and an 'Online-Trainingsplaner', these are resources offered by the federation to member clubs. There is no specific evidence that Volley Sch\u00f6nenwerd is actively procuring these services or investing in new technology stacks. The content represents the supply side of the ecosystem, not the procurement intent of the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:58:21.737635",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Requirements (General)",
+              "Continental Cup Organization"
+            ]
+          },
+          "patterns_found": [
+            "Federation-Level Governance",
+            "Event Scheduling",
+            "Historical Data Archiving",
+            "Multi-Language Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.1311421394348145
+            }
+          ],
+          "reasoning": "The content is scraped from the European Volleyball Confederation (CEV) website, which is a continental governing body. While Volley Sch\u00f6nenwerd competes within this system, the CEV site focuses on macro-level event management, federation regulations, and historical results. It does not contain procurement signals, technology stacks, or vendor partnerships specific to the Swiss club Volley Sch\u00f6nenwerd. This is a governance/oversight entity, not a procurement source for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:58:27.877826",
+          "domain_explored": "https://volleybern-solothurn.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smart Competition Platform (Implied)",
+              "League Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Implementation of new league format (Smart Competitions)",
+              "Strategic adjustments for upcoming season (26/27)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation",
+            "Organizational Change Management",
+            "Strategic Planning (Season 26/27)",
+            "Regional Sports Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.9477310180664062
+            }
+          ],
+          "reasoning": "The content confirms a regional entity (Bern-Solothurn) is actively implementing 'Smart Competitions' for the 26/27 season. While this is not the target entity (Volley Sch\u00f6nenwerd), it validates the existence of a 'Smart Competition' framework within Swiss Volley. This suggests potential technology standardization or shared software platforms that Volley Sch\u00f6nenwerd may eventually need to procure or adopt to remain compliant or competitive within the league structure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:58:47.227773",
+          "domain_explored": "https://volleybasel.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Placeholder",
+            "Dynamic Content Loading (AJAX)",
+            "Regional Association Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1195,
+              "output_tokens": 205,
+              "elapsed_seconds": 14.981205940246582
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repeated UI placeholder text ('News werden geladen...', 'Einblicke aus der Region') and navigation elements. The actual news content, which might contain procurement signals like job postings or project tenders, is loaded dynamically and was not captured in this text snapshot. There is no evidence of technology stacks, specific vendor partnerships, or organizational decision-making in the provided text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:58:50.095269",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:58:56.551345",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/physiotherapeut-in-80-100%25-strengelbach-at-physioswiss-4328201156",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "runmyphysio (Practice Management)",
+              "Dividat (Therapy/Cognitive Tech)"
+            ],
+            "job_postings": [
+              "Physiotherapist (Wilders Physiotherapie)"
+            ],
+            "procurement_indicators": [
+              "Corporate Partnership (Wilders Physiotherapie)",
+              "Ticketing/Perk Management System usage",
+              "Potential for shared medical/tech vendor relationships"
+            ]
+          },
+          "patterns_found": [
+            "Local Business Partnership",
+            "Technology Stack Disclosure",
+            "B2B Service Exchange"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1647,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.0252439975738525
+            }
+          ],
+          "reasoning": "While this is a job posting for a third party (Wilders Physiotherapie), it explicitly confirms a corporate partnership with Volley Sch\u00f6nenwerd (ticket perks). It also exposes the technology stack (runmyphysio, Dividat) used by a close partner, which suggests potential data integration or shared vendor ecosystems in the future."
+        }
+      ],
+      "total_input_tokens": 8550,
+      "total_output_tokens": 1495,
+      "estimated_cost_usd": 0.048075
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volley Sch\u00f6nenwerd may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:58:56.552860"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326554",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:23.842401"
+}

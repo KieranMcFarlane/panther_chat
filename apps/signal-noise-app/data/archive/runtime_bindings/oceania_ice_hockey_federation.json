@@ -1,0 +1,163 @@
+{
+  "entity_id": "oceania_ice_hockey_federation",
+  "entity_name": "Oceania Ice Hockey Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "nationalteamsoficehockey.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/general-manager-at-waikato-hockey-association-4067208601",
+      "https://nz.linkedin.com/jobs/view/team-member-recreation-assistant-allan-brewster-leisure-centre-at-auckland-council-4300428981"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oceania_ice_hockey_federation",
+      "entity_name": "Oceania Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/general-manager-at-waikato-hockey-association-4067208601",
+        "https://nz.linkedin.com/jobs/view/team-member-recreation-assistant-allan-brewster-leisure-centre-at-auckland-council-4300428981",
+        "https://nationalteamsoficehockey.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oceania Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:05:16.884608",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-party media aggregator",
+            "Global scope (non-Oceania specific)",
+            "Historical/Editorial content focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 183,
+              "elapsed_seconds": 1.9934499263763428
+            }
+          ],
+          "reasoning": "The scraped content identifies the source as 'National Teams of Ice Hockey,' a global media platform covering international hockey news, scores, and history. It contains no information regarding the Oceania Ice Hockey Federation's internal operations, governance, or technology stack. The content is purely editorial and unrelated to Oceania procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:05:23.226685",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/general-manager-at-waikato-hockey-association-4067208601",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "General Manager",
+                "entity": "Waikato Hockey Association",
+                "location": "Hamilton, New Zealand",
+                "relevance": "Low - Wrong Sport and Entity"
+              }
+            ],
+            "procurement_indicators": [
+              "Budgeting & Forecasting responsibility (GM level)",
+              "Funding applications & Sponsorship management"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Field Hockey vs. Ice Hockey)",
+            "Regional Scope (Waikato vs. Oceania)",
+            "Operational Focus (Facility/Volunteer management vs. Federation procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 302,
+              "elapsed_seconds": 3.0462331771850586
+            }
+          ],
+          "reasoning": "The content is a job posting for the Waikato Hockey Association, which governs field hockey in Hamilton, NZ. This is a distinct entity and sport from the target entity (Oceania Ice Hockey Federation). While the role involves financial management and sponsorship, it is an operational leadership role for a regional association, not a procurement signal for the continental ice hockey federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:05:30.619960",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/team-member-recreation-assistant-allan-brewster-leisure-centre-at-auckland-council-4300428981",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Team Member - Recreation Assistant",
+                "entity": "Auckland Council",
+                "location": "Allan Brewster Leisure Centre",
+                "focus": "Community fitness and school holiday programmes (skating/inline hockey)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Auckland Council vs. Oceania Ice Hockey Federation)",
+            "Operational Scope (Local Leisure Centre vs. Federation Governance)",
+            "Role Level (Frontline Assistant vs. Procurement Decision Maker)",
+            "Activity Context (Recreational Skating vs. Competitive Ice Hockey)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 349,
+              "elapsed_seconds": 3.65203595161438
+            }
+          ],
+          "reasoning": "The job posting is for a frontline 'Recreation Assistant' role at a local community leisure centre managed by Auckland Council. While the description mentions 'skating' and 'inline hockey', these are recreational activities for youth programs, not indicative of the strategic procurement, technology investment, or governance patterns of the Oceania Ice Hockey Federation. The entity (Auckland Council) and the role's operational focus (customer service/child supervision) contradict the search for Federation-level procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 4336,
+      "total_output_tokens": 834,
+      "estimated_cost_usd": 0.025518
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oceania Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:05:30.621401"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305247",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:33.778469"
+}

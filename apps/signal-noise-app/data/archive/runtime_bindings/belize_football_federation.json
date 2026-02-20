@@ -1,0 +1,437 @@
+{
+  "entity_id": "belize_football_federation",
+  "entity_name": "Belize Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "footballfederationbelize.com",
+    "findyello.com",
+    "inside.fifa.com",
+    "adventuresfc.tripod.com",
+    "newsendip.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://bz.linkedin.com/jobs/view/executive-assistant-at-football-federation-of-belize-ffb-4192892894",
+      "https://bz.linkedin.com/jobs/view/junior-accounts-officer-football-federation-of-belize-at-football-federation-of-belize-ffb-4204730008",
+      "https://bz.linkedin.com/jobs/view/official-data-collector-at-img-arena-3967438783",
+      "https://bz.linkedin.com/jobs/view/satellite-facility-operations-intern-at-sporting-kansas-city-4014091586",
+      "https://bz.linkedin.com/jobs/view/operations-specialist-sf%2Ba-at-sporting-kansas-city-4138521105",
+      "https://bz.linkedin.com/jobs/view/satellite-facilities-concessions-associate-at-sporting-kansas-city-3938189918"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belize_football_federation",
+      "entity_name": "Belize Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://bz.linkedin.com/jobs/view/official-data-collector-at-img-arena-3967438783",
+        "https://bz.linkedin.com/jobs/view/executive-assistant-at-football-federation-of-belize-ffb-4192892894",
+        "https://bz.linkedin.com/jobs/view/satellite-facility-operations-intern-at-sporting-kansas-city-4014091586",
+        "https://bz.linkedin.com/jobs/view/operations-specialist-sf%2Ba-at-sporting-kansas-city-4138521105",
+        "https://findyello.com",
+        "https://bz.linkedin.com/jobs/view/junior-accounts-officer-football-federation-of-belize-at-football-federation-of-belize-ffb-4204730008",
+        "https://inside.fifa.com",
+        "https://footballfederationbelize.com",
+        "https://newsendip.com",
+        "https://adventuresfc.tripod.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Financial Software Procurement (QuickBooks)",
+        "Operational Expansion (Finance Dept)",
+        "Standardized Accounting Workflows",
+        "Internal Audit Readiness"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belize Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:09:54.867629",
+          "domain_explored": "https://footballfederationbelize.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify/WooCommerce)",
+              "Payment Gateway",
+              "CMS (WordPress implied by structure)",
+              "Event Management Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Store Operations (Merchandise Procurement)",
+              "International Clearance Process (Admin Software)",
+              "National Team Logistics (Travel/Kit)",
+              "Stadium/Event Management (Friendly Matches vs Bermuda)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations",
+            "Event Management",
+            "Federation Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 347,
+              "elapsed_seconds": 7.54409122467041
+            }
+          ],
+          "reasoning": "The content reveals an active 'Official Store' with specific product listings (Jaguars Dry Fit, Jerseys), indicating a need for e-commerce platforms, payment processing, and inventory management systems. The 'International Clearance Process' and 'Forms' sections suggest administrative workflow software requirements. The 'Partners' section (though empty in the text) implies a sponsorship management capability. While no direct RFP is visible, the operational complexity (National Teams, District Associations, Leagues) supports the hypothesis of ongoing procurement for operational support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:10:02.642286",
+          "domain_explored": "https://findyello.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Jamaica vs Belize)",
+            "Generic Business Directory Content",
+            "Consumer-Facing Categories (Gas Stations, Bars, Restaurants)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.2548060417175293
+            }
+          ],
+          "reasoning": "The scraped content is from FindYello.com, a business directory specifically for Jamaica. The Belize Football Federation operates in Belize. The content lists generic consumer categories (Gas Stations, Auto Parts, Hotels) and local Jamaican businesses (Juici Patties, Rainforest Caribbean). There is absolutely no relevance to the Belize Football Federation, its procurement needs, or its technology stack. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:10:10.011459",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Program (Global Infrastructure Funding)",
+              "Stadium Refurbishment Projects (Burundi context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Federation Governance",
+            "FIFA Forward Funding Program",
+            "Women's Football Development",
+            "Generic News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.5702199935913086
+            }
+          ],
+          "reasoning": "The content is from FIFA's global corporate site and focuses on high-level governance, the FIFA Forward funding program (infrastructure in Burundi), and the Women's Champions Cup. While FIFA Forward indicates available funding for infrastructure, this content is global in scope and does not provide specific procurement signals, technology stacks, or RFPs relevant to the Belize Football Federation specifically."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:10:17.300434",
+          "domain_explored": "https://adventuresfc.tripod.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Tripod.com (Legacy Hosting)",
+              "Static HTML"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legacy Web Infrastructure (Tripod.com)",
+            "Amateur/Grassroots Football Context",
+            "Static Content with No Commercial Activity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 541,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.6703648567199707
+            }
+          ],
+          "reasoning": "The content is hosted on a legacy free hosting platform (Tripod.com) associated with 'Adventures Football Club', which appears to be a local or amateur club rather than the governing body (Belize Football Federation). The content is static, historical, and lacks any governance, commercial, or procurement functionality relevant to the Federation's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:10:29.337358",
+          "domain_explored": "https://newsendip.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Sweden vs Belize)",
+            "Irrelevant Industry Sector (Alcohol Regulation vs Sports)",
+            "General News Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 832,
+              "output_tokens": 160,
+              "elapsed_seconds": 3.400653839111328
+            }
+          ],
+          "reasoning": "The content discusses the liberalization of alcohol sales in Sweden and the Systembolaget monopoly. This is completely unrelated to the Belize Football Federation, sports management, or procurement activities within the target entity's scope."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:10:49.627347",
+          "domain_explored": "https://bz.linkedin.com/jobs/view/executive-assistant-at-football-federation-of-belize-ffb-4192892894",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruiting)",
+              "Standard Office Productivity Suites (Implied by 'Reports', 'Expense Reports')"
+            ],
+            "job_postings": [
+              {
+                "title": "Executive Assistant",
+                "status": "Closed (10 months ago)",
+                "location": "Belmopan City, Belize",
+                "reporting_to": "General Secretary (Ian Jones)"
+              }
+            ],
+            "procurement_indicators": [
+              "Operational Budgeting (Expense report management)",
+              "Administrative Infrastructure (Office supplies, scheduling tools)",
+              "Governance Contact (General Secretary identified as key decision maker)"
+            ]
+          },
+          "patterns_found": [
+            "Administrative Operations Expansion",
+            "Centralized Governance Structure",
+            "Executive Support Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1664,
+              "output_tokens": 360,
+              "elapsed_seconds": 12.741639375686646
+            }
+          ],
+          "reasoning": "The content confirms active organizational growth and operational formalization through the hiring of an Executive Assistant. While this is a personnel matter rather than a direct procurement tender, it indicates an active administrative hub (General Secretary) that manages resources, schedules, and expenses. This role often serves as a gatekeeper or influencer for vendor selection in office supplies, travel, and software tools."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:10:57.891392",
+          "domain_explored": "https://bz.linkedin.com/jobs/view/junior-accounts-officer-football-federation-of-belize-at-football-federation-of-belize-ffb-4204730008",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "QuickBooks",
+              "Microsoft Excel"
+            ],
+            "job_postings": [
+              "Junior Accounts Officer"
+            ],
+            "procurement_indicators": [
+              "Requirement for QuickBooks proficiency indicates active software usage/subscription",
+              "Need for audit support suggests procurement of external audit services",
+              "Payroll processing requirement indicates potential payroll software/service vendor"
+            ]
+          },
+          "patterns_found": [
+            "Financial Software Procurement (QuickBooks)",
+            "Operational Expansion (Finance Dept)",
+            "Standardized Accounting Workflows",
+            "Internal Audit Readiness"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1746,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.6015360355377197
+            }
+          ],
+          "reasoning": "This job posting explicitly confirms the use and potential procurement of specific financial technology (QuickBooks). It indicates a maturing finance department requiring structured software for invoicing, payroll, and reporting. The requirement for 'proficient in... accounting software' suggests an active or recent investment in digital financial infrastructure."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:11:08.203139",
+          "domain_explored": "https://bz.linkedin.com/jobs/view/official-data-collector-at-img-arena-3967438783",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Windows OS (Laptop/Tablet requirement)",
+              "Full HD Video/Display Hardware",
+              "Proprietary Data Collection Software (implied)"
+            ],
+            "job_postings": [
+              {
+                "role": "Official Data Collector",
+                "employer": "IMG Arena",
+                "nature": "Freelance/Contract",
+                "location": "Belize City, Belize",
+                "context": "CONCACAF Champions Cup, Central American Cup"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Data Rights Management",
+              "Event-based Labor Procurement",
+              "Vendor-operated Technical Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Data Operations",
+            "CONCACAF Competition Logistics",
+            "Freelance Labor Market Structure",
+            "Sports Data Supply Chain"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1817,
+              "output_tokens": 367,
+              "elapsed_seconds": 4.954814195632935
+            }
+          ],
+          "reasoning": "While this is a job posting by IMG Arena (a vendor) rather than the FFB itself, it confirms the operational ecosystem surrounding the FFB. It validates that CONCACAF competitions (which involve FFB) require specialized data collection services, hardware (Windows devices), and freelance labor. It indicates the FFB operates within a data-driven commercial framework where vendors like IMG Arena are contracted for official data rights."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:11:33.482725",
+          "domain_explored": "https://bz.linkedin.com/jobs/view/satellite-facility-operations-intern-at-sporting-kansas-city-4014091586",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Satellite Facility Operations Intern (Sporting Kansas City)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Kansas City vs Belize)",
+            "Irrelevant Entity (Sporting KC vs FFB)",
+            "Data Scraping Artifact (LinkedIn Location Inference Error)",
+            "Unpaid Educational Internship Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1890,
+              "output_tokens": 234,
+              "elapsed_seconds": 20.015934944152832
+            }
+          ],
+          "reasoning": "The content describes an internship for Sporting Kansas City (MLS), not the Belize Football Federation. While the scraped text shows 'Central Bank, Belize' as the location, this is a LinkedIn data parsing error or user location setting, not the actual job site. The role involves physical facility maintenance in Kansas, offering no procurement intelligence for the FFB in Belize."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T09:11:43.697903",
+          "domain_explored": "https://bz.linkedin.com/jobs/view/operations-specialist-sf%2Ba-at-sporting-kansas-city-4138521105",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operations Specialist, SF+A - Sporting Kansas City (Rejected)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Kansas City vs Belize)",
+            "Irrelevant Entity (Sporting KC vs FFB)",
+            "Data Scraping Artifact (LinkedIn Location Inference Error)",
+            "Facilities Management Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1974,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.9948689937591553
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Operations Specialist' at Sporting Kansas City (MLS), not the Belize Football Federation. The mention of 'Central Bank, Belize' in the text is a data artifact caused by LinkedIn's location inference algorithm (likely the scraper's IP location or a user setting) rather than the actual job location. The role focuses on stadium facility operations in the US, which is irrelevant to FFB procurement activities."
+        }
+      ],
+      "total_input_tokens": 14719,
+      "total_output_tokens": 2674,
+      "estimated_cost_usd": 0.08426700000000001
+    },
+    "procurement_signals": [
+      "Financial Software Procurement (QuickBooks)",
+      "Operational Expansion (Finance Dept)",
+      "Standardized Accounting Workflows",
+      "Internal Audit Readiness"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belize Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:11:43.701333"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204386",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:09:59.258767"
+}

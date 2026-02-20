@@ -1,0 +1,355 @@
+{
+  "entity_id": "celtic",
+  "entity_name": "Celtic",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "celticfc.com",
+    "celticfc.tv",
+    "eticketing.co.uk",
+    "stalybridgeceltic.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/company/celtic-careers",
+      "https://uy.linkedin.com/company/celtic-careers",
+      "https://www.linkedin.com/jobs/celtic-careers-jobs-worldwide",
+      "https://ie.linkedin.com/jobs/celtic-jobs",
+      "https://om.linkedin.com/company/celtic-careers",
+      "https://pe.linkedin.com/company/celtic-careers",
+      "https://ie.linkedin.com/jobs/celtic-careers-jobs",
+      "https://ie.linkedin.com/jobs/celtic-careers-jobs-dublin",
+      "https://ie.linkedin.com/jobs/view/used-equipment-manager-at-celtic-careers-4365989193",
+      "https://ie.linkedin.com/jobs/view/service-advisor-at-celtic-careers-4365992056"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "celtic",
+      "entity_name": "Celtic",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://celticfc.tv",
+        "https://ie.linkedin.com/company/celtic-careers",
+        "https://celticfc.com",
+        "https://ie.linkedin.com/jobs/celtic-jobs",
+        "https://uy.linkedin.com/company/celtic-careers",
+        "https://om.linkedin.com/company/celtic-careers",
+        "https://www.linkedin.com/jobs/celtic-careers-jobs-worldwide",
+        "https://eticketing.co.uk",
+        "https://stalybridgeceltic.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Celtic may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:28:15.652067",
+          "domain_explored": "https://celticfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports/Entertainment Content Focus",
+            "Standard News Publishing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1309,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.4582300186157227
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news updates (player transfers, match results, and video galleries). There are no mentions of technology infrastructure, business operations, job vacancies, or organizational changes that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:28:24.310441",
+          "domain_explored": "https://celticfc.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Video Platform (Proprietary/White-label)",
+              "Payment Processing (Stripe/PayPal inferred via PPV)",
+              "Ticketing System (eticketing.co.uk)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "PPV (Pay-per-view) support channel",
+              "Subscription management infrastructure",
+              "Video on-demand (VOD) hosting"
+            ]
+          },
+          "patterns_found": [
+            "OTT/Video Streaming Platform",
+            "Subscription-based Monetization Model",
+            "Pay-Per-View (PPV) Transactional Capability",
+            "Digital Content Management",
+            "Third-party Ticketing Integration (eticketing.co.uk)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 326,
+              "elapsed_seconds": 5.575839996337891
+            }
+          ],
+          "reasoning": "The content reveals a proprietary OTT (Over-The-Top) video platform (Celtic TV) used for subscription and PPV streaming. This indicates a procurement need for video hosting, encoding, DRM, and payment gateway technologies. The presence of a 'Contact Us' form specifically for PPV issues suggests active management of these vendor relationships. While no direct RFP is visible, the technical complexity confirms procurement activity in the digital media infrastructure space."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:28:27.423725",
+          "domain_explored": "https://eticketing.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:28:38.991893",
+          "domain_explored": "https://stalybridgeceltic.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content is from Stalybridge Celtic (stalybridgeceltic.co.uk), not the target Celtic FC.",
+              "Operational Scope: Focus on player loans and match day logistics indicates a non-technical procurement environment."
+            ]
+          },
+          "patterns_found": [
+            "Lower League Football Club Operations",
+            "Standard Sports Journalism (Match Reports/Interviews)",
+            "Player Transfer/Loan Activity",
+            "Generic Ticketing Announcements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 278,
+              "elapsed_seconds": 5.395813941955566
+            }
+          ],
+          "reasoning": "The content analyzed is from Stalybridge Celtic FC (a lower league English club), not Celtic FC (the Scottish Premiership entity). The content consists solely of standard football operations news: player loan expirations, match reports, manager interviews, and basic ticketing information. There are no signals of enterprise procurement, technology investment, or corporate governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:28:46.869433",
+          "domain_explored": "https://ie.linkedin.com/company/celtic-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Showroom Sales Representative (Bathroom Showroom)"
+            ],
+            "procurement_indicators": [
+              "Agency lists 'Supply Chain & Procurement' as a recruitment specialty",
+              "Agency offers 'Outourcing' and 'Talent Solutions'"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Recruitment Agency",
+            "Generalist Staffing Services",
+            "Geographic Mismatch (Ireland vs Scotland)",
+            "Service Provider (Not the Target Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 281,
+              "elapsed_seconds": 4.206990003585815
+            }
+          ],
+          "reasoning": "The scraped content identifies 'Celtic Careers' as a recruitment consultancy agency based in Dublin, Ireland, established in 1999. This entity is a vendor/service provider (staffing firm) and is unrelated to Celtic Football Club (the target entity based in Glasgow, Scotland). While they list 'Supply Chain & Procurement' as a specialty, this indicates they *sell* recruitment services, not that they are the target of the analysis. This is a false positive discovery."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:28:53.216591",
+          "domain_explored": "https://uy.linkedin.com/company/celtic-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Showroom Sales Representative (Bathroom Showroom)"
+            ],
+            "procurement_indicators": [
+              "Agency lists 'Supply Chain & Procurement' as a recruitment specialty",
+              "Agency offers 'Outsourcing and Talent Solutions'"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Recruitment Agency",
+            "Geographic Mismatch (Ireland vs Scotland)",
+            "Generalist Staffing Services",
+            "Entity Name Collision (Celtic Careers vs Celtic FC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.661033868789673
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Celtic Careers' is an independent recruitment consultancy based in Dublin, Ireland, established in 1999. While they list 'Supply Chain & Procurement' as a specialty, they are a vendor providing staffing services, not the target entity (Celtic FC) which is based in Glasgow, Scotland. This represents a false positive in entity resolution."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:28:59.393688",
+          "domain_explored": "https://www.linkedin.com/jobs/celtic-careers-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Wall/Gated Content",
+            "Generic LinkedIn Interface Elements",
+            "Absence of Specific Role Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.9470717906951904
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's generic login and authentication prompts. There is no visible text regarding job descriptions, requirements, or technology stacks associated with 'Celtic Careers'. The content is effectively a 'Sign In' wall, preventing analysis of the underlying procurement or hiring signals without authentication."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:29:06.632468",
+          "domain_explored": "https://ie.linkedin.com/jobs/celtic-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Boning Hall Trainee Supervisor (Kepak Group)",
+              "Despatch General Operative (Kepak Group)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Collision (Ambiguity)",
+            "Geographic Mismatch (Ireland vs Scotland)",
+            "Sector Mismatch (Agri-food/Food Processing vs Sports/Entertainment)",
+            "Operational Roles (General Operatives/Supervisors)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 267,
+              "elapsed_seconds": 2.6187779903411865
+            }
+          ],
+          "reasoning": "The search results for 'Celtic' in Ireland are dominated by Kepak Group (a food processing company) and similarly unrelated entities. There is no presence of Celtic Football Club (Scotland) in these results. The roles listed (e.g., Boning Hall Trainee, Despatch General Operative) are manual labor/operational roles within the meat processing industry, which contradicts the target entity's profile and offers no procurement intelligence regarding the football club."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:29:31.416448",
+          "domain_explored": "https://om.linkedin.com/company/celtic-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Showroom Sales Representative (Bathroom Showroom)"
+            ],
+            "procurement_indicators": [
+              "Agency offers 'Supply Chain & Procurement' recruitment services",
+              "Agency provides 'Talent Solutions' and 'Outsourcing'"
+            ]
+          },
+          "patterns_found": [
+            "Entity Name Collision (Ambiguity)",
+            "Geographic Mismatch (Ireland vs Scotland)",
+            "Sector Mismatch (Recruitment Agency vs Sports Club)",
+            "Third-Party Service Provider"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1796,
+              "output_tokens": 281,
+              "elapsed_seconds": 21.24322819709778
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Celtic Careers' is a recruitment consultancy agency based in Dublin, Ireland, established in 1999. It explicitly lists 'Supply Chain & Procurement' as one of its recruitment sectors, but it is a vendor providing staffing services, not the target entity Celtic FC. The geographic location (Leinster, Ireland) and industry (Recruitment/Staffing) contradict the hypothesis of the target entity being the Scottish football club."
+        }
+      ],
+      "total_input_tokens": 12530,
+      "total_output_tokens": 2023,
+      "estimated_cost_usd": 0.067935
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Celtic may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:29:31.418723"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.138965",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:02.264325"
+}

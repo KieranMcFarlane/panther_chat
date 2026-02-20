@@ -1,0 +1,263 @@
+{
+  "entity_id": "ligue_1",
+  "entity_name": "Ligue 1",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "ligue1.com",
+    "ligue1pass.tv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mt.linkedin.com/jobs/view/trader-football-at-betclic-group-4161547906",
+      "https://www.linkedin.com/jobs/view/customer-support-specialist-at-scoreplay-4361267679",
+      "https://mt.linkedin.com/jobs/view/sports-trader-at-betclic-group-2779325109?refId=w0qcevGSW%2Bg7bVthtLNqJA%3D%3D&trackingId=RomB36R3r7KVwo7iPdB0rQ%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://www.linkedin.com/posts/william-hill_find-jobs-external-careers-activity-6313751190886715392-mVCK",
+      "https://mt.linkedin.com/jobs/view/junior-system-administrator-at-betclic-group-3057995265",
+      "https://mt.linkedin.com/jobs/view/safer-gaming-analyst-detection-at-betclic-group-4178691295"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ligue_1",
+      "entity_name": "Ligue 1",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mt.linkedin.com/jobs/view/sports-trader-at-betclic-group-2779325109?refId=w0qcevGSW%2Bg7bVthtLNqJA%3D%3D&trackingId=RomB36R3r7KVwo7iPdB0rQ%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://mt.linkedin.com/jobs/view/junior-system-administrator-at-betclic-group-3057995265",
+        "https://mt.linkedin.com/jobs/view/trader-football-at-betclic-group-4161547906",
+        "https://www.linkedin.com/jobs/view/customer-support-specialist-at-scoreplay-4361267679",
+        "https://ligue1pass.tv",
+        "https://ligue1.com",
+        "https://www.linkedin.com/posts/william-hill_find-jobs-external-careers-activity-6313751190886715392-mVCK"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ligue 1 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:50:54.581755",
+          "domain_explored": "https://ligue1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic content consumption endpoint",
+            "High information density but low procurement signal density"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 372,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.629225969314575
+            }
+          ],
+          "reasoning": "The analyzed content represents the standard news feed for Ligue 1 (2024/25 season). While it confirms the entity is active and in a current cycle, news aggregation pages rarely contain explicit procurement signals (RFPs, tech stack details, or strategic vendor partnerships) without deeper navigation to specific press releases or corporate sub-pages. The content is 'noise' regarding procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:51:27.670603",
+          "domain_explored": "https://ligue1pass.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:51:35.965670",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/trader-football-at-betclic-group-4161547906",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Token limit truncation",
+            "Non-target entity (Betclic Group vs Ligue 1)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 479,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.281471014022827
+            }
+          ],
+          "reasoning": "The scraped content is an error message ('Requests rate to linkedin.com is too high') and does not contain the actual job description or page content. Furthermore, the URL indicates the role is with 'Betclic Group' (a sponsor/partner), not the Ligue 1 governing body (LFP) directly, making it a secondary lead even if the content were accessible."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:51:45.244398",
+          "domain_explored": "https://www.linkedin.com/jobs/view/customer-support-specialist-at-scoreplay-4361267679",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Token limit truncation",
+            "Non-target entity (Scoreplay vs Ligue 1)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 547,
+              "output_tokens": 167,
+              "elapsed_seconds": 6.843044757843018
+            }
+          ],
+          "reasoning": "The content is a technical error message from LinkedIn indicating rate limiting, preventing analysis of the target URL. Additionally, the URL targets 'Scoreplay', a vendor/partner entity, rather than 'Ligue 1' directly, which falls outside the core scope unless specific vendor ecosystem mapping is active."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:51:53.467094",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/sports-trader-at-betclic-group-2779325109?refId=w0qcevGSW%2Bg7bVthtLNqJA%3D%3D&trackingId=RomB36R3r7KVwo7iPdB0rQ%3D%3D&position=9&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Token limit truncation",
+            "Non-target entity (Betclic Group vs Ligue 1)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 645,
+              "output_tokens": 150,
+              "elapsed_seconds": 4.309267044067383
+            }
+          ],
+          "reasoning": "The scraped content is a system error message indicating rate limiting on LinkedIn, preventing analysis of the job posting. Additionally, the target entity is Betclic Group, a betting partner, not the direct procurement arm of Ligue 1."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:52:02.984302",
+          "domain_explored": "https://www.linkedin.com/posts/william-hill_find-jobs-external-careers-activity-6313751190886715392-mVCK",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Non-target entity (William Hill)",
+            "Generic recruitment branding",
+            "Irrelevant user comments",
+            "Token limit truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1685,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.406291961669922
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post from William Hill (a gambling operator), not Ligue 1. While 'Ligue 1' is mentioned in a user comment regarding betting tips, this is not a procurement signal from the target entity. The post is a generic recruitment drive (#behindthebet) and does not contain information about Ligue 1's technology stack, governance, or procurement needs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:52:12.649201",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/junior-system-administrator-at-betclic-group-3057995265",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Active Directory",
+              "PowerShell",
+              "Office 365",
+              "Windows 10",
+              "Mac OS"
+            ],
+            "job_postings": [
+              "Junior System Administrator at Betclic Group"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Non-target entity (Betclic Group vs Ligue 1)",
+            "Internal IT support role (Junior System Administrator)",
+            "Token limit truncation",
+            "Generic recruitment branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1751,
+              "output_tokens": 265,
+              "elapsed_seconds": 4.854887008666992
+            }
+          ],
+          "reasoning": "The content is a job posting for a Junior System Administrator at Betclic Group, a gambling facilities and casinos entity. While Betclic is a commercial partner of Ligue 1 Uber Eats, this is an internal IT support role (hardware/software troubleshooting, Office 365, Active Directory) for the betting operator, not a procurement signal for the Ligue 1 organization itself. The entity context does not match the target."
+        }
+      ],
+      "total_input_tokens": 5479,
+      "total_output_tokens": 1143,
+      "estimated_cost_usd": 0.033582
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ligue 1 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:52:12.651037"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418515",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:26.468332"
+}

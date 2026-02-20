@@ -1,0 +1,156 @@
+{
+  "entity_id": "nigeria_professional_football_league",
+  "entity_name": "Nigeria Professional Football League",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "thenwfl.com",
+    "enyimbafc.net",
+    "npfl-live.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nigeria_professional_football_league",
+      "entity_name": "Nigeria Professional Football League",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://enyimbafc.net",
+        "https://npfl-live.com",
+        "https://thenwfl.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nigeria Professional Football League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:26:42.219017",
+          "domain_explored": "https://thenwfl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism",
+            "Match reporting",
+            "League operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 507,
+              "output_tokens": 149,
+              "elapsed_seconds": 3.2958831787109375
+            }
+          ],
+          "reasoning": "The content is a standard sports match report (MD7 Wrap) focusing on game results, team performance, and league standings. It contains no information regarding organizational spending, technology acquisition, job vacancies, or governance structures relevant to procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:26:58.145961",
+          "domain_explored": "https://enyimbafc.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook",
+              "Twitter"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism and match reporting",
+            "Team roster and player statistics",
+            "Social media integration (Facebook, Twitter)",
+            "League table standings",
+            "Fan engagement content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 214,
+              "elapsed_seconds": 12.836311101913452
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports operations, match results, player interviews, and fan engagement. There is no presence of corporate governance, administrative procurement, or enterprise technology adoption signals. The entity is a football club (Enyimba FC), not the league governing body, and the content is purely consumer-facing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:27:08.089893",
+          "domain_explored": "https://npfl-live.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "NPFL Live (Proprietary Streaming Platform)",
+              "Propel Sports (Broadcast Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract for broadcast rights management",
+              "Procurement of production equipment for 7 simultaneous live streams",
+              "Partnership with Propel Sports for media logistics"
+            ]
+          },
+          "patterns_found": [
+            "Digital broadcasting infrastructure",
+            "Proprietary streaming platform (NPFL Live)",
+            "Third-party media partnership (Propel Sports)",
+            "Operational logistics management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 778,
+              "output_tokens": 279,
+              "elapsed_seconds": 5.582782030105591
+            }
+          ],
+          "reasoning": "The content reveals the NPFL is actively investing in digital infrastructure through its proprietary 'NPFL Live' platform and a partnership with 'Propel Sports' to broadcast multiple matches. This indicates an active procurement need for broadcasting technology, streaming services, and production equipment, even if no specific RFP is listed."
+        }
+      ],
+      "total_input_tokens": 2692,
+      "total_output_tokens": 642,
+      "estimated_cost_usd": 0.017706
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nigeria Professional Football League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:27:08.092552"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.196701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:56.334447"
+}

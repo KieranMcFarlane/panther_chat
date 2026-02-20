@@ -1,0 +1,115 @@
+{
+  "entity_id": "cadel_evans_great_ocean_road_race",
+  "entity_name": "Cadel Evans Great Ocean Road Race",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "event_organizers",
+  "discovered_domains": [
+    "cadelevansgreatoceanroadrace.com.au",
+    "transport.vic.gov.au",
+    "domestiquecycling.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cadel_evans_great_ocean_road_race",
+      "entity_name": "Cadel Evans Great Ocean Road Race",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://domestiquecycling.com",
+        "https://cadelevansgreatoceanroadrace.com.au",
+        "https://transport.vic.gov.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cadel Evans Great Ocean Road Race may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:21:12.712686",
+          "domain_explored": "https://cadelevansgreatoceanroadrace.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship",
+                "details": "Mapei appears as a naming rights sponsor, indicating an existing partnership rather than a new procurement opportunity."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship visibility (Mapei)",
+            "Event results reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 462,
+              "output_tokens": 209,
+              "elapsed_seconds": 4.680119037628174
+            }
+          ],
+          "reasoning": "The content provided is a news headline regarding race results and a title sponsor (Mapei). It contains no information regarding internal operations, technology stacks, job vacancies, or requests for proposals. It is purely public relations/communications material with no procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:21:15.788477",
+          "domain_explored": "https://transport.vic.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:21:18.922704",
+          "domain_explored": "https://domestiquecycling.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 462,
+      "total_output_tokens": 209,
+      "estimated_cost_usd": 0.004521000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cadel Evans Great Ocean Road Race may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:21:18.923144"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.386120",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:31.727659"
+}

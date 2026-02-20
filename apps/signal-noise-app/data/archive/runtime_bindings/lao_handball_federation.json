@@ -1,0 +1,171 @@
+{
+  "entity_id": "lao_handball_federation",
+  "entity_name": "Lao Handball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "asianhandball.org",
+    "playmakerstats.com",
+    "weareiowa.com",
+    "laoff.org.la"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lao_handball_federation",
+      "entity_name": "Lao Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://laoff.org.la",
+        "https://weareiowa.com",
+        "https://playmakerstats.com",
+        "https://asianhandball.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lao Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:42:47.613540",
+          "domain_explored": "https://asianhandball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Sports Governance",
+            "Event Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 484,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.3570339679718018
+            }
+          ],
+          "reasoning": "The content is a standard sports news report regarding the results of the Asian Men's Handball Championship. It focuses on Bahrain's victory and the event location in Kuwait. There is no mention of the Lao Handball Federation, no procurement signals, no vendor solicitations, and no technology implementation details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:43:20.605761",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:43:29.233786",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local News Aggregation",
+            "General Consumer Content",
+            "Irrelevant Geographic Context (Iowa, USA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.881056070327759
+            }
+          ],
+          "reasoning": "The scraped content is from 'WeAreIowa.com', a local news station in Des Moines, Iowa (USA). It contains general news stories, weather reports, and consumer deals. There is absolutely no connection to the 'Lao Handball Federation' or the Asian handball ecosystem. This source is entirely irrelevant to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:43:42.419961",
+          "domain_explored": "https://laoff.org.la",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Email",
+              "Canva"
+            ],
+            "job_postings": [
+              "Competition Management Specialist (Long-term contract)",
+              "Requirements: Bachelor's degree, Computer skills (MS Office, Canva), English proficiency"
+            ],
+            "procurement_indicators": [
+              "Recruitment drive for administrative and competition management roles",
+              "Infrastructure creation and renovation activities (implied by 'infrastructure projects')",
+              "Hosting of major statutory meetings (Annual Congress) requiring event services",
+              "Operational expansion necessitating software for competition management and documentation"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Governance",
+            "Staff Recruitment & Expansion",
+            "Operational Technology Requirements",
+            "Infrastructure Development",
+            "Sports Administration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 387,
+              "elapsed_seconds": 3.8220951557159424
+            }
+          ],
+          "reasoning": "The content confirms the entity is the Lao National Football Federation (LFF), not the Handball Federation. While this is a mismatch for the specific target entity, the content provides high-value procurement signals relevant to the broader sports sector in Laos. The recruitment of a 'Competition Management Specialist' and the mention of infrastructure projects indicate active organizational growth and a need for operational software tools."
+        }
+      ],
+      "total_input_tokens": 3394,
+      "total_output_tokens": 728,
+      "estimated_cost_usd": 0.021102
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lao Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:43:42.421688"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361953",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:22.471572"
+}

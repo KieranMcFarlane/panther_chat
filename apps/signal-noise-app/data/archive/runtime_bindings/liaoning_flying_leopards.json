@@ -1,0 +1,151 @@
+{
+  "entity_id": "liaoning_flying_leopards",
+  "entity_name": "Liaoning Flying Leopards",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "basketball.asia-basket.com",
+    "globalsportsarchive.com",
+    "basketball-reference.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liaoning_flying_leopards",
+      "entity_name": "Liaoning Flying Leopards",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://basketball.asia-basket.com",
+        "https://basketball-reference.com",
+        "https://globalsportsarchive.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liaoning Flying Leopards may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:48:52.125243",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Irrelevant geographic focus (Philippines, South Korea, UAE, Japan)",
+            "Player performance statistics (no business context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.747127056121826
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com consists entirely of basketball game results, player statistics, and tournament news across various Asian leagues (Philippines, South Korea, UAE, Japan, etc.). There is absolutely no mention of 'Liaoning Flying Leopards' (a Chinese CBA team), nor are there any business, procurement, job posting, or technology signals relevant to the entity. This content is irrelevant noise for the objective of procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:49:01.751282",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Global competition listings (UEFA, CONCACAF, AFC)",
+            "Absence of entity-specific keywords (Liaoning, Flying Leopards, CBA)",
+            "Static content aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.3751089572906494
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu for global soccer competitions (UEFA, Premier League, etc.). It contains no information regarding the Liaoning Flying Leopards, the CBA, or any business/procurement activities. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:49:11.894160",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary search engine)",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference LLC - Publisher)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics aggregation",
+            "North American focus (NBA, ABA, WNBA)",
+            "Consumer-facing product navigation (Stathead, Ad-Free login)",
+            "Historical data archiving structure",
+            "Absence of CBA team-specific business operations data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.441772937774658
+            }
+          ],
+          "reasoning": "The content is from Basketball Reference, a database for North American sports statistics. While it mentions 'China's CBA' in the context of international leagues, the site structure is designed for historical stats, scores, and player data (e.g., LeBron James, Luka Don\u010di\u0107). It does not contain business operations, procurement signals, or vendor information for the Liaoning Flying Leopards franchise. The only hiring signal found is for the website publisher (Sports Reference), not the basketball team."
+        }
+      ],
+      "total_input_tokens": 4298,
+      "total_output_tokens": 704,
+      "estimated_cost_usd": 0.023454
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liaoning Flying Leopards may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:49:11.896907"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.213320",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:54.092263"
+}

@@ -1,0 +1,156 @@
+{
+  "entity_id": "international_pickleball_federation_(ipf)",
+  "entity_name": "International Pickleball Federation (IPF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "afpickleball.org",
+    "thedinkpickleball.com",
+    "europeanpickleballfederation.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_pickleball_federation_(ipf)",
+      "entity_name": "International Pickleball Federation (IPF)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://europeanpickleballfederation.org",
+        "https://thedinkpickleball.com",
+        "https://afpickleball.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Pickleball Federation (IPF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:43:56.717489",
+          "domain_explored": "https://afpickleball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Objective: Integration & Governance",
+              "Strategic Objective: Academy (implies potential LMS/Training procurement)",
+              "Strategic Objective: Tournaments (implies event management software needs)",
+              "Organizational Status: Non-Profit / Volunteer-based"
+            ]
+          },
+          "patterns_found": [
+            "Regional Federation Structure",
+            "Volunteer Governance Model",
+            "Growth & Integration Objectives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 310,
+              "elapsed_seconds": 5.468424081802368
+            }
+          ],
+          "reasoning": "The content confirms the existence of the Asia Federation of Pickleball (AFP), a key regional affiliate of the IPF. While the content is descriptive and lacks explicit procurement language (RFPs, vendor lists), the explicit mention of 'Integration & Governance' and 'Academy' objectives indicates functional areas that typically require backend software, CRM, or Learning Management Systems (LMS). The reliance on a large volunteer team (45 people) suggests a potential future need for collaboration tools or membership management software to scale operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:44:03.208845",
+          "domain_explored": "https://thedinkpickleball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media Content Consumption",
+            "Third-Party Rating System (DUPR)",
+            "Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 518,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.5338239669799805
+            }
+          ],
+          "reasoning": "The content is a news article from 'The Dink' regarding player rankings by DUPR (Dynamic Universal Pickleball Rating). It is purely editorial/entertainment content with no governance, administrative, or operational signals related to the International Pickleball Federation (IPF). It does not contain procurement signals, technology infrastructure details, or decision-making patterns relevant to IPF."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:44:11.684883",
+          "domain_explored": "https://europeanpickleballfederation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - Website presence",
+              "Event Registration Platforms (implied by EPC 2025 structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Management (Reference to '2025 sponsors')",
+              "National Association Affiliation (Workflow for onboarding countries)",
+              "Large-scale Event Logistics (30 countries, Open & Seniors divisions)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Federation Structure",
+            "Multi-National Coordination",
+            "Event Sponsorship Management",
+            "Affiliation & Governance Workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 353,
+              "elapsed_seconds": 5.0157928466796875
+            }
+          ],
+          "reasoning": "The content confirms the European Pickleball Federation (EPF) acts as the continental governing body managing 30 national associations and large-scale events (EPC 2025). While the text is repetitive and lacks explicit technical details, the operational scale (30 countries, multiple tournament divisions) and the mention of 'affiliation' processes and 'sponsors' indicate a need for governance platforms, CRM systems to manage national memberships, and event management tools. This aligns with the IPF's ecosystem analysis, identifying regional bodies as procurement nodes for federation management software."
+        }
+      ],
+      "total_input_tokens": 3364,
+      "total_output_tokens": 850,
+      "estimated_cost_usd": 0.022842
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Pickleball Federation (IPF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:44:11.686320"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.461166",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:25.357772"
+}

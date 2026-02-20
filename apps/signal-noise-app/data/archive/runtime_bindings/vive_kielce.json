@@ -1,0 +1,211 @@
+{
+  "entity_id": "vive_kielce",
+  "entity_name": "Vive Kielce",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "handball-planet.com",
+    "fcbarcelona.com",
+    "kielcehandball.pl",
+    "billetterie.psg.fr",
+    "ehfcl.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vive_kielce",
+      "entity_name": "Vive Kielce",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ehfcl.eurohandball.com",
+        "https://eurohandball.com",
+        "https://handball-planet.com",
+        "https://fcbarcelona.com",
+        "https://billetterie.psg.fr",
+        "https://kielcehandball.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Vive Kielce may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:25:52.267182",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie consent wall blocking content",
+            "General sports news aggregation",
+            "Event schedule listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 223,
+              "elapsed_seconds": 2.2619781494140625
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) general news portal, not the specific entity 'Vive Kielce'. The content consists of match reports (Denmark, Croatia) and generic event schedules. There is no mention of Vive Kielce, their specific procurement activities, or their technology stack. The presence of a cookie consent wall ('This content is blocked') suggests that deeper, potentially relevant content might be hidden, but the visible text offers zero procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:26:00.657802",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Tournament results (EHF EURO 2026)",
+            "Player transfer rumors",
+            "Video gallery content",
+            "Generic sports journalism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.648092746734619
+            }
+          ],
+          "reasoning": "The scraped content from handball-planet.com is exclusively focused on sports journalism, covering tournament results (Denmark's EHF EURO 2026 win), player awards, and transfer rumors. There is no mention of Vive Kielce's corporate operations, technology stack, or procurement activities. The entity 'Vive Kielce' appears only in a historical video quote context, not as a subject of business analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:26:07.280928",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity content (FC Barcelona vs Vive Kielce)",
+            "E-commerce and ticketing navigation",
+            "Sports team roster and schedule management",
+            "Fan engagement (Culers community, newsletter)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.4478979110717773
+            }
+          ],
+          "reasoning": "The scraped content is from FC Barcelona's official website, which is a completely different entity than the target, Vive Kielce. While both are handball-related organizations, the content focuses on FC Barcelona's general sports news, ticketing, and fan shop, providing zero procurement intelligence regarding Vive Kielce's operations, technology stack, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:26:17.966105",
+          "domain_explored": "https://kielcehandball.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1702)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:26:37.225419",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:26:44.599251",
+          "domain_explored": "https://ehfcl.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'BECOME A PARTNER' contact link (Non-specific)"
+            ]
+          },
+          "patterns_found": [
+            "Sports league navigation",
+            "General competition results (Esbjerg, Metz, Gy\u00f6r, Brest, Odense)",
+            "E-commerce calls to action (Shop Now)",
+            "Sponsorship acquisition links (Become a Partner)",
+            "Event schedule listings (2025-2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1580,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.178410053253174
+            }
+          ],
+          "reasoning": "The content is a navigation hub for the EHF Champions League, focusing on match results, schedules, and general league information. While there is a generic 'Become a Partner' link, there is no specific content regarding Vive Kielce's internal operations, technology stack, or specific procurement needs. The entity context is missing."
+        }
+      ],
+      "total_input_tokens": 5803,
+      "total_output_tokens": 869,
+      "estimated_cost_usd": 0.030444
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Vive Kielce may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:26:44.601213"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352902",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:21.946368"
+}

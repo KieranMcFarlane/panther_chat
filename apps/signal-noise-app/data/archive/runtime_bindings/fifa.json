@@ -1,0 +1,289 @@
+{
+  "entity_id": "fifa",
+  "entity_name": "FIFA",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "fifa.com",
+    "fifa.gg"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/fifa/jobs/",
+      "https://www.linkedin.com/jobs/fifa-jobs-worldwide",
+      "https://www.linkedin.com/jobs/fifa-jobs",
+      "https://www.linkedin.com/jobs/fifa-jobs-new-york",
+      "https://www.linkedin.com/jobs/fifa-jobs-miami-fl",
+      "https://au.linkedin.com/jobs/fifa-jobs",
+      "https://uk.linkedin.com/jobs/fifa-jobs",
+      "https://ca.linkedin.com/jobs/fifa-jobs",
+      "https://www.linkedin.com/jobs/fifa-world-cup-2026%E2%84%A2-canada-mexico-and-the-united-states-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/fifa-jobs-london"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fifa",
+      "entity_name": "FIFA",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/fifa-jobs",
+        "https://www.linkedin.com/jobs/fifa-jobs-new-york",
+        "https://www.linkedin.com/company/fifa/jobs/",
+        "https://www.linkedin.com/jobs/fifa-jobs-worldwide",
+        "https://fifa.gg",
+        "https://fifa.com",
+        "https://www.linkedin.com/jobs/fifa-jobs-miami-fl"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIFA may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:33:19.233672",
+          "domain_explored": "https://fifa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:33:28.535631",
+          "domain_explored": "https://fifa.gg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Browser compatibility check",
+            "Redirect to primary domain"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 479,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.569427013397217
+            }
+          ],
+          "reasoning": "The scraped content from fifa.gg is a client-side error message regarding browser compatibility and a redirect instruction to fifa.com. It contains no substantive information regarding technology stacks, procurement needs, or organizational structure. The subdomain appears to be a gaming/esports portal, but the content is inaccessible via this scrape."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:33:35.247422",
+          "domain_explored": "https://www.linkedin.com/company/fifa/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access restriction (403 Forbidden)",
+            "URL structure enforcement (Company name only)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 435,
+              "output_tokens": 165,
+              "elapsed_seconds": 4.2405149936676025
+            }
+          ],
+          "reasoning": "The content indicates a 403 Forbidden error, preventing access to the LinkedIn Jobs page. The error message suggests a URL structure issue ('Use only company name in the URL'), but effectively acts as a blocker to scraping. No procurement signals, job postings, or technology stack information could be extracted."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:33:51.075176",
+          "domain_explored": "https://www.linkedin.com/jobs/fifa-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Guest Relations \u2013 FIFA World Cup 26\u2122 | Miami (FIFA World Cup 2026\u2122 - Canada, Mexico and the United States)",
+              "HR Assistant (Philippine Football Federation)"
+            ],
+            "procurement_indicators": [
+              "Event Services Procurement (Hospitality/Relations)",
+              "Operational Staffing for FIFA World Cup 26"
+            ]
+          },
+          "patterns_found": [
+            "Event-specific hiring (FIFA World Cup 26\u2122)",
+            "Operational role expansion (Guest Relations)",
+            "Geographic specificity (Miami, FL)",
+            "Affiliate/Member Association activity (Philippine Football Federation)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 310,
+              "elapsed_seconds": 8.793928861618042
+            }
+          ],
+          "reasoning": "While the page is largely gated by a login wall, the visible snippets reveal active recruitment for the FIFA World Cup 2026. The 'Guest Relations' posting indicates operational procurement needs for event management services, hospitality, and staffing vendors. The presence of non-FIFA entities (Philippine Football Federation) suggests the search results are broad, but the specific FIFA 26 roles confirm active organizational build-out."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:33:59.050483",
+          "domain_explored": "https://www.linkedin.com/jobs/fifa-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Guest Relations \u2013 FIFA World Cup 26\u2122 | Miami",
+              "Recruiter"
+            ],
+            "procurement_indicators": [
+              "Personnel procurement for event operations",
+              "Vendor-neutral hiring (direct hiring via LinkedIn)"
+            ]
+          },
+          "patterns_found": [
+            "Event-specific hiring (FIFA World Cup 26\u2122)",
+            "Operational role expansion (Guest Relations)",
+            "Geographic specificity (Miami, FL)",
+            "Recruitment infrastructure scaling (Recruiter roles)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 268,
+              "elapsed_seconds": 3.463858127593994
+            }
+          ],
+          "reasoning": "While the page is largely obscured by authentication walls, the visible snippets confirm active operational scaling for the FIFA World Cup 2026. The presence of 'Recruiter' and 'Guest Relations' roles indicates a ramp-up in personnel procurement, specifically in the Miami host city market. This confirms operational intent but lacks specific technology or vendor procurement details."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:34:08.256304",
+          "domain_explored": "https://www.linkedin.com/jobs/fifa-jobs-new-york",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Creative Project Coordinator \u2013 FIFA World Cup 26\u2122 (On Location)",
+              "Creative Project Coordinator \u2013 FIFA World Cup 26\u2122 (TKO)",
+              "Senior Coordinator, Player Relations (Major League Soccer)",
+              "Street Team, Live Events (New York City FC)"
+            ],
+            "procurement_indicators": [
+              "Vendor: On Location (Official Hospitality Provider)",
+              "Vendor: TKO Group (Marketing/Agency)",
+              "Service Demand: Creative Project Management",
+              "Service Demand: Live Event Operations",
+              "Geographic Focus: New York (Media/Marketing hub)"
+            ]
+          },
+          "patterns_found": [
+            "Vendor ecosystem hiring (On Location, TKO, MLS)",
+            "Event-specific operational scaling (FIFA World Cup 26\u2122)",
+            "Indirect procurement signals (Hospitality, Marketing, Creative services)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1610,
+              "output_tokens": 355,
+              "elapsed_seconds": 3.886849880218506
+            }
+          ],
+          "reasoning": "While the page lists 77 jobs, the majority are for partner organizations (MLS, NYCFC, AIFF) rather than direct FIFA hiring. However, the presence of roles at 'On Location' (FIFA's official hospitality provider) and 'TKO' (marketing agency) indicates active procurement of services for the World Cup 26 ecosystem. This confirms the event-driven demand for third-party vendors."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:34:17.128954",
+          "domain_explored": "https://www.linkedin.com/jobs/fifa-jobs-miami-fl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Guest Relations \u2013 FIFA World Cup 26\u2122 | Miami",
+              "Recruiter",
+              "Stadium Interior Security Manager \u2013 FIFA World Cup 26\u2122 | All Host Cities",
+              "Coordinator, Stadium Entertainment, FIFA World Cup 2026"
+            ],
+            "procurement_indicators": [
+              "Volume hiring (88 jobs) implies potential procurement of staffing/HR vendors",
+              "Operational roles (Security, Entertainment) indicate service procurement needs"
+            ]
+          },
+          "patterns_found": [
+            "Event-specific hiring (FIFA World Cup 26\u2122)",
+            "Operational role expansion (Guest Relations)",
+            "Geographic specificity (Miami, FL)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1689,
+              "output_tokens": 318,
+              "elapsed_seconds": 2.942073106765747
+            }
+          ],
+          "reasoning": "The content confirms operational scaling for the FIFA World Cup 2026 in Miami, specifically in Guest Relations and Stadium Operations. While this indicates activity, it is primarily operational staffing rather than direct procurement signals (RFPs, tech stack). The volume of roles (88 jobs) suggests a significant vendor ecosystem or staffing procurement need, but specific technology investments are not listed in this view."
+        }
+      ],
+      "total_input_tokens": 7237,
+      "total_output_tokens": 1584,
+      "estimated_cost_usd": 0.045471
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIFA may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:34:17.130711"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457823",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:39.254310"
+}

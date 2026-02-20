@@ -1,0 +1,177 @@
+{
+  "entity_id": "rk_nexe",
+  "entity_name": "RK Nexe",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "rknexe.hr",
+    "eurohandball.com",
+    "behance.net",
+    "rk-zagreb.hr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_nexe",
+      "entity_name": "RK Nexe",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://eurohandball.com",
+        "https://rk-zagreb.hr",
+        "https://behance.net",
+        "https://rknexe.hr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Nexe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:45:43.912146",
+          "domain_explored": "https://rknexe.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team content filtering",
+            "Seasonal schedule management",
+            "News aggregation layout"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 161,
+              "elapsed_seconds": 5.028811931610107
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news (match results, tournament summaries) and a match schedule for the handball team. There are no mentions of business operations, technology vendors, job openings, or organizational changes that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:45:50.563807",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Cookie consent gating",
+            "Tournament schedule management",
+            "Third-party media content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.9267220497131348
+            }
+          ],
+          "reasoning": "The content is entirely focused on European handball sports news (EHF EURO), specifically match results, player awards (MVP), and tournament schedules. There is no mention of RK Nexe, corporate strategy, or procurement activities. The domain is a sports governing body site, not a corporate procurement portal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:45:58.392243",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Portfolio aggregation",
+            "Creative showcase platform",
+            "Generic design asset browsing",
+            "Freelance marketplace structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.619006872177124
+            }
+          ],
+          "reasoning": "The content is scraped from Behance, a general-purpose creative portfolio platform. It displays a generic feed of design projects (logos, branding, motion graphics) from various global creators and agencies. There is no specific content linking these assets to 'RK Nexe', nor are there any procurement signals, RFPs, or job postings relevant to the target entity. This represents a 'dead end' in the investigation of RK Nexe's procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:46:06.541702",
+          "domain_explored": "https://rk-zagreb.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Match schedule management",
+            "Sponsorship listing",
+            "Generic sports club CMS structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 170,
+              "elapsed_seconds": 4.333627223968506
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports results, player transfers, and match schedules for RK Zagreb. While 'Sponsors and Partners' are listed, this is standard brand visibility for sports teams and does not constitute a procurement signal or vendor selection process for the entity RK Nexe."
+        }
+      ],
+      "total_input_tokens": 5697,
+      "total_output_tokens": 716,
+      "estimated_cost_usd": 0.027830999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Nexe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:46:06.543548"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.360001",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:22.436531"
+}

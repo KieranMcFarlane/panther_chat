@@ -1,0 +1,513 @@
+{
+  "entity_id": "canadian_baseball_federation",
+  "entity_name": "Canadian Baseball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "forums.ootpdevelopments.com",
+    "battlefordsnow.com",
+    "baseball-reference.com",
+    "groundskeeper.mlblogs.com",
+    "japantimes.co.jp",
+    "slideserve.com",
+    "archive.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/baseball-jobs-toronto-on",
+      "https://ca.linkedin.com/jobs/view/rising-professionals-program-at-toronto-blue-jays-4362851125",
+      "https://ca.linkedin.com/jobs/baseball-jobs",
+      "https://ca.linkedin.com/jobs/view/development-officer-at-ontario-baseball-association-4327143499",
+      "https://ca.linkedin.com/jobs/toronto-blue-jays-jobs",
+      "https://ca.linkedin.com/jobs/baseball-jobs-british-columbia"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "canadian_baseball_federation",
+      "entity_name": "Canadian Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ca.linkedin.com/jobs/baseball-jobs-toronto-on",
+        "https://groundskeeper.mlblogs.com",
+        "https://baseball-reference.com",
+        "https://ca.linkedin.com/jobs/view/development-officer-at-ontario-baseball-association-4327143499",
+        "https://forums.ootpdevelopments.com",
+        "https://battlefordsnow.com",
+        "https://slideserve.com",
+        "https://archive.org",
+        "https://ca.linkedin.com/jobs/toronto-blue-jays-jobs",
+        "https://ca.linkedin.com/jobs/baseball-jobs",
+        "https://japantimes.co.jp",
+        "https://ca.linkedin.com/jobs/view/rising-professionals-program-at-toronto-blue-jays-4362851125"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Canadian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:12:52.854151",
+          "domain_explored": "https://forums.ootpdevelopments.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OnFastSpring (Webstore/E-commerce)",
+              "Forum Software (Bulletin Board/Community Platform)",
+              "FaceGen (3D Modeling)",
+              "HTML/CSS (for Mods)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing agreements (MLB, MLBPA, KBO, NHL mentioned as game licenses)",
+              "E-commerce platform usage (OnFastSpring)"
+            ]
+          },
+          "patterns_found": [
+            "Gaming/Simulation Platform",
+            "User-Generated Content (Mods)",
+            "Community Forums",
+            "Direct-to-Consumer Sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.354534149169922
+            }
+          ],
+          "reasoning": "The scraped content is from the 'OOTP Developments Forums', a community platform for the video game 'Out of the Park Baseball'. It contains discussions about game mechanics, mods, and technical support for the game, not the administrative or procurement operations of the 'Canadian Baseball Federation'. There is no overlap between this gaming entity and the target sports federation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:13:05.264774",
+          "domain_explored": "https://battlefordsnow.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local News Aggregation",
+            "General Public Safety Reporting",
+            "Sports Reporting (Saskatchewan Roughriders)",
+            "Community Events (Snowmobile Club)",
+            "Irrelevant Geographic Scope (North Battleford, SK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 191,
+              "elapsed_seconds": 5.333027124404907
+            }
+          ],
+          "reasoning": "The content is a local news feed for the Battlefords region in Saskatchewan, focusing on community events, crime reports, and local sports (Roughriders, North Stars). There is no mention of the Canadian Baseball Federation, national baseball governance, or related procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:13:22.250435",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary Search Engine)",
+              "Immaculate Grid (Web App)"
+            ],
+            "job_postings": [
+              {
+                "title": "Marketing Manager, Content & Creative",
+                "entity": "Sports Reference (Parent Company)",
+                "relevance": "Low - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Sports Data Aggregation",
+            "Historical Statistics Archiving",
+            "B2C Subscription Models (Stathead)",
+            "General Public Information (No B2B Context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 277,
+              "elapsed_seconds": 12.217989921569824
+            }
+          ],
+          "reasoning": "The content is from Baseball-Reference.com, a consumer-facing sports statistics database. While it contains a job posting for a 'Marketing Manager', this is for the media company (Sports Reference) and not for the 'Canadian Baseball Federation'. The entity context is incorrect; this is a data source, not the target organization or a procurement channel for them."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:13:33.011651",
+          "domain_explored": "https://groundskeeper.mlblogs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Medium (Publishing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Aggregation Platform (Medium)",
+            "User-Generated Content / Blogging",
+            "Non-Commercial Editorial Content",
+            "Absence of Corporate Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 249,
+              "elapsed_seconds": 4.010854244232178
+            }
+          ],
+          "reasoning": "The target URL resolves to a Medium-hosted publication ('Murray Cook\u2019s Field & Ballpark Blog'). The scraped content consists entirely of platform navigation elements (Sign in, Write, Careers at Medium) and standard footer links. There is no content related to the Canadian Baseball Federation, nor are there any procurement signals, technology stacks, or organizational decision-making structures present. It is a third-party blog, likely irrelevant to the specific procurement intelligence goals for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:13:56.235381",
+          "domain_explored": "https://japantimes.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Media",
+            "Geographic Irrelevance (Japan vs Canada)",
+            "Content Aggregation",
+            "B2C Editorial Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1578,
+              "output_tokens": 162,
+              "elapsed_seconds": 14.37899112701416
+            }
+          ],
+          "reasoning": "The source is a major Japanese news publication (Japan Times) focusing on domestic politics, society, and business news in Japan. There is no relevance to the Canadian Baseball Federation, Canadian procurement processes, or North American baseball operations signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:14:08.030510",
+          "domain_explored": "https://slideserve.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (Custom/Proprietary)",
+              "Lead Generation Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Content Aggregation",
+            "User-Generated Content (UGC) Platform",
+            "Content Farm Characteristics",
+            "Irrelevant Editorial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 250,
+              "elapsed_seconds": 4.095273017883301
+            }
+          ],
+          "reasoning": "The scraped content from SlideServe reveals a platform dedicated to sharing user-generated presentations, articles, and media (e.g., 'The Best Aerial Photos of 2025', 'Swimming with sharks'). The functionality is focused on content creation tools (Presentation, Quiz, Lead-form) rather than organizational procurement. There is no mention of the Canadian Baseball Federation, nor are there any signals regarding RFPs, technology stacks, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:14:19.185659",
+          "domain_explored": "https://archive.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Dependency (JavaScript)",
+            "Content Archiving Platform",
+            "Generic Web Resource"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 700,
+              "output_tokens": 183,
+              "elapsed_seconds": 6.961232900619507
+            }
+          ],
+          "reasoning": "The scraped content indicates a technical failure to load the page due to JavaScript requirements. The Internet Archive is a digital library, not a vendor or the primary entity (Canadian Baseball Federation). The content provided is a browser error message, which contains no procurement signals, governance data, or technology stack information relevant to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:14:35.370543",
+          "domain_explored": "https://ca.linkedin.com/jobs/baseball-jobs-toronto-on",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Software Developer \u2013 Baseball Systems",
+                "entity": "Toronto Blue Jays",
+                "location": "Toronto, Ontario",
+                "relevance": "Low (Entity Mismatch)"
+              },
+              {
+                "title": "Parks Labourer",
+                "entity": "City of Brampton",
+                "location": "Brampton, Ontario",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Entity Mismatch (Toronto Blue Jays vs Canadian Baseball Federation)",
+            "Authentication Gating (Sign-in Wall)",
+            "Geographic Irrelevance (Municipal/General Listings)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1731,
+              "output_tokens": 373,
+              "elapsed_seconds": 9.685858011245728
+            }
+          ],
+          "reasoning": "The scraped content is a generic job search results page for 'Baseball Jobs in Toronto' rather than a specific page for the Canadian Baseball Federation (CBF). While it lists a relevant role ('Software Developer \u2013 Baseball Systems' at Toronto Blue Jays), this represents a procurement signal for a separate commercial entity (MLB franchise), not the non-profit federation being analyzed. The content is largely repetitive login prompts and municipal labor roles (Parks Labourer), offering no insight into CBF's specific technology stack, governance, or procurement activities."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:14:45.495955",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/rising-professionals-program-at-toronto-blue-jays-4362851125",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Customer Relationship Management)",
+              "Social Media Platforms",
+              "Ticketing Systems"
+            ],
+            "job_postings": [
+              {
+                "role": "Associate, CRM",
+                "entity": "Toronto Blue Jays",
+                "type": "Contract / Entry Level"
+              },
+              {
+                "role": "Associate, Technology",
+                "entity": "Toronto Blue Jays",
+                "type": "Contract / Entry Level"
+              },
+              {
+                "role": "Associate, Merchandise & Retail Operations",
+                "entity": "Toronto Blue Jays",
+                "type": "Contract / Entry Level"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Toronto Blue Jays vs Canadian Baseball Federation)",
+            "Talent Acquisition (Early Career/Entry Level)",
+            "Authentication Gating (Sign-in Wall)",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1809,
+              "output_tokens": 394,
+              "elapsed_seconds": 3.6177451610565186
+            }
+          ],
+          "reasoning": "The content describes a talent development program for the Toronto Blue Jays (a commercial MLB franchise), not the Canadian Baseball Federation (the governing body). While the Blue Jays are a stakeholder, this is a recruitment posting for entry-level associates (Marketing, CRM, Technology) rather than a procurement signal or RFP from the Federation itself. The content is also gated behind LinkedIn's authentication, limiting deep analysis."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T13:15:04.647724",
+          "domain_explored": "https://ca.linkedin.com/jobs/baseball-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Software Developer \u2013 Baseball Systems (Toronto Blue Jays)",
+              "Parks Labourer (City of Brampton)",
+              "Program Director (True North Sports Camps)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Entity Mismatch (Municipalities, MLB Teams, Camps vs. Federation)",
+            "Authentication Gating (Sign-in Wall)",
+            "Keyword Noise (Parks Labourer, Multi-Sport Camps)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1879,
+              "output_tokens": 279,
+              "elapsed_seconds": 12.237524032592773
+            }
+          ],
+          "reasoning": "The search results for 'Baseball jobs in Canada' return a mix of municipal groundskeeping roles, private sports camps, and a specific MLB team developer role. None of the postings are attributed to the 'Canadian Baseball Federation'. The content is a generic job board aggregation that requires authentication to view full details, offering no direct insight into the Federation's procurement activities or technology stack."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T13:15:17.652339",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/development-officer-at-ontario-baseball-association-4327143499",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chief Advancement Officer (Smithsonian Institution)",
+              "Manager, Institutional Giving (Good Reason Houston)",
+              "Major Gifts Officer (Global Christian Relief)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Ontario Baseball Association vs Canadian Baseball Federation)",
+            "Generic Job Aggregation (US-based roles)",
+            "Authentication Gating (Sign-in Wall)",
+            "Content Irrelevance (Advancement/Fundraising roles vs Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1957,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.491970062255859
+            }
+          ],
+          "reasoning": "The URL targets the Ontario Baseball Association (a provincial NSO), not the Canadian Baseball Federation (National Federation). Furthermore, the scraped content is a generic aggregation of 'Advancement Officer' roles in the United States (Smithsonian, Houston NGOs), completely unrelated to the target entity or Canadian procurement activities. The content is hidden behind a login wall, offering no actionable intelligence."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T13:15:31.283334",
+          "domain_explored": "https://ca.linkedin.com/jobs/toronto-blue-jays-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Baseball Systems (Proprietary/Custom)",
+              "Hospitality Management Systems (Implied by Legends Global roles)"
+            ],
+            "job_postings": [
+              "Software Developer \u2013 Baseball Systems (Toronto Blue Jays)",
+              "General Manager (The Rogers Centre)",
+              "Suites & Catering Director",
+              "Pastry Chef"
+            ],
+            "procurement_indicators": [
+              "Technical Hiring (Software Developer)",
+              "Operational Hiring (Hospitality/Food Service)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (MLB Franchise vs. National Federation)",
+            "Authentication Gating (Sign-in Wall)",
+            "Vendor/Partner Roles (Legends Global Hospitality)",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2031,
+              "output_tokens": 328,
+              "elapsed_seconds": 8.930964946746826
+            }
+          ],
+          "reasoning": "The content is specific to the Toronto Blue Jays (an MLB franchise) and their hospitality partners (Legends Global), not the Canadian Baseball Federation (the governing body). While there is a 'Software Developer \u2013 Baseball Systems' role which indicates technical procurement, it belongs to the wrong entity. Additionally, the page is behind a login wall, preventing deep analysis of the tech stack."
+        }
+      ],
+      "total_input_tokens": 19082,
+      "total_output_tokens": 3247,
+      "estimated_cost_usd": 0.10595099999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Canadian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:15:31.284856"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312384",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:28.248206"
+}

@@ -1,0 +1,304 @@
+{
+  "entity_id": "vissel_kobe",
+  "entity_name": "Vissel Kobe",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "vissel-kobe.co.jp",
+    "quick.pia.jp",
+    "apps.apple.com",
+    "vissel.tstar.jp",
+    "noevir-stadium.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://jp.linkedin.com/jobs/view/sports-marketing-manager-candidate-vissel-kobe-sports-business-at-rakuten-4035583711",
+      "https://jp.linkedin.com/jobs/view/sports-ticket-sales-representative-fixed-term-employee-ticket-business-department-location-kobe-c-m-at-rakuten-4267041951"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vissel_kobe",
+      "entity_name": "Vissel Kobe",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.2,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.14,
+        0.2
+      ],
+      "explored_domains": [
+        "https://vissel-kobe.co.jp",
+        "https://quick.pia.jp",
+        "https://jp.linkedin.com/jobs/view/sports-ticket-sales-representative-fixed-term-employee-ticket-business-department-location-kobe-c-m-at-rakuten-4267041951",
+        "https://vissel.tstar.jp",
+        "https://noevir-stadium.jp",
+        "https://jp.linkedin.com/jobs/view/sports-marketing-manager-candidate-vissel-kobe-sports-business-at-rakuten-4035583711",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Vendor Partnership (Pia)",
+        "Digital Ticketing Implementation",
+        "Smart Gate Integration",
+        "Inbound/UX Optimization",
+        "Mobile Wallet Integration (Google/Apple Pay)",
+        "Job Posting (Sports Marketing Manager)",
+        "Data-Driven Marketing Strategy",
+        "Rakuten Ecosystem Integration",
+        "Fan LTV Maximization",
+        "Big Data Analytics (Fan Behavior)",
+        "Job Posting (Ticket Sales Representative)",
+        "Ticketing System Usage (Internal Rakuten Platform)",
+        "Data Analysis & Sales Optimization",
+        "Stadium Operations Integration",
+        "Cross-Departmental Collaboration (System Development)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Vissel Kobe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:08:18.248534",
+          "domain_explored": "https://vissel-kobe.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:08:29.590870",
+          "domain_explored": "https://quick.pia.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "QUICK Pia (Ticketing ASP)",
+              "Pia Smart Gate Solution",
+              "Google Wallet",
+              "Apple Wallet",
+              "Google Pay",
+              "Apple Pay"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Vendor Partnership: Pia Co., Ltd. (Ticketing System)",
+              "Strategic Focus: Inbound tourism support (Foreign visitor experience)",
+              "Strategic Focus: Reducing ticket purchase friction (No registration required)",
+              "Infrastructure: Smart gate implementation for stadium entry"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership (Pia)",
+            "Digital Ticketing Implementation",
+            "Smart Gate Integration",
+            "Inbound/UX Optimization",
+            "Mobile Wallet Integration (Google/Apple Pay)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 327,
+              "elapsed_seconds": 4.03184700012207
+            }
+          ],
+          "reasoning": "The content is a direct vendor landing page (Pia) listing 'Vissel Kobe' as a client for their 'QUICK Pia' service. This confirms an active procurement relationship for digital ticketing and gate access systems. It highlights specific technology adoption (Smart Gate, Wallet integration) aimed at inbound tourists and UX simplification."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:08:33.341864",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:08:46.362096",
+          "domain_explored": "https://vissel.tstar.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Tstar Ticketing System (Ticket Sports)",
+              "Mobile App (iOS/Android)",
+              "QR Code Ticketing",
+              "Digital Seat Selection"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Ticket Sports (Softbank Group)",
+              "Digital Transformation: Mobile-first ticketing strategy",
+              "Service Expansion: Official ticket resale platform"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Usage (Tstar.jp)",
+            "Digital Ticketing (QR Code)",
+            "Mobile App Integration",
+            "Resale Platform Implementation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 312,
+              "elapsed_seconds": 5.595851898193359
+            }
+          ],
+          "reasoning": "The content confirms Vissel Kobe utilizes the 'Tstar' (Ticket Sports) platform for ticketing operations, evidenced by the URL structure (vissel.tstar.jp). This is a specific vendor relationship (Softbank/Ticket Sports). The presence of 'QR\u30c1\u30b1\u30c3\u30c8' (QR Ticket) and a dedicated 'Official App' indicates ongoing investment in digital ticketing infrastructure and mobile integration. The mention of a 'Resale' system suggests the use of secondary market technology."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:09:20.423356",
+          "domain_explored": "https://noevir-stadium.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:09:37.323466",
+          "domain_explored": "https://jp.linkedin.com/jobs/view/sports-marketing-manager-candidate-vissel-kobe-sports-business-at-rakuten-4035583711",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Big Data Analytics",
+              "CRM (Customer Relationship Management)",
+              "Microsoft Office (Excel, PowerPoint, Word)",
+              "Data Visualization Tools (implied by 'behavior analysis')"
+            ],
+            "job_postings": [
+              "Sports Marketing Manager Candidate (Vissel Kobe) - Rakuten"
+            ],
+            "procurement_indicators": [
+              "Recruitment due to Business Expansion",
+              "Investment in Data Marketing Infrastructure",
+              "Integration of Rakuten Member ID system with Stadium operations",
+              "Focus on KPI formulation and quantitative analysis"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Sports Marketing Manager)",
+            "Data-Driven Marketing Strategy",
+            "Rakuten Ecosystem Integration",
+            "Fan LTV Maximization",
+            "Big Data Analytics (Fan Behavior)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 372,
+              "elapsed_seconds": 11.189616203308105
+            }
+          ],
+          "reasoning": "The content is a direct job posting from Rakuten for a Vissel Kobe marketing role. It explicitly confirms the procurement and implementation of a sophisticated data-driven marketing stack. It highlights the integration of Rakuten Group's big data capabilities (Rakuten Member IDs) with Vissel Kobe's operations to track fan behavior, execute PDCA cycles, and maximize LTV. This is a strong signal of active investment in marketing technology and analytics platforms."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:09:47.266550",
+          "domain_explored": "https://jp.linkedin.com/jobs/view/sports-ticket-sales-representative-fixed-term-employee-ticket-business-department-location-kobe-c-m-at-rakuten-4267041951",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticket Sales Management System (Rakuten Internal)",
+              "CRM Tools (implied by 'newsletter distribution')",
+              "Data Analytics Tools (for sales status confirmation)"
+            ],
+            "job_postings": [
+              "Sports Ticket Sales Representative (Fixed-Term) - Ticket Business Department"
+            ],
+            "procurement_indicators": [
+              "Collaboration with system development departments",
+              "Usage of dedicated ticketing management systems",
+              "Gate management hardware/software interaction",
+              "Client: Rakuten Vissel Kobe Co., Ltd."
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Ticket Sales Representative)",
+            "Ticketing System Usage (Internal Rakuten Platform)",
+            "Data Analysis & Sales Optimization",
+            "Stadium Operations Integration",
+            "Cross-Departmental Collaboration (System Development)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 371,
+              "elapsed_seconds": 4.001026630401611
+            }
+          ],
+          "reasoning": "This job posting confirms the operational relationship between Rakuten and Vissel Kobe, specifically within the ticketing department. It reveals the use of a dedicated 'ticket sales management system' for data analysis, registration, and gate management. It also highlights active collaboration with 'system development departments,' indicating ongoing technical maintenance or potential upgrades to ticketing infrastructure."
+        }
+      ],
+      "total_input_tokens": 6058,
+      "total_output_tokens": 1382,
+      "estimated_cost_usd": 0.038903999999999994
+    },
+    "procurement_signals": [
+      "Vendor Partnership (Pia)",
+      "Digital Ticketing Implementation",
+      "Smart Gate Integration",
+      "Inbound/UX Optimization",
+      "Mobile Wallet Integration (Google/Apple Pay)",
+      "Job Posting (Sports Marketing Manager)",
+      "Data-Driven Marketing Strategy",
+      "Rakuten Ecosystem Integration",
+      "Fan LTV Maximization",
+      "Big Data Analytics (Fan Behavior)",
+      "Job Posting (Ticket Sales Representative)",
+      "Ticketing System Usage (Internal Rakuten Platform)",
+      "Data Analysis & Sales Optimization",
+      "Stadium Operations Integration",
+      "Cross-Departmental Collaboration (System Development)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Vissel Kobe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:09:47.267393"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.188135",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:08.061439"
+}

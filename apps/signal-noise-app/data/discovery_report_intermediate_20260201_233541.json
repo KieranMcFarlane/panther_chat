@@ -1,0 +1,6409 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "boca_juniors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "river_plate",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "racing_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "independiente",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "v\u00e9lez_sarsfield",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_lorenzo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estudiantes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lan\u00fas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rosario_central",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "godoy_cruz",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "talleres",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "defensa_y_justicia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "newell's_old_boys",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "flamengo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "palmeiras",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "corinthians",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "s\u00e3o_paulo_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "santos_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gr\u00eamio",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "internacional",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atl\u00e9tico_mineiro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cruzeiro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fluminense",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botafogo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vasco_da_gama",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fortaleza",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "arsenal",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aston_villa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bournemouth",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brentford",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brighton_&_hove_albion",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chelsea",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "crystal_palace",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "everton",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fulham",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ipswich_town",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leicester_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liverpool",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "manchester_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "manchester_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "newcastle_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nottingham_forest",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "southampton",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tottenham_hotspur",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "west_ham_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wolverhampton_wanderers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burnley",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leeds_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sunderland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "west_bromwich_albion",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sheffield_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norwich_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "watford",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "middlesbrough",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stoke_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "birmingham_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bolton_wanderers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "charlton_athletic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "derby_county",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queens_park_rangers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hull_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "preston_north_end",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "blackburn_rovers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bristol_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paris_saint-germain",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "olympique_de_marseille",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "olympique_lyonnais",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "as_monaco",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lille_osc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rc_lens",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stade_rennais",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ogc_nice",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rc_strasbourg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toulouse_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stade_brestois",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "le_havre_ac",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_lorient",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "clermont_foot",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_metz",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sm_caen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aj_auxerre",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bayern_m\u00fcnchen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "borussia_dortmund",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rb_leipzig",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bayer_04_leverkusen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vfb_stuttgart",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eintracht_frankfurt",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vfl_wolfsburg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "borussia_m\u00f6nchengladbach",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "schalke_04",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hamburger_sv",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "1._fc_n\u00fcrnberg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hertha_bsc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_augsburg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tsg_hoffenheim",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "werder_bremen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vfl_bochum",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "1._fc_k\u00f6ln",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mainz_05",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "juventus",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "inter",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ac_milan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "as_roma",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ssc_napoli",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lazio",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atalanta",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiorentina",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "torino",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bologna",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "udinese",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cagliari",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "genoa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hellas_verona",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sassuolo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "empoli",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "parma",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lecce",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "urawa_red_diamonds",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kashima_antlers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "yokohama_f._marinos",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "club_am\u00e9rica",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chivas_guadalajara",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tigres_uanl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "monterrey",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cruz_azul",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pumas_unam",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "le\u00f3n",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pachuca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toluca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "santos_laguna",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tijuana",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atlas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "quer\u00e9taro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ajax",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "psv_eindhoven",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "feyenoord",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "az_alkmaar",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_utrecht",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_twente",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nec_nijmegen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vitesse_arnhem",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sc_heerenveen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "go_ahead_eagles",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sparta_rotterdam",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rkc_waalwijk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pec_zwolle",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sl_benfica",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_porto",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sporting_cp",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sc_braga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vit\u00f3ria_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_famalic\u00e3o",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moreirense_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gil_vicente_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "boavista_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rio_ave_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estoril_praia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "casa_pia_ac",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_hilal",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_nassr",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ittihad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ahli",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_shabab",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_fateh",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ettifaq",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_taawoun",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_wehda",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "celtic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rangers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hearts",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aberdeen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hibernian",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dundee_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kilmarnock",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "st_mirren",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "motherwell",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ross_county",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "st_johnstone",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dundee_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jeonbuk_hyundai_motors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ulsan_hd_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_seoul",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "real_madrid",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_barcelona",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atl\u00e9tico_de_madrid",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sevilla_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "real_sociedad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "athletic_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "villarreal_cf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "real_betis",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "valencia_cf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "celta_vigo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "girona_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "getafe_cf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ca_osasuna",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "deportivo_alav\u00e9s",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rayo_vallecano",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rcd_mallorca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ud_las_palmas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "espanyol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "c\u00e1diz_cf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "real_zaragoza",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "galatasaray",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fenerbah\u00e7e",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "be?ikta?",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trabzonspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "adana_demirspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "konyaspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ba?ak?ehir_fk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "antalyaspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sivasspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "alanyaspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bursaspor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "g\u00f6ztepe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "columbus_crew",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_cincinnati",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philadelphia_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_england_revolution",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "orlando_city_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "d.c._united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "portland_timbers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austin_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nashville_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sporting_kansas_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "los_angeles_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "la_galaxy",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "inter_miami_cf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "seattle_sounders_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atlanta_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_york_city_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swansea_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cardiff_city",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "premier_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "efl_championship",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "laliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "serie_a",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bundesliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ligue_1",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eredivisie",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "primeira_liga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scottish_premiership",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "s\u00fcper_lig",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liga_mx",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brasileir\u00e3o_s\u00e9rie_a",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "primera_divisi\u00f3n_(argentina)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saudi_pro_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "j1_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "k_league_1",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "a-league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_super_league_(csl)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "russian_premier_league_(rpl)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belgian_pro_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ekstraklasa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_bundesliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swiss_super_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "danish_superliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "allsvenskan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liga_portugal_2",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "serie_b",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "2._bundesliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ligue_2",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "women's_super_league_(wsl)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nwsl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fifa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uefa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "conmebol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "concacaf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "caf",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "afc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ofc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "red_star_belgrade",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "partizan_belgrade",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vojvodina_novi_sad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dinamo_zagreb",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hajduk_split",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hnk_rijeka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ifk_g\u00f6teborg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malm\u00f6_ff",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "djurg\u00e5rdens_if",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aik_fotboll",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_copenhagen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "br\u00f8ndby_if",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_midtjylland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rapid_wien",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austria_wien",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "red_bull_salzburg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_basel",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "young_boys",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_z\u00fcrich",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anderlecht",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "club_brugge",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kaa_gent",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "legia_warsaw",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lech_pozna?",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pogo?_szczecin",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dynamo_kyiv",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shakhtar_donetsk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dnipro-1",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cska_moscow",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "spartak_moscow",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lokomotiv_moscow",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kaizer_chiefs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "orlando_pirates",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mamelodi_sundowns",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tp_mazembe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "esperance_de_tunis",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wydad_casablanca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "raja_casablanca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ahly_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zamalek_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pyramids_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "enyimba_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kano_pillars",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_merrikh",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_hilal_omdurman",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "persepolis_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "esteghlal_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sepahan_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_sadd_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_duhail_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_rayyan_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pohang_steelers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "suwon_samsung_bluewings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "incheon_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gamba_osaka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vissel_kobe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cerezo_osaka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_sydney_wanderers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_victory",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sydney_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "auckland_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wellington_phoenix",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colo-colo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "universidad_de_chile",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "universidad_cat\u00f3lica",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pe\u00f1arol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nacional",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cerro_porte\u00f1o",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "olimpia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "independiente_del_valle",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ldu_quito",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "emelec",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "deportivo_cali",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atl\u00e9tico_nacional",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "millonarios_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "deportivo_t\u00e1chira",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "caracas_fc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shanghai_port",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shandong_taishan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "beijing_guoan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "serbian_superliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "croatian_football_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_african_premier_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "egyptian_premier_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botola_pro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "persian_gulf_pro_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "qatar_stars_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ukrainian_premier_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tunisian_ligue_professionnelle_1",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigeria_professional_football_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "asian_football_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "egyptian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_african_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "football_kenya_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "umbro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_balance",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kappa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mitre",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_football_association_(fifa)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "asian_football_confederation_(afc)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "confederation_of_african_football_(caf)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "confederation_of_north,_central_america_and_caribbean_association_football_(concacaf)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_american_football_confederation_(conmebol)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oceania_football_confederation_(ofc)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "union_of_european_football_associations_(uefa)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "afghanistan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "albanian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "algerian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "andorran_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "angolan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anguilla_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "antigua_and_barbuda_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "argentine_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "armenian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aruba_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "football_federation_australia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "azerbaijan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahamas_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahrain_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bangladesh_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barbados_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belarus_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belgian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belize_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "benin_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bermuda_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bhutan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bolivian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botswana_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brazilian_football_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "british_virgin_islands_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brunei_darussalam_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bulgarian_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burkina_faso_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burundi_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cambodian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cameroonian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "canadian_soccer_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cape_verde_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cayman_islands_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "central_african_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chadian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chilean_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_taipei_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colombian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "comoros_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "congolese_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "congo_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "costa_rican_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "croatian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cuban_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cyprus_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "czech_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "danish_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "djibouti_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dominica_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dominican_republic_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ecuadorian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "egyptian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "el_salvador_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "english_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "equatorial_guinea_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eritrean_national_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estonian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eswatini_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ethiopian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "faroe_islands_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiji_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "finnish_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "french_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gabon_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gambia_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "georgian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "german_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ghana_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gibraltar_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "greek_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "grenada_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guatemalan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guinea_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guinea-bissau_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guyana_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "haitian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "honduran_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hong_kong_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hungarian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "icelandic_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indonesian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iran_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iraq_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "israel_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "italian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ivorian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jamaica_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "japan_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jordan_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kazakhstan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "football_kenya_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kosovo_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kuwait_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kyrgyz_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lao_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "latvian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lebanese_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lesotho_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liberian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "libyan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liechtenstein_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lithuanian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "luxembourg_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "macao_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "madagascar_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malawi_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malaysian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "maldives_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mali_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malta_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mauritanian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mauritius_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mexican_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moldovan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mongolian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "montenegrin_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moroccan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mozambique_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "myanmar_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "namibian_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nepal_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "netherlands_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_zealand_football",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nicaragua_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "niger_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigerian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_korean_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_macedonia_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norwegian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oman_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pakistan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "palestine_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panama_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "papua_new_guinea_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paraguayan_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peruvian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philippine_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "polish_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "portuguese_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "puerto_rico_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "qatar_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "romanian_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "russian_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rwandan_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_kitts_and_nevis_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_lucia_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_vincent_and_the_grenadines_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "samoa_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "boston_celtics",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "los_angeles_lakers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "golden_state_warriors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "miami_heat",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chicago_bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_york_knicks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dallas_mavericks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "denver_nuggets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "phoenix_suns",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philadelphia_76ers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_antonio_spurs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toronto_raptors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brooklyn_nets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cleveland_cavaliers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atlanta_hawks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "houston_rockets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "utah_jazz",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sacramento_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "minnesota_timberwolves",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "milwaukee_bucks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "portland_trail_blazers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_orleans_pelicans",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "memphis_grizzlies",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oklahoma_city_thunder",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "orlando_magic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indiana_pacers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "detroit_pistons",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "charlotte_hornets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "washington_wizards",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "real_madrid_baloncesto",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fc_barcelona_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anadolu_efes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fenerbah\u00e7e_beko",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "olympiacos",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panathinaikos",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cska_moscow",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "maccabi_tel_aviv",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "as_monaco_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "virtus_bologna",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "milano_(olimpia_milano)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bayern_munich",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "unicaja_m\u00e1laga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "valencia_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "joventut_badalona",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gran_canaria",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bilbao_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "baxi_manresa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "basket_zaragoza",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cb_murcia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "obradoiro_cab",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "girona_b\u00e0squet",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dar\u00fc??afaka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "p?nar_kar??yaka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bursaspor_basketbol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "galatasaray_basketbol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "be?ikta?_basketbol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "t\u00fcrk_telekom_bk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bah\u00e7e?ehir_koleji",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tofa?_bursa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "petkim_spor",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "merkezefendi_belediyesi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "asvel_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nanterre_92",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "le_mans_sarthe_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cholet_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jl_bourg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "limoges_csp",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "strasbourg_ig",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paris_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bcm_gravelines-dunkerque",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "\u00e9lan_chalon",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brose_bamberg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "alba_berlin",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ratiopharm_ulm",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "basketball_l\u00f6wen_braunschweig",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bg_g\u00f6ttingen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mitteldeutscher_bc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ewe_baskets_oldenburg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "telekom_baskets_bonn",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rasta_vechta",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "crailsheim_merlins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dinamo_sassari",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "reyer_venezia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pallacanestro_varese",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aquila_basket_trento",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pallacanestro_brescia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vanoli_cremona",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pallacanestro_reggiana",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_basket_brindisi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "universo_treviso_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scafati_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "perth_wildcats",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sydney_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "adelaide_36ers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brisbane_bullets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tasmania_jackjumpers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_zealand_breakers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "illawarra_hawks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_east_melbourne_phoenix",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cairns_taipans",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liaoning_flying_leopards",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guangdong_southern_tigers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shanghai_sharks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zhejiang_golden_bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "beijing_ducks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "xinjiang_flying_tigers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shandong_heroes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jiangsu_dragons",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shenzhen_leopards",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guangzhou_loong_lions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "\u008ealgiris_kaunas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_rytas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_nept?nas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_wolves",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lietkabelis_panev?\u009eys",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_\u008aiauliai",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_juventus_utena",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aek_athens",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aris_thessaloniki",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peristeri_bc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "promitheas_patras",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paok_thessaloniki",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kolossos_rodou",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lavrio_bc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "partizan_belgrade",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "crvena_zvezda",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mega_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "budu?nost_podgorica",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cedevita_olimpija",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cibona_zagreb",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zadar",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "unics_kazan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lokomotiv_kuban",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zenit_st._petersburg",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "khimki_moscow",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "avtodor_saratov",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nizhny_novgorod",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "enisey_krasnoyarsk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "flamengo_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "franca_basquete",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "s\u00e3o_paulo_fc_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "minas_t\u00eanis_clube",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bauru_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paulistano",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pinheiros",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ahly_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zamalek_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "petro_de_luanda",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "primeiro_de_agosto",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "as_douanes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "espoir_bc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "\u00e9toile_sportive_du_sahel",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "us_monastir",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_miguel_beermen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barangay_ginebra_san_miguel",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "magnolia_hotshots",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tnt_tropang_giga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "meralco_bolts",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rain_or_shine_elasto_painters",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ryukyu_golden_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chiba_jets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "alvark_tokyo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nagoya_diamond_dolphins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kawasaki_brave_thunders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "utsunomiya_brex",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shimane_susanoo_magic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "seoul_sk_knights",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "busan_kt_sonicboom",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anyang_kgc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "goyang_orions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wonju_db_promy",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jeonju_kcc_egis",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hapoel_jerusalem",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hapoel_holon",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hapoel_tel_aviv",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bnei_herzliya",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ironi_nes_ziona",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estudiantes_de_bah\u00eda_blanca",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "quimsa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_lorenzo_de_almagro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "boca_juniors_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "instituto_de_c\u00f3rdoba",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pe\u00f1arol_de_mar_del_plata",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "atenas_de_c\u00f3rdoba",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_rayyan_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_sadd_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_gharafa_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_shamal_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_wakrah_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nba",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "euroleague",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liga_acb_(spain)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lnb_pro_a_(france)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bbl_(germany)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lega_basket_serie_a_(italy)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bsl_(t\u00fcrkiye)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cba_(china)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nbl_(australia)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wnba",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "b1_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lkl_(lithuanian_basketball_league)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_vojvodina",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_borac_?a?ak",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_dynamic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_split",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_\u008aibenik",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kk_osijek",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hammarby_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norrk\u00f6ping_dolphins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "j\u00e4mtland_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_nordsj\u00e6lland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bakken_bears",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "team_fog_n\u00e6stved",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lask_linz_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oberwart_gunners",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kapfenberg_bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "servette_star",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fribourg_olympic",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lions_de_gen\u00e8ve",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "club_brugge_basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oostende_bc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "antwerp_giants",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mks_d?browa_g\u00f3rnicza",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anwil_w?oc?awek",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stal_ostr\u00f3w_wielkopolski",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bc_donetsk",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "budivelnyk_kyiv",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dnipro",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "avtodor_volgograd",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "parma_perm",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "samara",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "orlando_pirates_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cape_town_tigers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "soweto_panthers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rivers_hoopers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kwara_falcons",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kano_pillars_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ferrovi\u00e1rio_de_maputo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "costa_do_sol",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "desportivo_de_maputo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "city_oilers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kcca_panthers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "updf_tomahawks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al-nasr_benghazi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al-ittihad_tripoli",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sharjah_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_wasl_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shabab_al_ahli",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_wahda_damascus",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_jaish_damascus",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ittihad_aleppo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_shorta_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_karkh_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_naft_sc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_ain_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "al_bataeh_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_boomers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sydney_flames",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "townsville_fire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "caxias_do_sul_basquete",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "corinthians_basquete",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "unifacisa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "club_atl\u00e9tico_goes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malv\u00edn",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aguada",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "deportivo_san_jos\u00e9",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "olimpia_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "libertad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "deportivo_cali",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "titanes_de_barranquilla",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "caribbean_storm",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trotamundos_de_carabobo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guaros_de_lara",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cocodrilos_de_caracas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "piratas_de_la_guaira",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "blackwater_bossing",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nlex_road_warriors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "converge_fiberxers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "terrafirma_dyip",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kyiv-basket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cherkaski_mavpy",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "basketligaen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_basketball_bundesliga",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swiss_basketball_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bnxt_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "plk_(polish_basketball_league)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigerian_premier_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "basketball_national_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mozambican_basketball_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uae_basketball_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "syrian_basketball_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iraqi_basketball_premier_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "diadora",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "spalding",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "molten",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "international_basketball_federation_(fiba)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiba_africa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiba_americas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiba_asia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiba_europe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiba_oceania",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "afghanistan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "albanian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "algerian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "american_samoa_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "andorran_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "angolan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "antigua_and_barbuda_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "argentine_basketball_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "armenian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aruba_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "australian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "azerbaijan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahamas_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahrain_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bangladesh_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barbados_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belarus_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belgian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belize_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "benin_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bermuda_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bhutan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bolivian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botswana_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brazilian_basketball_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "british_virgin_islands_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brunei_darussalam_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bulgarian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burkina_faso_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burundi_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cambodian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cameroonian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "canadian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cape_verde_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cayman_islands_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "central_african_republic_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chadian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chilean_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_taipei_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colombian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "comoros_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "congolese_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "congo_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "costa_rican_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "croatian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cuban_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cyprus_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "czech_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "danish_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "djibouti_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dominica_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dominican_republic_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ecuadorian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "egyptian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "el_salvador_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "equatorial_guinea_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eritrean_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estonian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eswatini_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ethiopian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiji_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "finnish_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "french_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gabon_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gambia_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "georgian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "german_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ghana_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gibraltar_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "greek_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "grenada_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guam_basketball_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guatemalan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guinea_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guinea-bissau_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guyana_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "haitian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "honduran_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hong_kong_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hungarian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "icelandic_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indonesian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iran_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iraq_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "irish_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "israel_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "italian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ivorian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jamaica_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "japan_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jordan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kazakhstan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kenya_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kosovo_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kuwait_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kyrgyz_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lao_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "latvian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lebanese_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lesotho_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liberian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "libyan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "liechtenstein_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lithuanian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "luxembourg_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "macao_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "madagascar_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malawi_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malaysian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "maldives_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mali_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malta_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mauritanian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mauritius_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mexican_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moldovan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mongolian_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "montenegrin_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moroccan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mozambique_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "myanmar_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "namibian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nepal_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "netherlands_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_zealand_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nicaragua_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "niger_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigerian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_korean_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_macedonia_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norwegian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oman_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pakistan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "palestine_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panama_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "papua_new_guinea_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paraguayan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peruvian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philippine_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "polish_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "portuguese_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "puerto_rico_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "qatar_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "romanian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "russian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rwandan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_kitts_and_nevis_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_lucia_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saint_vincent_and_the_grenadines_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "samoa_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_marino_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "s\u00e3o_tom\u00e9_and_pr\u00edncipe_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saudi_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scottish_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "senegalese_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "basketball_federation_of_serbia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "seychelles_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sierra_leone_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "singapore_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "slovak_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "slovenian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "solomon_islands_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "somali_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_african_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_sudan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "spanish_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sri_lanka_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sudan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "suriname_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swedish_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swiss_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "syrian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tahiti_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tajikistan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tanzanian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "thai_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "timor-leste_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "togolese_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tonga_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trinidad_and_tobago_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tunisian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "turkish_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "turkmenistan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "turks_and_caicos_islands_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uganda_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ukrainian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "united_arab_emirates_basketball_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "usa_basketball",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uruguayan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uzbekistan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vanuatu_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "venezuelan_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vietnam_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "virgin_islands_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "yemen_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zambian_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zimbabwe_basketball_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saracens",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "harlequins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leicester_tigers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "exeter_chiefs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bath_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northampton_saints",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sale_sharks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bristol_bears",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gloucester_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "newcastle_falcons",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stade_toulousain",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "la_rochelle",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "racing_92",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stade_fran\u00e7ais",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "clermont_auvergne",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toulon",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bordeaux_b\u00e8gles",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "castres_olympique",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leinster",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "munster",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ulster",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "connacht",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "glasgow_warriors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "edinburgh_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cardiff_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ospreys",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scarlets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "benetton_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zebre_parma",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sharks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "stormers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "crusaders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "blues",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chiefs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hurricanes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "highlanders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bayonne",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "section_paloise",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lyon",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "montpellier_h\u00e9rault_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "perpignan_(usap)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vannes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "agen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aix-en-provence_(provence_rugby)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aurillac",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "b\u00e9ziers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "biarritz_olympique",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brive",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "carcassonne",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colomiers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dax",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "grenoble",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dragons_rfc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "black_lion",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toyota_cheetahs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "houston_sabercats",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "seattle_seawolves",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_england_free_jacks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_diego_legion",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "old_glory_dc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_atl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nola_gold",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dallas_jackals",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "utah_warriors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chicago_hounds",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toronto_arrows",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saitama_wild_knights",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brave_lupus_tokyo",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kobelco_kobe_steelers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tokyo_sungoliath",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toyota_verblitz",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "yokohama_canon_eagles",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kubota_spears",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mitsubishi_sagamihara_dynaboars",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "shizuoka_blue_revs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hanazono_kintetsu_liners",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "act_brumbies",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queensland_reds",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nsw_waratahs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_force",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fijian_drua",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moana_pasifika",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pumas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "griquas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "blue_bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "albi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bourg-en-bresse",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bourgoin",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chamb\u00e9ry",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "marcq-en-baroeul",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "massy",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "narbonne",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nice",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "niort",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "p\u00e9rigueux",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rennes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rouen",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "suresnes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tarbes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cornish_pirates",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ealing_trailfinders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bedford_blues",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "doncaster_knights",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nottingham_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jersey_reds",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "coventry_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hartpury_rfc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "london_scottish",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ampthill_rufc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "caldy_rfc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinnor_rfc",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mie_honda_heat",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ricoh_black_rams",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "green_rockets_tokatsu",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toshiba_brave_lupus",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_rebels",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "aironi_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_viadana",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "petrarca_padova",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mogliano_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_rovigo_delta",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colorno_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "valorugby_emilia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_lyons",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiamme_oro_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_calvisano",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_parabiago",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hawke\u0092s_bay_magpies",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bay_of_plenty_steamers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "waikato",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "canterbury",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wellington_lions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nrl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "super_league",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "top_14",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "premiership_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "united_rugby_championship",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "super_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "japan_rugby_league_one",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "major_league_rugby_(mlr)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "world_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "asia_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_africa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_europe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oceania_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rugby_americas_north",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sudam\u00e9rica_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "algerian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "american_samoa_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "andorran_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "argentine_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "australian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "azerbaijan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahamas_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barbados_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belgian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bermuda_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botswana_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brazilian_rugby_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "british_virgin_islands_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brunei_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bulgarian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burkina_faso_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burundi_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cambodian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "canadian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cayman_islands_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chilean_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_rugby_football_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chinese_taipei_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colombian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cook_islands_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "costa_rican_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "croatian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cyprus_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "czech_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "democratic_republic_of_congo_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "danish_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "egyptian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "england_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eswatini_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiji_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "finnish_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "french_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "georgian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "german_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ghana_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guam_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guatemalan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guyana_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hong_kong_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hungarian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indian_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indonesian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "iranian_rugby_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "irish_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "israel_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "italian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ivory_coast_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jamaica_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "japan_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jordan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kazakhstan_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kenya_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "korea_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kyrgyzstan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lao_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "latvian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lebanese_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lesotho_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lithuanian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "luxembourg_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "madagascar_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malaysian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mali_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malta_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mauritius_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mexican_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moldovan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "monaco_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mongolian_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "montenegro_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moroccan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "namibian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nepal_rugby_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "netherlands_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_zealand_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigerian_rugby_football_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "niue_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norwegian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pakistan_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panama_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "papua_new_guinea_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "paraguayan_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peruvian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philippine_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "polish_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "portuguese_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "qatar_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "romanian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "russian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rwandan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "samoa_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scottish_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "senegalese_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "serbian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "singapore_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "slovak_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "slovenian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "solomon_islands_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_african_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "spanish_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sri_lanka_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "st._lucia_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "st._vincent_and_the_grenadines_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swedish_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swiss_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "syrian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tanzanian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "thai_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "togo_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tonga_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trinidad_and_tobago_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tunisian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "turkish_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uganda_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ukrainian_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "united_arab_emirates_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "usa_rugby",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uruguayan_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uzbekistan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vanuatu_rugby_football_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "venezuelan_rugby_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wales_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zambian_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zimbabwe_rugby_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chennai_super_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mumbai_indians",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kolkata_knight_riders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "royal_challengers_bengaluru",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rajasthan_royals",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sunrisers_hyderabad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "delhi_capitals",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "punjab_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lucknow_super_giants",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gujarat_titans",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sydney_sixers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sydney_thunder",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "perth_scorchers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_stars",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "melbourne_renegades",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "adelaide_strikers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brisbane_heat",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hobart_hurricanes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "islamabad_united",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "karachi_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lahore_qalandars",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "multan_sultans",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peshawar_zalmi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "quetta_gladiators",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "birmingham_phoenix",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "london_spirit",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "manchester_originals",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northern_superchargers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oval_invincibles",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "southern_brave",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trent_rockets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "welsh_fire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "somerset",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "yorkshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "surrey",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lancashire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "essex",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hampshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kent",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "middlesex",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "warwickshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nottinghamshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "durham",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sussex",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "worcestershire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gloucestershire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leicestershire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "derbyshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "glamorgan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northamptonshire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "victoria",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_south_wales",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queensland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_australia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_australia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tasmania",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mumbai",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "delhi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "karnataka",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tamil_nadu",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gujarat",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "maharashtra",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "punjab",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bengal",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hyderabad",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saurashtra",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rajasthan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vidarbha",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "baroda",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uttar_pradesh",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "andhra",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kerala",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "auckland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "wellington",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "canterbury",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "otago",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "central_districts",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northern_districts",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "eastern_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kwazulu-natal",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northerns",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "free_state",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "boland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "border",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gauteng",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "central_punjab",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "southern_punjab",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sindh",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "khyber_pakhtunkhwa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "balochistan",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "northern",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barbados",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jamaica",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "trinidad_&_tobago",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guyana",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "windward_islands",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "leeward_islands",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dhaka_metropolis",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rajshahi_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "khulna_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chittagong_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sylhet_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "barisal_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rangpur_division",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "central_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "southern_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_western_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "north_central_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uva_province",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colts_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tamil_union_c&ac",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sinhalese_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nondescripts_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "moors_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bloomfield_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "burgher_recreation_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "galle_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ragama_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chilaw_marians_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "badureliya_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panadura_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kurunegala_youth_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "antonians_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sebastianites_c&ac",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kandy_customs_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "police_sports_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "negombo_cricket_club",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ipl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bbl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "psl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cpl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sa20",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "the_hundred_(men)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "major_league_cricket_(mlc)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ilt20",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bpl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "lpl",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ranji_trophy",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sheffield_shield",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "county_championship",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "women's_premier_league_(wpl)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "international_cricket_council_(icc)",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "afghanistan_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_australia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bangladesh_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "england_and_wales_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "board_of_control_for_cricket_in_india",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_ireland",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_zealand_cricket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pakistan_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_south_africa",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sri_lanka_cricket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_west_indies",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "zimbabwe_cricket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "argentine_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "austrian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahamas_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bahrain_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belgian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "belize_national_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bermuda_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bhutan_cricket_council_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "botswana_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "brazilian_cricket_confederation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "bulgarian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_association_of_cambodia",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cameroon_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cricket_canada",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cayman_islands_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "china_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cook_islands_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "croatian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "cyprus_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "czech_cricket_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "danish_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "estonian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "fiji_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "finnish_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "french_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "german_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "gibraltar_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "greek_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "guernsey_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hong_kong_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "hungarian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "indonesia_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "isle_of_man_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "israel_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "italian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "japan_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "jersey_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kenya_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "kuwait_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "luxembourg_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malawi_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malaysian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "maldives_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "malta_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mexico_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "mozambique_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "namibia_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nepal_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "netherlands_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nigerian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "norwegian_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "oman_cricket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "panama_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "papua_new_guinea_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "peruvian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philippine_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "qatar_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "romanian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "rwandan_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "samoa_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "saudi_arabian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "scottish_cricket_union",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "serbian_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "sierra_leone_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "singapore_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "slovenian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "spanish_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "suriname_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swedish_cricket_federation",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "swiss_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tanzanian_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "thai_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "turkish_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "uganda_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "united_arab_emirates_cricket_board",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "united_states_of_america_cricket",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vanuatu_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "africa_cricket_association",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "icc_americas",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "asian_cricket_council",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "icc_east_asia-pacific",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "icc_europe",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "act_comets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "act_meteors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_south_wales_blues",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_south_wales_breakers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_south_wales_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queensland_bulls",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queensland_fire",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "queensland_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_australia_redbacks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_australia_scorpions",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "south_australia_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tasmania_roar",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tasmania_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tasmania_tigers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "victoria_bushrangers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "victoria_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "victoria_spirit",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_australia_second_xi",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_australia_warriors",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "western_australia_women",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "toronto_maple_leafs",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "montreal_canadiens",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "boston_bruins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_york_rangers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "chicago_blackhawks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "detroit_red_wings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "pittsburgh_penguins",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "tampa_bay_lightning",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "edmonton_oilers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "vancouver_canucks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "anaheim_ducks",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "buffalo_sabres",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "calgary_flames",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "carolina_hurricanes",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "colorado_avalanche",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "columbus_blue_jackets",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "dallas_stars",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "florida_panthers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "los_angeles_kings",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "minnesota_wild",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "nashville_predators",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_jersey_devils",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "new_york_islanders",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "ottawa_senators",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "philadelphia_flyers",
+      "reason": "'list' object has no attribute 'items'"
+    },
+    {
+      "entity_id": "san_jose_sharks",
+      "reason": "'list' object has no attribute 'items'"
+    }
+  ],
+  "start_time": "2026-02-01T23:35:41.503366",
+  "last_checkpoint_time": "2026-02-01T23:35:41.928411"
+}

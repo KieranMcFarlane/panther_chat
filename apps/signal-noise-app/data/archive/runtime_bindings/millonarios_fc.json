@@ -1,0 +1,118 @@
+{
+  "entity_id": "millonarios_fc",
+  "entity_name": "Millonarios FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "millonarios.com.co",
+    "tiendamillonarios.com.co",
+    "entradasmillonarios.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "millonarios_fc",
+      "entity_name": "Millonarios FC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://tiendamillonarios.com.co",
+        "https://entradasmillonarios.com",
+        "https://millonarios.com.co"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Millonarios FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:56:26.260009",
+          "domain_explored": "https://millonarios.com.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:56:41.016318",
+          "domain_explored": "https://tiendamillonarios.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or similar custom SaaS based on URL structure /products/ and /collections/)",
+              "Payment Gateway (implied by pricing/offers)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active merchandise retail operations",
+              "Inventory logistics for 'Colecci\u00f3n Falcao'",
+              "Back-to-school campaign logistics ('Regreso a Clases')"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandising Operations",
+            "Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 282,
+              "elapsed_seconds": 8.07115125656128
+            }
+          ],
+          "reasoning": "The content confirms Millonarios FC operates an active e-commerce channel (tiendamillonarios.com.co) for merchandise. While this is not a direct procurement signal for enterprise software, it indicates a functional area requiring inventory management, logistics, and payment processing vendors. The presence of a 'Colecci\u00f3n Falcao' and specific product SKUs suggests active supply chain management."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:57:27.163538",
+          "domain_explored": "https://entradasmillonarios.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1362,
+      "total_output_tokens": 282,
+      "estimated_cost_usd": 0.008316
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Millonarios FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:57:27.168068"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.193034",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:40:34.597723"
+}

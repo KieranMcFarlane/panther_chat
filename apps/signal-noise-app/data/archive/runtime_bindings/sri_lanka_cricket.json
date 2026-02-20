@@ -1,0 +1,448 @@
+{
+  "entity_id": "sri_lanka_cricket",
+  "entity_name": "Sri Lanka Cricket",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "srilankacricket.lk",
+    "slcscorers.com",
+    "icc-cricket.com",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lk.linkedin.com/jobs/view/assistant-manager-umpire-administration-operations-at-sri-lanka-cricket-4021713580",
+      "https://lk.linkedin.com/jobs/view/coaching-opportunities-%E2%80%93-sri-lanka-men%E2%80%99s-national-team-at-sri-lanka-cricket-4277192291",
+      "https://lk.linkedin.com/jobs/view/coordinator-to-international-cricket-at-sri-lanka-cricket-3533340214",
+      "https://lk.linkedin.com/jobs/view/senior-manager-%E2%80%93-brain-centre-at-sri-lanka-cricket-4059806629",
+      "https://lk.linkedin.com/jobs/view/head-coach-women-s-a-team-at-sri-lanka-cricket-4047453487",
+      "https://lk.linkedin.com/jobs/view/coach-educator-at-sri-lanka-cricket-4256589167"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sri_lanka_cricket",
+      "entity_name": "Sri Lanka Cricket",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.38,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.14,
+        0.2,
+        0.26,
+        0.32,
+        0.38
+      ],
+      "explored_domains": [
+        "https://lk.linkedin.com/jobs/view/head-coach-women-s-a-team-at-sri-lanka-cricket-4047453487",
+        "https://srilankacricket.lk",
+        "https://lk.linkedin.com/jobs/view/assistant-manager-umpire-administration-operations-at-sri-lanka-cricket-4021713580",
+        "https://icc-cricket.com",
+        "https://lk.linkedin.com/jobs/view/coaching-opportunities-%E2%80%93-sri-lanka-men%E2%80%99s-national-team-at-sri-lanka-cricket-4277192291",
+        "https://slcscorers.com",
+        "https://lk.linkedin.com/jobs/view/coordinator-to-international-cricket-at-sri-lanka-cricket-3533340214",
+        "https://espncricinfo.com",
+        "https://lk.linkedin.com/jobs/view/senior-manager-%E2%80%93-brain-centre-at-sri-lanka-cricket-4059806629"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Technology Partnership Press Release",
+        "Infrastructure Development Media Release",
+        "Event Management & Logistics",
+        "High-Profile Sports Sponsorship",
+        "Domestic Cricket Operations Expansion",
+        "Workforce Administration & Logistics",
+        "Performance Evaluation Systems",
+        "Training & Development Procurement",
+        "High-Performance Technical Staff Procurement",
+        "Sports Technology & Analytics Integration",
+        "Elite Athlete Development Infrastructure",
+        "Specialized Contract-based Employment",
+        "International Touring Operations & Logistics",
+        "Strategic Budget Formulation for Tours",
+        "Cross-Departmental Marketing Coordination",
+        "Administrative Technology Procurement (Office Automation)",
+        "Sports Data Analytics Infrastructure",
+        "High-Performance Technology Integration",
+        "Strategic Operations Management",
+        "Research & Development Procurement",
+        "Elite Women's Cricket Development Infrastructure",
+        "High-Performance Facility Utilization",
+        "International Touring Logistics & Operations",
+        "Technical Staff Procurement (Contract Role)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sri Lanka Cricket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:18:09.872642",
+          "domain_explored": "https://srilankacricket.lk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "IFS (Enterprise Software / Industrial AI)",
+              "Industrial AI"
+            ],
+            "job_postings": [
+              "Batting Coach (Vikram Rathour)",
+              "Fast Bowling Consultant (Lasith Malinga)"
+            ],
+            "procurement_indicators": [
+              "Partnership with IFS for ICC Men's T20 World Cup 2026",
+              "Ongoing progress on Jaffna International Cricket Stadium (JICS)",
+              "ICC T20 World Cup Trophy Tour execution",
+              "Pakistan Tour 'Rebuilding Sri Lanka' program logistics"
+            ]
+          },
+          "patterns_found": [
+            "Technology Partnership Press Release",
+            "Infrastructure Development Media Release",
+            "Event Management & Logistics",
+            "High-Profile Sports Sponsorship"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 325,
+              "elapsed_seconds": 6.702041864395142
+            }
+          ],
+          "reasoning": "The content contains explicit procurement signals via two specific press releases: 1) A confirmed partnership with 'IFS' (an enterprise software/industrial AI firm) for the T20 World Cup, indicating active investment in technology solutions. 2) A media release confirming progress on the 'Jaffna International Cricket Stadium', indicating ongoing infrastructure procurement or vendor engagement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:18:25.456624",
+          "domain_explored": "https://slcscorers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Applications (iOS/Android)",
+              "Content Management System (CMS)",
+              "Social Media Integration (Facebook, Twitter, WhatsApp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "App Store & Play Store Links (Implies mobile development vendor/app contract)",
+              "Live Match Loading Interface (Implies scoring software/data feed vendor)",
+              "News & Media Management (Implies content licensing or management tools)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Infrastructure Operations",
+            "Mobile Application Distribution",
+            "Social Media Integration",
+            "Content Management System"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 326,
+              "elapsed_seconds": 11.321711778640747
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated digital platform (slcscorers.com) for match results and news, indicating an active digital ecosystem. The presence of 'Play Store' and 'App Store' download buttons confirms investment in mobile application development. While this page itself is informational, the existence of the app and the CMS suggests ongoing requirements for software maintenance, development, and potentially hosting services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:18:35.841156",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Tournament Fixture Listings",
+            "Squad Announcements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 202,
+              "elapsed_seconds": 4.547691106796265
+            }
+          ],
+          "reasoning": "The content is sourced from the ICC's global website (icc-cricket.com), which functions as a media body for international cricket rather than a procurement portal for the Sri Lanka Cricket (SLC) board. The text focuses exclusively on the T20 World Cup 2026 squads, fixtures, and general tournament news. There is no mention of SLC's internal operations, technology vendors, or procurement needs. This source is irrelevant for identifying SLC's procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:18:39.927538",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:18:48.668845",
+          "domain_explored": "https://lk.linkedin.com/jobs/view/assistant-manager-umpire-administration-operations-at-sri-lanka-cricket-4021713580",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Tracking Systems",
+              "HR Management Systems (HRMS)",
+              "Electronic Communication Platforms"
+            ],
+            "job_postings": [
+              "Assistant Manager - Umpire Administration/Operations (Mid-Senior level)"
+            ],
+            "procurement_indicators": [
+              "Operational Logistics (Accommodation, Transportation)",
+              "Training Programs & Workshops",
+              "Umpire and Referee Evaluation Services",
+              "Tournament Management Software"
+            ]
+          },
+          "patterns_found": [
+            "Domestic Cricket Operations Expansion",
+            "Workforce Administration & Logistics",
+            "Performance Evaluation Systems",
+            "Training & Development Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1563,
+              "output_tokens": 312,
+              "elapsed_seconds": 4.435123920440674
+            }
+          ],
+          "reasoning": "The job posting for an Assistant Manager in Umpire Administration confirms active investment in domestic cricket operations. It signals a need for supporting infrastructure for logistics (travel/accommodation), training workshops, and performance tracking systems, indicating procurement potential for HR management tools, logistics services, and training vendors."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:18:58.390407",
+          "domain_explored": "https://lk.linkedin.com/jobs/view/coaching-opportunities-%E2%80%93-sri-lanka-men%E2%80%99s-national-team-at-sri-lanka-cricket-4277192291",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Analysis Software",
+              "Performance Tracking Systems",
+              "Talent Identification Platforms"
+            ],
+            "job_postings": [
+              "National Men's Team - Batting Coach",
+              "National Men's Team - Fielding Coach",
+              "National Men's Team - Spin Bowling Coach"
+            ],
+            "procurement_indicators": [
+              "Contract-based remuneration packages",
+              "Requirement for Level 3 Coach Accreditation",
+              "Demand for technology proficiency in coaching",
+              "Talent identification process implementation"
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Technical Staff Procurement",
+            "Sports Technology & Analytics Integration",
+            "Elite Athlete Development Infrastructure",
+            "Specialized Contract-based Employment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 358,
+              "elapsed_seconds": 6.313453197479248
+            }
+          ],
+          "reasoning": "The job posting explicitly outlines the recruitment for specialized coaching roles (Batting, Fielding, Spin Bowling) for the Men's National Team. The explicit requirement for 'Compulsory knowledge and expertise in technology in the modern game' and 'skill analysis' confirms a direct procurement need for technical personnel capable of utilizing sports analysis software and tools, signaling investment in high-performance infrastructure."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:19:08.217969",
+          "domain_explored": "https://lk.linkedin.com/jobs/view/coordinator-to-international-cricket-at-sri-lanka-cricket-3533340214",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office Suite (Excel, Word, PowerPoint)",
+              "Email & Communication Platforms",
+              "Budgeting & Financial Software"
+            ],
+            "job_postings": [
+              "Coordinator to International Cricket"
+            ],
+            "procurement_indicators": [
+              "Budget formulation for international tours (Logistics & Travel procurement)",
+              "Coordination with Marketing Department (Event Services procurement)",
+              "Requirement for tech-savvy staff (Digital Tool adoption)"
+            ]
+          },
+          "patterns_found": [
+            "International Touring Operations & Logistics",
+            "Strategic Budget Formulation for Tours",
+            "Cross-Departmental Marketing Coordination",
+            "Administrative Technology Procurement (Office Automation)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1725,
+              "output_tokens": 349,
+              "elapsed_seconds": 3.348306179046631
+            }
+          ],
+          "reasoning": "The job description for a 'Coordinator to International Cricket' reveals significant procurement responsibilities, specifically in 'formulating budgets for Inbound and Outbound international tours' and coordinating with the Marketing Department. This indicates active spending cycles for logistics, travel, and event management. Additionally, the requirement for 'strong computer literacy' and being 'tech-savvy' suggests ongoing administrative software needs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:19:17.294270",
+          "domain_explored": "https://lk.linkedin.com/jobs/view/senior-manager-%E2%80%93-brain-centre-at-sri-lanka-cricket-4059806629",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Data Analytics Platforms",
+              "Performance Monitoring Systems",
+              "Business Intelligence (BI) Tools",
+              "Project Management Software"
+            ],
+            "job_postings": [
+              "Senior Manager \u2013 Brain Centre (Strategic Planning & Tech Integration)"
+            ],
+            "procurement_indicators": [
+              "Implementation of new technologies",
+              "Research and development initiatives",
+              "Centralized operations infrastructure setup",
+              "Data-driven strategy tools"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data Analytics Infrastructure",
+            "High-Performance Technology Integration",
+            "Strategic Operations Management",
+            "Research & Development Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1804,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.6131792068481445
+            }
+          ],
+          "reasoning": "The posting for a 'Senior Manager \u2013 Brain Centre' confirms a strategic shift towards data-driven decision-making and centralized operations. This role requires oversight of 'new technologies' and 'sports data analytics,' indicating immediate procurement needs for software platforms (analytics, BI), hardware (performance tracking devices), and potentially consulting services for R&D. It moves beyond simple hiring into structural technology investment."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:19:29.679934",
+          "domain_explored": "https://lk.linkedin.com/jobs/view/head-coach-women-s-a-team-at-sri-lanka-cricket-4047453487",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Management Systems",
+              "General IT Competency (Office/Productivity)"
+            ],
+            "job_postings": [
+              "Head Coach - Women's 'A' Team (Contract, Mid-Senior level)"
+            ],
+            "procurement_indicators": [
+              "Contract employment for specialized technical roles",
+              "Budget allocation for international travel and touring logistics",
+              "Investment in indoor and outdoor practice facilities",
+              "Integration with High-Performance Centre operations"
+            ]
+          },
+          "patterns_found": [
+            "Elite Women's Cricket Development Infrastructure",
+            "High-Performance Facility Utilization",
+            "International Touring Logistics & Operations",
+            "Technical Staff Procurement (Contract Role)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1876,
+              "output_tokens": 328,
+              "elapsed_seconds": 6.19308876991272
+            }
+          ],
+          "reasoning": "The job posting confirms active procurement of technical personnel for the Women's 'A' Team, indicating investment in the player pathway infrastructure. It highlights specific requirements for facility access, international travel logistics, and coordination with the High-Performance Centre, reinforcing the operational expansion patterns seen in previous iterations."
+        }
+      ],
+      "total_input_tokens": 12851,
+      "total_output_tokens": 2544,
+      "estimated_cost_usd": 0.076713
+    },
+    "procurement_signals": [
+      "Technology Partnership Press Release",
+      "Infrastructure Development Media Release",
+      "Event Management & Logistics",
+      "High-Profile Sports Sponsorship",
+      "Domestic Cricket Operations Expansion",
+      "Workforce Administration & Logistics",
+      "Performance Evaluation Systems",
+      "Training & Development Procurement",
+      "High-Performance Technical Staff Procurement",
+      "Sports Technology & Analytics Integration",
+      "Elite Athlete Development Infrastructure",
+      "Specialized Contract-based Employment",
+      "International Touring Operations & Logistics",
+      "Strategic Budget Formulation for Tours",
+      "Cross-Departmental Marketing Coordination",
+      "Administrative Technology Procurement (Office Automation)",
+      "Sports Data Analytics Infrastructure",
+      "High-Performance Technology Integration",
+      "Strategic Operations Management",
+      "Research & Development Procurement",
+      "Elite Women's Cricket Development Infrastructure",
+      "High-Performance Facility Utilization",
+      "International Touring Logistics & Operations",
+      "Technical Staff Procurement (Contract Role)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sri Lanka Cricket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:19:29.680684"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299552",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:59.588757"
+}

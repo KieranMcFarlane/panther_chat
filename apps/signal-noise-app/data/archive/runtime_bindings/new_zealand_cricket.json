@@ -1,0 +1,369 @@
+{
+  "entity_id": "new_zealand_cricket",
+  "entity_name": "New Zealand Cricket",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "supersmash.co.nz",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/commercial-partnerships-manager-at-new-zealand-cricket-4216817599",
+      "https://nz.linkedin.com/jobs/view/head-of-finance-strategy-at-new-zealand-cricket-4311342463",
+      "https://nz.linkedin.com/jobs/view/chief-marketing-commercial-officer-new-zealand-cricket-at-elevate-talent-4043369081",
+      "https://nz.linkedin.com/jobs/view/chief-strategy-officer-new-zealand-cricket-at-elevate-talent-4043362938",
+      "https://nz.linkedin.com/jobs/view/premier-mens-head-coach-at-north-shore-cricket-4212894738"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_zealand_cricket",
+      "entity_name": "New Zealand Cricket",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.24
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/chief-strategy-officer-new-zealand-cricket-at-elevate-talent-4043362938",
+        "https://nz.linkedin.com/jobs/view/chief-marketing-commercial-officer-new-zealand-cricket-at-elevate-talent-4043369081",
+        "https://supersmash.co.nz",
+        "https://nz.linkedin.com/jobs/view/head-of-finance-strategy-at-new-zealand-cricket-4311342463",
+        "https://espncricinfo.com",
+        "https://nz.linkedin.com/jobs/view/premier-mens-head-coach-at-north-shore-cricket-4212894738",
+        "https://nz.linkedin.com/jobs/view/commercial-partnerships-manager-at-new-zealand-cricket-4216817599"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Posting: Commercial Partnerships Manager",
+        "Vendor Management Responsibilities",
+        "Cross-functional Collaboration (Marketing, Community, Events)",
+        "Budget & Financial Reconciliation Authority",
+        "Job Posting: Head of Finance & Strategy",
+        "Capital Allocation & Investment Management",
+        "Corporate Development & Joint Ventures",
+        "Strategic Finance Leadership",
+        "Vendor/Partnership Financial Oversight",
+        "Executive Leadership Role (C-Suite)",
+        "Digital & Broadcast Strategy Oversight",
+        "Agency & Vendor Management",
+        "Media Rights & Contract Negotiation",
+        "Commercial Revenue Generation",
+        "Strategic Planning & 5-Year Roadmap",
+        "Capital Projects & Investment Management",
+        "Revenue Diversification (New Ventures/Partnerships)",
+        "Financial Stewardship & Governance",
+        "M&A and Management Consulting Requirements"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New Zealand Cricket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:37:17.663416",
+          "domain_explored": "https://supersmash.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is purely editorial/sports journalism",
+            "Focus on match results and team performance",
+            "No corporate or administrative language detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 402,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.8895888328552246
+            }
+          ],
+          "reasoning": "The scraped content from supersmash.co.nz is a sports news article titled 'STAGS ROAR TO TITLE! CENTRAL SCINTILLATES'. It focuses on cricket match results, team performance, and season highlights. There is no mention of technology vendors, job vacancies, organizational restructuring, or purchasing requirements. It does not contain procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:37:29.128409",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism and live scoring data",
+            "Editorial content (match reports, schedules, rankings)",
+            "Global cricket coverage (ICC, IPL, International fixtures)",
+            "No corporate governance or vendor management language"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.765329122543335
+            }
+          ],
+          "reasoning": "The scraped content from ESPNcricinfo is purely sports data (match scores, schedules, team rankings) and general cricket news. It lacks any administrative context regarding New Zealand Cricket's internal operations, technology needs, or procurement cycles. This is a global sports news site, not a corporate entity site."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:37:52.675820",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/commercial-partnerships-manager-at-new-zealand-cricket-4216817599",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Commercial Partnerships Manager",
+                "department": "Marketing & Commercial",
+                "focus": "Account management, activation, contract fulfillment",
+                "status": "No longer accepting applications"
+              }
+            ],
+            "procurement_indicators": [
+              "Management of partnership contracts",
+              "Operational planning and budget management",
+              "Collaboration with Events and Cricket Operations for delivery",
+              "Requirement for agency/client-facing experience"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Commercial Partnerships Manager",
+            "Vendor Management Responsibilities",
+            "Cross-functional Collaboration (Marketing, Community, Events)",
+            "Budget & Financial Reconciliation Authority"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 352,
+              "elapsed_seconds": 14.307500123977661
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Commercial Partnerships Manager' at New Zealand Cricket. This role explicitly involves managing vendor relationships, fulfilling contractual requirements, and handling budgets. This is a strong procurement signal indicating an active commercial department managing external partnerships and likely procuring services for activation and marketing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:38:03.425812",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/head-of-finance-strategy-at-new-zealand-cricket-4311342463",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Modelling Software",
+              "ERP/Accounting Systems (implied by statutory reporting)",
+              "Treasury Management Systems"
+            ],
+            "job_postings": [
+              "Head of Finance & Strategy (Senior Leadership)"
+            ],
+            "procurement_indicators": [
+              "Management of an 'investment fund'",
+              "Oversight of 'joint ventures' and 'corporate development'",
+              "Responsibility for 'capital allocation'",
+              "Involvement in 'commercial partnerships' financial structuring",
+              "Requirement for 'statutory reporting' and 'compliance' vendors"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Head of Finance & Strategy",
+            "Capital Allocation & Investment Management",
+            "Corporate Development & Joint Ventures",
+            "Strategic Finance Leadership",
+            "Vendor/Partnership Financial Oversight"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1591,
+              "output_tokens": 371,
+              "elapsed_seconds": 2.8449838161468506
+            }
+          ],
+          "reasoning": "This job posting reveals the internal financial governance structure and high-value investment strategies of NZ Cricket. The role explicitly oversees capital allocation, major strategic initiatives, and corporate development (M&A/JVs), indicating a sophisticated procurement function for financial services and strategic consulting. It confirms the entity handles complex financial instruments and high-value partnerships."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:38:24.530452",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/chief-marketing-commercial-officer-new-zealand-cricket-at-elevate-talent-4043369081",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Platforms (General)",
+              "Broadcasting Technology",
+              "Marketing Automation (implied by 'digital roadmap')"
+            ],
+            "job_postings": [
+              "Chief Marketing & Commercial Officer (CMCO)"
+            ],
+            "procurement_indicators": [
+              "Management of partnered agencies",
+              "Digital investments and platforms oversight",
+              "Contract negotiation for media and broadcast agreements",
+              "Strategic sourcing for marketing campaigns"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Role (C-Suite)",
+            "Digital & Broadcast Strategy Oversight",
+            "Agency & Vendor Management",
+            "Media Rights & Contract Negotiation",
+            "Commercial Revenue Generation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1672,
+              "output_tokens": 340,
+              "elapsed_seconds": 14.59693717956543
+            }
+          ],
+          "reasoning": "This job posting for a Chief Marketing & Commercial Officer (CMCO) reveals high-level procurement governance and strategic spending. The role explicitly controls 'digital investments and platforms' and acts as the primary contact for 'partnered agencies' and 'commercial broadcast partnership strategies.' This indicates significant procurement authority regarding marketing technology (MarTech), media rights, and agency contracts."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:38:36.401134",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/chief-strategy-officer-new-zealand-cricket-at-elevate-talent-4043362938",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Technology adoption (General)",
+              "Fan Engagement Platforms"
+            ],
+            "job_postings": [
+              "Chief Strategy Officer"
+            ],
+            "procurement_indicators": [
+              "Capital Projects oversight",
+              "Strategic Sourcing (Partnerships/Ventures)",
+              "Financial Stewardship (Budget control)",
+              "M&A experience requirement"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Planning & 5-Year Roadmap",
+            "Capital Projects & Investment Management",
+            "Revenue Diversification (New Ventures/Partnerships)",
+            "Financial Stewardship & Governance",
+            "M&A and Management Consulting Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1746,
+              "output_tokens": 293,
+              "elapsed_seconds": 2.769195079803467
+            }
+          ],
+          "reasoning": "This C-Suite job posting confirms high-level procurement governance and strategic investment capability. The Chief Strategy Officer is explicitly responsible for 'capital projects,' 'strategic revenue opportunities,' and 'technology adoption,' indicating a mandate to procure solutions that drive business growth and innovation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:38:46.231235",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/premier-mens-head-coach-at-north-shore-cricket-4212894738",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Premier Mens Head Coach",
+                "entity": "North Shore Cricket Club",
+                "focus": "Sports Coaching and Team Management"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (North Shore Cricket Club vs New Zealand Cricket)",
+            "Operational Role (Sports Coaching)",
+            "Grassroots/Club Level Focus",
+            "Part-time/Contract Employment Type"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1823,
+              "output_tokens": 274,
+              "elapsed_seconds": 2.3361549377441406
+            }
+          ],
+          "reasoning": "The content is a job posting for a Premier Men's Head Coach at North Shore Cricket Club, a local community club founded in 1864. This is a distinct entity from New Zealand Cricket (the national governing body). The role is operational (coaching, training, player recruitment) rather than corporate or procurement-related. There are no signals of technology procurement, vendor management, or strategic investment relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 10168,
+      "total_output_tokens": 2026,
+      "estimated_cost_usd": 0.060894000000000004
+    },
+    "procurement_signals": [
+      "Job Posting: Commercial Partnerships Manager",
+      "Vendor Management Responsibilities",
+      "Cross-functional Collaboration (Marketing, Community, Events)",
+      "Budget & Financial Reconciliation Authority",
+      "Job Posting: Head of Finance & Strategy",
+      "Capital Allocation & Investment Management",
+      "Corporate Development & Joint Ventures",
+      "Strategic Finance Leadership",
+      "Vendor/Partnership Financial Oversight",
+      "Executive Leadership Role (C-Suite)",
+      "Digital & Broadcast Strategy Oversight",
+      "Agency & Vendor Management",
+      "Media Rights & Contract Negotiation",
+      "Commercial Revenue Generation",
+      "Strategic Planning & 5-Year Roadmap",
+      "Capital Projects & Investment Management",
+      "Revenue Diversification (New Ventures/Partnerships)",
+      "Financial Stewardship & Governance",
+      "M&A and Management Consulting Requirements"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New Zealand Cricket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:38:46.231758"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299064",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:21.543303"
+}

@@ -1,0 +1,228 @@
+{
+  "entity_id": "australian_basketball_federation",
+  "entity_name": "Australian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "australia.basketball",
+    "ausport.gov.au",
+    "bloomberg.com",
+    "spalding.com.au",
+    "resources.basketball-australia.pulselive.com",
+    "smcgaels.com",
+    "tsbasketball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "australian_basketball_federation",
+      "entity_name": "Australian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://australia.basketball",
+        "https://spalding.com.au",
+        "https://ausport.gov.au",
+        "https://resources.basketball-australia.pulselive.com",
+        "https://smcgaels.com",
+        "https://bloomberg.com",
+        "https://tsbasketball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Australian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:39:41.112394",
+          "domain_explored": "https://australia.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Recurring sports event management",
+            "Sponsorship visibility (Foot Locker)",
+            "International travel logistics (Opals to T\u00fcrkiye, U23 men to Tokyo)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.6759111881256104
+            }
+          ],
+          "reasoning": "The content provided is exclusively sports news regarding championship results, player selections, and event recaps. While there is an underlying operational requirement for event management and travel logistics, the text itself contains no explicit signals of procurement activities, technology adoption, or organizational restructuring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:40:02.431947",
+          "domain_explored": "https://ausport.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:40:07.178397",
+          "domain_explored": "https://bloomberg.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:40:16.872319",
+          "domain_explored": "https://spalding.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform",
+              "Quote Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Supplier Status: NBL Game Balls",
+              "High-Capital Equipment: Portable Hoops ($600 - $2,500 range)",
+              "Bulk/Institutional Inquiry: 'Get a Quote' forms for customer name/email"
+            ]
+          },
+          "patterns_found": [
+            "Official Equipment Supplier (NBL)",
+            "High-value Equipment Procurement",
+            "B2B Quote Request Mechanism"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 285,
+              "elapsed_seconds": 3.597572088241577
+            }
+          ],
+          "reasoning": "While the page is a commercial catalog, it confirms a critical supply chain relationship for the Australian Basketball Federation's ecosystem. Spalding is explicitly identified as the official game ball provider for the NBL (National Basketball League), which operates under the federation's governance. The presence of high-value equipment ($2,499.99 systems) and a 'Get a Quote' B2B function indicates a procurement channel for facility and equipment upgrades."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:40:40.393881",
+          "domain_explored": "https://resources.basketball-australia.pulselive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:41:21.052184",
+          "domain_explored": "https://smcgaels.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Saint Mary's College California)",
+            "Collegiate Athletics Content",
+            "Consumer Retail (Merchandise)",
+            "Sponsorship Activation (University Credit Union)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 195,
+              "elapsed_seconds": 34.36964011192322
+            }
+          ],
+          "reasoning": "The content scraped from 'smcgaels.com' belongs to Saint Mary's College of California (Gaels), not the Australian Basketball Federation. The page displays standard US collegiate sports news, schedules, and merchandise. There are no signals related to Australian procurement, governance, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:41:37.233420",
+          "domain_explored": "https://tsbasketball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Private Coaching Business)",
+            "Consumer Retail (Merchandise Store)",
+            "B2C Service Model (Private Training/Camps)",
+            "Brand Ambassadors (Brett Rainbow)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1631,
+              "output_tokens": 225,
+              "elapsed_seconds": 7.801516056060791
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'Tomorrow\u2019s Stars Basketball', a private coaching business based in Melbourne, not the Australian Basketball Federation (the governing body). While they mention 'industry leaders' and a new facility, this is a B2C (Business to Consumer) operation selling training services, camps, and merchandise. There is no evidence of procurement activity, technology stack management, or governance related to the national federation."
+        }
+      ],
+      "total_input_tokens": 6062,
+      "total_output_tokens": 893,
+      "estimated_cost_usd": 0.031581
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Australian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:41:37.234401"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.249163",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:38.653769"
+}

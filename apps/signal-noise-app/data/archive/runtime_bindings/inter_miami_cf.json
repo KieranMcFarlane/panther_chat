@@ -1,0 +1,380 @@
+{
+  "entity_id": "inter_miami_cf",
+  "entity_name": "Inter Miami CF",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "intermiamicf.com",
+    "mlsnextpro.com",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+      "https://www.linkedin.com/jobs/inter-miami-cf-jobs-fort-lauderdale-fl",
+      "https://www.linkedin.com/jobs/inter-miami-cf-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/game-day-staff-guest-services-reps-ticket-office-reps-retail-sales-associate-partnership-ambassador-comms-ambassador-at-inter-miami-cf-4338936462",
+      "https://www.linkedin.com/jobs/view/coordinator-operations-academy-at-inter-miami-cf-4367005919",
+      "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-inter-miami-cf-4316082051",
+      "https://www.linkedin.com/jobs/view/hiring-fair-game-day-part-time-staff-at-inter-miami-cf-4366531834",
+      "https://www.linkedin.com/jobs/view/groundskeeper-at-inter-miami-cf-4335641237",
+      "https://www.linkedin.com/jobs/view/director-video-production-at-inter-miami-cf-4336097920"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "inter_miami_cf",
+      "entity_name": "Inter Miami CF",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://intermiamicf.com",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/jobs/view/game-day-staff-guest-services-reps-ticket-office-reps-retail-sales-associate-partnership-ambassador-comms-ambassador-at-inter-miami-cf-4338936462",
+        "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+        "https://www.linkedin.com/jobs/inter-miami-cf-jobs-fort-lauderdale-fl",
+        "https://mlsnextpro.com",
+        "https://www.linkedin.com/jobs/view/coordinator-operations-academy-at-inter-miami-cf-4367005919",
+        "https://www.linkedin.com/jobs/inter-miami-cf-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Inter Miami CF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:46:43.031892",
+          "domain_explored": "https://intermiamicf.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket sales for 2026 MLS Games",
+              "Ticket sales for 2026 Concacaf Champions Cup",
+              "Preseason tour organization"
+            ]
+          },
+          "patterns_found": [
+            "High-volume ticket sales operations",
+            "International player acquisition (Designated Player)",
+            "Multi-year contract extensions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 238,
+              "elapsed_seconds": 4.034010171890259
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sporting operations (player signings) and ticket sales. While ticket sales imply the existence of a ticketing platform (e.g., Ticketmaster, AXS), there are no explicit signals of *new* procurement, technology adoption, or RFPs. The content is repetitive and lacks the specific keywords required to infer active buying intent for non-sporting goods or services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:46:53.109051",
+          "domain_explored": "https://mlsnextpro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level operational updates",
+            "Season scheduling",
+            "Personnel movements (coaching staff)",
+            "Expansion team activity (Connecticut United FC)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.6351962089538574
+            }
+          ],
+          "reasoning": "The content is sourced from the league-level domain (MLS NEXT Pro) and focuses on general scheduling, expansion news, and coaching promotions for other teams (Charlotte, Red Bull, San Jose). While Inter Miami CF competes in this ecosystem, this specific content does not reveal specific procurement signals, technology investments, or vendor partnerships directly attributable to the Inter Miami CF entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:47:01.457662",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inter Miami CF: Acquisition of Germ\u00e1n Berterame (Forward) from CF Monterrey",
+              "San Jose Earthquakes: Signing of Timo Werner (Designated Player)",
+              "Orlando City: Alex Freeman transfer",
+              "Houston Dynamo: Mateusz Bogusz acquisition",
+              "Austin FC: Facundo Torres acquisition"
+            ]
+          },
+          "patterns_found": [
+            "Player Acquisition (Roster Procurement)",
+            "International Transfers",
+            "Designated Player Contracts"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.982710123062134
+            }
+          ],
+          "reasoning": "The content confirms active procurement activity for Inter Miami CF, specifically the acquisition of Germ\u00e1n Berterame from CF Monterrey. While this is 'player procurement' rather than corporate procurement (IT/Services), it indicates an active transfer window and operational expenditure. This validates the entity's growth phase but does not directly reveal technology or vendor needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:47:12.030388",
+          "domain_explored": "https://www.linkedin.com/jobs/inter-miami-cf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Graphic Design Software (Inferred: Adobe Creative Suite)",
+              "Video Production Hardware/Software (Inferred)"
+            ],
+            "job_postings": [
+              "Graphic Designer (Fort Lauderdale, FL - Posted 4 days ago)",
+              "Director, Video Production (Fort Lauderdale, FL - Posted 2 months ago)"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion signals potential onboarding of HR/Procurement software",
+              "Creative roles imply potential licensing procurement needs"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment (Creative Services)",
+            "In-house Content Production",
+            "Organizational Growth (Staffing)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.768439769744873
+            }
+          ],
+          "reasoning": "The content reveals active hiring for 'Graphic Designer' and 'Director, Video Production' roles. While these are operational hires rather than direct procurement solicitations (RFPs), they indicate internal investment in creative capabilities. This suggests a potential reduction in external agency procurement for these services or a need for software tools to support these new hires (e.g., Adobe Creative Cloud, video editing hardware). It confirms the entity is actively expanding its workforce."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:47:20.921902",
+          "domain_explored": "https://www.linkedin.com/jobs/inter-miami-cf-jobs-fort-lauderdale-fl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Creative Cloud / Design Software",
+              "Video Editing Suites (e.g., Adobe Premiere, Final Cut)",
+              "Digital Content Management Systems (CMS)",
+              "Sports Science / Medical Tracking Tools"
+            ],
+            "job_postings": [
+              "Graphic Designer",
+              "Coordinator, Operations (Academy)",
+              "Assistant Athletic Trainer (Academy)",
+              "Director, Video Production",
+              "Coordinator, Digital (Academy)"
+            ],
+            "procurement_indicators": [
+              "Capital Expenditure (CapEx) for Video Production Equipment",
+              "Software Procurement for Digital Coordination",
+              "Medical/Training Supply Procurement for Academy",
+              "Potential reduction in Creative Agency spend (Insourcing)"
+            ]
+          },
+          "patterns_found": [
+            "Academy Infrastructure Expansion",
+            "In-house Digital & Creative Capacity Building",
+            "Sports Science & Medical Operations Staffing",
+            "Video Production Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 413,
+              "elapsed_seconds": 3.410536050796509
+            }
+          ],
+          "reasoning": "The content reveals a significant hiring surge (43 open roles) focused on scaling the 'Academy' and internal content capabilities. While these are HR signals, the specific roles (Coordinator, Digital; Director, Video Production; Graphic Designer) indicate a strategic shift from outsourcing to in-house execution for digital media and creative services. This implies future procurement needs for software, hardware, and production equipment to support these new hires."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:47:33.120720",
+          "domain_explored": "https://www.linkedin.com/jobs/inter-miami-cf-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Creative Software (Adobe Creative Suite implied)",
+              "Video Production Hardware",
+              "Digital Asset Management (DAM) Systems"
+            ],
+            "job_postings": [
+              "Graphic Designer (Fort Lauderdale, FL)",
+              "Director, Video Production (Fort Lauderdale, FL)"
+            ],
+            "procurement_indicators": [
+              "Headcount Growth (46 open roles)",
+              "Capital Expenditure (Video Production Equipment)",
+              "Software Licensing (Design Tools)"
+            ]
+          },
+          "patterns_found": [
+            "In-house Creative Capacity Expansion",
+            "Digital Media Production Investment",
+            "Organizational Scaling (46 open roles)",
+            "Global Talent Search"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1659,
+              "output_tokens": 332,
+              "elapsed_seconds": 4.342831134796143
+            }
+          ],
+          "reasoning": "The content confirms active recruitment with 46 open positions worldwide. Specific signals include 'Graphic Designer' and 'Director, Video Production' roles, indicating continued investment in in-house digital content creation capabilities. While this confirms organizational growth and potential software/hardware needs for creative teams, it does not reveal specific external procurement of vendors or technology stacks, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:47:43.444901",
+          "domain_explored": "https://www.linkedin.com/jobs/view/game-day-staff-guest-services-reps-ticket-office-reps-retail-sales-associate-partnership-ambassador-comms-ambassador-at-inter-miami-cf-4338936462",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticket Scanning Hardware",
+              "Access Control Systems",
+              "Workforce Management Software"
+            ],
+            "job_postings": [
+              "Guest Services Reps (Seasonal)",
+              "Retail Sales Associate (Seasonal & Part-time)",
+              "Stadium Operations Crew (Part-Time)",
+              "Security Officer (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Mandatory Training Procurement (Feb-Mar)",
+              "Uniform/Attire Sourcing for 200+ staff",
+              "Radio/Communication Equipment for Operations Crew",
+              "Point of Sale (POS) Systems for Retail Associates"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing Scale-up",
+            "Multi-Venue Logistics (Miami Freedom Park & Fort Lauderdale)",
+            "Event-Based Workforce Management",
+            "Guest Experience Technology Deployment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1755,
+              "output_tokens": 374,
+              "elapsed_seconds": 4.0441977977752686
+            }
+          ],
+          "reasoning": "While this is a high-volume hourly recruitment posting, it confirms the operational readiness for the new Miami Freedom Park stadium. The requirement for 'Ticket Takers' and 'Ticketing Issues' resolution implies the procurement of ticketing scanning hardware and access control systems. The dual-location requirement (Miami and Fort Lauderdale) suggests a need for unified workforce management or scheduling software to manage seasonal staff across venues."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:47:52.439755",
+          "domain_explored": "https://www.linkedin.com/jobs/view/coordinator-operations-academy-at-inter-miami-cf-4367005919",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Inventory Management Software",
+              "Event Management Platforms",
+              "Standard Operating Procedure (SOP) Documentation Tools"
+            ],
+            "job_postings": [
+              "Coordinator, Operations (Academy)"
+            ],
+            "procurement_indicators": [
+              "Equipment Inventory Management",
+              "Facility Maintenance Procurement",
+              "Training Material Acquisition",
+              "Venue Setup & Breakdown Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Academy Operations Infrastructure Investment",
+            "Inventory & Supply Chain Management",
+            "Standardization of Procedures (SOPs)",
+            "Venue & Event Logistics Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1833,
+              "output_tokens": 345,
+              "elapsed_seconds": 3.033210039138794
+            }
+          ],
+          "reasoning": "This job posting confirms the expansion of the Academy's operational backbone. While primarily an operational role, the specific responsibilities regarding 'managing equipment inventory,' 'maintaining accurate records,' and 'creating standard operating procedures' indicate a need for procurement-related software (Inventory Management Systems) and the acquisition of training materials/supplies. It signals a maturation of the Academy from a startup to a structured organization requiring formal supply chain management."
+        }
+      ],
+      "total_input_tokens": 12601,
+      "total_output_tokens": 2522,
+      "estimated_cost_usd": 0.075633
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Inter Miami CF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:47:52.440837"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.155796",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:44.433866"
+}

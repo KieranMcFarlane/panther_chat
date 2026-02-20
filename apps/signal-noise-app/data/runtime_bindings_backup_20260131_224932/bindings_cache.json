@@ -1,0 +1,473 @@
+{
+  "entity_bindings": {
+    "borussia-dortmund": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "borussia-dortmund",
+      "entity_name": "Borussia Dortmund",
+      "discovered_domains": [
+        "bvb.de",
+        "borussia-dortmund.de"
+      ],
+      "discovered_channels": {
+        "jobs_board": [
+          "https://www.linkedin.com/jobs/search?keywords=CRM&company=Borussia"
+        ],
+        "official_site": [
+          "https://bvb.de"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Hire": [
+          "CRM Manager",
+          "Digital Transformation Lead"
+        ]
+      },
+      "confidence_adjustment": 0.15,
+      "version": 1,
+      "created_at": "2026-01-29T11:08:15.952430",
+      "last_used": "2026-01-29T11:08:15.952456",
+      "usage_count": 3,
+      "success_rate": 0.9,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "arsenal-fc": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "arsenal-fc",
+      "entity_name": "Arsenal FC",
+      "discovered_domains": [
+        "arsenalfc.com"
+      ],
+      "discovered_channels": {
+        "official_site": [
+          "https://www.arsenalfc.com/news"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T11:11:58.211338",
+      "last_used": "2026-01-29T11:11:58.211343",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {
+        "discovery_time": "2026-01-29T11:11:58.210910",
+        "strategies_used": [
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "Head of Procurement Arsenal FC OR Director of Commercial Operations Arsenal FC",
+            "priority": 1,
+            "confidence": 0.9
+          },
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "CRM Manager Arsenal FC OR Ticketing Systems Arsenal FC",
+            "priority": 1,
+            "confidence": 0.85
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.arsenalfc.com/careers",
+            "priority": 2,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.arsenalfc.com/news",
+            "priority": 2,
+            "confidence": 0.75
+          },
+          {
+            "channel_type": "press",
+            "api_type": "generic_scraping",
+            "query": "Arsenal FC sponsorship deal OR Arsenal FC kit manufacturer announcement",
+            "priority": 3,
+            "confidence": 0.7
+          },
+          {
+            "channel_type": "partner_site",
+            "api_type": "generic_scraping",
+            "query": "customer story Arsenal FC OR case study Arsenal FC",
+            "priority": 4,
+            "confidence": 0.65
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.arsenalfc.com/legal/privacy",
+            "priority": 4,
+            "confidence": 0.6
+          }
+        ]
+      }
+    },
+    "chelsea-fc": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "chelsea-fc",
+      "entity_name": "Chelsea FC",
+      "discovered_domains": [
+        "chelseafc.co.uk",
+        "chelseafc.com",
+        "hospitality.chelseafc.com"
+      ],
+      "discovered_channels": {
+        "official_site": [
+          "https://chelseafc.com/legal/privacy-policy"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T11:26:08.399447",
+      "last_used": "2026-01-29T11:26:08.400010",
+      "usage_count": 4,
+      "success_rate": 0.91,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "manchester-united": {
+      "template_id": "emerging_intfed_digital_transformation",
+      "entity_id": "manchester-united",
+      "entity_name": "Manchester United",
+      "discovered_domains": [
+        "manchesterunited",
+        "manchester.united",
+        "manchester-united.-"
+      ],
+      "discovered_channels": {},
+      "enriched_patterns": {
+        "Digital Leadership Hire": [],
+        "Platform Migration": [],
+        "Rights Consolidation": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T04:20:21.723612",
+      "last_used": "2026-01-29T04:20:21.723613",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {
+        "discovery_time": "2026-01-29T04:20:21.723606",
+        "strategies_used": [
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "CRM \"Manchester United\" jobs",
+            "priority": 1,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://manchesterunited.",
+            "priority": 2,
+            "confidence": 0.7
+          }
+        ]
+      }
+    },
+    "liverpool-fc": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "discovered_domains": [
+        "liverpoolfc.com",
+        "liverpoolfc.com",
+        "liverpoolfc-.com"
+      ],
+      "discovered_channels": {
+        "official_site": [
+          "https://www.liverpoolfc.com/careers"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T11:13:25.078627",
+      "last_used": "2026-01-29T11:13:25.078947",
+      "usage_count": 3,
+      "success_rate": 0.9,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "manchester-city": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "manchester-city",
+      "entity_name": "Manchester City",
+      "discovered_domains": [
+        "manchester.gov.uk"
+      ],
+      "discovered_channels": {
+        "jobs_board": [
+          "https://uk.linkedin.com/jobs/crm-manager-jobs-manchester-area-united-kingdom"
+        ],
+        "official_site": [
+          "https://www.mancity.com/careers"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": [],
+        "Strategic Hire": [
+          "Today's top 66 Crm Manager jobs in Manchester Area, United Kingdom. Leverage your professional netwo"
+        ]
+      },
+      "confidence_adjustment": 0.05,
+      "version": 1,
+      "created_at": "2026-01-29T11:24:30.484258",
+      "last_used": "2026-01-29T11:24:30.484259",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {
+        "discovery_time": "2026-01-29T11:24:30.484245",
+        "strategies_used": [
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "Head of Procurement Manchester City",
+            "priority": 1,
+            "confidence": 0.9
+          },
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "Director of Partnerships Manchester City",
+            "priority": 1,
+            "confidence": 0.9
+          },
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "CRM Manager Manchester City",
+            "priority": 1,
+            "confidence": 0.9
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.mancity.com",
+            "priority": 2,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "press",
+            "api_type": "generic_scraping",
+            "query": "Manchester City sponsorship deal",
+            "priority": 2,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "press",
+            "api_type": "generic_scraping",
+            "query": "Manchester City kit manufacturer",
+            "priority": 3,
+            "confidence": 0.7
+          },
+          {
+            "channel_type": "partner_site",
+            "api_type": "generic_scraping",
+            "query": "site:sap.com Manchester City case study",
+            "priority": 3,
+            "confidence": 0.7
+          },
+          {
+            "channel_type": "partner_site",
+            "api_type": "generic_scraping",
+            "query": "site:salesforce.com Manchester City case study",
+            "priority": 3,
+            "confidence": 0.7
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.mancity.com/careers",
+            "priority": 2,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "press",
+            "api_type": "generic_scraping",
+            "query": "Manchester City stadium expansion",
+            "priority": 4,
+            "confidence": 0.6
+          }
+        ]
+      }
+    },
+    "chelsea-fc-fixed": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "chelsea-fc-fixed",
+      "entity_name": "Chelsea FC",
+      "discovered_domains": [
+        "chelseafc.co.uk",
+        "chelseafc.com",
+        "hospitality.chelseafc.com"
+      ],
+      "discovered_channels": {
+        "official_site": [
+          "https://chelseafc.com/legal/privacy-policy"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T11:32:06.933420",
+      "last_used": "2026-01-29T11:32:06.933422",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "tottenham-hotspur": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "tottenham-hotspur",
+      "entity_name": "Tottenham Hotspur",
+      "discovered_domains": [
+        "tottenhamhotspurstadium.com",
+        "tottenhamhotspur.com"
+      ],
+      "discovered_channels": {
+        "official_site": [
+          "https://www.tottenhamhotspurstadium.com/"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Leadership Hire": [],
+        "Vendor Stack Expansion": [],
+        "Contract Renewal Cycle": []
+      },
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-29T11:34:19.665148",
+      "last_used": "2026-01-29T11:34:19.665152",
+      "usage_count": 0,
+      "success_rate": 0.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {
+        "discovery_time": "2026-01-29T11:34:19.665081",
+        "strategies_used": [
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "CRM Director OR Head of Procurement OR Director of Partnerships Tottenham Hotspur",
+            "priority": 1,
+            "confidence": 0.9
+          },
+          {
+            "channel_type": "jobs_board",
+            "api_type": "linkedin_structured",
+            "query": "Head of Digital Transformation OR Chief Technology Officer Tottenham Hotspur",
+            "priority": 2,
+            "confidence": 0.85
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.tottenhamhotspur.com/news/",
+            "priority": 1,
+            "confidence": 0.8
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.tottenhamhotspur.com/careers/",
+            "priority": 2,
+            "confidence": 0.75
+          },
+          {
+            "channel_type": "official_site",
+            "api_type": "generic_scraping",
+            "url": "https://www.tottenhamhotspurstadium.com/",
+            "priority": 3,
+            "confidence": 0.7
+          },
+          {
+            "channel_type": "press",
+            "api_type": "generic_scraping",
+            "query": "Tottenham Hotspur sponsorship deal OR kit manufacturer OR stadium expansion",
+            "priority": 3,
+            "confidence": 0.65
+          },
+          {
+            "channel_type": "partner_site",
+            "api_type": "generic_scraping",
+            "query": "CRM customer stories OR ticketing case studies football club",
+            "priority": 4,
+            "confidence": 0.6
+          }
+        ]
+      }
+    },
+    "test_entity_1": {
+      "template_id": "test_template",
+      "entity_id": "test_entity_1",
+      "entity_name": "Test Entity 1",
+      "discovered_domains": [],
+      "discovered_channels": {},
+      "enriched_patterns": {},
+      "confidence_adjustment": 0.0,
+      "version": 1,
+      "created_at": "2026-01-30T03:52:38.053667",
+      "last_used": "2026-01-30T03:53:51.569926",
+      "usage_count": 2,
+      "success_rate": 1.0,
+      "state": "EXPLORING",
+      "promoted_at": null,
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "total_bindings": 9,
+    "last_updated": "2026-01-30T03:53:51.570059"
+  }
+}

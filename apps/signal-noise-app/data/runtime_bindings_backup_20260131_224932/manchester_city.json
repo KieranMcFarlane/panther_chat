@@ -1,0 +1,75 @@
+{
+  "entity_id": "manchester_city",
+  "entity_name": "Manchester City",
+  "template_id": "top_tier_club_global",
+  "discovered_at": "2026-01-30T14:59:05.462381Z",
+  "domains": [
+    "manchestercity.com",
+    "www.manchestercity.com"
+  ],
+  "channels": {
+    "jobs": "linkedin.com/jobs@manchestercity",
+    "careers": "manchestercity.com/careers",
+    "news": "manchestercity.com/news",
+    "press": "manchestercity.com/press"
+  },
+  "patterns": {
+    "Digital Infrastructure & Stack": {
+      "patterns_found": [
+        "Mobile app revamp",
+        "Cloud migration",
+        "CRM platform upgrade"
+      ],
+      "iterations_used": 25,
+      "confidence": 0.68,
+      "accept_rate": 0.8
+    },
+    "Commercial & Revenue Systems": {
+      "patterns_found": [
+        "Merchandise platform",
+        "Digital advertising platform"
+      ],
+      "iterations_used": 25,
+      "confidence": 0.81,
+      "accept_rate": 0.83
+    },
+    "Fan Engagement & Experience": {
+      "patterns_found": [
+        "Social media integration",
+        "Fan mobile app",
+        "Gamification platform",
+        "Loyalty program launch"
+      ],
+      "iterations_used": 23,
+      "confidence": 0.79,
+      "accept_rate": 0.82
+    },
+    "Data & Analytics": {
+      "patterns_found": [
+        "Performance tracking system",
+        "Fan analytics platform",
+        "Data warehouse implementation",
+        "Business intelligence dashboard"
+      ],
+      "iterations_used": 17,
+      "confidence": 0.76,
+      "accept_rate": 0.88
+    },
+    "Operations & Stadium": {
+      "patterns_found": [
+        "Smart ticketing gates",
+        "Security surveillance system"
+      ],
+      "iterations_used": 19,
+      "confidence": 0.69,
+      "accept_rate": 0.79
+    }
+  },
+  "performance_metrics": {
+    "total_iterations": 30,
+    "categories_discovered": 5,
+    "overall_confidence": 0.75,
+    "total_cost_usd": 0.75
+  },
+  "next_refresh": "2026-01-30T14:59:05.462385Z"
+}

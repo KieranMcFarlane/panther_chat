@@ -1,0 +1,224 @@
+{
+  "entity_id": "czech_volleyball_federation",
+  "entity_name": "Czech Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "paravolley.eu",
+    "wikidata.org",
+    "inside.cev.eu",
+    "cvf-web.dataproject.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "czech_volleyball_federation",
+      "entity_name": "Czech Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://cvf-web.dataproject.com",
+        "https://wikidata.org",
+        "https://inside.cev.eu",
+        "https://paravolley.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Czech Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:56:14.735169",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical hosting of international events (Prague, Brno) suggests past event management procurement, but no active signals."
+            ]
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (EuroVolley, EuroBeachVolley)",
+            "Outdated web footer copyright (CEV 2011)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 259,
+              "elapsed_seconds": 17.767433881759644
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event listing from the Confederation Europeenne de Volleyball (CEV), the European governing body. While it lists Czech locations (Prague, Brno) as hosts for past events, it contains no specific information regarding the Czech Volleyball Federation's internal procurement, technology stack, or governance. The '2011' copyright and 'New CEV Website' link indicate this is archived or legacy content with low current intelligence value."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:56:21.848164",
+          "domain_explored": "https://paravolley.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PVE Registration App (Custom or 3rd party mobile/web solution)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "EU Funding / EACEA Grants (ParaVolley Europe)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (ParaVolley Europe vs Czech Volleyball Federation)",
+            "Repetitive/Scraped Navigation Text",
+            "EU Funding Disclaimer (Standard Footer)",
+            "Generic Contact Information"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.5042548179626465
+            }
+          ],
+          "reasoning": "The scraped content is from ParaVolley Europe (paravolley.eu), a distinct legal entity based in Luxembourg, not the Czech Volleyball Federation (cvf.cz). While the existence of a 'PVE Registration App' indicates digital transformation in the broader volleyball ecosystem, it does not constitute a direct procurement signal for the target entity. The content is largely repetitive navigation text and standard EU disclaimers."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:56:50.218380",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "Community/Editorial Content (News, Birthdays)",
+            "Open Data Repository Structure (Wikimedia/Wikipedia context)",
+            "Lack of Commercial/Governance Language"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 241,
+              "elapsed_seconds": 22.568822145462036
+            }
+          ],
+          "reasoning": "The content is the generic homepage for Wikidata, a global open-data repository. It contains no specific information regarding the Czech Volleyball Federation (\u010cesk\u00fd volejbalov\u00fd svaz), its procurement activities, or its technology stack. The text focuses on community contributions, SPARQL queries, and general platform updates (e.g., 'Wikidata's 13th Birthday'), which are irrelevant to the specific procurement intelligence goal for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:57:00.275938",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (CEV vs Czech Volleyball Federation)",
+            "Generic News Aggregation Layout",
+            "Sports Development Content (Scouting, Youth Academies)",
+            "Future-Dated Content (January 2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1552,
+              "output_tokens": 214,
+              "elapsed_seconds": 5.7585978507995605
+            }
+          ],
+          "reasoning": "The scraped content is from the Confederation Europ\u00e9enne de Volleyball (CEV) internal news site, not the Czech Volleyball Federation (CVF). While federations are related, this is a governing body site focusing on pan-European news (Azerbaijan, Montenegro, Slovenia), not Czech-specific procurement or governance. No technology stack, RFPs, or job postings relevant to the target entity were found."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:57:15.443929",
+          "domain_explored": "https://cvf-web.dataproject.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DataProject (Competition Management/Web Hosting)",
+              "DataProject Web Solutions"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Digital Infrastructure",
+              "Vendor Partnership (DataProject)"
+            ]
+          },
+          "patterns_found": [
+            "Vendor-Hosted Infrastructure (DataProject)",
+            "Competition Management System Usage",
+            "SaaS Dependency for Digital Operations",
+            "Historical Data Archiving (2020/2021 Season)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1616,
+              "output_tokens": 285,
+              "elapsed_seconds": 7.225616216659546
+            }
+          ],
+          "reasoning": "The scraped content confirms that the Czech Volleyball Federation utilizes a third-party SaaS platform (DataProject) for its core competition management and digital presence. While this specific page is a historical archive (2020/2021) and lacks active procurement signals, it identifies a key technology vendor and a dependency on external software solutions. This establishes a baseline for the technology stack but does not show active buying intent for new solutions."
+        }
+      ],
+      "total_input_tokens": 7449,
+      "total_output_tokens": 1257,
+      "estimated_cost_usd": 0.041202
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Czech Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:57:15.445514"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.338842",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:07:14.491963"
+}

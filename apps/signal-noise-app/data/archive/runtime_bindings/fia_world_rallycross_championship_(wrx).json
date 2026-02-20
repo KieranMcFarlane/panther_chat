@@ -1,0 +1,273 @@
+{
+  "entity_id": "fia_world_rallycross_championship_(wrx)",
+  "entity_name": "FIA World Rallycross Championship (WRX)",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "worldrxhk.com",
+    "cedealerteam.com",
+    "totalenergies.com.au",
+    "volkswagen-newsroom.com",
+    "toomuchracing.com",
+    "vwpress.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/payroll-specialist-at-wolf-oil-corporation-3656390115?refId=dSn%2FoIUGL%2BmeXMGi6G1Dsg%3D%3D&trackingId=915%2FiDRKKD456%2FlTnfE5hA%3D%3D&position=17&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_world_rallycross_championship_(wrx)",
+      "entity_name": "FIA World Rallycross Championship (WRX)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cedealerteam.com",
+        "https://volkswagen-newsroom.com",
+        "https://worldrxhk.com",
+        "https://be.linkedin.com/jobs/view/payroll-specialist-at-wolf-oil-corporation-3656390115?refId=dSn%2FoIUGL%2BmeXMGi6G1Dsg%3D%3D&trackingId=915%2FiDRKKD456%2FlTnfE5hA%3D%3D&position=17&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://totalenergies.com.au",
+        "https://toomuchracing.com",
+        "https://vwpress.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA World Rallycross Championship (WRX) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:02:45.872475",
+          "domain_explored": "https://worldrxhk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Unavailable",
+            "Token Limit Reached"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 371,
+              "output_tokens": 127,
+              "elapsed_seconds": 2.3561477661132812
+            }
+          ],
+          "reasoning": "The provided text consists only of 'Loading...' and a note about the first 4000 characters. There is no actual content, HTML, or text to analyze for procurement signals, job postings, or technology stacks."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:02:56.622086",
+          "domain_explored": "https://cedealerteam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content is from a private team (Cedele), not the Championship organizer."
+            ]
+          },
+          "patterns_found": [
+            "Mission Statement Repetition",
+            "Diversity & Sustainability Focus",
+            "Partner Section Placeholder"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 937,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.0404889583587646
+            }
+          ],
+          "reasoning": "The content provided is a scraped text dump from 'cedealerteam.com', which is a private race team entity (Cedele Team), not the governing body or organizer of the FIA World Rallycross Championship (WRX). While they participate in the ecosystem, their generic mission statement on 'diversity and sustainability' and a placeholder 'Our Partners' section do not constitute a procurement signal for the WRX organization itself. The content is repetitive and lacks technical, operational, or tender-specific data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:03:20.895672",
+          "domain_explored": "https://totalenergies.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Click & Collect)",
+              "Digital Ordering Tool (e-ordering)"
+            ],
+            "job_postings": [
+              "General Careers Page (No specific roles listed)"
+            ],
+            "procurement_indicators": [
+              "Business Order Online (Lubricants)",
+              "IMARC 2025 Attendance (Mining/Resource Conference)"
+            ]
+          },
+          "patterns_found": [
+            "Global Corporate Entity",
+            "B2C E-commerce Focus",
+            "Generic Sustainability Reporting",
+            "Fraud Alert Disclaimer"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 342,
+              "elapsed_seconds": 9.295989274978638
+            }
+          ],
+          "reasoning": "The content analyzed is from the Australian subsidiary of TotalEnergies, a global integrated energy company. While the entity is involved in motorsports (Supercars, Bathurst 12 Hour) and has a 'Business Order Online' section, the content is primarily consumer-facing (e-commerce, Click & Collect) and corporate sustainability reporting. There is no specific connection to the FIA World Rallycross Championship (WRX) procurement needs, nor does it reveal specific B2B procurement signals relevant to the target entity's scale or specific championship operations. The signals are too generic and represent a different market segment (Global Energy vs. Championship Promoter/Team)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:03:32.525098",
+          "domain_explored": "https://volkswagen-newsroom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Corporate Hub",
+            "B2C Communication Focus",
+            "Irrelevant Domain Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 551,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.034723997116089
+            }
+          ],
+          "reasoning": "The target URL is a global corporate newsroom for Volkswagen, a massive OEM entity. While it discusses e-mobility, it serves a public relations and media function rather than a procurement or operational function for the FIA World Rallycross Championship (WRX). The content is too broad and lacks specific signals related to WRX governance, vendor selection, or championship-specific technology stacks."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:03:42.548317",
+          "domain_explored": "https://toomuchracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Calendar",
+              "iCal"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Content Focus",
+            "Fan Engagement Utility",
+            "No Corporate Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 679,
+              "output_tokens": 159,
+              "elapsed_seconds": 3.1284778118133545
+            }
+          ],
+          "reasoning": "The target URL is a fan-managed blog and calendar utility ('I Watch Too Much Racing'). It lacks any organizational structure, procurement intent, or enterprise decision-making patterns relevant to the FIA World Rallycross Championship entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:04:07.711744",
+          "domain_explored": "https://vwpress.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:04:22.429855",
+          "domain_explored": "https://be.linkedin.com/jobs/view/payroll-specialist-at-wolf-oil-corporation-3656390115?refId=dSn%2FoIUGL%2BmeXMGi6G1Dsg%3D%3D&trackingId=915%2FiDRKKD456%2FlTnfE5hA%3D%3D&position=17&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Payroll Specialist at Wolf Oil Corporation (Hemiksem, BE)"
+            ],
+            "procurement_indicators": [
+              "Entity Identification: Wolf Oil Corporation (WRX Partner)",
+              "Location: Hemiksem, Flemish Region, Belgium",
+              "Partnership Scope: FIA World Rally Championship (WRC) and FIA World Rallycross Championship (WRX)"
+            ]
+          },
+          "patterns_found": [
+            "WRX Official Partnership Mention",
+            "Corporate Job Posting (HR/Payroll)",
+            "Headquarters Location (Hemiksem, Belgium)",
+            "Vendor Partnership Mention (Premium Partnerships)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 315,
+              "elapsed_seconds": 8.419527292251587
+            }
+          ],
+          "reasoning": "While the content is a job posting (Payroll Specialist) and not a direct procurement signal, it confirms Wolf Oil Corporation as an active commercial entity with a dedicated HQ and explicitly names the FIA World Rallycross Championship (WRX) as a 'premium partnership.' This validates Wolf Oil as a key stakeholder/vendor within the WRX ecosystem. The job posting indicates internal growth and administrative structure, suggesting active vendor management for HR/Payroll services."
+        }
+      ],
+      "total_input_tokens": 5676,
+      "total_output_tokens": 1374,
+      "estimated_cost_usd": 0.037638000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA World Rallycross Championship (WRX) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:04:22.432226"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372853",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:23.153534"
+}

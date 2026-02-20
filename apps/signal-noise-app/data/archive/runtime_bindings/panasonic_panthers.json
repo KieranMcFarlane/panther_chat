@@ -1,0 +1,283 @@
+{
+  "entity_id": "panasonic_panthers",
+  "entity_name": "Panasonic Panthers",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "sports.pref.osaka.jp",
+    "news.panasonic.com",
+    "osaka-bluteon.com",
+    "en.volleyballworld.com",
+    "en.osaka-info.jp",
+    "japanvolleyball-asiatour.com",
+    "svleague.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "panasonic_panthers",
+      "entity_name": "Panasonic Panthers",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://news.panasonic.com",
+        "https://osaka-bluteon.com",
+        "https://svleague.jp",
+        "https://en.volleyballworld.com",
+        "https://sports.pref.osaka.jp",
+        "https://japanvolleyball-asiatour.com",
+        "https://en.osaka-info.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Panasonic Panthers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:35:31.566863",
+          "domain_explored": "https://sports.pref.osaka.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event organization and management for 'OSAKA SPORTS PROJECT'",
+              "Venue rental and coordination (Murasaki Park EXPOCITY, Aeon Malls)",
+              "Ticketing and invitation management systems for local sports teams"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Sports Governance",
+            "Event-based Vendor Procurement",
+            "Regional Sports Ecosystem"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.921447992324829
+            }
+          ],
+          "reasoning": "The content is from the Osaka Prefectural Government's sports portal (sports.pref.osaka.jp). While it lists partners (Meiji Yasuda Life) and mentions Panasonic-related teams (Red Hurricanes Osaka, Saitama Wild Knights - via League One), it is a public sector site focused on community sports events, marathons, and citizen engagement. It does not contain specific procurement signals, technology stacks, or job postings directly related to the Panasonic Panthers entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:35:42.389888",
+          "domain_explored": "https://news.panasonic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Robo Sync (Robot Control Platform)",
+              "KAIROS (Live Video Production Platform)",
+              "Generative AI (via AI model Inc. investment)",
+              "Gemba Cyber-Physical System (CPS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Panasonic Kurashi Visionary Fund Investment Activity",
+              "KAIROS LED Partnerships (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate-Level Technology Strategy",
+            "Internal Product Innovation (Robo Sync, KAIROS)",
+            "Venture Capital Investment (AI model Inc.)",
+            "Global Corporate Communications"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 333,
+              "elapsed_seconds": 4.43259596824646
+            }
+          ],
+          "reasoning": "The content provided is from the global Panasonic corporate news feed (news.panasonic.com), focusing on high-level product announcements (Robo Sync, KAIROS), corporate history, and venture investments. While relevant to the Panasonic Group's overall technology stack, it does not contain specific procurement signals, vendor selection processes, or operational details related to the 'Panasonic Panthers' rugby team entity. The content is too high-level to derive actionable procurement intelligence for the specific subsidiary/team."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:35:53.307044",
+          "domain_explored": "https://osaka-bluteon.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:36:02.895922",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Federation Content",
+            "Match Results & Scheduling",
+            "World Ranking Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.5412380695343018
+            }
+          ],
+          "reasoning": "The scraped content from volleyballworld.com is purely editorial and data-driven, focusing on match results (Lega Volley Femminile A1), schedules, and world rankings. There is no mention of Panasonic Panthers, corporate procurement, or vendor partnerships. This is a general sports news site, not a source for B2B intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:36:11.923313",
+          "domain_explored": "https://en.osaka-info.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Cultural Event Management",
+            "Public Information Portal"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.6127641201019287
+            }
+          ],
+          "reasoning": "The content is a general tourism portal (Osaka Info) focused on visitor events, exhibitions, and cultural updates. It lacks specific corporate governance, procurement intent, or operational details related to Panasonic Panthers. No signals of B2B purchasing, technology stacks, or vendor partnerships were detected."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:36:24.237540",
+          "domain_explored": "https://japanvolleyball-asiatour.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thai Ticket Major (Ticketing Platform)",
+              "J SPORTS Ondemand (Streaming Platform)",
+              "Wix / CMS (implied by 'block' editing references in source)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "International Event Travel & Logistics (Japan -> Thailand)",
+              "Broadcast Production Services (J SPORTS coordination)",
+              "Ticketing Platform Integration (Thai Ticket Major)",
+              "Sponsorship Fulfillment (Panasonic ENERGY)"
+            ]
+          },
+          "patterns_found": [
+            "International Event Logistics",
+            "Broadcasting & Streaming Rights Management",
+            "Cross-Border Ticketing Operations",
+            "Sponsorship Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 337,
+              "elapsed_seconds": 3.05175518989563
+            }
+          ],
+          "reasoning": "The content confirms Panasonic Panthers' participation in the 'SV.LEAGUE WORLD TOUR 2025 in Thailand'. While this is primarily a marketing/sports event page, it reveals specific operational vendors and technology stacks required to execute international events. The presence of 'Thai Ticket Major' (ticketing), 'J SPORTS' (broadcast/streaming), and the need for cross-border logistics indicates active procurement in event management and media distribution services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:36:34.156215",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Video Streaming Infrastructure",
+              "Ticketing Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Official Partners (Sponsorship procurement)",
+              "Broadcasting and Streaming Rights Management",
+              "Centralized Digital Asset Management"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide Digital Infrastructure",
+            "Centralized Content Management (CMS)",
+            "Official Sponsorship Ecosystem",
+            "Media Rights Distribution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 694,
+              "output_tokens": 321,
+              "elapsed_seconds": 2.7731146812438965
+            }
+          ],
+          "reasoning": "The scraped content represents the official league platform (svleague.jp) for the V.League, the governing body for Panasonic Panthers. While the raw text is primarily navigation debris (WOMEN/MEN toggles), the domain itself is a critical procurement signal. It indicates a centralized digital ecosystem where the league manages broadcasting, sponsorship assets, and match data. Procurement signals here are indirect, manifesting as league-level vendor selections (e.g., streaming infrastructure, official sponsors) that the Panthers utilize."
+        }
+      ],
+      "total_input_tokens": 8128,
+      "total_output_tokens": 1606,
+      "estimated_cost_usd": 0.048474
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Panasonic Panthers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:36:34.157855"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322783",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:20.277232"
+}

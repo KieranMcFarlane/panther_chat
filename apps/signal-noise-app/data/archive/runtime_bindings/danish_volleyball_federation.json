@@ -1,0 +1,218 @@
+{
+  "entity_id": "danish_volleyball_federation",
+  "entity_name": "Danish Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleyball.dk",
+    "www-old.cev.eu",
+    "esvoleybol.com",
+    "sporteventdenmark.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "danish_volleyball_federation",
+      "entity_name": "Danish Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.09999999999999999,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.039999999999999994,
+        0.09999999999999999
+      ],
+      "explored_domains": [
+        "https://sporteventdenmark.com",
+        "https://www-old.cev.eu",
+        "https://volleyball.dk",
+        "https://esvoleybol.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Job Posting: Project Employee",
+        "Event Hosting: European League Qualification",
+        "Strategic Initiative: Dansk Strand Alliance",
+        "Content Hub: V\u00e6rkt\u00f8jskassen (Toolbox)",
+        "Event Funding & Grants (\u00d8konomisk st\u00f8tte)",
+        "Partnership Solicitation (Partnerskab)",
+        "Event Management Resources (Eventguide/Analyser)",
+        "Sustainability Requirements (Gr\u00f8nnere events)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Danish Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:43:56.564015",
+          "domain_explored": "https://volleyball.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "V\u00e6rkt\u00f8jskassen (Content Management System/Digital Hub)",
+              "Event Management Platforms (implied by camp/tour organization)"
+            ],
+            "job_postings": [
+              "Projektmedarbejder til Volleyball Danmarks camps (Project Employee for Camps)"
+            ],
+            "procurement_indicators": [
+              "Recruitment for project management (Camps)",
+              "Hosting rights for international tournaments (European League)",
+              "Strategic alliance formation (Dansk Strand Alliance)",
+              "New coaching hires (Ungdomslandstr\u00e6nere)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Project Employee",
+            "Event Hosting: European League Qualification",
+            "Strategic Initiative: Dansk Strand Alliance",
+            "Content Hub: V\u00e6rkt\u00f8jskassen (Toolbox)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 362,
+              "elapsed_seconds": 8.948793888092041
+            }
+          ],
+          "reasoning": "The content reveals a clear procurement signal via a job posting for a 'Projektmedarbejder' (Project Employee) focused on camps, indicating immediate resource allocation. Additionally, the hosting of the European League qualification and the formation of the 'Dansk Strand Alliance' suggest upcoming needs for event services, infrastructure, and partnership management. The 'V\u00e6rkt\u00f8jskassen' indicates a structured approach to member resources, potentially supported by digital tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:44:03.927721",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Context: Munich 2022 (Historical)",
+              "Event Hosting Context: EuroBeachVolley Vienna 2021 (Historical)"
+            ]
+          },
+          "patterns_found": [
+            "Navigation Menu Structure",
+            "Historical Event Listings",
+            "External Federation Links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.6206443309783936
+            }
+          ],
+          "reasoning": "The content provided is a navigation dump from the CEV (Confederation Europ\u00e9enne de Volleyball) website, specifically the 'www-old' subdomain. It lists historical events (EuroVolley 2021, Munich 2022), generic competition structures, and links to other national federations. There is no specific mention of the Danish Volleyball Federation, no specific procurement documents, and no technology stack details relevant to the target entity beyond generic industry context."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:44:22.196551",
+          "domain_explored": "https://esvoleybol.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from 'admin' and 'wp-json' structure common in slugs)",
+              "Generic PHP/MySQL Stack"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Entity (Turkey)",
+            "Club-Level Content (ES Voleybol)",
+            "Standard Sports CMS (WordPress)",
+            "Local League Standings (TVF)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.441977024078369
+            }
+          ],
+          "reasoning": "The scraped content from 'esvoleybol.com' is entirely unrelated to the Danish Volleyball Federation. The content is in Turkish, references the Turkish Volleyball Federation (TVF), and pertains to a local club (ES Voleybol) in Istanbul. There are no signals relevant to Danish procurement or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:44:34.338633",
+          "domain_explored": "https://sporteventdenmark.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Analytics Platforms (referenced in 'Analyser og effektberegning')",
+              "Sustainability Management Tools (referenced in 'gr\u00f8nnere events')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Funding Application Process (Ans\u00f8gning om \u00f8konomisk st\u00f8tte)",
+              "Vendor Partnership Opportunities (L\u00e6s mere om muligheder for partnerskab)",
+              "RFP Guidelines for Event Organization"
+            ]
+          },
+          "patterns_found": [
+            "Event Funding & Grants (\u00d8konomisk st\u00f8tte)",
+            "Partnership Solicitation (Partnerskab)",
+            "Event Management Resources (Eventguide/Analyser)",
+            "Sustainability Requirements (Gr\u00f8nnere events)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 334,
+              "elapsed_seconds": 3.106566905975342
+            }
+          ],
+          "reasoning": "The content reveals Sport Event Denmark as a key funding and strategic partner for the Danish Volleyball Federation (DVF). The text explicitly mentions financial support pools ('puljer til \u00f8konomisk st\u00f8tte') and partnerships for hosting international events. Since DVF is hosting the European League Qualification (identified in Iteration 1), they are a direct target beneficiary of this organization, indicating a procurement pathway for event-related services and technology."
+        }
+      ],
+      "total_input_tokens": 5777,
+      "total_output_tokens": 1152,
+      "estimated_cost_usd": 0.034611
+    },
+    "procurement_signals": [
+      "Job Posting: Project Employee",
+      "Event Hosting: European League Qualification",
+      "Strategic Initiative: Dansk Strand Alliance",
+      "Content Hub: V\u00e6rkt\u00f8jskassen (Toolbox)",
+      "Event Funding & Grants (\u00d8konomisk st\u00f8tte)",
+      "Partnership Solicitation (Partnerskab)",
+      "Event Management Resources (Eventguide/Analyser)",
+      "Sustainability Requirements (Gr\u00f8nnere events)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Danish Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:44:34.342284"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.338927",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:26.964807"
+}

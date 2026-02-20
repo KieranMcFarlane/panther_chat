@@ -1,0 +1,157 @@
+{
+  "entity_id": "fc_metz",
+  "entity_name": "FC Metz",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "fcmetz.com",
+    "billetterie-fcmetz.com",
+    "academy-fcmetz.com",
+    "stadesaintsymphorien.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_metz",
+      "entity_name": "FC Metz",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://academy-fcmetz.com",
+        "https://billetterie-fcmetz.com",
+        "https://stadesaintsymphorien.com",
+        "https://fcmetz.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Metz may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:23:26.564835",
+          "domain_explored": "https://fcmetz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Subdomain: boutique.fcmetz.com)",
+              "Content Management System (for fcmetz.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Kappa (Sportswear supplier for 'Veste Vintage' and likely kits)",
+              "Merchandise Inventory Management: Active sale of 25/26 season kits"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandising Operations",
+            "Content Management System (CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.015584707260132
+            }
+          ],
+          "reasoning": "The content reveals the operational use of an e-commerce platform (boutique.fcmetz.com) for merchandise sales and a CMS for news/updates. While this confirms the existence of digital infrastructure, it does not explicitly signal *new* procurement intent (RFPs, hiring, or tech stack changes). However, the presence of 'Kappa' as a vendor and the specific e-commerce URLs are relevant vendor intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:23:29.315733",
+          "domain_explored": "https://billetterie-fcmetz.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:23:50.733852",
+          "domain_explored": "https://academy-fcmetz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress",
+              "Facebook Social Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Educational program outsourcing (Scolarit\u00e9 individualis\u00e9e)",
+              "Internat/Housing management (H\u00e9bergement)",
+              "International recruitment services",
+              "Catering and Nutrition services"
+            ]
+          },
+          "patterns_found": [
+            "Educational Services Procurement",
+            "International Student Management",
+            "Boarding & Logistics Operations",
+            "Content Management System (WordPress)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 309,
+              "elapsed_seconds": 16.759166955947876
+            }
+          ],
+          "reasoning": "The content reveals the 'FC Metz International Football Academy' (MIFA), a distinct business unit focused on education and boarding for international students (ages 16-20). While the page is primarily marketing, the operation of an international boarding school implies procurement needs for: Educational partnerships, catering/food services, facility maintenance for housing, and travel logistics. The site structure indicates a WordPress implementation, suggesting a need for web maintenance services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:23:53.504302",
+          "domain_explored": "https://stadesaintsymphorien.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2785,
+      "total_output_tokens": 582,
+      "estimated_cost_usd": 0.017085
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Metz may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:23:53.504598"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.123387",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:26.872479"
+}

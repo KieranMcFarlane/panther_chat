@@ -1,0 +1,211 @@
+{
+  "entity_id": "beijing_guoan",
+  "entity_name": "Beijing Guoan",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "fcguoan.com",
+    "fcguoan.sina.com.cn",
+    "football.fandom.com",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/football-careers",
+      "https://www.linkedin.com/posts/jobs4football_jobs4football-footballopportunities-footballmedicine-activity-7183013416645595138-Z_au"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "beijing_guoan",
+      "entity_name": "Beijing Guoan",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://onefootball.com",
+        "https://www.linkedin.com/posts/jobs4football_jobs4football-footballopportunities-footballmedicine-activity-7183013416645595138-Z_au",
+        "https://fcguoan.com",
+        "https://uk.linkedin.com/company/football-careers",
+        "https://fcguoan.sina.com.cn",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Beijing Guoan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:34:07.434127",
+          "domain_explored": "https://fcguoan.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:34:22.430363",
+          "domain_explored": "https://fcguoan.sina.com.cn",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "mojibake_encoding_error",
+            "static_news_portal_structure",
+            "legacy_domain_usage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 394,
+              "output_tokens": 179,
+              "elapsed_seconds": 4.615161895751953
+            }
+          ],
+          "reasoning": "The scraped content is heavily corrupted with Mojibake (encoding errors), rendering the text unreadable for analysis. The URL structure (fcguoan.sina.com.cn) indicates a legacy sports news portal hosted on Sina, typically used for public relations rather than corporate procurement operations. There are no discernible signals of technology stacks, job postings, or RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:34:38.817441",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_fan_wiki_content",
+            "irrelevant_league_focus",
+            "user_generated_content_structure",
+            "absence_of_corporate_entity_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 189,
+              "elapsed_seconds": 10.526916027069092
+            }
+          ],
+          "reasoning": "The scraped content is from a generic football fandom wiki (football.fandom.com). It contains general information about leagues (Premier League, La Liga), players (Ethan Nwaneri), and community guidelines. There is absolutely no mention of Beijing Guoan, its corporate structure, or any procurement activities. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:34:45.223903",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:34:52.128001",
+          "domain_explored": "https://uk.linkedin.com/company/football-careers",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Network Manager (Football Data & Analysis) at Empire (Data Analytics)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "third_party_recruitment_agency",
+            "generic_industry_job_board",
+            "irrelevant_entity_focus",
+            "vendor_b2b_marketing_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 228,
+              "elapsed_seconds": 2.5663132667541504
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Football Careers', a third-party recruitment agency based in Glasgow, not Beijing Guoan. While the page mentions a 'Featured Job' for a data analytics company, this is a listing for a client of the agency, not a direct procurement signal from Beijing Guoan. The content is B2B marketing material for the agency's services, not governance or procurement data for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:34:58.703494",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_jobs4football-footballopportunities-footballmedicine-activity-7183013416645595138-Z_au",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "third_party_content_aggregator",
+            "editorial_interview_content",
+            "irrelevant_entity_focus",
+            "generic_industry_insights"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1591,
+              "output_tokens": 185,
+              "elapsed_seconds": 1.734307050704956
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post by 'Jobs4football', a third-party job board and media outlet. It features an interview with a sports medicine professional (Filipe Cymbron) regarding his career and general methodology. There is no mention of Beijing Guoan, no specific procurement signals, RFPs, or technology investments related to the target entity."
+        }
+      ],
+      "total_input_tokens": 4932,
+      "total_output_tokens": 781,
+      "estimated_cost_usd": 0.026511
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Beijing Guoan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:34:58.704077"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.194548",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:38.929050"
+}

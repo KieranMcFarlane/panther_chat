@@ -1,0 +1,280 @@
+{
+  "entity_id": "international_sumo_federation_(ifs)",
+  "entity_name": "International Sumo Federation (IFS)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "ifs-sumo.org",
+    "sumoindia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E6%AC%A7%E4%BA%9A%E5%9B%BD%E9%99%85%E5%BC%80%E6%88%B7%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF.%E9%97%AEa57688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%9B%BD%E9%99%85%E4%BB%A3%E7%90%86%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B.%E5%85%A5xx55688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E4%BC%9A%E5%91%98%E8%B4%A6%E5%8F%B7%E7%94%B3%E8%AF%B7%E6%B5%81%E7%A8%8B%E8%AF%A6%E7%BB%86%E6%8C%87%E5%8D%97%E4%B8%8E%E6%95%99%E5%AD%A6%E5%88%86%E4%BA%AB%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E6%89%93.%E5%BC%80xx54688%E3%80%82cc%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/view/it-sales-executive-managed-it-services-healthcare-vertical-at-konica-minolta-business-solutions-u-s-a-inc-4331749214",
+      "https://www.linkedin.com/jobs/%E7%BE%8E%E5%9B%BD%E5%8A%A0%E5%B7%9E%E5%A4%A7%E5%AD%A6%E5%B0%94%E6%B9%BE%E5%88%86%E6%A0%A1%E7%A0%94%E7%A9%B6%E7%94%9F%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86012573%E3%80%91%E9%AB%98%E4%BB%BF%E5%BC%97%E5%90%89%E5%B0%BC%E4%BA%9A%E5%A4%A7%E5%AD%A6%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-%E3%80%A56o%E2%92%93573%E3%80%91%E5%AD%A6%E7%94%9Fid%E5%8D%A1ntu%E6%AF%95%E4%B8%9A%E8%AF%81%E6%88%90%E7%BB%A9%E5%8D%95%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86o%E2%92%9357%E2%92%8A%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E4%BA%A8%E5%88%A9%E9%9B%86%E5%9B%A2%E5%BC%80%E6%88%B7%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%E2%86%92%E7%BD%91%E6%AD%A2xx57688%E3%80%82cc%E3%80%91%E5%8A%A0%E6%8B%BF%E5%A4%A728%E5%BC%80%E5%A5%96%E6%9F%A5%E8%AF%A2%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-2%E2%92%90%D1%87%D0%B7%D0%B17%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-%E3%80%A52%E2%92%8D77o%D0%B1%E3%80%A5%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E8%80%81%E8%A1%97%E5%87%AF%E5%8D%9A%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%A77O%D0%97%E2%92%8E%D0%91%E2%92%94%E3%80%91%E5%8D%8E%E7%BA%B3%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BBQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E3%80%A54%E3%80%A597%E3%80%A57O%E3%80%91%E9%93%B6%E9%92%BB%E5%9B%BD%E9%99%85%E5%BC%80%E6%9C%8D%E7%83%AD%E7%BA%BFQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:%D0%91%E2%92%90O57%E2%92%96%D0%919%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E6%80%80%E9%9B%86%E5%8E%BF%E6%B0%B8%E5%9B%BA%E9%95%87%E6%80%8E%E4%B9%88%E5%8F%AB%E5%B0%8F%E5%A6%B9%E6%9C%8D%E5%8A%A1%C2%AB%E5%AE%98%E6%96%B9%E7%BA%A6%E7%82%AE%EF%BD%8D%EF%BC%95%EF%BC%92%EF%BC%90%EF%BC%90%EF%BC%8E%EF%BD%96%EF%BD%89%EF%BD%90%E8%B0%B7%E6%AD%8C%E6%97%97%E8%88%B0%E5%BA%97%C2%BB%E6%80%80%E9%9B%86%E5%8E%BF%E6%B0%B8%E5%9B%BA%E9%95%87%E6%80%8E%E4%B9%88%E7%BA%A6%E5%B0%8F%E5%A7%90%E4%B8%8A%E9%97%A8%E6%9C%8D%E5%8A%A1%E3%8A%A3%E6%80%80%E9%9B%86%E5%8E%BF%E6%B0%B8%E5%9B%BA%E9%95%87%E6%80%8E%E4%B9%88%E7%BA%A6%E7%BE%8E%E5%A5%B3%E4%B8%8A%E9%97%A8%E6%9C%8D%E5%8A%A1%E3%8A%A3%E6%80%80%E9%9B%86%E5%8E%BF%E6%B0%B8%E5%9B%BA%E9%95%87%E6%89%BE%E5%B0%8F%E5%A7%90%E7%BA%A6%E7%82%AE.xya-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_sumo_federation_(ifs)",
+      "entity_name": "International Sumo Federation (IFS)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E6%AC%A7%E4%BA%9A%E5%9B%BD%E9%99%85%E5%BC%80%E6%88%B7%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF.%E9%97%AEa57688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%9B%BD%E9%99%85%E4%BB%A3%E7%90%86%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B.%E5%85%A5xx55688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E4%BC%9A%E5%91%98%E8%B4%A6%E5%8F%B7%E7%94%B3%E8%AF%B7%E6%B5%81%E7%A8%8B%E8%AF%A6%E7%BB%86%E6%8C%87%E5%8D%97%E4%B8%8E%E6%95%99%E5%AD%A6%E5%88%86%E4%BA%AB%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E6%89%93.%E5%BC%80xx54688%E3%80%82cc%E3%80%91-jobs",
+        "https://www.linkedin.com/jobs/view/it-sales-executive-managed-it-services-healthcare-vertical-at-konica-minolta-business-solutions-u-s-a-inc-4331749214",
+        "https://www.linkedin.com/jobs/%E8%80%81%E8%A1%97%E5%87%AF%E5%8D%9A%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%A77O%D0%97%E2%92%8E%D0%91%E2%92%94%E3%80%91%E5%8D%8E%E7%BA%B3%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BBQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E3%80%A54%E3%80%A597%E3%80%A57O%E3%80%91%E9%93%B6%E9%92%BB%E5%9B%BD%E9%99%85%E5%BC%80%E6%9C%8D%E7%83%AD%E7%BA%BFQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:%D0%91%E2%92%90O57%E2%92%96%D0%919%E3%80%91-jobs",
+        "https://ifs-sumo.org",
+        "https://www.linkedin.com/jobs/%E7%BE%8E%E5%9B%BD%E5%8A%A0%E5%B7%9E%E5%A4%A7%E5%AD%A6%E5%B0%94%E6%B9%BE%E5%88%86%E6%A0%A1%E7%A0%94%E7%A9%B6%E7%94%9F%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86012573%E3%80%91%E9%AB%98%E4%BB%BF%E5%BC%97%E5%90%89%E5%B0%BC%E4%BA%9A%E5%A4%A7%E5%AD%A6%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-%E3%80%A56o%E2%92%93573%E3%80%91%E5%AD%A6%E7%94%9Fid%E5%8D%A1ntu%E6%AF%95%E4%B8%9A%E8%AF%81%E6%88%90%E7%BB%A9%E5%8D%95%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86o%E2%92%9357%E2%92%8A%E3%80%91-jobs",
+        "https://www.linkedin.com/jobs/%E4%BA%A8%E5%88%A9%E9%9B%86%E5%9B%A2%E5%BC%80%E6%88%B7%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%E2%86%92%E7%BD%91%E6%AD%A2xx57688%E3%80%82cc%E3%80%91%E5%8A%A0%E6%8B%BF%E5%A4%A728%E5%BC%80%E5%A5%96%E6%9F%A5%E8%AF%A2%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-2%E2%92%90%D1%87%D0%B7%D0%B17%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-%E3%80%A52%E2%92%8D77o%D0%B1%E3%80%A5%E3%80%91-jobs",
+        "https://sumoindia.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Sumo Federation (IFS) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:56:39.392336",
+          "domain_explored": "https://ifs-sumo.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:56:50.865493",
+          "domain_explored": "https://sumoindia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Newsletter subscription capability (Mailchimp/Custom)"
+            ]
+          },
+          "patterns_found": [
+            "generic_content_cms",
+            "federation_hierarchy",
+            "newsletter_subscription"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.9807000160217285
+            }
+          ],
+          "reasoning": "The content is from the Sumo Federation of India (a member federation of IFS), not the IFS itself. It consists primarily of promotional text ('Be more... be Sumo'), historical context, and basic navigation. While it mentions a newsletter subscription, there are no specific procurement signals, technology stacks, or job postings related to the International Sumo Federation's central operations or purchasing intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:57:04.183489",
+          "domain_explored": "https://www.linkedin.com/jobs/%E7%BC%85%E7%94%B8%E6%AC%A7%E4%BA%9A%E5%9B%BD%E9%99%85%E5%BC%80%E6%88%B7%E7%94%B5%E8%AF%9D%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%AE%BF.%E9%97%AEa57688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%9B%BD%E9%99%85%E4%BB%A3%E7%90%86%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E8%BF%9B.%E5%85%A5xx55688.cc%E3%80%91%E8%85%BE%E9%BE%99%E5%85%AC%E5%8F%B8%E4%BC%9A%E5%91%98%E8%B4%A6%E5%8F%B7%E7%94%B3%E8%AF%B7%E6%B5%81%E7%A8%8B%E8%AF%A6%E7%BB%86%E6%8C%87%E5%8D%97%E4%B8%8E%E6%95%99%E5%AD%A6%E5%88%86%E4%BA%AB%E3%80%90%E8%B0%B7%E6%AD%8C%E7%99%BE%E5%BA%A6%E9%9C%B8%E5%B1%8F%E2%86%92%E6%89%93.%E5%BC%80xx54688%E3%80%82cc%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Senior Manager - Special Events",
+                "company": "Herm\u00e8s",
+                "location": "Manhattan, NY",
+                "relevance": "None - Unrelated entity"
+              }
+            ],
+            "procurement_indicators": [
+              "Negative Signal: Data source integrity compromised by spam"
+            ]
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "unrelated_domain_content",
+            "scam_indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 310,
+              "elapsed_seconds": 8.784801006317139
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn jobs page that has been compromised or targeted by SEO spam injection. The 'Job Title' and search query strings contain repeated Chinese text related to gambling services ('\u7f05\u7538\u6b27\u4e9a\u56fd\u9645\u5f00\u6237' - Myanmar Eurasian International Account Opening) and SEO manipulation keywords ('\u8c37\u6b4c\u767e\u5ea6\u9738\u5c4f' - Google Baidu Screen Domination), rather than legitimate International Sumo Federation (IFS) content. The visible job listing is for Herm\u00e8s in Manhattan, which is unrelated to IFS. This indicates the URL or search term led to a poisoned or irrelevant result set."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:57:10.434090",
+          "domain_explored": "https://www.linkedin.com/jobs/view/it-sales-executive-managed-it-services-healthcare-vertical-at-konica-minolta-business-solutions-u-s-a-inc-4331749214",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Managed IT Services",
+              "Cyber Security/MSSP",
+              "Secure Cloud Solutions"
+            ],
+            "job_postings": [
+              "IT Sales Executive - Managed IT Services (Healthcare Vertical) at Konica Minolta"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "unrelated_entity",
+            "vendor_side_recruitment",
+            "healthcare_vertical_focus",
+            "managed_services_sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1694,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.586635112762451
+            }
+          ],
+          "reasoning": "The content is a job posting for an IT Sales Executive at Konica Minolta Business Solutions U.S.A., targeting the Healthcare vertical. This is a vendor-side sales role (selling Managed IT/Cybersecurity services) and is completely unrelated to the International Sumo Federation (IFS). It offers no intelligence regarding IFS's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:57:18.067135",
+          "domain_explored": "https://www.linkedin.com/jobs/%E7%BE%8E%E5%9B%BD%E5%8A%A0%E5%B7%9E%E5%A4%A7%E5%AD%A6%E5%B0%94%E6%B9%BE%E5%88%86%E6%A0%A1%E7%A0%94%E7%A9%B6%E7%94%9F%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86012573%E3%80%91%E9%AB%98%E4%BB%BF%E5%BC%97%E5%90%89%E5%B0%BC%E4%BA%9A%E5%A4%A7%E5%AD%A6%E6%AF%95%E4%B8%9A%E8%AF%81%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-%E3%80%A56o%E2%92%93573%E3%80%91%E5%AD%A6%E7%94%9Fid%E5%8D%A1ntu%E6%AF%95%E4%B8%9A%E8%AF%81%E6%88%90%E7%BB%A9%E5%8D%95%E3%80%90%E5%8A%9E%E5%9B%BD%E5%A4%96%E6%AF%95%E4%B8%9A%E8%AF%81%2Bq-86o%E2%92%9357%E2%92%8A%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive Assistant, Office of CEO (Herm\u00e8s)",
+              "Private Equity Associate - Media (Blacklock Group)",
+              "Executive Assistant, A&R (Warner Music Group)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "unrelated_domain_content",
+            "diploma_mill_scam"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1895,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.2344210147857666
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job search results page that has been compromised by SEO spam. The URL and page content are injected with Chinese text advertising fake diploma services ('\u529e\u56fd\u5916\u6bd5\u4e1a\u8bc1' - Buy Foreign Diploma) and contact numbers ('+q 86012573'). The actual job listings (Herm\u00e8s, Warner Music Group) are generic and unrelated to the International Sumo Federation (IFS). There is no procurement signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:57:24.853589",
+          "domain_explored": "https://www.linkedin.com/jobs/%E4%BA%A8%E5%88%A9%E9%9B%86%E5%9B%A2%E5%BC%80%E6%88%B7%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%E2%86%92%E7%BD%91%E6%AD%A2xx57688%E3%80%82cc%E3%80%91%E5%8A%A0%E6%8B%BF%E5%A4%A728%E5%BC%80%E5%A5%96%E6%9F%A5%E8%AF%A2%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-2%E2%92%90%D1%87%D0%B7%D0%B17%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E7%94%B5%E8%AF%9D%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF%2Bqq-%E3%80%A52%E2%92%8D77o%D0%B1%E3%80%A5%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "unrelated_domain_content",
+            "illegitimate_gambling_references"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2068,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.580812931060791
+            }
+          ],
+          "reasoning": "The URL and scraped content contain heavy spam injection, specifically referencing 'Henry Group' (\u4ea8\u5229\u96c6\u56e2), 'Canada 28' (a lottery scheme), and customer service scams. The text is a mix of Chinese characters and obfuscated strings designed to manipulate search engine rankings (SEO poisoning) on the LinkedIn domain. There is absolutely no connection to the International Sumo Federation (IFS) or legitimate procurement activities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:57:39.110544",
+          "domain_explored": "https://www.linkedin.com/jobs/%E8%80%81%E8%A1%97%E5%87%AF%E5%8D%9A%E5%85%AC%E5%8F%B8%E5%9C%A8%E7%BA%BF%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%A77O%D0%97%E2%92%8E%D0%91%E2%92%94%E3%80%91%E5%8D%8E%E7%BA%B3%E5%85%AC%E5%8F%B8%E6%80%8E%E4%B9%88%E8%81%94%E7%B3%BBQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E3%80%A54%E3%80%A597%E3%80%A57O%E3%80%91%E9%93%B6%E9%92%BB%E5%9B%BD%E9%99%85%E5%BC%80%E6%9C%8D%E7%83%AD%E7%BA%BFQQ%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:%D0%91%E2%92%90O57%E2%92%96%D0%919%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "unrelated_domain_content",
+            "black_hat_techniques"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2253,
+              "output_tokens": 171,
+              "elapsed_seconds": 10.071826934814453
+            }
+          ],
+          "reasoning": "The URL and scraped content contain heavy keyword stuffing and spam injection (Chinese characters mixed with '\u9738\u5c4fgoogle\u6280\u672f' and QQ numbers). The actual job listings returned (Herm\u00e8s, BM Digital) are generic LinkedIn results unrelated to the International Sumo Federation. This is a malicious SEO page, not a procurement signal."
+        }
+      ],
+      "total_input_tokens": 10925,
+      "total_output_tokens": 1379,
+      "estimated_cost_usd": 0.053459999999999994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Sumo Federation (IFS) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:57:39.112469"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463290",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:01.156496"
+}

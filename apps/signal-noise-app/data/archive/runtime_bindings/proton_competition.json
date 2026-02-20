@@ -1,0 +1,191 @@
+{
+  "entity_id": "proton_competition",
+  "entity_name": "Proton Competition",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "proton-competition.com",
+    "gt-world-challenge-europe.com",
+    "fordracing.com",
+    "europeanlemansseries.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "proton_competition",
+      "entity_name": "Proton Competition",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://gt-world-challenge-europe.com",
+        "https://europeanlemansseries.com",
+        "https://fordracing.com",
+        "https://proton-competition.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Proton Competition may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:37:56.653561",
+          "domain_explored": "https://proton-competition.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: Long-standing engineering and technical partnership with Porsche (Porsche 963, Porsche 911 GT3 R)",
+              "Strategic Partnership: Technical partnership with Ford (Ford Mustang GT3)",
+              "Operational Scope: Global logistics management (FIA WEC, Asian Le Mans Series, ELMS)"
+            ]
+          },
+          "patterns_found": [
+            "Operational focus on motorsport logistics and race results",
+            "Strategic reliance on major automotive partnerships (Porsche, Ford)",
+            "Content structure typical of PR/News updates rather than corporate governance"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1318,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.20527982711792
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of race results, upcoming schedules, and general 'About Us' marketing copy. While the text references partnerships with Porsche and Ford, these are established racing collaborations, not active procurement signals. There are no job postings, RFPs, or technology investments mentioned in this specific text block."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:38:03.114883",
+          "domain_explored": "https://gt-world-challenge-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (Official #GTWorld APP)",
+              "Generic CMS (implied by news structure)"
+            ],
+            "job_postings": [
+              "SRO GT Academy (Racing driver training, not corporate employment)"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem (CrowdStrike, AWS, D'Ieteren)",
+              "Event Logistics (Ticketing, VIP Packages)"
+            ]
+          },
+          "patterns_found": [
+            "Content Irrelevance",
+            "Third-Party Ecosystem",
+            "B2C Marketing Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.9673280715942383
+            }
+          ],
+          "reasoning": "The scraped content is from the GT World Challenge Europe series organizer (SRO), not Proton Competition. While Proton competes in this series, this page contains B2C news (tickets, concerts, driver signings) and general series standings. It offers no insight into Proton's internal procurement, technology stack, or governance. This is a 'false positive' signal in the context of entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:38:10.690342",
+          "domain_explored": "https://fordracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Marketing Focus",
+            "Third-Party Ecosystem",
+            "Content Irrelevance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.7854158878326416
+            }
+          ],
+          "reasoning": "The content is sourced from Ford Racing, a primary partner/sponsor of Proton Competition. The page is a consumer-facing news portal focused on race schedules, vehicle specifications (Raptor T1+, Mustang GT3), and brand storytelling. It contains no corporate governance data, procurement signals, or technology stack information relevant to Proton Competition's internal operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:38:31.188142",
+          "domain_explored": "https://europeanlemansseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript-heavy frontend (likely Vue.js, React, or Angular based on generic SPA error message)",
+              "Cloudflare (inferred from generic blocking/error pages common on this stack)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "None detected (Content blocked/irrelevant)"
+            ]
+          },
+          "patterns_found": [
+            "Client-Side Rendering (CSR) Dependency",
+            "Third-Party Ecosystem",
+            "Content Irrelevance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 559,
+              "output_tokens": 277,
+              "elapsed_seconds": 17.385589838027954
+            }
+          ],
+          "reasoning": "The target URL (europeanlemansseries.com) is a governing body/sanctioning entity for the series in which Proton Competition competes. The scraped content indicates a JavaScript-heavy Single Page Application (SPA) architecture that blocks standard scraping, revealing no static procurement signals. As a sporting authority, this site focuses on regulations, standings, and event logistics rather than the internal procurement operations of a private team like Proton Competition."
+        }
+      ],
+      "total_input_tokens": 4808,
+      "total_output_tokens": 1018,
+      "estimated_cost_usd": 0.029693999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Proton Competition may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:38:31.192495"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367727",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:16.113225"
+}

@@ -1,0 +1,157 @@
+{
+  "entity_id": "suwon_samsung_bluewings",
+  "entity_name": "Suwon Samsung Bluewings",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "bluewings.kr",
+    "news.samsung.com",
+    "play.google.com",
+    "wikidata.org",
+    "fcdynamo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "suwon_samsung_bluewings",
+      "entity_name": "Suwon Samsung Bluewings",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://fcdynamo.com",
+        "https://bluewings.kr",
+        "https://news.samsung.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Suwon Samsung Bluewings may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:49:17.563754",
+          "domain_explored": "https://bluewings.kr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:49:50.346954",
+          "domain_explored": "https://news.samsung.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:49:56.378705",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_mobile_app_store_content",
+            "irrelevant_gaming_keywords"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.6589057445526123
+            }
+          ],
+          "reasoning": "The provided content is a generic list of mobile games from the Google Play Store (e.g., Candy Crush, PUBG Mobile). It contains no information regarding Suwon Samsung Bluewings, their business operations, technology stack, or procurement activities. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:49:59.546609",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:50:07.434171",
+          "domain_explored": "https://fcdynamo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_sports_news",
+            "wrong_entity_target",
+            "ukrainian_language_content",
+            "youth_academy_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 188,
+              "elapsed_seconds": 4.157449960708618
+            }
+          ],
+          "reasoning": "The scraped content is from FC Dynamo Kyiv (fcdynamo.com), a Ukrainian football club, which is completely unrelated to the target entity, Suwon Samsung Bluewings (Korean club). The content consists solely of sports news regarding youth teams (U19, U14) and training camps. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2907,
+      "total_output_tokens": 346,
+      "estimated_cost_usd": 0.013911
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Suwon Samsung Bluewings may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:50:07.434806"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.187188",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:17.337943"
+}

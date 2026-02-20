@@ -1,0 +1,386 @@
+{
+  "entity_id": "major_league_cricket_(mlc)",
+  "entity_name": "Major League Cricket (MLC)",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "majorleaguecricket.com",
+    "majorleaguecrickett20.com",
+    "seattleorcas.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/graphic-designer-at-major-league-cricket-4365082743",
+      "https://www.linkedin.com/jobs/view/finance-manager-at-major-league-cricket-4355818947",
+      "https://www.linkedin.com/jobs/view/commercial-account-manager-at-major-league-cricket-4351972155",
+      "https://www.linkedin.com/jobs/view/tournament-travel-logistics-associate-at-major-league-cricket-4359267771",
+      "https://www.linkedin.com/jobs/view/graphic-designer-at-wiraa-4366114392",
+      "https://www.linkedin.com/jobs/view/graphic-designer-at-wiraa-4365749102"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "major_league_cricket_(mlc)",
+      "entity_name": "Major League Cricket (MLC)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.28,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.16,
+        0.22,
+        0.28
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/tournament-travel-logistics-associate-at-major-league-cricket-4359267771",
+        "https://www.linkedin.com/jobs/view/graphic-designer-at-wiraa-4366114392",
+        "https://www.linkedin.com/jobs/view/finance-manager-at-major-league-cricket-4355818947",
+        "https://majorleaguecricket.com",
+        "https://www.linkedin.com/jobs/view/commercial-account-manager-at-major-league-cricket-4351972155",
+        "https://seattleorcas.com",
+        "https://majorleaguecrickett20.com",
+        "https://www.linkedin.com/jobs/view/graphic-designer-at-major-league-cricket-4365082743"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Procurement Process Governance",
+        "Financial ERP/Accounting Stack",
+        "Vendor Management & Compliance",
+        "Budget Execution & Oversight",
+        "Partnership Lifecycle Management",
+        "Vendor & Agency Coordination",
+        "Commercial Operations Governance",
+        "Revenue Operations (RevOps) Support",
+        "Travel & Accommodation Procurement",
+        "Vendor Relationship Management",
+        "Event Logistics Operations",
+        "Contract Role (Seasonal/Project-based)",
+        "Marketing & Creative Services Procurement",
+        "Event Branding & Asset Management",
+        "Cross-Functional Design Operations",
+        "Vendor/Contractor Engagement Model"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Major League Cricket (MLC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:29:20.203407",
+          "domain_explored": "https://majorleaguecricket.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:29:28.781172",
+          "domain_explored": "https://majorleaguecrickett20.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms (Buy Tickets Now)",
+              "Streaming Infrastructure (JioCinema, Willow)",
+              "Web Analytics/Tracking (implied by digital presence)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Leasing/Management: Grand Prairie Stadium (Dallas), Broward County Stadium (Florida), Oakland Coliseum (California)",
+              "Broadcasting Partners: Star Sports, Willow, ESPN, Sky NZ",
+              "Title Sponsor: Cognizant (Technology Consulting partnership potential)",
+              "Event Operations: Multi-venue logistics for June-July 2025 window"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations & Infrastructure",
+            "Media Rights & Broadcasting",
+            "Title Sponsorship (Cognizant)",
+            "Multi-venue Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 402,
+              "elapsed_seconds": 4.829814910888672
+            }
+          ],
+          "reasoning": "The content reveals operational scale and infrastructure requirements for the 2025 season. Key procurement signals include the reliance on specific stadiums (Grand Prairie Stadium, Broward County Stadium, Oakland Coliseum), which implies facility management and service contracts. The listing of official broadcasters (Willow, Star Sports, etc.) confirms established media partnerships. The presence of a title sponsor (Cognizant) indicates an active sponsorship/commercial department. While no direct RFPs are visible, the operational complexity (multi-state logistics, broadcast production) supports the capability for procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:29:38.712318",
+          "domain_explored": "https://seattleorcas.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (TikTok, Bluesky, LinkedIn, YouTube)",
+              "Web Technologies (Link aggregation, likely WordPress or similar CMS)"
+            ],
+            "job_postings": [
+              "Head Coach (Adam Voges)",
+              "Women's Cricket Brand Ambassadors"
+            ],
+            "procurement_indicators": [
+              "BlockDAG Partnership Deal (Sponsorship/Blockchain Tech)",
+              "Investment in Southern Brave (Strategic Asset Acquisition)",
+              "Co-Owner Partnership Expansion with GMR Sports"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Sports Operations Procurement",
+            "Digital Marketing Stack",
+            "Strategic Investment Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 379,
+              "elapsed_seconds": 4.112893104553223
+            }
+          ],
+          "reasoning": "The content reveals active procurement and partnership activities by the Seattle Orcas, a key franchise within the Major League Cricket (MLC) ecosystem. The announcement of a 'Groundbreaking Partnership Deal with BlockDAG' indicates a procurement decision for a sponsor or technical partner. The hiring of a Head Coach (Adam Voges) and Brand Ambassadors reflects operational procurement (human capital). The investment in 'The Hundred's Southern Brave' by co-owners suggests complex governance and cross-market investment flows. The extensive social media stack (Facebook, Instagram, TikTok, Bluesky) indicates digital engagement requirements."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:29:46.138225",
+          "domain_explored": "https://www.linkedin.com/jobs/view/graphic-designer-at-major-league-cricket-4365082743",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Graphic Designer (Title only, content inaccessible)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Sign-in Wall / Restricted Access"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.606788158416748
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn login page and a list of unrelated job recommendations (Savage X Fenty, Tarte Cosmetics). The specific job description for the 'Graphic Designer at Major League Cricket' is hidden behind a sign-in wall and not present in the scraped text. Therefore, no specific procurement signals or technology stack details can be extracted for MLC."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:29:54.041592",
+          "domain_explored": "https://www.linkedin.com/jobs/view/finance-manager-at-major-league-cricket-4355818947",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "General Ledger Software (ERP)",
+              "Accounts Payable (AP) Automation Tools",
+              "Financial Consolidation Software"
+            ],
+            "job_postings": [
+              "Finance Manager (Grand Prairie, TX)"
+            ],
+            "procurement_indicators": [
+              "Direct reference to 'procurement processes' in responsibilities",
+              "Requirement for 'adherence to established financial controls'",
+              "Oversight of 'budget execution across MLC's portfolio'",
+              "Management of 'accounts payable' and vendor transactions"
+            ]
+          },
+          "patterns_found": [
+            "Procurement Process Governance",
+            "Financial ERP/Accounting Stack",
+            "Vendor Management & Compliance",
+            "Budget Execution & Oversight"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.20504093170166
+            }
+          ],
+          "reasoning": "The job description for a Finance Manager explicitly references 'adherence to established financial controls and procurement processes' and 'Budget Management, Procurement' as key responsibilities. It confirms the existence of a structured finance function requiring ERP/Accounting software (NetSuite/Sage/Intacct likely) and highlights the need for vendor management and compliance oversight as the league scales."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:30:02.949504",
+          "domain_explored": "https://www.linkedin.com/jobs/view/commercial-account-manager-at-major-league-cricket-4351972155",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems (implied by 'partnership reporting' and 'documentation')",
+              "Project Management Tools (implied by 'timelines' and 'approvals')"
+            ],
+            "job_postings": [
+              "Commercial Account Manager"
+            ],
+            "procurement_indicators": [
+              "Vendor & Agency Management: Explicit responsibility for serving as the primary contact for agencies and vendors.",
+              "Contract Governance: Focus on meeting contractual obligations and managing deliverables.",
+              "Centralized Procurement Structure: Role reports to VP, Commercial, indicating a centralized decision-making hub for partnerships.",
+              "Stakeholder Collaboration: Coordination between MLC HQ and franchise teams for asset allocation."
+            ]
+          },
+          "patterns_found": [
+            "Partnership Lifecycle Management",
+            "Vendor & Agency Coordination",
+            "Commercial Operations Governance",
+            "Revenue Operations (RevOps) Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 383,
+              "elapsed_seconds": 4.822819948196411
+            }
+          ],
+          "reasoning": "The job description for a Commercial Account Manager provides strong evidence of active procurement and vendor management operations. The role explicitly involves managing relationships with 'sponsors, agencies, and vendors,' ensuring 'contractual obligations' are met, and coordinating 'asset delivery.' This indicates a structured environment for third-party partnerships and procurement governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:30:16.665223",
+          "domain_explored": "https://www.linkedin.com/jobs/view/tournament-travel-logistics-associate-at-major-league-cricket-4359267771",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Travel Management Software (implied for booking coordination)",
+              "Event Logistics Platforms"
+            ],
+            "job_postings": [
+              "Tournament Travel & Logistics Associate"
+            ],
+            "procurement_indicators": [
+              "Securing relationships with airlines, hotels, and transport providers",
+              "Managing vendor relationships for tournament delivery",
+              "Coordination of accommodation and transportation logistics"
+            ]
+          },
+          "patterns_found": [
+            "Travel & Accommodation Procurement",
+            "Vendor Relationship Management",
+            "Event Logistics Operations",
+            "Contract Role (Seasonal/Project-based)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1711,
+              "output_tokens": 305,
+              "elapsed_seconds": 9.987865209579468
+            }
+          ],
+          "reasoning": "The job description explicitly outlines responsibility for 'securing and managing relationships with airlines, hotels, and ground transportation providers.' This is direct evidence of procurement activity within the Operations & Events function. The role involves vendor selection and management for the 2026 season, indicating a specific procurement cycle for tournament logistics."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:30:24.273944",
+          "domain_explored": "https://www.linkedin.com/jobs/view/graphic-designer-at-wiraa-4366114392",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Photoshop, Illustrator, InDesign)",
+              "Digital Asset Management (implied)",
+              "Ticketing Platforms (implied)"
+            ],
+            "job_postings": [
+              "Graphic Designer (Contract)"
+            ],
+            "procurement_indicators": [
+              "Contract-based hiring model for specialized skills",
+              "Procurement of physical materials (venue signage, accreditation, credentials)",
+              "Investment in visual identity for the 2026 season",
+              "Support for Commercial Partnerships (sponsorship proposals, mockups)"
+            ]
+          },
+          "patterns_found": [
+            "Marketing & Creative Services Procurement",
+            "Event Branding & Asset Management",
+            "Cross-Functional Design Operations",
+            "Vendor/Contractor Engagement Model"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 367,
+              "elapsed_seconds": 3.894495964050293
+            }
+          ],
+          "reasoning": "The job posting confirms MLC is actively procuring creative talent, specifically a Graphic Designer on a contract basis. The role description reveals specific procurement needs for software (Adobe Creative Suite), hardware (implied for remote work), and materials for event operations (signage, credentials). It also highlights the workflow between Marketing, Commercial Partnerships, and Ticketing, indicating a structured demand for design assets to support revenue generation and fan experience."
+        }
+      ],
+      "total_input_tokens": 11050,
+      "total_output_tokens": 2359,
+      "estimated_cost_usd": 0.068535
+    },
+    "procurement_signals": [
+      "Procurement Process Governance",
+      "Financial ERP/Accounting Stack",
+      "Vendor Management & Compliance",
+      "Budget Execution & Oversight",
+      "Partnership Lifecycle Management",
+      "Vendor & Agency Coordination",
+      "Commercial Operations Governance",
+      "Revenue Operations (RevOps) Support",
+      "Travel & Accommodation Procurement",
+      "Vendor Relationship Management",
+      "Event Logistics Operations",
+      "Contract Role (Seasonal/Project-based)",
+      "Marketing & Creative Services Procurement",
+      "Event Branding & Asset Management",
+      "Cross-Functional Design Operations",
+      "Vendor/Contractor Engagement Model"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Major League Cricket (MLC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:30:24.275904"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417281",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:28.731791"
+}

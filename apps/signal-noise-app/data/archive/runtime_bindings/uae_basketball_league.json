@@ -1,0 +1,191 @@
+{
+  "entity_id": "uae_basketball_league",
+  "entity_name": "UAE Basketball League",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "professional_leagues",
+  "discovered_domains": [
+    "alnasrclub.com",
+    "augustusmedia.com",
+    "sharjah24.ae",
+    "bethard.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uae_basketball_league",
+      "entity_name": "UAE Basketball League",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://bethard.com",
+        "https://sharjah24.ae",
+        "https://augustusmedia.com",
+        "https://alnasrclub.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UAE Basketball League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:51:19.265421",
+          "domain_explored": "https://alnasrclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Platinumlist (Ticketing Platform)",
+              "E-N45 Scouting System (Custom/Proprietary Form)",
+              "E-Commerce Store (Online Shop)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations (Platinumlist.net)",
+              "Digital Scouting Infrastructure (E-N45 forms for players/coaches)",
+              "Academy Performance Testing (Procurement of sports science services implied)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Ticketing Integration",
+            "Digital Scouting Workflow",
+            "Multi-Sport Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 292,
+              "elapsed_seconds": 11.377208948135376
+            }
+          ],
+          "reasoning": "The content reveals Al Nasr Club's operational infrastructure. While specific procurement requests are absent, the integration of Platinumlist.net for ticketing and the 'E-N45 Scouting' digital forms indicate existing investments in digital services and data management tools. The presence of a dedicated 'Investment Company' board suggests a structured approach to vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:51:25.689903",
+          "domain_explored": "https://augustusmedia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FAST TV (Free Ad-Supported Streaming TV)",
+              "LG Channels Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Exclusive Media Rights Procurement (Bahrain Zain Basketball League)",
+              "Partnership with LG for content distribution",
+              "Media Kit availability (Ad sales/Partnership procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Sports Rights Acquisition",
+            "FAST/OTT Distribution Strategy",
+            "Media Kit Availability"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.2109549045562744
+            }
+          ],
+          "reasoning": "While the target entity is the UAE Basketball League, this content establishes a critical regional precedent. Augustus Media (Smashi Sports) is actively procuring basketball media rights (Bahrain Zain Premier League) and distributing via FAST TV (LG Channels). This signals a viable procurement pathway for the UAE League: selling media rights to digital-first broadcasters like Smashi who are actively expanding their sports portfolio. It confirms market demand for basketball content in the region."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:51:40.247987",
+          "domain_explored": "https://sharjah24.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public Works & HR Recommendations (Government/General)"
+            ]
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Government Education Focus",
+            "Non-Commercial Sports Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.6943581104278564
+            }
+          ],
+          "reasoning": "The scraped content from Sharjah24 is a general news feed covering government meetings (Higher Education Council), academic conferences (Dentistry), and amateur university sports (Graduates Football Cup). There is zero intersection with professional basketball league operations, technology procurement, or commercial sports governance. The entity is a local news outlet, not a sports governing body or a commercial enterprise likely to issue RFPs for basketball league services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:51:45.868593",
+          "domain_explored": "https://bethard.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geo-Blocking Enforcement",
+            "Gaming Compliance Restrictions",
+            "B2C Service Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 766,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.295567750930786
+            }
+          ],
+          "reasoning": "The content is a generic 'Restricted Access' error page due to geo-blocking. This indicates the entity is a B2C gaming operator with compliance restrictions for the UAE region, rather than a local league entity or a vendor actively marketing to the league. There is no procurement intelligence, technology stack, or governance data available."
+        }
+      ],
+      "total_input_tokens": 5002,
+      "total_output_tokens": 989,
+      "estimated_cost_usd": 0.029841
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UAE Basketball League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:51:45.870180"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.242096",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:29.800936"
+}

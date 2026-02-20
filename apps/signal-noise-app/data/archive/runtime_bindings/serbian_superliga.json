@@ -1,0 +1,210 @@
+{
+  "entity_id": "serbian_superliga",
+  "entity_name": "Serbian SuperLiga",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "fkvojvodina.rs",
+    "wikidata.org",
+    "en.linglong.cn",
+    "football.fandom.com",
+    "kickalgor.com",
+    "sportaran.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "serbian_superliga",
+      "entity_name": "Serbian SuperLiga",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportaran.com",
+        "https://kickalgor.com",
+        "https://en.linglong.cn",
+        "https://fkvojvodina.rs",
+        "https://wikidata.org",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Serbian SuperLiga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:59:06.818872",
+          "domain_explored": "https://fkvojvodina.rs",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:59:09.707400",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:59:19.837367",
+          "domain_explored": "https://en.linglong.cn",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Sponsorship Link (Real Madrid)",
+            "Product Catalog (Tires)",
+            "Irrelevant Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 192,
+              "elapsed_seconds": 5.625204086303711
+            }
+          ],
+          "reasoning": "The scraped content from en.linglong.cn is a product catalog for tires and includes a reference to a 'Real Madrid' sports sponsorship. While football is relevant to the Serbian SuperLiga context, this page is purely commercial (B2C/B2B sales) and lacks any procurement signals, technology stack information, or governance data related to the Serbian SuperLiga entity itself. It does not advance the investigation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:59:26.901861",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "Fan-based Community Structure",
+            "Irrelevant League Focus (Premier League, La Liga, Serie A)",
+            "Outdated Browser Recommendations (Mozilla Firefox, Internet Explorer)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.97891902923584
+            }
+          ],
+          "reasoning": "The scraped content represents the main page of a generic football wiki (Football Fandom). It contains no information regarding the Serbian SuperLiga, its governance, or its procurement activities. The content is focused on general football information, major European leagues (Premier League, La Liga), and community editing guidelines. There are no signals of technology stacks, job postings, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:59:36.264049",
+          "domain_explored": "https://kickalgor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ELO Rating Algorithms",
+              "Data Analytics Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Football Rankings (ELO Rating System)",
+            "Statistical Data Aggregation",
+            "Irrelevant Geographic Focus (Global/Top 5 Leagues)",
+            "No Serbian SuperLiga Presence"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 253,
+              "elapsed_seconds": 5.202073097229004
+            }
+          ],
+          "reasoning": "The content is from 'Kickalgor', a site dedicated to global football club and league ratings using ELO algorithms. While it demonstrates the use of data analytics in sports, it focuses exclusively on top-tier global leagues (Premier League, La Liga) and specific confederations (AFC, CAF, CONCACAF). There is no mention of the Serbian SuperLiga, Serbian clubs, or local procurement activities. The site is a consumer of data, not a source of procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:59:43.481645",
+          "domain_explored": "https://sportaran.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Armenia vs Serbia)",
+            "News Aggregation / Media Content",
+            "Sports Journalism (Transfer News, Match Reports)",
+            "Irrelevant Entity Focus (Armenian National Team, Armenian Athletes)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.9150516986846924
+            }
+          ],
+          "reasoning": "The content is explicitly from a sports news portal focused on Armenia ('\u041d\u043e\u0432\u043e\u0441\u0442\u0438 \u0441\u043f\u043e\u0440\u0442\u0430 \u0410\u0440\u043c\u0435\u043d\u0438\u0438'). The articles cover Armenian athletes, international transfers involving Armenians, and global sports news. There is no connection to the Serbian SuperLiga, Serbian football clubs, or Serbian procurement entities."
+        }
+      ],
+      "total_input_tokens": 5924,
+      "total_output_tokens": 870,
+      "estimated_cost_usd": 0.030822000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Serbian SuperLiga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:59:43.483134"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.194802",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:29.185752"
+}

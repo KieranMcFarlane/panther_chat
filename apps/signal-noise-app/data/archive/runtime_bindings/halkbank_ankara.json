@@ -1,0 +1,180 @@
+{
+  "entity_id": "halkbank_ankara",
+  "entity_name": "Halkbank Ankara",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "halkbankspor.org.tr",
+    "www-old.cev.eu",
+    "eurohandball.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "halkbank_ankara",
+      "entity_name": "Halkbank Ankara",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://wikidata.org",
+        "https://halkbankspor.org.tr",
+        "https://eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Halkbank Ankara may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:01:57.696437",
+          "domain_explored": "https://halkbankspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports club entity",
+            "Fan engagement content",
+            "Sponsorship listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 178,
+              "elapsed_seconds": 20.89743423461914
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Halkbank Spor Kul\u00fcb\u00fc' (Halkbank Sports Club), the volleyball team sponsored by the bank, rather than the bank itself (Halkbank Ankara). The content is strictly related to match fixtures, scores, photo galleries, and team news. There are no procurement signals, job postings, or technology stack details relevant to the bank's corporate procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:02:09.242859",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league navigation structure",
+            "Historical match results (Champions League)",
+            "Team fixture listings (Halkbank Ankara vs Galatasaray)",
+            "Generic footer links (FIVB, confederations)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 195,
+              "elapsed_seconds": 5.522207021713257
+            }
+          ],
+          "reasoning": "The content is a sports results archive and navigation menu for the European Volleyball Confederation (CEV). The mention of 'Halkbank Ankara' is strictly as a competing team in a historical match schedule. There are no procurement signals, technology stacks, or corporate governance data relevant to the bank's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:02:17.870447",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism content (Match results, MVP awards)",
+            "Tournament navigation structure (EHF EURO, Champions League)",
+            "Cookie consent walls",
+            "Sponsorship visibility (Machineseeker)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 184,
+              "elapsed_seconds": 3.901731014251709
+            }
+          ],
+          "reasoning": "The content is exclusively focused on European handball federation (EHF) news, match results, and tournament schedules. It contains no corporate governance, financial, or technological information relevant to Halkbank Ankara's procurement operations. This is a sports news domain."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:02:44.187586",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge base platform content",
+            "Community event listings (WikidataCon, Birthdays)",
+            "Open source contribution calls (WikiProjects)",
+            "Educational documentation (Tutorials, Help portals)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 197,
+              "elapsed_seconds": 21.18828797340393
+            }
+          ],
+          "reasoning": "The content is the generic landing page for Wikidata, an open-source knowledge base. It contains no information specific to Halkbank Ankara, nor does it contain procurement signals, vendor lists, or corporate decision-making structures relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5747,
+      "total_output_tokens": 754,
+      "estimated_cost_usd": 0.028551
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Halkbank Ankara may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:02:44.189605"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.315839",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:08:23.333019"
+}

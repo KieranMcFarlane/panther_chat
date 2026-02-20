@@ -1,0 +1,364 @@
+{
+  "entity_id": "boston_red_sox",
+  "entity_name": "Boston Red Sox",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "redsoxfoundation.org",
+    "thefenway.com",
+    "overthemonster.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/boston-red-sox-jobs",
+      "https://www.linkedin.com/jobs/boston-red-sox-jobs-boston-ma",
+      "https://www.linkedin.com/jobs/boston-red-sox-jobs-worldwide",
+      "https://www.linkedin.com/jobs/boston-red-sox-jobs-massachusetts",
+      "https://www.linkedin.com/jobs/baseball-operations-boston-red-sox-jobs",
+      "https://www.linkedin.com/jobs/red-sox-foundation-jobs",
+      "https://www.linkedin.com/jobs/view/2026-game-events-and-services-day-of-game-staff-at-boston-red-sox-4342983926",
+      "https://www.linkedin.com/jobs/boston-red-sox-jobs-fort-myers-fl",
+      "https://www.linkedin.com/jobs/view/coordinator-baseball-communications-media-relations-at-boston-red-sox-4358146404"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "boston_red_sox",
+      "entity_name": "Boston Red Sox",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.24
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/boston-red-sox-jobs",
+        "https://www.linkedin.com/jobs/baseball-operations-boston-red-sox-jobs",
+        "https://www.linkedin.com/jobs/boston-red-sox-jobs-massachusetts",
+        "https://overthemonster.com",
+        "https://redsoxfoundation.org",
+        "https://www.linkedin.com/jobs/boston-red-sox-jobs-boston-ma",
+        "https://thefenway.com",
+        "https://www.linkedin.com/jobs/boston-red-sox-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active recruitment for operational roles",
+        "Investment in player performance technology (Minor League Technology Operator)",
+        "Sales and revenue generation focus (Director of Sales)",
+        "Spanish-language market expansion (Media Relations Assistant)",
+        "Geographic distribution (Boston HQ vs. Fort Myers Spring Training)",
+        "Active recruitment for operational roles",
+        "Investment in player performance technology (Minor League Technology Operator)",
+        "Sales and revenue generation focus (Director of Sales)",
+        "Active recruitment for operational roles",
+        "Investment in player performance technology (Minor League Technology Operator)",
+        "Sales and revenue generation focus (Director of Sales)",
+        "Active recruitment for operational roles",
+        "Investment in player performance technology (Minor League Technology Operator)",
+        "Sales and revenue generation focus (Director of Sales)",
+        "Software engineering capacity building (Lead Developer, Baseball Systems)",
+        "Digital content creation (Photography Intern, Media Relations)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Boston Red Sox may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:44:07.543021",
+          "domain_explored": "https://redsoxfoundation.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:44:17.150259",
+          "domain_explored": "https://thefenway.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Automation (implied by 'Subscribe to stay in the know' form)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Neighborhood tourism and lifestyle marketing",
+            "Local business partnership promotion (Van Leeuwen, Fenway Art Gallery)",
+            "Event-based content (Tree Farm)",
+            "Newsletter subscription form (Mailchimp/Marketing automation presence)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.035912275314331
+            }
+          ],
+          "reasoning": "The content is strictly consumer-facing marketing for the 'The Fenway' neighborhood, promoting local businesses, real estate, and events. While it confirms the entity manages a marketing platform (newsletter), it offers zero insight into B2B procurement, enterprise technology stacks, or organizational operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:44:30.989955",
+          "domain_explored": "https://overthemonster.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Fan community engagement",
+            "Roster move analysis (trades, acquisitions)",
+            "User-generated content (forums/comments)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 168,
+              "elapsed_seconds": 7.086611986160278
+            }
+          ],
+          "reasoning": "The content is strictly sports journalism and fan community discussion regarding player trades, roster analysis, and game trivia. There are no corporate signals, technology infrastructure details, or business procurement indicators present in this text."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:44:42.553880",
+          "domain_explored": "https://www.linkedin.com/jobs/boston-red-sox-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Performance Tracking Systems (implied by 'Technology Operator')",
+              "CRM Software (implied by 'Director of Sales')",
+              "Video Analysis/Review Systems (implied by 'Video Replay')",
+              "Ticketing Platforms (implied by 'Ticket Sales')"
+            ],
+            "job_postings": [
+              "Director of Sales",
+              "Minor League Rehab Specialist",
+              "Mental Skills Associate",
+              "Media Relations Assistant (Spanish-Language)",
+              "Spring Training Bat Attendant",
+              "Minor League Technology Operator",
+              "Video Replay Operator",
+              "Ticket Sales Representative"
+            ],
+            "procurement_indicators": [
+              "Technology Operator hiring implies existing contracts with sports analytics vendors",
+              "Sales leadership hiring indicates potential CRM or Sales Tech evaluation",
+              "High volume of jobs (140) suggests general administrative and infrastructure procurement"
+            ]
+          },
+          "patterns_found": [
+            "Active recruitment for operational roles",
+            "Investment in player performance technology (Minor League Technology Operator)",
+            "Sales and revenue generation focus (Director of Sales)",
+            "Spanish-language market expansion (Media Relations Assistant)",
+            "Geographic distribution (Boston HQ vs. Fort Myers Spring Training)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 473,
+              "elapsed_seconds": 6.926708936691284
+            }
+          ],
+          "reasoning": "The content provides direct evidence of organizational hiring and investment. The 'Minor League Technology Operator' role specifically indicates procurement or usage of sports technology (TrackMan, Rapsodo, BATS, etc.). The 'Director of Sales' role suggests a need for CRM tools. This confirms active operational expansion and technology adoption."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:44:54.226887",
+          "domain_explored": "https://www.linkedin.com/jobs/boston-red-sox-jobs-boston-ma",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Software (Sales focus)",
+              "Telephony/Switchboard Systems (Receptionist)",
+              "Sports Performance/Tracking Tech (Minor League context)"
+            ],
+            "job_postings": [
+              "Director of Sales",
+              "Game Day Receptionist / Switchboard Operator"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in Sales (Procurement of Sales Enablement Tools)",
+              "Operational staffing (Procurement of Office/Telecom Infrastructure)",
+              "Technical operations staffing (Procurement of Performance Hardware/Software)"
+            ]
+          },
+          "patterns_found": [
+            "Active recruitment for operational roles",
+            "Investment in player performance technology (Minor League Technology Operator)",
+            "Sales and revenue generation focus (Director of Sales)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 393,
+              "elapsed_seconds": 5.144388914108276
+            }
+          ],
+          "reasoning": "The scraped content reveals specific job postings that indicate organizational investment and procurement needs. The 'Director of Sales' role suggests a focus on revenue generation tools and CRM platforms. The 'Game Day Receptionist' role indicates operational infrastructure needs. The mention of a 'Minor League Technology Operator' (inferred from the context of typical sports team postings and the snippet) signals investment in sports performance and data analysis software. These roles require supporting software, hardware, and services, qualifying as procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:45:12.122790",
+          "domain_explored": "https://www.linkedin.com/jobs/boston-red-sox-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Sales",
+              "Minor League Rehab Specialist"
+            ],
+            "procurement_indicators": [
+              "High volume of hiring (143 roles)",
+              "Investment in sales operations",
+              "Investment in player development infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Active recruitment for operational roles",
+            "Investment in player performance technology (Minor League Technology Operator)",
+            "Sales and revenue generation focus (Director of Sales)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1673,
+              "output_tokens": 247,
+              "elapsed_seconds": 11.479212999343872
+            }
+          ],
+          "reasoning": "The content confirms 143 active job postings worldwide. Specific roles like 'Director of Sales' and 'Minor League Rehab Specialist' indicate active procurement for operational infrastructure and medical/performance staff, validating the recruitment signal identified in previous iterations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:45:22.116889",
+          "domain_explored": "https://www.linkedin.com/jobs/boston-red-sox-jobs-massachusetts",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Baseball Systems Software (Proprietary/Custom)",
+              "Sales Technology (CRM/Ticketing Systems)",
+              "Media Production Hardware/Software"
+            ],
+            "job_postings": [
+              "Lead Developer, Baseball Systems",
+              "Director of Sales",
+              "Minor League Technology Operator",
+              "Media Relations Assistant (Spanish-Language)",
+              "2026 Boston Red Sox Photography Intern"
+            ],
+            "procurement_indicators": [
+              "Internal software development (Lead Developer)",
+              "Sales infrastructure expansion (Director of Sales)",
+              "Worcester operations (Minor League Tech)"
+            ]
+          },
+          "patterns_found": [
+            "Active recruitment for operational roles",
+            "Investment in player performance technology (Minor League Technology Operator)",
+            "Sales and revenue generation focus (Director of Sales)",
+            "Software engineering capacity building (Lead Developer, Baseball Systems)",
+            "Digital content creation (Photography Intern, Media Relations)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 421,
+              "elapsed_seconds": 4.252346754074097
+            }
+          ],
+          "reasoning": "This page reinforces the procurement signals identified in previous iterations, specifically highlighting a 'Lead Developer, Baseball Systems' role. This indicates internal development of proprietary software, reducing reliance on external vendors for baseball analytics. The 'Director of Sales' posting suggests a need for CRM or sales automation tools. The 'Minor League Technology Operator' role confirms continued investment in sports tech infrastructure."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:46:20.188487",
+          "domain_explored": "https://www.linkedin.com/jobs/baseball-operations-boston-red-sox-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 24 column 55 (char 1387)"
+        }
+      ],
+      "total_input_tokens": 9370,
+      "total_output_tokens": 1930,
+      "estimated_cost_usd": 0.05706
+    },
+    "procurement_signals": [
+      "Active recruitment for operational roles",
+      "Investment in player performance technology (Minor League Technology Operator)",
+      "Sales and revenue generation focus (Director of Sales)",
+      "Spanish-language market expansion (Media Relations Assistant)",
+      "Geographic distribution (Boston HQ vs. Fort Myers Spring Training)",
+      "Active recruitment for operational roles",
+      "Investment in player performance technology (Minor League Technology Operator)",
+      "Sales and revenue generation focus (Director of Sales)",
+      "Active recruitment for operational roles",
+      "Investment in player performance technology (Minor League Technology Operator)",
+      "Sales and revenue generation focus (Director of Sales)",
+      "Active recruitment for operational roles",
+      "Investment in player performance technology (Minor League Technology Operator)",
+      "Sales and revenue generation focus (Director of Sales)",
+      "Software engineering capacity building (Lead Developer, Baseball Systems)",
+      "Digital content creation (Photography Intern, Media Relations)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Boston Red Sox may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:46:20.189193"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307225",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:41.418326"
+}

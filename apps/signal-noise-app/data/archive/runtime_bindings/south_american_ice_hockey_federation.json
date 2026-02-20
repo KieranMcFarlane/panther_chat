@@ -1,0 +1,386 @@
+{
+  "entity_id": "south_american_ice_hockey_federation",
+  "entity_name": "South American Ice Hockey Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "argentinaicehockey.com",
+    "amerigolhockey.com",
+    "nationalteamsoficehockey.com",
+    "internationalhockeywiki.com",
+    "usahockey.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/ice-hockey-jobs",
+      "https://www.linkedin.com/posts/national-hockey-league_nhlcareers-activity-7409617604119572480-dhxb",
+      "https://www.linkedin.com/posts/national-hockey-league_2-offene-nhl-jobs-activity-7275914225728851969-NJLm",
+      "https://www.linkedin.com/jobs/view/hockey-coach-naphl-tier-1-at-omega-hockey-services-4326632414"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_american_ice_hockey_federation",
+      "entity_name": "South American Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/ice-hockey-jobs",
+        "https://www.linkedin.com/jobs/view/hockey-coach-naphl-tier-1-at-omega-hockey-services-4326632414",
+        "https://nationalteamsoficehockey.com",
+        "https://www.linkedin.com/posts/national-hockey-league_nhlcareers-activity-7409617604119572480-dhxb",
+        "https://argentinaicehockey.com",
+        "https://usahockey.com",
+        "https://internationalhockeywiki.com",
+        "https://www.linkedin.com/posts/national-hockey-league_2-offene-nhl-jobs-activity-7275914225728851969-NJLm",
+        "https://amerigolhockey.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South American Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:23:17.146082",
+          "domain_explored": "https://argentinaicehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Standard Web CMS (implied by 'Skip to content' and generic layout)",
+              "Email (info@argentinaicehockey.com) - Primary contact channel"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Solicitation for donations to cover specific operational costs: Equipment, Travel, Training, Ice Time",
+              "Participation in 'Amerigol Latam Cup' implies recurring travel and logistics procurement to Florida, USA",
+              "Partnership with 'Florida Panthers' (Panthers Ice Den) indicates potential venue or sponsorship dependencies"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Funding Model",
+            "International Travel & Logistics",
+            "Equipment Procurement Needs",
+            "Grassroots Digital Presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 347,
+              "elapsed_seconds": 7.278655052185059
+            }
+          ],
+          "reasoning": "The content confirms the entity operates as a 100% amateur federation with limited state support. While no direct RFPs are listed, the explicit request for funds to cover 'ice time, training expenses, equipment, and travel' indicates a continuous procurement need for these categories. The use of a generic website template and contact email suggests a low-maturity technology stack, but the need for international logistics and travel management is high."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:23:41.369058",
+          "domain_explored": "https://amerigolhockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (External link 'Buy your tickets')",
+              "Live Streaming Platform ('Watch all the live action for free')",
+              "Social Media Widgets (Instagram, Facebook, Twitter/X)",
+              "CMS with dynamic content sliders (Angular/Vue.js indicators)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Ticketing Services",
+              "Live Streaming/Broadcasting Services",
+              "Digital Marketing/Graphic Design (Poster creation)",
+              "Web Hosting and Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Ticketing Operations",
+            "Digital Media & Live Streaming Infrastructure",
+            "Bilingual Content Management (English/Spanish)",
+            "Social Media Integration (Instagram, Facebook, X)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 318,
+              "elapsed_seconds": 17.162582874298096
+            }
+          ],
+          "reasoning": "The content confirms the entity operates a significant event (Amerigol Latam Cup) requiring ticketing platforms, live streaming services, and web management. While no explicit RFPs are visible, the operational scale indicates a need for event technology vendors and digital service providers."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:23:52.031339",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from structure/archives)",
+              "Google Maps Integration (inferred from 'select location on map')",
+              "Video Hosting (for highlights)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tag: 'Amerigol Latam Cup' (Validates event target)",
+              "Tag: 'Argentina Ice Hockey' (Validates regional presence)",
+              "Category: South America (Regional focus)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Event Aggregation",
+            "Amateur League Content Syndication",
+            "Historical Data Archiving",
+            "Niche Sports Media Consumption"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 336,
+              "elapsed_seconds": 4.34615683555603
+            }
+          ],
+          "reasoning": "The website 'National Teams of Ice Hockey' is a media aggregator rather than a governing body. It contains specific references to South American entities (e.g., 'Argentina Ice Hockey', 'Amerigol Latam Cup') within its tags and categories, indicating it covers the ecosystem relevant to the target entity. However, it is a third-party publisher, not a procurement source. The value lies in confirming the existence of the 'Amerigol Latam Cup' and regional activities, validating the market context, but offering no direct procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:24:29.738954",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MediaWiki (Inferred from 'Wiki' structure)",
+              "Open Source CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "IIHF Membership Verification (Argentina, Brazil, Chile, Colombia)",
+              "Historical Data Aggregation (Low-cost digital preservation)",
+              "Absence of Enterprise Software (Indicates low IT budget)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Entity Verification (Argentina/Chile/Brazil)",
+            "Historical Data Archiving & Knowledge Management",
+            "Amateur League Structure Analysis",
+            "Wiki-based Content Management System (CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 334,
+              "elapsed_seconds": 27.5469651222229
+            }
+          ],
+          "reasoning": "The source is a passive informational Wiki rather than an active commercial entity. However, it provides valuable verification of the South American ice hockey ecosystem (listing Argentina, Brazil, Chile, and Colombia as IIHF members). It confirms the 'Amateur/Developing' status of these federations, implying a reliance on low-cost or open-source technology stacks (Wiki/CMS) rather than enterprise procurement. The lack of corporate structure or job postings reinforces the hypothesis that procurement is decentralized and informal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:24:42.203399",
+          "domain_explored": "https://usahockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media Streaming)",
+              "RSS Feeds (Content Syndication)",
+              "Search Functionality (Site Search)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partners (Warrior Hockey)",
+              "Sanctioned Organization Management (Membership System)",
+              "Event Sponsorship (Long Drink Warrior Classic)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (USA vs. South America)",
+            "High-Performance Federation Structure",
+            "Corporate Partnership Model (Warrior Hockey)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.846863031387329
+            }
+          ],
+          "reasoning": "The scraped content is from USA Hockey, the governing body for ice hockey in the United States, not the South American Ice Hockey Federation. While the content reveals relevant procurement patterns for a mature federation (corporate partnerships, high-performance event management), it does not provide direct intelligence on the target entity (South America). The entity mismatch forces a rejection to maintain data integrity for the specific target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:24:56.754460",
+          "domain_explored": "https://www.linkedin.com/jobs/ice-hockey-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Varsity Ice Hockey Coach - The Episcopal Academy (US)",
+              "Ice Hockey, Men's Head Coach - University of Saint Joseph (US)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (United States vs. South America)",
+            "Academic & Amateur Sector Hiring (Coaching Roles)",
+            "Generic Job Aggregation (No Specific Federation Signals)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1666,
+              "output_tokens": 270,
+              "elapsed_seconds": 6.457056999206543
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn lists 276 jobs specifically located in the United States (e.g., The Episcopal Academy in PA, University of Saint Joseph in CT). This contradicts the target entity scope of the South American Ice Hockey Federation. The roles identified are coaching positions, which are operational HR matters rather than procurement or technology investment signals. Therefore, this source is rejected as irrelevant to the specific South American procurement intelligence goal."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:25:15.965076",
+          "domain_explored": "https://www.linkedin.com/posts/national-hockey-league_nhlcareers-activity-7409617604119572480-dhxb",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Production Assistant \u2013 Temporary (National Hockey League)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (NHL vs. South American Federation)",
+            "Professional League Hiring (Media Production)",
+            "North American Job Market Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1753,
+              "output_tokens": 222,
+              "elapsed_seconds": 15.301713943481445
+            }
+          ],
+          "reasoning": "The content is a recruitment post for the National Hockey League (NHL), a North American professional entity, which is distinct from the South American Ice Hockey Federation. The role (Production Assistant) focuses on media content creation for the NHL's commercial partners, not federation governance or amateur sport procurement. This does not align with the target entity's profile or procurement signals."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:25:23.625382",
+          "domain_explored": "https://www.linkedin.com/posts/national-hockey-league_2-offene-nhl-jobs-activity-7275914225728851969-NJLm",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "NHL Office Roles (Zurich, Switzerland)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (NHL vs. South American Federation)",
+            "Geographic Mismatch (Switzerland/Europe vs. South America)",
+            "Professional League Expansion (Corporate Hiring)",
+            "Global Brand Strategy (Zurich Office)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1834,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.488792896270752
+            }
+          ],
+          "reasoning": "The content is a recruitment post by the National Hockey League (NHL) for a new office in Zurich, Switzerland. While the location is international, it is not within the target region (South America) and the entity is the premier professional North American league, not the regional amateur federation. This indicates corporate expansion rather than federation procurement signals."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T06:25:34.850510",
+          "domain_explored": "https://www.linkedin.com/jobs/view/hockey-coach-naphl-tier-1-at-omega-hockey-services-4326632414",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Hockey Coach - NAPHL Tier 1 (Omega Hockey Services - Hudson, WI)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Wisconsin, USA vs. South America)",
+            "Entity Mismatch (Omega Hockey Services vs. South American Ice Hockey Federation)",
+            "Amateur Youth Sector Hiring (Tier 1 Youth Hockey)",
+            "Seasonal/Part-Time Employment Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1920,
+              "output_tokens": 227,
+              "elapsed_seconds": 6.514750003814697
+            }
+          ],
+          "reasoning": "The content describes a coaching position for 'Wranglers Hockey Club' located in Hudson, Wisconsin, managed by 'Omega Hockey Services'. This is a local North American amateur youth hockey job (Tier 1) and has no connection to the South American Ice Hockey Federation, its governance, or its procurement activities."
+        }
+      ],
+      "total_input_tokens": 14591,
+      "total_output_tokens": 2579,
+      "estimated_cost_usd": 0.082458
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South American Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:25:34.852088"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305137",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:08.313130"
+}

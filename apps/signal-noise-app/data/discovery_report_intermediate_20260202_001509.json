@@ -1,0 +1,13 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "world_netball",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-02-02T00:15:09.089706",
+  "last_checkpoint_time": "2026-02-02T00:15:09.090194"
+}

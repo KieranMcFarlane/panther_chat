@@ -1,0 +1,370 @@
+{
+  "entity_id": "cofidis_women_team",
+  "entity_name": "Cofidis Women Team",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "equipecofidis.com",
+    "paris-roubaix-femmes.fr",
+    "letourfemmes.fr",
+    "liege-bastogne-liege-femmes.be",
+    "la-fleche-wallonne-femmes.be",
+    "lavueltafemenina.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://it.linkedin.com/jobs/credit-collector-offerte-di-lavoro-corsico",
+      "https://it.linkedin.com/jobs/view/business-financial-controller-at-diesel-4339010104",
+      "https://it.linkedin.com/jobs/cobrador-offerte-di-lavoro",
+      "https://it.linkedin.com/jobs/view/senior-retail-controller-at-diesel-4346700889"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cofidis_women_team",
+      "entity_name": "Cofidis Women Team",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://it.linkedin.com/jobs/view/senior-retail-controller-at-diesel-4346700889",
+        "https://lavueltafemenina.es",
+        "https://la-fleche-wallonne-femmes.be",
+        "https://paris-roubaix-femmes.fr",
+        "https://it.linkedin.com/jobs/view/business-financial-controller-at-diesel-4339010104",
+        "https://it.linkedin.com/jobs/cobrador-offerte-di-lavoro",
+        "https://it.linkedin.com/jobs/credit-collector-offerte-di-lavoro-corsico",
+        "https://equipecofidis.com",
+        "https://letourfemmes.fr",
+        "https://liege-bastogne-liege-femmes.be"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cofidis Women Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:38:54.452911",
+          "domain_explored": "https://equipecofidis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "S\u00e9bastien Demarbaix appointed as Sports Director (Nov 2025)",
+              "Evaldas \u0160i\u0161kevi\u010dius appointed as Sports Director (Nov 2025)"
+            ],
+            "procurement_indicators": [
+              "New Partnership: uvex (Equipment/Helmets/Gear) announced Jan 2026",
+              "Roster Expansion: Men's team increased to 30 riders (+8 new)",
+              "Roster Expansion: Women's team roster expansion (Burlova, Geurts, Mul added)"
+            ]
+          },
+          "patterns_found": [
+            "New Vendor Partnership (Equipment)",
+            "Organizational Restructuring (Staffing)",
+            "Roster Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 301,
+              "elapsed_seconds": 5.627289056777954
+            }
+          ],
+          "reasoning": "The content explicitly announces a new partnership with 'uvex' (equipment supplier), confirming active vendor engagement. It also details significant organizational changes including the hiring of sports directors and new riders for the 2026 season, indicating a period of growth and investment. While no direct IT procurement is visible, the expansion of the team and new partnerships suggest an active procurement cycle."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:39:08.765828",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis",
+            "Event Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 166,
+              "elapsed_seconds": 11.358665943145752
+            }
+          ],
+          "reasoning": "The scraped content is from the official Paris-Roubaix Femmes website and focuses exclusively on race results, specifically the 2025 victory of Pauline Ferrand-Pr\u00e9vot (Team Visma | Lease a Bike). It contains no information regarding Cofidis Women Team's internal operations, staffing, or technology stack. Therefore, it yields no procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:39:14.517077",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zwift (Virtual Training/Event Sponsor)",
+              "Tissot (Timekeeping Sponsor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis",
+            "Event Results",
+            "Sponsorship Visibility"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.8237340450286865
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the Tour de France Femmes event organization, race results, and competitor rankings (Team Visma, SD Worx, FDJ-Suez). While it lists sponsors like Tissot and Zwift, there is no mention of Cofidis Women Team's specific procurement activities, technology stack, or operational needs. This is market noise, not a signal for Cofidis procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:39:20.435057",
+          "domain_explored": "https://liege-bastogne-liege-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis",
+            "Event Results",
+            "Race Route Information"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.4420650005340576
+            }
+          ],
+          "reasoning": "The content is entirely focused on the Li\u00e8ge-Bastogne-Li\u00e8ge Femmes cycling event, specifically the 2025 results and the 2026 route announcement. It mentions competitors (AG Insurance-Soudal, FDJ-SUEZ, Fenix-Deceuninck) and the race organizer (A.S.O.), but contains no information regarding Cofidis Women Team's internal operations, procurement needs, or technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:39:27.214767",
+          "domain_explored": "https://la-fleche-wallonne-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis",
+            "Event Results",
+            "Race Route Information"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.5573270320892334
+            }
+          ],
+          "reasoning": "The content is exclusively focused on race results (specifically Puck Pieterse's victory), event logistics (2026 route), and general event news for La Fl\u00e8che Wallonne Femmes. There is no mention of Cofidis Women Team, nor are there any procurement signals, job postings, or technology investments related to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:39:30.061066",
+          "domain_explored": "https://lavueltafemenina.es",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:39:36.612911",
+          "domain_explored": "https://it.linkedin.com/jobs/credit-collector-offerte-di-lavoro-corsico",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Credit Collection Specialist (Theras)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board",
+            "Unrelated Role",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.660978078842163
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Credit Collector' roles in Corsico, Lombardy. While Cofidis (the sponsor) is a financial credit institution, this specific URL targets general employment listings rather than the specific procurement or operational needs of the Cofidis Women Team. There is no link between the job postings found here and the cycling team's procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:39:45.002135",
+          "domain_explored": "https://it.linkedin.com/jobs/view/business-financial-controller-at-diesel-4339010104",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Business & Financial Controller",
+                "entity": "Diesel",
+                "location": "Milano",
+                "department": "Controlling Department"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Job Posting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1680,
+              "output_tokens": 188,
+              "elapsed_seconds": 4.602287769317627
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Diesel', a fashion company, not 'Cofidis Women Team'. While the role (Financial Controller) involves financial governance, it is completely unrelated to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T12:39:55.809378",
+          "domain_explored": "https://it.linkedin.com/jobs/cobrador-offerte-di-lavoro",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board",
+            "Unrelated Role",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 155,
+              "elapsed_seconds": 7.09991192817688
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search page for the role 'Cobrador' (debt collector) in Italy. The visible listings (e.g., Renault Group) are unrelated to Cofidis Women Team or professional cycling. There is no mention of the target entity, procurement activities, or relevant technology stacks."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T12:40:02.821959",
+          "domain_explored": "https://it.linkedin.com/jobs/view/senior-retail-controller-at-diesel-4346700889",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Senior Retail Controller",
+                "company": "Diesel",
+                "location": "Milano",
+                "focus": "Financial Controlling, Budgeting, Retail Analysis"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Job Posting",
+            "Fashion/Retail Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1780,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.3036859035491943
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Senior Retail Controller' at Diesel, a fashion company. There is no connection to Cofidis Women Team, cycling, or sports procurement."
+        }
+      ],
+      "total_input_tokens": 14066,
+      "total_output_tokens": 1736,
+      "estimated_cost_usd": 0.068238
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cofidis Women Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:40:02.824200"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384428",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:26.108344"
+}

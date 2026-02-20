@@ -1,0 +1,208 @@
+{
+  "entity_id": "costa_rican_volleyball_federation",
+  "entity_name": "Costa Rican Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "costaricavolleyball.com",
+    "paralympic.org",
+    "norceca.net",
+    "worldparavolley.org",
+    "breakingbelizenews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "costa_rican_volleyball_federation",
+      "entity_name": "Costa Rican Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://paralympic.org",
+        "https://norceca.net",
+        "https://costaricavolleyball.com",
+        "https://breakingbelizenews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Costa Rican Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:51:35.451152",
+          "domain_explored": "https://costaricavolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Partnership",
+                "description": "The Federation likely utilizes or endorses 'Costa Rica Sports Tours' for inbound logistics, suggesting an existing vendor relationship rather than a new procurement opportunity."
+              }
+            ]
+          },
+          "patterns_found": [
+            "B2C Marketing Content",
+            "Sports Tourism Promotion",
+            "Third-Party Vendor Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.1658213138580322
+            }
+          ],
+          "reasoning": "The scraped content is strictly promotional marketing copy for 'Costa Rica Sports Tours,' a third-party vendor organizing travel for international teams. It focuses on tourism value propositions (climate, peace, cost) rather than the Federation's internal operations, governance, or technology needs. There is no signal of procurement activity by the Federation itself."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:51:41.155389",
+          "domain_explored": "https://paralympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Global Sports News",
+            "Event Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.7013797760009766
+            }
+          ],
+          "reasoning": "The content analyzed is from the International Paralympic Committee (IPC) website, a global governing body. This is entirely unrelated to the Costa Rican Volleyball Federation (FEVOLLEY). The content focuses on Milano Cortina 2026, general Paralympic history, and global sports news. There are no signals, technologies, or procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:51:48.303817",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Document Management (Heavy usage for schedules/reports)",
+              "Static Web Hosting (Legacy HTML structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Obligations (Rotating Schedule 2002-2030)",
+              "Infrastructure Requirements (Development Centers)",
+              "Governance Compliance (Constitution/Bylaws)",
+              "Marketing Standardization (Branding Kit)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Confederation Governance",
+            "Rotating Event Hosting Schedule",
+            "Development Center Infrastructure",
+            "Branding Guidelines Distribution",
+            "Constitutional Framework"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 341,
+              "elapsed_seconds": 3.7736141681671143
+            }
+          ],
+          "reasoning": "While the target entity (Costa Rican Volleyball Federation) is not the direct owner of this content, NORCECA is its governing body. The content reveals critical procurement drivers for the federation: the 'Rotating Schedule' indicates mandatory hosting obligations requiring event management vendors; 'Development Centers' implies facility and coaching procurement; and the 'Branding Kit' suggests marketing compliance requirements. This provides high-level context on the federation's operational obligations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:51:58.566236",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Educational Course Delivery (WPV Level I Sports Classification Course)",
+              "Event Hosting (ASEAN Para Games, Asian Para Games)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Scope",
+            "Global Sports Governing Body Content",
+            "Event Results Journalism",
+            "Educational Course Announcements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 264,
+              "elapsed_seconds": 6.151061058044434
+            }
+          ],
+          "reasoning": "The analyzed content belongs to World ParaVolley, the international governing body for Paralympic volleyball. While it shares the sport of volleyball with the target entity (Costa Rican Volleyball Federation), it is a distinct global organization. The content focuses on event results (ASEAN Para Games), governance appointments, and educational courses, none of which indicate procurement activities specific to the Costa Rican Federation. This represents a distraction from the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:52:01.577761",
+          "domain_explored": "https://breakingbelizenews.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5751,
+      "total_output_tokens": 1034,
+      "estimated_cost_usd": 0.032763
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Costa Rican Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:52:01.578234"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337424",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:23.520736"
+}

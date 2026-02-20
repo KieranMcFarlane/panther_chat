@@ -1,0 +1,267 @@
+{
+  "entity_id": "oceania_football_confederation_(ofc)",
+  "entity_name": "Oceania Football Confederation (OFC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "oceaniafootball.com",
+    "ofcfoundation.org",
+    "uefafoundation.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/competitions-and-event-manager-at-fifa-4015530399",
+      "https://pg.linkedin.com/posts/png-dynamics_png-careers-jobopportunity-activity-7039832804968337408-z6L5"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oceania_football_confederation_(ofc)",
+      "entity_name": "Oceania Football Confederation (OFC)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://pg.linkedin.com/posts/png-dynamics_png-careers-jobopportunity-activity-7039832804968337408-z6L5",
+        "https://nz.linkedin.com/jobs/view/competitions-and-event-manager-at-fifa-4015530399",
+        "https://uefafoundation.org",
+        "https://oceaniafootball.com",
+        "https://ofcfoundation.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Responsibility",
+        "Competition Management System (CMS) Usage",
+        "Event Logistics & Supply Chain",
+        "Strategic Operational Planning",
+        "C-Suite Executive Recruitment",
+        "Strategic Governance & Leadership",
+        "Stakeholder Management (Corporate & Government)",
+        "Operational Oversight of National Association"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oceania Football Confederation (OFC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:50:49.012541",
+          "domain_explored": "https://oceaniafootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OFC TV (Streaming Platform)",
+              "Google Maps (Location Services)",
+              "Booking Management System (Implied by 'Booking Request' forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Facility Booking Requests (OFC Academy & Ngahue Reserve)",
+              "Broadcasting Operations (OFC TV)",
+              "Event Logistics (FIFA World Cup 26 Qualifiers, Pro League)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Service Procurement (Accommodation & Facilities)",
+            "Digital Infrastructure (Streaming via OFC TV)",
+            "Event Management (Upcoming Qualifiers & Pro League)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 319,
+              "elapsed_seconds": 3.947894811630249
+            }
+          ],
+          "reasoning": "The content reveals specific operational procurement needs through 'OFC Academy Accommodation Booking Request' and 'OFC Ngahue Reserve Field Booking Request', indicating a requirement for facility management or booking systems. Additionally, 'OFC TV' and 'How to Watch' links suggest ongoing investment in digital broadcasting infrastructure and streaming services. While no explicit RFPs are visible, these functional areas represent active procurement categories."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:50:54.867615",
+          "domain_explored": "https://ofcfoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Defunct Foundation Domain",
+              "Redirection to Main Portal"
+            ]
+          },
+          "patterns_found": [
+            "Domain Redirection",
+            "Historical Context Only",
+            "Irrelevant Content (Gambling SEO Spam)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.6448819637298584
+            }
+          ],
+          "reasoning": "The scraped content indicates that 'ofcfoundation.org' is a defunct domain that redirects to the primary 'oceaniafootball.com' domain. The content provided is a generic historical overview of the OFC and contains irrelevant SEO spam regarding online casinos. There are no active procurement signals, technology stacks, or governance patterns present in this legacy content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:51:01.423244",
+          "domain_explored": "https://uefafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global project implementation (Pitch construction/renovation)",
+              "Corporate sponsorships (Mastercard, UEFA)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (UEFA vs OFC)",
+            "CSR/Donation Focus",
+            "Global Humanitarian Projects"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.381732702255249
+            }
+          ],
+          "reasoning": "The analyzed content belongs to the UEFA Foundation for Children, a distinct entity from the Oceania Football Confederation (OFC). While the content mentions 'Oceania' as a region of operation, this is a global charity site unrelated to OFC's specific procurement needs. The content focuses on social responsibility (CSR) and donations rather than B2B procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:51:08.344170",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/competitions-and-event-manager-at-fifa-4015530399",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Competition Management System (CMS)"
+            ],
+            "job_postings": [
+              "Competitions and Event Manager (FIFA/OFC) - Auckland, NZ"
+            ],
+            "procurement_indicators": [
+              "Explicit management of pre-delivery phase logistics including procurement",
+              "Equipment management",
+              "Host bid process and selection",
+              "Budget and financial report oversight",
+              "Vendor/Host liaison for event delivery"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Responsibility",
+            "Competition Management System (CMS) Usage",
+            "Event Logistics & Supply Chain",
+            "Strategic Operational Planning"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.270540237426758
+            }
+          ],
+          "reasoning": "The job description explicitly lists 'procurement' as a key accountability within the event management lifecycle. It confirms the use of a 'Competition Management System' (CMS) and highlights significant operational activity driven by the 2026/2027 FIFA World Cup qualification strategy. This provides concrete evidence of procurement intent and technology reliance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:51:18.187153",
+          "domain_explored": "https://pg.linkedin.com/posts/png-dynamics_png-careers-jobopportunity-activity-7039832804968337408-z6L5",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "General Secretary (CEO)",
+                "organization": "Papua New Guinea Football Association (PNGFA)",
+                "location": "Port Moresby, PNG",
+                "reports_to": "President and Board of Directors",
+                "affiliations": [
+                  "FIFA",
+                  "OFC"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Executive Search / Recruitment Services",
+              "Corporate Sector Partnerships",
+              "Government Relations",
+              "High-Performance Sports Management"
+            ]
+          },
+          "patterns_found": [
+            "C-Suite Executive Recruitment",
+            "Strategic Governance & Leadership",
+            "Stakeholder Management (Corporate & Government)",
+            "Operational Oversight of National Association"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 409,
+              "elapsed_seconds": 6.40196681022644
+            }
+          ],
+          "reasoning": "This content is a direct job posting for the General Secretary (CEO) role of the Papua New Guinea Football Association (PNGFA), a key member association of the Oceania Football Confederation (OFC). While this is an HR procurement signal rather than a supply chain RFP, it confirms active organizational restructuring and high-level strategic hiring within the OFC ecosystem. The role explicitly requires managing a 'large national sports organization' and interfacing with corporate and government sectors, indicating significant operational scale and associated procurement needs (infrastructure, events, admin)."
+        }
+      ],
+      "total_input_tokens": 7467,
+      "total_output_tokens": 1451,
+      "estimated_cost_usd": 0.044166
+    },
+    "procurement_signals": [
+      "Direct Procurement Responsibility",
+      "Competition Management System (CMS) Usage",
+      "Event Logistics & Supply Chain",
+      "Strategic Operational Planning",
+      "C-Suite Executive Recruitment",
+      "Strategic Governance & Leadership",
+      "Stakeholder Management (Corporate & Government)",
+      "Operational Oversight of National Association"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oceania Football Confederation (OFC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:51:18.187791"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.199266",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:14.254046"
+}

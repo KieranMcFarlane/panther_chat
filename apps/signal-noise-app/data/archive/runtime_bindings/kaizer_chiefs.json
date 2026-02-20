@@ -1,0 +1,127 @@
+{
+  "entity_id": "kaizer_chiefs",
+  "entity_name": "Kaizer Chiefs",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "kaizerchiefs.com",
+    "kcdigistore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kaizer_chiefs",
+      "entity_name": "Kaizer Chiefs",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://kaizerchiefs.com",
+        "https://kcdigistore.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kaizer Chiefs may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:54:51.737053",
+          "domain_explored": "https://kaizerchiefs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "E-commerce Platform (Digistore)",
+              "Mobile Application / Mobile Web"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Maintenance of Digital Storefront (Digistore)",
+              "Mobile Platform Management (KC Mobile)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Commerce Presence",
+            "Mobile Engagement Strategy",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.821420669555664
+            }
+          ],
+          "reasoning": "The content reveals structural elements of Kaizer Chiefs' digital ecosystem rather than explicit procurement events. The presence of 'Digistore' indicates an active e-commerce platform requiring vendor support (hosting, payment gateways). 'KC Mobile' suggests a dedicated mobile application or mobile-optimized web presence, implying investment in mobile development or maintenance. The repetitive nature of the text suggests a CMS-driven site, but no specific RFPs, job postings, or new technology adoptions are explicitly mentioned in this snippet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:55:00.248860",
+          "domain_explored": "https://kcdigistore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or custom CMS based on URL structure /collections/, /products/)",
+              "Digital Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active inventory procurement for 2025/26 season (Jerseys, Ladies range, Kids range)",
+              "Vendor partnership execution: Kappa (Apparel manufacturing)",
+              "Logistics and distribution requirements for 'White Whisper' and '222 Banda' limited editions"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Utilization",
+            "Merchandise Inventory Management",
+            "Kit Partnership Execution (Kappa)",
+            "Seasonal Product Lifecycle (2025/26)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 331,
+              "elapsed_seconds": 5.130224943161011
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated digital storefront (kcdigistore.com) for merchandise sales. While this is a commercial transaction site rather than a corporate procurement portal, it validates the entity's investment in digital infrastructure and inventory management systems. The presence of '2025/26' kits indicates active supply chain management and vendor relationships (specifically with Kappa) for manufacturing and logistics."
+        }
+      ],
+      "total_input_tokens": 2765,
+      "total_output_tokens": 628,
+      "estimated_cost_usd": 0.017715
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kaizer Chiefs may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:55:00.251763"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.180753",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:19:19.402601"
+}

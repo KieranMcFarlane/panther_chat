@@ -1,0 +1,280 @@
+{
+  "entity_id": "ark\u00e9a\u0096b&b_hotels_women",
+  "entity_name": "Ark\u00e9a\u0096B&B Hotels Women",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "letourfemmes.fr",
+    "cyclingnews.com",
+    "liege-bastogne-liege-femmes.be",
+    "paris-roubaix-femmes.fr",
+    "la-fleche-wallonne-femmes.be",
+    "vueltacv.com",
+    "procyclingstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ark\u00e9a\u0096b&b_hotels_women",
+      "entity_name": "Ark\u00e9a\u0096B&B Hotels Women",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://la-fleche-wallonne-femmes.be",
+        "https://paris-roubaix-femmes.fr",
+        "https://vueltacv.com",
+        "https://procyclingstats.com",
+        "https://cyclingnews.com",
+        "https://letourfemmes.fr",
+        "https://liege-bastogne-liege-femmes.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ark\u00e9a\u0096B&B Hotels Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:34:12.047282",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Ecosystem: Presence of Zwift (Digital Fitness) and Tissot (Timing/Watchmaking) as event sponsors indicates a technology-driven event environment, but no direct procurement link to the team."
+            ]
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Sponsorship Visibility (Zwift, Tissot)",
+            "General Sports News (Palmar\u00e8s, Grand D\u00e9part)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 258,
+              "elapsed_seconds": 3.416625738143921
+            }
+          ],
+          "reasoning": "The scraped content consists of general news updates, race results (Palmar\u00e8s), and marketing copy for the Tour de France Femmes event. While it confirms the existence of sponsors like Zwift and Tissot, it contains no specific information regarding the 'Ark\u00e9a\u2013B&B Hotels' team entity's internal procurement, technology stack, or operational needs. The content is consumer-facing sports media, not B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:34:22.600455",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News",
+            "Race Results",
+            "Athlete Retirement Announcements",
+            "Equipment Technology (Bikes)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 207,
+              "elapsed_seconds": 5.1080310344696045
+            }
+          ],
+          "reasoning": "The content provided is a list of general cycling news headlines and articles from Cyclingnews.com. While there is a mention of 'unreleased TT bikes' and 'tech gallery', this relates to consumer bike equipment reviews rather than the operational procurement, enterprise software, or business infrastructure needs of the Ark\u00e9a\u2013B&B Hotels Women team. There are no signals regarding team operations, sponsorships, job openings, or business technology."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:34:33.351631",
+          "domain_explored": "https://liege-bastogne-liege-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Player)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Race Results & Palmar\u00e8s",
+            "General Sports News",
+            "Video Embeds (Dailymotion)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.7730679512023926
+            }
+          ],
+          "reasoning": "The content is entirely focused on race results, route announcements, and general event promotion for Li\u00e8ge-Bastogne-Li\u00e8ge Femmes. There is no mention of the target entity (Ark\u00e9a\u2013B&B Hotels Women), nor are there any procurement signals, job postings, or technology stack indicators relevant to the target's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:34:44.195173",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Race Results & Palmar\u00e8s",
+            "Sponsorship Visibility (Zwift, Visma, Lidl-Trek)",
+            "Media Hosting (Dailymotion)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.109099864959717
+            }
+          ],
+          "reasoning": "The scraped content from paris-roubaix-femmes.fr is exclusively focused on race results, winner highlights (Pauline Ferrand-Pr\u00e9vot), and photo galleries from the 2025 event. While it confirms the event's existence and sponsorship ecosystem, it contains no information regarding the internal operations, technology stack, or procurement activities of the Ark\u00e9a\u2013B&B Hotels Women team."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:34:53.376796",
+          "domain_explored": "https://la-fleche-wallonne-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Player)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Race Results & Palmar\u00e8s",
+            "Sponsorship Visibility (Fenix-Deceuninck, Canyon//SRAM, FDJ-SUEZ)",
+            "Digital Asset Management (Dailymotion video embed)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 265,
+              "elapsed_seconds": 3.5503017902374268
+            }
+          ],
+          "reasoning": "The scraped content from la-fleche-wallonne-femmes.be is exclusively focused on race results (Puck Pieterse), event marketing (2026 route, Epic Celebrations), and media galleries. While the presence of a Dailymotion video player indicates a technology vendor relationship, it is a standard content delivery method for sports media and does not indicate specific procurement intent or active sourcing by the 'Ark\u00e9a\u2013B&B Hotels Women' entity. The content is historical and promotional, lacking any signals regarding RFPs, job postings, or strategic investments."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:35:02.838421",
+          "domain_explored": "https://vueltacv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Race Route Announcement",
+            "Sponsorship Visibility (Banc Sabadell)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1041,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.152676820755005
+            }
+          ],
+          "reasoning": "The content is a standard sports news update regarding the route presentation for the 2026 Volta a la Comunitat Valenciana. It focuses on event logistics (dates, stages) and sponsor branding. There is no information related to the target entity (Ark\u00e9a\u2013B&B Hotels Women), nor are there any procurement signals, technology stacks, or governance patterns relevant to the analysis objective."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:35:10.139842",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race Results & Palmar\u00e8s",
+            "Event Scheduling",
+            "UCI Rankings",
+            "Team Roster Updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1678,
+              "output_tokens": 146,
+              "elapsed_seconds": 3.0720880031585693
+            }
+          ],
+          "reasoning": "The content is strictly sports data aggregation (race results, rankings, calendars) for ProCyclingStats. It contains no corporate information, vendor lists, or business operations related to the Ark\u00e9a\u2013B&B Hotels Women team entity."
+        }
+      ],
+      "total_input_tokens": 10048,
+      "total_output_tokens": 1460,
+      "estimated_cost_usd": 0.052044
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ark\u00e9a\u0096B&B Hotels Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:35:10.140583"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384313",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:55.734788"
+}

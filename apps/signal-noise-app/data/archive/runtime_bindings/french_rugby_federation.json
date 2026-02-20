@@ -1,0 +1,194 @@
+{
+  "entity_id": "french_rugby_federation",
+  "entity_name": "French Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "french.ie",
+    "societegenerale.com",
+    "rugbyworldcup.com",
+    "lecoqsportif.com",
+    "media.renault.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_rugby_federation",
+      "entity_name": "French Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://lecoqsportif.com",
+        "https://rugbyworldcup.com",
+        "https://media.renault.com",
+        "https://societegenerale.com",
+        "https://french.ie"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:34:40.132350",
+          "domain_explored": "https://french.ie",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:34:50.863797",
+          "domain_explored": "https://societegenerale.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "banking_corporate_news",
+            "financial_services_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.058647871017456
+            }
+          ],
+          "reasoning": "The content provided is from the corporate website of Soci\u00e9t\u00e9 G\u00e9n\u00e9rale, a major French bank. It contains news regarding economic studies, financing projects (mining, energy, infrastructure), and general corporate information. There is absolutely no mention of the French Rugby Federation (FFR), rugby, or sports-related procurement activities. This content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:35:19.088114",
+          "domain_explored": "https://rugbyworldcup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Sponsorship: Mitsubishi Estate (Official Supporter)",
+              "Global Sponsorship: LIQUI MOLY (Official Partner)"
+            ]
+          },
+          "patterns_found": [
+            "global_governing_body_content",
+            "tournament_marketing",
+            "commercial_partnerships",
+            "event_logistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 226,
+              "elapsed_seconds": 20.856279850006104
+            }
+          ],
+          "reasoning": "The content is from the global Rugby World Cup site (World Rugby), focusing on the 2025 and 2027 tournaments hosted in Australia. While it lists commercial partners (Mitsubishi Estate, LIQUI MOLY), these are global sponsorships rather than procurement signals for the French Rugby Federation (FFR). The content is irrelevant to the specific procurement activities of the French entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:35:30.002590",
+          "domain_explored": "https://lecoqsportif.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_product_catalog",
+            "consumer_retail_interface",
+            "b2c_sales_focus",
+            "apparel_manufacturing_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.975040912628174
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from Le Coq Sportif's consumer-facing e-commerce platform. It displays product listings (polos, t-shirts, shoes), pricing, and promotional sales (SOLDES). There is no corporate governance information, procurement intent, or technology stack data relevant to the French Rugby Federation's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:35:40.878623",
+          "domain_explored": "https://media.renault.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "automotive_marketing_content",
+            "product_announcements",
+            "irrelevant_entity_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 168,
+              "elapsed_seconds": 3.470579147338867
+            }
+          ],
+          "reasoning": "The content is from the Renault Group media site and focuses exclusively on automotive product launches (Duster, Clio) and sales performance figures. There is no connection to the French Rugby Federation, nor are there any procurement signals, technology stack details, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5837,
+      "total_output_tokens": 758,
+      "estimated_cost_usd": 0.028880999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:35:40.884969"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290465",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:06.217791"
+}

@@ -1,0 +1,166 @@
+{
+  "entity_id": "indykpol_azs_olsztyn",
+  "entity_name": "Indykpol AZS Olsztyn",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "indykpolazs.pl",
+    "www-old.cev.eu",
+    "grokipedia.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "indykpol_azs_olsztyn",
+      "entity_name": "Indykpol AZS Olsztyn",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://www-old.cev.eu",
+        "https://zoominfo.com",
+        "https://indykpolazs.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Indykpol AZS Olsztyn may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:01:39.275619",
+          "domain_explored": "https://indykpolazs.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Photo Gallery Management",
+              "Live Score/Countdown Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Technological Partner (Partner Technologiczny) sponsorship slot available",
+              "Sponsor hierarchy (Strategic, Main, Partners) suggests vendor tiers",
+              "Active digital content management (news, match reports)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Structure",
+            "Content Management",
+            "Digital Media Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 316,
+              "elapsed_seconds": 5.449326038360596
+            }
+          ],
+          "reasoning": "The content is primarily sports team data (scores, roster, schedule) and confirms the entity operates a professional volleyball club. While no direct RFPs are visible, the presence of a 'Partner Technologiczny' (Technological Partner) sponsorship slot and the management of dynamic web content (live scores, galleries) indicates a need for web maintenance and potential vendor relationships for digital services. The 'Sponsor Strategiczny' and 'Sponsor G\u0142\u00f3wny' structure reveals the decision-making hierarchy for vendor selection."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:01:46.945476",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Sports Federation Navigation",
+            "Generic Event Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 198,
+              "elapsed_seconds": 3.271311044692993
+            }
+          ],
+          "reasoning": "The scraped content originates from the European Volleyball Confederation (CEV) website (cev.eu), not the target entity Indykpol AZS Olsztyn. The content consists of navigation menus for volleyball tournaments (Champions League, EuroVolley) and generic event listings. There is no mention of Indykpol AZS Olsztyn, nor are there any procurement signals, technology stacks, or governance patterns relevant to the target entity within this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:01:50.208566",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:01:57.610933",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Copy",
+            "Third-Party B2B Database Platform",
+            "Irrelevant Sales Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.434393882751465
+            }
+          ],
+          "reasoning": "The content provided is the homepage of ZoomInfo, a B2B data intelligence platform. It contains generic marketing copy, product descriptions, and testimonials from other companies (Seismic, McGriff) about using ZoomInfo. There is absolutely no information regarding 'Indykpol AZS Olsztyn', its procurement activities, technology stack, or governance. This is a complete false positive in the context of the target entity."
+        }
+      ],
+      "total_input_tokens": 4245,
+      "total_output_tokens": 709,
+      "estimated_cost_usd": 0.023370000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Indykpol AZS Olsztyn may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:01:57.613113"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318527",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:28.289809"
+}

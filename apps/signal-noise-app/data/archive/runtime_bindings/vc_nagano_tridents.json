@@ -1,0 +1,204 @@
+{
+  "entity_id": "vc_nagano_tridents",
+  "entity_name": "VC Nagano Tridents",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "vcnagano.jp",
+    "svleague.jp",
+    "globalsportsarchive.com",
+    "kinabal.co.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vc_nagano_tridents",
+      "entity_name": "VC Nagano Tridents",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.039999999999999994,
+        0.039999999999999994,
+        0.06
+      ],
+      "explored_domains": [
+        "https://svleague.jp",
+        "https://globalsportsarchive.com",
+        "https://vcnagano.jp",
+        "https://kinabal.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "E-commerce Platform Renewal",
+        "Third-party Ticketing System Usage",
+        "Digital Fan Engagement",
+        "Operational Process Updates"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VC Nagano Tridents may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:54:24.585500",
+          "domain_explored": "https://vcnagano.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Store Renewal)",
+              "Ticketing Platform (ticket-v.jp)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Online Store Renewal (Direct procurement of e-commerce services)",
+              "Ticketing System Integration (Vendor: Ticket Board / ticket-v.jp)",
+              "Operational Logistics (Shuttle bus and parking management services)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Renewal",
+            "Third-party Ticketing System Usage",
+            "Digital Fan Engagement",
+            "Operational Process Updates"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 314,
+              "elapsed_seconds": 11.890079975128174
+            }
+          ],
+          "reasoning": "The content explicitly announces the 'Renewal of the Official Online Store' (\u30aa\u30f3\u30e9\u30a4\u30f3\u30b9\u30c8\u30a2\u30ea\u30cb\u30e5\u30fc\u30a2\u30eb), which is a direct procurement signal indicating recent investment in e-commerce infrastructure. Additionally, the presence of a dedicated ticketing URL (ticket-v.jp) confirms the use of specialized ticketing vendors. The frequent updates regarding game operations and shuttle buses suggest an active operational environment requiring logistical support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:54:35.101910",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level Navigation",
+            "Generic Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 440,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.670346975326538
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and header structure of the SV League (svleague.jp) official website, not the VC Nagano Tridents (vcnagano.jp) entity. While VC Nagano participates in this league, the league's website content does not contain specific procurement signals, technology stack details, or job postings attributable to the VC Nagano Tridents organization itself. This represents a drift away from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:54:48.013231",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Irrelevant Geographic Focus",
+            "Static Navigation Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 178,
+              "elapsed_seconds": 4.71124792098999
+            }
+          ],
+          "reasoning": "The content is a generic global sports archive listing soccer leagues and tournaments worldwide. It contains no information specific to VC Nagano Tridents, Japanese volleyball, or the entity's procurement activities. The data is purely navigational and statistical, offering no insight into the target's business operations, technology stack, or vendor needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:54:58.219218",
+          "domain_explored": "https://kinabal.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EC site ASP (carts)",
+              "YouTube Advertising",
+              "LINE Official Accounts",
+              "Instagram Advertising",
+              "SEO Tools",
+              "Access Analytics"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Portfolio: EC site construction",
+              "Service Portfolio: Web consulting",
+              "Service Portfolio: Digital advertising operations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Service Provider",
+            "EC Site Construction",
+            "Content Marketing & SEO",
+            "SNS Operations (YouTube, LINE, Instagram)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.215937852859497
+            }
+          ],
+          "reasoning": "The content is from a web production and marketing agency (Kinabal Co., Ltd.), not the target entity (VC Nagano Tridents). While it lists relevant services like EC site construction and marketing operations, there is no direct evidence linking this vendor to a procurement event with VC Nagano Tridents. It represents a potential vendor in the ecosystem but does not confirm a transaction or intent."
+        }
+      ],
+      "total_input_tokens": 4742,
+      "total_output_tokens": 980,
+      "estimated_cost_usd": 0.028926
+    },
+    "procurement_signals": [
+      "E-commerce Platform Renewal",
+      "Third-party Ticketing System Usage",
+      "Digital Fan Engagement",
+      "Operational Process Updates"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VC Nagano Tridents may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:54:58.220636"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.323643",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:15.832062"
+}

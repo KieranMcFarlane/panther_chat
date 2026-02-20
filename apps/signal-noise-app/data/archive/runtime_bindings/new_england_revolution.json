@@ -1,0 +1,356 @@
+{
+  "entity_id": "new_england_revolution",
+  "entity_name": "New England Revolution",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "revolutionsoccer.net",
+    "mlssoccer.com",
+    "thekraftgroup.com",
+    "mlsstore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/new-england-revolution-jobs",
+      "https://www.linkedin.com/jobs/new-england-revolution-jobs-worldwide?f_C=1834534&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/match-day-and-event-staff-premium-at-new-england-revolution-4361942637",
+      "https://www.linkedin.com/jobs/view/team-administrator-mls-pt-at-new-england-revolution-4330420670",
+      "https://www.linkedin.com/jobs/view/equipment-assistant-at-new-england-revolution-4330397637",
+      "https://www.linkedin.com/jobs/view/player-development-coach-revolution-academy-at-new-england-revolution-4331288784",
+      "https://www.linkedin.com/jobs/view/membership-services-manager-at-new-england-revolution-4359295708",
+      "https://www.linkedin.com/jobs/view/operations-and-administrative-coordinator-at-new-england-revolution-4354940790",
+      "https://www.linkedin.com/jobs/view/communications-associate-at-new-england-revolution-4330443026",
+      "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-new-england-revolution-4354836672"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_england_revolution",
+      "entity_name": "New England Revolution",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.13999999999999999,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.12,
+        0.13999999999999999
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/match-day-and-event-staff-premium-at-new-england-revolution-4361942637",
+        "https://www.linkedin.com/jobs/new-england-revolution-jobs",
+        "https://www.linkedin.com/jobs/view/equipment-assistant-at-new-england-revolution-4330397637",
+        "https://www.linkedin.com/jobs/new-england-revolution-jobs-worldwide?f_C=1834534&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://mlssoccer.com",
+        "https://thekraftgroup.com",
+        "https://mlsstore.com",
+        "https://www.linkedin.com/jobs/view/team-administrator-mls-pt-at-new-england-revolution-4330420670",
+        "https://revolutionsoccer.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "CRM & Ticketing Operations",
+        "Digital Media Production",
+        "Academy Management Systems",
+        "Kraft Sports + Entertainment Shared Services",
+        "Travel & Logistics Management",
+        "Immigration & Legal Compliance",
+        "Stadium & Facility Operations",
+        "League Compliance (MLS)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New England Revolution may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:26:57.102226",
+          "domain_explored": "https://revolutionsoccer.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Player (likely YouTube or custom embed)",
+              "Social Media Platforms (TikTok, Instagram, Facebook, YouTube, X, Threads)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket Sales ('Buy Now' button)"
+            ]
+          },
+          "patterns_found": [
+            "Social Media Integration",
+            "Content Management System (CMS) usage",
+            "Video Hosting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 225,
+              "elapsed_seconds": 2.8850932121276855
+            }
+          ],
+          "reasoning": "The scraped content consists of sports news headlines, video highlights, and social media links. There are no explicit mentions of procurement activities, job postings, or technology investments. The presence of social media links and video players indicates standard web infrastructure but does not signal immediate procurement intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:27:03.314315",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-wide Transfer News",
+            "Competitor Player Acquisition",
+            "Content Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.672210931777954
+            }
+          ],
+          "reasoning": "The scraped content from mlssoccer.com focuses exclusively on league-wide player transfers, specifically highlighting competitors (San Jose Earthquakes, Orlando City, Houston Dynamo, Austin FC, Inter Miami). There is no mention of the New England Revolution, nor are there any signals regarding business operations, technology procurement, or job postings. The content is purely sports journalism unrelated to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:27:06.122287",
+          "domain_explored": "https://thekraftgroup.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:27:10.618565",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:27:18.831776",
+          "domain_explored": "https://www.linkedin.com/jobs/new-england-revolution-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Systems (Ticketing/Membership)",
+              "Video Production Software",
+              "Adobe Creative Cloud",
+              "Content Management Systems (CMS)",
+              "Academy Management Platforms"
+            ],
+            "job_postings": [
+              "Membership Services Manager",
+              "Communications Associate",
+              "Production Assistant (KSE)",
+              "Revolution Academy Intern",
+              "Fan and Community Engagement Associate"
+            ],
+            "procurement_indicators": [
+              "Expansion of Membership Services team suggests scaling of CRM/ticketing infrastructure.",
+              "Kraft Sports + Entertainment hiring indicates centralized procurement for production technology.",
+              "Academy internships suggest ongoing investment in youth development operational tools."
+            ]
+          },
+          "patterns_found": [
+            "CRM & Ticketing Operations",
+            "Digital Media Production",
+            "Academy Management Systems",
+            "Kraft Sports + Entertainment Shared Services"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 415,
+              "elapsed_seconds": 4.935127019882202
+            }
+          ],
+          "reasoning": "The job listings provide direct evidence of operational roles that rely on specific software procurement. The 'Membership Services Manager' role indicates a heavy reliance on CRM and Ticketing platforms (likely Archtics or similar), while 'Production Assistant' and 'Communications Associate' roles suggest investment in digital media workflows and content management tools. The presence of 'Revolution Academy' roles signals investment in youth development tracking systems."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:27:25.675653",
+          "domain_explored": "https://www.linkedin.com/jobs/new-england-revolution-jobs-worldwide?f_C=1834534&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 29 column 9 (char 1529)"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:27:31.917909",
+          "domain_explored": "https://www.linkedin.com/jobs/view/match-day-and-event-staff-premium-at-new-england-revolution-4361942637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Match Day and Event Staff - Premium",
+                "type": "Part-time / Hourly",
+                "focus": "Hospitality & Game Day Operations"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Hospitality Operations",
+            "Event Staffing",
+            "Physical Labor Requirements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1649,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.4889590740203857
+            }
+          ],
+          "reasoning": "The job posting is for a part-time, hourly 'Match Day and Event Staff' role focused on manual labor, customer service, and event coordination. It lacks technical requirements, software usage, or decision-making authority that would indicate procurement intent or technology investment."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:27:40.313912",
+          "domain_explored": "https://www.linkedin.com/jobs/view/team-administrator-mls-pt-at-new-england-revolution-4330420670",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Travel Booking Platforms",
+              "HR/Onboarding Software",
+              "League Compliance Systems (MLS)"
+            ],
+            "job_postings": [
+              "Team Administrator- MLS (PT)"
+            ],
+            "procurement_indicators": [
+              "Travel & Hospitality Vendor Management (Flights, Hotels, Transport)",
+              "Relocation & Housing Services",
+              "Stadium Operations & Field Equipment Procurement",
+              "Immigration Legal Services"
+            ]
+          },
+          "patterns_found": [
+            "Travel & Logistics Management",
+            "Immigration & Legal Compliance",
+            "Stadium & Facility Operations",
+            "League Compliance (MLS)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1713,
+              "output_tokens": 333,
+              "elapsed_seconds": 4.966025114059448
+            }
+          ],
+          "reasoning": "The job description for 'Team Administrator- MLS (PT)' reveals significant procurement activity in the operational category. The role is explicitly responsible for arranging travel logistics (flights, hotels, ground transport), relocation services, and equipment needs. This indicates active procurement or management of vendors in the Travel, Lifestyle, and Facility Management sectors. It also highlights compliance needs with MLS regulations, suggesting the use of specialized league management software."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:27:47.842920",
+          "domain_explored": "https://www.linkedin.com/jobs/view/equipment-assistant-at-new-england-revolution-4330397637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Heat Press Machinery",
+              "Inventory Tracking Software"
+            ],
+            "job_postings": [
+              "Equipment Assistant (Academy & MLS Next Pro focus)"
+            ],
+            "procurement_indicators": [
+              "Adidas partnership (Apparel/Footwear vendor)",
+              "Laundry & Maintenance services procurement",
+              "Tournament logistics & travel gear procurement"
+            ]
+          },
+          "patterns_found": [
+            "Apparel & Footwear Supply Chain",
+            "Inventory Management Systems",
+            "Equipment Maintenance & Logistics",
+            "Vendor Partnership (Adidas)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1780,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.740084171295166
+            }
+          ],
+          "reasoning": "While this is an entry-level operational role, it explicitly confirms the procurement workflow for 'adidas apparel and footwear' and the use of 'heat press' technology for uniform customization. It reveals the supply chain structure for the Academy and MLS Next Pro teams, indicating a need for inventory tracking and laundry maintenance services."
+        }
+      ],
+      "total_input_tokens": 9437,
+      "total_output_tokens": 1658,
+      "estimated_cost_usd": 0.053181
+    },
+    "procurement_signals": [
+      "CRM & Ticketing Operations",
+      "Digital Media Production",
+      "Academy Management Systems",
+      "Kraft Sports + Entertainment Shared Services",
+      "Travel & Logistics Management",
+      "Immigration & Legal Compliance",
+      "Stadium & Facility Operations",
+      "League Compliance (MLS)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New England Revolution may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:27:47.843391"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.152182",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:16.520625"
+}

@@ -1,0 +1,178 @@
+{
+  "entity_id": "bahamas_volleyball_federation",
+  "entity_name": "Bahamas Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "thenassauguardian.com",
+    "norceca.net",
+    "tribune242.com",
+    "gomingoes.com",
+    "sportsinthebahamas.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahamas_volleyball_federation",
+      "entity_name": "Bahamas Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://thenassauguardian.com",
+        "https://norceca.net",
+        "https://tribune242.com",
+        "https://gomingoes.com",
+        "https://sportsinthebahamas.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahamas Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:12:51.693452",
+          "domain_explored": "https://thenassauguardian.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "government_legal_affairs"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 773,
+              "output_tokens": 141,
+              "elapsed_seconds": 1.9405763149261475
+            }
+          ],
+          "reasoning": "The content provided is a news article regarding the Minister of National Security and amendments to the Criminal Evidence Act. It contains no information regarding the Bahamas Volleyball Federation, its operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:12:56.990709",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "NORCECA Branding Kit available (implies requirement for compliant marketing materials/design tools)",
+              "Rotating Hosting Schedule 2002-2030 (implies long-term event planning and infrastructure needs)",
+              "Constitution and Congress Reports (implies governance compliance requirements)"
+            ]
+          },
+          "patterns_found": [
+            "governance_structure",
+            "event_hosting_schedule",
+            "branding_guidelines",
+            "federation_affiliation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 279,
+              "elapsed_seconds": 2.3097527027130127
+            }
+          ],
+          "reasoning": "The content provides high-level context on the governing body (NORCECA) and its operational structure, including hosting schedules and branding kits. While it does not contain direct procurement signals for the Bahamas Volleyball Federation specifically, it establishes the ecosystem and regulatory framework (governance, events) that often dictates technology and service requirements for affiliated federations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:13:02.711744",
+          "domain_explored": "https://tribune242.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_content",
+            "political_coverage",
+            "crime_reporting",
+            "local_human_interest_stories"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.4505228996276855
+            }
+          ],
+          "reasoning": "The source is a general news daily (The Tribune) covering broad national topics (politics, crime, weather). While it has a 'Sports' section, the scraped homepage content shows no specific mentions of volleyball, the Bahamas Volleyball Federation (BVF), or associated procurement activities (tenders, sponsorships, equipment needs). The content is high-noise regarding the specific entity target."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:13:05.534128",
+          "domain_explored": "https://gomingoes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:13:08.203689",
+          "domain_explored": "https://sportsinthebahamas.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3624,
+      "total_output_tokens": 610,
+      "estimated_cost_usd": 0.020021999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahamas Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:13:08.204495"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.332973",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:12.545203"
+}

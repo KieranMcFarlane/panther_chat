@@ -1,0 +1,168 @@
+{
+  "entity_id": "dundee_united",
+  "entity_name": "Dundee United",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "dundeeunitedfc.co.uk",
+    "dundeefc.co.uk",
+    "dundeeunitedct.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dundee_united",
+      "entity_name": "Dundee United",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://dundeefc.co.uk",
+        "https://dundeeunitedct.co.uk",
+        "https://dundeeunitedfc.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dundee United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:00:43.114139",
+          "domain_explored": "https://dundeeunitedfc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "mtc (Website & E-commerce provider)",
+              "Multi-currency payment processing (indicated by template tags)",
+              "VOD (Video on Demand) streaming infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of Corporate Hospitality ('The Spartans')",
+              "Sponsorship acquisition (Dragon Soop, CalForth Construction)",
+              "Merchandise supply chain (Replica kits, 'All sizes back in stock')",
+              "Logistics for International Aid (Strip donation to Guinea-Bissau)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (mtc)",
+            "Digital Content Management (DUTV/VOD)",
+            "Corporate Partnership Structure",
+            "Community Engagement Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 340,
+              "elapsed_seconds": 3.4214611053466797
+            }
+          ],
+          "reasoning": "The content reveals the technology stack (mtc for web/shop) and active commercial/community operations. While no direct RFPs are visible, the 'Business United' corporate networking and active 'Principal/Official/Associate Partner' tiers indicate a structured commercial department that regularly procures services (hospitality, sponsorship, marketing). The presence of DUTV (VOD) suggests digital infrastructure needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:01:16.804992",
+          "domain_explored": "https://dundeefc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Twitter/X Integration",
+              "Video Streaming (DEETV)"
+            ],
+            "job_postings": [
+              "Job Vacancies | January 2026 (Generic reference, non-specific)"
+            ],
+            "procurement_indicators": [
+              "Player Transfer Activity (Lewis Montsma signing)",
+              "Hospitality Upgrades",
+              "Ticketing Platform Usage"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Dundee FC vs Dundee United)",
+            "Competitor Analysis",
+            "Standard Club Operations (Ticketing, Social Media)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 260,
+              "elapsed_seconds": 28.951893091201782
+            }
+          ],
+          "reasoning": "The scraped content is from 'dundeefc.co.uk', which belongs to Dundee FC, the city rival of the target entity Dundee United. While the operational context (ticketing, media, lotteries) is relevant to the industry, it provides no direct procurement intelligence for Dundee United. This represents a false positive in the discovery phase."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:01:22.634970",
+          "domain_explored": "https://dundeeunitedct.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Early Years Lead Coach"
+            ],
+            "procurement_indicators": [
+              "Community Investment (\u00a31.3m)",
+              "Operational Expansion (New Beechwood Park)"
+            ]
+          },
+          "patterns_found": [
+            "HR & Recruitment Activity",
+            "Community Investment & Grant Funding",
+            "Charitable Governance Structure",
+            "Program Operations (Sports Coaching)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.594444990158081
+            }
+          ],
+          "reasoning": "The content confirms the entity (Dundee United Community Trust) and reveals active recruitment (Early Years Lead Coach), indicating operational growth and potential future procurement needs for HR software or training tools. While direct procurement signals (RFPs/Tenders) are absent, the \u00a31.3m investment figure suggests significant cash flow requiring financial management, and the 'Vacancy' listing validates the organization's active hiring phase."
+        }
+      ],
+      "total_input_tokens": 4240,
+      "total_output_tokens": 856,
+      "estimated_cost_usd": 0.02556
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dundee United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:01:22.636188"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.140464",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:20.001147"
+}

@@ -1,0 +1,189 @@
+{
+  "entity_id": "guinea_volleyball_federation",
+  "entity_name": "Guinea Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "asianvolleyball.net",
+    "thenational.com.pg",
+    "postcourier.com.pg",
+    "volleyball.org.au",
+    "finixsports.wordpress.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guinea_volleyball_federation",
+      "entity_name": "Guinea Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://finixsports.wordpress.com",
+        "https://volleyball.org.au",
+        "https://thenational.com.pg",
+        "https://postcourier.com.pg",
+        "https://asianvolleyball.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guinea Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:45:01.713901",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "regional_confederation_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 818,
+              "output_tokens": 138,
+              "elapsed_seconds": 2.859419107437134
+            }
+          ],
+          "reasoning": "The content provided is from the Asian Volleyball Confederation (AVC) website and concerns the 2026 Cups in the Philippines. This is completely irrelevant to the Guinea Volleyball Federation, which is the target entity for procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:45:08.960560",
+          "domain_explored": "https://thenational.com.pg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "wrong_geography",
+            "general_news_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.2079851627349854
+            }
+          ],
+          "reasoning": "The content is from 'The National', a newspaper based in Papua New Guinea (PG), focusing on local news, tribal conflicts, and general regional events. There is absolutely no connection to the Guinea Volleyball Federation or West African volleyball governance. The entity and geography are incorrect."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:45:20.568876",
+          "domain_explored": "https://postcourier.com.pg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_geography",
+            "irrelevant_entity",
+            "general_news_content",
+            "legal_sector_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 165,
+              "elapsed_seconds": 8.522586822509766
+            }
+          ],
+          "reasoning": "The content is from the Post Courier (Papua New Guinea) and focuses exclusively on the PNG Law Society, the Chief Justice of PNG, and local PNG legal/political news. There is absolutely no connection to the Guinea Volleyball Federation, Guinea (West Africa), or volleyball-related procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:45:37.149875",
+          "domain_explored": "https://volleyball.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_geography",
+            "irrelevant_entity",
+            "event_calendar_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 762,
+              "output_tokens": 171,
+              "elapsed_seconds": 11.732360124588013
+            }
+          ],
+          "reasoning": "The content is from the Australian Volleyball Federation (volleyball.org.au), which is geographically distinct from the target entity, Guinea Volleyball Federation. The content consists solely of an event calendar entry for the Australian Beach Volleyball Tour, which provides no intelligence regarding Guinean procurement, governance, or technology stacks."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:45:40.119806",
+          "domain_explored": "https://finixsports.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4432,
+      "total_output_tokens": 630,
+      "estimated_cost_usd": 0.022746000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guinea Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:45:40.120216"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.342748",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:25.946967"
+}

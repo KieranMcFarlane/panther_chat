@@ -1,0 +1,152 @@
+{
+  "entity_id": "cyprus_volleyball_federation",
+  "entity_name": "Cyprus Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleyball.org.cy",
+    "inside.cev.eu",
+    "commonwealthofnations.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cyprus_volleyball_federation",
+      "entity_name": "Cyprus Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://volleyball.org.cy",
+        "https://commonwealthofnations.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cyprus Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:19:54.284044",
+          "domain_explored": "https://volleyball.org.cy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership: OPAP (League naming rights)",
+              "Sponsorship/Partnership: Cablenet (Broadcasting)",
+              "Service Provider: Stefano Cesare (International training/consulting)",
+              "Infrastructure: Spyros Kyprianou Hall (Venue usage)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Visibility (OPAP, Cablenet)",
+            "International Collaboration (Italian referee)",
+            "Event Organization (European matches)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.8422510623931885
+            }
+          ],
+          "reasoning": "The content is primarily operational news (match results, standings) rather than corporate procurement. However, the visibility of sponsors like OPAP and Cablenet, alongside the hosting of European-level matches requiring international logistics, indicates an active ecosystem with vendor dependencies. No explicit RFPs or tech stack details were found in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:20:01.129844",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEV Solidarity Fund (Open for Applications - Feb 2026)",
+              "Development Funding (Scouting & Player Identification)",
+              "Infrastructure Support (Strength & Conditioning Teams)"
+            ]
+          },
+          "patterns_found": [
+            "CEV Solidarity Fund Applications",
+            "Funding Opportunities",
+            "Federation Development Grants"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.8871688842773438
+            }
+          ],
+          "reasoning": "The content reveals the 'CEV Solidarity Fund' is accepting applications. This is a critical procurement signal as it indicates the availability of external funding for National Federations (including Cyprus). Federations often use these funds to procure specific services, technology, or expertise (e.g., scouting software, strength & conditioning equipment) to meet grant objectives. While not a direct RFP from Cyprus, it creates a high probability of upcoming spend."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:20:13.446963",
+          "domain_explored": "https://commonwealthofnations.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Directory Structure",
+            "High-Level Government Categories",
+            "Broad Economic Sectors"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 187,
+              "elapsed_seconds": 9.181347131729126
+            }
+          ],
+          "reasoning": "The content is a generic, high-level directory for the Commonwealth of Nations. While it lists Cyprus as a member and provides categories for 'Business' and 'Government', it lacks specific procurement signals, tender notices, or technology adoption details relevant to the Cyprus Volleyball Federation. It is a general information portal with no actionable intelligence for this specific entity."
+        }
+      ],
+      "total_input_tokens": 4265,
+      "total_output_tokens": 713,
+      "estimated_cost_usd": 0.02349
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cyprus Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:20:13.447939"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.338746",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:54.478281"
+}

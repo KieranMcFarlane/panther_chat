@@ -1,0 +1,400 @@
+{
+  "entity_id": "club_brugge",
+  "entity_name": "Club Brugge",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "clubbrugge.be",
+    "tickets.clubbrugge.be",
+    "shop.clubbrugge.be"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/club-brugge-jobs-worldwide",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-club-brugge-is-looking-activity-7057701356492464128-5Otl",
+      "https://be.linkedin.com/jobs/english-jobs-bruges-metropolitan-area",
+      "https://www.linkedin.com/jobs/castore-jobs-worldwide",
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+      "https://nl.linkedin.com/posts/club-brugge-k.v._jobs-hiring-career-activity-6835933104511754240-PODu",
+      "https://be.linkedin.com/jobs/supporter-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "club_brugge",
+      "entity_name": "Club Brugge",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+        "https://tickets.clubbrugge.be",
+        "https://clubbrugge.be",
+        "https://www.linkedin.com/jobs/club-brugge-jobs-worldwide",
+        "https://be.linkedin.com/jobs/english-jobs-bruges-metropolitan-area",
+        "https://www.linkedin.com/jobs/castore-jobs-worldwide",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-club-brugge-is-looking-activity-7057701356492464128-5Otl",
+        "https://shop.clubbrugge.be"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Innovation Leadership",
+        "Digital Transformation Governance",
+        "Executive Hiring (C-Suite/Director Level)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Club Brugge may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:44:13.695187",
+          "domain_explored": "https://clubbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise sales (Home Shirt 2025-2026)",
+              "Charity event organization (Club Brugge Charity Night 2026)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Fan Engagement Focus",
+            "E-commerce Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.6965928077697754
+            }
+          ],
+          "reasoning": "The scraped content is highly repetitive (repeating 'WEAREBRUGES' and news headlines multiple times) and consists solely of public-facing sports news, match results, and merchandise links. There are no job postings, technical infrastructure details, or strategic governance information visible in this specific text segment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:44:22.712318",
+          "domain_explored": "https://tickets.clubbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ask Club (Customer Service/Helpdesk Platform)",
+              "Dynamic JavaScript Framework (indicated by 'show_more' and loading states)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Customer Support Platform (Ask Club)"
+            ]
+          },
+          "patterns_found": [
+            "Dynamic Content Loading",
+            "Customer Support Integration",
+            "Ticketing Platform Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 489,
+              "output_tokens": 255,
+              "elapsed_seconds": 2.5451231002807617
+            }
+          ],
+          "reasoning": "The scraped content is dominated by UI placeholders ('Laden even geduld aub...') and customer support prompts ('Heb je een vraag?'). The primary finding is the integration with 'Ask Club' (askclub.be), which indicates a customer service tool, but this is an operational usage rather than a new procurement signal. The lack of substantial text or technical metadata prevents deeper analysis of the technology stack or procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:44:37.132100",
+          "domain_explored": "https://shop.clubbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or Magento based on URL structure 'collections')",
+              "Loyalty Management System (Club ID)",
+              "Dynamic Pricing Engine",
+              "Payment Gateway Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Logistics Partnership (Free shipping from \u20ac30 implies carrier contracts)",
+              "Inventory Management (High SKU turnover for kits/seasonal items)",
+              "Loyalty Program Vendor (Club ID system provider)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Structure",
+            "Dynamic Pricing Logic",
+            "Customer Loyalty Integration (Club ID)",
+            "Localized Logistics (Free Shipping Threshold)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 338,
+              "elapsed_seconds": 6.046544075012207
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing (merchandise), the structure reveals the underlying e-commerce technology stack. The presence of 'Club ID' integration for shipping discounts indicates a loyalty system connected to the web store. The specific pricing structure (Normal price vs. Offer price) suggests a dynamic pricing engine. These are operational capabilities that require procurement maintenance, though no direct RFPs are visible."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:44:47.286546",
+          "domain_explored": "https://www.linkedin.com/jobs/club-brugge-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cleaning medewerker (Facilities)",
+              "Winkelmedewerker Club & City Shop (Retail)",
+              "Greenkeeper (Groundskeeping)"
+            ],
+            "procurement_indicators": [
+              "Facilities Management Demand (Cleaning staff implies cleaning supplies/services contracts)",
+              "Retail Operations (Shop staff implies POS and inventory management needs)",
+              "Stadium Maintenance (Greenkeeping implies landscaping equipment and turf procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing (Facilities & Retail)",
+            "Job Title Localization",
+            "Search Result Noise (Jims Fitness)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.345686197280884
+            }
+          ],
+          "reasoning": "The content confirms active hiring for operational roles (Cleaning, Retail, Greenkeeping) which indicates ongoing procurement of services and equipment for these departments. However, the data is heavily polluted by irrelevant results from 'Jims' fitness centers, and there are no high-level strategic or technical procurement signals (IT, Management) visible in this snippet."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:44:58.474987",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-club-brugge-is-looking-activity-7057701356492464128-5Otl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analytics Platforms (Potential)",
+              "Wearable Technology (Potential)"
+            ],
+            "job_postings": [
+              {
+                "title": "Head of Performance",
+                "type": "Full-time",
+                "department": "Performance Department",
+                "focus": "Player development and team performance"
+              }
+            ],
+            "procurement_indicators": [
+              "Headcount Growth in Performance Unit",
+              "Strategic Focus on Player Optimization"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Role Recruitment",
+            "Performance Department Expansion",
+            "Sports Science Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 309,
+              "elapsed_seconds": 6.548809289932251
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'Head of Performance' role. While this is a direct hiring signal rather than a vendor procurement signal, it indicates investment in the Performance Department. Such specialized hires often precede or accompany the procurement of related software (analytics, load management) or hardware (wearables, gym equipment). It validates the entity's growth phase."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:45:10.667761",
+          "domain_explored": "https://be.linkedin.com/jobs/english-jobs-bruges-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Assistant Store Manager",
+                "company": "MANGO",
+                "location": "Bruges",
+                "relevance": "None"
+              },
+              {
+                "title": "Marketing & Communications Officer",
+                "company": "CLdN",
+                "location": "Bruges Metropolitan Area",
+                "relevance": "None"
+              },
+              {
+                "title": "Plant Manager",
+                "company": "G-bloc",
+                "location": "Bruges",
+                "relevance": "None"
+              },
+              {
+                "title": "Assistent Store Manager",
+                "company": "JYSK",
+                "location": "Blankenberge",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Noise (Bruges vs. Club Brugge)",
+            "Generic Retail Recruitment",
+            "Logistics & Manufacturing Presence",
+            "Recruitment Agency Intermediaries"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1671,
+              "output_tokens": 420,
+              "elapsed_seconds": 5.3059258460998535
+            }
+          ],
+          "reasoning": "The search query for 'English jobs in Bruges' returns general regional employment opportunities (Mango, JYSK, CLdN, G-bloc) rather than specific roles within Club Brugge KV. While the location is correct (Bruges Metropolitan Area), the entities listed are distinct from the target organization. The presence of recruitment agencies (Digital Talent Hunters) suggests a fragmented local labor market but yields no direct procurement signals for the football club."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:45:29.176073",
+          "domain_explored": "https://www.linkedin.com/jobs/castore-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Vrijwilliger Foundation - Trainer Younited",
+                "entity": "Club Brugge",
+                "location": "Bruges, Flemish Region, Belgium",
+                "age": "4 months ago",
+                "type": "Volunteer / CSR"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "category": "Sports Apparel",
+                "vendor": "Castore",
+                "nature": "Strategic Partnership / Kit Supply",
+                "evidence": "Search result intersection between Club Brugge queries and Castore hiring pages."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation (Kit Supplier)",
+            "Search Result Intersection",
+            "Volunteer Recruitment (CSR)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1733,
+              "output_tokens": 327,
+              "elapsed_seconds": 14.48674201965332
+            }
+          ],
+          "reasoning": "While the primary content is a generic LinkedIn login wall for Castore, the search results intersection confirms a key vendor relationship (Castore as kit supplier). This validates a specific procurement category (Sportswear/Fabrication). The listing for 'Vrijwilliger Foundation' confirms ongoing operations but is low-value procurement data."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:45:44.112043",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Innovation Management Platforms",
+              "Digital Fan Engagement Tools",
+              "Data Analytics"
+            ],
+            "job_postings": [
+              "Head of Club Innovation (Thomas Rypens)"
+            ],
+            "procurement_indicators": [
+              "Strategic Initiative Launch (Club Innovation)",
+              "Executive Appointment for Digital Transformation",
+              "Governance Restructuring"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Innovation Leadership",
+            "Digital Transformation Governance",
+            "Executive Hiring (C-Suite/Director Level)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1813,
+              "output_tokens": 282,
+              "elapsed_seconds": 4.1590189933776855
+            }
+          ],
+          "reasoning": "The content confirms the creation of a 'Club Innovation' initiative led by Thomas Rypens. This is a strong procurement signal indicating a strategic pivot towards digitalization and new technologies. Establishing a dedicated leadership role for innovation suggests budget allocation and upcoming vendor selection for tech projects (e.g., AI, fan engagement platforms, data analytics)."
+        }
+      ],
+      "total_input_tokens": 11630,
+      "total_output_tokens": 2435,
+      "estimated_cost_usd": 0.071415
+    },
+    "procurement_signals": [
+      "Strategic Innovation Leadership",
+      "Digital Transformation Governance",
+      "Executive Hiring (C-Suite/Director Level)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Club Brugge may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:45:44.113278"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.178358",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:23.630755"
+}

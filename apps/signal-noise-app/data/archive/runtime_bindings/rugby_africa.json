@@ -1,0 +1,158 @@
+{
+  "entity_id": "rugby_africa",
+  "entity_name": "Rugby Africa",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "rugbyafrique.com",
+    "sarugby.co.za",
+    "rugbyafrica.africa-newsroom.com",
+    "world.rugby"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_africa",
+      "entity_name": "Rugby Africa",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rugbyafrica.africa-newsroom.com",
+        "https://world.rugby",
+        "https://rugbyafrique.com",
+        "https://sarugby.co.za"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Africa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:51:46.735266",
+          "domain_explored": "https://rugbyafrique.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:51:53.722872",
+          "domain_explored": "https://sarugby.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Type: Sports Journalism",
+            "Content Type: Match Results/News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.3961269855499268
+            }
+          ],
+          "reasoning": "The scraped content is from 'sarugby.co.za' (South African Rugby), which is a distinct legal entity from the target 'Rugby Africa' (Continental governing body). The content consists solely of sports journalism, match results (Vodacom URC, Blitzboks), and domestic competition schedules. There are no procurement signals, technology stacks, or governance patterns relevant to Rugby Africa's procurement operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:52:03.228575",
+          "domain_explored": "https://rugbyafrica.africa-newsroom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Type: PR/Newsroom",
+            "Content Type: Video Message",
+            "Entity Match: Confirmed (Herbert Mensah, Rugby Africa)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 974,
+              "output_tokens": 163,
+              "elapsed_seconds": 5.653783798217773
+            }
+          ],
+          "reasoning": "The content is a public relations video release featuring a New Year message from the President. While it confirms the entity and leadership, it contains no technical, operational, or commercial data regarding procurement, technology stacks, or governance structures."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:52:18.378668",
+          "domain_explored": "https://world.rugby",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Type: Sports Journalism",
+            "Content Type: Match Results/News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 625,
+              "output_tokens": 165,
+              "elapsed_seconds": 12.051018953323364
+            }
+          ],
+          "reasoning": "The content is a sports match report from World Rugby (the global governing body) concerning the HSBC SVNS series in Singapore. It focuses on game results (Fiji, New Zealand, France, Australia) and contains no information regarding Rugby Africa's internal operations, procurement needs, or technology stack."
+        }
+      ],
+      "total_input_tokens": 2983,
+      "total_output_tokens": 519,
+      "estimated_cost_usd": 0.016734
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Africa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:52:18.379975"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.283751",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:34.397870"
+}

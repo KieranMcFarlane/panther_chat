@@ -1,0 +1,355 @@
+{
+  "entity_id": "asian_football_confederation_(afc)",
+  "entity_name": "Asian Football Confederation (AFC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "the-afc.com",
+    "media.the-afc.com",
+    "assets.the-afc.com",
+    "aseanfootball.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+      "https://www.linkedin.com/company/theafcdotcom/jobs/",
+      "https://au.linkedin.com/company/theafcdotcom/jobs",
+      "https://bn.linkedin.com/company/theafcdotcom/jobs?trk=nav_type_jobs",
+      "https://in.linkedin.com/company/theafcdotcom/jobs",
+      "https://sg.linkedin.com/jobs/view/manager-media-sales-support-at-asia-football-group-4365328144",
+      "https://sg.linkedin.com/jobs/view/manager-event-services-at-asia-football-group-4362703889",
+      "https://sg.linkedin.com/jobs/view/director-brand-project-management-at-asia-football-group-4159525455",
+      "https://hk.linkedin.com/jobs/view/executive-commercial-delivery-at-asia-football-group-4334804909",
+      "https://sg.linkedin.com/jobs/view/executive-admin-hr-and-services-at-asia-football-group-4333973942"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asian_football_confederation_(afc)",
+      "entity_name": "Asian Football Confederation (AFC)",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://bn.linkedin.com/company/theafcdotcom/jobs?trk=nav_type_jobs",
+        "https://assets.the-afc.com",
+        "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+        "https://au.linkedin.com/company/theafcdotcom/jobs",
+        "https://media.the-afc.com",
+        "https://in.linkedin.com/company/theafcdotcom/jobs",
+        "https://the-afc.com",
+        "https://aseanfootball.org",
+        "https://www.linkedin.com/company/theafcdotcom/jobs/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Local Organising Committee (LOC) Formation",
+        "Event Services & Fan Experience Roles",
+        "Partnership/Sponsorship Management",
+        "Tournament-Specific Hiring (AFC Women's Asian Cup 2026)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asian Football Confederation (AFC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:04:47.388401",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:04:56.858443",
+          "domain_explored": "https://media.the-afc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom Media Portal (AFC Media Channel)",
+              "User Authentication/Registration System",
+              "Digital Asset Management (DAM) capabilities"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic focus on 'strengthening the level of fan engagement'",
+              "Operation of a 'one-stop-shop' for media information and accreditation",
+              "Requirement for digital delivery of 'best Asian football action'"
+            ]
+          },
+          "patterns_found": [
+            "Digital Asset Management (DAM) Portal",
+            "Media Accreditation System",
+            "Fan Engagement Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.3666889667510986
+            }
+          ],
+          "reasoning": "The content reveals the 'AFC Media Channel,' a dedicated portal for media accreditation and competition information. This indicates an active investment in digital infrastructure to support their goal of becoming the 'world's leading football confederation.' While no direct RFP is visible, the existence of a custom media portal suggests a reliance on software vendors for content management and user authentication."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:05:02.042945",
+          "domain_explored": "https://assets.the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:05:18.003215",
+          "domain_explored": "https://aseanfootball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Content",
+            "Tournament Reporting",
+            "Sponsorship Branding (Shopee Cup\u2122)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 773,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.5461268424987793
+            }
+          ],
+          "reasoning": "The content provided is strictly sports journalism related to the ASEAN Club Championship match results. It contains no information regarding the Asian Football Confederation's (AFC) internal operations, technology stack, or procurement activities. While ASEAN is a region under AFC, this specific sub-domain appears to be a media/news portal with no signals for vendor analysis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:05:53.500258",
+          "domain_explored": "https://www.linkedin.com/jobs/asian-football-confederation-%28afc%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fan Experience Platforms",
+              "Event Ticketing Systems",
+              "Partnership Management CRM",
+              "Digital Signage/AV Solutions"
+            ],
+            "job_postings": [
+              "Venue Sports Presentation and Fan Experience Manager (Perth & Gold Coast)",
+              "Senior Manager, Partnerships Solutions (Dubai)",
+              "Manager, Event Services (Singapore)"
+            ],
+            "procurement_indicators": [
+              "Local Organising Committee (LOC) Operational Spend",
+              "Venue Presentation & Game Day Entertainment Vendors",
+              "Sponsorship Activation Services",
+              "Event Logistics & Services Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Local Organising Committee (LOC) Formation",
+            "Event Services & Fan Experience Roles",
+            "Partnership/Sponsorship Management",
+            "Tournament-Specific Hiring (AFC Women's Asian Cup 2026)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 351,
+              "elapsed_seconds": 32.1914381980896
+            }
+          ],
+          "reasoning": "The discovery of active hiring for the AFC Women\u2019s Asian Cup 2026 LOC (Perth & Gold Coast) confirms active procurement cycles for event management and fan experience technologies. Additionally, roles within the Asia Football Group (AFG) for Partnerships and Event Services indicate commercial and operational vendor engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:06:00.601836",
+          "domain_explored": "https://www.linkedin.com/company/theafcdotcom/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Verification: Confirmed HQ at AFC House, Kuala Lumpur",
+              "Entity Verification: Confirmed workforce size of 599 employees",
+              "Entity Discovery: Identified 'AFC Academic Centre of Excellence (ACE)' as an affiliated entity",
+              "Entity Discovery: Identified 'AFC Dream Asia Foundation' as an affiliated entity"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Entity Discovery (AFC Academic Centre of Excellence)",
+            "Affiliate Entity Discovery (AFC Dream Asia Foundation)",
+            "Organizational Size (599 employees)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1603,
+              "output_tokens": 325,
+              "elapsed_seconds": 3.8190760612487793
+            }
+          ],
+          "reasoning": "The scraped content from the specific LinkedIn company jobs page indicates 'There are currently no jobs posted at Asian Football Confederation (AFC)'. While this confirms the entity's existence and size, the absence of active job listings means there are no direct procurement signals (hiring needs, tech stack requirements, or expansion plans) to extract from this specific page. The discovery of affiliated pages (ACE, Dream Asia) is noted but requires further exploration to yield procurement value."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:06:07.437520",
+          "domain_explored": "https://au.linkedin.com/company/theafcdotcom/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Organizational Headcount: 601 employees",
+              "Affiliates: AFC Academic Centre of Excellence, AFC Dream Asia Foundation"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Entity Discovery (AFC Academic Centre of Excellence)",
+            "Affiliate Entity Discovery (AFC Dream Asia Foundation)",
+            "Organizational Size (601 employees)",
+            "Zero Active Job Postings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1677,
+              "output_tokens": 255,
+              "elapsed_seconds": 3.654808759689331
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn company page shell that explicitly states 'There are currently no jobs posted'. While it confirms organizational size and affiliate entities, it contains zero active procurement signals, technology requirements, or hiring intent. This represents a dead end for immediate procurement intelligence gathering compared to the previous iteration which contained active roles."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:06:16.193487",
+          "domain_explored": "https://bn.linkedin.com/company/theafcdotcom/jobs?trk=nav_type_jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Affiliate Entities: AFC Academic Centre of Excellence (ACE), AFC Dream Asia Foundation",
+              "Headcount: 601 employees"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Entity Discovery (AFC Academic Centre of Excellence)",
+            "Affiliate Entity Discovery (AFC Dream Asia Foundation)",
+            "Organizational Size (601 employees)",
+            "Job Board Saturation (No active postings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1756,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.6821529865264893
+            }
+          ],
+          "reasoning": "The scraped content is a duplicate of the previous iteration (LinkedIn Jobs page). It confirms organizational size and affiliate entities but explicitly states 'There are currently no jobs posted'. Since the primary value of this URL was job discovery and it is currently empty, no new procurement signals are generated."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:06:33.153607",
+          "domain_explored": "https://in.linkedin.com/company/theafcdotcom/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity: AFC Academic Centre of Excellence (ACE)",
+              "Entity: AFC Dream Asia Foundation",
+              "Headcount: 601 employees"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Entity Discovery (AFC Academic Centre of Excellence)",
+            "Affiliate Entity Discovery (AFC Dream Asia Foundation)",
+            "Organizational Size (601 employees)",
+            "Job Vacancy Status (Zero Active Postings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1830,
+              "output_tokens": 232,
+              "elapsed_seconds": 7.045344114303589
+            }
+          ],
+          "reasoning": "The scraped content is a duplicate of previous iterations (6, 7, and 8), providing no new actionable procurement intelligence. The page confirms the organizational size and affiliate entities but explicitly states there are no job postings, resulting in a lack of procurement signals."
+        }
+      ],
+      "total_input_tokens": 10573,
+      "total_output_tokens": 1887,
+      "estimated_cost_usd": 0.060023999999999994
+    },
+    "procurement_signals": [
+      "Local Organising Committee (LOC) Formation",
+      "Event Services & Fan Experience Roles",
+      "Partnership/Sponsorship Management",
+      "Tournament-Specific Hiring (AFC Women's Asian Cup 2026)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asian Football Confederation (AFC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:06:33.154509"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.198069",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:29.665193"
+}

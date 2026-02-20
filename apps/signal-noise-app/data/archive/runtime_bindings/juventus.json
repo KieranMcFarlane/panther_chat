@@ -1,0 +1,318 @@
+{
+  "entity_id": "juventus",
+  "entity_name": "Juventus",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "juventus.com",
+    "store.juventus.com",
+    "juvefc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/juventus-football-club-jobs-worldwide?f_C=9341955",
+      "https://www.linkedin.com/posts/deanharmer_open-job-positions-juventus-careers-activity-6876244909381181440-vaXN",
+      "https://www.linkedin.com/posts/juventus-football-club_careers-juventuscom-activity-6128173672353013760-xdA4",
+      "https://it.linkedin.com/jobs/view/sales-assistant-juventus-football-club-6-months-contract-at-gamblingcareers-com-4367939828"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "juventus",
+      "entity_name": "Juventus",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://store.juventus.com",
+        "https://www.linkedin.com/jobs/juventus-football-club-jobs-worldwide?f_C=9341955",
+        "https://juvefc.com",
+        "https://www.linkedin.com/posts/juventus-football-club_careers-juventuscom-activity-6128173672353013760-xdA4",
+        "https://it.linkedin.com/jobs/view/sales-assistant-juventus-football-club-6-months-contract-at-gamblingcareers-com-4367939828",
+        "https://juventus.com",
+        "https://www.linkedin.com/posts/deanharmer_open-job-positions-juventus-careers-activity-6876244909381181440-vaXN"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Juventus may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:01:22.814264",
+          "domain_explored": "https://juventus.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Platform (Juventus Play)",
+              "Streaming Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of 'Juventus Play' digital platform",
+              "Ticket sales operations (UCL Playoffs)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Launch",
+            "Fan Engagement Platform",
+            "Content Delivery Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 232,
+              "elapsed_seconds": 2.3908190727233887
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the specific headline 'Nasce Juventus Play: un nuovo modo di vivere il mondo bianconero' (Juventus Play is born: a new way to experience the black and white world) indicates a digital product launch. This suggests a procurement activity related to OTT platforms, content delivery networks, or app development infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:01:32.858094",
+          "domain_explored": "https://store.juventus.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Salesforce Commerce Cloud or similar enterprise suite given the URL structure and 'gb' locale)",
+              "Payment Gateway Systems",
+              "Inventory Management System (IMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of 'Home Match Kit' and 'Authentic' product lines implies ongoing procurement of physical goods from manufacturers (e.g., Adidas).",
+              "Presence of 'Memorabilia' and 'Signed items' suggests partnerships with authentication services or logistics for high-value items.",
+              "Dynamic 'Black&White Sale' and tiered pricing indicate active use of merchandising and pricing analytics tools."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Operations",
+            "Merchandising Strategy",
+            "Inventory Management",
+            "Localization (Multi-currency/Region)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 396,
+              "elapsed_seconds": 3.8103790283203125
+            }
+          ],
+          "reasoning": "The scraped content represents the frontend of the Juventus online store (store.juventus.com). While it does not contain explicit procurement documents (RFPs) or job postings, it confirms active e-commerce operations involving complex inventory management (kits, memorabilia, limited editions), dynamic pricing/promotions, and international logistics (indicated by currency symbols like '\u00a3'). This signals a reliance on a robust e-commerce technology stack, logistics partners, and merchandising procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:01:43.172631",
+          "domain_explored": "https://juvefc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Player Transfer Deal",
+              "Contract Finalization"
+            ]
+          },
+          "patterns_found": [
+            "Sports Transfer Activity",
+            "Player Contract Management",
+            "Roster Reduction Strategy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 607,
+              "output_tokens": 199,
+              "elapsed_seconds": 7.354511022567749
+            }
+          ],
+          "reasoning": "The content focuses exclusively on player transfer activities (Daniele Rugani to Fiorentina). While player transfers involve financial transactions and legal contracts, they fall under 'Sporting Operations' rather than corporate 'Procurement' (vendor sourcing, supply chain, or IT infrastructure). There are no signals of technology acquisition or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:01:50.152647",
+          "domain_explored": "https://www.linkedin.com/jobs/juventus-football-club-jobs-worldwide?f_C=9341955",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Unable to verify current hiring needs due to search error"
+            ]
+          },
+          "patterns_found": [
+            "Search Indexing Error",
+            "Data Access Limitation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 566,
+              "output_tokens": 195,
+              "elapsed_seconds": 3.4424750804901123
+            }
+          ],
+          "reasoning": "The scraped content indicates a 'No results found' error page for the specific LinkedIn Jobs query. This suggests the search parameters or the scraping method failed to return valid data, rather than a lack of jobs at the company. Since no actionable procurement signals (open roles, technologies, or strategic initiatives) were extracted, no progress can be made on the confidence score."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:01:57.423085",
+          "domain_explored": "https://www.linkedin.com/posts/deanharmer_open-job-positions-juventus-careers-activity-6876244909381181440-vaXN",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms",
+              "Content Management Systems (Implied)"
+            ],
+            "job_postings": [
+              {
+                "role": "Social Media Content Creator",
+                "department": "Digital Team",
+                "source": "LinkedIn / Dean Harmer",
+                "age": "4 years"
+              }
+            ],
+            "procurement_indicators": [
+              "Digital Team Growth",
+              "Content Strategy Investment"
+            ]
+          },
+          "patterns_found": [
+            "Digital Team Expansion",
+            "Social Media Content Production",
+            "Inbound Talent Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 323,
+              "elapsed_seconds": 3.9781670570373535
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'Social Media Content Creator' within the Digital Team. While this is a hiring signal rather than a direct procurement signal, it indicates organizational growth in digital capabilities. This often precedes or accompanies the procurement of content management systems, digital asset management (DAM) tools, or social media analytics platforms. The signal is weak because it focuses on human capital rather than vendor spend, but it validates the 'Digital Transformation' focus area."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:02:04.904102",
+          "domain_explored": "https://www.linkedin.com/posts/juventus-football-club_careers-juventuscom-activity-6128173672353013760-xdA4",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "International Business Development Officer"
+            ],
+            "procurement_indicators": [
+              "International Expansion Strategy",
+              "Partnership Management",
+              "Commercial Vendor Sourcing"
+            ]
+          },
+          "patterns_found": [
+            "International Business Development",
+            "Strategic Partnership Expansion",
+            "Market Penetration Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.3295629024505615
+            }
+          ],
+          "reasoning": "The content is a direct job posting for an 'International Business Development Officer' from 9 years ago. While historical, it confirms Juventus's strategic intent to expand its commercial operations internationally. This role typically involves vendor selection, partnership management, and procurement of local services, indicating a capability for external engagement, though specific technology procurement signals are absent."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:02:12.692421",
+          "domain_explored": "https://it.linkedin.com/jobs/view/sales-assistant-juventus-football-club-6-months-contract-at-gamblingcareers-com-4367939828",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "POS Systems (Till use)",
+              "Inventory Management Systems",
+              "Visual Merchandising Tools"
+            ],
+            "job_postings": [
+              "Sales Assistant (Retail) - Managed by Fanatics"
+            ],
+            "procurement_indicators": [
+              "Outsourced Retail Operations",
+              "Third-party Workforce Management (Fanatics International)",
+              "Supply Chain Integration (Receiving shipments)"
+            ]
+          },
+          "patterns_found": [
+            "Retail Operations Outsourcing",
+            "Vendor Managed Workforce",
+            "Physical Store Operations",
+            "Merchandising Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1719,
+              "output_tokens": 299,
+              "elapsed_seconds": 4.07951807975769
+            }
+          ],
+          "reasoning": "The content reveals that Juventus's retail operations (Stadium Megastore and City Center Torino) are managed by 'Fanatics International' (Fanatics Commerce). The job posting is issued by Fanatics, not directly by Juventus, indicating an outsourced or partnership model for retail management. This signals a procurement dependency on Fanatics for staffing, inventory management, and customer service infrastructure."
+        }
+      ],
+      "total_input_tokens": 8858,
+      "total_output_tokens": 1895,
+      "estimated_cost_usd": 0.054999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Juventus may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:02:12.693365"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.127415",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:43.014511"
+}

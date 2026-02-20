@@ -1,0 +1,306 @@
+{
+  "entity_id": "porsche_penske_motorsport",
+  "entity_name": "Porsche Penske Motorsport",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "racing.porsche.com",
+    "teampenske.com",
+    "shop.porsche.com",
+    "newsroom.porsche.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7285319364285747200-gFLj",
+      "https://www.linkedin.com/posts/bjoernbrickwedde_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7102389136975679489-uvIi"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "porsche_penske_motorsport",
+      "entity_name": "Porsche Penske Motorsport",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.04,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/bjoernbrickwedde_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7102389136975679489-uvIi",
+        "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7285319364285747200-gFLj",
+        "https://teampenske.com",
+        "https://racing.porsche.com",
+        "https://newsroom.porsche.com",
+        "https://shop.porsche.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "ERP-Driven Procurement Workflows",
+        "Operational Logistics & Supply Chain Management",
+        "Inventory Lifecycle Governance",
+        "Cross-Departmental Procurement Support"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Porsche Penske Motorsport may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:16:11.996282",
+          "domain_explored": "https://racing.porsche.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Content Production",
+              "Esports Infrastructure",
+              "Fan Engagement Platforms"
+            ]
+          },
+          "patterns_found": [
+            "Brand Marketing Focus",
+            "Content Hub Architecture",
+            "Customer Racing Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 256,
+              "elapsed_seconds": 5.555043935775757
+            }
+          ],
+          "reasoning": "The content is primarily marketing and brand-focused ('Home of Porsche Motorsport', '#Raceborn'). While it confirms the entity's involvement in Formula E and Customer Racing, it lacks explicit procurement signals like job postings or RFPs. However, the mention of a 'Porsche Motorsport Hub' and 'Esports' indicates a digital content infrastructure that requires vendor support (hosting, CMS, production), warranting a weak signal for digital services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:16:19.501534",
+          "domain_explored": "https://teampenske.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) for race reports",
+              "Digital Asset Management (DAM) for 'special paint schemes' and exhibits",
+              "Customer Relationship Management (CRM) for 'Fan' engagement"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership Renewal: Discount Tire (Anchor Partner)",
+              "Event Procurement: 60th Anniversary 'curated series of exhibits, events'",
+              "Driver Services: Contract restructuring for 2026 INDYCAR lineup",
+              "Marketing Services: Storytelling and content creation for anniversary season"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Renewals",
+            "Organizational Restructuring (Personnel)",
+            "Multi-Series Portfolio Management",
+            "Anniversary-Based Marketing Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 378,
+              "elapsed_seconds": 3.453368902206421
+            }
+          ],
+          "reasoning": "The content is primarily PR and race reporting, but it reveals significant underlying business activities. The renewal of the 'Discount Tire' partnership indicates active vendor/contract management. The '60th Anniversary' planning suggests a temporary increase in marketing procurement spend (events, exhibits, storytelling). Personnel changes (Malukas/Power) imply contract restructuring and driver services procurement. While no explicit RFPs are listed, the operational scale confirms active vendor management."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:16:25.607531",
+          "domain_explored": "https://shop.porsche.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Geo-IP Redirection / Localization",
+              "Sub-domain Regional Routing (e.g., /us/, /de/)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Logistics Network (Consumer Goods)",
+              "Regional E-commerce Compliance"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Architecture",
+            "Global Localization Strategy",
+            "Merchandise Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1097,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.8373701572418213
+            }
+          ],
+          "reasoning": "The analyzed content is strictly a 'Delivery Location' selector for the Porsche Shop consumer merchandise platform. It lacks any corporate governance, technical specifications, or B2B procurement signals relevant to Porsche Penske Motorsport operations. This represents a digital dead-end for motorsport intelligence gathering."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:16:37.667001",
+          "domain_explored": "https://newsroom.porsche.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Flexible Production Lines",
+              "High-Capacity Battery Systems (1000+ PS context)",
+              "EV Powertrain Architecture"
+            ],
+            "job_postings": [
+              "CEO Porsche Latin America (Executive Appointment)",
+              "CEO Porsche Asia Pacific (Executive Appointment)",
+              "Head of Design (Executive Appointment)"
+            ],
+            "procurement_indicators": [
+              "Regional Leadership Restructuring (LATAM/APAC) - Potential for new regional service vendors",
+              "Production Ramp-Up in Bratislava - Increased demand for industrial logistics and components",
+              "Experiential Marketing Leadership Background - Potential focus on event marketing procurement"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Transition",
+            "Global Regional Expansion",
+            "High-Performance EV Production Scaling",
+            "Flexible Manufacturing Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 371,
+              "elapsed_seconds": 4.65435004234314
+            }
+          ],
+          "reasoning": "While the content is primarily corporate PR and lacks direct procurement signals (RFPs/Tenders), the executive appointments in Latin America and Asia Pacific suggest upcoming organizational changes that often precede vendor realignments. The scaling of Cayenne Electric production indicates a heavy reliance on supply chain logistics, though specific vendor opportunities are not listed."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:16:46.492710",
+          "domain_explored": "https://www.linkedin.com/posts/russell-howard-racestaff_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7285319364285747200-gFLj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Inventory Management Systems",
+              "Mobile Productivity Devices",
+              "Project/Workforce Scheduling Tools"
+            ],
+            "job_postings": [
+              "Mechanic WEC - Shop Based (Mannheim, Germany)"
+            ],
+            "procurement_indicators": [
+              "Requirement for parts tracking and service status updates (Supply Chain)",
+              "Procurement of safety gear and protective equipment (PPE)",
+              "Management of specialized tools and electronic devices (Asset Management)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Capacity Expansion",
+            "Supply Chain & Inventory Management",
+            "Technical Compliance Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1597,
+              "output_tokens": 341,
+              "elapsed_seconds": 5.7269580364227295
+            }
+          ],
+          "reasoning": "While this is a direct job posting (operational), it reveals specific procurement-related functions embedded within the role. The explicit requirement for 'Inventory tracking including number of parts, current service status, updates required' indicates a need for inventory management software or tools. The mention of 'electronic devices' as productivity tools suggests a mobile-enabled workforce strategy. The focus on 'build schedules' and 'service intervals' implies the use of project management or ERP systems."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:16:52.529695",
+          "domain_explored": "https://www.linkedin.com/posts/bjoernbrickwedde_jobsinmotorsport-motorsportjobs-motorsportrecruitment-activity-7102389136975679489-uvIi",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Dynamics AX"
+            ],
+            "job_postings": [
+              "Parts Specialist (Mannheim / Germany)"
+            ],
+            "procurement_indicators": [
+              "Direct responsibility for writing Purchase Orders (POs) in AX",
+              "Invoice processing and payment reconciliation",
+              "Management of consumables and hardware inventory",
+              "Procurement of operational resources (fuel, nitrogen, tires, tools)",
+              "Management of external treatments and coatings for manufactured goods",
+              "Logistics and shipping organization"
+            ]
+          },
+          "patterns_found": [
+            "ERP-Driven Procurement Workflows",
+            "Operational Logistics & Supply Chain Management",
+            "Inventory Lifecycle Governance",
+            "Cross-Departmental Procurement Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 313,
+              "elapsed_seconds": 2.946410894393921
+            }
+          ],
+          "reasoning": "The content provides explicit confirmation of the technology stack (Microsoft Dynamics AX) and detailed procurement responsibilities (PO creation, invoice processing, inventory management). It moves beyond general organizational signals to specific operational procurement execution."
+        }
+      ],
+      "total_input_tokens": 8660,
+      "total_output_tokens": 1885,
+      "estimated_cost_usd": 0.054255
+    },
+    "procurement_signals": [
+      "ERP-Driven Procurement Workflows",
+      "Operational Logistics & Supply Chain Management",
+      "Inventory Lifecycle Governance",
+      "Cross-Departmental Procurement Support"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Porsche Penske Motorsport may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:16:52.532398"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364175",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:39.859531"
+}

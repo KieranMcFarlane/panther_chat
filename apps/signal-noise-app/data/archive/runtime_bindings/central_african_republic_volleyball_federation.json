@@ -1,0 +1,165 @@
+{
+  "entity_id": "central_african_republic_volleyball_federation",
+  "entity_name": "Central African Republic Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "the-sports.org",
+    "norceca.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "central_african_republic_volleyball_federation",
+      "entity_name": "Central African Republic Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://norceca.net",
+        "https://the-sports.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Central African Republic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:36:03.312522",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Grant/Funding Opportunity",
+                "title": "CEV Solidarity Fund Applications",
+                "date": "02 February 2026",
+                "description": "The CEV has opened applications for a 'revolutionary' Solidarity Fund. National federations typically apply for these funds to support development, infrastructure, or event hosting."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Funding Opportunities",
+            "Regional Federation Activity",
+            "Development Programs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 296,
+              "elapsed_seconds": 2.756176710128784
+            }
+          ],
+          "reasoning": "While the content is from the European Volleyball Confederation (CEV) and not the Central African Republic Federation directly, the 'CEV Solidarity Fund' represents a tangible procurement vehicle. National federations (like CAR's) often apply for these funds to finance equipment, training camps, and local events. This indicates a potential pathway for procurement (grant applications) rather than direct commercial tendering."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:36:09.623584",
+          "domain_explored": "https://the-sports.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Fitness Content Syndication",
+            "Betting/Calendar Integration",
+            "Irrelevance to Target Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.9648497104644775
+            }
+          ],
+          "reasoning": "The scraped content from 'the-sports.org' is a general sports news portal focusing on fitness trends, betting, and generic results. There is absolutely no mention of the Central African Republic, its Volleyball Federation, or any specific procurement activities related to the target entity. The content is noise."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:36:19.349816",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Document Management (Hosted Schedules, Charters)",
+              "Legacy Web Hosting (IIS/Windows based on URL structure)",
+              "Static Content Management (HTML/htm files)"
+            ],
+            "job_postings": [
+              "Executive Committee / Board of Administration (2024-2028 Term)"
+            ],
+            "procurement_indicators": [
+              "Event Hosting Rights (Rotating Schedule 2002-2030)",
+              "Development Center Operations (CRDVs)",
+              "Infrastructure for Congress 2024",
+              "Standardized Branding Procurement (Branding Kit)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Confederation Governance",
+            "Rotating Hosting Schedule (2002-2030)",
+            "Development Centers (CRDVs)",
+            "Constitutional Framework",
+            "Affiliated Federation Structure",
+            "Branding Guidelines"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 395,
+              "elapsed_seconds": 6.207938194274902
+            }
+          ],
+          "reasoning": "The content represents the North and Central American regional confederation (NORCECA), of which the Central African Republic (CAR) is likely a member or affiliate via FIVB structures. While the specific CAR federation page is not isolated here, the discovery of 'Development Centers', a 'Rotating Hosting Schedule' extending to 2030, and 'Commissions' indicates a structured pipeline for events and infrastructure that drives procurement. The 'Branding Kit' and 'Constitution' suggest standardized operational requirements that trickle down to national federations."
+        }
+      ],
+      "total_input_tokens": 4259,
+      "total_output_tokens": 869,
+      "estimated_cost_usd": 0.025812
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Central African Republic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:36:19.353202"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335912",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:26.641059"
+}

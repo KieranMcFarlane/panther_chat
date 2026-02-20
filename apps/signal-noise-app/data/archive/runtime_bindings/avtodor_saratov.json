@@ -1,0 +1,215 @@
+{
+  "entity_id": "avtodor_saratov",
+  "entity_name": "Avtodor Saratov",
+  "template_id": "tpl_c1_professional_league_clubs_v1",
+  "cluster_id": "bb_regional_russia",
+  "discovered_domains": [
+    "vtb-league.com",
+    "euroleaguebasketball.net",
+    "basketball-reference.com",
+    "basket-enisey.ru",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "avtodor_saratov",
+      "entity_name": "Avtodor Saratov",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://basket-enisey.ru",
+        "https://basketball-reference.com",
+        "https://globalsportsarchive.com",
+        "https://euroleaguebasketball.net",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Avtodor Saratov may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:16:29.191139",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Confirmation: Avtodor Saratov is a professional basketball organization."
+            ]
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Generic Navigation Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 191,
+              "elapsed_seconds": 21.858126163482666
+            }
+          ],
+          "reasoning": "The content is a navigation menu and team roster from the VTB United League website (vtb-league.com). While it confirms 'Avtodor Saratov' is a professional basketball club participating in the league, it contains no information regarding procurement activities, technology stacks, or governance patterns. It is purely descriptive sports data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:16:36.135449",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Content",
+            "Sponsorship Branding (Etihad, Motorola, BKT)",
+            "Media Rights Management",
+            "Generic Event Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.8495140075683594
+            }
+          ],
+          "reasoning": "The content is exclusively related to professional basketball (EuroLeague), including game highlights, disciplinary sanctions, and ticket sales for the 2026 Final Four. There is no connection to 'Avtodor Saratov' (a Russian entity and club), nor are there any procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:16:45.914985",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary Search Engine)",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Statistics Database",
+            "Generic Job Posting (Marketing/Creative)",
+            "Consumer Subscription Model (Stathead)",
+            "Historical Data Archiving"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 232,
+              "elapsed_seconds": 6.700931787490845
+            }
+          ],
+          "reasoning": "The content is from a sports statistics and history website (Basketball Reference). It contains a generic job posting for a 'Marketing Manager, Content & Creative' which is a standard operational role for a media/content company, not a procurement signal for 'Avtodor Saratov'. There is no connection to the target entity or relevant B2B procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:17:17.352024",
+          "domain_explored": "https://basket-enisey.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Standings (VTB United League, Premier League)",
+            "Game Schedule Management",
+            "Ticket Sales Interface ('\u041a\u0423\u041f\u0418\u0422\u042c \u0411\u0418\u041b\u0415\u0422')",
+            "Roster Updates (Player Transfers)",
+            "Venue Operations ('Arena.Sever')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 212,
+              "elapsed_seconds": 27.506118059158325
+            }
+          ],
+          "reasoning": "The content is exclusively focused on basketball operations for the 'Yenisey' club (scores, schedules, standings, ticketing). While 'Avtodor Saratov' is mentioned as a competing team in the standings table, the page belongs to a competitor/league partner and contains no information regarding Avtodor Saratov's internal procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:17:29.324288",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Statistics Database",
+            "Generic League Navigation",
+            "Consumer-Facing Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 147,
+              "elapsed_seconds": 7.782143831253052
+            }
+          ],
+          "reasoning": "The content is a standard sports statistics archive listing global soccer leagues and tournaments. It lacks any corporate governance, commercial vendor information, or procurement-related functionality relevant to 'Avtodor Saratov'."
+        }
+      ],
+      "total_input_tokens": 7293,
+      "total_output_tokens": 970,
+      "estimated_cost_usd": 0.036429
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Avtodor Saratov may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:17:29.326521"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.215105",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:41.119952"
+}

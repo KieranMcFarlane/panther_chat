@@ -1,0 +1,88 @@
+{
+  "entity_id": "melbourne_aces",
+  "entity_name": "Melbourne Aces",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "north_american_minor_league",
+  "discovered_domains": [
+    "melbourneaces.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "melbourne_aces",
+      "entity_name": "Melbourne Aces",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://melbourneaces.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Melbourne Aces may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:59:47.771578",
+          "domain_explored": "https://melbourneaces.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vivenu (Ticketing Platform)",
+              "Thirst Creative (Web Design)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced ticketing operations to Vivenu",
+              "Outsourced web design/maintenance to Thirst Creative",
+              "Active 'Sponsorship Opportunities' section indicates vendor/partner acquisition pipeline"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Vendor (Vivenu)",
+            "Web Design Vendor (Thirst Creative)",
+            "Sponsorship/Partnership Model"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 265,
+              "elapsed_seconds": 9.888738870620728
+            }
+          ],
+          "reasoning": "The scraped content reveals specific technology vendors used by Melbourne Aces, confirming their procurement history in ticketing and web design. While no active RFPs are present, the identification of Vivenu as the ticketing provider and Thirst Creative as the design agency provides clear insight into their technology stack and vendor partnerships."
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 265,
+      "estimated_cost_usd": 0.008049
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Melbourne Aces may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:59:47.773664"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309843",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:10:55.997097"
+}

@@ -1,0 +1,159 @@
+{
+  "entity_id": "samsung_lions",
+  "entity_name": "Samsung Lions",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "tier_1_professional_clubs",
+  "discovered_domains": [
+    "samsunglions.com",
+    "samsunglionsmall.com",
+    "mykbostats.com",
+    "zoominfo.com",
+    "baseballjapan.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "samsung_lions",
+      "entity_name": "Samsung Lions",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mykbostats.com",
+        "https://baseballjapan.org",
+        "https://zoominfo.com",
+        "https://samsunglionsmall.com",
+        "https://samsunglions.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Samsung Lions may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:26:39.628945",
+          "domain_explored": "https://samsunglions.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cookie Consent UI",
+            "Popup Management Script",
+            "Client-side Interaction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 376,
+              "output_tokens": 155,
+              "elapsed_seconds": 3.0036089420318604
+            }
+          ],
+          "reasoning": "The provided content consists entirely of UI elements for a 'Do not show for a day' (\uc624\ub298 \ud558\ub8e8 \ubcf4\uc9c0 \uc54a\uae30) popup and a close button script. This is generic frontend boilerplate code with no semantic information regarding business operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:26:49.870081",
+          "domain_explored": "https://samsunglionsmall.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Relationships: Evidence of existing partnerships with external apparel brands (Sansan Gear, Jjonnyami) for merchandise production."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "Merchandising Data",
+            "Collaborative Branding (Co-branded products with Sansan Gear, Jjonnyami, Bao Family)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 216,
+              "elapsed_seconds": 5.179510116577148
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of consumer-facing product listings (merchandise) from the Samsung Lions online mall. It contains pricing data and product names but reveals no information regarding the organization's internal procurement needs, technology stack, or governance structures."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:26:52.729061",
+          "domain_explored": "https://mykbostats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:26:55.692641",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:27:01.955747",
+          "domain_explored": "https://baseballjapan.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1779,
+      "total_output_tokens": 371,
+      "estimated_cost_usd": 0.010901999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Samsung Lions may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:27:01.957041"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309590",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:39.065661"
+}

@@ -1,0 +1,238 @@
+{
+  "entity_id": "lausanne_uc",
+  "entity_name": "Lausanne UC",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "lucvolleyball.ch",
+    "www-old.cev.eu",
+    "volleyball.ch",
+    "volleybasel.ch",
+    "volleybern-solothurn.ch",
+    "presensi.perpusnas.go.id"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lausanne_uc",
+      "entity_name": "Lausanne UC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://presensi.perpusnas.go.id",
+        "https://lucvolleyball.ch",
+        "https://volleybasel.ch",
+        "https://volleyball.ch",
+        "https://volleybern-solothurn.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lausanne UC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:23:49.178333",
+          "domain_explored": "https://lucvolleyball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership/Partenaires section (implies sponsorship opportunities rather than B2B procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club entity",
+            "Public facing news content",
+            "Newsletter subscription form"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.8594272136688232
+            }
+          ],
+          "reasoning": "The content analyzed is from the official website of the Lausanne UC Volleyball club (lucvolleyball.ch). It contains sports news, match results, historical club information, and logistics for spectators. While the entity name matches the target 'Lausanne UC', this is a sports association context, not a corporate procurement context. There are no signals of business technology procurement, RFPs, or enterprise governance structures present in this content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:24:01.029810",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization (CEV Level)",
+              "Multi-Sport Event Coordination (Munich 2022)"
+            ]
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Navigation Menu Structure",
+            "Event Scheduling Data",
+            "Federation Governance Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 261,
+              "elapsed_seconds": 6.254862070083618
+            }
+          ],
+          "reasoning": "The scraped content originates from 'www-old.cev.eu' (Confederation of European Volleyball), which is the governing body for European volleyball, not the target entity 'Lausanne UC' (a local sports club). While Lausanne UC participates in this ecosystem, this specific page is a high-level event calendar and navigation hub for the Confederation. It contains no specific procurement signals, technology stack details, or governance information relevant to the local operations of Lausanne UC. It is contextually related but procurement-irrelevant."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:24:12.319095",
+          "domain_explored": "https://volleyball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic Web CMS",
+              "Online-Trainingsplaner (SaaS tool mentioned)"
+            ],
+            "job_postings": [
+              "Generic 'Anzeigenmarkt' (Marketplace) for coaches/referees"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Portal",
+            "Educational Course Listings",
+            "Generic Job Board (Anzeigenmarkt)",
+            "News Aggregation",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.4715797901153564
+            }
+          ],
+          "reasoning": "The content analyzed from volleyball.ch represents the public-facing website of Swiss Volley, the national governing body for volleyball. While 'Lausanne UC' is geographically located within the Swiss Volley ecosystem, this page contains only general sports news, educational course listings ('Club Management'), and generic community services (job board for referees/players). There are no specific signals regarding Lausanne UC's internal procurement, technology stack, or administrative decision-making. This is a broad federation site, not the target entity's operational hub."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:24:24.351023",
+          "domain_explored": "https://volleybasel.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Sports Federation Portal",
+            "Generic News Aggregation",
+            "Dynamic Content Loading (JavaScript heavy)",
+            "Public Information / Member Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1145,
+              "output_tokens": 220,
+              "elapsed_seconds": 4.338332891464233
+            }
+          ],
+          "reasoning": "The scraped content represents the public-facing portal for 'Swiss Volley Region Basel'. The text is repetitive and focuses on 'News' and 'Regional Insights' (Einblicke aus der Region) for members and fans. There are no signals of corporate procurement, vendor management, or B2B technology acquisition. The entity appears to be a regional sports association rather than the target 'Lausanne UC' or a related commercial entity capable of significant procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:24:36.181011",
+          "domain_explored": "https://volleybern-solothurn.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smart Competitions (Sports Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Implementation of Smart Competitions framework for Season 26/27"
+            ]
+          },
+          "patterns_found": [
+            "Unrelated Regional Entity",
+            "Sports Federation News",
+            "Organizational Change Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.8357319831848145
+            }
+          ],
+          "reasoning": "The content is from 'Swiss Volley Region Bern-Solothurn', a distinct regional entity separate from 'Lausanne UC'. While it mentions 'Smart Competitions' implementation (a digital transformation project), this is an internal operational change for the Bern-Solothurn region and does not indicate procurement intent or vendor selection activity for Lausanne UC."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:25:09.483639",
+          "domain_explored": "https://presensi.perpusnas.go.id",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6906,
+      "total_output_tokens": 1227,
+      "estimated_cost_usd": 0.039123000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lausanne UC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:25:09.485002"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326652",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:04.568792"
+}

@@ -1,0 +1,89 @@
+{
+  "entity_id": "la_vuelta_ciclista_a_espa\u00f1a",
+  "entity_name": "La Vuelta Ciclista a Espa\u00f1a",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "lavuelta.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "la_vuelta_ciclista_a_espa\u00f1a",
+      "entity_name": "La Vuelta Ciclista a Espa\u00f1a",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://lavuelta.es"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "La Vuelta Ciclista a Espa\u00f1a may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:37:40.706894",
+          "domain_explored": "https://lavuelta.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Tissot Timing Systems (Official Timekeeper)",
+              "Video Hosting/Streaming (Video content present)",
+              "CMS (Content Management System for news)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Deal: Tissot (Official Timekeeping/Countdown)",
+              "Event Partnership: Desaf\u00edo Morelos (Expansion event)",
+              "Route Planning: Monaco to Granada (International logistics)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Activation (Tissot)",
+            "Event Expansion (Desaf\u00edo Morelos)",
+            "International Route Planning (Monaco/Granada)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.316595792770386
+            }
+          ],
+          "reasoning": "While the content is primarily editorial and results-based, it reveals specific commercial partnerships (Tissot) and event expansion (Desaf\u00edo Morelos) that imply underlying vendor relationships for timing, sponsorship management, and international event logistics. The 'Desaf\u00edo Morelos' suggests a new operational vendor requirement or partnership."
+        }
+      ],
+      "total_input_tokens": 1362,
+      "total_output_tokens": 286,
+      "estimated_cost_usd": 0.008376000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "La Vuelta Ciclista a Espa\u00f1a may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:37:40.708400"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.405993",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:53.173421"
+}

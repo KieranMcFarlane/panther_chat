@@ -1,0 +1,312 @@
+{
+  "entity_id": "borussia_dortmund",
+  "entity_name": "Borussia Dortmund",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "borussia.com",
+    "bundesliga.com",
+    "bvbbuzz.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/borussia-dortmund-jobs-worldwide",
+      "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+      "https://www.linkedin.com/showcase/dortmund-jobs-germany/",
+      "https://de.linkedin.com/company/jobs-in-football/",
+      "https://www.linkedin.com/jobs/sportfive-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "borussia_dortmund",
+      "entity_name": "Borussia Dortmund",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://borussia.com",
+        "https://bundesliga.com",
+        "https://www.linkedin.com/showcase/dortmund-jobs-germany/",
+        "https://www.linkedin.com/jobs/sportfive-jobs-worldwide",
+        "https://de.linkedin.com/company/jobs-in-football/",
+        "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+        "https://bvbbuzz.com",
+        "https://www.linkedin.com/jobs/borussia-dortmund-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Borussia Dortmund may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:05:04.148410",
+          "domain_explored": "https://borussia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:05:14.923073",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_content_aggregation",
+            "video_streaming_focus",
+            "editorial_content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 483,
+              "output_tokens": 160,
+              "elapsed_seconds": 5.997702121734619
+            }
+          ],
+          "reasoning": "The content provided is a generic Bundesliga match highlights page. While it mentions Borussia Dortmund, it is purely editorial/video content (Matchday 20 highlights) and contains no information regarding Dortmund's internal operations, technology stack, job postings, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:05:32.297121",
+          "domain_explored": "https://bvbbuzz.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "content_aggregation",
+            "fan_focus",
+            "repetitive_structure",
+            "transfer_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 857,
+              "output_tokens": 172,
+              "elapsed_seconds": 13.652860879898071
+            }
+          ],
+          "reasoning": "The scraped content from bvbbuzz.com is a fan-run news aggregator. The text consists almost entirely of repetitive navigation links ('News', 'Transfer News', 'Schedule') and generic headers. There is absolutely no corporate governance, career section, or vendor information present. This source is irrelevant for B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:05:43.039239",
+          "domain_explored": "https://www.linkedin.com/jobs/borussia-dortmund-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter",
+              "HRIS (Human Resource Information Systems)",
+              "Workforce Management Software"
+            ],
+            "job_postings": [
+              "Manager HR Operations (m/w/d) - Dortmund",
+              "Serviceleitung Hospitality - Dortmund"
+            ],
+            "procurement_indicators": [
+              "HR Transformation: Hiring for HR Operations suggests a review or implementation of new HR software, payroll systems, or employee self-service portals.",
+              "Service Infrastructure: Hospitality leadership roles often precede upgrades to POS systems, booking platforms, or catering vendor contracts."
+            ]
+          },
+          "patterns_found": [
+            "hr_operations_role",
+            "hospitality_management",
+            "german_market_localization",
+            "gig_economy_platform_structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 332,
+              "elapsed_seconds": 5.825930118560791
+            }
+          ],
+          "reasoning": "The content is primarily a login wall/gated content, but the visible metadata reveals active recruitment. The 'Manager HR Operations' role is a direct procurement signal for HRIS/HRM tools and process optimization vendors. The 'Serviceleitung Hospitality' role indicates ongoing investment in matchday experience and service management infrastructure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:05:51.551678",
+          "domain_explored": "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "acronym_collision",
+            "entity_mismatch",
+            "irrelevant_search_results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 162,
+              "elapsed_seconds": 4.825073957443237
+            }
+          ],
+          "reasoning": "The search query 'DFB' (Deutscher Fu\u00dfball-Bund) returned results unrelated to Borussia Dortmund (BVB). The results include the German Football Federation, a Chinese trade union, and a French university. This indicates a false positive in the search path and provides no procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:06:00.481236",
+          "domain_explored": "https://www.linkedin.com/showcase/dortmund-jobs-germany/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "HR Senior Expert Compensation",
+              "Inside Sales",
+              "Senior Golang Developer",
+              "Senior IT Architect"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "aggregator_spam",
+            "keyword_hijacking",
+            "third_party_recruiting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 210,
+              "elapsed_seconds": 4.5538551807403564
+            }
+          ],
+          "reasoning": "The content is from a third-party aggregator ('JobsRmine') using SEO tactics to associate itself with 'Borussia Dortmund' and 'Signal Iduna Park' to drive traffic. The job listings are generic roles for the University of Bonn and other entities, not Borussia Dortmund. There is no direct procurement signal from the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:06:30.679315",
+          "domain_explored": "https://de.linkedin.com/company/jobs-in-football/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Academy Senior Scout - Blackburn Rovers FC (via aggregator)"
+            ],
+            "procurement_indicators": [
+              "General industry hiring activity",
+              "Sponsorship deal analysis (editorial content)"
+            ]
+          },
+          "patterns_found": [
+            "third_party_aggregator",
+            "industry_recruitment_hub",
+            "content_curation",
+            "entity_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1632,
+              "output_tokens": 257,
+              "elapsed_seconds": 20.94067907333374
+            }
+          ],
+          "reasoning": "The scraped content represents 'Jobs In Football', a third-party recruitment agency and content aggregator, not Borussia Dortmund. While the feed contains relevant industry signals (e.g., the 'Academy Senior Scout' role for Blackburn Rovers), these are hiring activities of other clubs. The content is editorial and promotional in nature, lacking specific procurement intent, technology stack details, or vendor partnership information regarding Borussia Dortmund."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:06:40.088117",
+          "domain_explored": "https://www.linkedin.com/jobs/sportfive-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sports Partnerships Senior Sales Manager",
+              "Sports Partnerships Sales Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "vendor_agency",
+            "sales_focus",
+            "authentication_gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.8830180168151855
+            }
+          ],
+          "reasoning": "The scraped content lists job openings for SPORTFIVE, a sports marketing agency and vendor, not Borussia Dortmund (BVB). While SPORTFIVE may be a partner or vendor of interest to BVB, analyzing their internal hiring page does not provide direct procurement intelligence regarding Dortmund's internal operations, technology stack, or decision-making structure. The content is gated by authentication and focuses on sales roles, further distancing it from direct procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 9255,
+      "total_output_tokens": 1533,
+      "estimated_cost_usd": 0.05076
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Borussia Dortmund may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:06:40.089679"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.124613",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:08:42.781262"
+}

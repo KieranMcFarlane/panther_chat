@@ -1,0 +1,257 @@
+{
+  "entity_id": "drammen_hk",
+  "entity_name": "Drammen HK",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "aalborghaandbold.dk",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "ehfeuro.eurohandball.com",
+    "instinctmagazine.com",
+    "playmakerstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "drammen_hk",
+      "entity_name": "Drammen HK",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://aalborghaandbold.dk",
+        "https://playmakerstats.com",
+        "https://instinctmagazine.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://ehfeuro.eurohandball.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Drammen HK may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:05:43.907425",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls",
+            "Tournament schedules"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.213771104812622
+            }
+          ],
+          "reasoning": "The scraped content is from the general European Handball Federation (EHF) news portal and focuses on match results (Denmark, Croatia), player awards (Gidsel), and future tournament schedules. There is no mention of the specific entity 'Drammen HK', nor are there any procurement signals, job postings, or technology investments related to the club. The content is irrelevant to the specific procurement intelligence goal for Drammen HK."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:06:01.010991",
+          "domain_explored": "https://aalborghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity (Aalborg H\u00e5ndbold)",
+            "Fan engagement content",
+            "Ticket sales interfaces",
+            "Merchandise listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 172,
+              "elapsed_seconds": 12.12283992767334
+            }
+          ],
+          "reasoning": "The scraped content is from Aalborg H\u00e5ndbold, a different handball club than the target entity (Drammen HK). The content consists of sports news, match schedules, ticket sales, and merchandise listings. There are no procurement signals, technology stacks, or governance patterns relevant to Drammen HK."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:06:09.793451",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge base content",
+            "Community event listings (WikidataCon)",
+            "Open source project documentation",
+            "User account management interfaces"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.5326499938964844
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page of Wikidata, a general-purpose open knowledge base. It contains no specific information regarding 'Drammen HK', nor does it contain procurement signals, vendor lists, or organizational technology stacks relevant to the target entity. The content is entirely unrelated to the specific procurement intelligence goal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:06:25.183964",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics aggregation",
+            "Global tournament listings (UEFA, CONCACAF, AFC)",
+            "Navigation menu structures for sports categories",
+            "No entity-specific content (Drammen HK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 198,
+              "elapsed_seconds": 8.959326982498169
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic navigation sitemap for Global Sports Archive, listing international soccer tournaments and leagues. There is no mention of Drammen HK, Norwegian handball, or specific organizational operations. This is a general sports data repository with no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:06:41.251636",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Tournament result listings",
+            "Future event hosting schedules",
+            "Navigation structures for sports categories",
+            "Mentions of national teams (Denmark, Croatia, Norway) unrelated to Drammen HK"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 218,
+              "elapsed_seconds": 11.3920419216156
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the European Handball Federation (EHF) tournaments, results, and future hosting schedules (2026, 2028). While it mentions Norway as a host for future events, this is at the national/federation level, not the club level (Drammen HK). There are no signals regarding Drammen HK's procurement, technology stack, or operational needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:06:46.163121",
+          "domain_explored": "https://instinctmagazine.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:07:17.588991",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Multi-domain network navigation (zerozero.pt, ceroacero.es, etc.)",
+            "Generic football/soccer match results and league tables",
+            "Gambling awareness disclaimers (GambleAware)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1651,
+              "output_tokens": 201,
+              "elapsed_seconds": 3.3149139881134033
+            }
+          ],
+          "reasoning": "The content is exclusively focused on global sports statistics, match results, and league standings. It contains no corporate information, governance details, or technology procurement signals relevant to Drammen HK. The presence of a gambling disclaimer further indicates this is a consumer-facing sports media entity."
+        }
+      ],
+      "total_input_tokens": 8936,
+      "total_output_tokens": 1182,
+      "estimated_cost_usd": 0.044537999999999994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Drammen HK may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:07:17.590762"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.355680",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:03.424426"
+}

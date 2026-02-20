@@ -1,0 +1,158 @@
+{
+  "entity_id": "race_of_champions",
+  "entity_name": "Race of Champions",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "raceofchampions.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sg.linkedin.com/jobs/view/head-of-sport-asia-at-teg-pty-ltd-4301709271"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "race_of_champions",
+      "entity_name": "Race of Champions",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://sg.linkedin.com/jobs/view/head-of-sport-asia-at-teg-pty-ltd-4301709271",
+        "https://raceofchampions.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Sourcing & Vendor Management",
+        "Regional Expansion & Market Entry",
+        "Rights Holder Partnerships",
+        "Event Operations Procurement"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Race of Champions may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:43:45.398146",
+          "domain_explored": "https://raceofchampions.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Content Management (Static site structure)",
+              "E-commerce Platform (Merchandise 'Shop' functionality)",
+              "Video Streaming (Documentary/Watch Online)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Carbon Neutral / Net Zero Strategy (Paris Agreement alignment)",
+              "Waste Management & Recycling Services",
+              "Community Engagement & Gender Equality Initiatives",
+              "Venue Sourcing (Accor Stadium, Sydney)",
+              "Merchandise Production & Logistics (Australia-specific collection)",
+              "Event Operations (Timing, Scoring, Identical Cars maintenance)"
+            ]
+          },
+          "patterns_found": [
+            "Sustainability & ESG Compliance",
+            "Event Operations & Logistics",
+            "Merchandising & E-commerce",
+            "Venue & Infrastructure Sourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 370,
+              "elapsed_seconds": 7.610136985778809
+            }
+          ],
+          "reasoning": "The content reveals specific strategic initiatives, particularly the 'Towards a Carbon Neutral Event' project. This indicates a procurement need for sustainability partners (carbon offsetting, waste management). The mention of 'Exclusive Merchandise' and an upcoming event date (March 2025) signals active supply chain management for retail goods and venue services (Accor Stadium). While no explicit RFPs are visible, the operational requirements are clear."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:43:54.514434",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/head-of-sport-asia-at-teg-pty-ltd-4301709271",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ovation (Data-driven outcomes platform)",
+              "Ticketek (Fan Experience Platform)"
+            ],
+            "job_postings": [
+              {
+                "role": "Head of Sport- Asia",
+                "entity": "TEG Pty Ltd (TEG Sport)",
+                "location": "Singapore, Singapore",
+                "signals": [
+                  "Securing new partnerships",
+                  "Leveraging strategic partnerships with rights holders",
+                  "Directing multiple delivery partners",
+                  "Venue partner engagement",
+                  "Government entity engagement"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Active search for senior leadership to drive regional operations (implies budget allocation)",
+              "Requirement for 'deal negotiation and structure' experience",
+              "Need for 'delivery partners' and 'local co-promoters' in Asian markets",
+              "Focus on 'end-to-end implementation' of events (logistics/sourcing)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Sourcing & Vendor Management",
+            "Regional Expansion & Market Entry",
+            "Rights Holder Partnerships",
+            "Event Operations Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 463,
+              "elapsed_seconds": 5.7329261302948
+            }
+          ],
+          "reasoning": "The job posting for 'Head of Sport- Asia' at TEG Pty Ltd explicitly lists procurement-related responsibilities such as 'Joint Venture Leadership,' 'Event Portfolio Delivery,' and 'Regional Operations Management' involving 'multiple delivery partners.' It confirms TEG as the parent/promoter of Race of Champions and signals active expansion into Asian markets, necessitating new vendor relationships, venue procurement, and government partnerships."
+        }
+      ],
+      "total_input_tokens": 2783,
+      "total_output_tokens": 833,
+      "estimated_cost_usd": 0.020844
+    },
+    "procurement_signals": [
+      "Strategic Sourcing & Vendor Management",
+      "Regional Expansion & Market Entry",
+      "Rights Holder Partnerships",
+      "Event Operations Procurement"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Race of Champions may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:43:54.515293"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376982",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:48.226303"
+}

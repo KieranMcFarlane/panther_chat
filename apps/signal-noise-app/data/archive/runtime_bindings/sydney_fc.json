@@ -1,0 +1,188 @@
+{
+  "entity_id": "sydney_fc",
+  "entity_name": "Sydney FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "sydneyfc.com",
+    "sfcu.com.au",
+    "aleagues.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/company/footballaus/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sydney_fc",
+      "entity_name": "Sydney FC",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sfcu.com.au",
+        "https://au.linkedin.com/company/footballaus/jobs",
+        "https://sydneyfc.com",
+        "https://aleagues.com.au"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sydney FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:10:19.954272",
+          "domain_explored": "https://sydneyfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Renewal",
+                "description": "Sydney FC extends Under Armour Partnership to 10 years.",
+                "source": "sydneyfc.com"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Renewal (Under Armour)",
+            "Venue Operations (Allianz Stadium)",
+            "Sports Administration (Appeals process)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 247,
+              "elapsed_seconds": 5.103198289871216
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of sports news headlines, match results, and general fan information. While the 'Under Armour Partnership' extension indicates a commercial relationship, it is a renewal of an existing major sponsorship rather than a new procurement signal or technology investment. No specific RFPs, job postings, or technology stack details were found in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:10:29.441787",
+          "domain_explored": "https://sfcu.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content is from a fan group, not Sydney FC procurement."
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Activity",
+            "Historical Match Reports",
+            "User-Generated Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 199,
+              "elapsed_seconds": 5.010915994644165
+            }
+          ],
+          "reasoning": "The scraped content from sfcu.com.au identifies the domain as a fan-operated site (The SFCU - Sydney FC Fans Ultra), not the official corporate entity. The content consists of historical match reports and fan voting polls ('Player of the Season'). There are no corporate governance structures, technology stacks, or procurement signals present in this data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:10:35.516251",
+          "domain_explored": "https://aleagues.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Opta (Sports Data Provider)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level Content Aggregation",
+            "Sports Data Integration (Opta)",
+            "Generic Fan Engagement (Match Scheduling)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.1192171573638916
+            }
+          ],
+          "reasoning": "The content is sourced from the league's central platform (aleagues.com.au), which aggregates match results, news, and standardized 'Team of the Week' data powered by Opta. While this confirms the league's technology stack (Opta), it provides no specific insight into Sydney FC's independent procurement activities, decision-making structure, or vendor partnerships. It is a consumer-facing content hub, not a corporate signal source."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:10:43.100774",
+          "domain_explored": "https://au.linkedin.com/company/footballaus/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Club Licensing Bodies (Football Australia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Governing Body Operations",
+            "Regulatory Compliance (Club Licensing)",
+            "Entity Mismatch (Football Australia vs Sydney FC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 208,
+              "elapsed_seconds": 4.276627063751221
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn page of Football Australia (the governing body), not Sydney FC. While it shows a job posting for 'Club Licensing Bodies', this relates to regulatory compliance and governance at the national level rather than direct procurement or operational expansion for Sydney FC. The entity mismatch renders this data irrelevant for the specific target."
+        }
+      ],
+      "total_input_tokens": 5733,
+      "total_output_tokens": 869,
+      "estimated_cost_usd": 0.030233999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sydney FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:10:43.101933"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.188958",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:04.486400"
+}

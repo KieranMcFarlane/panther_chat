@@ -1,0 +1,176 @@
+{
+  "entity_id": "bahrain_football_association",
+  "entity_name": "Bahrain Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "the-waff.com",
+    "bahrainfootball.org",
+    "inside.fifa.com",
+    "the-afc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahrain_football_association",
+      "entity_name": "Bahrain Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://the-afc.com",
+        "https://inside.fifa.com",
+        "https://bahrainfootball.org",
+        "https://the-waff.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahrain Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:59:26.541178",
+          "domain_explored": "https://the-waff.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Video Conferencing (Virtual Meeting Tech)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Future Development Strategy Review (Jan 2026)",
+              "AI Implementation Plan Presentation",
+              "Approval of 3 Youth Tournaments for 2026"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Development Planning",
+            "Artificial Intelligence Adoption",
+            "Regional Governance & Committee Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.004347085952759
+            }
+          ],
+          "reasoning": "The content reveals that the West Asian Football Federation (WAFF), of which Bahrain is a key member, is actively discussing a 'Future Development Strategy' and has presented a specific plan to utilize Artificial Intelligence. While this is a regional body, these strategic initiatives often cascade down to member associations (like BFA) requiring compatible technology stacks, data analytics tools, or AI implementation partners. The intent is present but currently at a strategic/regional level rather than a direct Bahraini procurement tender."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:59:34.629596",
+          "domain_explored": "https://bahrainfootball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static HTML (Legacy)",
+              "Arabic Language Encoding (Legacy)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical reference to 'Higher Organizing Committee' (2006)",
+              "Stadium Operations (Bahrain National Stadium)"
+            ]
+          },
+          "patterns_found": [
+            "Legacy Content Archiving",
+            "SEO Spam Injection",
+            "Historical Match Results",
+            "Infrastructure Obsolescence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 233,
+              "elapsed_seconds": 4.099474906921387
+            }
+          ],
+          "reasoning": "The scraped content is heavily compromised by SEO spam (gambling links) and consists of static, archived news from 2005-2006. There is no dynamic content, governance structure, or technology stack information relevant to current procurement operations. The site appears to be a legacy archive or compromised domain."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:59:41.422544",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding Program (Global Infrastructure)",
+              "Stadium Refurbishment Projects (Global Context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Sports Governance",
+            "Women's Football Development",
+            "Infrastructure Funding (FIFA Forward)",
+            "Event Management (Champions Cup)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.9200079441070557
+            }
+          ],
+          "reasoning": "The content is scraped from FIFA's global news portal and focuses on high-level international governance, women's football development, and global infrastructure projects (e.g., Burundi stadium). While it mentions funding programs like 'FIFA Forward', these are global initiatives managed by FIFA's Zurich headquarters, not specific procurement signals or vendor opportunities for the Bahrain Football Association. The content lacks local relevance to Bahrain's specific procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:59:44.238963",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4248,
+      "total_output_tokens": 796,
+      "estimated_cost_usd": 0.024683999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahrain Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:59:44.239892"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.203029",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:29.981382"
+}

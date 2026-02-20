@@ -1,0 +1,130 @@
+[
+  {
+    "template_name": "elite_club_digital_transformation_signals",
+    "applicable_entity_profile": {
+      "sports": [
+        "football",
+        "basketball",
+        "cricket"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "revenue_bands": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ]
+    },
+    "signal_channels": [
+      {
+        "channel_type": "jobs_board",
+        "example_domains": [
+          "teamworkonline.com",
+          "linkedin.com",
+          "indeed.com",
+          "sportsjobs.com"
+        ],
+        "signal_strength": "high",
+        "scraping_priority": 10,
+        "update_frequency": "daily",
+        "notes": "Target specific strategic keywords that precede RFP release by 3-6 months. Query string construction: '(\"Head of Digital\" OR \"CRM Manager\" OR \"Head of Data\" OR \"Ticketing Strategy\") AND [Entity Name]'. Exclude 'Matchday', 'Steward', 'Academy Coach', 'Retail'."
+      },
+      {
+        "channel_type": "official_site",
+        "example_domains": [
+          "[entity].com",
+          "news.[entity].com"
+        ],
+        "signal_strength": "medium",
+        "scraping_priority": 8,
+        "update_frequency": "weekly",
+        "notes": "Scrape 'News', 'Media', and 'Careers' subdirectories. Look for keywords: 'Partnership', 'Technology', 'Fan Engagement Platform', 'App Update', 'Digital Transformation'. Ignore 'Player Transfer', 'Match Tickets', 'Kit Launch'."
+      },
+      {
+        "channel_type": "press",
+        "example_domains": [
+          "sportspromedia.com",
+          "theathletic.com",
+          "techcrunch.com",
+          "sifted.eu"
+        ],
+        "signal_strength": "medium",
+        "scraping_priority": 6,
+        "update_frequency": "daily",
+        "notes": "Monitor for interviews with CDO/CTO/Commercial Directors. Keywords: 'Tech stack', 'Overhaul', 'Fan experience', 'Data strategy'."
+      },
+      {
+        "channel_type": "partner_site",
+        "example_domains": [
+          "salesforce.com",
+          "hubspot.com",
+          "sap.com",
+          "ticketmaster.com",
+          "snowplowanalytics.com"
+        ],
+        "signal_strength": "low",
+        "scraping_priority": 4,
+        "update_frequency": "monthly",
+        "notes": "Scrape 'Case Studies' or 'Customer Success' sections for mentions of the target entity. Indicates existing stack, useful for predicting renewal cycles."
+      }
+    ],
+    "signal_patterns": [
+      {
+        "pattern_name": "Strategic Hire Precedence",
+        "description": "Hiring of 'Head of CRM', 'Head of Data', or 'Director of Fan Engagement' typically precedes a platform selection RFP by 3-9 months.",
+        "early_indicators": [
+          "New C-level or Director-level digital hire",
+          "Creation of a new 'Data' or 'CRM' team department"
+        ],
+        "confidence_weight": 0.9
+      },
+      {
+        "pattern_name": "Vendor Stack Expansion",
+        "description": "Migration from legacy systems (e.g., in-house ticketing) to enterprise SaaS (e.g., Salesforce, SAP) signals a need for implementation partners.",
+        "early_indicators": [
+          "Press release regarding new primary data partnership",
+          "Privacy Policy updates indicating new data processors"
+        ],
+        "confidence_weight": 0.7
+      },
+      {
+        "pattern_name": "Contract Renewal Cycle",
+        "description": "Major platforms (Ticketing, CRM, Jersey Sponsors) operate on 3-5 year cycles. End of term triggers RFP.",
+        "early_indicators": [
+          "Case study publication marking 3+ years with current vendor",
+          "Leadership change in Commercial Dept"
+        ],
+        "confidence_weight": 0.5
+      }
+    ],
+    "negative_filters": [
+      "Player Transfer",
+      "Matchday Host",
+      "Steward",
+      "Academy",
+      "Retail Assistant",
+      "Merchandise",
+      "Kit Launch",
+      "Internship",
+      "Analyst (Performance)"
+    ],
+    "verification_rules": [
+      {
+        "rule": "Job posting must be Senior level (Manager, Director, Head, VP) OR explicitly technical (Salesforce, SQL, Tableau).",
+        "required": true
+      },
+      {
+        "rule": "News item must contain keywords related to Technology, Data, or Digital Infrastructure.",
+        "required": false
+      }
+    ],
+    "expected_false_positive_risk": "low",
+    "template_confidence": 0.95,
+    "cluster_id": "elite_clubs_high_digital",
+    "created_at": "2026-01-28T12:21:15.859245",
+    "version": 1,
+    "template_id": "tpl_elite_clubs_high_digital_v1"
+  }
+]

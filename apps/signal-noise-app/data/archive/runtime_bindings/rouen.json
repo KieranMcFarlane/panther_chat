@@ -1,0 +1,442 @@
+{
+  "entity_id": "rouen",
+  "entity_name": "Rouen",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rouen.fr",
+    "en.visiterouen.com",
+    "en.normandie-tourisme.fr",
+    "fcr1899.com",
+    "metropole-rouen-normandie.fr",
+    "afnormandie.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/job-in-a-emplois-rouen",
+      "https://www.linkedin.com/jobs/technicien-informatique-emplois-rouen?trk=public_jobs_related_jserp_link",
+      "https://fr.linkedin.com/jobs/job-center-emplois-rouen",
+      "https://fr.linkedin.com/jobs/job-etudiant-emplois-rouen",
+      "https://fr.linkedin.com/jobs/job-manager-emplois-rouen-et-p%C3%A9riph%C3%A9rie",
+      "https://uk.linkedin.com/jobs/jobs-in-normandy",
+      "https://fr.linkedin.com/jobs/job-link-emplois-rouen",
+      "https://www.linkedin.com/jobs/haropa-port-jobs-worldwide",
+      "https://www.linkedin.com/jobs/rsm-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/coll%C3%A8ge-de-paris-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rouen",
+      "entity_name": "Rouen",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://rouen.fr",
+        "https://fr.linkedin.com/jobs/job-center-emplois-rouen",
+        "https://www.linkedin.com/jobs/technicien-informatique-emplois-rouen?trk=public_jobs_related_jserp_link",
+        "https://fr.linkedin.com/jobs/job-in-a-emplois-rouen",
+        "https://afnormandie.org",
+        "https://fcr1899.com",
+        "https://en.normandie-tourisme.fr",
+        "https://fr.linkedin.com/jobs/job-etudiant-emplois-rouen",
+        "https://fr.linkedin.com/jobs/job-manager-emplois-rouen-et-p%C3%A9riph%C3%A9rie",
+        "https://en.visiterouen.com",
+        "https://metropole-rouen-normandie.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rouen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:03:43.853902",
+          "domain_explored": "https://rouen.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard municipal accessibility navigation",
+            "Generic content placeholder structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 368,
+              "output_tokens": 158,
+              "elapsed_seconds": 3.0167040824890137
+            }
+          ],
+          "reasoning": "The provided text consists solely of a standard accessibility link ('Aller au contenu principal') and a note indicating a token limit truncation. There is no actual content, semantic HTML, or metadata regarding Rouen's procurement activities, technology stack, or governance to analyze."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:03:53.431584",
+          "domain_explored": "https://en.visiterouen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism promotion content",
+            "E-commerce booking functionality",
+            "Standard CMS image metadata"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.3928472995758057
+            }
+          ],
+          "reasoning": "The content is exclusively focused on tourism marketing (attractions, Rouen Pass, guided tours) and cultural promotion. There are no references to municipal governance, administrative decision-making, or technology procurement. The 'Booking' buttons refer to ticket sales for tourists, not procurement processes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:04:03.848524",
+          "domain_explored": "https://en.normandie-tourisme.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional tourism board content",
+            "Sustainability/Low-carbon thematic campaigns",
+            "Standard CMS navigation structure",
+            "Generic marketing copy (values, inspiration)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.7995500564575195
+            }
+          ],
+          "reasoning": "The content is entirely promotional and consumer-facing (B2C), focused on tourism marketing themes such as 'Low Carbon holidays' and 'D-Day'. There are no technical specifications, governance documents, or vendor procurement signals present. The entity scope has shifted from the specific municipality of Rouen to the broader Normandy region, which dilutes the relevance to the specific target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:04:15.054617",
+          "domain_explored": "https://fcr1899.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive placeholder content structure",
+            "Sports club branding (FC Rouen 1899)",
+            "External ticketing platform link (billetterie-fcrouen.fr)",
+            "News/Match updates content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.4700992107391357
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on the football club FC Rouen 1899, containing repetitive branding text, match schedules, and generic news updates. There are no signals related to municipal governance, public procurement tenders, or technology investments relevant to the city of Rouen. The entity appears to be a sports organization rather than a municipal body."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:04:29.360066",
+          "domain_explored": "https://metropole-rouen-normandie.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System) - inferred from dynamic content structure",
+              "Web Portal / E-Government platform"
+            ],
+            "job_postings": [
+              "General recruitment portal detected: /offres-demploi/offres-demploi-de-la-metropole"
+            ],
+            "procurement_indicators": [
+              "Infrastructure Projects: 'Travaux et chantiers' (Works and construction sites)",
+              "Utility Management: 'Eau et assainissement' (Water and sanitation)",
+              "Public Services: 'Collecte des d\u00e9chets' (Waste management)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal services portal structure",
+            "Dedicated 'Offres d'emploi' (Job Offers) section",
+            "Public works and infrastructure management links ('Travaux et chantiers')",
+            "Digital service delivery indicators ('Ma facture d'eau')"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1575,
+              "output_tokens": 403,
+              "elapsed_seconds": 5.145118951797485
+            }
+          ],
+          "reasoning": "The content represents the main administrative portal for the M\u00e9tropole Rouen Normandie. While the homepage itself is navigational, it confirms the existence of a structured public sector entity with significant operational scope (water, waste, transport, urban planning). The presence of a dedicated 'Offres d'emploi' section and 'Travaux et chantiers' indicates active personnel management and infrastructure spending, which are key precursors to procurement activity (RFPs, staffing, and vendor contracts). This moves the investigation from generic tourism content to the core governing entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:04:42.899105",
+          "domain_explored": "https://afnormandie.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mon Alliance (Proprietary LMS/Portal)",
+              "DELF/DALF/TCF Exam Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partenariat Ville de Rouen (Public Service Delegation potential)",
+              "Corporate Training Services (B2B procurement)",
+              "Professional Development for FLE Teachers"
+            ]
+          },
+          "patterns_found": [
+            "B2B Services ('Entreprises')",
+            "Public-Private Partnership ('Ville de Rouen')",
+            "Digital Platform ('Mon Alliance')",
+            "Professional Training ('Professionnels du FLE')"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1644,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.396913051605225
+            }
+          ],
+          "reasoning": "While primarily an educational non-profit, the entity explicitly targets 'Entreprises' (corporate clients) for language training and maintains a formal 'convention triennale' (3-year partnership agreement) with the 'Ville de Rouen'. This indicates a B2G (Business-to-Government) relationship and potential procurement of services by the municipality, as well as the use of a proprietary digital platform for service delivery."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:04:56.968041",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-in-a-emplois-rouen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "CONSEILLER EN INSERTION PROFESSIONNELLE A ROUEN at Groupe SOS Solidarit\u00e9s (Social Work/Non-profit)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic authentication gating (Sign in/Join now)",
+            "Repetitive placeholder text structure",
+            "Generic job aggregation ('3,000+ Job In A Jobs')",
+            "Social sector employment (Groupe SOS Solidarit\u00e9s)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1707,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.1782519817352295
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication walls and repetitive UI elements rather than substantive job descriptions or municipal procurement data. The specific job listing identified ('Conseiller en insertion professionnelle') is for a social work position within an NGO (Groupe SOS), which does not indicate technology procurement or vendor purchasing intent for the target entity (Rouen). The content is too generic and restricted to yield actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:05:08.739925",
+          "domain_explored": "https://www.linkedin.com/jobs/technicien-informatique-emplois-rouen?trk=public_jobs_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Technicien Support Informatique (Artemys)",
+              "Technicien Informatique Support Utilisateur (Groupe Premium)",
+              "Technicien Informatique Itin\u00e9rant (Fiducial)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation platform (LinkedIn)",
+            "Authentication gating (Sign in to view/alert)",
+            "Private sector hiring (Artemys, Groupe Premium, Fiducial)",
+            "Vocational training listings (Arinfo)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1789,
+              "output_tokens": 263,
+              "elapsed_seconds": 5.802842855453491
+            }
+          ],
+          "reasoning": "The content represents a generic job search results page for IT technicians in Rouen. The listings are primarily for private sector entities (Artemys, Fiducial) or vocational schools (Arinfo), and the platform requires authentication to view full details. There is no direct signal of municipal procurement, RFPs, or public sector technology investment by the target entity (Rouen)."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:05:41.591918",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-center-emplois-rouen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "D\u00e9veloppeur Full Stack H/F at L'Usine Nouvelle",
+              "Responsable d'agence (H/F) at Vitalliance",
+              "Alternance - Conseiller\u00b7e client\u00e8le at Challenge Business School",
+              "Conseiller-\u00e8re Vente Omnicanal at DECATHLON"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation platform (LinkedIn)",
+            "Authentication gating (Sign in to view/alert)",
+            "Private sector hiring (Vitalliance, Decathlon, L'Usine Nouvelle)",
+            "Educational sector hiring (Challenge Business School)",
+            "Irrelevant search term matching ('Job Center' returning generic retail/tech roles)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1861,
+              "output_tokens": 305,
+              "elapsed_seconds": 4.511896133422852
+            }
+          ],
+          "reasoning": "The search query 'Job Center' on LinkedIn returns generic private sector job listings (retail, IT, recruitment) within the Rouen area, rather than municipal procurement opportunities or public administration hiring. The content is gated by authentication and does not reveal specific technology stacks or public sector governance patterns relevant to the entity 'Rouen'."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:05:52.679705",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-etudiant-emplois-rouen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Stage Charg\u00e9 de documentation f/h (Veoneer)",
+              "Stage 6 mois (UniLaSalle)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation platform (LinkedIn)",
+            "Authentication gating (Sign in/Join now)",
+            "Private sector hiring (Veoneer, UniLaSalle)",
+            "Student/Internship focus (Job Etudiant)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1936,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.5253031253814697
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job search results page for 'Job Etudiant' (Student Jobs) in Rouen. It is gated by authentication walls and lists private sector internships (Veoneer) and academic opportunities (UniLaSalle). There are no signals of municipal procurement, public sector tenders, or technology investments by the Rouen government."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:06:07.936499",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-manager-emplois-rouen-et-p%C3%A9riph%C3%A9rie",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Directeur Apr\u00e8s-Vente Automobile F/H - Peugeot Le Havre - Groupe Legrand",
+              "Directeur d'usine/Directrice d'usine - CARTESIO",
+              "Responsable R\u00e9gional Paris Sud - Groupe iliad",
+              "Responsable d'agence F/H - Daniel Moquet Signe Vos Cl\u00f4tures"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation platform (LinkedIn)",
+            "Authentication gating (Sign in to view/alert)",
+            "Private sector hiring (Peugeot, Groupe iliad, CARTESIO)",
+            "Generic 'Manager' role search query"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2010,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.0965917110443115
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Manager' roles in the Rouen area. It lists private sector vacancies (Automotive, Telecom, Fencing) and requires authentication to view details. There are no procurement signals, technology stack insights, or public sector governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 17254,
+      "total_output_tokens": 2781,
+      "estimated_cost_usd": 0.093477
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rouen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:06:07.937549"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.278596",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:08.626707"
+}

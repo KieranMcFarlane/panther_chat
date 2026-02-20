@@ -1,0 +1,136 @@
+{
+  "entity_id": "sivasspor",
+  "entity_name": "Sivasspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "sivasspor.org.tr",
+    "besoccer.com",
+    "football.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sivasspor",
+      "entity_name": "Sivasspor",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://besoccer.com",
+        "https://football.fandom.com",
+        "https://sivasspor.org.tr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sivasspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:29:13.536952",
+          "domain_explored": "https://sivasspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (CMS)",
+              "Instagram (Social Media Integration)",
+              "TRT Spor (Broadcasting Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SMS Donation Platform (Revenue Operations)",
+              "Store58 (Merchandising/E-commerce)",
+              "Digital Media Rights (TRT Spor)",
+              "Sponsorship Management (\u00d6zbelsan, ATKO Grup)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Infrastructure",
+            "Mobile Operator Partnerships (SMS Donations)",
+            "E-commerce Integration (Store58)",
+            "Content Management System (WordPress)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 357,
+              "elapsed_seconds": 5.965819835662842
+            }
+          ],
+          "reasoning": "The content reveals a 'Vefa Sezonu' (Loyalty Season) campaign utilizing a high-cost SMS donation mechanism (158 TL/SMS) in partnership with major operators (Turkcell, T\u00fcrk Telekom, Vodafone). This indicates active revenue generation operations. The site structure references 'Store58' and 'Yak\u0131nda' (Coming Soon) for merchandise, signaling active or pending e-commerce procurement. The site is built on WordPress, confirming the technology stack. While no direct RFP is visible, the operational complexity (SMS gateways, e-commerce, high-traffic CMS) implies ongoing vendor relationships for maintenance and service provision."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:29:16.610580",
+          "domain_explored": "https://besoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:29:22.290504",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "Irrelevant Navigation Elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.5084011554718018
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage and navigation shell of 'Football Wiki' (a Fandom/Wikia property). It contains no specific information regarding Sivasspor's operations, technology stack, or procurement activities. The text is purely structural (language selectors, generic wiki descriptions, and unrelated Premier League news)."
+        }
+      ],
+      "total_input_tokens": 2797,
+      "total_output_tokens": 523,
+      "estimated_cost_usd": 0.016236
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sivasspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:29:22.291707"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.147959",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:22.771243"
+}

@@ -1,0 +1,228 @@
+{
+  "entity_id": "argentine_baseball_federation",
+  "entity_name": "Argentine Baseball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wbscamericas.org",
+    "static.wbsc.org",
+    "selecaoppge.unb.br",
+    "twstalker.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ar.linkedin.com/jobs/view/aut%C3%B3nomo-at-statscore-3909035455"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_baseball_federation",
+      "entity_name": "Argentine Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://twstalker.com",
+        "https://wbscamericas.org",
+        "https://ar.linkedin.com/jobs/view/aut%C3%B3nomo-at-statscore-3909035455",
+        "https://selecaoppge.unb.br",
+        "https://static.wbsc.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Major Event Hosting",
+        "Infrastructure Readiness",
+        "International Federation Partnership"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:24:11.077337",
+          "domain_explored": "https://wbscamericas.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms",
+              "Access Control Systems",
+              "Venue Security Tech",
+              "Volunteer Management Software"
+            ],
+            "job_postings": [
+              "Event Operations Staff",
+              "Security Personnel",
+              "Volunteer Coordinators"
+            ],
+            "procurement_indicators": [
+              "Stadium Renovation Contracts",
+              "Vendor Sponsorships",
+              "Service Level Agreements (SLAs) for Event Management"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Hosting",
+            "Infrastructure Readiness",
+            "International Federation Partnership"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 422,
+              "output_tokens": 284,
+              "elapsed_seconds": 8.028903007507324
+            }
+          ],
+          "reasoning": "The announcement of the 2026 World Baseball Classic is a definitive procurement signal. Hosting a Tier-1 international event necessitates immediate investment in stadium infrastructure, security technologies, ticketing systems, and volunteer management platforms. This moves the entity from general operations to a high-capex project execution phase."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:24:29.040705",
+          "domain_explored": "https://static.wbsc.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:24:54.447721",
+          "domain_explored": "https://selecaoppge.unb.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Spam/Scraped Content Aggregator",
+            "Off-Topic Sports/Entertainment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.960036039352417
+            }
+          ],
+          "reasoning": "The content provided is entirely unrelated to the Argentine Baseball Federation or procurement. It consists of generic entertainment and sports headlines (NBA, NFL, Spotify) and appears to be a low-quality content farm or scraped data feed. There is no signal of governance, technology, or purchasing intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:25:04.017736",
+          "domain_explored": "https://twstalker.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Social Media Aggregator",
+            "Generic Entertainment Content",
+            "Irrelevant Trends"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.3073668479919434
+            }
+          ],
+          "reasoning": "The scraped content from 'twstalker.com' is a generic Twitter analytics dashboard displaying worldwide trends (e.g., GRAMMYs, Justin Bieber) and popular profiles (e.g., Elon Musk, Barack Obama). There is absolutely no mention of the Argentine Baseball Federation, baseball, or procurement-related activities. This content is irrelevant to the target entity and the search for procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:25:27.173362",
+          "domain_explored": "https://ar.linkedin.com/jobs/view/aut%C3%B3nomo-at-statscore-3909035455",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Skrill",
+              "PayPal",
+              "Virtual Wallets",
+              "Live Data Transmission Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Aut\u00f3nomo (Scout/Live Reporter)",
+                "company": "STATSCORE",
+                "location": "Argentina (Remote/On-site)",
+                "focus": "Live statistics reporting for Baseball, Soccer, Basketball, etc."
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Data Operations",
+              "Vendor Presence (STATSCORE)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data Collection Demand",
+            "Freelance/Gig Economy Labor Model",
+            "Vendor Ecosystem Expansion (STATSCORE)",
+            "Event Coverage Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1548,
+              "output_tokens": 333,
+              "elapsed_seconds": 15.453749895095825
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, it confirms active data collection operations for baseball in Argentina by an international sports data provider (STATSCORE). This indicates a vendor ecosystem where the Federation may either be a client of or a partner to data providers. It validates the operational landscape of the sport but does not show direct procurement intent by the Federation itself."
+        }
+      ],
+      "total_input_tokens": 4902,
+      "total_output_tokens": 967,
+      "estimated_cost_usd": 0.029211
+    },
+    "procurement_signals": [
+      "Major Event Hosting",
+      "Infrastructure Readiness",
+      "International Federation Partnership"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:25:27.174546"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312099",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:37.069293"
+}

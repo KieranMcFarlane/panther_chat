@@ -1,0 +1,136 @@
+{
+  "entity_id": "bolivian_basketball_federation",
+  "entity_name": "Bolivian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "eduardoleal.co.uk",
+    "nytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/candidate-coordinator-at-brunswick-county-4366781737"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bolivian_basketball_federation",
+      "entity_name": "Bolivian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nytimes.com",
+        "https://www.linkedin.com/jobs/view/candidate-coordinator-at-brunswick-county-4366781737",
+        "https://eduardoleal.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bolivian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:14:46.585549",
+          "domain_explored": "https://eduardoleal.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:14:56.920979",
+          "domain_explored": "https://nytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news content",
+            "Irrelevant geopolitical/entertainment topics",
+            "No entity-specific correlation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.258892059326172
+            }
+          ],
+          "reasoning": "The scraped content from nytimes.com consists of general global news headlines (US Politics, Entertainment, Weather) unrelated to the Bolivian Basketball Federation. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:15:06.081174",
+          "domain_explored": "https://www.linkedin.com/jobs/view/candidate-coordinator-at-brunswick-county-4366781737",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Candidate Coordinator",
+                "entity": "Brunswick County",
+                "location": "Bolivia, NC, USA",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic false positive (Bolivia, NC vs Bolivia country)",
+            "Election administration role",
+            "Local government jurisdiction"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.2724740505218506
+            }
+          ],
+          "reasoning": "The content refers to a job posting for 'Brunswick County' located in 'Bolivia, North Carolina' (USA), not the country of Bolivia. This is a geographic false positive. The role involves election administration and campaign finance, which is irrelevant to the Bolivian Basketball Federation's procurement needs."
+        }
+      ],
+      "total_input_tokens": 2855,
+      "total_output_tokens": 390,
+      "estimated_cost_usd": 0.014415
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bolivian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:15:06.083229"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.253406",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:19.221166"
+}

@@ -1,0 +1,189 @@
+{
+  "entity_id": "volkerwessels_women\u0092s_pro_cycling_team",
+  "entity_name": "VolkerWessels Women\u0092s Pro Cycling Team",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "paris-roubaix-femmes.fr",
+    "total-velo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/lunchtime-supervisory-assistant-play-worker-x2-pennyhill-primary-school-at-wmjobs-4359269273",
+      "https://uk.linkedin.com/jobs/view/mobile-team-leader-at-securitas-uk-4366171009"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volkerwessels_women\u0092s_pro_cycling_team",
+      "entity_name": "VolkerWessels Women\u0092s Pro Cycling Team",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/lunchtime-supervisory-assistant-play-worker-x2-pennyhill-primary-school-at-wmjobs-4359269273",
+        "https://total-velo.com",
+        "https://uk.linkedin.com/jobs/view/mobile-team-leader-at-securitas-uk-4366171009",
+        "https://paris-roubaix-femmes.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VolkerWessels Women\u0092s Pro Cycling Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:31:53.138307",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis Data",
+            "Race Results",
+            "Sponsor Visibility (Visma | Lease a Bike)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 152,
+              "elapsed_seconds": 1.9305698871612549
+            }
+          ],
+          "reasoning": "The content is a race results page for the 2025 Paris-Roubaix Femmes. It focuses on Pauline Ferrand-Pr\u00e9vot (Team Visma | Lease a Bike) and contains no information regarding the VolkerWessels Women's Pro Cycling Team, its operations, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:32:00.034522",
+          "domain_explored": "https://total-velo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race Results & Standings",
+            "Event Schedules & TV Listings",
+            "General Cycling News",
+            "Competitor Activity (Visma | Lease a Bike mentions)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.5749711990356445
+            }
+          ],
+          "reasoning": "The content is a standard sports news feed (Total Velo) focused on race results, schedules, and rider transfers. It contains no corporate governance, technology infrastructure, or commercial procurement data relevant to the VolkerWessels Women's Pro Cycling Team."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:32:06.968955",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/lunchtime-supervisory-assistant-play-worker-x2-pennyhill-primary-school-at-wmjobs-4359269273",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Lunchtime Supervisory Assistant/Play worker"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Sector (Primary Education)",
+            "Operational Role (Lunchtime Supervision)",
+            "Geographic Mismatch (West Bromwich vs. Pro Cycling Context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1491,
+              "output_tokens": 220,
+              "elapsed_seconds": 3.2061119079589844
+            }
+          ],
+          "reasoning": "The content describes a job posting for a Lunchtime Supervisory Assistant at Pennyhill Primary School. This entity operates in the public education sector and has no logical connection to the VolkerWessels Women's Pro Cycling Team, professional cycling, or corporate procurement. The role is entry-level and operational, lacking any strategic, technological, or commercial relevance to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:32:16.200678",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/mobile-team-leader-at-securitas-uk-4366171009",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "GRS/SMP systems (Guard Reporting/Security Management Platforms)"
+            ],
+            "job_postings": [
+              {
+                "title": "Mobile Team Leader",
+                "company": "Securitas UK",
+                "location": "Birmingham, England",
+                "sector": "Security & Facility Management"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Operational Role (Security Services)",
+            "Sector Mismatch (Facility Security vs. Pro Cycling)",
+            "Geographic Mismatch (Birmingham, UK vs. Dutch Entity Context)",
+            "Standard Operating Procedures (SOP13, SOP18)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.349719047546387
+            }
+          ],
+          "reasoning": "The content describes a Mobile Team Leader position for Securitas UK, a security services firm. This is an operational role requiring an SIA licence and manual driving duties. It is completely unrelated to the procurement, technology, or sponsorship activities of a professional cycling team."
+        }
+      ],
+      "total_input_tokens": 5847,
+      "total_output_tokens": 813,
+      "estimated_cost_usd": 0.029736
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VolkerWessels Women\u0092s Pro Cycling Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:32:16.201268"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.385434",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:24.506920"
+}

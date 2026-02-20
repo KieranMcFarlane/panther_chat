@@ -1,0 +1,437 @@
+{
+  "entity_id": "aguada",
+  "entity_name": "Aguada",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "aguada.com.uy",
+    "aguada.gov.pr",
+    "aguadajewels.com",
+    "aguadaanchorage.com",
+    "aguadapark.com",
+    "hotelaguada.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://in.linkedin.com/jobs/view/operations-manager-at-aguada-anchorage-the-villa-resort-4354262659",
+      "https://www.linkedin.com/jobs/view/tech-lead-engineering-at-deel-4160542980",
+      "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7165419594965360640-jLr6",
+      "https://uy.linkedin.com/jobs/view/head-of-operations-at-scale-army-careers-4294879032",
+      "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7146825241929969664-uElY",
+      "https://pr.linkedin.com/jobs/view/retail-sales-associate-%E2%80%93-part-time-at-autozone-4323421792"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aguada",
+      "entity_name": "Aguada",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/tech-lead-engineering-at-deel-4160542980",
+        "https://aguada.gov.pr",
+        "https://aguadapark.com",
+        "https://aguadaanchorage.com",
+        "https://aguadajewels.com",
+        "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7165419594965360640-jLr6",
+        "https://hotelaguada.com",
+        "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7146825241929969664-uElY",
+        "https://uy.linkedin.com/jobs/view/head-of-operations-at-scale-army-careers-4294879032",
+        "https://in.linkedin.com/jobs/view/operations-manager-at-aguada-anchorage-the-villa-resort-4354262659",
+        "https://aguada.com.uy"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aguada may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:19:37.490525",
+          "domain_explored": "https://aguada.com.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress",
+              "WooCommerce",
+              "Elementor",
+              "WPBakery Page Builder",
+              "Qi Addons for Elementor",
+              "User Registration Plugin"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Ticketing Sales (Venta entradas)",
+              "Member Benefit Management (Beneficios para nuestros socios)",
+              "Online Registration System (Registrate)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Implementation (WooCommerce)",
+            "User Account Management (Mi Cuenta)",
+            "Digital Ticketing Operations",
+            "Content Management (WordPress/Elementor)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 317,
+              "elapsed_seconds": 10.089696168899536
+            }
+          ],
+          "reasoning": "The scraped content reveals a functional e-commerce and membership infrastructure. The presence of 'woocommerce-no-js', 'Carrito' (Cart), and 'Mi Cuenta' (My Account) indicates active digital operations for membership and ticket sales. While this confirms the capability to transact and manage users digitally, it does not explicitly show new procurement intent (RFPs) or specific enterprise technology stack investments beyond the web layer."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:19:46.751247",
+          "domain_explored": "https://aguada.gov.pr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Municipal Governance Structure",
+              "Public Service Portal"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Government Sector (Municipal)",
+            "Spanish Language Content",
+            "Static Informational Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1076,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.1280100345611572
+            }
+          ],
+          "reasoning": "The content is from the Municipality of Aguada, Puerto Rico (aguada.gov.pr), a government entity. This is a distinct entity from 'Aguada' (aguada.com.uy), which was identified in Iteration 1 as a commercial entity (likely the Uruguayan water cooler/services company) using WooCommerce. The content focuses on public services and citizen projects rather than commercial procurement or e-commerce operations. Therefore, this data is irrelevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:20:07.245541",
+          "domain_explored": "https://aguadajewels.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Retail Operations",
+            "B2C Business Model",
+            "Product Marketing Content",
+            "Spanish Language Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 661,
+              "output_tokens": 160,
+              "elapsed_seconds": 16.647955894470215
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer retail (jewelry sales, 'Larimar' stones, 'Nueva colecci\u00f3n'). There are no indicators of corporate procurement, enterprise technology adoption, or B2B supply chain activities relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:20:24.766171",
+          "domain_explored": "https://aguadaanchorage.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Business Model",
+            "Hospitality & Tourism Sector",
+            "Static Marketing Content",
+            "Facility Management Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 182,
+              "elapsed_seconds": 13.758389711380005
+            }
+          ],
+          "reasoning": "The entity 'Aguada Anchorage' is a villa resort in Goa, India. The content is exclusively focused on consumer marketing (booking villas), hospitality services (room service, pools), and facilities management. There are no signals of corporate procurement, vendor partnerships, or technology investments relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:20:27.606969",
+          "domain_explored": "https://aguadapark.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:20:37.443894",
+          "domain_explored": "https://hotelaguada.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Business Model",
+            "Hospitality & Tourism Sector",
+            "Spanish Language Content",
+            "Static Marketing Content",
+            "Direct Consumer Booking Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1575,
+              "output_tokens": 229,
+              "elapsed_seconds": 6.250906944274902
+            }
+          ],
+          "reasoning": "The scraped content from 'hotelaguada.com' identifies the entity as 'Aguada Hotel', a hospitality provider located in Trelew, Argentina. The content is exclusively focused on B2C marketing, promoting room types (Standard, Superior, Suite) and encouraging direct reservations via phone. There are no signals of corporate procurement, enterprise technology stacks, or B2B service vendor management. This confirms the entity is a consumer-facing hotel, contradicting the procurement hypothesis."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:20:45.598992",
+          "domain_explored": "https://in.linkedin.com/jobs/view/operations-manager-at-aguada-anchorage-the-villa-resort-4354262659",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "PMS (Property Management System)"
+            ],
+            "job_postings": [
+              "Operations Manager"
+            ],
+            "procurement_indicators": [
+              "Vendor Performance Monitoring",
+              "Cost Control / Consumables Management"
+            ]
+          },
+          "patterns_found": [
+            "B2C Business Model",
+            "Hospitality & Tourism Sector",
+            "Operational Role (Non-Procurement)",
+            "Entity Mismatch (Aguada Anchorage vs Aguada)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1640,
+              "output_tokens": 260,
+              "elapsed_seconds": 4.597785949707031
+            }
+          ],
+          "reasoning": "The content is a job description for an Operations Manager at 'Aguada Anchorage - The Villa Resort'. This confirms the entity operates in the B2C hospitality sector. The role focuses on resort operations, guest satisfaction, and staff management, not procurement or supply chain activities. This aligns with the rejection in Iteration 4, reinforcing that this entity does not fit the target profile for procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:20:53.287290",
+          "domain_explored": "https://www.linkedin.com/jobs/view/tech-lead-engineering-at-deel-4160542980",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Node.js",
+              "Express",
+              "PostgreSQL",
+              "TypeScript",
+              "SOLID principles"
+            ],
+            "job_postings": [
+              "Tech Lead, Engineering at Deel (Location: La Aguada - Costa Azul, Rocha, Uruguay)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Ambiguity",
+            "Recruitment Content",
+            "Technology Sector (SaaS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1701,
+              "output_tokens": 267,
+              "elapsed_seconds": 4.446285009384155
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Deel', a global HR/Compliance platform, located in 'La Aguada, Costa Azul'. While 'La Aguada' is a location in Rocha, Uruguay, it is a geographic descriptor rather than the corporate entity 'Aguada' being investigated. The content focuses on software engineering recruitment for a third-party company (Deel), providing no procurement signals, vendor partnerships, or technology investments related to the target entity 'Aguada'."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:21:00.670741",
+          "domain_explored": "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7165419594965360640-jLr6",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Front Office Supervisor",
+              "Front Office Associate",
+              "Housekeeping Associates",
+              "F&B Associates",
+              "Reservation Assistant"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "B2C Business Model",
+            "Hospitality & Tourism Sector",
+            "Recruitment Content",
+            "Operational Roles (Non-Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1769,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.040251970291138
+            }
+          ],
+          "reasoning": "The content refers to 'Taj Fort Aguada Resort & Spa', a specific hospitality entity owned by the Taj Group (Indian Hotels Company Limited). This is a distinct entity from the target 'Aguada'. The content consists solely of operational job postings (Front Office, Housekeeping, F&B) which are standard hospitality roles and do not indicate procurement activity, technology investment, or digital transformation relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:21:06.989447",
+          "domain_explored": "https://uy.linkedin.com/jobs/view/head-of-operations-at-scale-army-careers-4294879032",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Zapier",
+              "HubSpot",
+              "ClickUp",
+              "Slack",
+              "Google Sheets",
+              "Excel"
+            ],
+            "job_postings": [
+              "Head of Operations at Scale Army Careers"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Recruitment & Staffing Sector",
+            "B2B Service Delivery",
+            "Operational Role (Non-Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1828,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.9000051021575928
+            }
+          ],
+          "reasoning": "The job posting is for 'Scale Army Careers', a company located in 'La Aguada' (a neighborhood in Rocha, Uruguay). This represents an entity mismatch with the target entity 'Aguada'. Furthermore, the role is a Head of Operations focused on internal process efficiency, financial leadership, and recruiting ops, rather than procurement or supply chain management. The company is a service provider (staffing), not a buyer of complex goods."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T17:21:15.833976",
+          "domain_explored": "https://www.linkedin.com/posts/hotel-jobs-globally_taj-fort-aguada-resort-spa-goa-is-hiring-activity-7146825241929969664-uElY",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Security Officer",
+              "F&B Executive"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "B2C Business Model",
+            "Hospitality & Tourism Sector",
+            "Recruitment Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1898,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.028302192687988
+            }
+          ],
+          "reasoning": "The content refers to 'Taj Fort Aguada Resort & Spa', a specific hospitality entity owned by the Taj Group (Indian Hotels Company Limited). This is a distinct entity from the target 'Aguada' and represents a B2C operational model (hospitality) rather than a B2B procurement or technology context. The content is a standard job posting for operational roles (Security, F&B), offering no insight into procurement, technology stacks, or governance relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 15000,
+      "total_output_tokens": 2401,
+      "estimated_cost_usd": 0.081015
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aguada may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:21:15.836073"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.235655",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:07.835195"
+}

@@ -1,0 +1,307 @@
+{
+  "entity_id": "cpl",
+  "entity_name": "CPL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "college-ece.ca",
+    "albertaplanners.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/cpl-jobs-worldwide",
+      "https://ie.linkedin.com/jobs/cpl-jobs",
+      "https://www.linkedin.com/jobs/cpl-life-sciences-jobs-worldwide",
+      "https://www.linkedin.com/jobs/cpl-aromas-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/cpl-jobs",
+      "https://www.linkedin.com/jobs/cpl-jobs-chicago-il",
+      "https://ca.linkedin.com/jobs/cpl-jobs",
+      "https://uk.linkedin.com/jobs/cpl-jobs-london",
+      "https://uk.linkedin.com/jobs/cpl-jobs-manchester",
+      "https://ie.linkedin.com/jobs/view/careers-and-employment-facilitator-at-cpl-healthcare-3906649643?refId=aM00koBwStfSZPvtAH4lJw%3D%3D&trackingId=UcKKZGEKha4Dw6Zki7iEVg%3D%3D&position=23&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cpl",
+      "entity_name": "CPL",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/cpl-life-sciences-jobs-worldwide",
+        "https://www.linkedin.com/jobs/cpl-jobs-worldwide",
+        "https://www.linkedin.com/jobs/cpl-aromas-jobs-worldwide",
+        "https://college-ece.ca",
+        "https://uk.linkedin.com/jobs/cpl-jobs",
+        "https://albertaplanners.com",
+        "https://ie.linkedin.com/jobs/cpl-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CPL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:02:21.685828",
+          "domain_explored": "https://college-ece.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Case IQ (Compliance/Complaint Management)",
+              "Member Portal (Custom .NET architecture indicated by URL parameters)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of Case IQ for complaint management",
+              "Usage of 'my.college-ece.ca' for member self-service",
+              "Usage of 'publicregister.college-ece.ca' for public records"
+            ]
+          },
+          "patterns_found": [
+            "Self-Service Member Portal",
+            "Third-Party SaaS Integration (Case IQ)",
+            "Subdomain Usage for Service Segregation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 804,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.0870890617370605
+            }
+          ],
+          "reasoning": "The content reveals specific technology vendors and architectural patterns used by the College of Early Childhood Educators (CECE). The presence of a dedicated member portal ('my.college-ece.ca') and a specific subdomain for complaints ('college-ece.caseiq.app') indicates a reliance on third-party SaaS solutions for governance and constituent management. While not a direct procurement signal (RFP), it identifies the current vendor ecosystem and potential integration points."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:02:43.327209",
+          "domain_explored": "https://albertaplanners.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Consultant Directory: Platform for hiring planning professionals (B2B service)"
+            ]
+          },
+          "patterns_found": [
+            "Professional Association / Regulatory Body",
+            "Member Services Focus",
+            "Consultant Directory (B2B Matchmaking)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 808,
+              "output_tokens": 239,
+              "elapsed_seconds": 17.638700008392334
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as the 'Alberta Planners' association (likely the Alberta Professional Planners Institute), serving Alberta, NWT, and Nunavut. This is a professional regulatory body, not 'CPL' (which was previously analyzed as a college/entity). The content focuses on public interest regulation, advocacy, and a consultant directory for hiring planners. There is no correlation to the 'CPL' entity or procurement signals relevant to the original target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:02:58.719048",
+          "domain_explored": "https://www.linkedin.com/jobs/cpl-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "First Officer A320 (Etihad, Swiss)",
+              "Packing Operative (CPL Aromas)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (CPL vs. First Officer)",
+            "Generic Search Results",
+            "Irrelevant Industry Sectors (Aviation, Manufacturing)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 219,
+              "elapsed_seconds": 3.4137790203094482
+            }
+          ],
+          "reasoning": "The scraped content from the LinkedIn Jobs search for 'CPL' returns results for 'First Officer' roles (aviation industry) and unrelated entities like 'CPL Aromas'. The search query interprets 'CPL' as an acronym for 'Captain' or 'Commercial Pilot License', or matches other companies with the initials CPL. There is no data relevant to the target entity 'CPL' (procurement context)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:03:04.703451",
+          "domain_explored": "https://ie.linkedin.com/jobs/cpl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Medical Secretary",
+              "Document Controller",
+              "Assessment Officer",
+              "Office Administrator"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (CPL Group vs. CPL Entity)",
+            "Recruitment Agency Model (B2C Service Provider)",
+            "Geographic Mismatch (Ireland vs. Canada/US Context)",
+            "Subsidiary Branding (Cpl Healthcare, Tech Skills Resources)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 271,
+              "elapsed_seconds": 2.373680830001831
+            }
+          ],
+          "reasoning": "The search results refer to 'Cpl Group' (or 'Cpl'), a prominent recruitment and HR services agency based in Ireland, which is an acronym collision with the target entity 'CPL'. The content lists job placements for administrative and medical roles, indicating a business model focused on staffing services rather than internal procurement operations or governance. This contradicts the hypothesis of finding procurement signals for the target CPL entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:03:11.225732",
+          "domain_explored": "https://www.linkedin.com/jobs/cpl-life-sciences-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "CSO Technician - Packaging & Labelling",
+              "Group Financial Controller",
+              "Regulatory Affairs Officer",
+              "Senior Sales Director",
+              "Quality Assurance Coordinator"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (CPL vs. CPL Life Sciences)",
+            "Recruitment Agency Model (Third-Party Placement)",
+            "Geographic Mismatch (United Kingdom/EU vs. North America)",
+            "Functional Mismatch (Life Sciences/Pharma vs. General Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.119560956954956
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Cpl Life Sciences', a specialized recruitment agency operating primarily in the UK and EU (evidenced by locations like Wirral, Crewe, Edinburgh, and Waalwijk). This represents an acronym collision with the target entity 'CPL'. The listings are for candidates seeking employment (e.g., CSO Technician, Group Financial Controller) rather than procurement signals or vendor opportunities. The geographic and industry focus (Pharma/Life Sciences) further distinguishes this entity from the target context."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:03:18.080916",
+          "domain_explored": "https://www.linkedin.com/jobs/cpl-aromas-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Production Manager (Klang, Selangor, Malaysia)",
+              "Packing Operative (Dubai, UAE)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (CPL Aromas vs. CPL Entity)",
+            "Manufacturing Sector Focus (FMCG/Chemicals)",
+            "Geographic Dispersion (Malaysia, UAE, UK)",
+            "Operational Roles (Production, Packing)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1676,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.5357730388641357
+            }
+          ],
+          "reasoning": "The scraped content refers to 'CPL Aromas', a UK-based fragrance manufacturer. This is a distinct entity from the target 'CPL' (likely a regulatory body or association based on previous iterations). The job postings (Production Manager, Packing Operative) are operational/industrial roles in manufacturing, not corporate procurement or governance functions. This confirms an acronym collision."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:03:25.337800",
+          "domain_explored": "https://uk.linkedin.com/jobs/cpl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Clinical Research Associate (London, UK)",
+              "Group Financial Controller (Crewe, UK)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Acronym Collision (Cpl vs. CPL Entity)",
+            "Recruitment Agency Model (B2C Service Provider)",
+            "Geographic Mismatch (United Kingdom vs. Canada/US Context)",
+            "Duplicate Content / Scraped Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1741,
+              "output_tokens": 289,
+              "elapsed_seconds": 3.4297220706939697
+            }
+          ],
+          "reasoning": "The content is a scraped job board listing for 'Cpl' (specifically 'Cpl Life Sciences') in the United Kingdom. This is a continuation of the 'Acronym Collision' pattern observed in Iterations 3, 4, and 6. The entity 'Cpl' here functions as a recruitment agency (placing candidates like Clinical Research Associates), which is a B2C service model, distinct from the target CPL entity which is likely a B2B procurement or regulatory body (based on Iteration 1 & 2). The geographic focus (UK) further confirms the mismatch with the likely North American context of the target CPL."
+        }
+      ],
+      "total_input_tokens": 9628,
+      "total_output_tokens": 1878,
+      "estimated_cost_usd": 0.057054
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CPL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:03:25.338347"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416994",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:20.821528"
+}

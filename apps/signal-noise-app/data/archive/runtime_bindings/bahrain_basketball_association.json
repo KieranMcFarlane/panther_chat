@@ -1,0 +1,177 @@
+{
+  "entity_id": "bahrain_basketball_association",
+  "entity_name": "Bahrain Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "tickets.basketball.bh",
+    "apps.apple.com",
+    "bahrain.bh",
+    "bahrain-basketball-association.updatestar.com",
+    "grokipedia.com",
+    "bbkonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahrain_basketball_association",
+      "entity_name": "Bahrain Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://tickets.basketball.bh",
+        "https://bbkonline.com",
+        "https://bahrain-basketball-association.updatestar.com",
+        "https://grokipedia.com",
+        "https://bahrain.bh",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahrain Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:10:19.862632",
+          "domain_explored": "https://tickets.basketball.bh",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:10:29.845350",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "consumer_app_store_data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 159,
+              "elapsed_seconds": 7.070300817489624
+            }
+          ],
+          "reasoning": "The provided content is a generic scrape of the Apple App Store homepage featuring consumer games (Roblox, Pok\u00e9mon, Genshin Impact) and apps (EatOkra, Headway). There is absolutely no mention of the Bahrain Basketball Association, sports management, or enterprise procurement signals. This data is unrelated to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:10:41.844956",
+          "domain_explored": "https://bahrain.bh",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LiveChat (Customer Support Software)",
+              "SAP Portal (implied by 'Z7_OQKIGJK01HAT106MTUDULD' component IDs)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Link: \u0645\u062c\u0644\u0633 \u0627\u0644\u0645\u0646\u0627\u0642\u0635\u0627\u062a \u0648\u0627\u0644\u0645\u0632\u0627\u064a\u062f\u0627\u062a (Tender Board)",
+              "Service Category: \u0642\u0637\u0627\u0639 \u0627\u0644\u0623\u0639\u0645\u0627\u0644 \u0648\u0627\u0644\u0627\u0633\u062a\u062b\u0645\u0627\u0631 \u0648\u0627\u0644\u0636\u0631\u0627\u0626\u0628 (Business, Investment, and Taxes)"
+            ]
+          },
+          "patterns_found": [
+            "government_procurement_portal",
+            "tender_authority_reference",
+            "national_services_ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 288,
+              "elapsed_seconds": 4.86699914932251
+            }
+          ],
+          "reasoning": "The content represents the Bahrain National Portal (bahrain.bh), which serves as the primary gateway for government services. While it does not contain specific procurement data for the Basketball Association directly, it explicitly lists '\u0645\u062c\u0644\u0633 \u0627\u0644\u0645\u0646\u0627\u0642\u0635\u0627\u062a \u0648\u0627\u0644\u0645\u0632\u0627\u064a\u062f\u0627\u062a' (The Tender Board) as a key governing entity. This confirms the governance structure required to find procurement signals (Tender Board) and identifies the platform where official RFPs would be hosted."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:10:44.728342",
+          "domain_explored": "https://bahrain-basketball-association.updatestar.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:10:47.550431",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:10:50.470125",
+          "domain_explored": "https://bbkonline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2828,
+      "total_output_tokens": 447,
+      "estimated_cost_usd": 0.015189000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahrain Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:10:50.470529"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.251517",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:29.566001"
+}

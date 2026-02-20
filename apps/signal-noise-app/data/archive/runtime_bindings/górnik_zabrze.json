@@ -1,0 +1,191 @@
+{
+  "entity_id": "g\u00f3rnik_zabrze",
+  "entity_name": "G\u00f3rnik Zabrze",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "gornikzabrze.pl",
+    "handballzabrze.pl",
+    "behance.net",
+    "stadiumguide.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "g\u00f3rnik_zabrze",
+      "entity_name": "G\u00f3rnik Zabrze",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handballzabrze.pl",
+        "https://stadiumguide.com",
+        "https://behance.net",
+        "https://gornikzabrze.pl",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "G\u00f3rnik Zabrze may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:05:51.832044",
+          "domain_explored": "https://gornikzabrze.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league standings data",
+            "Match schedule fixtures",
+            "Repetitive DOM structure (scraping artifact)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.403440237045288
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports match results, league tables, and player interviews. There are no mentions of technology vendors, job openings, or organizational infrastructure that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:06:24.719567",
+          "domain_explored": "https://handballzabrze.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:06:34.842479",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic creative portfolio platform content",
+            "UI elements (filters, search bars, navigation)",
+            "Global creative project listings (unrelated to G\u00f3rnik Zabrze)",
+            "Russian language interface artifacts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.6405489444732666
+            }
+          ],
+          "reasoning": "The scraped content is from the generic Behance homepage (or a generic feed) and contains no references to G\u00f3rnik Zabrze, sports management, or specific procurement activities. It lists random global creative projects (e.g., 'CALE\u00d1O', 'Garmin', 'Google Red Envelope') and UI text. There is zero relevance to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:06:45.184928",
+          "domain_explored": "https://stadiumguide.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports venue listings",
+            "Irrelevant league reference (Bundesliga vs Polish Ekstraklasa)",
+            "Navigation/UI elements (View buttons)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 562,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.811269998550415
+            }
+          ],
+          "reasoning": "The content is from a general stadium guide website focusing on German Bundesliga stadiums. It contains no information regarding G\u00f3rnik Zabrze's internal operations, procurement needs, or technology stack. The entity context (Polish football club) does not align with the content context (German league overview)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:07:09.231966",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B SaaS marketing copy",
+            "Third-party testimonial aggregation",
+            "Sales tool value propositions (lead generation, CRM enrichment)",
+            "Global user base references (unrelated to G\u00f3rnik Zabrze)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 207,
+              "elapsed_seconds": 19.61133098602295
+            }
+          ],
+          "reasoning": "The content is the homepage of ZoomInfo, a B2B data provider. It contains generic marketing material, testimonials from unrelated companies (Seismic, McGriff), and product feature descriptions. There is no specific information regarding G\u00f3rnik Zabrze's procurement activities, technology stack, or governance. This is a vendor site, not a target entity site."
+        }
+      ],
+      "total_input_tokens": 4920,
+      "total_output_tokens": 737,
+      "estimated_cost_usd": 0.025815
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "G\u00f3rnik Zabrze may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:07:09.233338"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.353010",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:33.349872"
+}

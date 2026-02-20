@@ -1,0 +1,194 @@
+{
+  "entity_id": "england_rugby_football_union",
+  "entity_name": "England Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "visit-swale.co.uk",
+    "eric-rfu.org.uk",
+    "nerugbyrefs.org",
+    "zoominfo.com",
+    "allianz.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "england_rugby_football_union",
+      "entity_name": "England Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://visit-swale.co.uk",
+        "https://nerugbyrefs.org",
+        "https://allianz.co.uk",
+        "https://eric-rfu.org.uk",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "England Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:46:44.444921",
+          "domain_explored": "https://visit-swale.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "tourism_marketing_copy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.9401309490203857
+            }
+          ],
+          "reasoning": "The scraped content is from 'visit-swale.co.uk', a tourism website for the Swale district (Faversham, Sittingbourne, Isle of Sheppey). It contains promotional copy, visitor information links, and event search functionality. There is absolutely no content related to the England Rugby Football Union (RFU), sports governance, or corporate procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:46:54.520093",
+          "domain_explored": "https://eric-rfu.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Chameleon Studios (Web Design Agency)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "alumni_association_structure",
+            "honorary_association_focus",
+            "third_party_web_agency_attribution"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1041,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.195828914642334
+            }
+          ],
+          "reasoning": "The content identifies the entity as the 'England Rugby Internationals Club (ERIC)', an honorary association for former players focused on social and charitable activities. While it operates under the RFU umbrella, it is a distinct membership entity with no governance over RFU corporate procurement. The site is managed by an external agency (Chameleon Studios), indicating a lack of direct technical infrastructure managed by the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:47:05.248909",
+          "domain_explored": "https://nerugbyrefs.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Match Facts (Scheduling System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of 'Match Facts' for referee scheduling and payments"
+            ]
+          },
+          "patterns_found": [
+            "geographic_mismatch",
+            "grassroots_operational_focus",
+            "third_party_software_dependency"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.1243109703063965
+            }
+          ],
+          "reasoning": "The content analyzed belongs to the New England Rugby Referees Society (NERRS), which is a grassroots organization located in the USA (New England region), not the England Rugby Football Union (RFU) in the UK. While the site mentions a software tool ('Match Facts'), it is utilized as a user of a third-party system for scheduling, not as a procurement signal for the RFU itself. There is no governance or technology overlap with the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:47:38.781522",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:47:47.599368",
+          "domain_explored": "https://allianz.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "b2c_insurance_marketing",
+            "product_promotion_focus",
+            "irrelevant_domain_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.2572762966156006
+            }
+          ],
+          "reasoning": "The content is exclusively B2C marketing material for Allianz insurance products (Car, Home, Pet). It contains no information regarding the England Rugby Football Union (RFU), its procurement activities, or its technology stack. The domain is a commercial vendor site targeting individual consumers, not a signal of RFU procurement intent."
+        }
+      ],
+      "total_input_tokens": 5390,
+      "total_output_tokens": 787,
+      "estimated_cost_usd": 0.027975
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "England Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:47:47.600701"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.289644",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:55.297370"
+}

@@ -1,0 +1,94 @@
+{
+  "entity_id": "belize_volleyball_association",
+  "entity_name": "Belize Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "belizevolleyball.bz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belize_volleyball_association",
+      "entity_name": "Belize Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://belizevolleyball.bz"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Digital Transformation in Sports Operations",
+        "Adoption of International Federation Standards",
+        "Training & Certification Requirements"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belize Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:19:19.214248",
+          "domain_explored": "https://belizevolleyball.bz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-ScoreSheet (Volleyball Scoring System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Officials trained in E-ScoreSheet software",
+              "Adoption of digital scoring standards (FIVB/NORCECA compliance)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation in Sports Operations",
+            "Adoption of International Federation Standards",
+            "Training & Certification Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.479376792907715
+            }
+          ],
+          "reasoning": "The content explicitly mentions the adoption of 'E-ScoreSheet' technology for both indoor and beach volleyball. This is a specific digital tool requiring software licensing, hardware (tablets/devices), and official training. This indicates a clear procurement signal for sports technology solutions and associated educational services."
+        }
+      ],
+      "total_input_tokens": 1365,
+      "total_output_tokens": 236,
+      "estimated_cost_usd": 0.007634999999999999
+    },
+    "procurement_signals": [
+      "Digital Transformation in Sports Operations",
+      "Adoption of International Federation Standards",
+      "Training & Certification Requirements"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belize Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:19:19.215506"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334025",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:48.262759"
+}

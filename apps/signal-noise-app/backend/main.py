@@ -460,6 +460,213 @@ async def sync_from_supabase():
 
 
 # =============================================================================
+# Enhanced Dossier System Endpoints
+# =============================================================================
+
+class DossierRequest(BaseModel):
+    """Request for enhanced dossier generation"""
+    entity_id: str = Field(..., description="Entity ID (e.g., 'arsenal-fc')")
+    entity_name: str = Field(..., description="Entity display name")
+    entity_type: str = Field(default="CLUB", description="Entity type (CLUB, LEAGUE, ORG, etc.)")
+    priority_score: int = Field(default=50, ge=0, le=100, description="Priority score for tier determination")
+    force_refresh: bool = Field(default=False, description="Force regeneration even if cache is fresh")
+
+
+class DossierResponse(BaseModel):
+    """Response from dossier generation"""
+    entity_id: str
+    entity_name: str
+    dossier_data: Dict[str, Any]
+    metadata: Dict[str, Any]
+    cache_status: str
+    generated_at: str
+
+
+@app.post("/api/dossiers/generate", response_model=DossierResponse)
+async def generate_dossier(request: DossierRequest):
+    """
+    Generate enhanced dossier with multi-source intelligence and Supabase persistence
+
+    Process:
+    1. Check Supabase cache for existing fresh dossier
+    2. If cache miss or force_refresh, generate new dossier:
+       - Collect multi-source intelligence via BrightData SDK
+       - Generate contextual scores with explanations
+       - Create outreach strategy with conversation trees
+    3. Persist to Supabase entity_dossiers table
+    4. Return complete dossier
+
+    Returns:
+        Complete dossier with:
+        - Executive summary with contextual scores (meaning, why, benchmark, action)
+        - Digital infrastructure analysis
+        - Procurement signals and opportunities
+        - Leadership analysis with decision makers
+        - Timing analysis with contract windows
+        - Risk assessment
+        - Outreach strategy with conversation trees
+        - Recommended next steps
+    """
+    try:
+        import os
+        from supabase import create_client, Client
+
+        # Initialize Supabase client
+        supabase_url = os.getenv("SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_ANON_KEY")
+
+        if not supabase_url or not supabase_key:
+            raise HTTPException(
+                status_code=500,
+                detail="Supabase credentials not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables."
+            )
+
+        supabase: Client = create_client(supabase_url, supabase_key)
+
+        logger.info(f"📊 Dossier generation requested for {request.entity_name} (entity_id: {request.entity_id})")
+
+        # Step 1: Check Supabase cache
+        if not request.force_refresh:
+            try:
+                cached = supabase.table("entity_dossiers").select("*").eq("entity_id", request.entity_id).execute()
+
+                if cached.data:
+                    cached_dossier = cached.data[0]
+                    expires_at = cached_dossier.get("expires_at")
+                    cache_status = cached_dossier.get("cache_status", "STALE")
+
+                    # Check if cache is still fresh
+                    if expires_at and cache_status == "FRESH":
+                        from datetime import datetime
+                        expires_dt = datetime.fromisoformat(expires_at.replace("Z", "+00:00"))
+                        if expires_dt > datetime.now(expires_dt.tzinfo):
+                            logger.info(f"✅ Returning cached dossier (expires: {expires_at})")
+                            return DossierResponse(
+                                entity_id=cached_dossier["entity_id"],
+                                entity_name=cached_dossier["entity_name"],
+                                dossier_data=cached_dossier["dossier_data"],
+                                metadata={
+                                    "tier": cached_dossier.get("tier"),
+                                    "priority_score": cached_dossier.get("priority_score"),
+                                    "generation_time_seconds": cached_dossier.get("generation_time_seconds"),
+                                    "total_cost_usd": cached_dossier.get("total_cost_usd"),
+                                    "hypothesis_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("hypothesis_count", 0),
+                                    "signal_count": cached_dossier.get("dossier_data", {}).get("metadata", {}).get("signal_count", 0)
+                                },
+                                cache_status="CACHED",
+                                generated_at=cached_dossier["generated_at"]
+                            )
+            except Exception as e:
+                logger.warning(f"⚠️  Cache check failed: {e}. Proceeding with generation.")
+
+        # Step 2: Generate new dossier
+        logger.info(f"🔄 Generating new dossier with priority_score={request.priority_score}")
+
+        try:
+            from backend.dossier_generator import UniversalDossierGenerator
+            from backend.claude_client import ClaudeClient
+
+            # Initialize generator (ClaudeClient initializes in constructor)
+            claude = ClaudeClient()
+            generator = UniversalDossierGenerator(claude)
+
+            # Generate dossier
+            dossier = await generator.generate_universal_dossier(
+                entity_id=request.entity_id,
+                entity_name=request.entity_name,
+                entity_type=request.entity_type,
+                priority_score=request.priority_score
+            )
+
+            logger.info(f"✅ Dossier generated: {dossier.get('metadata', {}).get('hypothesis_count', 0)} hypotheses, "
+                       f"{dossier.get('metadata', {}).get('signal_count', 0)} signals")
+
+            # Step 3: Persist to Supabase
+            logger.info("💾 Persisting dossier to Supabase...")
+
+            from datetime import datetime, timedelta
+
+            # Determine tier based on priority_score
+            if request.priority_score >= 80:
+                tier = "PREMIUM"
+            elif request.priority_score >= 50:
+                tier = "STANDARD"
+            else:
+                tier = "BASIC"
+
+            # Calculate expiration (7 days from now)
+            expires_at = datetime.now() + timedelta(days=7)
+
+            dossier_record = {
+                "entity_id": request.entity_id,
+                "entity_name": request.entity_name,
+                "entity_type": request.entity_type,
+                "priority_score": request.priority_score,
+                "tier": tier,
+                "dossier_data": dossier,
+                "sections": [],  # Maintained for backward compatibility
+                "generated_at": datetime.now().isoformat(),
+                "generation_time_seconds": dossier.get("generation_time_seconds", 0),
+                "total_cost_usd": 0.0095,  # Approximate cost
+                "cache_status": "FRESH",
+                "expires_at": expires_at.isoformat(),
+                "last_accessed_at": datetime.now().isoformat()
+            }
+
+            # Upsert to Supabase (update if exists, insert if not)
+            try:
+                # Check if exists
+                existing = supabase.table("entity_dossiers").select("id").eq("entity_id", request.entity_id).execute()
+
+                if existing.data:
+                    # Update existing
+                    supabase.table("entity_dossiers").update(dossier_record).eq("entity_id", request.entity_id).execute()
+                    logger.info("✅ Updated existing dossier in Supabase")
+                else:
+                    # Insert new
+                    supabase.table("entity_dossiers").insert(dossier_record).execute()
+                    logger.info("✅ Inserted new dossier to Supabase")
+
+            except Exception as e:
+                logger.error(f"❌ Supabase persistence failed: {e}")
+                # Continue anyway - we have the dossier
+
+            # Step 4: Return response
+            return DossierResponse(
+                entity_id=request.entity_id,
+                entity_name=request.entity_name,
+                dossier_data=dossier,
+                metadata={
+                    "tier": tier,
+                    "priority_score": request.priority_score,
+                    "generation_time_seconds": dossier.get("generation_time_seconds", 0),
+                    "total_cost_usd": dossier_record["total_cost_usd"],
+                    "hypothesis_count": dossier.get("metadata", {}).get("hypothesis_count", 0),
+                    "signal_count": dossier.get("metadata", {}).get("signal_count", 0),
+                    "data_freshness": dossier.get("metadata", {}).get("data_freshness", 0)
+                },
+                cache_status="FRESH",
+                generated_at=dossier_record["generated_at"]
+            )
+
+        except ImportError as e:
+            logger.error(f"❌ Dossier generator import failed: {e}")
+            raise HTTPException(
+                status_code=501,
+                detail=f"Dossier generator not available: {str(e)}. Ensure backend/dossier_generator.py and backend/claude_client.py exist."
+            )
+        except Exception as e:
+            logger.error(f"❌ Dossier generation failed: {e}")
+            raise HTTPException(status_code=500, detail=f"Dossier generation failed: {str(e)}")
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"❌ Unexpected error in dossier generation: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+# =============================================================================
 # Error Handlers
 # =============================================================================
 

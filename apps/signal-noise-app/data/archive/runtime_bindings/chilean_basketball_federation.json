@@ -1,0 +1,216 @@
+{
+  "entity_id": "chilean_basketball_federation",
+  "entity_name": "Chilean Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "southernmiss.com",
+    "preprints.org",
+    "fiba3x3.com",
+    "betsapi.com",
+    "de.scribd.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chilean_basketball_federation",
+      "entity_name": "Chilean Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://preprints.org",
+        "https://betsapi.com",
+        "https://fiba3x3.com",
+        "https://de.scribd.com",
+        "https://southernmiss.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chilean Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:56:16.494461",
+          "domain_explored": "https://southernmiss.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "content_type_sports_schedule",
+            "generic_cms_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.0302557945251465
+            }
+          ],
+          "reasoning": "The scraped content belongs to the University of Southern Mississippi Athletics (southernmiss.com), which is completely unrelated to the target entity, the Chilean Basketball Federation. The content consists of sports schedules, game results, and generic news posts. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:56:25.060471",
+          "domain_explored": "https://preprints.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "academic_platform_content",
+            "generic_research_hosting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.0925021171569824
+            }
+          ],
+          "reasoning": "The content is from Preprints.org, a general academic repository for early research drafts. It contains scientific articles (e.g., 'Ellagic Acid', 'Fisher\u2013KPP Equation') and platform metrics. There is absolutely no connection to the Chilean Basketball Federation, Chilean governance, or sports procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:56:43.374600",
+          "domain_explored": "https://fiba3x3.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Social Media)",
+              "Facebook (Social Media)",
+              "Instagram (Social Media)",
+              "TikTok (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Vendor: Wilson (Official ball)",
+              "E-commerce Platform: 3x3-shop.com"
+            ]
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "global_federation_scope",
+            "content_type_news_schedule",
+            "ecommerce_links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1236,
+              "output_tokens": 276,
+              "elapsed_seconds": 11.806864261627197
+            }
+          ],
+          "reasoning": "The analyzed content belongs to the International Basketball Federation (FIBA), specifically its 3x3 division, rather than the Chilean Basketball Federation (FeChBas). While the content discusses global events (World Tour, Champions Cup) and includes vendor links (Wilson, 3x3-shop), these are related to FIBA's central operations and merchandise, not the procurement activities or governance of the Chilean entity. This represents an entity mismatch."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:56:51.811210",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "gambling_data_aggregator",
+            "live_betting_interface",
+            "api_service_provider"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.392094850540161
+            }
+          ],
+          "reasoning": "The content is from BetsAPI, a commercial sports data provider for betting companies. It displays live scores, odds, and match data for global sports (including basketball). It is entirely unrelated to the Chilean Basketball Federation's internal operations, governance, or procurement activities. The entity is a third-party vendor, not the target federation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:57:03.700798",
+          "domain_explored": "https://de.scribd.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_document_hosting",
+            "content_paywall",
+            "irrelevant_entity_mismatch",
+            "user_generated_content_library"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 210,
+              "elapsed_seconds": 4.648327827453613
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage interface of Scribd (a digital library/subscription service), translated in German. It contains navigation menus for categories like 'Art', 'Business', and 'Sports', but these are generic content classifications, not specific pages related to the Chilean Basketball Federation. There is no mention of the entity, no procurement documents, and no specific technology stack information relevant to the target."
+        }
+      ],
+      "total_input_tokens": 7066,
+      "total_output_tokens": 1014,
+      "estimated_cost_usd": 0.036408
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chilean Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:57:03.702551"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.263026",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:30.727588"
+}

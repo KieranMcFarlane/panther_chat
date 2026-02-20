@@ -1,0 +1,166 @@
+{
+  "entity_id": "osaka_blazers_sakai",
+  "entity_name": "Osaka Blazers Sakai",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "globalsportsarchive.com",
+    "dbpedia.org",
+    "wikidata.org",
+    "playmakerstats.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "osaka_blazers_sakai",
+      "entity_name": "Osaka Blazers Sakai",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://playmakerstats.com",
+        "https://globalsportsarchive.com",
+        "https://dbpedia.org",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Osaka Blazers Sakai may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:41:32.746859",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports taxonomy",
+            "Global competition listings",
+            "Navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 169,
+              "elapsed_seconds": 14.464032888412476
+            }
+          ],
+          "reasoning": "The provided content is a generic navigation menu for 'globalsportsarchive.com' listing global soccer leagues and competitions (UEFA, AFC, CONCACAF, etc.). There is no mention of 'Osaka Blazers Sakai', nor are there any specific procurement signals, technology stacks, or organizational data relevant to the entity in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:41:40.017122",
+          "domain_explored": "https://dbpedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DBpedia Knowledge Graph",
+              "Linked Open Data (LOD)",
+              "Databus (Data cataloging)"
+            ],
+            "job_postings": [
+              "Google Summer of Code (GSoC) Mentoring",
+              "DAAD Postdoc Net AI Fellowship",
+              "DBpedia Internship"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge graph infrastructure",
+            "Open source community governance",
+            "Academic/research focus (GSoC, DAAD)",
+            "Entity disambiguation (DBpedia vs. Sports Team)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 279,
+              "elapsed_seconds": 3.807502031326294
+            }
+          ],
+          "reasoning": "The content analyzed is from DBpedia.org, a general-purpose knowledge graph and ontology project. It contains no information regarding 'Osaka Blazers Sakai' (a Japanese professional basketball team). The signals detected relate to open-source data management and academic internships, which are irrelevant to the procurement activities of the target sports entity. This is a false positive in the search chain."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:41:43.067927",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:41:45.900576",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:41:48.731858",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2769,
+      "total_output_tokens": 448,
+      "estimated_cost_usd": 0.015027
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Osaka Blazers Sakai may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:41:48.732698"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.323722",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:34.927463"
+}

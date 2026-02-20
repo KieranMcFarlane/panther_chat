@@ -1,0 +1,139 @@
+{
+  "entity_id": "volley_lube",
+  "entity_name": "Volley Lube",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "lubevolley.it",
+    "legavolley.it",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volley_lube",
+      "entity_name": "Volley Lube",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://legavolley.it",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volley Lube may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:01:58.938275",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Ticketing System",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active use of online ticketing platforms for match sales",
+              "Execution of triennial (3-year) strategic agreements",
+              "Management of international travel and logistics for talent scouting"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "Fan Engagement Infrastructure",
+            "Strategic Partnership Agreements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.9663901329040527
+            }
+          ],
+          "reasoning": "The content reveals active operational capabilities in digital ticketing ('prevendita biglietti online') and strategic sports management ('accordo triennale'). While not a direct procurement signal, the reliance on online ticketing platforms and international partnership structures indicates an active ecosystem for vendor-supported services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:02:05.896428",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Check System (League-mandated technology)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Sponsorship Agreements (e.g., Credem Banca, Del Monte)",
+              "Centralized Digital Media Operations"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Structure",
+            "Sponsorship Ecosystem",
+            "Digital Content Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 280,
+              "elapsed_seconds": 3.162808895111084
+            }
+          ],
+          "reasoning": "The scraped content is from the Italian Volleyball League (Lega Pallavolo Serie A) website, which acts as the governing body for the league where Volley Lube competes. While this provides context on the league structure, sponsors (e.g., Credem Banca, Del Monte), and digital operations (media, stats), it does not contain specific procurement signals, technology stack details, or job postings directly attributable to 'Volley Lube' as an entity. It is a directory and results hub, not a source for corporate procurement intelligence for a specific club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:02:08.733464",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2761,
+      "total_output_tokens": 539,
+      "estimated_cost_usd": 0.016368
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volley Lube may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:02:08.734057"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.317823",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:48.005146"
+}

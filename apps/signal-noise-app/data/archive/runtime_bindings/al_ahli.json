@@ -1,0 +1,401 @@
+{
+  "entity_id": "al_ahli",
+  "entity_name": "Al Ahli",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "en.alahlifc.sa",
+    "alahlifc.sa",
+    "alahlisc.qa",
+    "shababalahli.ae",
+    "alahli.qa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/alahli-club-company/jobs/",
+      "https://sa.linkedin.com/company/alahli-club-company/jobs",
+      "https://www.linkedin.com/posts/al-ahli-hospital_career-jobs-alahlihospital-activity-7098919179642138624-X-ZT",
+      "https://www.linkedin.com/jobs/view/4287720661",
+      "https://www.linkedin.com/posts/careersump_al-ahli-hospital-doha-qatar-activity-7413813040757968898-kkDE",
+      "https://www.linkedin.com/jobs/view/4215556002"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ahli",
+      "entity_name": "Al Ahli",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/careersump_al-ahli-hospital-doha-qatar-activity-7413813040757968898-kkDE",
+        "https://sa.linkedin.com/company/alahli-club-company/jobs",
+        "https://www.linkedin.com/company/alahli-club-company/jobs/",
+        "https://www.linkedin.com/posts/al-ahli-hospital_career-jobs-alahlihospital-activity-7098919179642138624-X-ZT",
+        "https://www.linkedin.com/jobs/view/4287720661",
+        "https://alahlisc.qa",
+        "https://alahlifc.sa",
+        "https://en.alahlifc.sa",
+        "https://alahli.qa",
+        "https://shababalahli.ae"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ahli may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:21:23.371795",
+          "domain_explored": "https://en.alahlifc.sa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Renewal",
+                "details": "Strategic partnership extended with Cenomi Centers until 2031.",
+                "source_date": "Jan 25, 2026",
+                "potential_value": "High (Long-term strategic commitment)"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Renewal",
+            "Long-term Commercial Commitments",
+            "Sponsorship/Revenue Stream Stability"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 286,
+              "elapsed_seconds": 19.06309485435486
+            }
+          ],
+          "reasoning": "The content reveals a significant commercial event: the extension of a strategic partnership with Cenomi Centers until 2031. While this is not a direct procurement of technology or services in the traditional sense (like an RFP), it indicates active vendor management and long-term contract negotiation capabilities. It suggests a stable financial environment and a focus on commercial partnerships, which supports the overall procurement hypothesis, albeit indirectly."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:21:36.462567",
+          "domain_explored": "https://alahlifc.sa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Renewal",
+                "entity": "Cinome Centers (\u0633\u064a\u0646\u0648\u0645\u064a \u0633\u0646\u062a\u0631\u0632)",
+                "details": "Strategic partnership extended until 2031",
+                "source_date": "2026-01-25"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Renewal",
+            "Long-term Commercial Commitments",
+            "Sponsorship/Revenue Stream Stability"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 256,
+              "elapsed_seconds": 4.089238166809082
+            }
+          ],
+          "reasoning": "The content confirms the renewal of a strategic partnership with 'Cinome Centers' (\u0633\u064a\u0646\u0648\u0645\u064a \u0633\u0646\u062a\u0631\u0632) until 2031. While this indicates commercial activity and vendor relationship management, it is a renewal of an existing agreement rather than a new procurement tender or technology acquisition. The rest of the content is purely sports news (match results), which is irrelevant to procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:21:48.117163",
+          "domain_explored": "https://alahlisc.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Target is Saudi (Al Ahli FC), Source is Qatari (Al Ahli SC)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.2461161613464355
+            }
+          ],
+          "reasoning": "The content scraped from 'alahlisc.qa' clearly identifies the entity as 'Al Ahli SC' (Doha, Qatar), distinct from the target entity 'Al Ahli FC' (Saudi Arabia). The content focuses on Qatari leagues (Stars League, Qatar Cup), Qatari stadiums (Thumama, Jassim bin Hamad), and player transfers specific to the Qatari team. This provides zero procurement intelligence for the Saudi target entity and introduces noise, requiring a rejection to maintain entity integrity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:22:04.127649",
+          "domain_explored": "https://shababalahli.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content",
+            "Sports/Entertainment Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.14552903175354
+            }
+          ],
+          "reasoning": "The scraped content from 'shababalahli.ae' clearly identifies the entity as 'Shabab Al Ahli (UAE)', a football club based in the United Arab Emirates. This is a distinct entity from 'Al Ahli Saudi FC' (the target entity in Saudi Arabia). The content focuses exclusively on match schedules, player rosters, and sports news. There are no procurement signals, technology stacks, or corporate governance data relevant to the Saudi target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:22:14.848487",
+          "domain_explored": "https://alahli.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content",
+            "Sports/Entertainment Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.1296019554138184
+            }
+          ],
+          "reasoning": "The content is a descriptive profile of Al Ahli Sports Club in Qatar (alahli.qa), focusing on football history, stadium facilities, and community impact. It is distinct from the target entity (Al Ahli FC Saudi Arabia) and contains no procurement, technology, or business operation signals relevant to the original objective."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:22:19.765601",
+          "domain_explored": "https://www.linkedin.com/company/alahli-club-company/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction",
+            "Data Inaccessibility"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 600,
+              "output_tokens": 142,
+              "elapsed_seconds": 2.5128602981567383
+            }
+          ],
+          "reasoning": "The content provided is an error message ('Forbidden. Use only company name in the URL') rather than actual job listings or company data. Therefore, no procurement signals, technology stack details, or governance patterns can be extracted from this specific source."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:22:25.014124",
+          "domain_explored": "https://sa.linkedin.com/company/alahli-club-company/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction",
+            "Data Inaccessibility",
+            "Platform Policy Enforcement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 647,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.642357110977173
+            }
+          ],
+          "reasoning": "The request to scrape the LinkedIn jobs page was blocked by a 403 Forbidden error, indicating that the platform's anti-scraping measures or policy restrictions prevented data retrieval. No content regarding job postings, procurement roles, or technology stacks could be analyzed."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:22:42.815341",
+          "domain_explored": "https://www.linkedin.com/posts/al-ahli-hospital_career-jobs-alahlihospital-activity-7098919179642138624-X-ZT",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Nurses",
+              "Pharmacist",
+              "Insurance Coordinator"
+            ],
+            "procurement_indicators": [
+              "High-volume staffing requirements (300+ nurses mentioned)",
+              "Vendor interest in staffing supply (Comment from Zatok Nig ltd)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Healthcare Sector Focus",
+            "Recruitment Activity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 231,
+              "elapsed_seconds": 11.947129011154175
+            }
+          ],
+          "reasoning": "The content analyzed is from 'Al-Ahli Hospital' (Qatar), a healthcare provider, which is a distinct entity from 'Al Ahli' (Saudi Football Club). While the content shows active recruitment (procurement of human capital), it does not provide procurement signals relevant to the target entity's sports, entertainment, or commercial operations."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T06:22:53.258224",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4287720661",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Biomechanics Analysis Systems",
+              "Electrotherapy Devices",
+              "Cryotherapy Units",
+              "Electronic Medical Records (EMR)"
+            ],
+            "job_postings": [
+              "Physiotherapist (Al-Ahli Club Company, Jeddah)"
+            ],
+            "procurement_indicators": [
+              "Requirement for advanced rehabilitation equipment",
+              "Need for injury prevention software/analytics",
+              "Supply chain for medical consumables"
+            ]
+          },
+          "patterns_found": [
+            "Sports Medicine Procurement",
+            "Clinical Equipment Requirements",
+            "High-Performance Infrastructure",
+            "Specialized Talent Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1752,
+              "output_tokens": 307,
+              "elapsed_seconds": 5.499372959136963
+            }
+          ],
+          "reasoning": "While this is a direct hiring post (Recruitment), the detailed job description for a 'Physiotherapist' reveals specific procurement dependencies. The role requires 'rehabilitation equipment', 'electrotherapy', 'cryotherapy', and 'biomechanics assessment' tools. This signals a need for clinical vendors and sports technology suppliers to support the 'Al-Ahli Club Company' entity in Jeddah."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T06:23:04.524074",
+          "domain_explored": "https://www.linkedin.com/posts/careersump_al-ahli-hospital-doha-qatar-activity-7413813040757968898-kkDE",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Female Filipino Nurses (Al Ahli Hospital, Qatar)"
+            ],
+            "procurement_indicators": [
+              "Partnership with 'United for Manpower Solutions' for recruitment services"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Healthcare Sector Focus",
+            "Recruitment Activity",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1824,
+              "output_tokens": 238,
+              "elapsed_seconds": 7.135808944702148
+            }
+          ],
+          "reasoning": "The content explicitly refers to 'Al Ahli Hospital' in Doha, Qatar, which is a healthcare entity distinct from the target entity 'Al Ahli' (Saudi Football Club). While the target entity has a sports medicine department, this specific content relates to general hospital staffing and nursing recruitment in a different country. Therefore, it does not provide procurement intelligence relevant to the Saudi sports entity."
+        }
+      ],
+      "total_input_tokens": 13776,
+      "total_output_tokens": 2187,
+      "estimated_cost_usd": 0.074133
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ahli may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:23:04.527887"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.138354",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:00.974018"
+}

@@ -1,0 +1,119 @@
+{
+  "entity_id": "bermuda_volleyball_association",
+  "entity_name": "Bermuda Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "givebermuda.org",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bermuda_volleyball_association",
+      "entity_name": "Bermuda Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://givebermuda.org",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bermuda Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:28:42.686284",
+          "domain_explored": "https://givebermuda.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)",
+              "Online Searchable Database (Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Listed in GiveBermuda database (Operational capability)",
+              "Categorized under 'Advancement of sport' (Sector alignment)",
+              "Partnership with Bermuda Foundation (Funding/Grant potential)"
+            ]
+          },
+          "patterns_found": [
+            "Nonprofit Directory Aggregation",
+            "Categorical Classification (Advancement of Sport)",
+            "Community Foundation Partnership"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 320,
+              "elapsed_seconds": 7.906960964202881
+            }
+          ],
+          "reasoning": "The content is from GiveBermuda, a centralized database for Bermuda's nonprofits. While it does not contain direct procurement signals (like RFPs) for the Bermuda Volleyball Association (BVA) specifically, it confirms BVA's existence within the formal nonprofit ecosystem. The categorization of 'Advancement of sport' suggests BVA is eligible for funding and likely maintains governance standards required by the database. This indicates a capability for formal partnerships and potential future procurement of services to support donor management or compliance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:28:49.546402",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "B2B Data Platform",
+            "Irrelevance to Target Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.846806049346924
+            }
+          ],
+          "reasoning": "The provided content is generic marketing copy for ZoomInfo, a B2B sales intelligence platform. It contains no specific information regarding the Bermuda Volleyball Association, its procurement activities, technology stack, or governance. The text describes ZoomInfo's features and customer testimonials, which are irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2787,
+      "total_output_tokens": 493,
+      "estimated_cost_usd": 0.015756
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bermuda Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:28:49.547768"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334310",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:37.257631"
+}

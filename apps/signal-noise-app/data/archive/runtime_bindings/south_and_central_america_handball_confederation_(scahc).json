@@ -1,0 +1,134 @@
+{
+  "entity_id": "south_and_central_america_handball_confederation_(scahc)",
+  "entity_name": "South and Central America Handball Confederation (SCAHC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "grokipedia.com",
+    "handball-planet.com",
+    "handball.no"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_and_central_america_handball_confederation_(scahc)",
+      "entity_name": "South and Central America Handball Confederation (SCAHC)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://handball-planet.com",
+        "https://handball.no"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South and Central America Handball Confederation (SCAHC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:17:48.525257",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:17:59.540775",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "European focus (EHF)",
+            "Player transfers",
+            "Awards and editorial content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 165,
+              "elapsed_seconds": 4.06262993812561
+            }
+          ],
+          "reasoning": "The scraped content from 'handball-planet.com' is a sports news outlet focused on European handball (EHF), player transfers, and awards. It contains no information regarding the South and Central America Handball Confederation (SCAHC), its governance, or its procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:18:11.283450",
+          "domain_explored": "https://handball.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "TV 2 Sport 2 (Broadcasting partner)",
+              "Autoinvoice (E-invoicing standard)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: REMA 1000 (Retail partner for youth schools)",
+              "Venue: Ullevaal Stadion (Shared facility usage)"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Scope (NHF)",
+            "Domestic League Focus",
+            "Generic Web Template Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 243,
+              "elapsed_seconds": 4.246112108230591
+            }
+          ],
+          "reasoning": "The content scraped is from the Norwegian Handball Federation (Norges H\u00e5ndballforbund), not the South and Central America Confederation (SCAHC). While it provides a template for federation operations (e.g., 'Verdil\u00f8ftet', ticketing, youth schools), it contains zero procurement signals specific to the target entity. The entity mismatch necessitates a rejection."
+        }
+      ],
+      "total_input_tokens": 2858,
+      "total_output_tokens": 408,
+      "estimated_cost_usd": 0.014693999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South and Central America Handball Confederation (SCAHC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:18:11.285318"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361195",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:41.975713"
+}

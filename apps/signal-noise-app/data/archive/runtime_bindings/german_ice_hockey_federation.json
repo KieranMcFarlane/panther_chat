@@ -1,0 +1,199 @@
+{
+  "entity_id": "german_ice_hockey_federation",
+  "entity_name": "German Ice Hockey Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "deb-online.de",
+    "internationalhockeywiki.com",
+    "fitline.com",
+    "internationalhockey.fandom.com",
+    "lenzstaehelin.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_ice_hockey_federation",
+      "entity_name": "German Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://internationalhockey.fandom.com",
+        "https://fitline.com",
+        "https://deb-online.de",
+        "https://internationalhockeywiki.com",
+        "https://lenzstaehelin.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:29:53.748014",
+          "domain_explored": "https://deb-online.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fancorner (Fan Engagement/Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active usage of 'Fancorner' platform for National Team content",
+              "Operational expenditure on Olympic training camps (logistics/infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 545,
+              "output_tokens": 244,
+              "elapsed_seconds": 8.265461206436157
+            }
+          ],
+          "reasoning": "The content confirms an active commercial partnership with 'Fancorner' (categorized as a tag and likely a platform provider for fan engagement or ticketing). While this specific article is operational news about a training camp, the presence of the 'Fancorner' category/tag validates an existing vendor relationship and potential for upselling or contract renewal within the digital fan experience domain."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:30:01.342066",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Reference Content",
+            "Historical Data Archiving",
+            "No Commercial Activity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.5028820037841797
+            }
+          ],
+          "reasoning": "The source is a historical wiki (International Hockey Wiki) focused on records, statistics, and history. It contains no operational data, vendor solicitations, or technology stack information relevant to the German Ice Hockey Federation's procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:30:05.116230",
+          "domain_explored": "https://fitline.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:30:11.191640",
+          "domain_explored": "https://internationalhockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom Wiki Platform",
+              "MediaWiki"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Reference Content",
+            "Historical Data Archiving",
+            "No Commercial Activity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.641517162322998
+            }
+          ],
+          "reasoning": "The source is a Fandom wiki dedicated to international hockey history and statistics. It contains user-generated content about leagues, tournaments, and historical facts. There is no presence of the German Ice Hockey Federation (DEB), no commercial operations, and no procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:30:21.811621",
+          "domain_explored": "https://lenzstaehelin.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity identified as external legal counsel/vendor",
+              "No RFP or tender documentation found"
+            ]
+          },
+          "patterns_found": [
+            "Legal Services Provider",
+            "Corporate Law Firm",
+            "B2C Service Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1535,
+              "output_tokens": 205,
+              "elapsed_seconds": 7.3212480545043945
+            }
+          ],
+          "reasoning": "The scraped content identifies 'Lenz & Staehelin' as a Swiss law firm offering legal and tax advice. This is a vendor/supplier entity, not the German Ice Hockey Federation (DEB). The content describes legal services (M&A, Private Wealth, etc.) and contains no procurement signals, technology stacks, or governance data relevant to the DEB's purchasing activities."
+        }
+      ],
+      "total_input_tokens": 4978,
+      "total_output_tokens": 777,
+      "estimated_cost_usd": 0.026589
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:30:21.813660"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.306094",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:13.736504"
+}

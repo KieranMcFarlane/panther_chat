@@ -1,0 +1,369 @@
+{
+  "entity_id": "usa_hockey",
+  "entity_name": "USA Hockey",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "usahockey.com",
+    "shopusahockey.com",
+    "usahockeyrulebook.com",
+    "usahockeynational.sportngin.com",
+    "usahockeyntdp.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/usa-hockey-jobs",
+      "https://ca.linkedin.com/company/ccmhockey/jobs",
+      "https://www.linkedin.com/jobs/view/hockey-program-instructor-at-madison-square-garden-entertainment-corp-4354710982",
+      "https://www.linkedin.com/jobs/view/coordinator-youth-hockey-fan-development-at-harris-blitzer-sports-entertainment-4337032014"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "usa_hockey",
+      "entity_name": "USA Hockey",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://ca.linkedin.com/company/ccmhockey/jobs",
+        "https://usahockeyrulebook.com",
+        "https://usahockey.com",
+        "https://www.linkedin.com/jobs/view/hockey-program-instructor-at-madison-square-garden-entertainment-corp-4354710982",
+        "https://usahockeyntdp.com",
+        "https://www.linkedin.com/jobs/view/coordinator-youth-hockey-fan-development-at-harris-blitzer-sports-entertainment-4337032014",
+        "https://usahockeynational.sportngin.com",
+        "https://shopusahockey.com",
+        "https://www.linkedin.com/jobs/usa-hockey-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "USA Hockey may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:41:46.559219",
+          "domain_explored": "https://usahockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System) - inferred from news publishing structure",
+              "YouTube Integration - inferred from 'Subscribe on YouTube' call to action"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partners Section",
+              "Warrior Hockey Sponsorship (Equipment Procurement)",
+              "Long Drink Warrior Classic (Event Sponsorship/Vendor relationship)",
+              "Sanctioned Organizations List (Database/Software requirement)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Partnership Ecosystem",
+            "Event Sponsorship Integration",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 325,
+              "elapsed_seconds": 8.377429962158203
+            }
+          ],
+          "reasoning": "The homepage content confirms USA Hockey's active engagement with corporate partners (e.g., Warrior Hockey) and the management of large-scale sanctioned events. While no direct RFPs are visible on the homepage, the presence of a 'Corporate Partners' section and specific sponsored events (Long Drink Warrior Classic) indicates a structured vendor management and sponsorship procurement cycle. The site structure also implies the use of a CMS for news aggregation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:41:55.654456",
+          "domain_explored": "https://shopusahockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure: /products/, /pages/)",
+              "E-commerce CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory management for 'New Arrivals'",
+              "Logistics for 'Road to 2026' merchandise",
+              "Third-party manufacturing for apparel (T-shirts, Hoodies, Jackets)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Supply Chain",
+            "Event-Driven Inventory Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.9197540283203125
+            }
+          ],
+          "reasoning": "The content confirms USA Hockey operates a dedicated e-commerce storefront (shopusahockey.com). While the text is primarily marketing noise, the structure reveals a Shopify-based architecture (indicated by URL patterns like '/products/' and '/pages/'). This signals a procurement category for Retail & E-commerce technology and logistics, specifically around the 2026 Olympic cycle."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:41:59.695796",
+          "domain_explored": "https://usahockeyrulebook.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:42:06.818500",
+          "domain_explored": "https://usahockeynational.sportngin.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportsEngine (NBC Sports Next)",
+              "YouTube (Media Integration)",
+              "RSS Feed Distribution"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SportsEngine Platform Subscription (SaaS)",
+              "Corporate Partnership Management (Warrior Hockey)",
+              "Event Logistics for National Tournaments (Warrior Classic)",
+              "Governance/Meeting Services (Winter Meeting)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (SportsEngine)",
+            "Content Management System (CMS) Dependency",
+            "Corporate Partnership Ecosystem",
+            "Event-Driven Content Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.4676239490509033
+            }
+          ],
+          "reasoning": "The URL structure (sportngin.com) reveals a critical dependency on the SportsEngine platform, a NBC Sports Next product. This is a significant procurement signal indicating a B2B SaaS subscription for web hosting, league management, and registration services. The content also highlights ongoing corporate partnerships (Warrior Hockey) and major event management (Olympics, Winter Meetings), which require associated event services and vendor coordination."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:42:18.347128",
+          "domain_explored": "https://usahockeyntdp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportsEngine (Inferred from site structure and UI patterns)",
+              "Ticketing Platform (Specific 'Ticket Central' integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Sponsorship Contracts (Kroger, Chipotle)",
+              "Event Ticketing Services",
+              "Venue Management (USA Hockey Arena)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Usage (SportsEngine)",
+            "Ticketing & Event Management Systems",
+            "Corporate Partnership Integration (Kroger, Chipotle)",
+            "Content Management System (CMS) Dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 336,
+              "elapsed_seconds": 6.999065160751343
+            }
+          ],
+          "reasoning": "The site is a dedicated sub-domain for the National Team Development Program (NTDP), indicating a decentralized operational structure that likely requires separate vendor management. The presence of specific 'Ticket Central' functionality and corporate sponsor naming rights (Kroger College Series, Chipotle All-American Game) signals active procurement in event services and partnership management. The underlying technology appears to be the same SportsEngine platform identified in Iteration 4, reinforcing the organization's reliance on this specific SaaS vendor."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:42:27.090801",
+          "domain_explored": "https://www.linkedin.com/jobs/usa-hockey-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Marketing Operation Intern (USA Hockey, Plymouth, MI)"
+            ],
+            "procurement_indicators": [
+              "Marketing Operations Function (Implies use of MarTech stack)",
+              "HQ Location Confirmation (Plymouth, MI)"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Operations Role",
+            "Internship Pipeline (Entry-Level)",
+            "Plymouth, MI HQ Presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1616,
+              "output_tokens": 249,
+              "elapsed_seconds": 5.275023937225342
+            }
+          ],
+          "reasoning": "While the search results contain noise from unrelated entities (Islanders, Colgate, City of Davenport), the identification of a direct USA Hockey posting for a 'Marketing Operation Intern' confirms active hiring within the marketing function. This suggests a need for operational support, potentially involving vendor management or software tool usage, though the intern level limits the immediate procurement authority."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:42:37.539361",
+          "domain_explored": "https://ca.linkedin.com/company/ccmhockey/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Quality Control Engineer (Taiwan)",
+              "Analyste des op\u00e9rations commerciales et de la tarification (Montreal)",
+              "Material & Process Specialist, BU Sticks",
+              "Specialist, Trade Marketing - US (Boston)",
+              "Designer Industriel & CAD"
+            ],
+            "procurement_indicators": [
+              "Supply chain management (Quality Control, Material Specialist)",
+              "US market trade marketing presence (Boston, MA)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Vendor vs. Governing Body)",
+            "Supply Chain & Manufacturing Roles",
+            "Trade Marketing Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1672,
+              "output_tokens": 315,
+              "elapsed_seconds": 4.189603090286255
+            }
+          ],
+          "reasoning": "The scraped content is from CCM Hockey, a private equipment manufacturer and vendor, not USA Hockey (the governing body). While CCM is a key supplier to the hockey ecosystem, analyzing their internal job postings (Quality Control, Industrial Design) does not provide direct procurement intelligence regarding USA Hockey's internal operations, technology stack, or partnership decision-making. This represents a deviation from the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:42:45.627845",
+          "domain_explored": "https://www.linkedin.com/jobs/view/hockey-program-instructor-at-madison-square-garden-entertainment-corp-4354710982",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Hockey Program Instructor",
+                "entity": "Madison Square Garden Entertainment Corp.",
+                "type": "Part-time / Seasonal / Operational",
+                "focus": "Youth Hockey Instruction & Brand Promotion"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Vendor vs. Governing Body)",
+            "Operational/Coaching Role",
+            "Brand Ambassadorship Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1748,
+              "output_tokens": 255,
+              "elapsed_seconds": 4.535337924957275
+            }
+          ],
+          "reasoning": "The job posting is for Madison Square Garden Entertainment Corp. (MSG), specifically for the New York Rangers (Junior Rangers). While USA Hockey governs the sport, MSG is a separate commercial entity (a team/venue owner) and not the target of this procurement intelligence analysis. The role is operational (instructor/coach) rather than procurement-related."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:42:56.173610",
+          "domain_explored": "https://www.linkedin.com/jobs/view/coordinator-youth-hockey-fan-development-at-harris-blitzer-sports-entertainment-4337032014",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Harris Blitzer Sports & Entertainment vs. USA Hockey)",
+            "Irrelevant Search Results (The Children's Village)",
+            "Data Scraping Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1825,
+              "output_tokens": 225,
+              "elapsed_seconds": 2.79254412651062
+            }
+          ],
+          "reasoning": "The provided content is a LinkedIn job search results page that is completely unrelated to the target entity, USA Hockey. The URL indicates the target was a job at Harris Blitzer Sports & Entertainment (owners of the NJ Devils), but the scraped text lists positions for 'The Children's Village', 'Penn Medicine', and 'Christian City'. This represents a significant scraping error or redirect, offering zero intelligence regarding USA Hockey's procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 12667,
+      "total_output_tokens": 2288,
+      "estimated_cost_usd": 0.072321
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "USA Hockey may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:42:56.175084"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.306957",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:45.198355"
+}

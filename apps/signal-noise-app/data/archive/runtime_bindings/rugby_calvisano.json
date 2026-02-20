@@ -1,0 +1,165 @@
+{
+  "entity_id": "rugby_calvisano",
+  "entity_name": "Rugby Calvisano",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rugbycalvisano.it",
+    "a.osmarks.net",
+    "epcrugby.com",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_calvisano",
+      "entity_name": "Rugby Calvisano",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rugbycalvisano.it",
+        "https://a.osmarks.net",
+        "https://epcrugby.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Calvisano may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:09:57.487366",
+          "domain_explored": "https://rugbycalvisano.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop stadio San Michele)",
+              "Digital Asset Management (PhotoFan)",
+              "Document Management System (PDF hosting for Service Charter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Charter Update (2025-2026)",
+              "Stadium Shop Operations",
+              "Ticketing System (Biglietti)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Commerce Presence",
+            "Document Management Operations",
+            "Fan Engagement Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 282,
+              "elapsed_seconds": 4.879316091537476
+            }
+          ],
+          "reasoning": "The content confirms the existence of a 'Shop stadio San Michele' and a 'PhotoFan' section, indicating active e-commerce and digital asset management needs. The presence of a 'Carta dei servizi' (Service Charter) PDF for the 2025-2026 season suggests ongoing administrative and service delivery procurement cycles. However, the content is primarily navigation and news, lacking explicit technical specifications or RFP notices."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:10:03.059331",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Offline Reader Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 469,
+              "output_tokens": 140,
+              "elapsed_seconds": 2.0996110439300537
+            }
+          ],
+          "reasoning": "The scraped content is from 'a.osmarks.net', which serves a Kiwix offline reader page. This is completely unrelated to Rugby Calvisano and contains no procurement signals, technology stack information, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:10:12.039295",
+          "domain_explored": "https://epcrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Sports League Aggregation",
+            "No Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 600,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.6540751457214355
+            }
+          ],
+          "reasoning": "The scraped content from epcrugby.com represents a sports league information portal (Champions Cup) displaying pool tables, video links, and news. It contains no information regarding Rugby Calvisano's internal operations, technology stack, or procurement activities. It is irrelevant to the objective of gathering procurement intelligence on the specific entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:10:15.053310",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2427,
+      "total_output_tokens": 597,
+      "estimated_cost_usd": 0.016236
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Calvisano may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:10:15.053748"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281951",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:36.486660"
+}

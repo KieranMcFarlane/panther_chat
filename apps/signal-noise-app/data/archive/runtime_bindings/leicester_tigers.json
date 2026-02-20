@@ -1,0 +1,360 @@
+{
+  "entity_id": "leicester_tigers",
+  "entity_name": "Leicester Tigers",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "tier1_professional_clubs",
+  "discovered_domains": [
+    "leicestertigers.com",
+    "premiershiprugby.com",
+    "kumhotire.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/education-and-inclusion-officer-at-leicester-tigers-foundation-4144364302",
+      "https://uk.linkedin.com/jobs/view/general-manager-at-levy-4354624844",
+      "https://uk.linkedin.com/jobs/view/retail-and-bars-manager-at-levy-4316334417",
+      "https://uk.linkedin.com/jobs/head-of-english-jobs-duddington",
+      "https://uk.linkedin.com/jobs/view/account-lead-connecting-businesses-schools-and-students-at-leicestershire-education-business-company-4353508443",
+      "https://uk.linkedin.com/jobs/view/222881421",
+      "https://uk.linkedin.com/jobs/entry-level-jobs-leicester"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "leicester_tigers",
+      "entity_name": "Leicester Tigers",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/retail-and-bars-manager-at-levy-4316334417",
+        "https://uk.linkedin.com/jobs/view/education-and-inclusion-officer-at-leicester-tigers-foundation-4144364302",
+        "https://premiershiprugby.com",
+        "https://uk.linkedin.com/jobs/view/general-manager-at-levy-4354624844",
+        "https://uk.linkedin.com/jobs/head-of-english-jobs-duddington",
+        "https://uk.linkedin.com/jobs/view/account-lead-connecting-businesses-schools-and-students-at-leicestershire-education-business-company-4353508443",
+        "https://kumhotire.com",
+        "https://leicestertigers.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Outsourced Service Partnership (Levy)",
+        "Capital Investment & Refurbishment Planning",
+        "Supply Chain & Vendor Management",
+        "Strategic Sourcing (Food & Beverage)",
+        "Operational Procurement (Matchday/Events)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Leicester Tigers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:04:29.902767",
+          "domain_explored": "https://leicestertigers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Analytics (implied by 'Match Day Live' tracking)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Marketing Campaigns ('Oh My Gold' competition launch)",
+              "Community/Foundation Management (Leicester Tigers Foundation 10k)",
+              "Ticketing Platform (Dynamic pricing mentioned: 'from just \u00a35')"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Fan Engagement Focus",
+            "Sponsorship Visibility"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.123173952102661
+            }
+          ],
+          "reasoning": "The scraped content is limited to the homepage header, news headlines, and match fixtures. It contains high volumes of repetitive text and advertisements. There are no explicit procurement signals (RFPs, Tenders), job postings, or detailed technology infrastructure details visible in this specific text segment. The mention of 'CEO Sleepout' and 'Oh My Gold' competition indicates marketing activity but not immediate procurement intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:04:38.512782",
+          "domain_explored": "https://premiershiprugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: Gallagher (The Rugby Awards 2026)"
+            ]
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Sponsorship visibility (Gallagher)",
+            "Fan engagement focus (Awards, Ticket sales)",
+            "Sports data analytics (League table display)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.88545298576355
+            }
+          ],
+          "reasoning": "The content is from the Premiership Rugby league homepage, not the Leicester Tigers entity. While it confirms the league context and Gallagher sponsorship, it contains no specific procurement signals, technology stack details, or decision-making patterns unique to Leicester Tigers."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:04:50.622386",
+          "domain_explored": "https://kumhotire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain",
+            "Consumer Navigation",
+            "Product Catalog Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 155,
+              "elapsed_seconds": 3.5601282119750977
+            }
+          ],
+          "reasoning": "The scraped content is from kumhotire.com, a tire manufacturer, and contains product specifications (Ecsta-Sport), dealer locators, and social media links. There is absolutely no connection to Leicester Tigers, rugby, or the sports industry. This is a false positive in the scraping queue."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:05:00.428503",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/education-and-inclusion-officer-at-leicester-tigers-foundation-4144364302",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analysis/Impact Measurement Tools (Implied)"
+            ],
+            "job_postings": [
+              {
+                "title": "Education and Inclusion Officer",
+                "department": "Leicester Tigers Foundation",
+                "salary": "\u00a322,500",
+                "focus": "NEET cohorts, HMP Fosse Way delivery, Down Syndrome Rugby"
+              }
+            ],
+            "procurement_indicators": [
+              "Partnership procurement: 'Working in partnership with Tigers Learning Providers'",
+              "Service delivery: Contractual delivery at HMP Fosse Way",
+              "Data infrastructure: Requirement for 'monitoring records' and 'analysis of evaluation information'"
+            ]
+          },
+          "patterns_found": [
+            "CSR/Community Investment Hiring",
+            "Public Sector Partnership Delivery (HMP Fosse Way)",
+            "Education & Training Procurement",
+            "KPI & Data Analysis Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 404,
+              "elapsed_seconds": 3.8442418575286865
+            }
+          ],
+          "reasoning": "While this is a direct hiring post rather than a vendor RFP, it reveals the operational structure of the Leicester Tigers Foundation. The role explicitly mentions 'working in partnership with Tigers Learning Providers' and delivering programs at 'HMP Fosse Way', indicating procurement of third-party educational services or content. It also highlights a need for data tracking ('monitoring records', 'analysis of evaluation information'), suggesting potential future procurement for CRM or Impact Measurement tools within the Foundation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:05:10.250731",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/general-manager-at-levy-4354624844",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "EPOS/POS Systems (implied by 'retail concessions')",
+              "Inventory Management Systems",
+              "Ticketing/Booking Integration (implied)"
+            ],
+            "job_postings": [
+              "General Manager (Levy @ Leicester Tigers)"
+            ],
+            "procurement_indicators": [
+              "Capital Investment & Refurbishment Projects",
+              "Food & Beverage Supply Chain Procurement",
+              "Contractor Management",
+              "Event Catering Equipment Procurement",
+              "Local Sourcing Initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Outsourced Service Partnership (Levy)",
+            "Capital Investment & Refurbishment Planning",
+            "Supply Chain & Vendor Management",
+            "Strategic Sourcing (Food & Beverage)",
+            "Operational Procurement (Matchday/Events)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.4608240127563477
+            }
+          ],
+          "reasoning": "This posting confirms a significant outsourced partnership with Levy for F&B operations. It explicitly mentions responsibilities for capital investment, refurbishment, and managing supplier/contractor relationships, indicating active procurement cycles for construction, food supply, and event services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:05:22.544204",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/retail-and-bars-manager-at-levy-4316334417",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Scraped Authentication/Sign-in Wall",
+            "Generic Job Recommendation Engine",
+            "Irrelevant Content (Editorial Cartoonist)",
+            "Content Mismatch (Target URL vs. Scraped Content)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 196,
+              "elapsed_seconds": 4.219628095626831
+            }
+          ],
+          "reasoning": "The scraped content is entirely composed of LinkedIn's generic sign-in walls and job recommendations for 'Editorial Cartoonist' roles. There is zero text related to the target URL (Retail and Bars Manager at Levy). The content is effectively noise/garbage data resulting from a scraper failing to bypass a login modal or dynamic content load."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:05:34.874876",
+          "domain_explored": "https://uk.linkedin.com/jobs/head-of-english-jobs-duddington",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Education Officer (Leicester Tigers Foundation) - Previously identified in Iteration 4"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Duplicate Content (Iteration 4)",
+            "Generic Job Search Aggregation",
+            "Irrelevant Search Results (High-Def Water)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1332,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.518131971359253
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Head Of English' in Duddington. While it lists an 'Education Officer' role at the Leicester Tigers Foundation, this exact role was already identified and analyzed in Iteration 4. The surrounding content (High-Def Water) and the search query itself are irrelevant to Leicester Tigers' procurement activities. This iteration yields no new procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:05:45.840194",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/account-lead-connecting-businesses-schools-and-students-at-leicestershire-education-business-company-4353508443",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Database (Generic)"
+            ],
+            "job_postings": [
+              "Account Lead (Leicestershire Education Business Company)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (LEBC vs Leicester Tigers)",
+            "Education Sector Focus",
+            "Generic CRM Usage",
+            "No Procurement Intent"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1814,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.8057379722595215
+            }
+          ],
+          "reasoning": "The content is a job posting for the 'Leicestershire Education Business Company' (LEBC), a third-party organization, and not Leicester Tigers. While the role involves 'connecting businesses' and mentions 'CRM database' usage, it is focused on education brokerage and social mobility, not corporate procurement or supply chain management relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 12096,
+      "total_output_tokens": 2007,
+      "estimated_cost_usd": 0.06639300000000001
+    },
+    "procurement_signals": [
+      "Outsourced Service Partnership (Levy)",
+      "Capital Investment & Refurbishment Planning",
+      "Supply Chain & Vendor Management",
+      "Strategic Sourcing (Food & Beverage)",
+      "Operational Procurement (Matchday/Events)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Leicester Tigers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:05:45.842818"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.270536",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:27.667792"
+}

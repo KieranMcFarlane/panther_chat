@@ -1,0 +1,104 @@
+{
+  "entity_id": "austrian_cricket_association",
+  "entity_name": "Austrian Cricket Association",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "austriacricket.at",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_cricket_association",
+      "entity_name": "Austrian Cricket Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://austriacricket.at"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Cricket Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:45:34.150274",
+          "domain_explored": "https://austriacricket.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (CMS)",
+              "WebP (Image Format)",
+              "PNG (Image Format)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Evidence of WordPress CMS implementation",
+              "Usage of digital media hosting for training/game videos",
+              "Content categorization structure (Umpires, Scorer, Practise)"
+            ]
+          },
+          "patterns_found": [
+            "Content Management System (CMS) Usage",
+            "Digital Asset Management (Video Hosting)",
+            "Website Structure Analysis"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 727,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.1938841342926025
+            }
+          ],
+          "reasoning": "The content reveals the underlying technical infrastructure of the Austrian Cricket Association's website. The presence of WordPress-specific directory paths (e.g., '/wp-content/uploads/') confirms the use of WordPress as the CMS. The hosting of multiple video assets (images and webp files) indicates a need for media storage and hosting solutions. While no direct procurement requests were found, this confirms the technology stack and suggests a potential need for related services (plugins, hosting, maintenance)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:45:37.000537",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 727,
+      "total_output_tokens": 304,
+      "estimated_cost_usd": 0.0067410000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Cricket Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:45:37.001134"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299903",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:17.195201"
+}

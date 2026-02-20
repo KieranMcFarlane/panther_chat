@@ -1,0 +1,146 @@
+{
+  "entity_id": "lokomotiv_novosibirsk",
+  "entity_name": "Lokomotiv Novosibirsk",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "globalsportsarchive.com",
+    "volleyweek.bg"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lokomotiv_novosibirsk",
+      "entity_name": "Lokomotiv Novosibirsk",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://www-old.cev.eu",
+        "https://volleyweek.bg"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lokomotiv Novosibirsk may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:14:45.246717",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Historical event listings (2019-2022)",
+            "Standard footer links (FIVB, confederations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.5771918296813965
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu and event index from the CEV (European Volleyball Confederation) website. It contains no specific information regarding 'Lokomotiv Novosibirsk', its internal operations, technology stack, or procurement activities. It is irrelevant noise for the specific entity analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:14:54.868656",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "High volume of hyperlinks to external competitions (UEFA, CONCACAF, AFC)",
+            "Static content aggregation (Soccer, Basketball, Volleyball categories)",
+            "Absence of organizational entity 'Lokomotiv Novosibirsk'"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 209,
+              "elapsed_seconds": 4.341824054718018
+            }
+          ],
+          "reasoning": "The scraped content represents a generic sports aggregation portal (Global Sports Archive) listing international leagues and competitions. There is no mention of Lokomotiv Novosibirsk, nor are there any signals regarding procurement, technology stacks, or organizational governance specific to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:15:03.446781",
+          "domain_explored": "https://volleyweek.bg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Rumor-based transfer reporting (Yoandy Leal, Darlan Souza)",
+            "Match recaps and scoreboards (Turkish League, Italian League)",
+            "Social media viral content aggregation (Nishida video)",
+            "No corporate governance or vendor management content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 244,
+              "elapsed_seconds": 4.48149299621582
+            }
+          ],
+          "reasoning": "The scraped content from 'volleyweek.bg' consists entirely of sports journalism, focusing on player transfers, match results, and viral social media moments. There is no mention of Lokomotiv Novosibirsk, nor are there any signals regarding business operations, technology procurement, or organizational governance. The content is irrelevant to the objective of finding procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 4275,
+      "total_output_tokens": 630,
+      "estimated_cost_usd": 0.022275
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lokomotiv Novosibirsk may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:15:03.447992"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319672",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:06.872666"
+}

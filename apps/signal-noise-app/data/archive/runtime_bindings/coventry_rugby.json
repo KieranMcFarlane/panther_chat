@@ -1,0 +1,336 @@
+{
+  "entity_id": "coventry_rugby",
+  "entity_name": "Coventry Rugby",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "coventryrugby.co.uk",
+    "covblog.org",
+    "coventrybears.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/graduate-management-trainee-coventry-rugby-leamington-spa-at-enterprise-4302456971",
+      "https://uk.linkedin.com/jobs/view/one-year-management-placement-internship-%E2%80%93-coventry-rugby-leamington-spa-at-enterprise-4326710738",
+      "https://uk.linkedin.com/jobs/student-placement-jobs-coventry",
+      "https://uk.linkedin.com/jobs/trainee-jobs-rugby?op=%2Fjobs%2Fsearch&trk=jobs_jserp_facet_title",
+      "https://uk.linkedin.com/jobs/student-jobs-rugby",
+      "https://uk.linkedin.com/jobs/executive-trainee-jobs-greater-coventry-area",
+      "https://uk.linkedin.com/jobs/view/field-sales-representative-at-virgin-media-o2-4211148755",
+      "https://uk.linkedin.com/jobs/graduate-trainee-jobs-coventry?op=%2Fjobs%2Fsearch&trk=jobs_jserp_facet_geo_city"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "coventry_rugby",
+      "entity_name": "Coventry Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/student-jobs-rugby",
+        "https://uk.linkedin.com/jobs/student-placement-jobs-coventry",
+        "https://uk.linkedin.com/jobs/view/one-year-management-placement-internship-%E2%80%93-coventry-rugby-leamington-spa-at-enterprise-4326710738",
+        "https://coventrybears.com",
+        "https://uk.linkedin.com/jobs/trainee-jobs-rugby?op=%2Fjobs%2Fsearch&trk=jobs_jserp_facet_title",
+        "https://uk.linkedin.com/jobs/view/graduate-management-trainee-coventry-rugby-leamington-spa-at-enterprise-4302456971",
+        "https://coventryrugby.co.uk",
+        "https://covblog.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Coventry Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:45:56.732560",
+          "domain_explored": "https://coventryrugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Eliteprosports (Merchandise/E-commerce)",
+              "Ticketing Platform (Implied via 'Matchday Center' links)",
+              "CMS (Implied via site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Partner: Eliteprosports (External vendor handling online sales)",
+              "Hospitality Sales: Active procurement of hospitality packages for 2025/26 season",
+              "Ticketing Operations: Managed matchday center links"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Eliteprosports)",
+            "Hospitality Sales Cycle (2025/26 Season)",
+            "Content Management System (CMS) Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 325,
+              "elapsed_seconds": 4.76120400428772
+            }
+          ],
+          "reasoning": "The content reveals specific vendor partnerships and sales cycles. The 'Replica Shirts' link explicitly points to 'eliteprosports.co.uk', identifying a third-party e-commerce provider for merchandise. The '2025/26 Matchday Hospitality' link indicates active sales for the upcoming season, suggesting the use of event management or ticketing platforms. While no direct RFP is visible, these are active procurement relationships and sales infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:46:07.651018",
+          "domain_explored": "https://covblog.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Publishing Platform (covblog.org)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Review: Club admits to pursuing 'unrealistic' goals and is pivoting to financial sustainability.",
+              "Financial Pressure: Reported losses of \u00a33.4m over four years (\u00a3800k annually) with reliance on private investment.",
+              "Governance: Active 'Supporters' Forum' (Jan 2026) discussing club strategy and entertainment value.",
+              "Commercial Focus: Emphasis on the need to 'entertain, inspire and bring enjoyment' to drive value."
+            ]
+          },
+          "patterns_found": [
+            "Financial Distress / Turnaround Strategy",
+            "Governance Structure (Supporters' Forum)",
+            "Operational Efficiency Needs",
+            "Fan Engagement Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 368,
+              "elapsed_seconds": 3.9142820835113525
+            }
+          ],
+          "reasoning": "The content reveals a critical financial pivot (losses of \u00a33.4m) and a strategic shift from 'dream chasing' to financial sustainability. While no direct RFPs are visible, the explicit acknowledgment of 'unsustainable' losses and reliance on private investment strongly signals a future need for procurement services focused on financial consultancy, operational efficiency, and revenue generation (commercial partnerships). The 'Supporters' Forum' indicates a structured governance approach."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:46:17.459229",
+          "domain_explored": "https://coventrybears.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "O'Neills (Third-party merchandising)",
+              "Kit Stop (Third-party merchandising)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship solicitation",
+              "General merchandise outsourcing"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Rugby League vs Rugby Union)",
+            "Community Club Structure",
+            "Third-Party E-commerce (O'Neills, Kit Stop)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.0839710235595703
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Coventry Bears (Rugby League), a distinct entity from the target Coventry Rugby (Rugby Union). While the site confirms standard community club operational needs (kit, sponsorship), it offers no specific procurement intelligence regarding the target entity. The reliance on external platforms for merchandise suggests a lack of complex internal e-commerce procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:46:26.165666",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/graduate-management-trainee-coventry-rugby-leamington-spa-at-enterprise-4302456971",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Scraping Error / Invalid Data",
+            "Unrelated Job Board Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 595,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.5230069160461426
+            }
+          ],
+          "reasoning": "The provided content is a LinkedIn error page indicating 'We couldn't find a match' for a search query, likely containing a typo ('Itison'). The URL title suggests a role at 'Enterprise' (a car rental company), not Coventry Rugby. There is no information relevant to Coventry Rugby's procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:46:39.162138",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/one-year-management-placement-internship-%E2%80%93-coventry-rugby-leamington-spa-at-enterprise-4326710738",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Keyword Spamming / Location Ambiguity",
+            "Generic Recruitment Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1630,
+              "output_tokens": 156,
+              "elapsed_seconds": 3.654904842376709
+            }
+          ],
+          "reasoning": "The job posting is for Enterprise Mobility (Enterprise Rent-A-Car), not Coventry Rugby. The inclusion of 'Rugby' in the job title refers to the town of Rugby, Warwickshire, not the rugby club. This is a false positive generated by keyword matching on the location string."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:46:47.773095",
+          "domain_explored": "https://uk.linkedin.com/jobs/student-placement-jobs-coventry",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "employer": "Enterprise",
+                "title": "One Year Management Placement / Internship \u2013 Coventry / Rugby / Leamington Spa",
+                "relevance": "False Positive (Location Keyword)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Keyword Ambiguity",
+            "Generic Job Board Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.6036388874053955
+            }
+          ],
+          "reasoning": "The content is a generic job board listing page for 'Student Placement Jobs in Coventry'. While it contains a job title referencing 'Coventry / Rugby / Leamington Spa', the employer is 'Enterprise' (Enterprise Rent-A-Car), not Coventry Rugby. The mention of 'Rugby' refers to the town, not the rugby club. This provides no actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:47:15.865453",
+          "domain_explored": "https://uk.linkedin.com/jobs/trainee-jobs-rugby?op=%2Fjobs%2Fsearch&trk=jobs_jserp_facet_title",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Engineering Trainee - Purchasing (Mercedes AMG HPP)",
+              "Process Improvement Intern (Royal Enfield)",
+              "Engineering Intern UK (Amazon)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Keyword Ambiguity (Location vs. Entity)",
+            "Generic Job Board Content",
+            "Entity Mismatch (Automotive/Engineering vs. Sports)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1748,
+              "output_tokens": 261,
+              "elapsed_seconds": 19.813066959381104
+            }
+          ],
+          "reasoning": "The search results are for jobs located in the town of 'Rugby' (Warwickshire) or containing the word 'Rugby' in unrelated contexts (e.g., Mercedes AMG HPP in Brixworth). There is no direct connection to the entity 'Coventry Rugby' (the rugby union club). The listings are for engineering, internships, and general roles at companies like Amazon, Royal Enfield, and Cozzene Advisors, which are irrelevant to the procurement strategy of the specific sports entity being analyzed."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:47:23.830896",
+          "domain_explored": "https://uk.linkedin.com/jobs/student-jobs-rugby",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Location vs. Organization)",
+            "Generic Job Board Content",
+            "Keyword Ambiguity ('Rugby' as a town)",
+            "Authentication Wall / Dynamic Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1811,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.4678311347961426
+            }
+          ],
+          "reasoning": "The search query 'student-jobs-rugby' targets the geographic location of Rugby, Warwickshire, rather than the entity Coventry Rugby. The content lists unrelated roles (Handelsbanken, Kuok Group) and is obscured by LinkedIn's authentication modal, providing no actionable procurement intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 11721,
+      "total_output_tokens": 1950,
+      "estimated_cost_usd": 0.064413
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Coventry Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:47:23.834149"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280302",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:36.368924"
+}

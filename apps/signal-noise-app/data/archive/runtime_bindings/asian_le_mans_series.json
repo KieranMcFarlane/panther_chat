@@ -1,0 +1,252 @@
+{
+  "entity_id": "asian_le_mans_series",
+  "entity_name": "Asian Le Mans Series",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "asianlemansseries.com",
+    "alms.alkamelsystems.com",
+    "press.fiawec.com",
+    "24h-lemans.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asian_le_mans_series",
+      "entity_name": "Asian Le Mans Series",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://press.fiawec.com",
+        "https://24h-lemans.com",
+        "https://asianlemansseries.com",
+        "https://alms.alkamelsystems.com",
+        "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asian Le Mans Series may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:03:06.336163",
+          "domain_explored": "https://asianlemansseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP (Legacy/Custom backend indicated by .php extensions)",
+              "YouTube (Google/Alphabet Inc. - Video hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Standard operational content (Race calendars, entries)",
+              "No vendor procurement pages detected"
+            ]
+          },
+          "patterns_found": [
+            "Static Site Structure",
+            "Legacy URL Patterns (.php)",
+            "Third-Party Dependency (YouTube)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 254,
+              "elapsed_seconds": 4.5663111209869385
+            }
+          ],
+          "reasoning": "The provided content is a site map/navigation dump containing links to standard operational pages (Calendar, Results, Gallery) and legacy PHP endpoints. There are no explicit procurement signals such as RFPs, job postings, or technology investment announcements. The presence of '.php' extensions suggests a legacy or static web infrastructure rather than a modern SaaS procurement stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:03:16.351958",
+          "domain_explored": "https://alms.alkamelsystems.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Alkamelsystems.com (Vendor Platform)",
+              "Cookie Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Timing & Scoring Infrastructure",
+              "Data Hosting Vendor (Alkamelsystems)"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Dependency: Alkamelsystems.com",
+            "Specialized Functionality: Timing and Scoring Data",
+            "Cookie Consent Management",
+            "Legacy/Static Content Delivery"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 278,
+              "elapsed_seconds": 2.858222723007202
+            }
+          ],
+          "reasoning": "The content reveals that Asian Le Mans Series relies on a third-party vendor, 'Alkamelsystems.com', to host and deliver critical timing, scoring, and classification data. This is a specialized technical service (motorsport timing solutions) indicating an existing procurement relationship. The presence of detailed data structures (pit stop analysis, lap charts) suggests the use of a specialized software platform (likely TSL or similar) provided by this vendor."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:03:27.171480",
+          "domain_explored": "https://press.fiawec.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shared Web Platform (press.fiawec.com)",
+              "Centralized Authentication System (SSO/Cross-domain)",
+              "Digital Asset Management (PDF Media Guides)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized Vendor Management: Media accreditation and digital services are procured centrally by FIA WEC, covering ALMS.",
+              "Shared Infrastructure: ALMS utilizes the same IT backend and CMS as European Le Mans Series (ELMS) and Le Mans Cup (LMC).",
+              "Operational Efficiency: Use of a unified system suggests a 'buy once, deploy many' procurement strategy across the Le Mans family of series."
+            ]
+          },
+          "patterns_found": [
+            "Shared Service Platform",
+            "Centralized Digital Governance",
+            "Unified Identity Management",
+            "Cross-Championship Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1471,
+              "output_tokens": 380,
+              "elapsed_seconds": 4.381646156311035
+            }
+          ],
+          "reasoning": "The content reveals that the Asian Le Mans Series (ALMS) does not operate an independent procurement or technology stack for media operations. Instead, it leverages a shared 'Press Area' platform owned and managed by the FIA WEC (press.fiawec.com). This indicates a centralized governance model where procurement decisions for digital media tools, accreditation systems, and CRM are likely handled at the championship (WEC) or organizational (ACO) level rather than by the ALMS entity directly."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:03:39.273489",
+          "domain_explored": "https://24h-lemans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Centralized E-commerce Platform (boutique.lemans.org)",
+              "CMS (Likely custom or enterprise-grade based on URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "M24 Museum Construction Project (Capital Expenditure)",
+              "Shared Merchandising Vendor (E-commerce)"
+            ]
+          },
+          "patterns_found": [
+            "Shared Infrastructure (Boutique Subdomain)",
+            "Capital Project Signals (M24 Museum)",
+            "Content Management System (CMS) Artifacts"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 308,
+              "elapsed_seconds": 4.296104907989502
+            }
+          ],
+          "reasoning": "While the target entity is the Asian Le Mans Series, this content from the primary 24 Heures du Mans event reveals shared ecosystem infrastructure. The link to 'boutique.lemans.org' indicates a centralized e-commerce platform likely used across the series, suggesting a vendor relationship for merchandise. Additionally, the 'M24 Museum' project indicates active investment in architectural and experiential services, which often require similar procurement for digital experiences (apps, audiovisual) that could be replicated in the Asian series."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:03:46.887876",
+          "domain_explored": "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analysis Software (implied by requirements)",
+              "Simulation Tools (implied by requirements)"
+            ],
+            "job_postings": [
+              {
+                "role": "Race Engineer",
+                "category": "Trackside / Engineering",
+                "engagement_type": "Freelance / Contract",
+                "focus": "LMP2 Category",
+                "recruiter": "JSC7 Engineering",
+                "status": "Closed (Filled)"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor: JSC7 Engineering (Talent Acquisition)",
+              "Event Schedule Confirmation: 2025 ALMS Calendar (Dubai, Abu Dhabi)",
+              "Budget Cycle: Team-level hiring for 2025 season"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Recruitment Dependency",
+            "Freelance Labor Model",
+            "Specialized Technical Skill Demand",
+            "2025 Seasonal Budgeting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 424,
+              "elapsed_seconds": 3.9312849044799805
+            }
+          ],
+          "reasoning": "While this is a job posting, it is not posted by the Asian Le Mans Series (ALMS) organization directly, but by a third-party agency (JSC7 Engineering) on behalf of a client (a racing team). This indicates that teams participating in the series operate independently and procure their own technical talent. The posting confirms the existence of the 2025 season (procurement of services for future events) and highlights a demand for specialized engineering skills (data analysis, simulation), which implies the use of related software tools, though it does not reveal the ALMS organization's direct procurement activities."
+        }
+      ],
+      "total_input_tokens": 7367,
+      "total_output_tokens": 1644,
+      "estimated_cost_usd": 0.046761
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asian Le Mans Series may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:03:46.889643"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376821",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:50.202692"
+}

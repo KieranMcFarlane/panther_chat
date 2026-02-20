@@ -1,0 +1,113 @@
+{
+  "entity_id": "bhutan_football_federation",
+  "entity_name": "Bhutan Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bhutanfootball.org",
+    "inside.fifa.com",
+    "assets.the-afc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bhutan_football_federation",
+      "entity_name": "Bhutan Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://bhutanfootball.org",
+        "https://assets.the-afc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bhutan Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:59:12.311782",
+          "domain_explored": "https://bhutanfootball.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:59:18.898784",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Program (Potential funding source for future BFF projects)"
+            ]
+          },
+          "patterns_found": [
+            "FIFA Forward funding mechanism",
+            "Infrastructure refurbishment projects (stadiums)",
+            "Women's football development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.2802791595458984
+            }
+          ],
+          "reasoning": "The content is from FIFA's global news portal and discusses high-level strategic initiatives (FIFA Forward, Women's Champions Cup) and infrastructure projects in other nations (Burundi). While FIFA Forward is a funding source for Member Associations like Bhutan, this specific page contains no direct signals regarding Bhutan Football Federation's specific procurement activities, technology stack, or immediate intent to purchase."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:59:21.891546",
+          "domain_explored": "https://assets.the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1392,
+      "total_output_tokens": 231,
+      "estimated_cost_usd": 0.007641
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bhutan Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:59:21.894756"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204727",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:23.383466"
+}

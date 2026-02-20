@@ -1,0 +1,387 @@
+{
+  "entity_id": "fim_asia",
+  "entity_name": "FIM Asia",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fimasia-live.com",
+    "fim-moto.com",
+    "asiaroadracing.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://id.linkedin.com/jobs/view/human-resources-manager-at-%ED%95%8C%EC%95%84%EC%8B%9C%EC%95%84-f-i-m-asia-4322765578",
+      "https://id.linkedin.com/jobs/view/finance-accounting-manager-at-fim-asia-indonesia-4326461682",
+      "https://id.linkedin.com/jobs/view/internal-audit-manager-at-pt-abadi-sejahtera-finansindo-singa-fintech-4264039304",
+      "https://ph.linkedin.com/jobs/view/international-sales-agent-at-asia-food-expo-4261592105",
+      "https://id.linkedin.com/jobs/view/director-operations-client-services-at-confidential-3800565194?refId=nIvm7XJiJNuSC2oYCEE%2BqQ%3D%3D&trackingId=fIV3A%2F696MTIao80Kz%2BqvA%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://id.linkedin.com/jobs/view/internal-audit-manager-at-bank-perdana-4016625952"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_asia",
+      "entity_name": "FIM Asia",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.2,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.14,
+        0.14,
+        0.2,
+        0.2
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://fimasia-live.com",
+        "https://id.linkedin.com/jobs/view/director-operations-client-services-at-confidential-3800565194?refId=nIvm7XJiJNuSC2oYCEE%2BqQ%3D%3D&trackingId=fIV3A%2F696MTIao80Kz%2BqvA%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://id.linkedin.com/jobs/view/human-resources-manager-at-%ED%95%8C%EC%95%84%EC%8B%9C%EC%95%84-f-i-m-asia-4322765578",
+        "https://id.linkedin.com/jobs/view/internal-audit-manager-at-pt-abadi-sejahtera-finansindo-singa-fintech-4264039304",
+        "https://id.linkedin.com/jobs/view/finance-accounting-manager-at-fim-asia-indonesia-4326461682",
+        "https://ph.linkedin.com/jobs/view/international-sales-agent-at-asia-food-expo-4261592105",
+        "https://asiaroadracing.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Entity Confirmation (FIM Asia = Pulpa Inc.)",
+        "Regional Expansion (Indonesia Entity Setup)",
+        "HRIS & Payroll Procurement Needs",
+        "Operational Vendor Sourcing (Logistics, IT, Facilities)",
+        "Cross-Border Governance (Korea/Singapore HQ)",
+        "Cross-Border Financial Operations (Indonesia-Singapore)",
+        "Fintech Stack Adoption (Aspire, Osome)",
+        "Regulatory Compliance Procurement (Tax, Audit, Legal)",
+        "Intercompany Fund Flow Management",
+        "Entity Structure Validation (Pulpa Inc. / FIM Asia Ventures)",
+        "Event Partnership Ecosystem",
+        "B2B Sales Operations",
+        "Regional Event Coordination",
+        "Vendor/Exhibitor Acquisition"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM Asia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:37:42.377760",
+          "domain_explored": "https://fimasia-live.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational scale: Managing multi-country events (Thailand, Chinese Taipei, Philippines) implies a need for event logistics and timing/scoring services, though no specific vendors are mentioned.",
+              "Sponsorship reliance: Heavy presence of Idemitsu and Petronas suggests a funded marketing budget, but no direct procurement activity is visible."
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Sponsorship Visibility (Idemitsu, Petronas)",
+            "Regional Coordination (Cross-border events)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.064858675003052
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on race results, event schedules, and rider announcements for the 2025 season. While this confirms the entity is operationally active, it contains zero technical infrastructure details, job postings, or explicit purchasing signals (RFPs, vendor selection). It is 'noise' regarding procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:38:00.098548",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Reference to 'FIM Quality Product' (Marketing/Standardization)",
+              "Reference to 'International Sustainability Commission' (Potential ESG consulting)",
+              "Reference to 'Commission for Mobility' (Potential Policy/Transport consulting)"
+            ]
+          },
+          "patterns_found": [
+            "Global Governance Structure",
+            "Regulatory Publishing Workflow",
+            "Commission-based Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 256,
+              "elapsed_seconds": 7.605924129486084
+            }
+          ],
+          "reasoning": "The content analyzed is from the global governing body (FIM), not the regional operational entity (FIM Asia). While this provides context on the regulatory environment (Safety, Homologations, Commissions), it contains no direct procurement signals, vendor solicitations, or technology stack specific to FIM Asia's operations. The focus is on sport administration and public documents."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:38:15.361792",
+          "domain_explored": "https://asiaroadracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Facebook, Twitter, Instagram, Youtube)",
+              "Broadcast/Digital Streaming Platforms",
+              "Timing and Scoring Systems (Implied by 'Results')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Procurement: Contracts with Sepang International Circuit (Malaysia), Chang International Circuit (Thailand), Mobility Resort Motegi (Japan)",
+              "Title Sponsorship: Idemitsu (Title Sponsor), Petronas (Venue Naming), TVS (One Make Championship)",
+              "Equipment Procurement: High-performance motorcycle fleets (Ducati, Honda, BMW, Yamaha, Kawasaki, TVS)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem (Idemitsu, Petronas, TVS)",
+            "Multi-venue Operations (Malaysia, Thailand, Japan)",
+            "B2B Service Requirements (Timing, Transponders, Track Infrastructure)",
+            "Brand Asset Management (Digital Rights, Hospitality)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 397,
+              "elapsed_seconds": 7.308440208435059
+            }
+          ],
+          "reasoning": "The content confirms ARRC is a high-budget, multi-national series requiring complex logistical and technical services. While no explicit 'Procurement' or 'RFP' links are visible in this text, the operational scale (4 countries, 5 distinct classes, title sponsors) implies significant procurement for event management, timing systems, and broadcast/digital services. The presence of major sponsors (Idemitsu, Petronas, TVS) indicates a structured commercial partnership model."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:38:36.768995",
+          "domain_explored": "https://id.linkedin.com/jobs/view/human-resources-manager-at-%ED%95%8C%EC%95%84%EC%8B%9C%EC%95%84-f-i-m-asia-4322765578",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HRIS (Human Resource Information System)",
+              "Payroll Software",
+              "Applicant Tracking Systems (ATS)"
+            ],
+            "job_postings": [
+              "Human Resources Manager (Indonesia) - Jakarta"
+            ],
+            "procurement_indicators": [
+              "Vendor Selection: External payroll vendors, legal advisors, recruitment agencies.",
+              "Infrastructure Setup: Office leasing, IT equipment purchasing, WFH tools.",
+              "Compliance Procurement: BPJS, tax systems, KITAS/VITAS services.",
+              "Operational Sourcing: Hiring for 'sourcing managers' and 'logistics roles'."
+            ]
+          },
+          "patterns_found": [
+            "Entity Confirmation (FIM Asia = Pulpa Inc.)",
+            "Regional Expansion (Indonesia Entity Setup)",
+            "HRIS & Payroll Procurement Needs",
+            "Operational Vendor Sourcing (Logistics, IT, Facilities)",
+            "Cross-Border Governance (Korea/Singapore HQ)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 374,
+              "elapsed_seconds": 12.932785987854004
+            }
+          ],
+          "reasoning": "The job posting confirms FIM Asia is actively establishing a new Indonesian subsidiary (Pulpa Inc.). This is a high-confidence procurement signal because it explicitly lists responsibilities for procuring HRIS, payroll vendors, legal services, and office infrastructure. It confirms the entity operates as a 'Technology, Information and Internet' company, validating the digital transformation hypothesis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:38:49.475664",
+          "domain_explored": "https://id.linkedin.com/jobs/view/finance-accounting-manager-at-fim-asia-indonesia-4326461682",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Aspire (Corporate Banking/Expense)",
+              "Osome (Cloud Accounting/Bookkeeping)",
+              "OCBC (Traditional Banking)"
+            ],
+            "job_postings": [
+              "Finance & Accounting Manager (Indonesia) - Reports to Country Director / HQ People Lead"
+            ],
+            "procurement_indicators": [
+              "Outsourced Bookkeeping Services (Osome)",
+              "External Tax Consultancy (VAT/WHT compliance)",
+              "Annual Audit Services (Singapore & Indonesia)",
+              "Legal/Secretarial Services (ACRA/IRAS filings)",
+              "Payroll Processing Services (BPJS/THR)"
+            ]
+          },
+          "patterns_found": [
+            "Cross-Border Financial Operations (Indonesia-Singapore)",
+            "Fintech Stack Adoption (Aspire, Osome)",
+            "Regulatory Compliance Procurement (Tax, Audit, Legal)",
+            "Intercompany Fund Flow Management",
+            "Entity Structure Validation (Pulpa Inc. / FIM Asia Ventures)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1634,
+              "output_tokens": 409,
+              "elapsed_seconds": 6.1856770515441895
+            }
+          ],
+          "reasoning": "The job description for a Finance & Accounting Manager reveals critical procurement infrastructure and technology stack details. It confirms the active use of 'Aspire' (corporate spend management) and 'Osome' (online bookkeeping), indicating a preference for cloud-based Fintech solutions over traditional ERPs. It also highlights ongoing procurement needs for external services including tax consultancy, statutory audit, and legal compliance to navigate the complex regulatory environment between Indonesia (PSAK) and Singapore (ACRA)."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:39:01.640800",
+          "domain_explored": "https://id.linkedin.com/jobs/view/internal-audit-manager-at-pt-abadi-sejahtera-finansindo-singa-fintech-4264039304",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Internal Audit Manager at PT Abadi Sejahtera Finansindo (Singa Fintech)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Singa Fintech vs FIM Asia)",
+            "Irrelevant Industry Sector (Fintech vs Motorsports)",
+            "Generic Functional Role (Internal Audit)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1721,
+              "output_tokens": 208,
+              "elapsed_seconds": 4.4797821044921875
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'PT Abadi Sejahtera Finansindo (Singa Fintech)', a financial services entity. There is no semantic or entity-based link to FIM Asia, Pulpa Inc., or the motorsports industry. The role is a standard internal audit function with no specific procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:39:14.496973",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/international-sales-agent-at-asia-food-expo-4261592105",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter",
+              "AI Assessment Tools"
+            ],
+            "job_postings": [
+              "International Sales Agent (Asia Food Expo / FIM Asia Partnership)"
+            ],
+            "procurement_indicators": [
+              "Partnership with 1SC Group OPC (AFEX)",
+              "Expansion of international sales force",
+              "Focus on FMCG and Food Manufacturing sectors",
+              "Event organization in Pampanga, Philippines"
+            ]
+          },
+          "patterns_found": [
+            "Event Partnership Ecosystem",
+            "B2B Sales Operations",
+            "Regional Event Coordination",
+            "Vendor/Exhibitor Acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1800,
+              "output_tokens": 306,
+              "elapsed_seconds": 5.590808153152466
+            }
+          ],
+          "reasoning": "This content confirms a direct operational partnership between FIM Asia and Asia Food Expo (AFEX). The job posting for an International Sales Agent indicates active procurement of sales talent to drive exhibitor and sponsor acquisition for the event. It validates FIM Asia's involvement in cross-industry trade shows (Food & Beverage) and highlights a need for B2B sales tools and CRM systems to manage international client relationships."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:39:25.847630",
+          "domain_explored": "https://id.linkedin.com/jobs/view/director-operations-client-services-at-confidential-3800565194?refId=nIvm7XJiJNuSC2oYCEE%2BqQ%3D%3D&trackingId=fIV3A%2F696MTIao80Kz%2BqvA%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Ingenico Group vs FIM Asia)",
+            "Irrelevant Industry Sector (Fintech/Payments vs Motorsports)",
+            "Generic Functional Role (Director of Operations)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1901,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.132508754730225
+            }
+          ],
+          "reasoning": "The job posting is for a Director of Operations at 'Ingenico Group' (mentioned explicitly in the text: 'alignment with Ingenico Group'), a global payment solutions company. While the location (Jakarta, Indonesia) matches the target region, the entity and industry (Fintech/Terminals) are completely unrelated to FIM Asia (Motorsports/Event Management). The operational focus on logistics and repair of payment terminals does not translate to procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 12842,
+      "total_output_tokens": 2457,
+      "estimated_cost_usd": 0.075381
+    },
+    "procurement_signals": [
+      "Entity Confirmation (FIM Asia = Pulpa Inc.)",
+      "Regional Expansion (Indonesia Entity Setup)",
+      "HRIS & Payroll Procurement Needs",
+      "Operational Vendor Sourcing (Logistics, IT, Facilities)",
+      "Cross-Border Governance (Korea/Singapore HQ)",
+      "Cross-Border Financial Operations (Indonesia-Singapore)",
+      "Fintech Stack Adoption (Aspire, Osome)",
+      "Regulatory Compliance Procurement (Tax, Audit, Legal)",
+      "Intercompany Fund Flow Management",
+      "Entity Structure Validation (Pulpa Inc. / FIM Asia Ventures)",
+      "Event Partnership Ecosystem",
+      "B2B Sales Operations",
+      "Regional Event Coordination",
+      "Vendor/Exhibitor Acquisition"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM Asia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:39:25.849990"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.379646",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:10.873280"
+}

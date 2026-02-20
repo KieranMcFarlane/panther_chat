@@ -1,0 +1,259 @@
+{
+  "entity_id": "dominican_republic_volleyball_federation",
+  "entity_name": "Dominican Republic Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "zoominfo.com",
+    "norceca.net",
+    "en-academic.com",
+    "asianvolleyball.net",
+    "a.osmarks.net",
+    "volleytalk.proboards.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/year-up-young-professional-jobs?trk=amworks_jserp_redirect"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dominican_republic_volleyball_federation",
+      "entity_name": "Dominican Republic Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://a.osmarks.net",
+        "https://volleytalk.proboards.com",
+        "https://www.linkedin.com/jobs/year-up-young-professional-jobs?trk=amworks_jserp_redirect",
+        "https://norceca.net",
+        "https://asianvolleyball.net",
+        "https://zoominfo.com",
+        "https://en-academic.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dominican Republic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:56:30.579466",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:57:18.666926",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Oversight: NORCECA VP presence in elections suggests strict compliance requirements for member federations.",
+              "Event Cycle: Identification of 'Rotating Schedule 2002-2030' indicates long-term event planning cycles.",
+              "Organizational Link: Confirmation of '41 Affiliated Federations' list provides a directory to locate specific Dominican Republic Federation details."
+            ]
+          },
+          "patterns_found": [
+            "Governance Structure",
+            "Event Hosting Schedule",
+            "Affiliated Federation Links",
+            "Constitutional Framework"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 332,
+              "elapsed_seconds": 44.49895000457764
+            }
+          ],
+          "reasoning": "The content provides strong context on the organizational ecosystem (NORCECA) and governance (Constitution, Executive Committees) surrounding the target entity (Dominican Republic Volleyball Federation). While no direct procurement signals (RFPs, tech stack) are present for the target entity specifically, the 'Affiliated Federations' link and 'Hosting Schedule' establish the operational context necessary to identify future procurement needs (e.g., event hosting infrastructure, compliance with governance standards)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:57:26.576483",
+          "domain_explored": "https://en-academic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Dictionary Interface",
+            "Irrelevant Linguistic Content",
+            "Absence of Entity-Specific Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.850872755050659
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage and navigation structure of 'en-academic.com', a dictionary and encyclopedia aggregation site. It contains lists of languages and dictionary types but no specific information regarding the Dominican Republic Volleyball Federation, its procurement activities, or its governance structure. There are no signals of technology stacks, job postings, or vendor partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:57:38.052453",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope",
+            "Competitor Entity Content",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 949,
+              "output_tokens": 147,
+              "elapsed_seconds": 5.852855205535889
+            }
+          ],
+          "reasoning": "The content is exclusively about the Asian Volleyball Confederation (AVC) and events in the Philippines. There is absolutely no mention of the Dominican Republic, its federation, or any procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:57:46.024336",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Dependency Error",
+            "Offline Content Aggregator (Kiwix)",
+            "Generic Content Placeholder"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 604,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.6618008613586426
+            }
+          ],
+          "reasoning": "The scraped content indicates a technical failure (JavaScript required) and reveals the site is powered by Kiwix, an offline content reader. The text provided is a generic error message/interface placeholder with no semantic content related to the Dominican Republic Volleyball Federation, procurement, or governance."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:57:52.196924",
+          "domain_explored": "https://volleytalk.proboards.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Cookie Consent Banner",
+            "Third-Party Forum Hosting Platform",
+            "Absence of Entity-Specific Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 990,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.4433131217956543
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a generic cookie consent and privacy notice from the ProBoards hosting platform. It contains no information regarding the Dominican Republic Volleyball Federation, its procurement activities, technology stack, or governance structure. The content is purely functional infrastructure text unrelated to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:57:58.352843",
+          "domain_explored": "https://www.linkedin.com/jobs/year-up-young-professional-jobs?trk=amworks_jserp_redirect",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Scope",
+            "Generic Job Board Interface",
+            "Authentication Gate/Scraped Noise",
+            "Non-Target Geographic Focus (United States)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.527761220932007
+            }
+          ],
+          "reasoning": "The scraped content is from a LinkedIn job search page for 'Year Up Young Professional' roles in the United States. It lists positions for entities like the 'New York Botanical Garden' and 'Year Up United'. There is absolutely no content, reference, or relation to the 'Dominican Republic Volleyball Federation' (FEDOVOLI). The content is entirely irrelevant to the target entity's procurement or governance activities."
+        }
+      ],
+      "total_input_tokens": 7052,
+      "total_output_tokens": 1240,
+      "estimated_cost_usd": 0.039756
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dominican Republic Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:57:58.354197"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339122",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:06.981924"
+}

@@ -1,0 +1,223 @@
+{
+  "entity_id": "montreal_canadiens",
+  "entity_name": "Montreal Canadiens",
+  "template_id": "tpl_tier1_club_north_america_v1",
+  "cluster_id": "nhl_major_league_clubs",
+  "discovered_domains": [
+    "centrebell.ca",
+    "anciens.canadiens.com",
+    "tricoloresports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/view/inside-sales-representative-b2b-sales-repr%C3%A9sentant-des-ventes-internes-ventes-b2b-at-sekure-payment-experts-4190475437",
+      "https://ca.linkedin.com/jobs/view/business-development-analyst-at-konica-minolta-business-solutions-u-s-a-inc-208949195",
+      "https://ca.linkedin.com/jobs/view/opener-sales-representative-vaudreuil-repr%C3%A9sentant-des-ventes-de-l%E2%80%99ouvreur-vaudreuil-at-sekure-payment-experts-4343022362"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "montreal_canadiens",
+      "entity_name": "Montreal Canadiens",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ca.linkedin.com/jobs/view/business-development-analyst-at-konica-minolta-business-solutions-u-s-a-inc-208949195",
+        "https://centrebell.ca",
+        "https://anciens.canadiens.com",
+        "https://ca.linkedin.com/jobs/view/inside-sales-representative-b2b-sales-repr%C3%A9sentant-des-ventes-internes-ventes-b2b-at-sekure-payment-experts-4190475437",
+        "https://ca.linkedin.com/jobs/view/opener-sales-representative-vaudreuil-repr%C3%A9sentant-des-ventes-de-l%E2%80%99ouvreur-vaudreuil-at-sekure-payment-experts-4343022362",
+        "https://tricoloresports.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Montreal Canadiens may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:21:45.549901",
+          "domain_explored": "https://centrebell.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing platforms (implied via Evenko links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue event calendar management",
+              "Third-party event promotion (Evenko)"
+            ]
+          },
+          "patterns_found": [
+            "Venue operations focus",
+            "Ticketing ecosystem integration",
+            "Event management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1010,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.1028590202331543
+            }
+          ],
+          "reasoning": "The scraped content from centrebell.ca consists solely of event listings (concerts, shows) and ticketing links managed by 'Evenko'. While this confirms the venue's operational status and partnership with Evenko for event promotion, it contains no explicit signals regarding technology procurement, RFPs, or corporate decision-making structures relevant to the Montreal Canadiens' internal procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:21:52.410565",
+          "domain_explored": "https://anciens.canadiens.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms (implied by 'Acheter des billets')",
+              "Event Management Systems",
+              "CRM (Donor Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event organization services",
+              "Ticketing system maintenance/management",
+              "Venue logistics coordination"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "Ticketing & E-commerce",
+            "Non-profit Fundraising Logistics",
+            "Alumni Relations Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1184,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.7162070274353027
+            }
+          ],
+          "reasoning": "The content reveals the operational scope of the 'Anciens Canadiens' (Alumni) foundation. While primarily a fundraising entity, it indicates a need for event management software, ticketing platforms, and CRM tools to manage donor relationships and event logistics. The presence of 'Acheter des billets' (Buy tickets) and event scheduling suggests an active e-commerce component."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:21:55.360355",
+          "domain_explored": "https://tricoloresports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:22:08.448820",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/inside-sales-representative-b2b-sales-repr%C3%A9sentant-des-ventes-internes-ventes-b2b-at-sekure-payment-experts-4190475437",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Third-Party Recruitment",
+            "Generic Job Aggregation",
+            "Authentication/Sign-in Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 197,
+              "elapsed_seconds": 5.013743162155151
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job aggregation page for 'Inside Technical Sales' roles, specifically referencing a position at 'Sekure Payment Experts' (a third-party payment processor). There is no content, text, or metadata linking this page to the Montreal Canadiens, the Bell Centre, or their affiliated entities (e.g., Tricolore Sports, Canadiens Alumni). This represents a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:22:13.064539",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/business-development-analyst-at-konica-minolta-business-solutions-u-s-a-inc-208949195",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:22:38.687851",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/opener-sales-representative-vaudreuil-repr%C3%A9sentant-des-ventes-de-l%E2%80%99ouvreur-vaudreuil-at-sekure-payment-experts-4343022362",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Director - Resident Culture Brewing (Nosh.com)",
+              "Sales Representative - Kane Brewing Company (Nosh.com)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Third-Party Recruitment",
+            "Generic Job Aggregation",
+            "Authentication/Sign-in Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 210,
+              "elapsed_seconds": 20.422531127929688
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for 'Craft Beer Market' roles (specifically Resident Culture Brewing and Kane Brewing Company), which are unrelated to the Montreal Canadiens. The page is also obstructed by an authentication wall, preventing detailed analysis. There is no procurement signal relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5372,
+      "total_output_tokens": 909,
+      "estimated_cost_usd": 0.029751
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Montreal Canadiens may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:22:38.689181"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302756",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:24.916347"
+}

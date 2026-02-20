@@ -1,0 +1,259 @@
+{
+  "entity_id": "af_corse",
+  "entity_name": "AF Corse",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "afcorse.it",
+    "afcorseusa.com",
+    "richardmille.com",
+    "ferrari.com",
+    "gt-world-challenge-europe.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/sponsorships-project-manager-ftc-at-vista-4361901726"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "af_corse",
+      "entity_name": "AF Corse",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://richardmille.com",
+        "https://ferrari.com",
+        "https://afcorse.it",
+        "https://gt-world-challenge-europe.com",
+        "https://afcorseusa.com",
+        "https://uk.linkedin.com/jobs/view/sponsorships-project-manager-ftc-at-vista-4361901726"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Sponsorship Activation Management",
+        "UHNW (Ultra High Net Worth) Client Hospitality",
+        "Supplier & Agency Governance",
+        "CRM & ROI Reporting (Salesforce)",
+        "Joint Venture Marketing Execution"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AF Corse may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:08:26.281066",
+          "domain_explored": "https://afcorse.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Partnership Emphasis",
+            "Historical Performance Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 920,
+              "output_tokens": 166,
+              "elapsed_seconds": 8.463334798812866
+            }
+          ],
+          "reasoning": "The scraped content is exclusively marketing copy focused on the Ferrari 499P Hypercar program and historical race victories (Le Mans 2023-2025). It contains no technical infrastructure details, job postings, or procurement signals. The text is highly repetitive and lacks actionable intelligence regarding vendor needs or technology stacks."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:08:35.011645",
+          "domain_explored": "https://afcorseusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Unknown)",
+              "Payment Processing Gateway"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active merchandise sales (T-shirts, Hoodies, Jackets, Caps)",
+              "Inventory management requirements (Size variants S-3XL)",
+              "Supply chain for physical goods"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Direct-to-Consumer (DTC) Retail",
+            "Merchandising Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 264,
+              "elapsed_seconds": 5.597148180007935
+            }
+          ],
+          "reasoning": "While the content is primarily marketing-focused, the presence of a structured e-commerce section with specific SKUs, pricing, and size variants indicates an active retail operation. This suggests a procurement need for supply chain management, inventory systems, and potentially e-commerce platform maintenance (Shopify, Magento, etc.), though no specific tech stack or RFPs are visible in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:08:41.092795",
+          "domain_explored": "https://richardmille.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High-End Consumer Goods Marketing",
+            "Brand Storytelling",
+            "Product Portfolio Display"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1182,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.110551118850708
+            }
+          ],
+          "reasoning": "The scraped content from richardmille.com is purely marketing material focused on luxury watch models (RM 17-02, RM 63-02), brand narrative, and material showcases (Sapphire). There is no connection to AF Corse's operational needs, nor are there any procurement signals, job postings, or technology infrastructure details relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:08:43.848469",
+          "domain_explored": "https://ferrari.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:08:52.965901",
+          "domain_explored": "https://gt-world-challenge-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (iOS/Android)",
+              "AWS (Series Title Sponsor - 'powered by AWS')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SRO GT Academy (Recruitment/Training pipeline)",
+              "VIP Packages (Hospitality procurement)",
+              "Ticketing Platforms"
+            ]
+          },
+          "patterns_found": [
+            "Competitive Landscape Monitoring",
+            "Sponsorship Ecosystem Analysis",
+            "Series-Level Governance"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 272,
+              "elapsed_seconds": 5.701941967010498
+            }
+          ],
+          "reasoning": "The content is the official portal for the GT World Challenge Europe series, managed by SRO Motorsports Group. While it lists 'AF Corse - Francorchamps Motors' in the standings, the site focuses on race results, driver entries, and series news rather than the internal operations or procurement needs of the AF Corse racing team. It provides context on the competitive environment but no direct signals of AF Corse's purchasing behavior or technology stack."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:09:03.457882",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/sponsorships-project-manager-ftc-at-vista-4361901726",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce (CRM & ROI tracking)"
+            ],
+            "job_postings": [
+              "Sponsorships Project Manager (FTC) at Vista (Focus: AF Corse WEC Team)"
+            ],
+            "procurement_indicators": [
+              "Supplier and agency relationship management",
+              "Hospitality and event procurement (European rounds, guest programs)",
+              "Marketing material production (invitations, assets)",
+              "Branded asset procurement (team wear, livery, garage branding)",
+              "B2B Sales enablement via CRM data"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Activation Management",
+            "UHNW (Ultra High Net Worth) Client Hospitality",
+            "Supplier & Agency Governance",
+            "CRM & ROI Reporting (Salesforce)",
+            "Joint Venture Marketing Execution"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 354,
+              "elapsed_seconds": 6.740900993347168
+            }
+          ],
+          "reasoning": "This job posting provides direct evidence of a structured commercial relationship between Vista and AF Corse. It reveals the operational layer of the partnership, specifically focusing on procurement-related activities such as managing agency relationships, tracking ROI via Salesforce, and executing complex hospitality logistics. It confirms AF Corse is the recipient of sponsorship spend and operates within a network of vendors managed by the sponsor."
+        }
+      ],
+      "total_input_tokens": 6615,
+      "total_output_tokens": 1231,
+      "estimated_cost_usd": 0.03831
+    },
+    "procurement_signals": [
+      "Sponsorship Activation Management",
+      "UHNW (Ultra High Net Worth) Client Hospitality",
+      "Supplier & Agency Governance",
+      "CRM & ROI Reporting (Salesforce)",
+      "Joint Venture Marketing Execution"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AF Corse may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:09:03.458717"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.370351",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:06.771554"
+}

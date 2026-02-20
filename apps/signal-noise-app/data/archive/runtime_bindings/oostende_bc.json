@@ -1,0 +1,290 @@
+{
+  "entity_id": "oostende_bc",
+  "entity_name": "Oostende BC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "commons.wikimedia.org",
+    "zoominfo.com",
+    "unicajabaloncesto.com",
+    "ownerdirect.com",
+    "stijn.linearecta.be",
+    "ballineurope.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/business-central-functional-consultant-senior-at-nigel-frank-international-4284780729",
+      "https://be.linkedin.com/showcase/careers-nhv/",
+      "https://be.linkedin.com/jobs/view/account-manager-at-accent-jobs-3807524365",
+      "https://be.linkedin.com/jobs/view/sap-solutions-lead-at-televic-rail-4235352422",
+      "https://be.linkedin.com/jobs/view/dossierbeheerder-%E2%80%93-individuele-kredieten-at-bnp-paribas-fortis-4233340175",
+      "https://be.linkedin.com/jobs/view/meewerkend-lijnverantwoordelijke-at-accent-jobs-3905691760"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oostende_bc",
+      "entity_name": "Oostende BC",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://unicajabaloncesto.com",
+        "https://ballineurope.com",
+        "https://be.linkedin.com/jobs/view/sap-solutions-lead-at-televic-rail-4235352422",
+        "https://be.linkedin.com/showcase/careers-nhv/",
+        "https://be.linkedin.com/jobs/view/account-manager-at-accent-jobs-3807524365",
+        "https://be.linkedin.com/jobs/view/business-central-functional-consultant-senior-at-nigel-frank-international-4284780729",
+        "https://be.linkedin.com/jobs/view/dossierbeheerder-%E2%80%93-individuele-kredieten-at-bnp-paribas-fortis-4233340175",
+        "https://stijn.linearecta.be",
+        "https://zoominfo.com",
+        "https://ownerdirect.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oostende BC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:15:54.191112",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:15:57.162614",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:16:09.495258",
+          "domain_explored": "https://unicajabaloncesto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom Ticketing Platform (venta.unicajabaloncesto.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content",
+            "Cookie Policy Text"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 187,
+              "elapsed_seconds": 8.61985182762146
+            }
+          ],
+          "reasoning": "The scraped content is from 'unicajabaloncesto.com' (Unicaja Baloncesto), a Spanish basketball club based in M\u00e1laga. This is completely unrelated to the target entity 'Oostende BC' (a Belgian basketball club). The content contains navigation menus, cookie policies, and sports news, but provides zero procurement intelligence for Oostende BC."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:16:39.120210",
+          "domain_explored": "https://ownerdirect.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting property name enclosed in double quotes: line 3 column 4 (char 25)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:16:44.649355",
+          "domain_explored": "https://stijn.linearecta.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Personal Portfolio Content",
+            "Dutch Language (Belgium)",
+            "Irrelevant Navigation (Hobbies, Quotes, Travel)",
+            "Personal Pronouns (I, My)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.670618772506714
+            }
+          ],
+          "reasoning": "The content is explicitly a personal website for an individual named Stijn Audooren. It contains sections for hobbies (Reizen, Fotografie, Stadiumspot), quotes, and personal education. While it mentions a job title ('Multimedia-advisor'), it is a personal portfolio/blog with no connection to the entity 'Oostende BC' or any procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:16:47.502101",
+          "domain_explored": "https://ballineurope.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:16:57.138584",
+          "domain_explored": "https://be.linkedin.com/jobs/view/business-central-functional-consultant-senior-at-nigel-frank-international-4284780729",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 3 column 27 (char 53)"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:17:05.185613",
+          "domain_explored": "https://be.linkedin.com/showcase/careers-nhv/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General Careers Page (Aviation sector)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Industry (Airlines/Aviation)",
+            "B2B Service Provider (Not Target Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 208,
+              "elapsed_seconds": 4.66811990737915
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'NHV', an aviation services company headquartered in Oostende. While it shares the geographic location (Oostende) with the target entity 'Oostende BC' (Basketball Club), it is a completely different organization in a different industry. The content describes a careers page for helicopter services, which contradicts the procurement hypothesis for the basketball entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:17:47.254265",
+          "domain_explored": "https://be.linkedin.com/jobs/view/account-manager-at-accent-jobs-3807524365",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Could not parse Claude response"
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T18:17:56.537149",
+          "domain_explored": "https://be.linkedin.com/jobs/view/sap-solutions-lead-at-televic-rail-4235352422",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 3 column 26 (char 44)"
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T18:18:29.773178",
+          "domain_explored": "https://be.linkedin.com/jobs/view/dossierbeheerder-%E2%80%93-individuele-kredieten-at-bnp-paribas-fortis-4233340175",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Dossierbeheerder \u2013 Individuele Kredieten (BNP Paribas Fortis)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Industry (Banking/Finance)",
+            "B2C Service Provider",
+            "Strategic Partnership (Accenture/BNP Paribas Fortis)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1786,
+              "output_tokens": 226,
+              "elapsed_seconds": 29.633564233779907
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Dossierbeheerder' (File Manager) at BNP Paribas Fortis, a major bank. It explicitly mentions an 'Accenture Strategic Partnership' regarding the transfer of an entity. This is completely unrelated to 'Oostende BC' (presumably a basketball club or similar entity based on previous iterations like 'unicajabaloncesto.com'). There is no procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 6313,
+      "total_output_tokens": 810,
+      "estimated_cost_usd": 0.031089
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oostende BC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:18:29.774456"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228058",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:02.259838"
+}

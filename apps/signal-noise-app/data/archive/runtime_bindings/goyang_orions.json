@@ -1,0 +1,318 @@
+{
+  "entity_id": "goyang_orions",
+  "entity_name": "Goyang Orions",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "gostatesmen.com",
+    "globalsportsarchive.com",
+    "theworknplay.com",
+    "wikidata.org",
+    "koreatimes.co.kr",
+    "basketball.asia-basket.com",
+    "a.osmarks.net",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "goyang_orions",
+      "entity_name": "Goyang Orions",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://a.osmarks.net",
+        "https://commons.wikimedia.org",
+        "https://koreatimes.co.kr",
+        "https://globalsportsarchive.com",
+        "https://gostatesmen.com",
+        "https://theworknplay.com",
+        "https://basketball.asia-basket.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Goyang Orions may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:39:49.290840",
+          "domain_explored": "https://gostatesmen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sidearm Sports (Inferred from URL structure and layout)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard Sports CMS (Sidearm Sports)",
+            "Generic Content Structure",
+            "Fan Engagement Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 516,
+              "output_tokens": 205,
+              "elapsed_seconds": 10.1974196434021
+            }
+          ],
+          "reasoning": "The scraped content consists of generic navigation elements and headers typical of a college athletics website (specifically built on the Sidearm Sports platform). There is no mention of Goyang Orions, job postings, or specific technology procurement initiatives. The content is purely informational and related to 'Statesmen' athletics, which appears unrelated to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:40:02.684882",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "High-Volume League Listings",
+            "No Entity-Specific Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.3041300773620605
+            }
+          ],
+          "reasoning": "The content is a generic navigation structure for global soccer leagues (UEFA, AFC, etc.) from Global Sports Archive. It contains no specific information regarding 'Goyang Orions', its operations, technology stack, or procurement activities. It is irrelevant noise for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:40:13.353758",
+          "domain_explored": "https://theworknplay.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Poly (Potential Audio/Video Hardware or HR Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate domain structure",
+              "Workforce management keywords"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Entity Association",
+            "Workforce Management Context",
+            "Potential Vendor Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 465,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.2454261779785156
+            }
+          ],
+          "reasoning": "The domain 'theworknplay.com' and the initial 'Poly' tag suggest a corporate entity or platform potentially related to workforce management, HR tech, or facility services (Work/Play). While the snippet is truncated, the context implies a business ecosystem rather than a pure sports aggregator. This indicates a shift towards corporate operations where procurement signals (HR, facility management, or software tools) are more likely to exist than on fan-focused sports sites."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:40:25.634112",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Wikimedia",
+              "SPARQL",
+              "Pretalx",
+              "IRC"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Interface",
+            "Global Data Aggregator",
+            "User-Generated Content Model",
+            "Open Source Infrastructure (Wikimedia)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.892798900604248
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a global open-data repository. While the platform contains structured data about entities, the specific content analyzed here is the site's navigation and introduction, not a specific page for 'Goyang Orions'. There are no procurement signals, job postings, or vendor ecosystems relevant to the target entity within this generic text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:40:38.241617",
+          "domain_explored": "https://koreatimes.co.kr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Association",
+            "General Business News Content",
+            "Geopolitical Supply Chain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.7783150672912598
+            }
+          ],
+          "reasoning": "The scraped content from koreatimes.co.kr discusses Hyundai Motor's divestment in Russia. While this provides context on the South Korean automotive supply chain, it is completely irrelevant to the specific procurement intelligence needs of Goyang Orions (a basketball team). There is no intersection between the entities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:40:49.506019",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "High-Volume League Listings",
+            "No Entity-Specific Content",
+            "Subscription-Based Database Model"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 221,
+              "elapsed_seconds": 4.374754905700684
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com is a generic news aggregator covering Asian basketball leagues (Philippines, Taiwan, Japan, etc.). While it mentions 'South Korean KBL' and teams like 'Wonju DB', there is no specific mention of 'Goyang Orions' or any procurement-related signals (RFPs, tech stack, hiring). The content focuses on game scores, player statistics, and league standings. This is a data source for sports outcomes, not business intelligence for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:41:02.318654",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Offline Content Archive Interface",
+            "JavaScript Dependency Error",
+            "Kiwix/Zim Content Hosting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 722,
+              "output_tokens": 181,
+              "elapsed_seconds": 6.145256996154785
+            }
+          ],
+          "reasoning": "The target URL resolves to a personal or utility domain hosting a Kiwix offline archive instance. The content provided is a system error page ('JavaScript is not enabled') rather than substantive information about Goyang Orions. There is no connection to the entity's operations, supply chain, or procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:41:13.772078",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MediaWiki (Wiki software)",
+              "RSS Feeds"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository Interface",
+            "User-Generated Content Model",
+            "Non-Profit Context",
+            "Global Aggregation Platform"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1712,
+              "output_tokens": 212,
+              "elapsed_seconds": 5.232271194458008
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page of Wikimedia Commons, a global media repository. It contains generic navigation elements, upload prompts, and categorical links (Nature, Society, Science) but lacks specific content related to 'Goyang Orions'. There are no procurement signals, vendor lists, or organizational technology stacks visible in this generic interface."
+        }
+      ],
+      "total_input_tokens": 9500,
+      "total_output_tokens": 1631,
+      "estimated_cost_usd": 0.052965
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Goyang Orions may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:41:13.773208"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217177",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:07.476392"
+}

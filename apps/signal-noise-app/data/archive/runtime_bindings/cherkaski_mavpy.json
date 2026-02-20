@@ -1,0 +1,173 @@
+{
+  "entity_id": "cherkaski_mavpy",
+  "entity_name": "Cherkaski Mavpy",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "mavpabasket.com",
+    "sofascore.com",
+    "annabet.com",
+    "commons.wikimedia.org",
+    "grokipedia.com",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cherkaski_mavpy",
+      "entity_name": "Cherkaski Mavpy",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://mavpabasket.com",
+        "https://commons.wikimedia.org",
+        "https://flashscore.com",
+        "https://grokipedia.com",
+        "https://sofascore.com",
+        "https://annabet.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cherkaski Mavpy may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:11:27.706537",
+          "domain_explored": "https://mavpabasket.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:11:30.468080",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:11:37.479223",
+          "domain_explored": "https://annabet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "unrelated_domain_content",
+            "gambling_tools",
+            "odds_calculator",
+            "sports_betting_services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 168,
+              "elapsed_seconds": 3.9891719818115234
+            }
+          ],
+          "reasoning": "The scraped content from 'annabet.com' is entirely unrelated to Cherkaski Mavpy (a basketball club). The site is a sports betting analytics platform offering tools like Arbitrage Calculators and Odds Converters. There are no procurement signals, job postings, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:11:40.467520",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:11:43.331566",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:11:48.632613",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_disclaimer_content",
+            "sports_scores_interface",
+            "unrelated_domain_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 699,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.3654892444610596
+            }
+          ],
+          "reasoning": "The scraped content from Flashscore.com consists of user interface elements for sports scores and multiple responsible gambling disclaimers (in French, German, Portuguese, and Ukrainian). There is no presence of corporate information, procurement notices, or technology vendor details relevant to Cherkaski Mavpy."
+        }
+      ],
+      "total_input_tokens": 2112,
+      "total_output_tokens": 333,
+      "estimated_cost_usd": 0.011331
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cherkaski Mavpy may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:11:48.634219"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.238996",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:41.406009"
+}

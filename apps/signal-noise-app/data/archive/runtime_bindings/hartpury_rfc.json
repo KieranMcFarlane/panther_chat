@@ -1,0 +1,82 @@
+{
+  "entity_id": "hartpury_rfc",
+  "entity_name": "Hartpury RFC",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "hartpury.ac.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hartpury_rfc",
+      "entity_name": "Hartpury RFC",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://hartpury.ac.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hartpury RFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:15:42.615179",
+          "domain_explored": "https://hartpury.ac.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Confirmation: 'Hartpury RFC' is listed as a distinct top-level navigation item alongside 'Hartpury FC', confirming it as a key sub-entity or partner within the broader Hartpury Group structure."
+            ]
+          },
+          "patterns_found": [
+            "Brand affiliation",
+            "Navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.165081024169922
+            }
+          ],
+          "reasoning": "The content is the main homepage navigation and hero section for Hartpury University and Hartpury College. While it confirms the existence of 'Hartpury RFC' as a top-level navigation link, the text provided is generic marketing copy (awards, open days, general stats). It contains no specific procurement signals, technology stack details, or job postings related to the RFC entity specifically."
+        }
+      ],
+      "total_input_tokens": 1356,
+      "total_output_tokens": 231,
+      "estimated_cost_usd": 0.007533
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hartpury RFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:15:42.616514"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280388",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:26.767200"
+}

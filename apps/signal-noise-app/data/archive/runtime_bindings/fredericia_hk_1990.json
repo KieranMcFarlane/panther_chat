@@ -1,0 +1,224 @@
+{
+  "entity_id": "fredericia_hk_1990",
+  "entity_name": "Fredericia HK 1990",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "wikidata.org",
+    "aalborghaandbold.dk",
+    "commons.wikimedia.org",
+    "eurohandball.com",
+    "kampe.dhf.dk",
+    "portal.fpa.pt"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://dk.linkedin.com/jobs/view/%C3%B8konomisupportere-til-jernbaneprojekter-at-banedanmark-4151301754"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fredericia_hk_1990",
+      "entity_name": "Fredericia HK 1990",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://aalborghaandbold.dk",
+        "https://commons.wikimedia.org",
+        "https://kampe.dhf.dk",
+        "https://eurohandball.com",
+        "https://portal.fpa.pt",
+        "https://dk.linkedin.com/jobs/view/%C3%B8konomisupportere-til-jernbaneprojekter-at-banedanmark-4151301754",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fredericia HK 1990 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:18:30.668648",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:18:36.469072",
+          "domain_explored": "https://aalborghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team content (Handball)",
+            "Ticket sales",
+            "Merchandise retail",
+            "Fan engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.7975800037384033
+            }
+          ],
+          "reasoning": "The scraped content from aalborghaandbold.dk is exclusively related to the handball team 'Aalborg H\u00e5ndbold' (match schedules, player stats, tickets, merchandise). There is no mention of, or connection to, the target entity 'Fredericia HK 1990' or any corporate procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:18:39.228750",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:18:45.682571",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Event schedules (Men's EHF EURO 2026)",
+            "Cookie consent walls",
+            "General sports federation content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.8160629272460938
+            }
+          ],
+          "reasoning": "The content is exclusively focused on European handball federation news, match results, and tournament schedules (EHF EURO). There is no mention of the specific entity 'Fredericia HK 1990', nor are there any procurement signals, technology stacks, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:18:51.826716",
+          "domain_explored": "https://kampe.dhf.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic redirect message",
+            "Sports federation branding (DANSKH\u00c5NDBOLD)",
+            "Navigation to external domain (danskhaandbold.dk)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 158,
+              "elapsed_seconds": 3.0160019397735596
+            }
+          ],
+          "reasoning": "The scraped content from kampe.dhf.dk is a simple redirection page instructing users to visit danskhaandbold.dk. It contains no substantive information regarding operations, technology, or procurement activities relevant to Fredericia HK 1990."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:19:08.941913",
+          "domain_explored": "https://portal.fpa.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports portal interface",
+            "Historical competition data (Season 2013-2014)",
+            "Generic 'Loading' placeholders (A carregar...)",
+            "Portuguese language context (Entity is Danish)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 691,
+              "output_tokens": 183,
+              "elapsed_seconds": 13.79396677017212
+            }
+          ],
+          "reasoning": "The content is a sports results portal (likely Portuguese Handball Federation based on the domain fpa.pt) displaying historical match data from 2013-2014. It contains no corporate governance, technology stack, or procurement information relevant to the Danish entity Fredericia HK 1990."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:19:18.256955",
+          "domain_explored": "https://dk.linkedin.com/jobs/view/%C3%B8konomisupportere-til-jernbaneprojekter-at-banedanmark-4151301754",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 7 column 52 (char 258)"
+        }
+      ],
+      "total_input_tokens": 4096,
+      "total_output_tokens": 677,
+      "estimated_cost_usd": 0.022443
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fredericia HK 1990 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:19:18.258422"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351966",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:09.337528"
+}

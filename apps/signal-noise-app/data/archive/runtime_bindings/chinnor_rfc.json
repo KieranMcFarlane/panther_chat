@@ -1,0 +1,143 @@
+{
+  "entity_id": "chinnor_rfc",
+  "entity_name": "Chinnor RFC",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "chinnor-rfc.com",
+    "chinnorrfc.rfu.club",
+    "pitchero.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chinnor_rfc",
+      "entity_name": "Chinnor RFC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://chinnor-rfc.com",
+        "https://chinnorrfc.rfu.club",
+        "https://pitchero.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chinnor RFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:15:59.763268",
+          "domain_explored": "https://chinnor-rfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pitchero (CMS, Media Hosting, Membership)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Sponsorship procurement (Club Sponsors section)",
+              "Event Management Services (Fundraiser dinners)",
+              "Media Hosting/Content Management (via Pitchero)"
+            ]
+          },
+          "patterns_found": [
+            "Platform Dependency: Pitchero",
+            "Event Management & Fundraising",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 254,
+              "elapsed_seconds": 7.8198020458221436
+            }
+          ],
+          "reasoning": "The content confirms Chinnor RFC utilizes Pitchero as their primary digital platform for content management, media hosting, and likely membership administration. While no explicit RFPs are present, the reliance on this SaaS platform and the active management of fundraising events (James Haskell) and sponsorship packages indicates a functional need for event management and marketing tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:16:04.437377",
+          "domain_explored": "https://chinnorrfc.rfu.club",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:16:15.453267",
+          "domain_explored": "https://pitchero.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pitchero (Club Management System)",
+              "Pitchero Mobile Apps (iOS/Android)",
+              "Pitchero GPS Trackers",
+              "FCA Intermediaries (Payment Gateway)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active subscription to Pitchero platform",
+              "Usage of digital payment collection for membership/match fees",
+              "Adoption of GPS performance tracking hardware/software"
+            ]
+          },
+          "patterns_found": [
+            "Platform Dependency: Pitchero",
+            "SaaS Subscription Model",
+            "Payment Processing Integration",
+            "GPS Performance Tracking"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 313,
+              "elapsed_seconds": 4.622072219848633
+            }
+          ],
+          "reasoning": "The content confirms Chinnor RFC is a customer of Pitchero, utilizing a SaaS platform that bundles website, membership, and payment processing. While this confirms a technology vendor relationship, it represents a 'sunk cost' or operational expense rather than an active procurement signal for new vendors. The mention of GPS trackers indicates a willingness to invest in performance technology, but likely through the existing Pitchero ecosystem."
+        }
+      ],
+      "total_input_tokens": 2789,
+      "total_output_tokens": 567,
+      "estimated_cost_usd": 0.016871999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chinnor RFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:16:15.456532"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280721",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:19.367283"
+}

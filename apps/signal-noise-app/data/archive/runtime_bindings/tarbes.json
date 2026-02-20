@@ -1,0 +1,455 @@
+{
+  "entity_id": "tarbes",
+  "entity_name": "Tarbes",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "tarbes-tourisme.fr",
+    "tarbes.fr",
+    "tarbes-expos.com",
+    "visit-occitanie.com",
+    "tarbesentango.fr",
+    "tarbespf.com",
+    "tlp.aeroport.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/trigo-aerospace-jobs-worldwide",
+      "https://www.linkedin.com/company/infopro-digital/jobs",
+      "https://www.linkedin.com/jobs/manaero-jobs-worldwide?f_C=11506317&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/salesperson-full-time-remote-at-convertros-4184918970",
+      "https://www.linkedin.com/jobs/search?keywords=&location=%E6%AC%A7%E6%B4%B2%E6%9D%AF%E6%8A%95%E6%B3%A8%E9%87%91%E9%A2%9D%E6%8A%95%E6%B3%A8%E5%AE%98%E7%BD%91%E3%80%90bsw8.com%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E7%95%99%E7%97%95%E9%A9%AC%E5%8D%A1%E9%BE%99%E3%80%90%E9%A3%9E%E6%9C%BA:@J5333%E3%80%9143,rj6",
+      "https://www.linkedin.com/jobs/portalp-jobs-worldwide?f_C=2562736&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/international-internship-experience-in-the-aircraft-industry-all-gender-at-daher-4333806985",
+      "https://www.linkedin.com/jobs/danone-jobs-france?f_C=2238&trk=top-companies-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tarbes",
+      "entity_name": "Tarbes",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/manaero-jobs-worldwide?f_C=11506317&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://tarbes-tourisme.fr",
+        "https://www.linkedin.com/company/infopro-digital/jobs",
+        "https://www.linkedin.com/jobs/trigo-aerospace-jobs-worldwide",
+        "https://tarbes.fr",
+        "https://tarbespf.com",
+        "https://visit-occitanie.com",
+        "https://www.linkedin.com/jobs/search?keywords=&location=%E6%AC%A7%E6%B4%B2%E6%9D%AF%E6%8A%95%E6%B3%A8%E9%87%91%E9%A2%9D%E6%8A%95%E6%B3%A8%E5%AE%98%E7%BD%91%E3%80%90bsw8.com%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E7%95%99%E7%97%95%E9%A9%AC%E5%8D%A1%E9%BE%99%E3%80%90%E9%A3%9E%E6%9C%BA:@J5333%E3%80%9143,rj6",
+        "https://www.linkedin.com/jobs/view/salesperson-full-time-remote-at-convertros-4184918970",
+        "https://tlp.aeroport.fr",
+        "https://tarbes-expos.com",
+        "https://tarbesentango.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tarbes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:11:24.453974",
+          "domain_explored": "https://tarbes-tourisme.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization: Carnaval bigourdan (Feb 2026)",
+              "Content Creation: Partnership with @frizouu (content creator)",
+              "Cultural Programming: Expositions and festivals"
+            ]
+          },
+          "patterns_found": [
+            "Content Marketing Strategy",
+            "Tourism Promotion",
+            "Event Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 239,
+              "elapsed_seconds": 2.741053819656372
+            }
+          ],
+          "reasoning": "The analyzed content is exclusively consumer-facing marketing copy from the official tourism website (tarbes-tourisme.fr). It promotes local events (Carnaval, festivals), cultural heritage, and lifestyle amenities. There are no technical specifications, administrative notices, partnership calls, or backend infrastructure details that would indicate a procurement signal or technology stack implementation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:11:35.056715",
+          "domain_explored": "https://tarbes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legacy Browser Notification",
+            "Generic Site Navigation",
+            "Disabled Registration Forms"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 534,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.958677053451538
+            }
+          ],
+          "reasoning": "The provided text consists primarily of frontend UI elements (browser update warnings, search bars, and disabled registration forms) rather than substantive content. There are no visible procurement signals, technology stack details, or governance information in this snippet."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:11:42.977822",
+          "domain_explored": "https://tarbes-expos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "B2B Service Promotion (Exhibiting/Hosting)",
+            "Public Event Agenda"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 157,
+              "elapsed_seconds": 3.373976945877075
+            }
+          ],
+          "reasoning": "The content is strictly promotional and operational, focusing on event listings (Cirque Zavatta, Agriculture Salon) and venue rental services. There are no technical specifications, vendor calls, or governance information indicative of active procurement cycles."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:11:50.383343",
+          "domain_explored": "https://visit-occitanie.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Transportation Partnership (liO Train)",
+            "Consumer Surveying",
+            "Generic Content Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1499,
+              "output_tokens": 179,
+              "elapsed_seconds": 1.8352587223052979
+            }
+          ],
+          "reasoning": "The content is strictly consumer-facing marketing material for the broader Occitanie region. It promotes the 'Occitanie Rail Tour' and general tourism. While it indicates the region invests in tourism marketing, it provides no specific signals regarding Tarbes municipal procurement, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:11:57.657379",
+          "domain_explored": "https://tarbesentango.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cultural Event Promotion",
+            "Artist Roster Management",
+            "Public Event Agenda"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 154,
+              "elapsed_seconds": 4.153800010681152
+            }
+          ],
+          "reasoning": "The content provided ('LesMaestros', '\u00c0 d\u00e9couvrir') indicates a cultural or entertainment context, likely a specific event or artist group page. There are no signals of organizational procurement, technology infrastructure, or administrative governance in this snippet."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:12:01.440504",
+          "domain_explored": "https://tarbespf.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:12:08.713374",
+          "domain_explored": "https://tlp.aeroport.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Resatravel (Booking Engine)",
+              "Otidea (Web Agency/CMS)"
+            ],
+            "job_postings": [
+              "Offre d'emploi (Link present, content not scraped)"
+            ],
+            "procurement_indicators": [
+              "Outsourced web development to Otidea",
+              "Partnership agreements with airlines (Volotea, Air Cara\u00efbes, French Bee)",
+              "Use of external booking platform (Resatravel)"
+            ]
+          },
+          "patterns_found": [
+            "B2B Service Outsourcing (Web Development)",
+            "Digital Transformation (100% Digital Embarkation)",
+            "Commercial Partnership Management (Airline Alliances)",
+            "Third-Party SaaS Integration (Resatravel)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.0687432289123535
+            }
+          ],
+          "reasoning": "While the primary function of the site is B2C passenger information, the footer explicitly credits 'R\u00e9alisation : www.otidea.com', confirming a vendor relationship for web development. Additionally, the site integrates third-party SaaS platforms (Resatravel) for reservations and order tracking, indicating a procurement strategy favoring outsourcing for specialized digital services. The '100% num\u00e9rique' initiative suggests ongoing investment in digital process optimization."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:12:19.871566",
+          "domain_explored": "https://www.linkedin.com/jobs/trigo-aerospace-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ayudante topograf\u00eda (Surveying Assistant) - Algeciras/Cadiz, Spain"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Trigo Aerospace vs Tarbes)",
+            "Recruitment Platform Noise",
+            "Geographic Irrelevance (Spain/Andalusia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1698,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.8855948448181152
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job listing page for 'TRIGO Aerospace Defense & Rail', a private aerospace services company. While the aerospace industry is relevant to the Tarbes region (home to Airbus and related suppliers), this specific page is a generic recruitment interface for a private entity, not the City of Tarbes or a public procurement portal. There are no procurement signals, RFPs, or technology investments related to the target entity 'Tarbes'."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:12:27.653902",
+          "domain_explored": "https://www.linkedin.com/company/infopro-digital/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Automotive Software",
+              "B2B SaaS Platforms"
+            ],
+            "job_postings": [
+              "Technicien support - Logiciel Automobile (H/F/X) - Tarbes, Occitanie"
+            ],
+            "procurement_indicators": [
+              "Local Technical Operations",
+              "Software Support Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Relevance (Tarbes)",
+            "B2B Software Operations",
+            "Technical Support Function"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 252,
+              "elapsed_seconds": 2.8516809940338135
+            }
+          ],
+          "reasoning": "While Infopro Digital is a large national entity (Entity Mismatch risk), the specific listing for 'Technicien support - Logiciel Automobile' located in 'Tarbes, Occitanie' confirms a physical operational presence and technical workforce in the target geography. This indicates a local site that likely requires procurement for IT infrastructure, software licenses, and hardware support."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:12:35.040321",
+          "domain_explored": "https://www.linkedin.com/jobs/manaero-jobs-worldwide?f_C=11506317&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "APPROVISIONNEUR H/F (Buyer) - Toussus-le-Noble",
+              "MECANICIEN AERONAUTIQUE H/F (Aeronautical Mechanic) - Garons",
+              "Responsable Qualit\u00e9 H/F (Quality Manager) - Bondoufle"
+            ],
+            "procurement_indicators": [
+              "Hiring for Supply Chain/Procurement roles (Approvisionneur) at Manaero",
+              "Active recruitment in Aerospace MRO sector"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Manaero vs Tarbes)",
+            "Geographic Irrelevance (Toussus-le-Noble, Garons, Bondoufle)",
+            "Recruitment Platform Noise",
+            "Operational Roles (Mechanics, Painters, Quality)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1836,
+              "output_tokens": 346,
+              "elapsed_seconds": 4.192903757095337
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job feed for Manaero, an aerospace MRO company. While Manaero operates in the relevant industry (aerospace), the specific job listings are geographically dispersed (\u00cele-de-France, Nouvelle-Aquitaine, Occitanie) and do not specifically target the Tarbes entity (Tarbes Lourdes Pyr\u00e9n\u00e9es Airport or the city itself). The 'Approvisionneur' (Buyer/Procurement) role is located in Toussus-le-Noble, not Tarbes. This indicates operational activity for a different branch, failing to provide specific procurement signals for the Tarbes entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T16:12:43.200571",
+          "domain_explored": "https://www.linkedin.com/jobs/view/salesperson-full-time-remote-at-convertros-4184918970",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI-powered tools (Sales)",
+              "Willotalent (ATS)"
+            ],
+            "job_postings": [
+              "Salesperson (Convertros)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Convertros vs Tarbes)",
+            "Recruitment Platform Noise",
+            "Geographic Irrelevance (Remote/EMEA)",
+            "B2C Sales Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1911,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.6804308891296387
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Convertros', a company specializing in brand experiences and sales, with no apparent connection to the target entity 'Tarbes'. The role is remote/EMEA-based and focuses on sales execution rather than procurement or governance. The mention of 'Tarbes' in the 'Similar jobs' section (Biwiz) is incidental noise generated by the LinkedIn platform's recommendation algorithm, not a signal from the target entity."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T16:12:51.475729",
+          "domain_explored": "https://www.linkedin.com/jobs/search?keywords=&location=%E6%AC%A7%E6%B4%B2%E6%9D%AF%E6%8A%95%E6%B3%A8%E9%87%91%E9%A2%9D%E6%8A%95%E6%B3%A8%E5%AE%98%E7%BD%91%E3%80%90bsw8.com%E8%B0%B7%E6%AD%8C%E6%90%9C%E7%B4%A2%E7%95%99%E7%97%95%E9%A9%AC%E5%8D%A1%E9%BE%99%E3%80%90%E9%A3%9E%E6%9C%BA:@J5333%E3%80%9143,rj6",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Conseiller\u00b7e en immobilier professionnel (ORPI)",
+              "Magasinier agent logistique (G\u00e9rard Perrier Industrie)",
+              "B\u00e9n\u00e9vole charg\u00e9.e de communication (Banques Alimentaires)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Pau, Bill\u00e8re, Serres-Castet)",
+            "Entity Mismatch (ORPI, Banques Alimentaires, Domani)",
+            "Recruitment Platform Noise",
+            "Spam/SEO Artifacts in URL"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2035,
+              "output_tokens": 262,
+              "elapsed_seconds": 4.729258298873901
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page filtered for locations in the Nouvelle-Aquitaine region (Pau, Bill\u00e8re, Serres-Castet), which are geographically distinct from the target entity Tarbes (Occitanie). The job listings (Real Estate, Logistics, Volunteering) are unrelated to Tarbes procurement operations. The URL contains SEO spam artifacts unrelated to the content."
+        }
+      ],
+      "total_input_tokens": 16254,
+      "total_output_tokens": 2555,
+      "estimated_cost_usd": 0.087087
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tarbes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:12:51.476342"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.278757",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:17.752747"
+}

@@ -1,0 +1,225 @@
+{
+  "entity_id": "team_dsm\u0096firmenich_postnl",
+  "entity_name": "Team DSM\u0096Firmenich PostNL",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "teampicnicpostnl.com",
+    "our-company.dsm-firmenich.com",
+    "bobshop.com",
+    "velo.outsideonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/content-creator-at-precision-fuel-hydration-3970061987"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "team_dsm\u0096firmenich_postnl",
+      "entity_name": "Team DSM\u0096Firmenich PostNL",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://teampicnicpostnl.com",
+        "https://our-company.dsm-firmenich.com",
+        "https://uk.linkedin.com/jobs/view/content-creator-at-precision-fuel-hydration-3970061987",
+        "https://velo.outsideonline.com",
+        "https://bobshop.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Team DSM\u0096Firmenich PostNL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:01:09.260534",
+          "domain_explored": "https://teampicnicpostnl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Marketing Content",
+            "Race Schedules",
+            "Talent Development"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.5207810401916504
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to professional cycling (Team Picnic PostNL), covering race reports, rider development, and event schedules. There is no mention of DSM-Firmenich, corporate procurement, or enterprise technology stacks. The content is irrelevant to the procurement intelligence objective."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:01:14.702324",
+          "domain_explored": "https://our-company.dsm-firmenich.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Corporate Communications",
+            "Newsroom Aggregation",
+            "Sustainability Reporting",
+            "Investor Relations Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 455,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.178511142730713
+            }
+          ],
+          "reasoning": "The provided content is a truncated navigation menu and header text from the corporate newsroom. It contains generic links to 'news' and 'businesses' but lacks specific details on procurement activities, technology stacks, or vendor partnerships. The content is too high-level to extract actionable procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:01:20.864522",
+          "domain_explored": "https://bobshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform",
+              "Product Catalog Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-Commerce Retail Interface",
+            "Consumer Catalog Content",
+            "B2C Marketing Campaigns",
+            "Shopping Cart Functionality"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.553234815597534
+            }
+          ],
+          "reasoning": "The analyzed content from bobshop.com is a consumer-facing e-commerce storefront for cycling apparel and equipment. It displays product listings, pricing (EUR), discount codes, and shopping cart functionality. There is no content related to corporate procurement, supply chain management, or B2B vendor relations for the entity Team DSM\u2013Firmenich PostNL. This appears to be a false positive in the discovery chain (likely related to 'PostNL' sponsorship or team merchandise) and does not serve the procurement intelligence objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:01:37.282271",
+          "domain_explored": "https://velo.outsideonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism Content",
+            "Consumer Cycling Gear Reviews",
+            "Race Results & Editorial Analysis",
+            "Audience Engagement (Feed Subscription)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 156,
+              "elapsed_seconds": 12.97602105140686
+            }
+          ],
+          "reasoning": "The content is exclusively sports journalism and consumer gear reviews from 'Velo'. It contains no corporate governance, procurement intent, or technology stack information relevant to Team DSM-Firmenich or PostNL."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:01:47.208931",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/content-creator-at-precision-fuel-hydration-3970061987",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "E-commerce platforms",
+              "SEO tools",
+              "Media Studio production workflows",
+              "Video & Photo editing software"
+            ],
+            "job_postings": [
+              "Content Creator (Precision Fuel & Hydration)"
+            ],
+            "procurement_indicators": [
+              "Confirmed Partnership: Precision Fuel & Hydration supplies 'UCI WorldTour Team dsm-firmenich PostNL'",
+              "Marketing Collaboration: Content creation involves working with the team/athletes",
+              "Sponsorship Scope: Partnership is listed alongside Premier League, NFL, and Formula One teams"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Acknowledgement",
+            "Sponsorship Ecosystem",
+            "Marketing Technology Stack",
+            "Content Production Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 358,
+              "elapsed_seconds": 6.4253928661346436
+            }
+          ],
+          "reasoning": "While this is a job posting for a vendor (Precision Fuel & Hydration) rather than the target entity, it explicitly confirms an active commercial partnership between Precision Fuel & Hydration and 'UCI WorldTour Team dsm-firmenich PostNL'. This validates the entity's existence and its engagement in the sports nutrition sponsorship ecosystem. It also reveals the partner's internal tech stack (e-commerce focus, SEO tools) which may influence joint marketing ventures."
+        }
+      ],
+      "total_input_tokens": 6353,
+      "total_output_tokens": 1105,
+      "estimated_cost_usd": 0.035634
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Team DSM\u0096Firmenich PostNL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:01:47.211661"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384229",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:11.686636"
+}

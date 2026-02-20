@@ -1,0 +1,325 @@
+{
+  "entity_id": "french_handball_federation",
+  "entity_name": "French Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "ffhandball.fr",
+    "grokipedia.com",
+    "ehfeuro.eurohandball.com",
+    "sportfive.com",
+    "betclicgroup.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+      "https://fr.linkedin.com/jobs/view/internship-assistant-brand-manager-france-m-f-x-july-2026-at-bel-4358338116",
+      "https://www.linkedin.com/posts/la28_la28-hiring-careers-activity-7191517675200643073-OaQG"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_handball_federation",
+      "entity_name": "French Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+        "https://fr.linkedin.com/jobs/view/internship-assistant-brand-manager-france-m-f-x-july-2026-at-bel-4358338116",
+        "https://www.linkedin.com/posts/la28_la28-hiring-careers-activity-7191517675200643073-OaQG",
+        "https://sportfive.com",
+        "https://grokipedia.com",
+        "https://ehfeuro.eurohandball.com",
+        "https://betclicgroup.com",
+        "https://ffhandball.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:41:29.759263",
+          "domain_explored": "https://ffhandball.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_content_navigation",
+            "user-facing_portal"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 380,
+              "output_tokens": 139,
+              "elapsed_seconds": 2.296450138092041
+            }
+          ],
+          "reasoning": "The provided text consists of generic navigation elements ('Find your Club', 'Discover practices') from the public-facing homepage. There are no technical specifications, organizational changes, or commercial opportunities visible in this snippet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:41:35.478158",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:41:50.487974",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregation",
+            "tournament_results",
+            "event_schedule",
+            "external_governing_body_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 168,
+              "elapsed_seconds": 8.625188112258911
+            }
+          ],
+          "reasoning": "The content is exclusively related to the European Handball Federation (EHF) tournaments, results, and schedules. It contains no information regarding the French Handball Federation's internal operations, technology stack, or procurement activities. This is irrelevant content for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:42:00.864822",
+          "domain_explored": "https://sportfive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity identified as a potential vendor/partner (SportFive) rather than the target organization (FFHB)."
+            ]
+          },
+          "patterns_found": [
+            "marketing_agency_landing_page",
+            "cookie_consent_overload",
+            "brand_promotion",
+            "vendor_ecosystem_member"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.5139782428741455
+            }
+          ],
+          "reasoning": "The scraped content is from SportFive, a sports marketing agency and rights holder. The text is dominated by cookie consent dialogs and brand messaging ('Leaders In Sports Marketing'). While SportFive is a vendor/partner to federations like the FFHB, this specific page represents their marketing front-end, not the FFHB's procurement operations or internal decision-making signals. It does not contain data regarding FFHB's internal purchasing, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:42:19.549903",
+          "domain_explored": "https://betclicgroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Financial Press Release: Senior Secured Notes Offering",
+              "Marketing Slogan: Tech for player protection"
+            ]
+          },
+          "patterns_found": [
+            "gaming_industry_landing_page",
+            "financial_news_press_releases",
+            "repetitive_brand_slogans",
+            "corporate_ir_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 261,
+              "elapsed_seconds": 11.585100889205933
+            }
+          ],
+          "reasoning": "The content is from Betclic Group, a private online gaming entity, not the French Handball Federation. While Betclic is a commercial partner/sponsor of the FFHB (often visible on jerseys), this specific page contains only high-level marketing slogans and financial press releases regarding debt offerings. It does not contain procurement signals, technology stack details, or governance information relevant to the Federation's purchasing needs. It is a vendor/partner site, not the target entity's procurement portal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:42:26.726838",
+          "domain_explored": "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Strategic Partnership",
+                "details": "Wavestone acquired Nomad\u00e9is to strengthen sustainability consulting (M&A activity)."
+              },
+              {
+                "type": "Event Organization",
+                "details": "Organization of Shareholders club meetings and internal events at Wavestone."
+              }
+            ]
+          },
+          "patterns_found": [
+            "personal_blog_post",
+            "career_narrative",
+            "consulting_firm_context",
+            "event_planning",
+            "music_arts_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 284,
+              "elapsed_seconds": 2.7544641494750977
+            }
+          ],
+          "reasoning": "The content is a personal LinkedIn article by Benjamin Cl\u00e9ment describing his 'slasher' career (organist, Wavestone consultant, event host). While it mentions Wavestone's acquisition of Nomad\u00e9is and internal shareholder events, it is a retrospective personal narrative rather than a procurement signal, vendor request, or job posting for the French Handball Federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:42:37.874169",
+          "domain_explored": "https://fr.linkedin.com/jobs/view/internship-assistant-brand-manager-france-m-f-x-july-2026-at-bel-4358338116",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Nielsen (Consumer Panels)",
+              "Iri (Distributor Panels)"
+            ],
+            "job_postings": [
+              {
+                "role": "Assistant Brand Manager France",
+                "type": "Internship",
+                "entity": "Bel",
+                "department": "Marketing"
+              }
+            ],
+            "procurement_indicators": [
+              "Use of external agencies for packaging and promotion",
+              "Market data procurement (Nielsen/Iri)"
+            ]
+          },
+          "patterns_found": [
+            "job_posting_internship",
+            "consumer_goods_sector",
+            "brand_management_context",
+            "wrong_entity_target"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1651,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.9363527297973633
+            }
+          ],
+          "reasoning": "The content is a job posting for an internship at 'Bel' (a food company), not the French Handball Federation. While it mentions marketing tools (Nielsen, Iri) and agency collaboration, it is irrelevant to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:42:59.951459",
+          "domain_explored": "https://www.linkedin.com/posts/la28_la28-hiring-careers-activity-7191517675200643073-OaQG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director, Village Management",
+              "Website Manager",
+              "Director, National Olympic and Paralympic Committee Services",
+              "Manager, Partnership Marketing"
+            ],
+            "procurement_indicators": [
+              "LA28 is building a team over the next 4 years",
+              "Active recruitment for partnership marketing roles"
+            ]
+          },
+          "patterns_found": [
+            "olympic_organizing_committee_hiring",
+            "event_management_roles",
+            "marketing_partnership_roles",
+            "geographic_mismatch_los_angeles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1713,
+              "output_tokens": 296,
+              "elapsed_seconds": 16.073566913604736
+            }
+          ],
+          "reasoning": "The content is a hiring announcement for the LA28 Olympic and Paralympic Games Organizing Committee. While it indicates significant procurement and hiring activity for the 2028 Olympics, the entity is the Los Angeles organizing committee, not the French Handball Federation (FFHB). The roles (Village Management, Partnership Marketing) and context (Los Angeles) are irrelevant to the specific procurement intelligence goal for the French entity."
+        }
+      ],
+      "total_input_tokens": 9760,
+      "total_output_tokens": 1654,
+      "estimated_cost_usd": 0.05409
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:42:59.953193"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361611",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:29.037081"
+}

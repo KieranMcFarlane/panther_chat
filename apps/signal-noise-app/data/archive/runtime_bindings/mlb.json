@@ -1,0 +1,354 @@
+{
+  "entity_id": "mlb",
+  "entity_name": "MLB",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "mlbshop.com",
+    "en.mlb-korea.com",
+    "mlbplayers.com",
+    "theshow.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+      "https://www.linkedin.com/jobs/major-league-baseball-jobs-worldwide",
+      "https://www.linkedin.com/jobs/mlb-advanced-media-jobs",
+      "https://www.linkedin.com/jobs/mlb-jobs-manhattan-ny",
+      "https://www.linkedin.com/jobs/major-league-baseball-engineering-jobs",
+      "https://uk.linkedin.com/jobs/mlb-jobs",
+      "https://do.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/company/mlbpa/jobs",
+      "https://www.linkedin.com/jobs/mlb-advanced-media-jobs-new-york-ny"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mlb",
+      "entity_name": "MLB",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/major-league-baseball/jobs",
+        "https://www.linkedin.com/jobs/mlb-advanced-media-jobs",
+        "https://theshow.com",
+        "https://www.linkedin.com/jobs/mlb-jobs-manhattan-ny",
+        "https://mlbplayers.com",
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+        "https://en.mlb-korea.com",
+        "https://www.linkedin.com/jobs/major-league-baseball-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MLB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:52:10.483644",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:52:21.010575",
+          "domain_explored": "https://en.mlb-korea.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Inventory Management",
+              "Licensing/Royalty Agreements"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Content",
+            "Fashion Retail Product Listings",
+            "Celebrity Endorsement Campaigns (Karina)",
+            "Regional Licensing (Korea)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1379,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.819125175476074
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from a B2C fashion retail storefront (mlb-korea.com). It displays consumer product lines (caps, tees), pricing, and marketing campaigns. There are absolutely no signals regarding B2B procurement, enterprise technology stacks, or organizational governance. This is a licensing/retail entity, not the central league office."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:52:31.500592",
+          "domain_explored": "https://mlbplayers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Exclusive rights management for 5,500+ players implies need for Digital Rights Management (DRM) or licensing software vendors.",
+              "Operation of a 501(c)3 foundation implies procurement for charitable fund management and event planning services.",
+              "Administration of Joint Drug Prevention programs implies potential contracts with medical testing or administrative compliance vendors."
+            ]
+          },
+          "patterns_found": [
+            "Labor Union Governance Structure",
+            "Group Licensing & Commercial Rights Management",
+            "Non-Profit / Charitable Foundation Operations",
+            "Regulatory Compliance (Joint Drug Prevention Program)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 357,
+              "elapsed_seconds": 3.827991008758545
+            }
+          ],
+          "reasoning": "The content identifies the MLB Players Association (MLBPA) as a distinct entity from MLB (the league), functioning as a labor union and commercial rights holder. While not a direct procurement signal for MLB league operations, it reveals a complex ecosystem involving 'MLB Players, Inc.' (licensing) and 'Players Trust' (charity). These sub-entities likely require independent vendor relationships for legal services, licensing platforms, and charitable fund management, warranting a weak signal for broader ecosystem procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:52:42.510170",
+          "domain_explored": "https://theshow.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media Hosting)",
+              "Discord (Community Chat)",
+              "iOS/Android (Companion App)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Product Marketing",
+            "Video Game Release Management",
+            "Consumer Engagement Platforms (Discord/Forums)",
+            "Digital Distribution (App Stores)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 236,
+              "elapsed_seconds": 5.0572710037231445
+            }
+          ],
+          "reasoning": "The content is entirely focused on the consumer-facing video game 'MLB The Show' developed by San Diego Studio. It details product features, cover athlete marketing (Aaron Judge), and community engagement. While this indicates MLB's licensing revenue stream, it provides zero direct signals regarding MLB's internal procurement operations, enterprise technology stack, or vendor acquisition processes."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:52:47.158308",
+          "domain_explored": "https://www.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Platform Policy Enforcement (LinkedIn)",
+            "Data Scraping Countermeasures"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 563,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.163729190826416
+            }
+          ],
+          "reasoning": "The attempt to scrape LinkedIn Jobs failed with a '403 Forbidden' error. This indicates that the target URL has anti-scraping measures in place (likely due to missing headers or IP reputation). No content regarding procurement, job postings, or technology stacks could be extracted from this iteration."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:52:59.438030",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Mobile Application Infrastructure (MLB Ballpark App)",
+              "Data Engineering Pipelines",
+              "Business Intelligence / Analytics Tools"
+            ],
+            "job_postings": [
+              "Director, Product - MLB Ballpark App",
+              "Data Engineer",
+              "Intelligence Analyst",
+              "Senior Accountant",
+              "Human Resources Coordinator"
+            ],
+            "procurement_indicators": [
+              "Digital Transformation: Expansion of the MLB Ballpark App indicates ongoing vendor relationships for mobile development and maintenance.",
+              "Data Infrastructure: Hiring for Data Engineering roles suggests investment in cloud storage (AWS/Azure/GCP) or big data processing tools.",
+              "Security Operations: 'Intelligence Analyst' role implies procurement of threat intelligence or security monitoring services."
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Management (MLB Ballpark App)",
+            "Data Engineering & Infrastructure Investment",
+            "Corporate Operations (HR, Finance, Security)",
+            "High-Volume Hiring (125+ Open Positions)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 428,
+              "elapsed_seconds": 7.629281997680664
+            }
+          ],
+          "reasoning": "While the content is a job listing aggregation rather than a direct procurement document, the specific roles identified (Director of Product for MLB Ballpark App, Data Engineer, Intelligence Analyst) confirm active investment in digital infrastructure and analytics platforms. These roles typically precede or accompany significant technology procurement decisions regarding CRM, mobile infrastructure, and data storage."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:53:07.736669",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-baseball-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 27 column 58 (char 1442)"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:53:17.935506",
+          "domain_explored": "https://www.linkedin.com/jobs/mlb-advanced-media-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Mobile Application Infrastructure (iOS/Android)",
+              "Data Analytics & Business Intelligence Tools",
+              "HRIS (Human Resources Information Systems)"
+            ],
+            "job_postings": [
+              "Director, Product - MLB Ballpark App",
+              "Intelligence Analyst",
+              "Human Resources Coordinator",
+              "Special Project Coordinator, Former Player",
+              "Receptionist (Temp to Perm)"
+            ],
+            "procurement_indicators": [
+              "Digital Transformation: Senior leadership hiring for the MLB Ballpark App indicates budget allocation for fan-facing mobile technology.",
+              "Data Operations: Intelligence Analyst role suggests procurement of data sources or analytical software.",
+              "Staffing Models: Use of 'Temp to Perm' for administrative roles indicates reliance on staffing agencies."
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Management (MLB Ballpark App)",
+            "Intelligence & Analytics Operations",
+            "Corporate Operations (HR, Admin)",
+            "Legacy Entity Integration (MLB Advanced Media)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1730,
+              "output_tokens": 437,
+              "elapsed_seconds": 5.142991065979004
+            }
+          ],
+          "reasoning": "The content confirms MLB's active investment in its digital infrastructure, specifically the 'MLB Ballpark App' via a Director-level role. This signals ongoing procurement needs for mobile development, user experience platforms, and associated cloud services. The 'Intelligence Analyst' role suggests investment in data analytics tools or services. However, the listing is largely administrative and does not reveal specific vendor names or RFPs, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:53:24.884181",
+          "domain_explored": "https://www.linkedin.com/jobs/mlb-jobs-manhattan-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Receptionist (Temp to Perm)",
+              "Human Resources Coordinator"
+            ],
+            "procurement_indicators": [
+              "Administrative Staffing",
+              "Corporate Office Operations"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Operations (HR, Admin)",
+            "Staffing & Recruitment (Temp to Perm)",
+            "Location-Based Hiring (Manhattan, NY)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1795,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.4732699394226074
+            }
+          ],
+          "reasoning": "While the content is heavily gated by LinkedIn's authentication walls, the visible snippets confirm active hiring for corporate operations roles (Receptionist, HR Coordinator) at the MLB Manhattan office. This indicates ongoing administrative procurement and staffing activities, though specific technology stack details remain obscured."
+        }
+      ],
+      "total_input_tokens": 10008,
+      "total_output_tokens": 2068,
+      "estimated_cost_usd": 0.061044
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MLB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:53:24.886042"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.413968",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:39:36.101941"
+}

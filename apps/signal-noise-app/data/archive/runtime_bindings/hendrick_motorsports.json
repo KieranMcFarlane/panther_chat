@@ -1,0 +1,384 @@
+{
+  "entity_id": "hendrick_motorsports",
+  "entity_name": "Hendrick Motorsports",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "hendrickmotorsports.com",
+    "hmsracing.com",
+    "hendrickusa.com",
+    "hendrickcars.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/motorsports-jobs-charlotte-nc",
+      "https://www.linkedin.com/jobs/view/content-creator-at-hendrick-motorsports-4342889357",
+      "https://www.linkedin.com/jobs/view/performance-engineering-intern-at-hendrick-motorsports-4334172514",
+      "https://www.linkedin.com/jobs/view/cnc-tube-bender-at-hendrick-motorsports-4361553021",
+      "https://www.linkedin.com/jobs/view/project-and-race-support-engineer-intern-at-hendrick-motorsports-4354632002",
+      "https://www.linkedin.com/jobs/view/engine-clean-up-technician-at-hendrick-motorsports-4343059546",
+      "https://www.linkedin.com/jobs/view/raw-material-inventory-specialist-at-hendrick-motorsports-4334361040",
+      "https://www.linkedin.com/jobs/motorsports-engineering-jobs-charlotte-metro?trk=jserp_directory",
+      "https://www.linkedin.com/jobs/racing-jobs-concord-nc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hendrick_motorsports",
+      "entity_name": "Hendrick Motorsports",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.13999999999999999,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.13999999999999999
+      ],
+      "explored_domains": [
+        "https://hendrickcars.com",
+        "https://hendrickusa.com",
+        "https://hendrickmotorsports.com",
+        "https://www.linkedin.com/jobs/view/cnc-tube-bender-at-hendrick-motorsports-4361553021",
+        "https://www.linkedin.com/jobs/view/performance-engineering-intern-at-hendrick-motorsports-4334172514",
+        "https://www.linkedin.com/jobs/view/content-creator-at-hendrick-motorsports-4342889357",
+        "https://www.linkedin.com/jobs/view/project-and-race-support-engineer-intern-at-hendrick-motorsports-4354632002",
+        "https://hmsracing.com",
+        "https://www.linkedin.com/jobs/motorsports-jobs-charlotte-nc"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Manufacturing Capability",
+        "Technical Solutions Division (B2B Services)",
+        "Precision Manufacturing Equipment Procurement",
+        "Aerospace & Industrial Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hendrick Motorsports may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:28:29.840644",
+          "domain_explored": "https://hendrickmotorsports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Marketing Platform (implied by 'Sign up for email updates')",
+              "Social Media Management (X, Instagram, Facebook, TikTok, YouTube)",
+              "Web Analytics (UTM parameters detected in UniFirst and TikTok links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Partnership: UniFirst (Uniform services)",
+              "Active Partnership: HendrickCars (Automotive retail)",
+              "Digital Campaign Tracking: UTM sources suggest active digital marketing spend"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Automation Usage",
+            "Vendor Partnership Management",
+            "Social Media Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 961,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.9798789024353027
+            }
+          ],
+          "reasoning": "The content reveals the use of email marketing infrastructure ('Subscribe Here') and active vendor partnerships (UniFirst, HendrickCars). While this confirms the *capability* and *existence* of procurement and marketing tools, it does not explicitly signal a new *intent* to purchase or upgrade technology. However, the presence of UTM tracking parameters in vendor links indicates a level of digital governance and analytics capability."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:28:33.594679",
+          "domain_explored": "https://hmsracing.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:28:40.906241",
+          "domain_explored": "https://hendrickusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Electric Mobility Platforms",
+              "Tactical Silent Propulsion",
+              "Thumb Throttle Control Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "U.S. Patents 10,654,503 and 11,254,341",
+              "European Patent EP3895959"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Defense Sector Content",
+            "Product Specification (STEED Vehicle)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 246,
+              "elapsed_seconds": 4.37314510345459
+            }
+          ],
+          "reasoning": "The content from hendrickusa.com describes 'Silent Tactical Energy Enhanced Dismount' (STEED), a military-grade electric payload platform. This belongs to Hendrick Commercial Vehicle (defense/industrial sector), not Hendrick Motorsports (NASCAR/racing sector). While they share the 'Hendrick' parentage, this content describes a product for sale, not a procurement signal for the racing entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:28:44.765425",
+          "domain_explored": "https://hendrickcars.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:28:53.910159",
+          "domain_explored": "https://www.linkedin.com/jobs/motorsports-jobs-charlotte-nc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "Content Creator",
+              "Aviation Intern",
+              "Future Opportunities (General)"
+            ],
+            "procurement_indicators": [
+              "HR/Recruitment Activity (Proxy for Vendor Spend)",
+              "Aviation Department (Logistics/Travel Procurement Potential)"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment (Content & Aviation)",
+            "General Talent Pipeline Management",
+            "Aviation Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 305,
+              "elapsed_seconds": 5.601286888122559
+            }
+          ],
+          "reasoning": "The content confirms Hendrick Motorsports is actively hiring for specific operational roles (Content Creator, Aviation Intern). While these are not direct procurement roles, active hiring indicates organizational growth and budget availability. The 'Future Opportunities' listing suggests a structured HR/Recruitment function, which is a proxy for vendor management activity (ATS, background check services). However, the specific job descriptions (Creative/Aviation) are not directly relevant to procurement technology stack analysis."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:29:02.987129",
+          "domain_explored": "https://www.linkedin.com/jobs/view/content-creator-at-hendrick-motorsports-4342889357",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud (implied by post-production/editing)",
+              "Social Media Management Tools (implied by ROI/analytics)",
+              "AP Style Guide"
+            ],
+            "job_postings": [
+              "Content Creator (Social Media Focus)"
+            ],
+            "procurement_indicators": [
+              "Usage of ROI/analytics tools for platform management",
+              "Collaboration with external stakeholders (vendors/partners)",
+              "Investment in high-end photography/videography equipment"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Production Pipeline",
+            "Social Media Platform Ecosystem",
+            "Vendor Collaboration (External Stakeholders)",
+            "ROI/Analytics Utilization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 312,
+              "elapsed_seconds": 5.6630699634552
+            }
+          ],
+          "reasoning": "The job posting confirms active investment in digital media infrastructure. While primarily a HR signal, the requirement for 'ROI/analytics tools' and collaboration with 'external stakeholders' indicates a managed procurement stack for content creation and distribution. The mention of 'partner activations' suggests a structured vendor management workflow."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:29:10.445495",
+          "domain_explored": "https://www.linkedin.com/jobs/view/performance-engineering-intern-at-hendrick-motorsports-4334172514",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MATLAB",
+              "Simulink",
+              "PME VES (Vehicle Engineering Software)",
+              "7-Post Shaker Rig (Hardware)",
+              "Ride Rate Rig (Hardware)"
+            ],
+            "job_postings": [
+              "Performance Engineering Intern"
+            ],
+            "procurement_indicators": [
+              "Enterprise Software Licensing (Engineering Analysis)",
+              "Specialized Hardware Maintenance & Calibration",
+              "Data Acquisition System Management"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Engineering Software Stack",
+            "High-Performance Data Infrastructure",
+            "Simulation & Modeling Capabilities",
+            "Technical Talent Pipeline (R&D)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1669,
+              "output_tokens": 319,
+              "elapsed_seconds": 3.2561988830566406
+            }
+          ],
+          "reasoning": "While this is a job posting (Recruitment), it explicitly identifies the proprietary and specialized technology stack required for vehicle simulation and data analysis. The requirement for specific software like 'Simulink/MATLAB' and 'PME VES' indicates existing procurement relationships or licensing needs for high-value engineering tools. It confirms the entity invests heavily in technical R&D infrastructure."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:29:18.898556",
+          "domain_explored": "https://www.linkedin.com/jobs/view/cnc-tube-bender-at-hendrick-motorsports-4361553021",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CNC Tube Bending Equipment (e.g., BLM)",
+              "CAD Software",
+              "GD&T (Geometric Dimensioning and Tolerancing)"
+            ],
+            "job_postings": [
+              "CNC Tube Bender (Hendrick Motorsports Technical Solutions)"
+            ],
+            "procurement_indicators": [
+              "Acquisition of CNC manufacturing machinery (BLM)",
+              "Procurement of raw materials (tubing/metals)",
+              "Industrial tooling and measurement equipment procurement",
+              "B2B service delivery infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Direct Manufacturing Capability",
+            "Technical Solutions Division (B2B Services)",
+            "Precision Manufacturing Equipment Procurement",
+            "Aerospace & Industrial Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1741,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.6101531982421875
+            }
+          ],
+          "reasoning": "This posting reveals 'Hendrick Motorsports Technical Solutions,' a dedicated division for B2B manufacturing and services. It confirms direct procurement of high-value industrial machinery (CNC tube benders, specifically BLM brand) and raw materials for production, moving beyond general racing operations into commercial manufacturing."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:29:28.943453",
+          "domain_explored": "https://www.linkedin.com/jobs/view/project-and-race-support-engineer-intern-at-hendrick-motorsports-4354632002",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analysis Software (Excel, Python, R, or MATLAB)",
+              "Project Management Tools",
+              "Reporting & Visualization Platforms"
+            ],
+            "job_postings": [
+              "Project and Race Support Engineer Intern"
+            ],
+            "procurement_indicators": [
+              "Tool Creation Requirement (Internal Dev or Low-Code Procurement)",
+              "Project Tracking & Reporting Needs",
+              "Data Collection & Analysis Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Project Management Office (PMO) Operations",
+            "Data Analytics & Reporting Infrastructure",
+            "Race Engineering Support Tools",
+            "Cross-Functional Resource Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1821,
+              "output_tokens": 349,
+              "elapsed_seconds": 5.20689582824707
+            }
+          ],
+          "reasoning": "The job posting confirms the existence of a structured Project Management function within the engineering division. While the role is an internship, the requirement to 'create basic tools' and 'track project progress' indicates a need for productivity software, data visualization tools, and potentially project management platforms (e.g., Asana, Trello, or Microsoft Project). This supports the hypothesis of procurement for organizational software, though it lacks the direct purchasing authority found in manufacturing roles."
+        }
+      ],
+      "total_input_tokens": 10747,
+      "total_output_tokens": 2166,
+      "estimated_cost_usd": 0.064731
+    },
+    "procurement_signals": [
+      "Direct Manufacturing Capability",
+      "Technical Solutions Division (B2B Services)",
+      "Precision Manufacturing Equipment Procurement",
+      "Aerospace & Industrial Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hendrick Motorsports may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:29:28.944505"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364667",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:06.342689"
+}

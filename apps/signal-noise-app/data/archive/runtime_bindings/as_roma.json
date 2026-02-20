@@ -1,0 +1,261 @@
+{
+  "entity_id": "as_roma",
+  "entity_name": "AS Roma",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "asroma.com",
+    "chiesaditotti.com",
+    "friedkin.com",
+    "romapress.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/as-roma_asroma-careers-activity-7052611534258102272-0LQ3",
+      "https://www.linkedin.com/posts/footballbusinessinside_the-next-fbin-careers-update-is-here-this-activity-7417113349781540864-jlxh",
+      "https://www.linkedin.com/company/friedkin-companies-inc-/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "as_roma",
+      "entity_name": "AS Roma",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://asroma.com",
+        "https://www.linkedin.com/posts/as-roma_asroma-careers-activity-7052611534258102272-0LQ3",
+        "https://friedkin.com",
+        "https://romapress.net",
+        "https://www.linkedin.com/company/friedkin-companies-inc-/jobs",
+        "https://www.linkedin.com/posts/footballbusinessinside_the-next-fbin-careers-update-is-here-this-activity-7417113349781540864-jlxh",
+        "https://chiesaditotti.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AS Roma may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:26:06.001943",
+          "domain_explored": "https://asroma.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:26:12.332806",
+          "domain_explored": "https://chiesaditotti.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "Google Docs (Document Sharing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Fan Engagement Content",
+            "Sports Journalism",
+            "Community Forums"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1381,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.266141891479492
+            }
+          ],
+          "reasoning": "The source (Chiesa di Totti) is a fan-focused news and community blog. The content is exclusively related to match coverage, player transfers, and fan discussions. There are no signals regarding corporate procurement, technology infrastructure, or business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:26:16.111087",
+          "domain_explored": "https://friedkin.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:26:23.662502",
+          "domain_explored": "https://romapress.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partner Content Section (Potential advertising vendor relationship, but content is consumer-focused)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Transfer Market News",
+            "Player Injury Reports",
+            "Match Schedules",
+            "Sponsored Content (Partner Content)",
+            "Fan Engagement Articles"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.293488025665283
+            }
+          ],
+          "reasoning": "The scraped content from RomaPress is entirely focused on sports journalism, specifically player transfers (Zaragoza, Tsimikas), match results, and injury updates. While there is 'Partner Content' listed, the specific articles provided are fan engagement pieces (emotions, betting) rather than corporate procurement or B2B technology announcements. No direct procurement signals, RFPs, or technology stack details were found in this text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:26:29.393513",
+          "domain_explored": "https://www.linkedin.com/posts/as-roma_asroma-careers-activity-7052611534258102272-0LQ3",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of International Strategy"
+            ],
+            "procurement_indicators": [
+              "Investment in international business development",
+              "Focus on generating direct returns from new business initiatives",
+              "Potential future sourcing for international tours and related services"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings",
+            "International Business Development",
+            "Strategic Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.2885220050811768
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Head of International Strategy'. While not a procurement request, it indicates organizational investment in business development and international expansion. This role likely involves vendor selection for tours, events, and local partnerships, signaling future procurement activity in the services sector."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:26:39.695880",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_the-next-fbin-careers-update-is-here-this-activity-7417113349781540864-jlxh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Industry Career Aggregation",
+            "Competitor Leadership Moves",
+            "General Sports Business News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 171,
+              "elapsed_seconds": 5.6288158893585205
+            }
+          ],
+          "reasoning": "The content is a generic industry career update from 'Football Business Inside' listing appointments at rival clubs (Barcelona, Juventus, Real Madrid, etc.). There is no mention of AS Roma, no specific AS Roma job postings, and no procurement-related signals (RFPs, tech stack, or vendor needs) relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:26:48.926358",
+          "domain_explored": "https://www.linkedin.com/company/friedkin-companies-inc-/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Engineering",
+              "Software Platforms"
+            ],
+            "job_postings": [
+              "Consultant, Demand & Supply",
+              "Mgr., Quality Assurance & Systems",
+              "Data Engineer",
+              "Software Engineer"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for Supply Chain and Systems roles",
+              "Corporate investment in Software/Data infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Hiring Activity",
+            "Digital Transformation Roles",
+            "Supply Chain Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 323,
+              "elapsed_seconds": 4.071895122528076
+            }
+          ],
+          "reasoning": "The content is a LinkedIn company page for The Friedkin Group (AS Roma's parent company). While it confirms active hiring and corporate infrastructure investment (Data Engineers, Software Engineers), the roles listed are primarily for Gulf States Toyota or The Friedkin Group's corporate HQ in Houston. There are no direct procurement signals specific to AS Roma's operations in Rome, but the 'Consultant, Demand & Supply' and 'Mgr., Quality Assurance & Systems' roles indicate a structured approach to vendor and supply chain management at the parent level."
+        }
+      ],
+      "total_input_tokens": 7579,
+      "total_output_tokens": 1160,
+      "estimated_cost_usd": 0.040137
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AS Roma may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:26:48.928490"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.128794",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:36:14.089905"
+}

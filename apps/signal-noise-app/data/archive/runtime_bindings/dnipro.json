@@ -1,0 +1,467 @@
+{
+  "entity_id": "dnipro",
+  "entity_name": "Dnipro",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "gorod.dp.ua",
+    "dniprollc.com",
+    "itdni.pro",
+    "dnipromedicalinstitute.com",
+    "dnipro-m.sk",
+    "nabu.gov.ua"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/jobs-in-dnipropetrovsk",
+      "https://www.linkedin.com/posts/undp-ukraine_vacancy-undpcareers-activity-7423288995889156097-1VbS",
+      "https://www.linkedin.com/jobs/jobs-in-ukraine",
+      "https://www.linkedin.com/jobs/search/?currentJobId=2732412525&amp;geoId=102264497&amp;keywords=design",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3715827905&geoId=102264497&keywords=AI%20Engineer&location=Ukraine&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true",
+      "https://www.linkedin.com/jobs/view/2022552939",
+      "https://www.linkedin.com/jobs/view/logistics-assistant-at-reliefweb-4294119082?position=40&pageNum=0&refId=zr3ZDHcguIGcTMvrnYfrgg%3D%3D&trackingId=0w6pAEZL3Rs%2ByUZE1Rml0g%3D%3D",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3114048416&f_TPR=r604800&geoId=103173899&keywords=hiring&location=%D0%9A%D0%B8%D0%B5%D0%B2%2C%20%D0%A3%D0%BA%D1%80%D0%B0%D0%B8%D0%BD%D0%B0&start=25",
+      "https://ua.linkedin.com/jobs/view/monitoring-and-reporting-analyst-2-openings-ds-dnipro-and-mykolaiv-ukraine-at-undp-careers-4365054795",
+      "https://www.linkedin.com/jobs/oracle-jobs-ukraine?trk=amworks_jserp_redirect"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dnipro",
+      "entity_name": "Dnipro",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.1,
+        0.16,
+        0.16,
+        0.22
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/undp-ukraine_vacancy-undpcareers-activity-7423288995889156097-1VbS",
+        "https://itdni.pro",
+        "https://dniprollc.com",
+        "https://www.linkedin.com/jobs/search/?currentJobId=2732412525&amp;geoId=102264497&amp;keywords=design",
+        "https://www.linkedin.com/jobs/jobs-in-ukraine",
+        "https://dnipro-m.sk",
+        "https://gorod.dp.ua",
+        "https://nabu.gov.ua",
+        "https://dnipromedicalinstitute.com",
+        "https://www.linkedin.com/jobs/jobs-in-dnipropetrovsk",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3715827905&geoId=102264497&keywords=AI%20Engineer&location=Ukraine&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "International NGO Hiring (UNDP)",
+        "Project Management Roles",
+        "Monitoring and Reporting Functions",
+        "Regional Presence (Dnipro)",
+        "Direct Procurement Role Hiring",
+        "International NGO Operations (INFUSE)",
+        "Regulatory Body Expansion (National Bank of Ukraine)",
+        "Remote/Contract Work Models",
+        "High-Demand Technical Recruitment (AI/ML)",
+        "B2B SaaS Expansion (HelpFlow, OBRIO)",
+        "Remote-First Workforce Models",
+        "Digital Transformation Hires"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dnipro may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:52:13.029939",
+          "domain_explored": "https://gorod.dp.ua",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Municipal service announcements",
+            "Public safety alerts",
+            "Community event listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.642206907272339
+            }
+          ],
+          "reasoning": "The content is the homepage of a local news portal (gorod.dp.ua). It consists of general news headlines, weather warnings, and community announcements. There are no specific mentions of RFPs, technology procurement, job postings, or digital transformation initiatives in the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:52:22.744031",
+          "domain_explored": "https://dniprollc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Service Offerings",
+            "Logistics/Shipping Services",
+            "Commercial Entity Description"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.6598317623138428
+            }
+          ],
+          "reasoning": "The content analyzed belongs to a commercial logistics company named 'Dnipro LLC' that offers shipping services from the USA to Ukraine. It is a service provider (vendor) website, not the municipal entity 'Dnipro' (the city). There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:52:37.851777",
+          "domain_explored": "https://itdni.pro",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnerships with Higher Education Institutions (Vendor/Partner potential)",
+              "Conference and Meetup Organization (Event services/Software procurement)",
+              "Educational Material Development (LMS or Content Creation tools)"
+            ]
+          },
+          "patterns_found": [
+            "IT Education and Training Services",
+            "B2B Partnership Model (Universities/Centers)",
+            "Event Organization (Conferences/Meetups)",
+            "Content Creation (Educational Materials)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 544,
+              "output_tokens": 302,
+              "elapsed_seconds": 7.05154013633728
+            }
+          ],
+          "reasoning": "The content indicates an active IT cluster or educational entity (IT Dnipro Community) focused on workforce development and ecosystem growth. While not a direct procurement tender, this entity acts as a hub for B2B networking and technology adoption. Organizations driving IT education and conferences often require event management platforms, CRM systems, and educational software, representing a potential indirect procurement channel or a source of market intelligence for local tech trends."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:52:52.086665",
+          "domain_explored": "https://dnipromedicalinstitute.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Education Portal",
+              "Hospital Diagnostic Technology",
+              "Library Management Systems (Electronic/Print)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospital equipment maintenance and upgrades",
+              "Laboratory supplies and apparatus",
+              "Educational software licenses (LMS)",
+              "Campus facility management services"
+            ]
+          },
+          "patterns_found": [
+            "Educational Institution (Higher Ed)",
+            "Hospital/Clinic Operations",
+            "Digital Infrastructure (Online Education Portal)",
+            "Laboratory & Research Facilities",
+            "International Student Recruitment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 319,
+              "elapsed_seconds": 3.2060468196868896
+            }
+          ],
+          "reasoning": "The entity is a Medical Institute and University Hospital. While the primary function is education, the explicit mention of 'Hospital's up to date technology and equipment,' 'Anatomy Laboratories,' and an 'Online Education Portal' indicates a requirement for specialized medical hardware, software, and IT infrastructure. This creates a potential, though indirect, procurement pipeline for medical and educational technologies."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:53:04.312886",
+          "domain_explored": "https://dnipro-m.sk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform",
+              "Product Catalog System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "B2C Retail Interface",
+            "Hardware/Tool Manufacturing",
+            "Slovak Language Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.924915075302124
+            }
+          ],
+          "reasoning": "The content is a standard e-commerce product catalog for power tools and hardware (compressors, saws, levels). The site targets consumers (B2C) and is in Slovak, indicating a commercial retail entity rather than a municipal body or a B2B service provider relevant to Dnipro city procurement. There are no signals of RFPs, governance, or enterprise technology procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:53:17.031863",
+          "domain_explored": "https://nabu.gov.ua",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Law Enforcement Press Release",
+            "Anti-Corruption Investigation Report",
+            "Legal Proceedings Notification"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 712,
+              "output_tokens": 178,
+              "elapsed_seconds": 6.134756803512573
+            }
+          ],
+          "reasoning": "The content is a press release from the National Anti-Corruption Bureau of Ukraine (NABU) regarding the completion of an investigation into judicial bribery. While it involves government operations, it is a legal news item with no relevance to technology procurement, commercial supply chains, or business development opportunities for Dnipro."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:53:26.564393",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-dnipropetrovsk",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 25 column 112 (char 1419)"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:53:33.754886",
+          "domain_explored": "https://www.linkedin.com/posts/undp-ukraine_vacancy-undpcareers-activity-7423288995889156097-1VbS",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Monitoring & Reporting Systems (implied by Analyst role)",
+              "Digital Collaboration Tools (implied by remote/hybrid roles)"
+            ],
+            "job_postings": [
+              "Monitoring and Reporting Analyst (Dnipro)",
+              "Communications Associate (Dnipro)",
+              "Project Associate (Dnipro)"
+            ],
+            "procurement_indicators": [
+              "UNDP Operational Expansion",
+              "Project Lifecycle Management",
+              "Administrative Capacity Building"
+            ]
+          },
+          "patterns_found": [
+            "International NGO Hiring (UNDP)",
+            "Project Management Roles",
+            "Monitoring and Reporting Functions",
+            "Regional Presence (Dnipro)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1717,
+              "output_tokens": 318,
+              "elapsed_seconds": 3.431633949279785
+            }
+          ],
+          "reasoning": "The content confirms active operational presence and expansion of the United Nations Development Programme (UNDP) in Dnipro. The recruitment for 'Project Associate' and 'Monitoring and Reporting Analyst' roles indicates active project lifecycles requiring management, reporting, and likely associated procurement of services or tools to support these functions. This is a strong signal of ongoing development activity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:53:42.700294",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-ukraine",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Procurement Specialist (Remote, Contract) - INFUSE",
+              "Chief Economist - National Bank of Ukraine (Non-banking supervision)",
+              "Senior Economist - National Bank of Ukraine (Non-banking supervision)"
+            ],
+            "procurement_indicators": [
+              "Active hiring for procurement specialist roles",
+              "Expansion of regulatory oversight functions (National Bank)",
+              "Presence of international organizations (INFUSE) often associated with donor-funded procurement"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Role Hiring",
+            "International NGO Operations (INFUSE)",
+            "Regulatory Body Expansion (National Bank of Ukraine)",
+            "Remote/Contract Work Models"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1773,
+              "output_tokens": 338,
+              "elapsed_seconds": 5.412734031677246
+            }
+          ],
+          "reasoning": "The content contains a direct hit for a 'Procurement Specialist' role with INFUSE, indicating active acquisition of personnel for procurement functions. Additionally, the National Bank of Ukraine is expanding its economic supervision workforce, signaling organizational growth and potential future needs for supporting systems (software, training, compliance tools). This confirms active procurement activity in the region."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:54:08.233778",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=2732412525&amp;geoId=102264497&amp;keywords=design",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Scheduler - REMOTE (Lensa)",
+              "Music Assistant, TV (Lensa)",
+              "Social Media Producer (Kansas City Chiefs)",
+              "Recruiting Coordinator (Notion)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (US-centric)",
+            "Generic Job Aggregator Content",
+            "B2C Recruitment Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 240,
+              "elapsed_seconds": 18.41533899307251
+            }
+          ],
+          "reasoning": "The content provided is from a LinkedIn job search result page filtered for 'design' roles within the United States (geoId=102264497). The listings (e.g., Lensa, Kansas City Chiefs, Notion) are exclusively US-based and unrelated to the target entity 'Dnipro' or Ukraine. This represents a deviation from the relevant search path and offers no procurement intelligence signals for the specified entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:54:20.700460",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3715827905&geoId=102264497&keywords=AI%20Engineer&location=Ukraine&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Machine Learning (ML)",
+              "Software Engineering",
+              "B2B SaaS"
+            ],
+            "job_postings": [
+              "AI Software Engineer at HelpFlow (Remote/Ukraine)",
+              "AI/ML Engineer at OBRIO (Ukraine)"
+            ],
+            "procurement_indicators": [
+              "Active scaling of technical teams",
+              "Investment in automation and intelligence capabilities",
+              "Presence of international tech companies operating in the region"
+            ]
+          },
+          "patterns_found": [
+            "High-Demand Technical Recruitment (AI/ML)",
+            "B2B SaaS Expansion (HelpFlow, OBRIO)",
+            "Remote-First Workforce Models",
+            "Digital Transformation Hires"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1940,
+              "output_tokens": 338,
+              "elapsed_seconds": 6.113552808761597
+            }
+          ],
+          "reasoning": "The search results reveal a robust market for AI/ML engineering roles within Ukraine, specifically identifying companies like HelpFlow and OBRIO actively hiring. While these are job postings and not direct tenders, the demand for 'AI Engineer' and 'AI/ML Engineer' roles indicates active investment in AI infrastructure and software development. This suggests a procurement pipeline for related cloud infrastructure, developer tools, and data platforms."
+        }
+      ],
+      "total_input_tokens": 14361,
+      "total_output_tokens": 2574,
+      "estimated_cost_usd": 0.081693
+    },
+    "procurement_signals": [
+      "International NGO Hiring (UNDP)",
+      "Project Management Roles",
+      "Monitoring and Reporting Functions",
+      "Regional Presence (Dnipro)",
+      "Direct Procurement Role Hiring",
+      "International NGO Operations (INFUSE)",
+      "Regulatory Body Expansion (National Bank of Ukraine)",
+      "Remote/Contract Work Models",
+      "High-Demand Technical Recruitment (AI/ML)",
+      "B2B SaaS Expansion (HelpFlow, OBRIO)",
+      "Remote-First Workforce Models",
+      "Digital Transformation Hires"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dnipro may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:54:20.702380"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228779",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:57.292245"
+}

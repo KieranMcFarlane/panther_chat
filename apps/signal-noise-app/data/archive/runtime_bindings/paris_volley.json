@@ -1,0 +1,203 @@
+{
+  "entity_id": "paris_volley",
+  "entity_name": "Paris Volley",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "parisvolley.com",
+    "parisvolleyclub.fr",
+    "www-old.cev.eu",
+    "scparisvolley.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris_volley",
+      "entity_name": "Paris Volley",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://scparisvolley.eu",
+        "https://www-old.cev.eu",
+        "https://parisvolleyclub.fr",
+        "https://parisvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:34:41.869381",
+          "domain_explored": "https://parisvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Third-party)",
+              "Ticketing System",
+              "Social Media Integration (Facebook, Twitter, Instagram, TikTok, LinkedIn)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Online Store Operations",
+              "Season Ticket Management (2025-2026)",
+              "Age Verification System (Alcohol compliance)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Presence",
+            "Digital Ticketing Operations",
+            "Social Media Ecosystem Integration",
+            "Age Verification Compliance (Alcohol)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 299,
+              "elapsed_seconds": 5.865232944488525
+            }
+          ],
+          "reasoning": "The content confirms the operation of a digital storefront ('nouvelle boutique en ligne') and ticketing platform ('ABONNEMENTS 2025-2026'), indicating active procurement for e-commerce and payment processing solutions. The presence of an age verification gate suggests specific compliance requirements or sponsorship agreements with alcohol brands. However, specific vendor names or RFPs are not visible in this header/footer content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:34:57.996469",
+          "domain_explored": "https://parisvolleyclub.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms (implied by 'formulaire de tests')",
+              "Standard Web CMS (Static content)"
+            ],
+            "job_postings": [
+              "Coach Recruitments (Volunteer/Low-paid)"
+            ],
+            "procurement_indicators": [
+              "Seasonal Registration Management",
+              "Venue Capacity Planning"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Sports Association Structure",
+            "Manual Registration Workflows",
+            "Volunteer/Staff Recruitment (Coaches)",
+            "Capacity Constraints Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 294,
+              "elapsed_seconds": 6.484372854232788
+            }
+          ],
+          "reasoning": "The content analyzed from 'parisvolleyclub.fr' identifies the entity as a local amateur sports association (Paris Volley Club) located in the 11th arrondissement, distinct from the professional 'Paris Volley' entity (Ligue A). The content focuses on youth/adult amateur registrations, tryouts (M15F, M18F), and coach recruitment for 'Nationale 3'. There is no evidence of enterprise-level procurement, technology stack investment, or RFPs typical of the professional club target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:35:07.717784",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitive Intelligence: Paris Volley identified as participant in CEV Champions League (Men)",
+              "Vendor Landscape: List of European clubs and national federations (potential partners or benchmarking targets)"
+            ]
+          },
+          "patterns_found": [
+            "Governing Body Ecosystem",
+            "Competitor/Partner Landscape",
+            "Event Calendar Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 258,
+              "elapsed_seconds": 3.236593008041382
+            }
+          ],
+          "reasoning": "The content is from the Confederation Europ\u00e9enne de Volleyball (CEV), the European governing body. While it lists 'Paris Volley' (as Tours VB's opponent in a Champions League match), this establishes Paris Volley as a participant in the ecosystem rather than a procurement entity on this specific page. The page is a navigation hub for European competitions, not a source for Paris Volley's internal procurement signals or technology stack."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:35:18.908167",
+          "domain_explored": "https://scparisvolley.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms",
+              "Static Web Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Volunteer-based staffing structure",
+              "Manual capacity management",
+              "Municipal gym rental dependency"
+            ]
+          },
+          "patterns_found": [
+            "Amateur Sports Association Operations",
+            "Manual Registration Workflows",
+            "Public Facility Usage (Gymnase Valeyre)",
+            "Google Forms Usage (No-Code/Low-Tech Stack)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.4849960803985596
+            }
+          ],
+          "reasoning": "The content describes a local amateur volleyball club (Sporting Club Paris Volley) focused on youth and leisure recruitment. It relies on manual processes via Google Forms and public municipal facilities. There is no indication of corporate procurement activity, enterprise technology adoption, or budget for vendor solutions."
+        }
+      ],
+      "total_input_tokens": 5738,
+      "total_output_tokens": 1095,
+      "estimated_cost_usd": 0.033639
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:35:18.909647"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322346",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:08.288859"
+}

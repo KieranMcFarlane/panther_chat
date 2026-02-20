@@ -1,0 +1,214 @@
+{
+  "entity_id": "paris\u0096roubaix_femmes",
+  "entity_name": "Paris\u0096Roubaix Femmes",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "paris-roubaix-femmes.fr",
+    "paris-roubaix.fr",
+    "letourfemmes.fr",
+    "cyclingnews.com",
+    "cyclingfans.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris\u0096roubaix_femmes",
+      "entity_name": "Paris\u0096Roubaix Femmes",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://paris-roubaix.fr",
+        "https://paris-roubaix-femmes.fr",
+        "https://cyclingfans.com",
+        "https://letourfemmes.fr",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris\u0096Roubaix Femmes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:03:57.265006",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Player/Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Title Sponsor: Zwift",
+              "Organizer: A.S.O. (Amaury Sport Organisation)",
+              "Photography Services: A.S.O./Thomas Maheux"
+            ]
+          },
+          "patterns_found": [
+            "Title Sponsorship (Zwift)",
+            "Media Hosting (Dailymotion)",
+            "Event Organization (A.S.O.)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 226,
+              "elapsed_seconds": 5.403118133544922
+            }
+          ],
+          "reasoning": "The content confirms the event title sponsorship ('avec Zwift') and identifies the organizer (A.S.O.), which governs procurement. It reveals the use of Dailymotion for video hosting. While no direct RFPs are present, these partnerships and technology choices are key procurement signals for understanding the vendor ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:04:03.586168",
+          "domain_explored": "https://paris-roubaix.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Hosting)",
+              "CMS (Custom/Proprietary based on URL structure)",
+              "Registration Platform (Third-party for Challenge event)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Paris-Roubaix Challenge Registration (Vendor required for participant management)",
+              "Media Rights Distribution (Dailymotion partnership)",
+              "Event Organization by A.S.O. (Amaury Sport Organization)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Platform (Challenge Registration)",
+            "Media Hosting (Dailymotion)",
+            "Content Management System (CMS)",
+            "Governance (A.S.O. Organization)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.239778995513916
+            }
+          ],
+          "reasoning": "The content confirms the event is organized by A.S.O. and utilizes a third-party registration platform for the 'Paris-Roubaix Challenge' (mass participation event). While no direct RFPs are visible, the reliance on registration platforms and video hosting indicates ongoing procurement for event management software and media services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:04:10.476747",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Platform (L'\u00c9tape Femmes)",
+              "Official Timing Systems (Tissot)",
+              "Virtual Training/Event Platform (Zwift)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement (Zwift, Tissot)",
+              "International Event Services (UK 2027 planning)",
+              "Mass Participation Event Management (L'\u00c9tape)"
+            ]
+          },
+          "patterns_found": [
+            "Title Sponsorship (Zwift)",
+            "Official Timekeeping (Tissot)",
+            "Event Registration (L'\u00c9tape Femmes)",
+            "International Expansion (Grand D\u00e9part UK 2027)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.843259811401367
+            }
+          ],
+          "reasoning": "The content confirms the event organizer (A.S.O.) relies on major title sponsors (Zwift) and official partners (Tissot) for core operations. The presence of 'L'\u00c9tape Femmes' indicates a B2C registration platform requirement. The 'Grand D\u00e9part Grande-Bretagne 2027' signals future international logistical needs. While no direct RFPs are visible, the ecosystem of vendors is expanding."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:04:15.800886",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News",
+            "Race Results",
+            "Athlete Interviews",
+            "Equipment Reviews"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.332728147506714
+            }
+          ],
+          "reasoning": "The content provided is a list of general cycling news headlines and articles from Cyclingnews.com. It focuses on race results (Cyclo-cross World Championships), athlete retirements/interviews (Simon Clarke, Mathieu van der Poel), and equipment tech galleries. There is no mention of Paris\u2013Roubaix Femmes organization, governance, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:04:19.006863",
+          "domain_explored": "https://cyclingfans.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5762,
+      "total_output_tokens": 992,
+      "estimated_cost_usd": 0.032166
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris\u0096Roubaix Femmes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:04:19.007737"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.410217",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:49.257581"
+}

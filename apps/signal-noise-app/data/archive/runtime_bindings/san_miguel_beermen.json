@@ -1,0 +1,133 @@
+{
+  "entity_id": "san_miguel_beermen",
+  "entity_name": "San Miguel Beermen",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "sanmiguelbrewery.com.ph",
+    "deltasportswear.com.ph",
+    "basketball.asia-basket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "san_miguel_beermen",
+      "entity_name": "San Miguel Beermen",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://deltasportswear.com.ph",
+        "https://basketball.asia-basket.com",
+        "https://sanmiguelbrewery.com.ph"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "San Miguel Beermen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:02:09.694350",
+          "domain_explored": "https://sanmiguelbrewery.com.ph",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:02:16.992337",
+          "domain_explored": "https://deltasportswear.com.ph",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Likely - inferred from 'collections' URL structure and standard e-commerce layout)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Delta Sportswear (Apparel Partner)",
+              "Category: Licensed Merchandising / Retail Supply Chain"
+            ]
+          },
+          "patterns_found": [
+            "Official Merchandise Licensing",
+            "Vendor Partnership (Apparel)",
+            "E-commerce Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.8524019718170166
+            }
+          ],
+          "reasoning": "The content confirms an existing commercial relationship between San Miguel Beermen and Delta Sportswear for the production and distribution of 'Official Merchandise'. While this indicates a procurement activity (vendor partnership for goods), it is a retail/consumer goods relationship rather than a corporate B2B technology or service procurement signal. It confirms the entity's existence and vendor ecosystem but offers low intelligence value for corporate tech/service procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:02:42.973372",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Game Results Reporting",
+            "Player Performance Tracking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 216,
+              "elapsed_seconds": 21.300617933273315
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com consists of general sports news headlines, game results, and player statistics for various leagues (Japan, China, Taiwan, etc.). While there is a specific mention of 'SM Beermen' in the context of a PBA Finals game result, the content is purely informational/journalistic. It contains no corporate governance data, technology infrastructure details, or procurement signals (RFPs, vendor partnerships, job postings) relevant to the business operations of San Miguel Beermen."
+        }
+      ],
+      "total_input_tokens": 2835,
+      "total_output_tokens": 499,
+      "estimated_cost_usd": 0.01599
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "San Miguel Beermen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:02:42.978229"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216644",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:52.406977"
+}

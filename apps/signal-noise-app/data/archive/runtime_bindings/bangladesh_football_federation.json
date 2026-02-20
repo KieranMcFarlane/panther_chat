@@ -1,0 +1,353 @@
+{
+  "entity_id": "bangladesh_football_federation",
+  "entity_name": "Bangladesh Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://bd.linkedin.com/jobs/view/assistant-manager-senior-executive-human-resources-for-bangladesh-football-federation-job-id-1285575-at-bdjobs-com-4014797729",
+      "https://bd.linkedin.com/jobs/view/head-of-legal-for-bangladesh-football-federation-job-id-1359062-at-bdjobs-com-4211693055",
+      "https://www.linkedin.com/posts/ca-cma-acca-cs-cima-cfa-jobs-in-bd_position-cfo-bangladesh-football-federation-activity-7319652816090722306-uJ3A",
+      "https://bd.linkedin.com/jobs/view/head-of-admin-hr-and-training-for-bangladesh-football-federation-job-id-1359060-at-bdjobs-com-4211692166",
+      "https://bd.linkedin.com/jobs/view/executive-general-secretary-s-office-for-bangladesh-football-federation-job-id-1359055-at-bdjobs-com-4211696030",
+      "https://bd.linkedin.com/jobs/view/chief-financial-officer-for-bangladesh-football-federation-job-id-1359048-at-bdjobs-com-4211695073",
+      "https://bd.linkedin.com/jobs/view/marketing-and-digital-design-officer-for-bangladesh-football-federation-job-id-1359077-at-bdjobs-com-4211687859"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bangladesh_football_federation",
+      "entity_name": "Bangladesh Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.3,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.3
+      ],
+      "explored_domains": [
+        "https://bd.linkedin.com/jobs/view/head-of-admin-hr-and-training-for-bangladesh-football-federation-job-id-1359060-at-bdjobs-com-4211692166",
+        "https://www.linkedin.com/posts/ca-cma-acca-cs-cima-cfa-jobs-in-bd_position-cfo-bangladesh-football-federation-activity-7319652816090722306-uJ3A",
+        "https://inside.fifa.com",
+        "https://bd.linkedin.com/jobs/view/head-of-legal-for-bangladesh-football-federation-job-id-1359062-at-bdjobs-com-4211693055",
+        "https://bd.linkedin.com/jobs/view/assistant-manager-senior-executive-human-resources-for-bangladesh-football-federation-job-id-1285575-at-bdjobs-com-4014797729",
+        "https://bd.linkedin.com/jobs/view/executive-general-secretary-s-office-for-bangladesh-football-federation-job-id-1359055-at-bdjobs-com-4211696030"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "HR Software Development Intent",
+        "Job Portal & Agency Partnerships",
+        "Performance Management System Implementation",
+        "Database Management Requirements",
+        "Senior Leadership Recruitment",
+        "Contract Management & Compliance Governance",
+        "External Legal Counsel Procurement",
+        "Legal Research Tools Requirement",
+        "Risk Management & Audit Implementation",
+        "C-Level Executive Recruitment (CFO)",
+        "Financial Governance & Compliance Overhaul",
+        "Audit & Taxation Vendor Management",
+        "Budget Control & Financial Planning Implementation",
+        "HRIS & Payroll System Procurement",
+        "Training & Development Outsourcing",
+        "Annual HR Operating Plan & Budgeting",
+        "Facility & Logistics Management Vendors",
+        "Background Verification Services",
+        "Executive Office Support & Protocol Management",
+        "VIP Logistics & Travel Coordination",
+        "Government & Diplomatic Liaison",
+        "Digital Communication Tools Proficiency",
+        "Event Management & High-Level Meeting Execution"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bangladesh Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:57:49.760654",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "FIFA Forward funding program references",
+            "Women's football development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.9388880729675293
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal and discusses general international football topics (Arsenal, Burundi stadium, Women's Champions Cup). There is no mention of the Bangladesh Football Federation (BFF), no local procurement signals, and no specific technology or vendor information relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:57:57.960761",
+          "domain_explored": "https://bd.linkedin.com/jobs/view/assistant-manager-senior-executive-human-resources-for-bangladesh-football-federation-job-id-1285575-at-bdjobs-com-4014797729",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HR Software (Custom/Development)",
+              "Recruitment Database",
+              "Performance Management System",
+              "Video Conferencing (VC)"
+            ],
+            "job_postings": [
+              "Assistant Manager/Senior Executive - Human Resources"
+            ],
+            "procurement_indicators": [
+              "Initiatives to develop HR software",
+              "Management of Job Portal agencies",
+              "Annual HR Budget management",
+              "Cost-effective Recruitment Plan formulation"
+            ]
+          },
+          "patterns_found": [
+            "HR Software Development Intent",
+            "Job Portal & Agency Partnerships",
+            "Performance Management System Implementation",
+            "Database Management Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 292,
+              "elapsed_seconds": 4.407238006591797
+            }
+          ],
+          "reasoning": "The job description explicitly states the need to 'Take initiatives to develop the HR software as required' and manage relationships with job portals. This indicates a clear procurement signal for HR technology tools, recruitment services, and potential database management systems."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:58:04.562894",
+          "domain_explored": "https://bd.linkedin.com/jobs/view/head-of-legal-for-bangladesh-football-federation-job-id-1359062-at-bdjobs-com-4211693055",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Legal Research Tools"
+            ],
+            "job_postings": [
+              "Head of Legal (Director Level)"
+            ],
+            "procurement_indicators": [
+              "Coordination with external legal counsel",
+              "Conduct legal audits and assessments",
+              "Proficiency in legal research tools"
+            ]
+          },
+          "patterns_found": [
+            "Senior Leadership Recruitment",
+            "Contract Management & Compliance Governance",
+            "External Legal Counsel Procurement",
+            "Legal Research Tools Requirement",
+            "Risk Management & Audit Implementation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.2603719234466553
+            }
+          ],
+          "reasoning": "The posting for a 'Head of Legal' at the Director level confirms organizational maturation and a move towards formal governance structures. The explicit requirement to 'coordinate with external legal counsel' indicates a procurement channel for legal services. Additionally, the requirement for 'legal research tools' and 'risk audits' signals future procurement needs for compliance software and professional services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:58:17.063437",
+          "domain_explored": "https://www.linkedin.com/posts/ca-cma-acca-cs-cima-cfa-jobs-in-bd_position-cfo-bangladesh-football-federation-activity-7319652816090722306-uJ3A",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Enterprise Resource Planning (ERP)",
+              "Financial Management Systems",
+              "Accounting Software",
+              "Budgeting & Forecasting Tools"
+            ],
+            "job_postings": [
+              "Chief Financial Officer (CFO)"
+            ],
+            "procurement_indicators": [
+              "Senior Financial Leadership Hiring",
+              "Compliance & Taxation Governance",
+              "External Audit & Advisory Vendor Selection",
+              "Financial System Modernization"
+            ]
+          },
+          "patterns_found": [
+            "C-Level Executive Recruitment (CFO)",
+            "Financial Governance & Compliance Overhaul",
+            "Audit & Taxation Vendor Management",
+            "Budget Control & Financial Planning Implementation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 327,
+              "elapsed_seconds": 8.162749290466309
+            }
+          ],
+          "reasoning": "The recruitment of a Chief Financial Officer (CFO) with a mandate for 'financial regulations, taxation, and compliance' indicates a maturation of the federation's governance structure. This role typically controls the purse strings for major technology investments (ERP, Finance Systems) and selects external vendors for auditing and tax compliance. It signals a move towards professionalizing financial operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:58:29.095568",
+          "domain_explored": "https://bd.linkedin.com/jobs/view/head-of-admin-hr-and-training-for-bangladesh-football-federation-job-id-1359060-at-bdjobs-com-4211692166",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Human Resource Information System (HRIS)",
+              "Payroll Software",
+              "Performance Management System"
+            ],
+            "job_postings": [
+              "Head of Admin, HR and Training"
+            ],
+            "procurement_indicators": [
+              "Annual HR Budget allocation",
+              "External Training Partnerships",
+              "Background Verification Vendors",
+              "Facility and Logistics Management Suppliers",
+              "Office Assets and Vehicle Procurement"
+            ]
+          },
+          "patterns_found": [
+            "HRIS & Payroll System Procurement",
+            "Training & Development Outsourcing",
+            "Annual HR Operating Plan & Budgeting",
+            "Facility & Logistics Management Vendors",
+            "Background Verification Services"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1706,
+              "output_tokens": 350,
+              "elapsed_seconds": 8.560452938079834
+            }
+          ],
+          "reasoning": "The job description for the Head of Admin, HR and Training explicitly outlines responsibilities that require third-party procurement. Key signals include the need to maintain an 'employee database' (HRIS), prepare 'monthly salary & overtime sheets' (Payroll software/service), conduct 'background verification' (Vendors), and coordinate with 'external partners' for training. The mention of an 'Annual HR Operating Plan' confirms a structured budget cycle for these procurements."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:58:39.127697",
+          "domain_explored": "https://bd.linkedin.com/jobs/view/executive-general-secretary-s-office-for-bangladesh-football-federation-job-id-1359055-at-bdjobs-com-4211696030",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office Suite (Word, Excel, PowerPoint, Outlook)",
+              "Digital Communication Tools"
+            ],
+            "job_postings": [
+              "Executive, General Secretary's Office (Job ID: 1359055)"
+            ],
+            "procurement_indicators": [
+              "Travel & Itinerary Management for VIPs/National Teams",
+              "Protocol Support Services",
+              "Event Planning & Execution Vendors",
+              "Stakeholder Management Systems"
+            ]
+          },
+          "patterns_found": [
+            "Executive Office Support & Protocol Management",
+            "VIP Logistics & Travel Coordination",
+            "Government & Diplomatic Liaison",
+            "Digital Communication Tools Proficiency",
+            "Event Management & High-Level Meeting Execution"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1790,
+              "output_tokens": 383,
+              "elapsed_seconds": 6.532402038574219
+            }
+          ],
+          "reasoning": "The job posting for 'Executive, General Secretary's Office' reveals a critical operational layer within the BFF focused on high-level administration and logistics. While primarily an administrative role, the explicit requirement for 'digital communication tools' and the responsibility for 'VIP delegations and National and Age Level Teams' logistics indicates procurement needs in travel management services, event coordination, and potentially upgraded communication or collaboration software to handle sensitive stakeholder interactions. It confirms the BFF is actively professionalizing its core administrative functions."
+        }
+      ],
+      "total_input_tokens": 9474,
+      "total_output_tokens": 1846,
+      "estimated_cost_usd": 0.056111999999999995
+    },
+    "procurement_signals": [
+      "HR Software Development Intent",
+      "Job Portal & Agency Partnerships",
+      "Performance Management System Implementation",
+      "Database Management Requirements",
+      "Senior Leadership Recruitment",
+      "Contract Management & Compliance Governance",
+      "External Legal Counsel Procurement",
+      "Legal Research Tools Requirement",
+      "Risk Management & Audit Implementation",
+      "C-Level Executive Recruitment (CFO)",
+      "Financial Governance & Compliance Overhaul",
+      "Audit & Taxation Vendor Management",
+      "Budget Control & Financial Planning Implementation",
+      "HRIS & Payroll System Procurement",
+      "Training & Development Outsourcing",
+      "Annual HR Operating Plan & Budgeting",
+      "Facility & Logistics Management Vendors",
+      "Background Verification Services",
+      "Executive Office Support & Protocol Management",
+      "VIP Logistics & Travel Coordination",
+      "Government & Diplomatic Liaison",
+      "Digital Communication Tools Proficiency",
+      "Event Management & High-Level Meeting Execution"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bangladesh Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:58:39.129089"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.203482",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:55.340137"
+}

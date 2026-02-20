@@ -1,0 +1,402 @@
+{
+  "entity_id": "bourg-en-bresse",
+  "entity_name": "Bourg-en-Bresse",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "bourgenbresse.fr",
+    "bourgenbressedestinations.com",
+    "en.montagnes-du-jura.fr",
+    "tripadvisor.com",
+    "britannica.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/enovacom-jobs-worldwide",
+      "https://www.linkedin.com/jobs/search/?location=Auvergne-Rh%C3%B4ne-Alpes",
+      "https://www.linkedin.com/jobs/dynacit%C3%A9-jobs-worldwide",
+      "https://www.linkedin.com/jobs/hive-group-jobs-worldwide",
+      "https://www.linkedin.com/jobs/aftral-jobs-worldwide?f_C=9349767&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/msa-ain-rhone-jobs-worldwide?f_C=46297564&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/azureva-jobs-worldwide?f_C=11147241&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/u-logistique-jobs-worldwide?f_C=25789076&trk=job-results_see-all-jobs-link",
+      "https://www.linkedin.com/jobs/alfa3a-jobs-worldwide?f_C=2074506&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/jobs-in-oyonnax"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bourg-en-bresse",
+      "entity_name": "Bourg-en-Bresse",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/aftral-jobs-worldwide?f_C=9349767&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://www.linkedin.com/jobs/hive-group-jobs-worldwide",
+        "https://en.montagnes-du-jura.fr",
+        "https://bourgenbresse.fr",
+        "https://www.linkedin.com/jobs/enovacom-jobs-worldwide",
+        "https://www.linkedin.com/jobs/search/?location=Auvergne-Rh%C3%B4ne-Alpes",
+        "https://bourgenbressedestinations.com",
+        "https://www.linkedin.com/jobs/dynacit%C3%A9-jobs-worldwide",
+        "https://tripadvisor.com",
+        "https://britannica.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bourg-en-Bresse may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:48:48.227349",
+          "domain_explored": "https://bourgenbresse.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:48:59.094035",
+          "domain_explored": "https://bourgenbressedestinations.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "tourism_promotion_content",
+            "regional_cultural_marketing",
+            "static_informational_site"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.3981900215148926
+            }
+          ],
+          "reasoning": "The content is exclusively promotional material for the Bourg-en-Bresse tourist office (Bourg-en-Bresse destinations). It focuses on tourism assets (Monastery of Brou, local gastronomy, nature sites) and contains no corporate governance, financial, or technical information indicative of procurement activities or technology stacks."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:49:08.542773",
+          "domain_explored": "https://en.montagnes-du-jura.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "tourism_promotion_content",
+            "regional_cultural_marketing",
+            "static_informational_site",
+            "bfc_tourisme_branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 150,
+              "elapsed_seconds": 2.519974946975708
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing tourism marketing (accommodation, skiing, dining) for the Jura Mountains region. It contains no governance, administrative, or procurement signals relevant to Bourg-en-Bresse."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:49:18.753596",
+          "domain_explored": "https://tripadvisor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "global_travel_aggregation_platform",
+            "b2c_content_marketing",
+            "generic_tourism_listings",
+            "third_party_advertising"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 212,
+              "elapsed_seconds": 3.136064052581787
+            }
+          ],
+          "reasoning": "The content is from the global homepage of Tripadvisor, a third-party consumer travel platform. It contains generic tourism listings, global marketing campaigns ('2026 Trendcast'), and advertisements for tours worldwide (Florence, Hawaii, etc.). There is absolutely no content related to the municipal governance, procurement processes, or business operations of Bourg-en-Bresse. This domain is irrelevant to the objective of finding local procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:49:30.767800",
+          "domain_explored": "https://britannica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "encyclopedic_content",
+            "general_knowledge_repository",
+            "historical_reference_material",
+            "global_news_aggregation",
+            "b2c_informational"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 185,
+              "elapsed_seconds": 5.2492759227752686
+            }
+          ],
+          "reasoning": "The content is from Britannica, a general knowledge encyclopedia. It contains articles about film preservation, precious metals markets, and the Olympics. There is absolutely no connection to the specific procurement activities, governance, or technology stack of the municipal entity Bourg-en-Bresse. This is irrelevant noise."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:49:38.755229",
+          "domain_explored": "https://www.linkedin.com/jobs/enovacom-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Enovacom (Healthcare software integration)"
+            ],
+            "job_postings": [
+              "Charg\u00e9(e) des applications de gestion - logiciels du plateau m\u00e9dico-technique (Centre Hospitalier de Carcassonne)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "unrelated_geographic_scope",
+            "healthcare_sector_focus",
+            "vendor_specific_job_aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.944199323654175
+            }
+          ],
+          "reasoning": "The content is a job listing page for 'Enovacom' roles, primarily associated with the 'Centre Hospitalier de Carcassonne' in Occitanie. This is geographically distinct from the target entity Bourg-en-Bresse (Auvergne-Rh\u00f4ne-Alpes). While it reveals technology usage (Enovacom) in the healthcare sector, there is no direct link to procurement activities or governance within Bourg-en-Bresse."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:49:46.263779",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?location=Auvergne-Rh%C3%B4ne-Alpes",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cuisinier (Golf & Country Club de Maison Blanche)",
+              "Charg\u00e9 d'Accompagnement Social (Forum r\u00e9fugi\u00e9s)",
+              "Vendeuse / Vendeur (COURIR)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_job_aggregation",
+            "b2c_recruitment_platform",
+            "regional_scope_mismatch",
+            "low_value_roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 237,
+              "elapsed_seconds": 2.888528823852539
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for the broader Auvergne-Rh\u00f4ne-Alpes region. It lists low-value retail and social roles (Cooks, Sales associates) unrelated to Bourg-en-Bresse municipal governance or high-value procurement. The geographic scope is too wide, and the platform is a general aggregator, not a source of strategic intent for the specific target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:50:00.176746",
+          "domain_explored": "https://www.linkedin.com/jobs/dynacit%C3%A9-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable contentieux F/H \u2013 Bourg en Bresse (Litigation Manager)",
+              "Responsable achats directs F/H \u2013 Bourg en Bresse (Direct Purchasing Manager)",
+              "Acheteur indirect F/H \u2013 Bourg en Bresse (Indirect Buyer)",
+              "Responsable comptabilit\u00e9 g\u00e9n\u00e9rale F/H \u2013 Bourg en Bresse (General Accounting Manager)"
+            ],
+            "procurement_indicators": [
+              "Entity: Dynacit\u00e9 (Private Sector Vendor)",
+              "Activity: Active hiring for procurement roles (Direct/Indirect Purchasing)",
+              "Location: Bourg-en-Bresse, Auvergne-Rh\u00f4ne-Alpes, France",
+              "Recency: 1-3 months ago"
+            ]
+          },
+          "patterns_found": [
+            "private_sector_employment_aggregation",
+            "vendor_specific_job_postings",
+            "procurement_role_hiring",
+            "geographic_match_only"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1707,
+              "output_tokens": 410,
+              "elapsed_seconds": 8.85929799079895
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for 'Dynacit\u00e9', a private company (likely a social landlord or property manager based on the sector context), not the Bourg-en-Bresse municipality. While the location matches the target entity (Bourg-en-Bresse), the hiring entity is a third-party vendor. The page lists procurement-related roles (e.g., 'Responsable achats directs', 'Acheteur indirect') which indicates Dynacit\u00e9 is expanding its internal procurement capacity, but this does not represent a procurement signal *from* the city of Bourg-en-Bresse itself. It is a B2C recruitment platform listing private sector jobs."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T05:50:08.567711",
+          "domain_explored": "https://www.linkedin.com/jobs/hive-group-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HVAC Systems",
+              "Climatic Engineering Equipment"
+            ],
+            "job_postings": [
+              {
+                "title": "Technicien Climaticien",
+                "location": "Bourg-en-Bresse, Auvergne-Rh\u00f4ne-Alpes, France",
+                "company": "HIVE GROUP",
+                "posted": "2 weeks ago",
+                "type": "Facilities/Maintenance"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "signal": "Local Vendor Presence",
+                "description": "HIVE GROUP is actively hiring in Bourg-en-Bresse, suggesting active facilities management contracts or local service delivery."
+              },
+              {
+                "signal": "Operational Capacity Expansion",
+                "description": "Hiring technical staff indicates scaling of operations, often correlated with contract wins or increased maintenance scope."
+              }
+            ]
+          },
+          "patterns_found": [
+            "local_entity_job_posting",
+            "facilities_management_role",
+            "hvac_maintenance",
+            "local_vendor_operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 396,
+              "elapsed_seconds": 5.115041017532349
+            }
+          ],
+          "reasoning": "The content contains a direct job posting for 'Technicien Climaticien' (HVAC Technician) located in Bourg-en-Bresse by HIVE GROUP. This confirms active operations and hiring by a facilities management/technical services vendor within the target geography, indicating local business activity and potential service procurement needs."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T05:50:26.785000",
+          "domain_explored": "https://www.linkedin.com/jobs/aftral-jobs-worldwide?f_C=9349767&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Conseiller(\u00e8re) recrutement - Toulouse",
+              "Conseiller recrutement - Perpignan",
+              "Commercial btob - Chalon-sur-Sa\u00f4ne",
+              "Commercial itin\u00e9rant - Rouen/Arras"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "private_sector_vocational_training",
+            "geographic_scope_mismatch",
+            "recruitment_focused_roles",
+            "b2b_sales_roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1837,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.916050910949707
+            }
+          ],
+          "reasoning": "The content represents job postings for AFTRAL, a private vocational training group (transport/logistics). While one posting is in Bourgogne-Franche-Comt\u00e9 (Chalon-sur-Sa\u00f4ne), it is unrelated to the specific procurement activities of the Bourg-en-Bresse public entity. The roles are focused on recruitment advisors and sales, not public sector procurement or governance."
+        }
+      ],
+      "total_input_tokens": 14412,
+      "total_output_tokens": 2239,
+      "estimated_cost_usd": 0.076821
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bourg-en-Bresse may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:50:26.787782"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.276705",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:59.023284"
+}

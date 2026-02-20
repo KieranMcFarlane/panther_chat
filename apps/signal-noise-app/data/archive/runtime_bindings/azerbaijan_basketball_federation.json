@@ -1,0 +1,160 @@
+{
+  "entity_id": "azerbaijan_basketball_federation",
+  "entity_name": "Azerbaijan Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "play.fiba3x3.com",
+    "a.osmarks.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://az.linkedin.com/jobs/view/physiotherapist-at-azerbaijan-basketball-federation-4300929918"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "azerbaijan_basketball_federation",
+      "entity_name": "Azerbaijan Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://az.linkedin.com/jobs/view/physiotherapist-at-azerbaijan-basketball-federation-4300929918",
+        "https://a.osmarks.net",
+        "https://play.fiba3x3.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Azerbaijan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:30:21.745920",
+          "domain_explored": "https://play.fiba3x3.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FIBA 3x3 Platform (SaaS)",
+              "Player Profile Database (Hosted)",
+              "Event Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of FIBA centralized platform reduces need for independent event tech procurement",
+              "Potential need for local integration tools or data export services",
+              "Marketing/Outreach requirements to drive local traffic to the global platform"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Platform Dependency",
+            "Centralized Data Management",
+            "User Authentication/SSO"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1132,
+              "output_tokens": 284,
+              "elapsed_seconds": 5.098827123641968
+            }
+          ],
+          "reasoning": "The content confirms the Azerbaijan Basketball Federation utilizes the FIBA 3x3 digital ecosystem (play.fiba3x3.com) for event management and player tracking. This indicates a reliance on external SaaS platforms rather than in-house procurement of core sports technology. It reveals a 'Digital Enabler' pattern where the federation consumes global infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:30:37.664164",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static Content / Offline Reader",
+            "No Dynamic Interaction",
+            "Unrelated Domain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 475,
+              "output_tokens": 203,
+              "elapsed_seconds": 9.355589151382446
+            }
+          ],
+          "reasoning": "The target URL (a.osmarks.net) is serving content via 'Kiwix', an offline reader typically used for static archives (like Wikipedia dumps). The content provided is a generic 'Please enable JavaScript' message and footer links, completely devoid of any organizational data, governance structure, or technology stack related to the Azerbaijan Basketball Federation. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:30:49.985155",
+          "domain_explored": "https://az.linkedin.com/jobs/view/physiotherapist-at-azerbaijan-basketball-federation-4300929918",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Physiotherapist (Ganja-based)"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment Cycle",
+              "Regional Operational Expenditure (Salary: 1,000 AZN + Housing)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing",
+            "Regional Expansion (Ganja)",
+            "Service Procurement (Medical/Healthcare)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.9009900093078613
+            }
+          ],
+          "reasoning": "The content confirms the Federation is actively hiring for operational roles (Physiotherapist) in Ganja, indicating active organizational management and regional team support. While this is a direct hire rather than a technology procurement, it validates the entity's active hiring cycle and operational budget, which supports the overall procurement intelligence profile. It does not directly signal technology procurement."
+        }
+      ],
+      "total_input_tokens": 3087,
+      "total_output_tokens": 729,
+      "estimated_cost_usd": 0.020196
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Azerbaijan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:30:49.990658"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.250589",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:23:47.243788"
+}

@@ -1,0 +1,385 @@
+{
+  "entity_id": "anderlecht",
+  "entity_name": "Anderlecht",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "ticketing.rsca.be",
+    "shop.rsca.be",
+    "anderlecht-online.be",
+    "proleague.be"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/on-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/sales-assistant-anderlecht-jobs-brussels",
+      "https://be.linkedin.com/jobs/hr-graduate-jobs-bruxelles-anderlecht?trk=jobs_jserp_facet_geo_city",
+      "https://be.linkedin.com/jobs/ab-inbev-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/workplace-manager-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/information-consultant-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/assistant-department-manager-jobs-bruxelles-anderlecht?trk=jobs_jserp_facet_geo_city",
+      "https://be.linkedin.com/jobs/corporate-finance-analyst-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/it-in-jobs-anderlecht",
+      "https://be.linkedin.com/jobs/sales-merchandiser-jobs-anderlecht"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "anderlecht",
+      "entity_name": "Anderlecht",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://shop.rsca.be",
+        "https://be.linkedin.com/jobs/hr-graduate-jobs-bruxelles-anderlecht?trk=jobs_jserp_facet_geo_city",
+        "https://be.linkedin.com/jobs/sales-assistant-anderlecht-jobs-brussels",
+        "https://proleague.be",
+        "https://be.linkedin.com/jobs/on-jobs-anderlecht",
+        "https://be.linkedin.com/jobs/workplace-manager-jobs-anderlecht",
+        "https://ticketing.rsca.be",
+        "https://anderlecht-online.be",
+        "https://be.linkedin.com/jobs/ab-inbev-jobs-anderlecht"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Anderlecht may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:33:05.609765",
+          "domain_explored": "https://ticketing.rsca.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Dynamic Content Loading (JavaScript)",
+            "Client-Side Rendering"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 380,
+              "output_tokens": 180,
+              "elapsed_seconds": 5.142052173614502
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Loading, please wait...' placeholders. This indicates the ticketing site is a Single Page Application (SPA) where the actual data (pricing, vendors, technology) is loaded dynamically via JavaScript after the initial HTML response. Since the scraping output did not capture the rendered DOM or API responses, there is no actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:33:16.222852",
+          "domain_explored": "https://shop.rsca.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Payment Processing (implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active procurement of 'Joma' collections for resale",
+              "Seasonal product lifecycle management (Season 25/26 kits)",
+              "Outlet/Inventory liquidation strategy (Discounts up to 50%)",
+              "Licensing/IP procurement (Vinyl records, branded puzzles)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Procurement",
+            "Vendor Partnership (Joma)",
+            "Inventory Management Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 285,
+              "elapsed_seconds": 5.077144145965576
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce platform (shop.rsca.be) for merchandise sales. While this is a consumer-facing page, the presence of specific vendor collections (Joma) and seasonal inventory management (Kits 25/26) indicates active procurement cycles for retail goods and platform maintenance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:33:57.558267",
+          "domain_explored": "https://anderlecht-online.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OS Templates (Web Design Framework)",
+              "Static HTML/Basic Scripting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Type: Unofficial Fan Club (VZW)",
+              "Web Infrastructure: Low-cost/Donated Templates"
+            ]
+          },
+          "patterns_found": [
+            "Unofficial Entity (VZW/Fan Site)",
+            "Template-Based Architecture (OS Templates)",
+            "Legacy/Static Content Structure",
+            "Copyright Date Anomalies (1970/2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 735,
+              "output_tokens": 266,
+              "elapsed_seconds": 6.89302396774292
+            }
+          ],
+          "reasoning": "The content confirms that 'anderlecht-online.be' is an unofficial fansite managed by a VZW (non-profit), not the official RSC Anderlecht organization. The site relies on generic OS Templates and displays significant technical errors (Unix epoch timestamps '1970', future copyright dates '2026'). This indicates a lack of enterprise-grade procurement activity or official governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:34:06.003770",
+          "domain_explored": "https://proleague.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide CSR Initiatives (Younited Partnership)",
+              "Online Safety Measures (Anti-hate campaigns)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Governance",
+            "Generic News Aggregation",
+            "Social Media Integration",
+            "Content Repetition (Scraping Artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 269,
+              "elapsed_seconds": 2.9230098724365234
+            }
+          ],
+          "reasoning": "The scraped content originates from the Belgian Pro League (proleague.be), the governing body for Belgian football, rather than RSCA Anderlecht specifically. While Anderlecht is a member club, the content focuses on league-wide initiatives (e.g., 'Week van de Belgische Muziek', 'Younited' charity) and generic match summaries. There are no direct procurement signals, technology stacks, or job postings specific to Anderlecht's entity operations. The content is highly repetitive, indicating a shallow scrape of a news feed or social media wall."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:34:15.646127",
+          "domain_explored": "https://be.linkedin.com/jobs/on-jobs-anderlecht",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Officer, Hybrid Policy (NATO)",
+              "Officer, Innovation and Technology Adoption (NATO)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Ambiguity (Anderlecht vs. RSCA)",
+            "Entity Mismatch (NATO vs. Football Club)",
+            "Generic Job Aggregation",
+            "Authentication Gate (Content Hidden)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.899686098098755
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the geographic location 'Anderlecht' rather than the specific entity 'RSCA Anderlecht'. The primary listings detected (e.g., NATO roles) are unrelated to the football club's operations. No specific procurement signals, technology stacks, or vendor partnerships related to RSCA were extracted from this generic content."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:34:25.371506",
+          "domain_explored": "https://be.linkedin.com/jobs/sales-assistant-anderlecht-jobs-brussels",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Assistant at Pandora (Westland Shopping)",
+              "Part Time Sales Assistant at JD Sports Fashion"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Ambiguity",
+            "Retail Sector Aggregation",
+            "Entity Mismatch",
+            "Generic Job Board Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 214,
+              "elapsed_seconds": 4.07489800453186
+            }
+          ],
+          "reasoning": "The search results for 'Sales Assistant Anderlecht' return job postings for retail brands (Pandora, JD Sports) located within the geographic commune of Anderlecht, rather than roles associated with the football club entity (RSCA). There is no evidence of procurement activity, technology investment, or corporate governance related to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:35:05.088222",
+          "domain_explored": "https://be.linkedin.com/jobs/hr-graduate-jobs-bruxelles-anderlecht?trk=jobs_jserp_facet_geo_city",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Intern (outbound) - LIZY",
+              "Young Graduate Management Consultant - Threon"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Ambiguity (Anderlecht vs. RSCA)",
+            "Generic Job Aggregation",
+            "Entity Mismatch (LIZY, Threon vs. Football Club)",
+            "Authentication Wall (Sign-in Prompt)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1682,
+              "output_tokens": 248,
+              "elapsed_seconds": 19.920665979385376
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page filtered by the geographic location of 'Anderlecht' (the commune), not the entity RSC Anderlecht. The listings are for unrelated third-party entities (e.g., LIZY, Threon) and do not reflect procurement activities or hiring by the football club itself. The presence of repeated 'Sign in' prompts further indicates a lack of accessible, specific data regarding the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:35:22.722622",
+          "domain_explored": "https://be.linkedin.com/jobs/ab-inbev-jobs-anderlecht",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Graduate Management Traineeship Programme (GMT) - Belgium",
+              "Key Account Manager Intern"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (AB InBev vs. RSC Anderlecht)",
+            "Geographic Ambiguity (Anderlecht Municipality vs. Target Entity)",
+            "Generic Job Aggregation",
+            "Authentication Wall/Gated Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1746,
+              "output_tokens": 237,
+              "elapsed_seconds": 11.951014280319214
+            }
+          ],
+          "reasoning": "The scraped content lists job openings for AB InBev located in the Anderlecht municipality (or nearby Leuven). While AB InBev is a major corporate entity, it is not the target entity (RSC Anderlecht). The presence of 'Anderlecht' in the URL is a geographic filter, not an organizational identifier. This confirms a pattern of geographic noise in the LinkedIn search results."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:35:47.540045",
+          "domain_explored": "https://be.linkedin.com/jobs/workplace-manager-jobs-anderlecht",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Assistant Manager",
+                "company": "DaJobs",
+                "location": "Brussels Region, Belgium",
+                "relevance": "None"
+              },
+              {
+                "title": "Complaints Manager",
+                "company": "Innova Solutions",
+                "location": "Brussels, Brussels Region, Belgium",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Ambiguity (Anderlecht Municipality vs. RSCA)",
+            "Entity Mismatch (DaJobs, Innova Solutions vs. Target Entity)",
+            "Authentication Wall (Sign-in Prompt)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1817,
+              "output_tokens": 351,
+              "elapsed_seconds": 15.213487148284912
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered by the location 'Anderlecht' (the municipality) rather than the specific entity 'RSC Anderlecht'. The visible job listings (Assistant Manager at DaJobs, Complaints Manager at Innova Solutions) are unrelated to the football club's operations or procurement needs. The content is primarily composed of repeated 'Sign in' prompts and generic job listings, indicating a lack of specific intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 12433,
+      "total_output_tokens": 2285,
+      "estimated_cost_usd": 0.071574
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Anderlecht may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:35:47.542522"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.178105",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:01.961875"
+}

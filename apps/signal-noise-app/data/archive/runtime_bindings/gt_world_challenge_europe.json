@@ -1,0 +1,256 @@
+{
+  "entity_id": "gt_world_challenge_europe",
+  "entity_name": "GT World Challenge Europe",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "gt-world-challenge-europe.com",
+    "gt-world-challenge.com",
+    "gtwcmerchandise.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/antoniarankin_newjob-motorsports-motorsportsjobs-activity-7183213043688873984-xIQv",
+      "https://be.linkedin.com/jobs/view/m%C3%A9canicien-en-chef-chief-mechanic-at-boutsen-vds-4349070962"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gt_world_challenge_europe",
+      "entity_name": "GT World Challenge Europe",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://gt-world-challenge.com",
+        "https://gt-world-challenge-europe.com",
+        "https://gtwcmerchandise.com",
+        "https://be.linkedin.com/jobs/view/m%C3%A9canicien-en-chef-chief-mechanic-at-boutsen-vds-4349070962",
+        "https://www.linkedin.com/posts/antoniarankin_newjob-motorsports-motorsportsjobs-activity-7183213043688873984-xIQv"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "GT World Challenge Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:05:38.356005",
+          "domain_explored": "https://gt-world-challenge-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Amazon Web Services (AWS) - Title Sponsor/Infrastructure",
+              "Mobile Application (iOS/Android)",
+              "CRM/Email Marketing Platform (Sign-up forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SRO GT Academy expansion (Education/Training services)",
+              "VIP Packages & Hospitality sales (Event management procurement)",
+              "Concert organization (Dimitri Vegas at Spa - Entertainment procurement)",
+              "Official Test Days (Track/Logistics procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Asset Management (DAM) Usage",
+            "Mobile App Maintenance/Development",
+            "CRM & Email Marketing Integration",
+            "Sponsorship & Event Procurement (VIP/Concerts)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 340,
+              "elapsed_seconds": 5.205743789672852
+            }
+          ],
+          "reasoning": "The content reveals active digital operations requiring ongoing vendor support. The explicit mention of 'powered by AWS' confirms cloud infrastructure procurement. The presence of a mobile app (iOS/Android) and a 'Sign up' mechanism for CRM indicates a need for software development and marketing automation vendors. The 'VIP Packages' and 'Concert' organization suggest procurement of event services and hospitality vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:05:47.811248",
+          "domain_explored": "https://gt-world-challenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AWS (Title Sponsor - implies cloud infrastructure usage)",
+              "Global Content Management Systems (CMS)",
+              "Multi-regional Web Hosting"
+            ],
+            "job_postings": [
+              "Global Chief Marketing Officer (Paul Hembery - SRO Motorsports Group)"
+            ],
+            "procurement_indicators": [
+              "Expansion of SRO GT Academy (Global program rollout)",
+              "Management of 30 events across 4 continents (Logistics/Scoring/Timing Tech)",
+              "Integration of new manufacturers (10 total)"
+            ]
+          },
+          "patterns_found": [
+            "Global Digital Infrastructure Requirements",
+            "Executive Leadership Change (CMO)",
+            "Pan-continental Program Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 340,
+              "elapsed_seconds": 4.484358787536621
+            }
+          ],
+          "reasoning": "The content confirms the entity operates as part of a global ecosystem (SRO Motorsports Group) spanning four continents. The appointment of a Global CMO (Paul Hembery) and the expansion of the 'SRO GT Academy' into a 'pan-continental' competition indicate active organizational growth and digital transformation. This suggests future procurement needs for centralized marketing technology, global CRM systems, and scalable digital platforms to manage multi-regional operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:05:55.480844",
+          "domain_explored": "https://gtwcmerchandise.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /products/ and UI artifacts)",
+              "E-commerce Payments Gateway"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Vendor Management (Apparel, Hard goods)",
+              "Sustainable Material Sourcing (Recycled PET Softshells/Lanyards)",
+              "Fulfillment & Logistics Services"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Shopify)",
+            "Sustainable Product Sourcing (Recycled PET)",
+            "Global Inventory Management (Multi-currency)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 334,
+              "elapsed_seconds": 4.4126877784729
+            }
+          ],
+          "reasoning": "The scraped content reveals a dedicated e-commerce storefront (gtwcmerchandise.com) for the series. The URL structure and 'Unit price/per' text artifacts strongly indicate a Shopify-based stack. The presence of 'Recycled PET' apparel suggests specific vendor requirements for sustainable materials. While this confirms active retail operations, it is a 'Weak Accept' because the site appears to be a standard implementation of a hosted platform, showing limited immediate signals for new *procurement* of major custom software, though it does indicate ongoing vendor relationships for physical goods."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:06:05.167784",
+          "domain_explored": "https://www.linkedin.com/posts/antoniarankin_newjob-motorsports-motorsportsjobs-activity-7183213043688873984-xIQv",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Pit Lane Reporter (Filled by Antonia Rankin)"
+            ],
+            "procurement_indicators": [
+              "Vendor: LoudSpeaker Agency (Talent/Audio Services)",
+              "Activity: Seasonal Staffing for Broadcast Production"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition (Media/Broadcasting)",
+            "Agency Partnership (Broadcasting/Talent)",
+            "Seasonal Workforce Scaling"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 230,
+              "elapsed_seconds": 6.249154806137085
+            }
+          ],
+          "reasoning": "The content confirms active hiring for the GT World Challenge Europe series, specifically for broadcast/media roles (Pit Lane Reporter). It reveals a dependency on third-party agencies (LoudSpeaker Agency) for talent sourcing and management, indicating a procurement category for HR services and media production contractors."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:06:14.476774",
+          "domain_explored": "https://be.linkedin.com/jobs/view/m%C3%A9canicien-en-chef-chief-mechanic-at-boutsen-vds-4349070962",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Porsche 911 GT3 R (Vehicle Platform)",
+              "Data Acquisition Systems (implied by diagnostics responsibility)",
+              "BOP (Balance of Performance) Management Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "M\u00e9canicien en chef / Chief Mechanic",
+                "entity": "Boutsen VDS",
+                "location": "Wavre, Belgium",
+                "context": "Expansion for 2026 Porsche Motorsport partnership"
+              }
+            ],
+            "procurement_indicators": [
+              "Capital Expenditure (CapEx): Expansion of fleet for 2026 season",
+              "Supply Chain: Sourcing Porsche Motorsport parts and spares",
+              "MRO: Procurement of specialized mechanical tools and pit equipment",
+              "Logistics: Travel and accommodation services for European circuit calendar"
+            ]
+          },
+          "patterns_found": [
+            "Technical Workforce Scaling",
+            "Major OEM Partnership Activation (Porsche Motorsport 2026)",
+            "Specialized Tooling & Equipment Procurement",
+            "Logistics & Travel Services (European Circuit Calendar)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1638,
+              "output_tokens": 432,
+              "elapsed_seconds": 5.126338005065918
+            }
+          ],
+          "reasoning": "While this is a job posting (Boutsen VDS) rather than a direct procurement tender for the series organizer (SRO/GTWC), it provides high-value intelligence regarding the ecosystem's procurement needs. The explicit mention of a '2026 development in partnership with Porsche Motorsport' signals a capital-intensive expansion phase for a key team, which correlates with upcoming demand for specialized automotive parts, pit equipment, and logistics services."
+        }
+      ],
+      "total_input_tokens": 7472,
+      "total_output_tokens": 1676,
+      "estimated_cost_usd": 0.047556
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "GT World Challenge Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:06:14.478756"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.375541",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:13.653813"
+}

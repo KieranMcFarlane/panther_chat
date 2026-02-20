@@ -1,0 +1,86 @@
+{
+  "entity_id": "soudal\u0096quick-step",
+  "entity_name": "Soudal\u0096Quick-Step",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "uci_worldteam",
+  "discovered_domains": [
+    "soudal-quickstepteam.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "soudal\u0096quick-step",
+      "entity_name": "Soudal\u0096Quick-Step",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://soudal-quickstepteam.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Soudal\u0096Quick-Step may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:19:26.318893",
+          "domain_explored": "https://soudal-quickstepteam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "thewolfpack.shop (E-commerce Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Store Link (Consumer Sales)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Public Relations Content",
+            "E-commerce Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.654888868331909
+            }
+          ],
+          "reasoning": "The scraped content is a repetition of the website's homepage news feed (Team presentation, Media day) and a roster list. While there is a link to a merchandise shop ('Race Clothing 2026'), this is standard consumer-facing e-commerce (B2C) and does not constitute a procurement signal (B2B). There are no job postings, RFPs, or technology infrastructure details present."
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 219,
+      "estimated_cost_usd": 0.0073679999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Soudal\u0096Quick-Step may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:19:26.320608"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.382022",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:44.765008"
+}

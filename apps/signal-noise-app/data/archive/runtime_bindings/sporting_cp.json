@@ -1,0 +1,120 @@
+{
+  "entity_id": "sporting_cp",
+  "entity_name": "Sporting CP",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "sporting.pt",
+    "fportugal.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sporting_cp",
+      "entity_name": "Sporting CP",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sporting.pt",
+        "https://fportugal.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sporting CP may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:56:29.561817",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Ticketing)",
+              "Membership Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing operations",
+              "Merchandising/Shop presence"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Infrastructure",
+            "Multi-sport Event Management",
+            "Membership Subscription Model"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.1037588119506836
+            }
+          ],
+          "reasoning": "The scraped content is the homepage HTML, focusing on public-facing content such as match results, ticket sales ('Comprar Bilhetes'), membership drives ('Faz-te s\u00f3cio'), and sports calendars. While this confirms the existence of e-commerce and membership platforms, it does not contain specific procurement signals, technology vendor names, or strategic investment initiatives required for the initial discovery phase."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:56:37.452323",
+          "domain_explored": "https://fportugal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content sourced from external retailer (fportugal.com), not Sporting CP directly."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Retail Interface",
+            "Third-Party Retail Aggregation",
+            "Merchandise Catalog Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.3212831020355225
+            }
+          ],
+          "reasoning": "The content is scraped from 'fportugal.com', a third-party e-commerce retailer (Foot Locker Portugal), not the official Sporting CP domain. While it lists Sporting CP merchandise, it provides no insight into the club's internal procurement operations, technology stack, or governance. This represents a false positive in the search for procurement signals."
+        }
+      ],
+      "total_input_tokens": 2759,
+      "total_output_tokens": 452,
+      "estimated_cost_usd": 0.015057
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sporting CP may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:56:37.454407"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352307",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:57.022336"
+}

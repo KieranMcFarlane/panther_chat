@@ -1,0 +1,264 @@
+{
+  "entity_id": "ao_racing",
+  "entity_name": "AO Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "aoracing.com",
+    "tsm-models.com",
+    "shop.porsche.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/e-commerce-senior-manager-at-ao-racing-4327951260",
+      "https://www.linkedin.com/jobs/view/senior-mechanical-engineer-iv-communications-at-otto-engineering-inc-4323710592",
+      "https://www.linkedin.com/posts/brianjmckinley_careers-the-official-stewart-haas-racing-activity-6874421161342640128-Xxef"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ao_racing",
+      "entity_name": "AO Racing",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/senior-mechanical-engineer-iv-communications-at-otto-engineering-inc-4323710592",
+        "https://www.linkedin.com/posts/brianjmckinley_careers-the-official-stewart-haas-racing-activity-6874421161342640128-Xxef",
+        "https://aoracing.com",
+        "https://tsm-models.com",
+        "https://www.linkedin.com/jobs/view/e-commerce-senior-manager-at-ao-racing-4327951260",
+        "https://shop.porsche.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AO Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:25:18.543977",
+          "domain_explored": "https://aoracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Store)",
+              "Email Marketing Platform (Subscribe form)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising Operations (Apparel/Accessories)",
+              "Sponsorship Acquisition (Champion Porsche)",
+              "Licensing Deal (LEGO Technic)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Commerce Presence",
+            "Marketing Partnership Activity",
+            "Brand Licensing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 269,
+              "elapsed_seconds": 5.257280111312866
+            }
+          ],
+          "reasoning": "The content confirms the existence of an e-commerce platform ('The AO Store') and active sponsorship/merchandising partnerships (Champion Porsche, LEGO). While this indicates a need for e-commerce support and digital marketing tools, the homepage itself does not contain explicit technical procurement signals (like RFPs) or specific technology stack details. It validates the business scale but requires deeper scraping for specific vendor intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:25:29.735036",
+          "domain_explored": "https://tsm-models.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP (index.php?action=cart)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Product Listings",
+              "Shopping Cart Functionality"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Retail Activity",
+            "Merchandise Catalog",
+            "Third-Party Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.6555938720703125
+            }
+          ],
+          "reasoning": "The scraped content from 'tsm-models.com' identifies it as a distinct e-commerce entity selling scale models and merchandise, unrelated to the operational procurement, governance, or technology infrastructure of 'AO Racing'. The presence of 'AO Racing' branded items (if any) would indicate a vendor relationship, but the content provided lists generic motorsport merchandise (Ducati, Honda, Mercedes). This represents a vendor/supplier site, not the target entity's internal operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:25:38.542043",
+          "domain_explored": "https://shop.porsche.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Internationalization (i18n) / Localization",
+              "Multi-region Content Delivery"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global E-Commerce Infrastructure",
+            "Regional Localization",
+            "Corporate Merchandising"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1077,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.6601390838623047
+            }
+          ],
+          "reasoning": "The content is a country/region selector for Porsche's official online shop. This confirms the entity is Porsche AG (the OEM), not AO Racing. While it indicates a complex global supply chain for merchandise, it is a consumer-facing interface and provides no specific procurement signals related to the 'AO Racing' target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:25:49.971867",
+          "domain_explored": "https://www.linkedin.com/jobs/view/e-commerce-senior-manager-at-ao-racing-4327951260",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Interface",
+            "Authentication Barrier",
+            "Unrelated Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.5429670810699463
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's generic login interface, footer links, and aggregated job listings for other entities (e.g., UNIQLO, Berri Organics). There is no visible text, metadata, or content specifically related to 'AO Racing' or a specific job posting for them within the provided text. The URL suggests a specific job ID, but the scraper captured the logged-out view or a redirect page, yielding zero intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:25:59.229167",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-mechanical-engineer-iv-communications-at-otto-engineering-inc-4323710592",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Lead Mechanical Engineer at CRB",
+              "Senior Mechanical Engineer/ Project Manager at Acorn Product Development"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity",
+            "Generic Job Aggregation",
+            "Authentication Barrier"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1578,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.787763833999634
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job search results page for 'Senior Mechanical Project Engineer' roles, specifically listing positions at Otto Engineering, CRB, and Acorn Product Development. There is no mention of 'AO Racing', nor are there any procurement signals relevant to the target entity. The content is entirely unrelated to the objective."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:26:06.088189",
+          "domain_explored": "https://www.linkedin.com/posts/brianjmckinley_careers-the-official-stewart-haas-racing-activity-6874421161342640128-Xxef",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "Stewart-Haas Racing",
+                "role": "Sr. Manager, Sales",
+                "source": "LinkedIn (Brian McKinley)",
+                "age": "4 years"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Entity",
+            "Third-Party Recruitment",
+            "Historical Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.6360421180725098
+            }
+          ],
+          "reasoning": "The content is a repost by Brian McKinley regarding a job opening at Stewart-Haas Racing, a distinct and separate entity from AO Racing. The post is 4 years old and references a sales role, which does not align with the current technical or operational procurement signals required for the target entity."
+        }
+      ],
+      "total_input_tokens": 8564,
+      "total_output_tokens": 1339,
+      "estimated_cost_usd": 0.045777
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AO Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:26:06.089558"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367645",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:15.551386"
+}

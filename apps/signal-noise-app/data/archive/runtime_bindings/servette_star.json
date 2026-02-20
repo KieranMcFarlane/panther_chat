@@ -1,0 +1,152 @@
+{
+  "entity_id": "servette_star",
+  "entity_name": "Servette Star",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "volleyball.ch",
+    "volleybasel.ch",
+    "volleybern-solothurn.ch"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "servette_star",
+      "entity_name": "Servette Star",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://volleybasel.ch",
+        "https://volleyball.ch",
+        "https://volleybern-solothurn.ch"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Servette Star may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:55:29.616885",
+          "domain_explored": "https://volleyball.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mentions of 'Club Management' course covering member acquisition and sponsorship (General Federation Level)",
+              "Mentions of 'Online-Trainingsplaner' tool for coaches (General Federation Level)"
+            ]
+          },
+          "patterns_found": [
+            "General sports federation content",
+            "Educational course offerings",
+            "Generic member services"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.0391080379486084
+            }
+          ],
+          "reasoning": "The content is from the Swiss Volley federation homepage, not Servette Star. It contains generic news, educational courses ('Club Management', 'Online-Trainingsplaner'), and general federation services. There is no specific mention of Servette Star, their specific technology stack, or direct procurement activities (RFPs, job postings) relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:55:36.891940",
+          "domain_explored": "https://volleybasel.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Dynamic content loading (JavaScript/AJAX)",
+            "Generic placeholder text repetition",
+            "Regional sports federation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1053,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.6190459728240967
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of repetitive UI placeholder text ('News werden geladen\u2026', 'Einblicke aus der Region') and empty containers. The actual news content, which might contain procurement signals like job postings or project tenders, is loaded dynamically via JavaScript and was not captured in this static scrape. There is no visible evidence of technology stacks, vendor partnerships, or governance structures in the provided text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:55:46.217945",
+          "domain_explored": "https://volleybern-solothurn.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smart Competition Platform (Generic/Industry Standard)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Implementation of 'Smart Competitions' system for 26/27 season",
+              "Project governance by Doris Hess and Hans Rufer"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Initiative",
+            "Organizational Change Management",
+            "Strategic Planning (Season 26/27)",
+            "Project Governance (Named leads)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 272,
+              "elapsed_seconds": 5.653490781784058
+            }
+          ],
+          "reasoning": "The content confirms an active digital transformation project ('Smart Competitions') scheduled for implementation in the 26/27 season. While this is a regional affiliate (Bern-Solothurn) rather than the target entity (Servette Star), it validates the broader ecosystem's investment in digital competition management tools, suggesting a potential technology adoption path or shared platform requirement within the Swiss Volley infrastructure."
+        }
+      ],
+      "total_input_tokens": 3875,
+      "total_output_tokens": 721,
+      "estimated_cost_usd": 0.02244
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Servette Star may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:55:46.219465"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227759",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:19:59.645875"
+}

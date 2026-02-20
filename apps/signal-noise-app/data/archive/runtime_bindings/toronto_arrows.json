@@ -1,0 +1,142 @@
+{
+  "entity_id": "toronto_arrows",
+  "entity_name": "Toronto Arrows",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "ultimaterugby.com",
+    "theprovince.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toronto_arrows",
+      "entity_name": "Toronto Arrows",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://theprovince.com",
+        "https://zoominfo.com",
+        "https://ultimaterugby.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toronto Arrows may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:02:43.774676",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "sports_news_feed"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 483,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.779787063598633
+            }
+          ],
+          "reasoning": "The content provided is a news update regarding player contract renewals for the Northampton Saints (a UK-based rugby club). This is completely unrelated to the Toronto Arrows (the target entity) and contains no procurement, technology, or governance signals relevant to the analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:02:53.324753",
+          "domain_explored": "https://theprovince.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "general_news_feed",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 154,
+              "elapsed_seconds": 2.3164358139038086
+            }
+          ],
+          "reasoning": "The content is a general news feed from 'The Province,' a Vancouver-based newspaper. The articles focus on the Vancouver Canucks, Whitecaps, and local BC crime/politics. There is no mention of the Toronto Arrows, the MLR, or any procurement activities related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:03:02.833497",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_page",
+            "irrelevant_entity_content",
+            "generic_b2b_sales_pitch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 168,
+              "elapsed_seconds": 3.4511611461639404
+            }
+          ],
+          "reasoning": "The content is a marketing landing page for ZoomInfo, a B2B data platform. It contains generic sales copy, testimonials from unrelated companies (Seismic, McGriff), and product feature descriptions. There is no specific information regarding the Toronto Arrows' procurement activities, technology stack, or governance structure."
+        }
+      ],
+      "total_input_tokens": 3318,
+      "total_output_tokens": 469,
+      "estimated_cost_usd": 0.016988999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toronto Arrows may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:03:02.836700"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.273056",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:49.858991"
+}

@@ -1,0 +1,192 @@
+{
+  "entity_id": "panvita_pomgrad",
+  "entity_name": "Panvita Pomgrad",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "flashscore.com",
+    "webpage.ozs.onixweb.net",
+    "weareiowa.com",
+    "volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "panvita_pomgrad",
+      "entity_name": "Panvita Pomgrad",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://flashscore.com",
+        "https://webpage.ozs.onixweb.net",
+        "https://weareiowa.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Panvita Pomgrad may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:14:24.159747",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_association_data",
+            "navigation_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.1057939529418945
+            }
+          ],
+          "reasoning": "The provided content is scraped from the Confederation Europ\u00e9enne de Volleyball (CEV) website and contains navigation menus, match results, and tournament information. There is no mention of Panvita Pomgrad, nor are there any procurement signals, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:14:31.306005",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_content",
+            "sports_aggregation",
+            "generic_navigation",
+            "ad_presence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 586,
+              "output_tokens": 169,
+              "elapsed_seconds": 3.385878086090088
+            }
+          ],
+          "reasoning": "The content is from Flashscore, a live sports score aggregation platform. The text consists primarily of gambling warnings (responsible gaming notices in multiple languages), generic navigation elements, and loading indicators. There is no content related to Panvita Pomgrad, business procurement, or corporate decision-making."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:14:36.363050",
+          "domain_explored": "https://webpage.ozs.onixweb.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "contact_info_spam",
+            "sports_association_entity",
+            "low_content_density",
+            "irrelevant_domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 771,
+              "output_tokens": 182,
+              "elapsed_seconds": 1.979403018951416
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive contact information blocks for 'Odbojkarska zveza Slovenije' (Volleyball Association of Slovenia). There is zero semantic content related to business operations, technology, or procurement. The entity is a sports federation, which falls outside the target profile for Panvita Pomgrad's procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:14:46.427242",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "google_consent_wall",
+            "youtube_redirect",
+            "generic_media_content",
+            "irrelevant_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.6664340496063232
+            }
+          ],
+          "reasoning": "The content is a Google/YouTube cookie consent wall for 'WeAreIowa', a US-based local news station. This entity is unrelated to Panvita Pomgrad (a Slovenian agricultural company) and contains no procurement signals, technology stack details, or governance information relevant to the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:14:49.207676",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4201,
+      "total_output_tokens": 676,
+      "estimated_cost_usd": 0.022743
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Panvita Pomgrad may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:14:49.208310"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326262",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:27.954178"
+}

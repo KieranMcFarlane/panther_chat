@@ -1,0 +1,214 @@
+{
+  "entity_id": "angolan_football_federation",
+  "entity_name": "Angolan Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cafonline.com",
+    "inside.fifa.com",
+    "football.miraheze.org",
+    "africasacountry.com",
+    "footballranking.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "angolan_football_federation",
+      "entity_name": "Angolan Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://football.miraheze.org",
+        "https://africasacountry.com",
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://footballranking.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Angolan Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:13:28.161390",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Repetitive UI elements (Show more/See all)",
+            "High-level event categorization (AFCON, Champions League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 920,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.9544830322265625
+            }
+          ],
+          "reasoning": "The content provided is a scraped list of navigation links and UI elements from the Confederation of African Football (CAF) website. It contains no specific information regarding the Angolan Football Federation (FAF), nor does it contain procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:13:39.734269",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (Global context only)"
+            ]
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "FIFA Forward program mentions (infrastructure funding)",
+            "Women's football development initiatives",
+            "Repetitive navigation elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 249,
+              "elapsed_seconds": 8.68582010269165
+            }
+          ],
+          "reasoning": "The content is scraped from FIFA's global news portal and focuses on high-level international football governance, the FIFA Women's Champions Cup, and general infrastructure funding (FIFA Forward) in Burundi. While FIFA Forward indicates global spending, it does not provide specific procurement signals, RFPs, or technology stack details for the Angolan Football Federation. The content is generic to the global sport and irrelevant to the specific entity procurement analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:13:46.798777",
+          "domain_explored": "https://football.miraheze.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic wiki platform structure (Miraheze)",
+            "Encyclopedic content format (User-generated content)",
+            "Absence of corporate/governance navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 807,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.3392269611358643
+            }
+          ],
+          "reasoning": "The target URL is a generic fan-maintained encyclopedia (Football Wiki) hosted on Miraheze. It contains no official governance information, procurement data, or technology stack details related to the Angolan Football Federation. It is a tertiary source with low signal value for B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:13:52.127262",
+          "domain_explored": "https://africasacountry.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Editorial content structure (Author, Date, Category)",
+            "Socio-political commentary topics (History, Tax, Labor)",
+            "Media publication navigation (Arts, Culture, Front Page)",
+            "Absence of corporate/governance terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.2086689472198486
+            }
+          ],
+          "reasoning": "The content is exclusively focused on socio-political commentary, history, and culture (e.g., Mau Mau history, Kwame Nkrumah, tax havens). It lacks any corporate structure, procurement notices, or technology implementation details relevant to the Angolan Football Federation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:13:59.807411",
+          "domain_explored": "https://footballranking.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom (Wiki Platform)",
+              "MediaWiki (likely underlying engine)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wiki platform structure (Fandom/Wikia)",
+            "User-generated content (UGC) indicators ('anyone can edit')",
+            "Generic contact email (Gmail domain)",
+            "Encyclopedic data format (Rankings/Statistics)",
+            "Absence of corporate governance navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 250,
+              "elapsed_seconds": 4.007591009140015
+            }
+          ],
+          "reasoning": "The content is from a fan-maintained wiki (Football Ranking Wiki/Fandom) dedicated to global football statistics and rankings. It lacks any corporate or governance structure related to the Angolan Football Federation. The contact method is a generic Gmail address, and the platform is designed for user-generated content rather than official procurement or organizational operations."
+        }
+      ],
+      "total_input_tokens": 6331,
+      "total_output_tokens": 1058,
+      "estimated_cost_usd": 0.034863
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Angolan Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:13:59.809695"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.200771",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:56.319018"
+}

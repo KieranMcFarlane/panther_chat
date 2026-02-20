@@ -1,0 +1,322 @@
+{
+  "entity_id": "olympique_de_marseille",
+  "entity_name": "Olympique de Marseille",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "boutique.om.fr",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/",
+      "https://fr.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+      "https://www.linkedin.com/jobs/olympique-de-marseille-jobs-worldwide",
+      "https://dk.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+      "https://www.linkedin.com/jobs/marseille-jobs-worldwide",
+      "https://fr.linkedin.com/posts/sportjobshunter_emploi-sport-job-activity-6752140332676206593-2XHN?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "olympique_de_marseille",
+      "entity_name": "Olympique de Marseille",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/jobs/olympique-de-marseille-jobs-worldwide",
+        "https://www.linkedin.com/jobs/marseille-jobs-worldwide",
+        "https://dk.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+        "https://boutique.om.fr",
+        "https://fr.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+        "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Olympique de Marseille may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:42:10.470283",
+          "domain_explored": "https://boutique.om.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom)",
+              "Product Information Management (PIM)",
+              "Dynamic Pricing Engine"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of 25/26 season product lines",
+              "Integration with loyalty program 'Peuple Bleu&Blanc'",
+              "Complex product configuration rules (flocage compatibility)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Customization Logic",
+            "Dynamic Product Catalog (25/26 Season)",
+            "Loyalty Program Integration (Peuple Bleu&Blanc)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.7517309188842773
+            }
+          ],
+          "reasoning": "The content confirms the operation of an e-commerce platform with specific customization logic (flocage/pricing) and dynamic content management for new seasons. While this indicates active use of digital sales tools, it does not explicitly signal a new procurement initiative or technology stack change, warranting a WEAK_ACCEPT for capability confirmation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:42:17.678433",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Gaming Content",
+            "Irrelevance to B2B Procurement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.160694122314453
+            }
+          ],
+          "reasoning": "The scraped content from the Google Play Store lists popular consumer mobile games (e.g., Candy Crush, PUBG Mobile) and generic app categories. There is no content related to Olympique de Marseille, their business operations, or their technology stack. This is entirely irrelevant to the procurement intelligence objective."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:42:27.253886",
+          "domain_explored": "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme",
+                "department": "Treizi\u00e8me Homme (Fan Engagement / Loyalty)",
+                "location": "Marseille, France",
+                "recency": "1 week ago",
+                "implication": "Expansion of project management capacity for fan-related initiatives."
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Organizational Expansion",
+                "signal": "Hiring for project support roles suggests increased project volume, potentially leading to future tool or service procurement."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Project Management Recruitment",
+            "Fan Engagement Department Growth",
+            "Operational Support Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 346,
+              "elapsed_seconds": 6.25019097328186
+            }
+          ],
+          "reasoning": "The content reveals an active recruitment for an 'Assistant Project Manager' within the 'Treizi\u00e8me Homme' (13th Man) department. While this is a personnel signal rather than a direct technology tender, it indicates organizational growth and investment in the fan experience/loyalty sector, which often precedes software procurement (CRM, Project Management tools) or event vendor requirements."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:42:33.661898",
+          "domain_explored": "https://fr.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme (Project Manager Assistant - Fan Engagement)"
+            ],
+            "procurement_indicators": [
+              "Departmental Expansion (Fan Engagement)",
+              "Project Management Operational Needs"
+            ]
+          },
+          "patterns_found": [
+            "Project Management Recruitment",
+            "Fan Engagement Department Growth",
+            "Operational Support Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.2059171199798584
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for 'Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme' (Project Manager Assistant for the '13th Man' initiative). This indicates active recruitment within the Fan Engagement department. While this confirms organizational growth and operational activity, it is an operational support role rather than a direct procurement or technology acquisition signal. It suggests potential future needs for project management tools or fan engagement platforms, justifying a weak signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:42:43.239799",
+          "domain_explored": "https://www.linkedin.com/jobs/olympique-de-marseille-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme (Assistant Project Manager - 13th Man)",
+              "Chief of Staff (McCourt Global - filtered out)"
+            ],
+            "procurement_indicators": [
+              "Expansion of '13th Man' (Fan Engagement) project team",
+              "Investment in project management resources"
+            ]
+          },
+          "patterns_found": [
+            "Project Management Recruitment",
+            "Fan Engagement Department Growth",
+            "Operational Support Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1597,
+              "output_tokens": 281,
+              "elapsed_seconds": 6.386236906051636
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for 'Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme' (Assistant Project Manager 13th Man). This indicates active recruitment within the Fan Engagement department. While this confirms organizational growth and potential future tool procurement, the primary signal is operational capacity building rather than immediate vendor selection. The listing for McCourt Global is noted but treated as a separate entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:43:04.786486",
+          "domain_explored": "https://dk.linkedin.com/company/sasp-olympique-de-marseille/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme (Project Manager Assistant)"
+            ],
+            "procurement_indicators": [
+              "Continued investment in 'Treizi\u00e8me Homme' fan engagement project",
+              "Staff expansion within the Fan Engagement department"
+            ]
+          },
+          "patterns_found": [
+            "Project Management Recruitment",
+            "Fan Engagement Department Growth",
+            "Operational Support Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1659,
+              "output_tokens": 268,
+              "elapsed_seconds": 18.171430826187134
+            }
+          ],
+          "reasoning": "The content is a localized (Danish) version of the previously explored LinkedIn company page. It confirms the recruitment of an 'Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme' (Project Manager Assistant for the '13th Man' fan initiative). While this reinforces the organizational focus on fan engagement projects, it does not provide new procurement-specific signals or technology stack details beyond what was already identified in Iteration 3 and 4."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:43:13.051823",
+          "domain_explored": "https://www.linkedin.com/jobs/marseille-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Candidature Spontan\u00e9e",
+                "company": "Ekstend Group",
+                "relevance": "None"
+              },
+              {
+                "title": "Chef des ventes v\u00e9hicules d'occasion H/F",
+                "company": "GROUPEMENT DES CONCESSIONNAIRES RENAULT",
+                "relevance": "None"
+              },
+              {
+                "title": "Assistant\u00b7e de projets culturels \u2013 Festival Explore F/H",
+                "company": "Aix-Marseille University",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Geographic Job Aggregation",
+            "Irrelevant Industry Sectors (Automotive, Education, General Services)",
+            "Absence of Target Entity (Olympique de Marseille)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 355,
+              "elapsed_seconds": 4.599750757217407
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the city of Marseille, not specific listings for Olympique de Marseille. The entities identified (Ekstend Group, Renault, Aix-Marseille University) are third parties with no direct procurement relationship to the target entity indicated in the text. This provides zero intelligence regarding OM's procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 10761,
+      "total_output_tokens": 1966,
+      "estimated_cost_usd": 0.061772999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Olympique de Marseille may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:43:13.053004"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.121442",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:07.664693"
+}

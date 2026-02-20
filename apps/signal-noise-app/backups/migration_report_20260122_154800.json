@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-01-22T15:48:00.652269+00:00",
+  "dry_run": false,
+  "statistics": {
+    "episodes_processed": 0,
+    "entities_created": 0,
+    "signals_created": 0,
+    "evidence_created": 0,
+    "errors": [
+      "Entity arsenal-fc: {'message': \"Could not find the table 'public.entities' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.cached_entities'\", 'details': None}",
+      "Entity manchester-united: {'message': \"Could not find the table 'public.entities' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.cached_entities'\", 'details': None}",
+      "Entity chelsea-fc: {'message': \"Could not find the table 'public.entities' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.cached_entities'\", 'details': None}",
+      "Entity liverpool-fc: {'message': \"Could not find the table 'public.entities' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.cached_entities'\", 'details': None}",
+      "Entity barcelona-fc: {'message': \"Could not find the table 'public.entities' in the schema cache\", 'code': 'PGRST205', 'hint': \"Perhaps you meant the table 'public.cached_entities'\", 'details': None}"
+    ]
+  },
+  "summary": "\nMigration Summary:\n- Episodes processed: 0\n- Entities created: 0\n- Signals created: 0\n- Evidence created: 0\n- Errors: 5\n\n\u26a0\ufe0f Migration completed with errors\n"
+}

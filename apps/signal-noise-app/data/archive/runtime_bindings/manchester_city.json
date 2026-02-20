@@ -1,0 +1,349 @@
+{
+  "entity_id": "manchester_city",
+  "entity_name": "Manchester City",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "mancity.com",
+    "mancity-webapp-staging.azurewebsites.net",
+    "cityfootballgroup.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/manchester-city-football-club-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/manchester-city-football-club-jobs",
+      "https://se.linkedin.com/company/manchester-city-jobs",
+      "https://de.linkedin.com/company/manchester-city-jobs",
+      "https://no.linkedin.com/company/manchester-city-jobs",
+      "https://id.linkedin.com/company/manchester-city-jobs",
+      "https://kr.linkedin.com/company/manchester-city-jobs",
+      "https://uk.linkedin.com/jobs/manchester-city-council-jobs",
+      "https://www.linkedin.com/company/manchester-city-jobs",
+      "https://uy.linkedin.com/company/manchester-city-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "manchester_city",
+      "entity_name": "Manchester City",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://no.linkedin.com/company/manchester-city-jobs",
+        "https://de.linkedin.com/company/manchester-city-jobs",
+        "https://se.linkedin.com/company/manchester-city-jobs",
+        "https://mancity-webapp-staging.azurewebsites.net",
+        "https://www.linkedin.com/jobs/manchester-city-football-club-jobs-worldwide",
+        "https://mancity.com",
+        "https://uk.linkedin.com/jobs/manchester-city-football-club-jobs",
+        "https://cityfootballgroup.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Manchester City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:36:53.710606",
+          "domain_explored": "https://mancity.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Data Structure",
+            "Advertisement Placement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 956,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.405967950820923
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive fixture listings (EFL Cup, Premier League, UEFA Youth League) and navigation elements. There is no mention of technology vendors, job openings, or strategic initiatives that indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:37:05.282778",
+          "domain_explored": "https://mancity-webapp-staging.azurewebsites.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Azure (Azure Web Apps)",
+              "Web Application Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Cloud Infrastructure Procurement (Azure)",
+              "Staging/Development Environment Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "Staging Environment Detection",
+            "Azure Hosting Infrastructure",
+            "Placeholder Content (Test Links)",
+            "Content Repetition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1112,
+              "output_tokens": 237,
+              "elapsed_seconds": 4.6490700244903564
+            }
+          ],
+          "reasoning": "The URL reveals the use of Azure Web Apps for hosting (mancity-webapp-staging.azurewebsites.net), confirming a direct investment in the Microsoft Azure cloud infrastructure stack. While the content is largely repetitive sports data and test placeholders, the hosting environment itself is a confirmed technology procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:37:21.590843",
+          "domain_explored": "https://cityfootballgroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legal & Compliance Services: Requirement for independent trust structures to satisfy UEFA regulations.",
+              "Facility Management: Operations supporting 4M annual stadium attendees across 12 global clubs.",
+              "Global Infrastructure: Logistics and vendor management for 3,000+ matches annually."
+            ]
+          },
+          "patterns_found": [
+            "Global Entity Structure",
+            "Compliance & Governance Disclosure",
+            "High-Volume Operational Metrics",
+            "Centralized Brand Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 314,
+              "elapsed_seconds": 7.756284952163696
+            }
+          ],
+          "reasoning": "The content confirms Manchester City operates under the City Football Group (CFG) umbrella, a global entity managing 12+ clubs. While the specific page is high-level marketing content, the disclosure regarding the 'independent blind trust' for Girona FC indicates a complex governance structure requiring legal and compliance services. The operational metrics (4M attendance, 3K+ matches) imply significant backend procurement needs for ticketing, security, and facility management across multiple jurisdictions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:37:32.117258",
+          "domain_explored": "https://www.linkedin.com/jobs/manchester-city-football-club-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "Digital Content Management Tools (implied by 'Assistant Branded Content Creator')"
+            ],
+            "job_postings": [
+              "Partner Programs Manager - MCFC Football Education",
+              "Venue Operations Executive",
+              "Venue Sales Executive",
+              "Assistant Branded Content Creator"
+            ],
+            "procurement_indicators": [
+              "Expansion of Partner Programs (Education sector)",
+              "Venue Commercialization (Sales & Operations focus)",
+              "Increased Content Production Capacity"
+            ]
+          },
+          "patterns_found": [
+            "Partner Program Management",
+            "Venue Operations & Sales",
+            "Branded Content Creation",
+            "Active Recruitment Cycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 358,
+              "elapsed_seconds": 5.804206132888794
+            }
+          ],
+          "reasoning": "The content reveals active hiring for roles that manage external relationships and revenue generation (Partner Programs Manager, Venue Sales). While these are operational roles rather than direct procurement positions, the 'Partner Programs Manager' role specifically indicates active management of vendor/supplier relationships, which is a strong proxy for current partnership ecosystem activity. The 'Venue Sales' role suggests monetization of non-matchday assets, often involving third-party vendors."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:37:44.549728",
+          "domain_explored": "https://uk.linkedin.com/jobs/manchester-city-football-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Branded Content Creator",
+              "Partner Programs Manager - MCFC Football Education",
+              "Venue Operations Executive",
+              "Venue Sales Executive"
+            ],
+            "procurement_indicators": [
+              "Investment in venue commercial capabilities (Sales/Ops)",
+              "Expansion of partner management infrastructure",
+              "Increased content production demands"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations & Sales Expansion",
+            "Partner Program Management",
+            "Branded Content Creation",
+            "Active Hiring Cycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 300,
+              "elapsed_seconds": 4.525768995285034
+            }
+          ],
+          "reasoning": "While this page is a job board and not a direct procurement tender, it confirms active investment in operational capabilities. The hiring for 'Venue Sales' and 'Partner Programs' indicates a focus on revenue generation and partnership management, which are key drivers for future procurement needs (CRM, event management software, and vendor services). However, it lacks direct technology stack or RFP evidence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:37:50.943023",
+          "domain_explored": "https://se.linkedin.com/company/manchester-city-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Entity Verification",
+                "status": "False Positive",
+                "details": "Identified as an external job board, not the target football club."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Entity Disambiguation Failure",
+            "Third-Party Job Board Aggregation",
+            "Small-Medium Enterprise (SME) Profile"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1642,
+              "output_tokens": 276,
+              "elapsed_seconds": 2.155815839767456
+            }
+          ],
+          "reasoning": "The scraped content reveals that 'Manchester City Jobs' is a third-party social initiative (ManchesterCityJobs.co.uk) established in 2013 to assist citizens in North West England. It is a small, privately held entity (2-10 employees) distinct from Manchester City Football Club. The content describes a job board utility for general recruitment rather than the football club's corporate procurement or hiring activities. Therefore, this source is irrelevant to the target entity's procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:37:56.891420",
+          "domain_explored": "https://de.linkedin.com/company/manchester-city-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Confirmed as a recruitment agency/job board, not the football club.",
+              "No Authority: The entity facilitates job searches but does not engage in high-level procurement for the club."
+            ]
+          },
+          "patterns_found": [
+            "Entity Disambiguation Failure",
+            "Third-Party Job Board Aggregation",
+            "Small-Medium Enterprise (SME) Profile"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 244,
+              "elapsed_seconds": 2.3028879165649414
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Manchester City Jobs' is a third-party job board (ManchesterCityJobs.co.uk) established in 2013 as a social initiative, not the official football club. It is a distinct entity (SME size: 2-10 employees) with no direct procurement authority or affiliation to the club's operations. This represents a false positive in the search query."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:38:02.420588",
+          "domain_explored": "https://no.linkedin.com/company/manchester-city-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Disambiguation Failure",
+            "Third-Party Job Board Aggregation",
+            "Small-Medium Enterprise (SME) Profile"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1763,
+              "output_tokens": 186,
+              "elapsed_seconds": 1.7251520156860352
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Manchester City Jobs' is a third-party job board (ManchesterCityJobs.co.uk) established in 2013, not the official football club. It is a small entity (2-10 employees) focused on recruitment services for the North West region, lacking any strategic procurement authority or operational connection to Manchester City FC's technology stack."
+        }
+      ],
+      "total_input_tokens": 11747,
+      "total_output_tokens": 2064,
+      "estimated_cost_usd": 0.06620100000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Manchester City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:38:02.422083"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.119488",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:34.027533"
+}

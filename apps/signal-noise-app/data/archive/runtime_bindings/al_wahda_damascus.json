@@ -1,0 +1,169 @@
+{
+  "entity_id": "al_wahda_damascus",
+  "entity_name": "Al Wahda Damascus",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "wikidata.org",
+    "fawanewss.co.uk",
+    "dcathletic.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ae.linkedin.com/jobs/view/commis-i-at-saadiyat-rotana-resort-villas-4305932135"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_wahda_damascus",
+      "entity_name": "Al Wahda Damascus",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ae.linkedin.com/jobs/view/commis-i-at-saadiyat-rotana-resort-villas-4305932135",
+        "https://fawanewss.co.uk",
+        "https://wikidata.org",
+        "https://dcathletic.de"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Wahda Damascus may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:55:30.108527",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:55:37.905022",
+          "domain_explored": "https://fawanewss.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "streaming_services",
+            "consumer_marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 149,
+              "elapsed_seconds": 4.698525905609131
+            }
+          ],
+          "reasoning": "The scraped content from 'fawanewss.co.uk' is a consumer-facing landing page for a sports streaming service. It contains no information regarding 'Al Wahda Damascus', its governance, or its procurement activities. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:55:44.526296",
+          "domain_explored": "https://dcathletic.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "streaming_services",
+            "us_high_school_sports",
+            "nfhs_network",
+            "irrelevant_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 484,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.480201005935669
+            }
+          ],
+          "reasoning": "The content provided is a URL redirection or embedding related to a US high school sports event (Guilford vs. West Haven Ice Hockey) hosted on the NFHS Network. This is completely unrelated to 'Al Wahda Damascus' (a Syrian entity) and contains no procurement, technology, or governance signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:55:53.205293",
+          "domain_explored": "https://ae.linkedin.com/jobs/view/commis-i-at-saadiyat-rotana-resort-villas-4305932135",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Commis I",
+                "company": "Saadiyat Rotana Resort & Villas",
+                "location": "Abu Dhabi, UAE",
+                "sector": "Hospitality"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_entity",
+            "wrong_location",
+            "hospitality_sector",
+            "entry_level_hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 216,
+              "elapsed_seconds": 5.092274904251099
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Commis I' (Kitchen staff) role at Saadiyat Rotana Resort in Abu Dhabi. This is completely unrelated to 'Al Wahda Damascus', which is a football club entity based in Syria. The sector (Hospitality) and location (UAE) do not match the target entity's profile."
+        }
+      ],
+      "total_input_tokens": 3355,
+      "total_output_tokens": 535,
+      "estimated_cost_usd": 0.01809
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Wahda Damascus may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:55:53.206810"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233054",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:40.317465"
+}

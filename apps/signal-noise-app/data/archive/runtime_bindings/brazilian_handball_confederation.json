@@ -1,0 +1,144 @@
+{
+  "entity_id": "brazilian_handball_confederation",
+  "entity_name": "Brazilian Handball Confederation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "handball-planet.com",
+    "redalyc.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brazilian_handball_confederation",
+      "entity_name": "Brazilian Handball Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball-planet.com",
+        "https://redalyc.org",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brazilian Handball Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:49:11.892596",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "irrelevant_event_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.797709941864014
+            }
+          ],
+          "reasoning": "The provided content is the generic homepage text for Wikidata, a general knowledge base platform. It contains no specific information regarding the Brazilian Handball Confederation (CBHb), its procurement activities, technology stack, or governance patterns. The content describes Wikidata's features, community events (e.g., WikidataCon 2025), and general data literacy, which are irrelevant to the specific procurement intelligence task for the CBHb."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:49:21.487096",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_sports_news",
+            "international_event_coverage",
+            "player_transfers",
+            "irrelevant_entity_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.61625599861145
+            }
+          ],
+          "reasoning": "The content is entirely focused on international handball news (EHF EURO 2026), player transfers, and European team results. There is no mention of the Brazilian Handball Confederation, Brazilian domestic handball, or any procurement/governance activities related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:49:34.331485",
+          "domain_explored": "https://redalyc.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "academic_repository_interface",
+            "covid-19_research_cluster",
+            "generic_education_journal_content",
+            "template_variable_leakage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.87792706489563
+            }
+          ],
+          "reasoning": "The scraped content represents the raw HTML/JavaScript interface of Redalyc, a Latin American academic journal repository. The text is populated with generic academic articles unrelated to handball, sports management, or the Brazilian Handball Confederation. The presence of template syntax (e.g., '{{t.pandemics.volume}}') indicates this is a generic platform view rather than specific entity content. No procurement signals, governance structures, or technology stacks relevant to the target entity were found."
+        }
+      ],
+      "total_input_tokens": 4219,
+      "total_output_tokens": 581,
+      "estimated_cost_usd": 0.021372000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brazilian Handball Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:49:34.333002"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361370",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:39:03.957327"
+}

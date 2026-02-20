@@ -1,0 +1,262 @@
+{
+  "entity_id": "liga_acb_(spain)",
+  "entity_name": "Liga ACB (Spain)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "sportbusiness.com",
+    "livescore.com",
+    "fordhamsports.com",
+    "azscore.com",
+    "readybetwin.com",
+    "fightingirish.com",
+    "sportssurge.alibaba.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/laliga-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liga_acb_(spain)",
+      "entity_name": "Liga ACB (Spain)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://azscore.com",
+        "https://readybetwin.com",
+        "https://livescore.com",
+        "https://www.linkedin.com/jobs/laliga-jobs-worldwide",
+        "https://sportssurge.alibaba.com",
+        "https://fordhamsports.com",
+        "https://fightingirish.com",
+        "https://sportbusiness.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liga ACB (Spain) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:57:32.832099",
+          "domain_explored": "https://sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports rights expansion",
+            "Media rights bidding",
+            "Sponsorship activations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.127213954925537
+            }
+          ],
+          "reasoning": "The content provided is a general industry news feed from SportBusiness.com covering global entities (NFL, F1, UEFA, MLB). While it mentions Madrid as a location for NFL events, there is no specific mention of Liga ACB, its internal operations, technology stack, or specific procurement activities (RFPs, job postings) relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:57:39.121720",
+          "domain_explored": "https://livescore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Clarity (Analytics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Data consumption (La Liga scores)",
+            "Consumer-facing content",
+            "B2C advertising"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.3422977924346924
+            }
+          ],
+          "reasoning": "The scraped content is from LiveScore.com, a consumer-facing sports results aggregator. While it lists 'La Liga' (the competition Liga ACB manages) as a data source, this indicates a downstream consumption of data, not an upstream procurement signal by Liga ACB. There are no job postings, RFPs, or technology investments related to the entity Liga ACB."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:57:45.864953",
+          "domain_explored": "https://fordhamsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:57:48.682960",
+          "domain_explored": "https://azscore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:57:51.589163",
+          "domain_explored": "https://readybetwin.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:57:57.548481",
+          "domain_explored": "https://fightingirish.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Paciolan eVenue (Ticketing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Ticketing platform usage (Paciolan/eVenue)",
+            "Content publishing (CMS)",
+            "Athletic team news aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.7421441078186035
+            }
+          ],
+          "reasoning": "The content is from the University of Notre Dame's athletics website (NCAA), which is irrelevant to Liga ACB (Spain). While it reveals the use of the Paciolan/eVenue ticketing system (a common vendor in sports), this does not indicate procurement activity for the target entity (Liga ACB). The entity mismatch invalidates any potential signals."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:58:05.543092",
+          "domain_explored": "https://sportssurge.alibaba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C content aggregation",
+            "General sports education (field dimensions, equipment)",
+            "Affiliate marketing content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 182,
+              "elapsed_seconds": 4.559982776641846
+            }
+          ],
+          "reasoning": "The content is generic B2C educational material regarding field dimensions and equipment selection. It lacks any specific reference to Liga ACB, Spanish basketball, or enterprise-level procurement activities (RFPs, tech stacks, or vendor partnerships). The domain appears to be a low-quality content farm unrelated to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:58:11.580301",
+          "domain_explored": "https://www.linkedin.com/jobs/laliga-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Gestor de Marketing (Marketing Manager)",
+              "Coordinador de Control de Gesti\u00f3n (Management Control Coordinator)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment in management control",
+              "Active recruitment in marketing"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (La Liga vs Liga ACB)",
+            "Marketing & Management Hiring",
+            "Geographic focus: Madrid"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1661,
+              "output_tokens": 220,
+              "elapsed_seconds": 2.6201536655426025
+            }
+          ],
+          "reasoning": "The scraped content lists job postings for 'La Liga' (football/soccer), not 'Liga ACB' (basketball). Although both are major Spanish sports entities, they are distinct organizations. Procurement signals for La Liga do not apply to the target entity, Liga ACB."
+        }
+      ],
+      "total_input_tokens": 7560,
+      "total_output_tokens": 958,
+      "estimated_cost_usd": 0.03705
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liga ACB (Spain) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:58:11.581037"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.415702",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:13.394623"
+}

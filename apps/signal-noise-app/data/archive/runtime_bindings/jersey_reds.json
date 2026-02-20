@@ -1,0 +1,113 @@
+{
+  "entity_id": "jersey_reds",
+  "entity_name": "Jersey Reds",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "statesassembly.je",
+    "leaguerugby.co.uk",
+    "bailiwickexpress.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jersey_reds",
+      "entity_name": "Jersey Reds",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bailiwickexpress.com",
+        "https://leaguerugby.co.uk",
+        "https://statesassembly.je"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jersey Reds may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:49:01.182881",
+          "domain_explored": "https://statesassembly.je",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Public-i.tv (Webcasting platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legislative governance content",
+            "Public sector civic engagement",
+            "Generic webcasting (Public-i.tv)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 201,
+              "elapsed_seconds": 3.243555784225464
+            }
+          ],
+          "reasoning": "The scraped content is from the States Assembly of Jersey (the parliament), which is a distinct entity from Jersey Reds (the rugby union club). While they share the 'Jersey' geo-location, the content focuses on parliamentary proceedings, voting, and petitions rather than sports club operations or procurement. There is no signal of procurement intent relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:49:04.086177",
+          "domain_explored": "https://leaguerugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:49:06.908467",
+          "domain_explored": "https://bailiwickexpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1356,
+      "total_output_tokens": 201,
+      "estimated_cost_usd": 0.007082999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jersey Reds may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:49:06.909162"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280032",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:09.188596"
+}

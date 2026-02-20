@@ -1,0 +1,135 @@
+{
+  "entity_id": "san_lorenzo_de_almagro",
+  "entity_name": "San Lorenzo de Almagro",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "sanlorenzo.com.ar",
+    "sanlorenzowebsite.com.ar",
+    "soycuervo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "san_lorenzo_de_almagro",
+      "entity_name": "San Lorenzo de Almagro",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sanlorenzo.com.ar",
+        "https://sanlorenzowebsite.com.ar",
+        "https://soycuervo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "San Lorenzo de Almagro may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:12:41.016949",
+          "domain_explored": "https://sanlorenzo.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Member Portal",
+              "Community Engagement Platform",
+              "Governance Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of 'GOBERNANZA ABIERTA' digital space for member participation",
+              "Institutional focus on transparency and member feedback loops"
+            ]
+          },
+          "patterns_found": [
+            "Digital Governance Initiative",
+            "Member Engagement Platform",
+            "Institutional Transparency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 268,
+              "elapsed_seconds": 2.8591222763061523
+            }
+          ],
+          "reasoning": "The content reveals a specific institutional project titled 'GOBERNANZA ABIERTA' (Open Governance). This indicates a strategic shift towards digital member engagement and transparency, which often requires the procurement of specialized community management software, CRM tools, or voting platforms. While no specific vendor is named, the launch of a new digital space for members is a clear signal of technological investment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:12:46.014012",
+          "domain_explored": "https://sanlorenzowebsite.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism Content",
+            "Match Reports",
+            "YouTube Channel Promotion",
+            "Player Transfers/Refuerzos"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.073558807373047
+            }
+          ],
+          "reasoning": "The scraped content is entirely focused on sports journalism\u2014match results (victory vs Central C\u00f3rdoba), player interviews (Gregorio Rodr\u00edguez), and event promotion (YouTube subscription). There are no signals of business operations, technology infrastructure, or administrative procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:12:48.623387",
+          "domain_explored": "https://soycuervo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2775,
+      "total_output_tokens": 436,
+      "estimated_cost_usd": 0.014865
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "San Lorenzo de Almagro may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:12:48.624290"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.219378",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:08.441886"
+}

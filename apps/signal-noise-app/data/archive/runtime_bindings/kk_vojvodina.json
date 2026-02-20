@@ -1,0 +1,192 @@
+{
+  "entity_id": "kk_vojvodina",
+  "entity_name": "KK Vojvodina",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "kkvojvodina.rs",
+    "fkvojvodina.rs",
+    "zoominfo.com",
+    "aba-liga.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kk_vojvodina",
+      "entity_name": "KK Vojvodina",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://aba-liga.com",
+        "https://kkvojvodina.rs",
+        "https://fkvojvodina.rs",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KK Vojvodina may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:44:04.199255",
+          "domain_explored": "https://kkvojvodina.rs",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is exclusively sports journalism (game results, player stats, match previews)",
+            "Website structure is standard brochure-ware (Home, News, Selections, About, Contact)",
+            "No administrative or corporate governance sections visible in the provided text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 212,
+              "elapsed_seconds": 14.56841492652893
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news articles (game results in KLS and ABA 2 leagues), player profiles, and general navigation menus. There are no explicit mentions of procurement activities, technology investments, job openings, or administrative decision-making that would signal B2B purchasing intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:44:18.040950",
+          "domain_explored": "https://fkvojvodina.rs",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism content (player transfers, match results)",
+            "Fan engagement features (newsletter signup, ticket sales)",
+            "Standard brochure-ware navigation (History, Trophies, Youth School)",
+            "No administrative or corporate governance sections"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.4979028701782227
+            }
+          ],
+          "reasoning": "The scraped content from fkvojvodina.rs is exclusively focused on sports operations, news, and fan engagement. There are no visible links to or content regarding procurement, job vacancies, or corporate administration. The structure mirrors the previous iteration (KK Vojvodina), suggesting a standard sports club template with no embedded procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:44:25.421404",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor marketing content",
+            "B2B sales software promotion",
+            "Generic testimonials",
+            "Irrelevant domain content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.843324899673462
+            }
+          ],
+          "reasoning": "The content analyzed is from the homepage of ZoomInfo, a B2B intelligence software vendor. It contains generic marketing copy, product testimonials, and feature descriptions unrelated to KK Vojvodina. There are no specific signals, employee names, or technology stacks associated with the target entity (KK Vojvodina) in this text. This represents a 'hallucinated' or irrelevant search result in the context of the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:44:58.713027",
+          "domain_explored": "https://aba-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:45:09.584444",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic media repository interface",
+            "User contribution guidelines (Upload, Create account)",
+            "Non-profit organization context (Wikimedia Foundation)",
+            "Standard web navigation elements (Search, RSS feeds, Categories)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1598,
+              "output_tokens": 183,
+              "elapsed_seconds": 4.551684856414795
+            }
+          ],
+          "reasoning": "The content is the generic homepage text of Wikimedia Commons, a media file repository. It contains no information regarding KK Vojvodina, its operations, governance, or procurement activities. It is entirely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 5923,
+      "total_output_tokens": 819,
+      "estimated_cost_usd": 0.030054
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KK Vojvodina may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:45:09.585801"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.224620",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:42.387306"
+}

@@ -1,0 +1,350 @@
+{
+  "entity_id": "mercedes-amg_petronas_formula_one_team",
+  "entity_name": "Mercedes-AMG Petronas Formula One Team",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "mercedesamgf1.com",
+    "formula1.com",
+    "lifestylecollection.mbusa.com",
+    "global.pli-petronas.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/mercedes-amg-petronas-formula-one-team/jobs",
+      "https://www.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs",
+      "https://www.linkedin.com/pulse/f1-careers-update-new-roles-placements-graduate-openings-nx4ie",
+      "https://uk.linkedin.com/jobs/f1-jobs",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3967407285&f_TPR=r604800&geoId=92000000&keywords=f1&location=Worldwide&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3968865354&f_TPR=r604800&geoId=92000000&keywords=f1&location=Worldwide&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mercedes-amg_petronas_formula_one_team",
+      "entity_name": "Mercedes-AMG Petronas Formula One Team",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs",
+        "https://uk.linkedin.com/jobs/f1-jobs",
+        "https://mercedesamgf1.com",
+        "https://uk.linkedin.com/company/mercedes-amg-petronas-formula-one-team/jobs",
+        "https://lifestylecollection.mbusa.com",
+        "https://global.pli-petronas.com",
+        "https://www.linkedin.com/pulse/f1-careers-update-new-roles-placements-graduate-openings-nx4ie",
+        "https://www.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs-worldwide",
+        "https://formula1.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mercedes-AMG Petronas Formula One Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:12:24.192382",
+          "domain_explored": "https://mercedesamgf1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft (Cloud/AI/Data Innovation)",
+              "Zuma (Collaboration/Platform)",
+              "Nu (Global Partner)",
+              "Adobe (Implicit - 'Download' assets)",
+              "CMS Platform (Implicit - 'Stories' management)"
+            ],
+            "job_postings": [
+              "General Careers Section (Link present: 'Explore Our Newest Career Opportunities')"
+            ],
+            "procurement_indicators": [
+              "Partnership Agreement with Zuma",
+              "Multi-Year Global Partnership with Nu",
+              "Microsoft Innovation Collaboration ('Factory to Circuit')",
+              "Sustainability Engineering Progress (2025 Season)",
+              "Fan Experience Feedback Collection (2026)",
+              "adidas Teamwear Partnership (Procurement of Merchandise)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Technology Partnerships",
+            "Sustainability Engineering Initiatives",
+            "Fan Engagement & Digital Asset Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 402,
+              "elapsed_seconds": 5.309809923171997
+            }
+          ],
+          "reasoning": "The content reveals active strategic partnerships with Microsoft (innovation/factory to circuit) and Nu (global partnership), alongside a specific collaboration with Zuma. These indicate a reliance on external vendors for core technology and services. The mention of 'Engineers Major Sustainability Progress' suggests potential procurement of green technologies or consulting. The 'Download Your W17 Car Card' and 'Fan Experience' inquiries indicate digital content management needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:12:35.496105",
+          "domain_explored": "https://formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Content",
+            "Driver Standings & Statistics",
+            "Video Content Management (Generic)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 198,
+              "elapsed_seconds": 3.7373759746551514
+            }
+          ],
+          "reasoning": "The scraped content is from the general Formula 1 homepage (formula1.com), not the specific Mercedes-AMG Petronas Team entity. It contains general news, driver standings, and video highlights. While it mentions 'George Russell' and 'Mercedes' in the standings, this is performance data, not a procurement signal. There are no job postings, RFPs, or technology investments specific to the team's procurement operations here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:13:08.377731",
+          "domain_explored": "https://lifestylecollection.mbusa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:13:25.751473",
+          "domain_explored": "https://global.pli-petronas.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Electric Vehicle Fluids (PETRONAS Iona)",
+              "High-Performance Lubricants (Syntium, Tutela)",
+              "Sustainable Energy Solutions"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Technology Transfer: 'What happens on the track doesn't stay on track' indicates active procurement of F1 tech for commercial use.",
+              "Sustainability Targets: Commitment to Net Zero and Cap GHG emissions (49.5m tonnes by 2024) suggests future procurement of green tech.",
+              "Sector-Specific Solutions: Specialized lubricants for Mining, Construction, and Agriculture indicate a diversified B2B procurement capability."
+            ]
+          },
+          "patterns_found": [
+            "Strategic Technology Transfer (Track-to-Road)",
+            "Sustainability & Net Zero Governance Targets",
+            "Specialized Industrial Supply Chain (Mining, Construction, Agriculture)",
+            "Co-Branding & OEM Partnership Models"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 414,
+              "elapsed_seconds": 4.811032056808472
+            }
+          ],
+          "reasoning": "The content confirms PETRONAS is a major strategic partner to Mercedes-AMG Petronas F1, explicitly detailing a 'Track-to-Road' technology transfer model. While this is a corporate site (global.pli-petronas.com) rather than a direct F1 procurement portal, it reveals the vendor's capability to deliver high-performance fluids and their commitment to Net Zero targets, which aligns with the F1 team's sustainability and performance procurement needs. It provides context on the nature of the partnership but no direct RFPs or tech stack data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:13:30.469079",
+          "domain_explored": "https://uk.linkedin.com/company/mercedes-amg-petronas-formula-one-team/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Data Scrape Failure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 606,
+              "output_tokens": 150,
+              "elapsed_seconds": 2.3176980018615723
+            }
+          ],
+          "reasoning": "The target URL returned a '403 Forbidden' error with the instruction to use only the company name in the URL. This indicates an access restriction or anti-scraping measure, preventing the retrieval of job posting data or procurement signals. No actionable intelligence was gathered."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:13:38.336623",
+          "domain_explored": "https://www.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "NDT (Non-Destructive Testing) Equipment",
+              "Aerodynamic Simulation Software (Implied)",
+              "Project Management Platforms (Implied)"
+            ],
+            "job_postings": [
+              "Aerodynamicist - Non F1",
+              "Project Manager (12-Month Fixed Term Contract)",
+              "NDT Technician (Early/Late Shift)",
+              "Heritage Mechanic"
+            ],
+            "procurement_indicators": [
+              "Use of Fixed Term Contracts for Project Management",
+              "Recruitment for Shift-Based Operations (Implies supply chain for parts/testing)",
+              "Expansion into 'Non F1' Aerodynamics (Implies diversification of R&D procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Technical Recruitment (Aerodynamics, NDT)",
+            "Project-Based Resource Augmentation (Fixed Term Contracts)",
+            "Operational Continuity (Shift Work & Heritage Operations)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 374,
+              "elapsed_seconds": 4.076325178146362
+            }
+          ],
+          "reasoning": "While the content does not reveal explicit procurement tooling (like specific ERP/CRM names), the job titles indicate active investment in specialized human capital and project management resources. The 'Project Manager (Fixed Term)' role suggests specific, time-bound initiatives which often correlate with vendor onboarding or process optimization projects, warranting a weak signal for procurement capacity building."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:14:01.809911",
+          "domain_explored": "https://uk.linkedin.com/jobs/mercedes-amg-petronas-formula-one-team-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Data Access Failure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 770,
+              "output_tokens": 140,
+              "elapsed_seconds": 18.43906307220459
+            }
+          ],
+          "reasoning": "The content indicates a technical restriction (rate limiting) preventing access to the underlying job data. Without the actual job descriptions or company information, no procurement signals or technology stack details can be extracted."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:14:07.241620",
+          "domain_explored": "https://www.linkedin.com/pulse/f1-careers-update-new-roles-placements-graduate-openings-nx4ie",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Data Access Failure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 831,
+              "output_tokens": 155,
+              "elapsed_seconds": 3.037245273590088
+            }
+          ],
+          "reasoning": "The request to LinkedIn was blocked due to rate limiting (429 Too Many Requests). The content body contains only the error message and instructions to contact an Account Manager, rather than the article regarding F1 careers and placements. No procurement signals or job data could be extracted."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T08:14:15.693927",
+          "domain_explored": "https://uk.linkedin.com/jobs/f1-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Anti-Scraping Mechanism",
+            "Data Access Failure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 878,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.934049129486084
+            }
+          ],
+          "reasoning": "The scraping attempt was blocked by LinkedIn's rate limiting mechanism (Error 429: Too Many Requests). The content returned is a system error message rather than actual job listings or company data. Consequently, no procurement signals, technology stack details, or governance patterns can be extracted from this specific iteration."
+        }
+      ],
+      "total_input_tokens": 9046,
+      "total_output_tokens": 1997,
+      "estimated_cost_usd": 0.057093
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mercedes-AMG Petronas Formula One Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:14:15.695250"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.363143",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:58.796785"
+}

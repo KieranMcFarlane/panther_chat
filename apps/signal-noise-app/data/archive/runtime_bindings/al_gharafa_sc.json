@@ -1,0 +1,120 @@
+{
+  "entity_id": "al_gharafa_sc",
+  "entity_name": "Al Gharafa SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "lensdatabase.fr",
+    "algharafa.qa",
+    "rougememoire.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_gharafa_sc",
+      "entity_name": "Al Gharafa SC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://algharafa.qa",
+        "https://rougememoire.com",
+        "https://lensdatabase.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Gharafa SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:23:58.574100",
+          "domain_explored": "https://lensdatabase.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:24:41.450441",
+          "domain_explored": "https://algharafa.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Twitter/X (Social Media)",
+              "E-commerce Platform (Implied by 'Buy Ticket' and 'Club Store' references)",
+              "Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Retail/Merchandising Operations (Champion Shirts sales)",
+              "Digital Ticketing Solutions (Buy Ticket functionality)",
+              "Strategic Governance Change (New Asian Olympic Council President)"
+            ]
+          },
+          "patterns_found": [
+            "e_commerce_presence",
+            "merchandising_operations",
+            "social_media_marketing_stack",
+            "high_profile_leadership"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 305,
+              "elapsed_seconds": 32.08452105522156
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, it confirms active commercial operations ('\u0645\u062a\u062c\u0631 \u0646\u0627\u062f\u064a \u0627\u0644\u063a\u0631\u0627\u0641\u0629' / Al Gharafa Club Store) and digital engagement. The presence of an online store indicates a need for e-commerce platforms, payment gateways, and inventory management systems. Additionally, the high-profile leadership change (Sheikh Joaan bin Hamad Al Thani) often precedes strategic reviews and infrastructure investments."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:24:46.141814",
+          "domain_explored": "https://rougememoire.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1384,
+      "total_output_tokens": 305,
+      "estimated_cost_usd": 0.008727
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Gharafa SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:24:46.142326"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220504",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:34:49.930565"
+}

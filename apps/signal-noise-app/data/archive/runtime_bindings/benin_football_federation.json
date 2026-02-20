@@ -1,0 +1,209 @@
+{
+  "entity_id": "benin_football_federation",
+  "entity_name": "Benin Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cafonline.com",
+    "zoominfo.com",
+    "beninwebtv.bj",
+    "ramassa.com",
+    "inside.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "benin_football_federation",
+      "entity_name": "Benin Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://ramassa.com",
+        "https://zoominfo.com",
+        "https://beninwebtv.bj"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Benin Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:26:49.408452",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports portal structure",
+            "Navigation menu repetition",
+            "Absence of localized entity data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 919,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.573744773864746
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive navigation menu elements and links from the Confederation of African Football (CAF) main portal. There is no mention of the Benin Football Federation, specific procurement activities, job postings, or technology implementations relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:27:02.105792",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B SaaS marketing copy",
+            "Third-party testimonial aggregation",
+            "Irrelevant sales pitch content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 191,
+              "elapsed_seconds": 7.629525661468506
+            }
+          ],
+          "reasoning": "The provided content is a generic marketing landing page for ZoomInfo, a B2B data platform. It contains no specific information regarding the Benin Football Federation, its procurement activities, technology stack, or governance. The text consists entirely of sales pitches, testimonials from unrelated individuals (Abhishek Kumar, Caio Lima), and feature descriptions for the ZoomInfo product."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:27:11.009835",
+          "domain_explored": "https://beninwebtv.bj",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news portal structure",
+            "High volume of entertainment and political content",
+            "Absence of corporate or organizational governance data",
+            "Generic keyword matching (e.g., 'Football') without entity context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.8561689853668213
+            }
+          ],
+          "reasoning": "The scraped content from BeninWebTV represents a general news aggregator covering politics, sports, and entertainment. While 'Football' appears as a category, it refers to international leagues (Serie A, SPL) rather than the Benin Football Federation. There are no signals regarding the Federation's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:27:20.940187",
+          "domain_explored": "https://ramassa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic mismatch (Catalonia, Spain vs. Benin)",
+            "Entity type mismatch (Local club/NGO vs. National Federation)",
+            "Language mismatch (Catalan vs. French/English)",
+            "Content repetition (scraping artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1527,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.4675872325897217
+            }
+          ],
+          "reasoning": "The content describes 'Associaci\u00f3 Esportiva Ramass\u00e0', a football club and NGO located in Les Franqueses del Vall\u00e8s, Barcelona (Spain). This is completely unrelated to the Benin Football Federation (F\u00e9d\u00e9ration B\u00e9ninoise de Football) in West Africa. The entity, location, and context are irrelevant to the target procurement intelligence goal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:27:31.368140",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Repetitive navigation menu structure",
+            "Generic 'What FIFA does' marketing copy",
+            "Irrelevant geographic mentions (Burundi, global focus)",
+            "Absence of localized Benin entity data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 218,
+              "elapsed_seconds": 5.314140796661377
+            }
+          ],
+          "reasoning": "The scraped content from inside.fifa.com is a global news portal focusing on FIFA-wide initiatives (Women's Champions Cup, FIFA Forward program in Burundi). It lacks specific information regarding the Benin Football Federation's internal procurement, technology stack, or governance. The content is high-level marketing and news, not operational data for the target entity."
+        }
+      ],
+      "total_input_tokens": 6918,
+      "total_output_tokens": 992,
+      "estimated_cost_usd": 0.035634
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Benin Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:27:31.369879"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204574",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:26.008944"
+}

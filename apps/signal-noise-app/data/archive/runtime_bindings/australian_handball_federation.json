@@ -1,0 +1,212 @@
+{
+  "entity_id": "australian_handball_federation",
+  "entity_name": "Australian Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "handballaustralia.org.au",
+    "oceaniahandballleagueinc.com",
+    "play-handball.com.au",
+    "wikiwand.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "australian_handball_federation",
+      "entity_name": "Australian Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://wikiwand.com",
+        "https://handballaustralia.org.au",
+        "https://play-handball.com.au",
+        "https://oceaniahandballleagueinc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Franchise Business Model",
+        "Sports Governance & Operations",
+        "Broadcast & Media Production",
+        "Fundraising & Non-Profit Partnerships",
+        "High-Volume Training Academies"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Australian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:50:31.239361",
+          "domain_explored": "https://handballaustralia.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Operations Focus",
+            "Public Relations Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 451,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.444734811782837
+            }
+          ],
+          "reasoning": "The content is a standard sports announcement regarding the 'Aussie Crocs' (Men's Team) and their Asian Championship campaign. It focuses on athletic performance, team selection, and match schedules. There are no signals regarding technology acquisition, vendor selection, or organizational infrastructure spending."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:50:42.121040",
+          "domain_explored": "https://oceaniahandballleagueinc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Technology (A&OHL TV)",
+              "Satellite Television Infrastructure (SCTV)",
+              "Sports Management Platforms",
+              "Fundraising Software (Australian Sports Foundation integration)"
+            ],
+            "job_postings": [
+              "Professional Players and Coaches (Development Programs)",
+              "Franchise Management Roles",
+              "Administration Staff"
+            ],
+            "procurement_indicators": [
+              "Request for Franchise Partnerships (RFP equivalent)",
+              "Procurement of Venue Hire and Accommodation for League",
+              "Broadcast Rights and Production Services Procurement",
+              "Merchandising and Sponsorship Vendor Setup",
+              "Legal Services for Franchise Agreements"
+            ]
+          },
+          "patterns_found": [
+            "Franchise Business Model",
+            "Sports Governance & Operations",
+            "Broadcast & Media Production",
+            "Fundraising & Non-Profit Partnerships",
+            "High-Volume Training Academies"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 422,
+              "elapsed_seconds": 3.621273994445801
+            }
+          ],
+          "reasoning": "The content reveals a major commercial initiative (Oceania Handball League) directly linked to the Australian Handball Federation. The proposal outlines a complex operational structure requiring significant procurement in broadcast technology (A&OHL TV), sports management software, venue management, and fundraising platforms (ASF partnership). The explicit mention of a 'Business Plan', 'Operations Manual', and 'Franchise Agreements' indicates a mature stage of procurement planning for league infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:50:54.255442",
+          "domain_explored": "https://play-handball.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Management Platforms (implied by 'REGISTER TO PLAY')",
+              "Web CMS (WordPress implied by structure)"
+            ],
+            "job_postings": [
+              "Coaching & Mentoring roles (HIP Program)"
+            ],
+            "procurement_indicators": [
+              "Play Well Strategy Funding (2025)",
+              "National expansion to Canberra, Bendigo, Sydney, Brisbane",
+              "Partnership model reliance"
+            ]
+          },
+          "patterns_found": [
+            "Government Funding & Grants",
+            "National Participation Strategy",
+            "Multi-State Program Rollout",
+            "Operational Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.259386777877808
+            }
+          ],
+          "reasoning": "While the page is consumer-facing, it reveals critical organizational context: the entity has secured 'Play Well' government funding for 2025 and is executing a national rollout across 4 states. This funding and expansion necessitate backend procurement for program delivery, venue management, and compliance reporting, even if specific vendors are not listed here."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:51:05.934938",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Wiki Interface Noise",
+            "American History References"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 172,
+              "elapsed_seconds": 5.36060094833374
+            }
+          ],
+          "reasoning": "The scraped content is entirely derived from the Wikiwand interface and generic Wikipedia articles (e.g., Abraham Lincoln, Usain Bolt). There is absolutely no mention of the Australian Handball Federation, handball operations, or procurement activities. This represents a complete failure of the search query to retrieve relevant entity-specific data."
+        }
+      ],
+      "total_input_tokens": 4836,
+      "total_output_tokens": 1037,
+      "estimated_cost_usd": 0.030063
+    },
+    "procurement_signals": [
+      "Franchise Business Model",
+      "Sports Governance & Operations",
+      "Broadcast & Media Production",
+      "Fundraising & Non-Profit Partnerships",
+      "High-Volume Training Academies"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Australian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:51:05.936165"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361288",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:39:25.136605"
+}

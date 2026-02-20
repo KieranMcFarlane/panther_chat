@@ -1,0 +1,348 @@
+{
+  "entity_id": "world_supersport_championship",
+  "entity_name": "World Supersport Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "worldsbk.com.au",
+    "fim-moto.com",
+    "rk-europe.com",
+    "puighitechparts.es",
+    "triumphmotorcycles.com",
+    "pages.championpowersports.eu",
+    "donington-park.co.uk",
+    "hondanews.eu",
+    "triumph-mediakits.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_supersport_championship",
+      "entity_name": "World Supersport Championship",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://triumphmotorcycles.com",
+        "https://hondanews.eu",
+        "https://pages.championpowersports.eu",
+        "https://puighitechparts.es",
+        "https://rk-europe.com",
+        "https://worldsbk.com.au",
+        "https://triumph-mediakits.com",
+        "https://donington-park.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Supersport Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:22:03.330263",
+          "domain_explored": "https://worldsbk.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Hospitality Vendor",
+                "details": "The Westernport Hotel utilized for off-track championship activities."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Event Promotion",
+            "Hospitality Partnerships",
+            "Local Circuit Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 873,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.518200159072876
+            }
+          ],
+          "reasoning": "The content is a promotional news post for a fan event at a local hotel, managed by the Phillip Island Circuit. It indicates existing hospitality vendor relationships but provides no new signals regarding technology procurement, RFPs, or digital transformation for the World Supersport Championship entity itself."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:22:12.998457",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Safety & Homologations Commission (Potential procurement of safety gear/tech)",
+              "FIM Quality Product (Licensing/Standardization program)",
+              "International Sustainability Commission (Potential ESG/Environmental consulting)"
+            ]
+          },
+          "patterns_found": [
+            "Regulatory Governance",
+            "Safety & Homologation Standards",
+            "Sporting Commission Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 254,
+              "elapsed_seconds": 5.993677139282227
+            }
+          ],
+          "reasoning": "The content represents the global governing body (FIM) rather than the World Supersport Championship commercial rights holder or organizer. While the site lists 'Circuit Racing' under its disciplines, the content is focused on governance, regulations, and safety commissions rather than procurement operations, vendor selection, or technology stacks specific to the World Supersport series."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:22:21.674659",
+          "domain_explored": "https://rk-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Management (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "ISO 9001 Certification (Quality Assurance)"
+            ]
+          },
+          "patterns_found": [
+            "ISO 9001 Compliance",
+            "OEM Manufacturing Context",
+            "Cookie Consent Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 220,
+              "elapsed_seconds": 4.885586977005005
+            }
+          ],
+          "reasoning": "The scraped content is primarily repetitive navigation text, ISO 9001 badges, and a standard privacy policy/cookie consent banner. While 'OEM Model Supply 2024' suggests a manufacturing context, there is no visible content linking RK Europe specifically to World Supersport procurement operations, technology stacks, or governance structures. The content is too generic and lacks specific procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:22:49.059127",
+          "domain_explored": "https://puighitechparts.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Distributor Portal Link (extranet.puighitechparts.es)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Navigation",
+            "Aftermarket Parts Catalog",
+            "Distributor Network Management",
+            "Multilingual Localization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 227,
+              "elapsed_seconds": 24.108160972595215
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation menu and a product search utility for Puig, a manufacturer of motorcycle accessories. While Puig is a vendor to the racing industry, this specific content is focused on consumer-facing sales (B2C) and product cataloging. It does not contain procurement signals, technology stack details, or corporate governance information relevant to the World Supersport Championship's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:22:52.082044",
+          "domain_explored": "https://triumphmotorcycles.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:23:17.645507",
+          "domain_explored": "https://pages.championpowersports.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Client-side dependency)",
+              "SVG Graphics",
+              "PDF Catalogs"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Catalog (E-CAT) Usage",
+              "PDF Brochure Distribution"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Navigation",
+            "Aftermarket Parts Catalog",
+            "Distributor Network Management",
+            "Motorsports Sponsorship Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 267,
+              "elapsed_seconds": 22.27506709098816
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Champion Powersports' (DRiV Italy), which is a vendor/distributor of braking components and aftermarket parts, not the World Supersport Championship entity itself. While the page mentions motorsports partnerships (TCR Spain, FFSA GT4, Enduro), these are marketing case studies for their products, not procurement signals from the championship organizing body. The site functions as a digital catalog (E-CAT) for parts sales."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:23:35.759956",
+          "domain_explored": "https://donington-park.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Looking for a Job in Motorsport? Come and join us"
+            ],
+            "procurement_indicators": [
+              "MSVR Season Launch (Event coordination)",
+              "General Track Day (Service offering)"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations Management",
+            "B2C Ticketing & Event Promotion",
+            "Track Day & Hospitality Services",
+            "Motorsport Venue Hosting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 274,
+              "elapsed_seconds": 14.889611005783081
+            }
+          ],
+          "reasoning": "The content is from Donington Park, a motorsport venue. While it mentions the 'MOTUL FIM Superbike World Championship' as an event hosted at the circuit, the site content is focused on venue operations, ticket sales, and track day schedules. It does not contain information regarding the procurement activities, technology stack, or governance of the World Supersport Championship organizing body itself. This is a downstream operational entity (venue), not the championship rights holder or regulator."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:23:41.600775",
+          "domain_explored": "https://hondanews.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (void(0) handlers)",
+              "Multi-language CMS (evidenced by /eu/en/ structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Multi-Regional Corporate Navigation",
+            "Cookie Consent Management",
+            "Media Newsroom Structure",
+            "Product Categorization (Cars, Motorcycles, Marine, Power Products)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.6174957752227783
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of the global navigation header, cookie consent banners, and footer links from the Honda Motor Europe newsroom. While 'Motorsport' is listed as a category, the content does not contain specific articles, press releases, or procurement-related data (such as RFPs, vendor lists, or technology stacks) relevant to the World Supersport Championship entity. It represents a generic corporate interface rather than specific intelligence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:23:47.873603",
+          "domain_explored": "https://triumph-mediakits.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Product Marketing & PR Campaigns",
+            "Media Kit Distribution",
+            "Consumer Product Launches",
+            "Brand Partnership Management (Moto2, Film Studios)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1745,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.22701096534729
+            }
+          ],
+          "reasoning": "The content is a media and news aggregation site focused on consumer product launches (motorcycles), cinema placements, and racing editions. While it indicates marketing spend, it does not contain procurement signals such as RFPs, technology infrastructure needs, or job postings relevant to World Supersport Championship procurement."
+        }
+      ],
+      "total_input_tokens": 11868,
+      "total_output_tokens": 1898,
+      "estimated_cost_usd": 0.06407399999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Supersport Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:23:47.874259"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374669",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:24.745026"
+}

@@ -1,0 +1,113 @@
+{
+  "entity_id": "american_samoa_volleyball_association",
+  "entity_name": "American Samoa Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "asianvolleyball.net",
+    "samoanews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "american_samoa_volleyball_association",
+      "entity_name": "American Samoa Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://asianvolleyball.net",
+        "https://samoanews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "American Samoa Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:56:42.375518",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "regional_confederation_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 822,
+              "output_tokens": 142,
+              "elapsed_seconds": 2.659823179244995
+            }
+          ],
+          "reasoning": "The content is from the Asian Volleyball Confederation (AVC) website and focuses on continental event schedules (Philippines, 2026). It contains no information regarding the American Samoa Volleyball Association, its local operations, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:56:53.530876",
+          "domain_explored": "https://samoanews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_aggregator",
+            "sports_coverage",
+            "political_news",
+            "crime_reports",
+            "no_procurement_section"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.094743013381958
+            }
+          ],
+          "reasoning": "The scraped content from Samoa News represents a general news portal covering local sports (tennis, football), politics (Treasury confirmation), and community events. There is no dedicated section for government procurement, RFPs, or job postings related to the American Samoa Volleyball Association. The content is high-level news rather than operational data."
+        }
+      ],
+      "total_input_tokens": 2230,
+      "total_output_tokens": 328,
+      "estimated_cost_usd": 0.011609999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "American Samoa Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:56:53.531869"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331439",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:50.909551"
+}

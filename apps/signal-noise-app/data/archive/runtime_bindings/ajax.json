@@ -1,0 +1,351 @@
+{
+  "entity_id": "ajax",
+  "entity_name": "Ajax",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "english.ajax.nl",
+    "ajax.nl",
+    "ajax.systems",
+    "home.ajax.nl",
+    "ajaxfutbol.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/ajax-systems-jobs-worldwide",
+      "https://ca.linkedin.com/jobs/career-jobs-ajax-on",
+      "https://www.linkedin.com/jobs/ajax-systems-jobs",
+      "https://ca.linkedin.com/jobs/warehouse-jobs-ajax-on",
+      "https://www.linkedin.com/jobs/afc-ajax-jobs-worldwide",
+      "https://ca.linkedin.com/jobs/ajax-part-time-jobs-ajax-on",
+      "https://ca.linkedin.com/jobs/recruit-jobs-ajax-on"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ajax",
+      "entity_name": "Ajax",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ajaxfutbol.com",
+        "https://www.linkedin.com/jobs/afc-ajax-jobs-worldwide",
+        "https://home.ajax.nl",
+        "https://ajax.nl",
+        "https://ca.linkedin.com/jobs/career-jobs-ajax-on",
+        "https://www.linkedin.com/jobs/ajax-systems-jobs",
+        "https://www.linkedin.com/jobs/ajax-systems-jobs-worldwide",
+        "https://english.ajax.nl",
+        "https://ajax.systems",
+        "https://ca.linkedin.com/jobs/warehouse-jobs-ajax-on"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ajax may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:18:27.923475",
+          "domain_explored": "https://english.ajax.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (hosting high volumes of video content)",
+              "E-commerce Platforms (Kit/Merchandise sales)",
+              "Gaming/Simulation Software (EA Sports Partnership)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership Renewal: Extension of contract with EA (Electronic Arts)",
+              "Infrastructure Project: 'De Nieuwe Toekomst' facility (second home for teams)",
+              "Merchandising: Launch of Away 25/26 and Training 25/26 kits (Supply Chain)",
+              "CSR Initiative: 'Dapp're Strijders' and social behavior rules (Consulting/Training services)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Management",
+            "Sponsorship & Partnership Renewals",
+            "Merchandising & E-commerce",
+            "Corporate Social Responsibility (CSR) Programs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 372,
+              "elapsed_seconds": 5.227920055389404
+            }
+          ],
+          "reasoning": "The content is primarily fan engagement and sports news, but reveals specific procurement-relevant activities. The explicit mention of 'Ajax and EA extend partnership' signals a vendor relationship management activity (likely gaming/simulation software). The 'De Nieuwe Toekomst' facility references indicate infrastructure or facility management procurement. The 'Shop now' links and kit launches imply active e-commerce and supply chain operations for merchandise."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:19:12.132667",
+          "domain_explored": "https://ajax.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platforms (implied by 'Shop nu' links)",
+              "Video Streaming Platforms (hosting 'Ajax Doc')",
+              "Social Media Management Tools (referenced in 'social gedragsregels')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Automotive Fleet Partnership: BMW (New vehicles for players)",
+              "Technology Partnership Renewal: EA Sports (Electronic Arts)",
+              "Retail Merchandise: Away 25/26, Training 25/26 kits",
+              "Event Procurement: Gala events in Johan Cruijff ArenA"
+            ]
+          },
+          "patterns_found": [
+            "Merchandising & E-commerce",
+            "Automotive Fleet Procurement",
+            "Digital Content Management",
+            "Sports Technology Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 353,
+              "elapsed_seconds": 37.9416937828064
+            }
+          ],
+          "reasoning": "The scraped content is primarily marketing and news-driven, but contains specific embedded signals of procurement activities. The 'Shop nu' links confirm active e-commerce operations. The video title 'Nieuwe BMW's voor Ajacieden' indicates a fleet procurement partnership with BMW. The title 'Ajax en EA verlengen samenwerking' signals a contract renewal in the sports technology/gaming sector. While no direct RFPs are visible, these partnerships require vendor management and procurement cycles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:19:19.724702",
+          "domain_explored": "https://ajax.systems",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Surveillance",
+              "Automation Systems",
+              "Fire Safety Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Distribution/Reseller Network (Where to buy)",
+              "Product Portfolio Management"
+            ]
+          },
+          "patterns_found": [
+            "Security Systems Manufacturing",
+            "B2C Distribution Channels",
+            "Product Catalog Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.8944950103759766
+            }
+          ],
+          "reasoning": "The content scraped from ajax.systems identifies the entity as a manufacturer of security systems (intrusion, fire, video surveillance) rather than the football club (AFC Ajax) or a procurement entity. The focus is on product categories (detectors, sirens, hubs) and 'Where to buy' distribution. This contradicts the hypothesis of analyzing procurement signals for the sports entity Ajax."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:19:30.893257",
+          "domain_explored": "https://home.ajax.nl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary)",
+              "Product Customization Engine",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory procurement for seasonal collections (Home 25/26 kit)",
+              "Logistics and distribution partnerships for retail goods",
+              "Digital platform maintenance for online shop"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Merchandising",
+            "Direct-to-Consumer (DTC) Retail",
+            "Product Lifecycle Management (Seasonal Kits)",
+            "Customization Tools (User Interface)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 302,
+              "elapsed_seconds": 3.844067096710205
+            }
+          ],
+          "reasoning": "The content confirms Ajax operates a sophisticated direct-to-consumer e-commerce platform for merchandise. While this is primarily retail revenue rather than B2B procurement, the presence of 'Design your own' tools indicates investment in web technologies and user experience software. The seasonal nature of the products (25/26 kit) suggests a cyclical procurement pipeline for inventory management and logistics."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:19:37.905372",
+          "domain_explored": "https://ajaxfutbol.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:19:52.363591",
+          "domain_explored": "https://www.linkedin.com/jobs/ajax-systems-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Python",
+              "Desktop Application Development",
+              "Manual QA Testing"
+            ],
+            "job_postings": [
+              "Junior Python developer (Desktop) - Kyiv",
+              "Junior / Middle Manual QA Engineer - Kyiv",
+              "Personal Assistant to HNWI - Dubai"
+            ],
+            "procurement_indicators": [
+              "Active R&D Recruitment",
+              "Administrative Support Hiring"
+            ]
+          },
+          "patterns_found": [
+            "Security Systems Manufacturing",
+            "Software Development (Python, QA)",
+            "R&D Center Operations",
+            "Global Expansion (UAE, Ukraine)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 279,
+              "elapsed_seconds": 6.636288166046143
+            }
+          ],
+          "reasoning": "The scraped content is from 'Ajax Systems' (the security alarm manufacturer), not 'Ajax' (the Dutch football club). The job listings (Python developers, QA Engineers, Personal Assistant in Dubai) and company context confirm this is a B2B/B2C security technology firm. This contradicts the procurement hypothesis for the football club entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:20:13.026286",
+          "domain_explored": "https://ca.linkedin.com/jobs/career-jobs-ajax-on",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Talent Acquisition Assistant Manager at UNIQLO",
+              "Future Career Opportunities at Royal Ontario Museum"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Disambiguation (Ajax, Ontario vs. Ajax Amsterdam)",
+            "Generic Job Aggregation",
+            "Talent Acquisition (Uniqlo, Royal Ontario Museum)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 224,
+              "elapsed_seconds": 13.721666097640991
+            }
+          ],
+          "reasoning": "The URL explicitly targets 'Ajax, ON' (Ontario, Canada), a geographic location distinct from the target entity 'Ajax' (the football club/systems entity). The content lists generic jobs for unrelated entities like the Royal Ontario Museum and Uniqlo. This confirms the search path has drifted into a geographic noise trap rather than the corporate entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:20:16.253142",
+          "domain_explored": "https://www.linkedin.com/jobs/ajax-systems-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T08:20:18.370588",
+          "domain_explored": "https://ca.linkedin.com/jobs/warehouse-jobs-ajax-on",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T08:20:20.421878",
+          "domain_explored": "https://www.linkedin.com/jobs/afc-ajax-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 8936,
+      "total_output_tokens": 1773,
+      "estimated_cost_usd": 0.053403
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ajax may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:20:20.422325"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.132486",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:16.973403"
+}

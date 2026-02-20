@@ -1,0 +1,266 @@
+{
+  "entity_id": "imsa_weathertech_sportscar_championship",
+  "entity_name": "IMSA WeatherTech SportsCar Championship",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "imsa.com",
+    "weathertechraceway.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+      "https://www.linkedin.com/jobs/view/imsa-technical-systems-engineer-at-nascar-202695572",
+      "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963",
+      "https://www.linkedin.com/jobs/view/part-time-competition-technology-technician-%C4%B1-at-nascar-196397567"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "imsa_weathertech_sportscar_championship",
+      "entity_name": "IMSA WeatherTech SportsCar Championship",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://imsa.com",
+        "https://weathertechraceway.com",
+        "https://www.linkedin.com/jobs/view/part-time-competition-technology-technician-%C4%B1-at-nascar-196397567",
+        "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+        "https://www.linkedin.com/jobs/view/imsa-technical-systems-engineer-at-nascar-202695572",
+        "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "specialized_hardware_procurement",
+        "data_systems_integration",
+        "vendor_supplier_management",
+        "technical_governance"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IMSA WeatherTech SportsCar Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:22:06.095511",
+          "domain_explored": "https://imsa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1295)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:22:15.603633",
+          "domain_explored": "https://weathertechraceway.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospitality packages sales",
+              "Official merchandise sales",
+              "Ticketing platform usage (implied by 'tickets are on sale now')"
+            ]
+          },
+          "patterns_found": [
+            "venue_specific_content",
+            "hospitality_sales",
+            "ticketing_operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 232,
+              "elapsed_seconds": 2.5093300342559814
+            }
+          ],
+          "reasoning": "The content analyzed is from the specific venue website (WeatherTech Raceway Laguna Seca) rather than the central IMSA sanctioning body. While IMSA is a key event partner (IMSA Monterey SportsCar Championship), the content focuses on venue caretaking, camping, and ticket sales rather than organizational procurement, technology stack, or governance. No direct procurement signals for the target entity (IMSA) were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:23:00.958438",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-part-time-transport-driver-at-nascar-4229320786",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Part-Time Transport Driver (Logistics)"
+            ],
+            "procurement_indicators": [
+              "Logistics Department (Equipment Maintenance)",
+              "NASCAR Parent Company (Shared Services Potential)",
+              "ACO Strategic Partnership"
+            ]
+          },
+          "patterns_found": [
+            "logistics_operations",
+            "vendor_partnership",
+            "parent_company_structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 243,
+              "elapsed_seconds": 40.80094528198242
+            }
+          ],
+          "reasoning": "While the job posting is for a driver (operational expense), it confirms the 'Logistics' department exists and requires equipment maintenance ('tech equipment'). Critically, the company description confirms the NASCAR ownership structure and the strategic partnership with the Automobile Club de l'Ouest (ACO), indicating a complex governance model where procurement may be centralized or shared."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:23:09.753752",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-technical-systems-engineer-at-nascar-202695572",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Acquisition Systems",
+              "Vehicle Simulation Software",
+              "Statistical Analysis Tools",
+              "Telemetry Systems",
+              "Dynamometer & Wind Tunnel Data Platforms"
+            ],
+            "job_postings": [
+              "Technical Systems Engineer (Daytona Beach, FL) - Focus on data analysis, BoP, and electronics supplier management"
+            ],
+            "procurement_indicators": [
+              "Direct management of data system suppliers",
+              "Procurement and distribution of electronic control units (ECUs) and logging hardware to competitors",
+              "Acquisition of simulation and analysis software tools",
+              "Sourcing of off-track testing data (dynamometer/wind tunnel)"
+            ]
+          },
+          "patterns_found": [
+            "specialized_hardware_procurement",
+            "data_systems_integration",
+            "vendor_supplier_management",
+            "technical_governance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 397,
+              "elapsed_seconds": 4.283704042434692
+            }
+          ],
+          "reasoning": "The job description for a Technical Systems Engineer reveals explicit procurement responsibilities, specifically 'Works closely with data system suppliers on the deployment, integration, calibration, and maintenance of data acquisition systems' and 'Assists in management and distribution of electronic systems.' This confirms active vendor management and the procurement of specialized technical hardware (data loggers, sensors) and software (simulation tools) required for the Balance of Performance (BoP) process."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:23:21.797868",
+          "domain_explored": "https://www.linkedin.com/jobs/view/imsa-transport-driver-at-nascar-4240945963",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Electronic Logging Devices (ELD)",
+              "Fleet Management Software"
+            ],
+            "job_postings": [
+              "IMSA Transport Driver (Full Time) - Logistics"
+            ],
+            "procurement_indicators": [
+              "DOT Compliance Technology (ELD)",
+              "Fleet Maintenance & Repair Services",
+              "Fuel Procurement",
+              "Event Equipment (Awnings, Tech Equipment)"
+            ]
+          },
+          "patterns_found": [
+            "logistics_operations",
+            "fleet_management",
+            "regulatory_compliance_procurement",
+            "operational_spend"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 299,
+              "elapsed_seconds": 5.545705795288086
+            }
+          ],
+          "reasoning": "While this is a logistics role rather than a direct procurement position, it reveals specific procurement categories and compliance requirements. The mention of 'Electronic Logging Devices (ELD)' indicates a specific technology procurement need for DOT compliance. The role also implies ongoing procurement for fleet maintenance, fuel, and event supplies (awning, tech equipment). This confirms operational spend but does not show strategic sourcing activity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:23:43.914950",
+          "domain_explored": "https://www.linkedin.com/jobs/view/part-time-competition-technology-technician-%C4%B1-at-nascar-196397567",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "broken_link",
+            "content_unavailable"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 122,
+              "elapsed_seconds": 18.53363609313965
+            }
+          ],
+          "reasoning": "The target URL returned a 'Page not found' error (404) across multiple language localizations. No job description, technical requirements, or procurement signals were accessible for analysis."
+        }
+      ],
+      "total_input_tokens": 7609,
+      "total_output_tokens": 1293,
+      "estimated_cost_usd": 0.042221999999999996
+    },
+    "procurement_signals": [
+      "specialized_hardware_procurement",
+      "data_systems_integration",
+      "vendor_supplier_management",
+      "technical_governance"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IMSA WeatherTech SportsCar Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:23:43.916316"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373492",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:35:32.714825"
+}

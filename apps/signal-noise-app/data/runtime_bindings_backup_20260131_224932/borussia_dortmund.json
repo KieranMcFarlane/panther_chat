@@ -1,0 +1,73 @@
+{
+  "entity_id": "borussia_dortmund",
+  "entity_name": "Borussia Dortmund",
+  "template_id": "top_tier_club_global",
+  "discovered_at": "2026-01-30T14:59:05.463703Z",
+  "domains": [
+    "borussiadortmund.com",
+    "www.borussiadortmund.com"
+  ],
+  "channels": {
+    "jobs": "linkedin.com/jobs@borussiadortmund",
+    "careers": "borussiadortmund.com/careers",
+    "news": "borussiadortmund.com/news",
+    "press": "borussiadortmund.com/press"
+  },
+  "patterns": {
+    "Digital Infrastructure & Stack": {
+      "patterns_found": [
+        "New ticketing system",
+        "Cloud migration"
+      ],
+      "iterations_used": 24,
+      "confidence": 0.74,
+      "accept_rate": 0.8
+    },
+    "Commercial & Revenue Systems": {
+      "patterns_found": [
+        "Merchandise platform",
+        "E-commerce expansion",
+        "Sponsorship tech integration"
+      ],
+      "iterations_used": 24,
+      "confidence": 0.69,
+      "accept_rate": 0.9
+    },
+    "Fan Engagement & Experience": {
+      "patterns_found": [
+        "Personalized content delivery",
+        "Loyalty program launch",
+        "Gamification platform"
+      ],
+      "iterations_used": 23,
+      "confidence": 0.85,
+      "accept_rate": 0.86
+    },
+    "Data & Analytics": {
+      "patterns_found": [
+        "Performance tracking system",
+        "Business intelligence dashboard",
+        "Predictive analytics"
+      ],
+      "iterations_used": 17,
+      "confidence": 0.67,
+      "accept_rate": 0.9
+    },
+    "Operations & Stadium": {
+      "patterns_found": [
+        "Venue management system",
+        "Smart ticketing gates"
+      ],
+      "iterations_used": 24,
+      "confidence": 0.76,
+      "accept_rate": 0.77
+    }
+  },
+  "performance_metrics": {
+    "total_iterations": 30,
+    "categories_discovered": 5,
+    "overall_confidence": 0.74,
+    "total_cost_usd": 0.75
+  },
+  "next_refresh": "2026-01-30T14:59:05.463706Z"
+}

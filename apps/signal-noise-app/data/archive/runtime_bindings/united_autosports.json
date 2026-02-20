@@ -1,0 +1,288 @@
+{
+  "entity_id": "united_autosports",
+  "entity_name": "United Autosports",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "unitedautosports.com",
+    "store.united-autosports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7410635574195142656-kWxt",
+      "https://www.linkedin.com/posts/fluid-jobs_motorsport-f1-nascar-activity-7302632270958415872-SLwJ",
+      "https://br.linkedin.com/company/motorsportjobs?trk=public_profile_topcard-current-company",
+      "https://www.linkedin.com/posts/f1jobs_motorsportjobs-motorsport-jobs-activity-7121073292454547456-aQuC"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "united_autosports",
+      "entity_name": "United Autosports",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.039999999999999994,
+        0.06
+      ],
+      "explored_domains": [
+        "https://store.united-autosports.com",
+        "https://unitedautosports.com",
+        "https://www.linkedin.com/posts/f1jobs_motorsportjobs-motorsport-jobs-activity-7121073292454547456-aQuC",
+        "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7410635574195142656-kWxt",
+        "https://www.linkedin.com/posts/fluid-jobs_motorsport-f1-nascar-activity-7302632270958415872-SLwJ",
+        "https://br.linkedin.com/company/motorsportjobs?trk=public_profile_topcard-current-company"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "United Autosports may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:11:55.842327",
+          "domain_explored": "https://unitedautosports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "McLaren 720S GT3 EVO",
+              "Oreca 07 (LMP2)",
+              "Schuberth (Helmet supplier)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Acquisition of 2x McLaren 720S GT3 EVOs for 2024 WEC Season",
+              "Driver line-up expansion requiring associated support contracts",
+              "Participation in Velocity Invitational (Historic Racing Logistics)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic OEM Partnership Expansion",
+            "Fleet/Asset Procurement (Motorsport)",
+            "Event-Based Vendor Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 327,
+              "elapsed_seconds": 6.628791093826294
+            }
+          ],
+          "reasoning": "The content reveals a significant strategic procurement signal: the expansion of the partnership with McLaren Automotive to include two new 720S GT3 EVOs for the WEC LMGT3 grid. This indicates active procurement of high-value assets (cars) and associated parts/services. Additionally, the frequent participation in events like the Velocity Invitational and the use of specific gear (Schuberth helmets) suggests ongoing procurement of event services and specialized equipment. However, no direct IT, software, or corporate service procurement signals were found in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:12:04.381140",
+          "domain_explored": "https://store.united-autosports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or Shopify Plus)",
+              "Payments Gateway (Stripe/PayPal inferred)",
+              "CDN (Cloudflare inferred)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Procurement (Branded Merchandise)",
+              "Fulfillment/Logistics Partners (Shipping carriers)",
+              "Platform Licensing (SaaS E-commerce)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Operations",
+            "Merchandise Retail",
+            "Third-Party Platform Usage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 418,
+              "output_tokens": 300,
+              "elapsed_seconds": 4.915576219558716
+            }
+          ],
+          "reasoning": "The content analyzed is a consumer-facing merchandise store (united-autosports.com/store). This represents a B2C retail operation utilizing a standard e-commerce platform (likely Shopify or similar based on URL structure). While this indicates a procurement relationship with an e-commerce platform provider, it does not signal active, high-value B2B procurement intent, technology expansion, or strategic vendor sourcing relevant to the core motorsport operations. It is a static sales channel."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:12:13.025326",
+          "domain_explored": "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7410635574195142656-kWxt",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: Client facing / Commercial Representative",
+              "Scope: Hypercar, LMP2, GT3, Historics programmes",
+              "Stakeholders: Partners, Sponsors, Drivers, VIP Guests"
+            ],
+            "procurement_indicators": [
+              "Expansion of Commercial Operations",
+              "Increased Hospitality/Event Management Load",
+              "Vendor usage for Motorsport Jobs (Recruitment)"
+            ]
+          },
+          "patterns_found": [
+            "Stakeholder Management Expansion",
+            "VIP Hospitality Operations",
+            "Sponsorship Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.237307071685791
+            }
+          ],
+          "reasoning": "The content reveals a hiring intent for a 'Client facing' role responsible for partners, sponsors, and VIP guests. While this is an HR signal rather than a direct RFP, it indicates an expansion in commercial operations and hospitality management. This growth often triggers downstream procurement needs for hospitality vendors, CRM tools, and gifting services, though the specific intent to purchase is not explicitly stated in the post."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:12:20.416744",
+          "domain_explored": "https://www.linkedin.com/posts/fluid-jobs_motorsport-f1-nascar-activity-7302632270958415872-SLwJ",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Systems Architecture",
+              "Engineering Infrastructure"
+            ],
+            "job_postings": [
+              "Senior Systems Engineer"
+            ],
+            "procurement_indicators": [
+              "Technical Capability Expansion",
+              "Infrastructure Investment"
+            ]
+          },
+          "patterns_found": [
+            "Technical Infrastructure Procurement",
+            "Systems Engineering Investment",
+            "Digital Infrastructure Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.668017864227295
+            }
+          ],
+          "reasoning": "The content identifies a specific job opening for a 'Senior Systems Engineer' at United Autosports. While this is a hiring signal rather than a direct RFP, the role indicates active investment in technical infrastructure and systems architecture, which often precedes or requires procurement of software, hardware, or consulting services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:12:33.728961",
+          "domain_explored": "https://br.linkedin.com/company/motorsportjobs?trk=public_profile_topcard-current-company",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Workday",
+              "Taleo",
+              "iCIMS",
+              "SuccessFactors"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of specialized niche job boards",
+              "Integration with enterprise-grade ATS platforms"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Platform Usage",
+            "Outsourced Recruitment",
+            "ATS Integration (Workday, Taleo, iCIMS, SuccessFactors)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 264,
+              "elapsed_seconds": 4.981511116027832
+            }
+          ],
+          "reasoning": "The analyzed content is a generic company profile for 'Motorsport Jobs', a third-party recruitment platform, not United Autosports. While it confirms that United Autosports likely utilizes this platform for hiring (and uses ATS systems like Workday/Taleo), the content itself provides no direct procurement signals, technology investments, or governance patterns specific to United Autosports' internal operations. It is an external vendor description."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:12:41.001993",
+          "domain_explored": "https://www.linkedin.com/posts/f1jobs_motorsportjobs-motorsport-jobs-activity-7121073292454547456-aQuC",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Large Format Printing",
+              "Vinyl Cutting/Plotting Software",
+              "Graphic Design Tools (Adobe Suite)"
+            ],
+            "job_postings": [
+              "Race Car Wrapper (Production and installation of full vehicle livery designs)"
+            ],
+            "procurement_indicators": [
+              "Requirement for high-durability vinyl materials for racing conditions",
+              "Inventory management for livery consumables",
+              "Vendor relationship management for motorsport-grade graphic materials"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Service Procurement",
+            "Marketing Asset Production",
+            "Sponsorship Activation Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1698,
+              "output_tokens": 331,
+              "elapsed_seconds": 3.2481021881103516
+            }
+          ],
+          "reasoning": "The content identifies a specific operational role ('Race Car Wrapper') at United Autosports. While this is a direct labor hire, the function involves the procurement and installation of vehicle livery materials (vinyl/wraps). This indicates a supply chain for raw materials (large format printing media, vinyls, adhesives) and potential outsourcing of graphic production services during peak race times, fitting the 'Fleet/Asset Procurement' pattern established in Iteration 1."
+        }
+      ],
+      "total_input_tokens": 8138,
+      "total_output_tokens": 1753,
+      "estimated_cost_usd": 0.050709000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "United Autosports may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:12:41.003549"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.367806",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:42.032705"
+}

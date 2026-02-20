@@ -1,0 +1,407 @@
+{
+  "entity_id": "afl",
+  "entity_name": "AFL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "afleurope.org",
+    "watchafl.com.au",
+    "aflplayers.com.au",
+    "sydneyafl.com.au",
+    "theaflstore.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/company/australian-football-league/jobs",
+      "https://au.linkedin.com/jobs/afl-jobs-melbourne-vic",
+      "https://www.linkedin.com/company/aflglobal/jobs",
+      "https://au.linkedin.com/jobs/view/national-schools-lead-at-afl-australian-football-league-4367750187",
+      "https://au.linkedin.com/jobs/australian-football-league-jobs",
+      "https://au.linkedin.com/jobs/afl-jobs-sydney-nsw",
+      "https://au.linkedin.com/jobs/view/match-manager-katherine-at-afl-australian-football-league-4361120152",
+      "https://au.linkedin.com/jobs/view/schools-and-innovative-venue-growth-lead-vic-at-afl-australian-football-league-4344324283",
+      "https://au.linkedin.com/jobs/view/club-development-officer-at-afl-australian-football-league-4363702054",
+      "https://au.linkedin.com/jobs/view/social-projects-lead-at-afl-australian-football-league-4326323275"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afl",
+      "entity_name": "AFL",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.15999999999999998,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.039999999999999994,
+        0.06,
+        0.039999999999999994,
+        0.09999999999999999,
+        0.15999999999999998
+      ],
+      "explored_domains": [
+        "https://theaflstore.com.au",
+        "https://www.linkedin.com/company/aflglobal/jobs",
+        "https://sydneyafl.com.au",
+        "https://au.linkedin.com/jobs/afl-jobs-melbourne-vic",
+        "https://au.linkedin.com/jobs/australian-football-league-jobs",
+        "https://au.linkedin.com/company/australian-football-league/jobs",
+        "https://au.linkedin.com/jobs/view/national-schools-lead-at-afl-australian-football-league-4367750187",
+        "https://afleurope.org",
+        "https://watchafl.com.au",
+        "https://aflplayers.com.au"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Outsourced Service Delivery Models",
+        "Digital Product Procurement",
+        "Educational Resource Supply Chain",
+        "Strategic Partnership Management",
+        "Program Efficiency Analysis",
+        "Event Operations Procurement",
+        "Membership Technology Stack",
+        "Regional Logistics Coordination",
+        "Affiliate Vendor Ecosystem"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AFL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:57:42.262067",
+          "domain_explored": "https://afleurope.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (CMS)",
+              "Yoast SEO (Inferred from standard WP structure)",
+              "Generic Event Management (implied by operations)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Planning & Vendor Management (Speakers, Artists, Venues)",
+              "Digital Asset Management (Image hosting/CDN usage)",
+              "Multi-country operational support needs"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Operations",
+            "WordPress CMS Usage",
+            "Multi-jurisdictional Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 301,
+              "elapsed_seconds": 4.1183857917785645
+            }
+          ],
+          "reasoning": "The content confirms AFL Europe is an active operational body managing events across 20+ countries. The frequent 'Grand Final Lunch' announcements indicate a need for event management software and ticketing platforms. The site structure (wp-content/uploads) confirms a WordPress CMS stack. While no direct procurement requests are visible, the scale of operations (20 countries) and event frequency suggest a baseline requirement for event, CRM, and content management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:58:45.831013",
+          "domain_explored": "https://watchafl.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:59:01.859821",
+          "domain_explored": "https://aflplayers.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Member Management System (MMS)",
+              "Role-Based Access Control (RBAC)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Stakeholder Segmentation (Players, Agents, Media)",
+              "Digital Service Delivery (Career/Alumni management)"
+            ]
+          },
+          "patterns_found": [
+            "Constituent Relationship Management (CRM)",
+            "Self-Service Portal Architecture",
+            "Role-Based Access Control (RBAC)",
+            "Stakeholder Segmentation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 290,
+              "elapsed_seconds": 5.32874321937561
+            }
+          ],
+          "reasoning": "The content reveals a sophisticated digital portal designed to manage distinct user personas (Current Players, Alumni, Agents, Media). This structure implies a need for CRM or Member Management Systems (MMS) to handle data privacy, career services, and stakeholder engagement. While no direct procurement intent is visible, the complexity of the user journey suggests an underlying technology stack requiring maintenance and potential vendor support."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:59:13.799005",
+          "domain_explored": "https://sydneyafl.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Approved Suppliers Program (AFL NSW/ACT)",
+              "Centralized Vendor Selection for Clubs",
+              "Category Management (Goods & Services)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Vendor Management",
+            "Affiliate Procurement Framework",
+            "Supply Chain Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.306933879852295
+            }
+          ],
+          "reasoning": "The content reveals a formalized procurement structure via the 'Suppliers' section. AFL Sydney (an affiliate) utilizes an 'Approved Suppliers' program managed by AFL NSW/ACT to standardize goods and services for over 26 clubs. This indicates a governance model where procurement decisions are centralized or guided at the state level rather than individual clubs, creating a clear vendor entry point."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:59:23.603164",
+          "domain_explored": "https://theaflstore.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:59:28.527102",
+          "domain_explored": "https://au.linkedin.com/company/australian-football-league/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "API Endpoint Restriction",
+            "Data Access Failure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 587,
+              "output_tokens": 154,
+              "elapsed_seconds": 2.536729097366333
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error with a specific instruction to use only the company name in the URL. This indicates a technical restriction (likely an anti-scraping measure or incorrect endpoint formatting) that prevents the extraction of job posting data. No procurement signals could be derived."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:59:40.713464",
+          "domain_explored": "https://au.linkedin.com/jobs/afl-jobs-melbourne-vic",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Stadium Logistics Team Member - Casual"
+            ],
+            "procurement_indicators": [
+              "Active management of stadium inventory and equipment flows",
+              "Requirement for casual logistics workforce suggests variable supply chain demand"
+            ]
+          },
+          "patterns_found": [
+            "Operational Logistics Recruitment",
+            "Supply Chain Labor Demand",
+            "Event-Based Workforce Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1622,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.7011590003967285
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for 'Stadium Logistics Team Member' roles. While this is an operational hire rather than a strategic procurement role, it confirms active supply chain and logistics operations at the venue level, indicating a need for inventory management and physical supply flow solutions."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:59:55.834047",
+          "domain_explored": "https://www.linkedin.com/company/aflglobal/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "API Endpoint Restriction",
+            "Data Access Failure",
+            "Automated Traffic Filtering"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 691,
+              "output_tokens": 163,
+              "elapsed_seconds": 9.99802303314209
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error with a specific instruction to use only the company name in the URL. This indicates a technical restriction preventing the extraction of procurement data (job postings or company updates) from this specific LinkedIn endpoint, resulting in a net loss of confidence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T05:00:16.992255",
+          "domain_explored": "https://au.linkedin.com/jobs/view/national-schools-lead-at-afl-australian-football-league-4367750187",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Interactive Digital Products (Student Engagement)",
+              "Digital Learning Platforms",
+              "CRM (Implicit for School Membership management)"
+            ],
+            "job_postings": [
+              "National Schools Lead (Sydney, NSW) - Focus on Participation Programs"
+            ],
+            "procurement_indicators": [
+              "Outsourcing investigation for program delivery (e.g., Sporting Schools, CHK)",
+              "R&D for interactive digital products integrating club brands",
+              "Partnership development with external education specialists",
+              "Resource deployment optimization (Workforce allocation)"
+            ]
+          },
+          "patterns_found": [
+            "Outsourced Service Delivery Models",
+            "Digital Product Procurement",
+            "Educational Resource Supply Chain",
+            "Strategic Partnership Management",
+            "Program Efficiency Analysis"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1745,
+              "output_tokens": 349,
+              "elapsed_seconds": 12.224649906158447
+            }
+          ],
+          "reasoning": "The job description for the 'National Schools Lead' contains explicit procurement directives, specifically the mandate to 'Investigate an outsourced model for program delivery' and 'Investigate the possibility of an interactive digital product.' These are clear signals of upcoming sourcing activities for both service delivery and software development."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T05:00:32.092637",
+          "domain_explored": "https://au.linkedin.com/jobs/australian-football-league-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticketing/CRM Systems",
+              "Event Management Software",
+              "Scheduling Platforms"
+            ],
+            "job_postings": [
+              "Senior Stadium Event Manager (AFL)",
+              "National Schools Lead (AFL)",
+              "Competition Coordinator - Greater Sydney (AFL)",
+              "Game Development Officer - Katherine (AFL)"
+            ],
+            "procurement_indicators": [
+              "Stadium Operations Vendor Management",
+              "Educational Resource Procurement",
+              "Regional Travel & Logistics Supply",
+              "Membership Database Management"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations Procurement",
+            "Membership Technology Stack",
+            "Regional Logistics Coordination",
+            "Affiliate Vendor Ecosystem"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1806,
+              "output_tokens": 354,
+              "elapsed_seconds": 3.3711800575256348
+            }
+          ],
+          "reasoning": "The content reveals specific operational roles that drive procurement needs. The 'Senior Stadium Event Manager' role indicates significant procurement authority for event infrastructure, security, and vendor management. The 'Membership Sales & Service Officer' (via Richmond FC) suggests reliance on CRM and ticketing platforms. The presence of regional roles (Katherine, Greater Sydney) confirms a decentralized procurement model requiring logistics and travel vendors."
+        }
+      ],
+      "total_input_tokens": 10718,
+      "total_output_tokens": 2074,
+      "estimated_cost_usd": 0.063264
+    },
+    "procurement_signals": [
+      "Outsourced Service Delivery Models",
+      "Digital Product Procurement",
+      "Educational Resource Supply Chain",
+      "Strategic Partnership Management",
+      "Program Efficiency Analysis",
+      "Event Operations Procurement",
+      "Membership Technology Stack",
+      "Regional Logistics Coordination",
+      "Affiliate Vendor Ecosystem"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AFL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:00:32.094830"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.413869",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:40:55.131607"
+}

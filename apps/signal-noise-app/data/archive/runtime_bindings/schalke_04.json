@@ -1,0 +1,354 @@
+{
+  "entity_id": "schalke_04",
+  "entity_name": "Schalke 04",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "schalke04.de",
+    "bundesliga.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/fc-schalke-04-jobs-worldwide",
+      "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-47-is-here-activity-7399356391271948289-XRJC",
+      "https://be.linkedin.com/company/futboljobs.com",
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-20-of-the-year-activity-7330849940685918209-HAYl",
+      "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-30-of-the-year-activity-7353680333436870656-13it"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "schalke_04",
+      "entity_name": "Schalke 04",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/jobs/fc-schalke-04-jobs-worldwide",
+        "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+        "https://schalke04.de",
+        "https://be.linkedin.com/company/futboljobs.com",
+        "https://bundesliga.com",
+        "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+        "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-47-is-here-activity-7399356391271948289-XRJC"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Supply Chain Management Vacancy",
+        "Merchandising Operations Role",
+        "Active Recruitment (HR Coordinator)",
+        "Event Management Staffing"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Schalke 04 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:07:14.024695",
+          "domain_explored": "https://schalke04.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "E-commerce presence (Shop link with UTM parameters)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Standard CMS Structure",
+            "E-commerce Linkage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.886665105819702
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of repetitive sports news headlines (match reports, player interviews) and standard navigation elements. While there is a link to the 'Shop' (E-commerce), the content itself does not reveal new procurement signals, technology stacks, or job postings beyond what is typically expected for a football club's main homepage."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:07:21.948855",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic League Content",
+            "Irrelevant Context",
+            "Transfer Window Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 504,
+              "output_tokens": 169,
+              "elapsed_seconds": 3.2016828060150146
+            }
+          ],
+          "reasoning": "The content from bundesliga.com is a general league update regarding the January 2026 transfer window. It focuses on player movements across the entire Bundesliga rather than the specific operational, technological, or procurement activities of Schalke 04. There are no signals regarding internal technology stacks, job postings, or RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:07:29.439216",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Content",
+            "Gaming/Entertainment Focus",
+            "UI Navigation Elements",
+            "Irrelevant Keywords (Arknights, Persona, Clash of Clans)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.496833086013794
+            }
+          ],
+          "reasoning": "The content provided is raw HTML/Text from the Google Play Store homepage. It lists popular video games (e.g., Arknights, Clash of Clans, Persona 5) and device categories. There is absolutely no connection to Schalke 04, corporate procurement, or enterprise technology stacks. This is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:07:37.553518",
+          "domain_explored": "https://www.linkedin.com/jobs/fc-schalke-04-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Junior Supply Chain Manager (m/w/d) Merchandising",
+              "HR-Koordinator (m/w/d)",
+              "Mitarbeiter (m/w/d) Service & Veranstaltungen",
+              "Mitarbeiter (m/w/d) Business Events"
+            ],
+            "procurement_indicators": [
+              "Supply Chain Management (Merchandising)",
+              "Business Events Operations",
+              "HR Coordination (Vendor/Tool management potential)"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain Management Vacancy",
+            "Merchandising Operations Role",
+            "Active Recruitment (HR Coordinator)",
+            "Event Management Staffing"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 297,
+              "elapsed_seconds": 2.531513214111328
+            }
+          ],
+          "reasoning": "The content reveals a direct procurement signal through the 'Junior Supply Chain Manager (m/w/d) Merchandising' posting. This indicates active management of the merchandise supply chain, a key area for vendor engagement and logistics procurement. Additionally, the 'HR-Koordinator' and 'Business Events' roles suggest organizational restructuring and active vendor management for events."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:07:47.257282",
+          "domain_explored": "https://www.linkedin.com/jobs/dfb-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "DFB Optical Coating Assistant Engineer (Qingdao Federation of Trade Unions)",
+              "Financial Manager (DFB) (Universit\u00e9 de Caen Normandie)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Acronym Collision)",
+            "Generic Platform Content",
+            "Irrelevant Geographic Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1557,
+              "output_tokens": 230,
+              "elapsed_seconds": 5.271178960800171
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn jobs search results page for the query 'DFB'. While 'DFB' stands for 'Deutscher Fu\u00dfball-Bund' (German Football Association) in the target context, the results are dominated by unrelated entities using the same acronym (e.g., Qingdao Federation of Trade Unions, Universit\u00e9 de Caen). There is no content linking these results to the target entity, Schalke 04."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:07:53.700710",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-47-is-here-activity-7399356391271948289-XRJC",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "New Role (Title unspecified in snippet)",
+                "person": "Thomas Fest",
+                "entity": "FC Schalke 04",
+                "source": "FBIN Weekly Careers Update #47"
+              }
+            ],
+            "procurement_indicators": [
+              "Potential strategic review under new leadership",
+              "Governance restructuring (Executive appointment)"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Change",
+            "Personnel Movement",
+            "Strategic Restructuring Indicator"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 289,
+              "elapsed_seconds": 2.2896759510040283
+            }
+          ],
+          "reasoning": "While the content does not explicitly mention procurement or technology stacks, the appointment of Thomas Fest to a new role at FC Schalke 04 is a significant governance signal. Leadership changes often precede shifts in strategic direction, vendor selection, and operational restructuring, which are key antecedents to procurement activity. This validates the entity context and suggests active organizational changes."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:08:02.411881",
+          "domain_explored": "https://be.linkedin.com/company/futboljobs.com",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Performance Trainer \u2013 D.C. United \u2013 USA (Irrelevant to Schalke 04)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Third-Party Aggregator)",
+            "Generic Job Board Content",
+            "Irrelevant Geographic Context (US Soccer, Spain HQ)",
+            "Platform Navigation Elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1688,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.670872926712036
+            }
+          ],
+          "reasoning": "The analyzed content belongs to Futboljobs.com, a third-party job board and staffing agency, not Schalke 04. While the platform aggregates sports industry jobs, the specific content snippet provided (a 'Performance Trainer' role for 'D.C. United' in the USA) has no direct connection to Schalke 04's procurement activities or operations. It represents noise in the signal detection process."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:08:12.814649",
+          "domain_explored": "https://www.linkedin.com/posts/footballbusinessinside_fbins-weekly-careers-update-6-is-here-activity-7292784072014110720-4OMj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Dominik Durben (New Hire)",
+                "context": "Personnel movement indicating active staffing changes.",
+                "source": "FBIN Weekly Careers Update"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "signal": "Personnel Expansion",
+                "relevance": "New hires often require onboarding vendors, software licenses, or infrastructure.",
+                "confidence": "Low"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Personnel Movement",
+            "Strategic Hiring Indicator",
+            "Entity Match (Dominik Durben)",
+            "Third-Party Industry Intelligence (FBIN)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1771,
+              "output_tokens": 321,
+              "elapsed_seconds": 5.838794946670532
+            }
+          ],
+          "reasoning": "The content confirms a specific personnel hire (Dominik Durben) at FC Schalke 04 via a reputable industry aggregator (FBIN). While the post itself does not list procurement job titles, the hiring of new personnel often precedes or accompanies structural changes and new vendor selection processes. This validates the entity's active status and growth phase, increasing the likelihood of future procurement signals."
+        }
+      ],
+      "total_input_tokens": 11448,
+      "total_output_tokens": 1911,
+      "estimated_cost_usd": 0.063009
+    },
+    "procurement_signals": [
+      "Supply Chain Management Vacancy",
+      "Merchandising Operations Role",
+      "Active Recruitment (HR Coordinator)",
+      "Event Management Staffing"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Schalke 04 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:08:12.816910"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.126028",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:40.776090"
+}

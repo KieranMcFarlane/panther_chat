@@ -1,0 +1,165 @@
+{
+  "entity_id": "tatab\u00e1nya_kc",
+  "entity_name": "Tatab\u00e1nya KC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "tatabanyahandball.com",
+    "eurohandball.com",
+    "grokipedia.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tatab\u00e1nya_kc",
+      "entity_name": "Tatab\u00e1nya KC",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://tatabanyahandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tatab\u00e1nya KC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:27:46.806467",
+          "domain_explored": "https://tatabanyahandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webshop / E-commerce Platform",
+              "Auction/Bidding Software (implied by 'Licit\u00e1lj')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Webshop maintenance and operations",
+              "Charity auction management tools",
+              "Corporate partnership activation (AGC, Think Pink campaign)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce/Online Store Presence",
+            "Corporate Social Responsibility (CSR) Partnerships",
+            "Sponsorship Ecosystem (MOL, Grundfos, AGC, OTP, Pick)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 285,
+              "elapsed_seconds": 3.2488279342651367
+            }
+          ],
+          "reasoning": "The content confirms the existence of a 'Webshop' and active charity auctions ('Licit\u00e1lj'), indicating a need for e-commerce platforms and payment processing solutions. The presence of major corporate sponsors (MOL, Grundfos, OTP Bank) suggests a B2B partnership structure that may involve procurement of joint marketing or hospitality services. However, no explicit RFPs or tech stack details were found in this specific text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:27:57.230560",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Content",
+            "Cookie Consent/Gating Mechanisms",
+            "Tournament Schedules"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.714553117752075
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com). It contains high-level tournament results (Denmark champions, Gidsel MVP), generic event schedules for 2025/2026, and cookie-gated content blocks. There is no mention of 'Tatab\u00e1nya KC', nor are there any specific procurement signals, technology stacks, or job postings related to the target entity. This source is irrelevant for entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:28:03.331299",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:28:15.319067",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Automated Content Listing",
+            "Cookie Consent/Gating Mechanisms"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.6986231803894043
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic, automated list of soccer leagues and tournaments from Global Sports Archive. There is no mention of Tatab\u00e1nya KC, handball, or specific corporate entities. The content is purely navigational/informational and lacks any procurement signals, technology stacks, or governance data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4279,
+      "total_output_tokens": 671,
+      "estimated_cost_usd": 0.022902
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tatab\u00e1nya KC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:28:15.320709"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.355183",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:08.712111"
+}

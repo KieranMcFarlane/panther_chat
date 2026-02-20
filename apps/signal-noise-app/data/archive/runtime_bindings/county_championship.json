@@ -1,0 +1,177 @@
+{
+  "entity_id": "county_championship",
+  "entity_name": "County Championship",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "ecbwcountychampionship.play-cricket.com",
+    "espncricinfo.com",
+    "rothesay.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/early-engagement-program-lead-coach-girls-at-leicestershire-county-cricket-club-4293488881"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "county_championship",
+      "entity_name": "County Championship",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://espncricinfo.com",
+        "https://ecbwcountychampionship.play-cricket.com",
+        "https://uk.linkedin.com/jobs/view/early-engagement-program-lead-coach-girls-at-leicestershire-county-cricket-club-4293488881",
+        "https://rothesay.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "County Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:52:53.313537",
+          "domain_explored": "https://ecbwcountychampionship.play-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Play-Cricket (ECB Platform)",
+              "Zendesk (Inferred from Help Center URL 'play-cricket.ecb.co.uk/hc')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Agreements: Vitality (Vitality Blast, T20), Metro Bank (One Day Cup)",
+              "Venue Procurement: Emirates Old Trafford (Finals), Arundel Castle Cricket Club",
+              "Digital Platform: Managed via ECB Play-Cricket (Low likelihood of local IT procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Standardized Digital Infrastructure (Play-Cricket SaaS)",
+            "Centralized Governance (ECB Management)",
+            "Sponsorship Integration (Vitality, Metro Bank)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 310,
+              "elapsed_seconds": 4.552135944366455
+            }
+          ],
+          "reasoning": "The content confirms the entity operates on the ECB's standardized 'Play-Cricket' platform, indicating a reliance on central contracts rather than independent procurement. However, the presence of multiple commercial sponsors (Vitality, Metro Bank) and the management of complex tournament schedules suggests potential needs for activation services, analytics, or event management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:52:57.530895",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:53:03.367165",
+          "domain_explored": "https://rothesay.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Rothesay vs County Championship)",
+            "Corporate Content (Pension Insurance)",
+            "No Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.615200996398926
+            }
+          ],
+          "reasoning": "The scraped content is from Rothesay, a UK pension insurance specialist, and is completely unrelated to the County Championship (cricket). The content focuses on pension management, asset security, and corporate reports. There are no signals relevant to sports procurement, technology stacks, or governance patterns for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:53:10.842591",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/early-engagement-program-lead-coach-girls-at-leicestershire-county-cricket-club-4293488881",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment Platform)",
+              "Hybrid Work Tools (implied by 'work from home acceptable')"
+            ],
+            "job_postings": [
+              "Early Engagement Program Lead Coach (Girls) - Leicestershire County Cricket Club"
+            ],
+            "procurement_indicators": [
+              "Program Expansion: Investment in 'Early Engagement' suggests budget availability.",
+              "Infrastructure: Adoption of hybrid work models implies investment in remote collaboration tools.",
+              "Compliance: Adherence to ECB centralized qualification standards."
+            ]
+          },
+          "patterns_found": [
+            "Operational Recruitment (Coaching Staff)",
+            "Hybrid Work Infrastructure Adoption",
+            "ECB Governance Alignment (Qualifications)",
+            "Community Engagement Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 380,
+              "elapsed_seconds": 3.7068653106689453
+            }
+          ],
+          "reasoning": "The content is a direct job posting from a constituent entity (Leicestershire CCC) of the County Championship structure. While it is an operational role (coaching) rather than a procurement role, it confirms active investment in 'Early Engagement' programs and the adoption of hybrid work infrastructure. The requirement for ECB coaching certificates confirms the centralized governance pattern. This signals organizational growth and potential future needs for supporting software (CRM for player tracking), but no direct tech procurement is present."
+        }
+      ],
+      "total_input_tokens": 4362,
+      "total_output_tokens": 870,
+      "estimated_cost_usd": 0.026136
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "County Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:53:10.843498"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417915",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:44.754464"
+}

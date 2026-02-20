@@ -1,0 +1,116 @@
+[
+  {
+    "template_name": "Tier 1 Club Centralized Procurement",
+    "template_confidence": 0.7,
+    "applicable_entity_profile": {
+      "sport": "football",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    "signal_channels": [
+      {
+        "channel_type": "partnership_announcements",
+        "priority": 1,
+        "description": "Partnership announcements and press releases"
+      },
+      {
+        "channel_type": "tech_news_articles",
+        "priority": 2,
+        "description": "Technology news and deployment articles"
+      },
+      {
+        "channel_type": "press_releases",
+        "priority": 3,
+        "description": "Official press releases"
+      },
+      {
+        "channel_type": "leadership_job_postings",
+        "priority": 4,
+        "description": "Leadership and procurement role postings"
+      }
+    ],
+    "signal_patterns": [
+      {
+        "pattern_name": "multi_year_partnership",
+        "category": "Partnerships",
+        "weight": 0.15,
+        "description": "Multi-year partnerships indicating procurement budget",
+        "keywords": ["multi-year", "partnership", "strategic partnership", "long-term"],
+        "early_indicators": [
+          "Press release: 'multi-year partnership'",
+          "Official site: 'strategic partnership announcement'",
+          "Annual report: 'long-term vendor agreement'"
+        ]
+      },
+      {
+        "pattern_name": "recent_deployment",
+        "category": "Deployments",
+        "weight": 0.12,
+        "description": "Recent technology deployments",
+        "keywords": ["deploys", "deployment", "implementation", "recently deployed"],
+        "early_indicators": [
+          "Press release: 'deploys Salesforce/SAP' with date",
+          "Official site: 'implementation complete'",
+          "Case study: 'went live with' platform"
+        ]
+      },
+      {
+        "pattern_name": "digital_transformation",
+        "category": "Technology",
+        "weight": 0.10,
+        "description": "Digital transformation initiatives",
+        "keywords": ["digital transformation", "technology modernization"],
+        "early_indicators": [
+          "Leadership hiring: CTO, Head of Digital, Chief Digital Officer",
+          "Official site: 'digital transformation initiative'",
+          "Annual report: 'technology investment plan'"
+        ]
+      },
+      {
+        "pattern_name": "procurement_roles",
+        "category": "Leadership",
+        "weight": 0.05,
+        "description": "Procurement/commercial leadership roles",
+        "keywords": ["procurement manager", "head of procurement", "commercial manager"],
+        "early_indicators": [
+          "Careers page: 'Procurement Manager' or 'Commercial Director'",
+          "LinkedIn: Senior procurement role with budget responsibilities",
+          "Leadership team: Commercial/Procurement leadership"
+        ]
+      },
+      {
+        "pattern_name": "legacy_systems",
+        "category": "Opportunity",
+        "weight": 0.05,
+        "description": "Legacy systems indicating replacement opportunity",
+        "keywords": ["legacy", "bespoke", "installed since"],
+        "early_indicators": [
+          "Official site: 'legacy system' or 'bespoke system'",
+          "Annual report: 'system installed since' (older than 5 years)",
+          "Case study: 'migrating from' legacy platform"
+        ]
+      }
+    ],
+    "verification_rules": [
+      {
+        "rule_type": "partnership_confirmation",
+        "description": "Verify partnership mentions with official sources"
+      },
+      {
+        "rule_type": "temporal_check",
+        "description": "Check recency of deployments (within 12 months = bonus)"
+      },
+      {
+        "rule_type": "source_diversity",
+        "description": "Require signals from 2+ different source types"
+      }
+    ],
+    "negative_filters": [
+      "app_store",
+      "mobile_app",
+      "consumer_product",
+      "ticket_sales"
+    ]
+  }
+]

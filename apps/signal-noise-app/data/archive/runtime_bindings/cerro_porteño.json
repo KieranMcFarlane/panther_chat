@@ -1,0 +1,244 @@
+{
+  "entity_id": "cerro_porte\u00f1o",
+  "entity_name": "Cerro Porte\u00f1o",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "cerro.com.py",
+    "clubcerro.com",
+    "sites.google.com",
+    "conmebollibertadores.com",
+    "tuti.com.py"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://py.linkedin.com/company/deporte-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cerro_porte\u00f1o",
+      "entity_name": "Cerro Porte\u00f1o",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cerro.com.py",
+        "https://clubcerro.com",
+        "https://py.linkedin.com/company/deporte-jobs",
+        "https://conmebollibertadores.com",
+        "https://sites.google.com",
+        "https://tuti.com.py"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cerro Porte\u00f1o may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:40:57.694158",
+          "domain_explored": "https://cerro.com.py",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory: Home Shirt 2025, Sideline T-Shirt/Polo 2025"
+            ]
+          },
+          "patterns_found": [
+            "Sports content ingestion",
+            "Roster management",
+            "E-commerce product listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.91637921333313
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations: match fixtures, player rosters, league standings, and merchandise (shirts). There are no explicit signals regarding technology procurement, job vacancies, or business infrastructure investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:41:04.758839",
+          "domain_explored": "https://clubcerro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism",
+            "Match previews",
+            "Generic content management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 480,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.583089828491211
+            }
+          ],
+          "reasoning": "The scraped content consists of sports news, specifically a match preview for 'Cerro Porte\u00f1o vs. Sportivo Luque\u00f1o'. There are no indicators of business operations, technology infrastructure, or procurement activities (RFPs, job postings, vendor partnerships). The site appears to be a purely informational/news portal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:41:12.031322",
+          "domain_explored": "https://sites.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Sites (Suspected Host)",
+              "Google Drive"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Generic Google Services Template"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 963,
+              "output_tokens": 164,
+              "elapsed_seconds": 3.4453110694885254
+            }
+          ],
+          "reasoning": "The scraped content represents a Google Drive/Google Sites authentication page. It contains no information regarding Cerro Porte\u00f1o's internal operations, technology stack, or procurement activities. The content is purely functional UI text for login screens."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:41:20.737847",
+          "domain_explored": "https://conmebollibertadores.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational Context: Confirms active participation in international tournaments (Libertadores 2025), implying a need for travel logistics and stadium management, but no direct procurement signals found in the text."
+            ]
+          },
+          "patterns_found": [
+            "Sports Schedule Ingestion",
+            "Generic Tournament Data",
+            "Competitor Match Analysis"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.8958780765533447
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic schedule for the CONMEBOL Libertadores tournament. While it confirms Cerro Porte\u00f1o's participation and upcoming fixtures (e.g., vs. Carabobo), it provides no insight into the club's internal operations, technology stack, or procurement activities. It is strictly operational sports data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:41:25.225474",
+          "domain_explored": "https://tuti.com.py",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:41:35.594173",
+          "domain_explored": "https://py.linkedin.com/company/deporte-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate & Talent)",
+              "Website (deportejobs.com)"
+            ],
+            "job_postings": [
+              "Smart Fit Colombia: Senior Tax Analyst",
+              "Smart Fit Colombia: HR Team Talent",
+              "Confedera\u00e7\u00e3o Brasileira de Voleibol: Operational Services Assistant",
+              "Coritiba SAF: Nutrition Student",
+              "Confedera\u00e7\u00e3o Brasileira de Voleibol: Institutional Relations Analyst",
+              "Ituano Futebol Clube: Locker Room Manager"
+            ],
+            "procurement_indicators": [
+              "Vendor: Deporte Jobs (HR Services/Staffing)",
+              "Location: Asuncion, Paraguay (Shared geography with target)",
+              "Sector Focus: Sports Industry (Direct relevance)",
+              "Service Type: Recruitment/Talent Acquisition"
+            ]
+          },
+          "patterns_found": [
+            "HR Services Aggregation",
+            "Sports Industry Job Board",
+            "Recruitment Process Outsourcing (RPO) Signals",
+            "Regional Talent Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 425,
+              "elapsed_seconds": 6.81771993637085
+            }
+          ],
+          "reasoning": "While this page is not a direct procurement portal for Cerro Porte\u00f1o, it is a specialized HR service provider ('Deporte Jobs') based in Asunci\u00f3n that aggregates job listings for the sports industry in Latin America. It serves as a signal for *potential* procurement activity regarding staffing and HR services. If Cerro Porte\u00f1o utilizes this platform, it indicates a procurement channel for talent acquisition. The presence of listings for similar entities (Confedera\u00e7\u00e3o Brasileira de Voleibol, Coritiba SAF) validates its relevance to the sector."
+        }
+      ],
+      "total_input_tokens": 5860,
+      "total_output_tokens": 1156,
+      "estimated_cost_usd": 0.03492
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cerro Porte\u00f1o may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:41:35.600675"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.190373",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:39.597506"
+}

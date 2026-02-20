@@ -1,0 +1,225 @@
+{
+  "entity_id": "winspace_orange_seal",
+  "entity_name": "Winspace Orange Seal",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "winspacewomencyclingteam.com",
+    "winspace.cc",
+    "letourfemmes.fr",
+    "paris-roubaix-femmes.fr",
+    "la-fleche-wallonne-femmes.be"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "winspace_orange_seal",
+      "entity_name": "Winspace Orange Seal",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://winspacewomencyclingteam.com",
+        "https://la-fleche-wallonne-femmes.be",
+        "https://paris-roubaix-femmes.fr",
+        "https://winspace.cc",
+        "https://letourfemmes.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Winspace Orange Seal may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:28:56.093305",
+          "domain_explored": "https://winspacewomencyclingteam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Content Management (implied by 'newsroom' structure)",
+              "Event Management Systems (indicated by 'Our Races' section)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Rebranding Services (Name change effective 2026)",
+              "Sports Marketing & Sponsorship Activation",
+              "Talent Acquisition / Recruitment Services (Cynisca Foundation partnership)",
+              "Compliance & Governance (ProTeam status requirements)"
+            ]
+          },
+          "patterns_found": [
+            "Rebranding / Name Change (Mayenne\u2013Monbana\u2013Mypie)",
+            "International Sponsorship Structure",
+            "UCI ProTeam Status Achievement",
+            "Partnership with Non-Profit (Cynisca Foundation)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 329,
+              "elapsed_seconds": 4.235113859176636
+            }
+          ],
+          "reasoning": "The content reveals a significant organizational change (rebranding to 'Mayenne\u2013Monbana\u2013Mypie' in 2026) and the achievement of UCI ProTeam status. While no direct RFPs are visible, the rebranding and status elevation strongly indicate upcoming procurement needs for branding, marketing materials, and compliance management. The international sponsor structure suggests a need for logistics and travel coordination vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:29:02.614940",
+          "domain_explored": "https://winspace.cc",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify or similar custom cart implied by '/products/' paths)",
+              "Marketing CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-Commerce Product Catalog",
+            "Consumer-Facing Marketing Content",
+            "Direct-to-Consumer (DTC) Sales Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.2833731174468994
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of product descriptions (SLC5, L\u00fan HYPER, L\u00fan Routte, C5 Aero), marketing slogans ('Beyond Speed', 'Pure Carbon Precision'), and UI elements ('Shop now', 'Play slideshow'). There is no presence of corporate governance, B2B vendor procurement, or enterprise technology infrastructure signals. This is a retail storefront, not a procurement entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:29:12.680319",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Marketing Content",
+            "Sports Results Aggregation",
+            "Sponsorship Branding (Zwift, Tissot)",
+            "Public Race Information"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 206,
+              "elapsed_seconds": 7.051634788513184
+            }
+          ],
+          "reasoning": "The scraped content from letourfemmes.fr is a public-facing sports news and results portal. It contains race schedules (Grand D\u00e9part 2027), winner palmar\u00e8s (Team Visma, SD Worx), and sponsor branding (Zwift). There is no corporate governance, procurement data, or vendor information related to the entity 'Winspace Orange Seal'. This URL represents the event organizer/sporting side, not the target entity's procurement function."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:29:22.717018",
+          "domain_explored": "https://paris-roubaix-femmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Hosting)",
+              "A.S.O (Amaury Sport Organization - Content Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Results Aggregation",
+            "Sponsorship Branding (Zwift)",
+            "Consumer-Facing Media Content",
+            "Athlete Performance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 202,
+              "elapsed_seconds": 6.9367780685424805
+            }
+          ],
+          "reasoning": "The content is entirely focused on race results, imagery, and video highlights for the Paris-Roubaix Femmes event. It contains no corporate governance information, technology infrastructure details, or procurement-related activities. It is a sports media property, not a business entity source."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:29:28.546791",
+          "domain_explored": "https://la-fleche-wallonne-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion Video Player"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Results Aggregation",
+            "Consumer-Facing Media Content",
+            "Sponsorship Branding (Fenix-Deceuninck, Canyon//SRAM, FDJ-SUEZ)",
+            "Editorial Content Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.6967411041259766
+            }
+          ],
+          "reasoning": "The content is exclusively focused on race results, winner announcements (Puck Pieterse), and event promotion for La Fl\u00e8che Wallonne Femmes. It contains no corporate governance, technology infrastructure, or procurement-related data. The entity Winspace Orange Seal is not mentioned in the provided text."
+        }
+      ],
+      "total_input_tokens": 7355,
+      "total_output_tokens": 1155,
+      "estimated_cost_usd": 0.03939
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Winspace Orange Seal may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:29:28.548036"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.385588",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:03.990405"
+}

@@ -1,0 +1,185 @@
+{
+  "entity_id": "chamb\u00e9ry_savoie_mont_blanc",
+  "entity_name": "Chamb\u00e9ry Savoie Mont Blanc",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "chambery-airport.com",
+    "chambery-business-airport.com",
+    "chamberymontagnes.com",
+    "vinci-airports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chamb\u00e9ry_savoie_mont_blanc",
+      "entity_name": "Chamb\u00e9ry Savoie Mont Blanc",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://chamberymontagnes.com",
+        "https://chambery-airport.com",
+        "https://vinci-airports.com",
+        "https://chambery-business-airport.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chamb\u00e9ry Savoie Mont Blanc may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:03:11.800972",
+          "domain_explored": "https://chambery-airport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management by VINCI Airports (implies centralized vendor management)"
+            ]
+          },
+          "patterns_found": [
+            "VINCI Airports branding",
+            "Passenger service amenities (WiFi, Dining)",
+            "Destination marketing content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.4360220432281494
+            }
+          ],
+          "reasoning": "The content provided is exclusively consumer-facing marketing material (services, restaurants, travel guides) and navigation elements. There is no presence of corporate governance, procurement notices, technology infrastructure details, or job postings. The entity is managed by VINCI Airports, suggesting centralized procurement, but this specific page yields no actionable intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:03:23.454259",
+          "domain_explored": "https://chambery-business-airport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Menu Link (Nos tarifs) - Indicates potential vendor services but no active RFP",
+              "Fuel Services (AVGAS 100LL JET A1) - Indicates fuel supply contracts, likely long-term established"
+            ]
+          },
+          "patterns_found": [
+            "Operational data display (Runway specs, Fuel types)",
+            "Proximity marketing (Ski resort transfer times)",
+            "Navigation to service pages (Tarifs, Services aux passagers)",
+            "Static content repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.1394472122192383
+            }
+          ],
+          "reasoning": "The content provided is purely operational and marketing static text. It lists airport technical specifications (runway dimensions, fuel types), location benefits relative to ski resorts, and navigation links to general service pages. There are no explicit signals of procurement activity, technology adoption, or organizational decision-making structures."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:03:32.390801",
+          "domain_explored": "https://chamberymontagnes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism marketing content (Destination branding)",
+            "Event promotion (Tour de France 2026)",
+            "Seasonal activity categorization",
+            "CMS-generated image metadata/copyrights"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 178,
+              "elapsed_seconds": 1.9097609519958496
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing marketing material promoting tourism destinations, activities, and events in the Chamb\u00e9ry region. There are no technical specifications, governance documents, calls for tender, or corporate infrastructure details present."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:03:43.464364",
+          "domain_explored": "https://vinci-airports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Parent company investment in modernization (Global context)",
+              "Parent company investment in sustainable aviation fuel (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Global corporate news aggregation",
+            "Infrastructure investment announcements (Lisbon, Cape Verde)",
+            "Sustainability initiatives (SAF fuel)",
+            "Traffic reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.1016199588775635
+            }
+          ],
+          "reasoning": "The content is from the VINCI Airports global corporate newsroom. While it confirms VINCI Airports as the parent company and highlights their capacity for large-scale infrastructure and modernization projects, the specific news items (Lisbon, Cape Verde, Salvador Bahia) are geographically distinct from Chamb\u00e9ry Savoie Mont Blanc. There are no specific procurement signals, technology stacks, or RFPs related to the Chamb\u00e9ry entity in this text."
+        }
+      ],
+      "total_input_tokens": 5828,
+      "total_output_tokens": 917,
+      "estimated_cost_usd": 0.031239
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chamb\u00e9ry Savoie Mont Blanc may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:03:43.465501"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349991",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:54.237596"
+}

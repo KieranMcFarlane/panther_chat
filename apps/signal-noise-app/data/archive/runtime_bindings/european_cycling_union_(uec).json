@@ -1,0 +1,195 @@
+{
+  "entity_id": "european_cycling_union_(uec)",
+  "entity_name": "European Cycling Union (UEC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "specialolympics.org",
+    "riderun.discovermelgaco.pt",
+    "citymountainbike.com",
+    "europeanparachampionships.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "european_cycling_union_(uec)",
+      "entity_name": "European Cycling Union (UEC)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://citymountainbike.com",
+        "https://specialolympics.org",
+        "https://europeanparachampionships.com",
+        "https://riderun.discovermelgaco.pt"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "European Cycling Union (UEC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:44:01.746045",
+          "domain_explored": "https://specialolympics.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Branding (Logo Reveal)",
+            "Global Event Planning (Santiago 2027, Paris 2026)",
+            "Donation/Call-to-Action (Fundraising)",
+            "Partner Acknowledgement (Sponsorship listings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 218,
+              "elapsed_seconds": 5.843530893325806
+            }
+          ],
+          "reasoning": "The scraped content is from the Special Olympics website, which is a distinct entity from the target European Cycling Union (UEC). While the content discusses major upcoming events (Santiago 2027, Paris 2026) and partner ecosystems, it provides zero intelligence regarding UEC's specific procurement needs, technology stack, or governance. The content is purely informational and promotional for a different organization."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:44:27.451642",
+          "domain_explored": "https://riderun.discovermelgaco.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing/Registration Platform (Consumer)",
+              "Content Management (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Ticketing (Buy Ticket buttons)",
+              "Local Event Promotion (Maratona BTT, XCO Melga\u00e7o)"
+            ]
+          },
+          "patterns_found": [
+            "Event Registration/Ticketing",
+            "Local Tourism Promotion",
+            "Training Facilities (Centro de Est\u00e1gio)",
+            "Consumer-facing Content (Routes/Trails)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.634329080581665
+            }
+          ],
+          "reasoning": "The content is scraped from 'riderun.discovermelgaco.pt', which is a local tourism and event registration portal for Melga\u00e7o, Portugal. It promotes a specific training center and sells tickets for local races (MTB, XCO). There is no connection to the European Cycling Union (UEC), nor are there any signals of UEC-level procurement, governance, or enterprise technology adoption."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:44:36.063635",
+          "domain_explored": "https://citymountainbike.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Platforms (implied by calendar structure)",
+              "E-commerce (Merch sales)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Bioracer (Official Jersey)",
+              "Event Hosting: Multiple international locations (Addis Ababa, Barcelona, Sao Paulo, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "UCI Affiliation (World Cup/Championships)",
+            "Event Calendar Management",
+            "Merchandising (Bioracer Partnership)",
+            "Global Sports Logistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 279,
+              "elapsed_seconds": 3.657513380050659
+            }
+          ],
+          "reasoning": "The content confirms the entity is a specialized event organizer (City Mountainbike) operating under the UCI (Union Cycliste Internationale) umbrella, not the European Cycling Union (UEC). While there is high commercial activity (merchandise, global events), it is specific to the MTB Eliminator discipline and represents a finished consumer-facing product rather than a procurement signal for the UEC itself."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:44:45.474122",
+          "domain_explored": "https://europeanparachampionships.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Brand Design Procurement (implied by 'Designing a brand')",
+              "Sustainability Consulting (implied by 'Sustainability Report')",
+              "Strategic Evaluation Services (Mulier Institute)"
+            ]
+          },
+          "patterns_found": [
+            "Event Hosting Announcements (Geneva 2027)",
+            "Brand Identity Development",
+            "Sustainability Reporting",
+            "Post-Event Evaluation (Mulier Institute)",
+            "Patronage Governance (EPC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.086403846740723
+            }
+          ],
+          "reasoning": "The content is focused on the European Para Championships (EPC), a distinct entity from the European Cycling Union (UEC). While there is evidence of event lifecycle activities (hosting decisions, branding, sustainability reporting), these are specific to Para-sports multi-event management and do not indicate procurement intent or technology needs for the UEC specifically."
+        }
+      ],
+      "total_input_tokens": 5805,
+      "total_output_tokens": 1016,
+      "estimated_cost_usd": 0.032655
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "European Cycling Union (UEC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:44:45.475441"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.412925",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:36.892497"
+}

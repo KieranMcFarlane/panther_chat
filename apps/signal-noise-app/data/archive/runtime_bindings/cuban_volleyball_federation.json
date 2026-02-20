@@ -1,0 +1,275 @@
+{
+  "entity_id": "cuban_volleyball_federation",
+  "entity_name": "Cuban Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "norceca.net",
+    "cubasi.cu",
+    "cubanews.acn.cu",
+    "worldofvolley.com",
+    "translatingcuba.com",
+    "africanews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/head-women-s-volleyball-coach-%2300034148-at-missouri-university-of-science-and-technology-4358923927"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cuban_volleyball_federation",
+      "entity_name": "Cuban Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://norceca.net",
+        "https://www.linkedin.com/jobs/view/head-women-s-volleyball-coach-%2300034148-at-missouri-university-of-science-and-technology-4358923927",
+        "https://africanews.com",
+        "https://cubanews.acn.cu",
+        "https://translatingcuba.com",
+        "https://cubasi.cu",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cuban Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:06:43.744975",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Document Management (Heavy reliance on PDFs for charts, constitutions, and reports)",
+              "Web Content Management (Static HTML structure, legacy CMS)",
+              "Digital Asset Management (Branding Kit distribution)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "2024-2028 Strategic Cycle (Candidaturas/Executive Committee docs)",
+              "Event Hosting Schedule (Rotation 2002-2030)",
+              "Development Centers (CRDVs) infrastructure",
+              "Governance Audit activities (Cayman Islands election oversight)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Planning Cycles (2024-2028)",
+            "Event Hosting & Infrastructure Requirements",
+            "Governance & Oversight Activities",
+            "Digital Branding Guidelines"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 402,
+              "elapsed_seconds": 6.943711280822754
+            }
+          ],
+          "reasoning": "The content reveals the strategic roadmap for the NORCECA confederation (2024-2028), which directly dictates the operational environment for the Cuban Volleyball Federation. The 'Candidaturas' and 'Hosting Schedule' documents indicate a structured, multi-year event cycle requiring significant procurement for logistics, infrastructure, and travel. The presence of a 'Branding Kit' suggests a need for marketing software or design services to maintain compliance. While no direct Cuban purchase orders are listed, these documents define the mandatory ecosystem and standards Cuba must adhere to, signaling future indirect procurement needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:07:33.584531",
+          "domain_explored": "https://cubasi.cu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Sports Reporting (Baseball, Athletics)",
+            "Political Commentary"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.2649190425872803
+            }
+          ],
+          "reasoning": "The provided content is a general news homepage (Cubasi.cu) featuring political headlines, cultural events, and general sports updates (Baseball, Athletics). There is no specific mention of the Cuban Volleyball Federation, nor are there any procurement signals, RFPs, or technology investments related to volleyball governance or infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:07:48.777782",
+          "domain_explored": "https://cubanews.acn.cu",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:07:57.775090",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "League Results & Standings",
+            "Transfer Market Activity (Player Signings)",
+            "Sponsorship Visibility (e.g., Vodafone, Credem Banca)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.413465738296509
+            }
+          ],
+          "reasoning": "The scraped content from WorldofVolley is a global sports news feed focusing on match results, league standings, and player transfers for international teams (Brazil, Italy, Poland, Turkey, etc.). While it mentions corporate sponsors, there is zero specific content regarding the Cuban Volleyball Federation, its governance, or its procurement activities. The content is irrelevant to the specific entity being targeted."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:08:07.091669",
+          "domain_explored": "https://translatingcuba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geopolitical Risk Analysis",
+            "Energy Supply Chain Disruption",
+            "Humanitarian & Economic Sanctions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.513552188873291
+            }
+          ],
+          "reasoning": "The content discusses high-level geopolitical relations, oil tariffs, and diplomatic calls between Mexico and the US regarding Cuba. While this highlights macro-economic risks (energy supply), it contains zero information regarding the Cuban Volleyball Federation's specific procurement activities, technology needs, or governance structure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:08:18.839383",
+          "domain_explored": "https://africanews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Pan-African Sports Reporting (AFCON, Football)",
+            "Geopolitical & Economic News (DRC, Iran, Spain)",
+            "General Business & Culture Coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.8784093856811523
+            }
+          ],
+          "reasoning": "The scraped content from Africanews is a general news aggregator focusing on broad geopolitical events (DRC conflict, Iran nuclear deal), general sports (AFCON football), and business news unrelated to the Cuban Volleyball Federation. There are no mentions of Cuba, volleyball, or specific procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:08:25.165139",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-women-s-volleyball-coach-%2300034148-at-missouri-university-of-science-and-technology-4358923927",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Head Women's Volleyball Coach",
+                "entity": "Missouri University of Science and Technology",
+                "location": "Rolla, MO",
+                "salary": "$55,000 - $65,000",
+                "relevance": "None - Wrong Entity/Geography"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget management for team travel and equipment",
+              "Equipment purchasing authority"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Match (US University vs Cuban Federation)",
+            "General Sports Administration Job Description",
+            "Standard Budgeting & Procurement Responsibilities (Non-Specific)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1694,
+              "output_tokens": 317,
+              "elapsed_seconds": 2.4860689640045166
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a Head Women's Volleyball Coach at the Missouri University of Science and Technology (NCAA Division II, USA). While the job description mentions 'equipment purchases' and 'managing a budget,' the entity is a US educational institution, not the Cuban Volleyball Federation. This content is irrelevant to the target entity's procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 9131,
+      "total_output_tokens": 1473,
+      "estimated_cost_usd": 0.049488000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cuban Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:08:25.169071"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.338653",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:53.007201"
+}

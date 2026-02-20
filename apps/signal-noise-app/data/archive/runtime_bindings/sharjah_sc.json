@@ -1,0 +1,264 @@
+{
+  "entity_id": "sharjah_sc",
+  "entity_name": "Sharjah SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "globalsportsarchive.com",
+    "m.football-lineups.com",
+    "vault.nimc.gov.ng",
+    "sharjah24.ae"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_sharjah-british-international-school-careers-activity-7308487483233554432-mbHv",
+      "https://www.linkedin.com/jobs/uae-jobs",
+      "https://www.linkedin.com/jobs/view/4346647925/?eBP=NON_CHARGEABLE_CHANNEL&refId=c%2BG4Iz84YvR63smE0SlKnA%3D%3D&trackingId=ERNUTQx4Bmcn0abWZ3eeKQ%3D%3D&trk=flagship3_search_srp_jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sharjah_sc",
+      "entity_name": "Sharjah SC",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/4346647925/?eBP=NON_CHARGEABLE_CHANNEL&refId=c%2BG4Iz84YvR63smE0SlKnA%3D%3D&trackingId=ERNUTQx4Bmcn0abWZ3eeKQ%3D%3D&trk=flagship3_search_srp_jobs",
+        "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_sharjah-british-international-school-careers-activity-7308487483233554432-mbHv",
+        "https://globalsportsarchive.com",
+        "https://sharjah24.ae",
+        "https://www.linkedin.com/jobs/uae-jobs",
+        "https://m.football-lineups.com",
+        "https://vault.nimc.gov.ng"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sharjah SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:16:59.570962",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Irrelevant league listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.6564202308654785
+            }
+          ],
+          "reasoning": "The provided content is a generic navigation menu and list of global soccer leagues from globalsportsarchive.com. It contains no specific information regarding 'Sharjah SC', nor does it contain procurement signals, job postings, or technology stack details relevant to the entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:17:10.530058",
+          "domain_explored": "https://m.football-lineups.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Irrelevant league listings",
+            "High volume of low-value outbound links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 178,
+              "elapsed_seconds": 4.072771072387695
+            }
+          ],
+          "reasoning": "The scraped content from football-lineups.com is a generic index of global football teams and matches (Argentina, Chile, Colombia, England, Italy, etc.). It contains no specific information regarding 'Sharjah SC', nor does it contain any procurement signals, job postings, or technology stack indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:17:27.110692",
+          "domain_explored": "https://vault.nimc.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:17:38.917774",
+          "domain_explored": "https://sharjah24.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic news aggregation layout",
+            "Repetitive content blocks",
+            "Local governance and education news",
+            "Event coverage (Expos, Student competitions)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.5534439086914062
+            }
+          ],
+          "reasoning": "The content from Sharjah24.ae consists of general local news headlines regarding governance, education, and the environment. There are no specific mentions of 'Sharjah SC' (Sports Club), procurement tenders, job postings, or technology investments relevant to the target entity. The content is repetitive and lacks actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:17:47.479555",
+          "domain_explored": "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_sharjah-british-international-school-careers-activity-7308487483233554432-mbHv",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "ICT Teacher",
+              "Junior Accountant"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation post",
+            "Educational sector hiring",
+            "Entity name mismatch (School vs Sports Club)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.4245171546936035
+            }
+          ],
+          "reasoning": "The content refers to 'Sharjah British International School', which is a distinct entity from 'Sharjah SC' (Sharjah Sports Club). While it lists an 'ICT teacher' and 'Junior Accountant', these are operational roles for an educational institution and do not constitute procurement signals for the target sports entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:17:57.183703",
+          "domain_explored": "https://www.linkedin.com/jobs/uae-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "New York Cabin Crew Opportunities (Emirates)",
+              "ALIM Proofreader (Net2Source)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic authentication walls",
+            "Geographic mismatch (US-based listings for UAE entities)",
+            "Broad aggregation noise",
+            "High volume of low-relevance listings (Cabin Crew)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1623,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.644285202026367
+            }
+          ],
+          "reasoning": "The content represents a generic, unfiltered LinkedIn jobs feed for 'UAE' roles, largely restricted by an authentication wall. The visible listings are geographically irrelevant (e.g., New York listings for Emirates) or generic recruitment noise. There is no specific signal related to Sharjah SC's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:18:05.722045",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4346647925/?eBP=NON_CHARGEABLE_CHANNEL&refId=c%2BG4Iz84YvR63smE0SlKnA%3D%3D&trackingId=ERNUTQx4Bmcn0abWZ3eeKQ%3D%3D&trk=flagship3_search_srp_jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Mechanical Engineer \u2013 Static",
+              "UAE Business Unit"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity name mismatch (Wood vs Sharjah SC)",
+            "Sector mismatch (Oil & Gas vs Sports)",
+            "Geographic coincidence (Sharjah location)",
+            "Generic corporate engineering recruitment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.672276020050049
+            }
+          ],
+          "reasoning": "The job posting is for 'Wood', a global engineering and consulting firm focused on oil and gas, energy security, and decarbonization. While the location is in Sharjah, the entity is definitively not Sharjah SC (Sports Club). The content describes technical engineering roles unrelated to sports management, procurement, or club operations."
+        }
+      ],
+      "total_input_tokens": 9154,
+      "total_output_tokens": 1157,
+      "estimated_cost_usd": 0.044816999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sharjah SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:18:05.723863"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.232713",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:36.677433"
+}

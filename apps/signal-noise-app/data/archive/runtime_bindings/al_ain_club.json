@@ -1,0 +1,139 @@
+{
+  "entity_id": "al_ain_club",
+  "entity_name": "Al Ain Club",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "alainclub.ae",
+    "shop.alainclub.ae",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ain_club",
+      "entity_name": "Al Ain Club",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://shop.alainclub.ae",
+        "https://alainclub.ae",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ain Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:48:46.087088",
+          "domain_explored": "https://alainclub.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Establishment of Al Ain Sports Games Company (2013)",
+              "Establishment of Al Ain Club for Investment (2013)",
+              "Presence of an Honorary Board for strategic/logistical support",
+              "High-level governance oversight (Sheikh Hazaa bin Zayed Al Nahyan)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Structure Identification",
+            "Strategic Entity Segmentation",
+            "Governance Hierarchy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 257,
+              "elapsed_seconds": 14.92171597480774
+            }
+          ],
+          "reasoning": "The content identifies key corporate entities (Sports Games Company, Investment Company) established in 2013 under the guidance of H.H. Sheikh Hazaa bin Zayed Al Nahyan. This indicates a mature, structured governance model capable of procurement. While no direct RFPs are listed, the existence of distinct commercial arms suggests active vendor engagement channels."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:48:54.043554",
+          "domain_explored": "https://shop.alainclub.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure '/collections/' and '/products/')",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Vendor Partnership: Nike (Apparel manufacturing)",
+              "Digital Sales Channel: Online Store",
+              "Inventory Management: Active SKU management (Hoodies, Joggers, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Implementation",
+            "Merchandise Supply Chain",
+            "Brand Partnership (Nike)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 273,
+              "elapsed_seconds": 4.213219881057739
+            }
+          ],
+          "reasoning": "The content confirms Al Ain Club operates a dedicated e-commerce storefront (shop.alainclub.ae). While this is primarily B2C, it validates the entity's capability to engage in digital procurement and vendor partnerships (specifically Nike for kit manufacturing). It establishes a baseline of commercial activity but does not yet reveal B2B procurement needs or internal tech stack details."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:48:57.048811",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2761,
+      "total_output_tokens": 530,
+      "estimated_cost_usd": 0.016233
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ain Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:48:57.049716"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233620",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:03.758428"
+}

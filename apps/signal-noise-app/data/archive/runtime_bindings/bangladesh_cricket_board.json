@@ -1,0 +1,154 @@
+{
+  "entity_id": "bangladesh_cricket_board",
+  "entity_name": "Bangladesh Cricket Board",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "tigercricket.com.bd",
+    "gobcbticket.com.bd",
+    "icc-cricket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bangladesh_cricket_board",
+      "entity_name": "Bangladesh Cricket Board",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://icc-cricket.com",
+        "https://gobcbticket.com.bd",
+        "https://tigercricket.com.bd"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Vendor Enlistment Cancellation",
+        "Strategic Partnership (MoU)",
+        "Governance Change (Elections)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bangladesh Cricket Board may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:14:35.214232",
+          "domain_explored": "https://tigercricket.com.bd",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Enlistment",
+                "status": "Cancelled / Reset",
+                "description": "Vendor Enlistment Process Cancellation (Dec 2024). Indicates a potential upcoming re-tender or new vendor registration drive.",
+                "source": "tigercricket.com.bd"
+              },
+              {
+                "type": "Partnership / MoU",
+                "status": "Active",
+                "description": "MoU signed with Bangladesh Tourism Board for 'Cricket Tourism'. Potential future procurement for travel, logistics, or marketing services.",
+                "source": "tigercricket.com.bd"
+              },
+              {
+                "type": "Governance",
+                "status": "Ongoing",
+                "description": "Board of Directors Election 2025 processes (Candidate lists, appeals). Changes in leadership may shift procurement priorities.",
+                "source": "tigercricket.com.bd"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Enlistment Cancellation",
+            "Strategic Partnership (MoU)",
+            "Governance Change (Elections)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 424,
+              "elapsed_seconds": 4.440518856048584
+            }
+          ],
+          "reasoning": "The content contains a direct procurement signal: a 'Vendor Enlistment Cancellation Notice'. This indicates an active procurement cycle that has been interrupted or reset, creating a clear opportunity for vendors to monitor for a re-release of the enlistment process. Additionally, the MoU with the Tourism Board suggests upcoming marketing/service needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:14:38.240086",
+          "domain_explored": "https://gobcbticket.com.bd",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:14:44.286581",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Coverage",
+            "Tournament Scheduling",
+            "International Team News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.9015891551971436
+            }
+          ],
+          "reasoning": "The scraped content is from the International Cricket Council (ICC) website, a global governing body. The content focuses exclusively on international tournament news (T20 World Cup), team squads, and match fixtures. There is absolutely no information regarding the Bangladesh Cricket Board's (BCB) procurement activities, vendor needs, or technology stack. This is irrelevant to the specific entity target."
+        }
+      ],
+      "total_input_tokens": 2805,
+      "total_output_tokens": 611,
+      "estimated_cost_usd": 0.01758
+    },
+    "procurement_signals": [
+      "Vendor Enlistment Cancellation",
+      "Strategic Partnership (MoU)",
+      "Governance Change (Elections)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bangladesh Cricket Board may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:14:44.288119"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298406",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:52.481274"
+}

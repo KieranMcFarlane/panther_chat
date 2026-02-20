@@ -1,0 +1,410 @@
+{
+  "entity_id": "portland_timbers",
+  "entity_name": "Portland Timbers",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "timbers.com",
+    "ptfcauthentics.com",
+    "timberspremium.com",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/portland-timbers-jobs",
+      "https://www.linkedin.com/jobs/sports-jobs-portland-oregon-metropolitan-area",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-portland-timbers-seeks-activity-7232095471794597888-yTgu",
+      "https://www.linkedin.com/jobs/sports-marketing-jobs-portland-oregon-metropolitan-area",
+      "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-portland-timbers-activity-7132702972152541184--Fpm",
+      "https://www.linkedin.com/posts/kristel-wissel-8941533_mls-team-jobs-activity-6525395384657940480-ddEN",
+      "https://cn.linkedin.com/company/careers-in-sport",
+      "https://www.linkedin.com/posts/sportsbusinessventures_jobs-activity-7403780405222694912-T4rz"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "portland_timbers",
+      "entity_name": "Portland Timbers",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.17999999999999997,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.12,
+        0.13999999999999999,
+        0.15999999999999998,
+        0.15999999999999998,
+        0.17999999999999997
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/sports-marketing-jobs-portland-oregon-metropolitan-area",
+        "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-portland-timbers-activity-7132702972152541184--Fpm",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-portland-timbers-seeks-activity-7232095471794597888-yTgu",
+        "https://www.linkedin.com/jobs/sports-jobs-portland-oregon-metropolitan-area",
+        "https://mlssoccer.com",
+        "https://timbers.com",
+        "https://ptfcauthentics.com",
+        "https://www.linkedin.com/jobs/portland-timbers-jobs",
+        "https://timberspremium.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Analytics & Marketing Technology Investment",
+        "Operational Staffing (Security & Box Office)",
+        "Creative Services In-Housing (Design & Photography)",
+        "Fan Experience Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Portland Timbers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:01:29.321471",
+          "domain_explored": "https://timbers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Equipment",
+              "Digital Content Management (Podcast hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Radio Broadcast Partnership (105.1 The Fan)",
+              "2026 Theme Nights Schedule (Event Planning & Vendor Requirements)"
+            ]
+          },
+          "patterns_found": [
+            "Media Rights & Broadcasting Partnership",
+            "Marketing Campaign Planning (Theme Nights)",
+            "Sponsorship/Partnership Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 263,
+              "elapsed_seconds": 33.92012095451355
+            }
+          ],
+          "reasoning": "The content reveals a finalized procurement of media services (radio broadcast partnership with 105.1 The Fan) and the planning of marketing assets (2026 Theme Nights). While the radio deal is a signed contract (past tense procurement), the announcement of 'Theme Nights' indicates active procurement needs for event materials, branding, and promotional vendors for the upcoming 2026 season."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:01:39.508928",
+          "domain_explored": "https://ptfcauthentics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from 'Add to cart', 'Collections', and standard e-commerce structure)",
+              "Google Analytics (Inferred from standard tracking needs)",
+              "E-commerce Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Parkside (Manufacturing/Trading Cards)",
+              "Logistics Partner: Carbon-neutral shipping provider",
+              "Retail Operations: Inventory management for 'Spirit of 75', 'Forever Green', and 'Back in Black' collections"
+            ]
+          },
+          "patterns_found": [
+            "Merchandising & Inventory Management",
+            "E-commerce Platform Usage",
+            "Supply Chain / Vendor Partnership (Parkside)",
+            "Sustainability Initiatives (Carbon-neutral shipping)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 341,
+              "elapsed_seconds": 3.5384390354156494
+            }
+          ],
+          "reasoning": "The content is the team's official e-commerce storefront (PTFC Authentics). While it does not contain explicit RFPs or job postings, it reveals active vendor relationships (specifically with 'PARKSIDE' for trading cards) and the use of a digital commerce platform (Shopify) to manage inventory and sales. This indicates a procurement category focused on retail operations, physical goods manufacturing, and logistics."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:02:00.397182",
+          "domain_explored": "https://timberspremium.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing/Digital Experience Platform (implied by site structure)",
+              "CRM (implied by 'Annual Suite Memberships' and 'Premium Team' contact management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Casting for 'Single-Match Suites' and 'Annual Memberships' suggests a need for inventory allocation software.",
+              "Reference to 'in-suite dining' and 'catering options' indicates a procurement category for Food & Beverage vendors.",
+              "Hosting non-soccer events (Chris Stapleton concert) suggests venue management and event services procurement."
+            ]
+          },
+          "patterns_found": [
+            "Premium Inventory Management",
+            "Event Catering & Hospitality Services",
+            "CRM / Ticketing Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 332,
+              "elapsed_seconds": 13.925640106201172
+            }
+          ],
+          "reasoning": "The content confirms the existence of a dedicated premium hospitality channel (timberspremium.com) which implies procurement needs for catering, inventory management, and customer relationship management (CRM) tools. However, the content is purely consumer-facing (event listings, booking CTAs) and does not reveal specific vendor relationships or back-office technology stacks."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:02:09.497528",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Wide Sports News",
+            "Player Transfer Activity",
+            "Competitor Intelligence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.525347948074341
+            }
+          ],
+          "reasoning": "The content provided is from the general MLS news feed (mlssoccer.com) and focuses exclusively on player transfers, roster moves, and league-wide events for other teams (San Jose, Orlando City, Houston, Austin, Inter Miami). There is absolutely no mention of the Portland Timbers, their specific vendors, technology stack, or procurement activities. This source is irrelevant for entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:03:05.108966",
+          "domain_explored": "https://www.linkedin.com/jobs/portland-timbers-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Analytics (implied by Analyst role)",
+              "Marketing Automation Platforms",
+              "CRM Systems",
+              "Ticketing Systems (e.g., Ticketmaster, Archtics)",
+              "Design Software (Adobe Creative Cloud)"
+            ],
+            "job_postings": [
+              "Sr. Digital Marketing Analyst",
+              "Security Manager",
+              "Photography Internship",
+              "Fan Experience Staff",
+              "Box Office Staff",
+              "Graphic Design Internship"
+            ],
+            "procurement_indicators": [
+              "Hiring for data analysis suggests a need for enterprise analytics licenses.",
+              "Security Manager role implies contracts with security firms or surveillance tech vendors.",
+              "Box Office staffing indicates reliance on specific ticketing platforms and POS hardware."
+            ]
+          },
+          "patterns_found": [
+            "Digital Analytics & Marketing Technology Investment",
+            "Operational Staffing (Security & Box Office)",
+            "Creative Services In-Housing (Design & Photography)",
+            "Fan Experience Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 403,
+              "elapsed_seconds": 50.73253607749939
+            }
+          ],
+          "reasoning": "The discovery of a 'Sr. Digital Marketing Analyst' role is a strong procurement signal, indicating investment in data analytics tools and marketing technology stacks. Additionally, the presence of 'Security Manager' and 'Box Office Staff' roles signals ongoing procurement needs for physical security services and ticketing software/hardware infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:03:27.023641",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-jobs-portland-oregon-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Director of Soccer Operations",
+                "entity": "Portland Thorns FC",
+                "location": "Portland, OR",
+                "recency": "3 days ago"
+              },
+              {
+                "role": "Supply & Inventory Planning Planner",
+                "entity": "Nike",
+                "location": "Beaverton, OR",
+                "recency": "4 days ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Operational expansion at affiliate entity (Thorns FC)",
+              "Regional supply chain activity (Nike)"
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Entity Hiring (Portland Thorns FC)",
+            "Regional Sports Market Activity (Nike)",
+            "Supply Chain & Inventory Planning Roles"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 383,
+              "elapsed_seconds": 7.2947998046875
+            }
+          ],
+          "reasoning": "While the specific URL is a generic search page for 'Sports Jobs in Portland' rather than a dedicated Portland Timbers career page, it contains a direct signal from the organization's affiliate entity, Portland Thorns FC (Peregrine Sports LLC). The listing for 'Director of Soccer Operations' indicates active organizational structuring and investment within the broader Timbers/Thorns ecosystem. Additionally, the prevalence of Nike roles in the region reinforces the local sports supply chain context, though it is not a direct procurement signal for the Timbers."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:03:37.463817",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-portland-timbers-seeks-activity-7232095471794597888-yTgu",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Academy Assistant Coach (U16, U18)"
+            ],
+            "procurement_indicators": [
+              "Academy Operations Investment",
+              "Compliance/Standards Adherence (USSF Licenses)"
+            ]
+          },
+          "patterns_found": [
+            "Academy & Youth Development Operations",
+            "Coaching Staffing & Certification Requirements",
+            "Operational Efficiency (Multi-team management)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.8498098850250244
+            }
+          ],
+          "reasoning": "While this is a job posting for a coaching role rather than a direct procurement signal, it indicates active investment in the Academy pipeline (U16/U18). The requirement for a 'USSF B Coaching License' suggests a structured vendor/employee relationship with certification bodies. It confirms operational expansion but offers low direct procurement intelligence compared to technology or infrastructure roles."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:03:52.581255",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-marketing-jobs-portland-oregon-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Regional Competitor Activity (Nike)",
+            "No Entity-Specific Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1839,
+              "output_tokens": 185,
+              "elapsed_seconds": 10.740278005599976
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Sports Marketing' in the Portland area. While it lists regional competitors (Nike) and general marketing roles, there is no specific mention of Portland Timbers, Peregrine Sports, or the Thorns. The content is behind a login/gate, yielding no actionable procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T08:04:04.706786",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-portland-timbers-activity-7132702972152541184--Fpm",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Goalkeeper Coach"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for specialized technical positions",
+              "Joint operational structure (Timbers & Thorns)"
+            ]
+          },
+          "patterns_found": [
+            "Coaching Staffing & Certification Requirements",
+            "Multi-Entity Operations (Timbers & Thorns)",
+            "Specialized Technical Recruitment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1915,
+              "output_tokens": 257,
+              "elapsed_seconds": 6.946664810180664
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for specialized technical roles (Goalkeeper Coach) within the Portland Timbers & Thorns FC organization. While this is a direct hiring signal rather than a vendor procurement signal, it indicates operational growth and investment in the technical staff infrastructure. It reinforces the pattern of active hiring seen in previous iterations but does not reveal specific technology stacks or vendor partnerships."
+        }
+      ],
+      "total_input_tokens": 14524,
+      "total_output_tokens": 2603,
+      "estimated_cost_usd": 0.082617
+    },
+    "procurement_signals": [
+      "Digital Analytics & Marketing Technology Investment",
+      "Operational Staffing (Security & Box Office)",
+      "Creative Services In-Housing (Design & Photography)",
+      "Fan Experience Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Portland Timbers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:04:04.708119"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.153561",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:01:30.940174"
+}

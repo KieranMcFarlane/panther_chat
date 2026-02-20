@@ -1,0 +1,181 @@
+{
+  "entity_id": "bidasoa_ir\u00fan",
+  "entity_name": "Bidasoa Ir\u00fan",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "cdbidasoa.eus",
+    "ehfeuro.eurohandball.com",
+    "bidasoaturismo.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bidasoa_ir\u00fan",
+      "entity_name": "Bidasoa Ir\u00fan",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ehfeuro.eurohandball.com",
+        "https://globalsportsarchive.com",
+        "https://bidasoaturismo.com",
+        "https://cdbidasoa.eus"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bidasoa Ir\u00fan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:39:37.886518",
+          "domain_explored": "https://cdbidasoa.eus",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Newsletter Subscription (Email Marketing)",
+              "E-commerce Platform (Nuestra Tienda)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship slots (Gymnica, etc.)",
+              "Ticketing/Abono (Season Pass) management"
+            ]
+          },
+          "patterns_found": [
+            "Sports club operations",
+            "E-commerce presence (Tienda)",
+            "Newsletter marketing",
+            "Sponsorship display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 260,
+              "elapsed_seconds": 2.5214970111846924
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations (handball team match results, standings, and player news) and fan engagement (store, newsletter). There are no explicit signals regarding corporate procurement, technology RFPs, or job postings. The presence of a 'Tienda' (Store) and 'Newsletter' indicates basic digital capabilities but does not constitute immediate procurement intent for new enterprise solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:39:49.736549",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated domain content",
+            "Sports federation news (EHF)",
+            "Tournament listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.625866174697876
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) website and focuses on tournament results (Denmark, Croatia), MVP awards, and future event bids (2030/2032). There is absolutely no mention of 'Bidasoa Ir\u00fan', nor any procurement, technology, or business signals related to the target entity. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:40:02.564917",
+          "domain_explored": "https://bidasoaturismo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism board content",
+            "Visitor information services",
+            "Generic CMS navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 507,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.719434976577759
+            }
+          ],
+          "reasoning": "The domain 'bidasoaturismo.com' corresponds to the local tourism board (Mancomunidad de Bidasoa Beherea), not the sports entity 'Bidasoa Ir\u00fan'. The content focuses on visitor logistics (C\u00f3mo moverse), events, and promotional materials (Videos y Folletos). This is a public information portal with no indicators of corporate procurement activity relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:40:09.978408",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports aggregation content",
+            "Global tournament listings (UEFA, CONCACAF, AFC)",
+            "No entity-specific governance or commercial data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.3334338665008545
+            }
+          ],
+          "reasoning": "The content is a generic navigation sitemap for global sports tournaments (soccer, handball, etc.) found on globalsportsarchive.com. It contains no information regarding 'Bidasoa Ir\u00fan', its procurement activities, technology stack, or governance. The domain is a statistical archive and does not represent the target entity's commercial ecosystem."
+        }
+      ],
+      "total_input_tokens": 4767,
+      "total_output_tokens": 804,
+      "estimated_cost_usd": 0.026361
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bidasoa Ir\u00fan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:40:10.018132"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351126",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:15.451606"
+}

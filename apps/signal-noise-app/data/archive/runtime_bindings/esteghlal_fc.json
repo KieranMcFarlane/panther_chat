@@ -1,0 +1,205 @@
+{
+  "entity_id": "esteghlal_fc",
+  "entity_name": "Esteghlal FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "fcesteghlal.ir",
+    "transfermarkt.co.in",
+    "zoominfo.com",
+    "flashscore.in",
+    "gholackgroup.ir",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "esteghlal_fc",
+      "entity_name": "Esteghlal FC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://transfermarkt.co.in",
+        "https://flashscore.in",
+        "https://fcesteghlal.ir",
+        "https://zoominfo.com",
+        "https://wikidata.org",
+        "https://gholackgroup.ir"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Esteghlal FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:59:19.941128",
+          "domain_explored": "https://fcesteghlal.ir",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:59:29.383185",
+          "domain_explored": "https://transfermarkt.co.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_league_content",
+            "player_market_data",
+            "transfer_rumors"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.5181078910827637
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to the Indian Super League (ISL), including specific clubs like Chennaiyin FC and Kerala Blasters. There is absolutely no mention of Esteghlal FC, the Persian Gulf Pro League, or the Iranian market. The content consists of player transfer rumors, market values, and general football news, which are irrelevant to the procurement intelligence task for the specified entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:59:35.288271",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "generic_b2b_platform",
+            "irrelevant_testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 152,
+              "elapsed_seconds": 1.8635377883911133
+            }
+          ],
+          "reasoning": "The content is generic marketing material for ZoomInfo, a B2B data platform. It contains no specific information regarding Esteghlal FC's operations, technology stack, or procurement activities. The testimonials and metrics provided are unrelated to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:59:54.058448",
+          "domain_explored": "https://flashscore.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_betting_content",
+            "live_score_aggregation",
+            "ad_heavy_structure",
+            "dynamic_client_side_rendering"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 490,
+              "output_tokens": 181,
+              "elapsed_seconds": 11.325430870056152
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive 'Loading...' and 'AD' markers, which are characteristic of Flashscore's client-side rendered sports data interface. This domain is a sports results aggregator and betting affiliate platform, not a source for corporate procurement intelligence regarding Esteghlal FC's internal operations or vendor needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:00:11.443349",
+          "domain_explored": "https://gholackgroup.ir",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:00:21.875664",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_knowledge_base_content",
+            "irrelevant_community_news",
+            "non_commercial_entity_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 184,
+              "elapsed_seconds": 3.3932158946990967
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a free knowledge base. It contains general information about the platform, community events (birthdays, conferences), and documentation. There is no specific content related to 'Esteghlal FC', nor are there any procurement signals, job postings, or vendor partnership opportunities relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4847,
+      "total_output_tokens": 704,
+      "estimated_cost_usd": 0.025101
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Esteghlal FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:00:21.876295"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.186041",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:59.644472"
+}

@@ -1,0 +1,132 @@
+{
+  "entity_id": "international_orienteering_federation_(iof)",
+  "entity_name": "International Orienteering Federation (IOF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "orienteering-sport.com",
+    "orienteering.com",
+    "orienteering.or.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_orienteering_federation_(iof)",
+      "entity_name": "International Orienteering Federation (IOF)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://orienteering.com",
+        "https://orienteering.or.jp",
+        "https://orienteering-sport.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Orienteering Federation (IOF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:09:29.676601",
+          "domain_explored": "https://orienteering-sport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard informational content",
+            "Public-facing educational material",
+            "Static navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1373,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.023113965988159
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of general educational pages describing the sport of orienteering (disciplines, map symbols, equipment). There are no mentions of internal operations, technology vendors, job openings, or strategic initiatives that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:09:33.326279",
+          "domain_explored": "https://orienteering.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:09:47.139620",
+          "domain_explored": "https://orienteering.or.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "WMOC2027 Bulletin Publication (Event Services)",
+              "Official Partner List (Sponsorship/Vendor Ecosystem): Litera, Med Sign Japan, Kaname Surveying, Arc Communications, Descente Japan"
+            ]
+          },
+          "patterns_found": [
+            "National Federation Structure (JOA)",
+            "Event Management & Logistics (WMOC2027)",
+            "Safety & Compliance (Accident Investigation)",
+            "Official Partner/Sponsor listings",
+            "Administrative Announcements (Team Selection, Rules)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 328,
+              "elapsed_seconds": 7.794158220291138
+            }
+          ],
+          "reasoning": "The content is from the Japanese Orienteering Association (JOA), a national member federation of the IOF. While it shows active operations (event hosting for WMOC2027, team selections, partner management), it lacks direct procurement signals for the International Orienteering Federation (IOF) itself. The 'Official Partner' list indicates B2B relationships (e.g., Descente, Arc Communications), but these are localized sponsorships for the Japanese federation, not IOF-level tenders. The site focuses on governance, event logistics, and member services rather than IOF global procurement."
+        }
+      ],
+      "total_input_tokens": 2828,
+      "total_output_tokens": 493,
+      "estimated_cost_usd": 0.015879
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Orienteering Federation (IOF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:09:47.140217"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.460133",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:20.125102"
+}

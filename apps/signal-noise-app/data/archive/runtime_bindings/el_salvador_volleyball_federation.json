@@ -1,0 +1,241 @@
+{
+  "entity_id": "el_salvador_volleyball_federation",
+  "entity_name": "El Salvador Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "worldofvolley.com",
+    "triptap.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sv.linkedin.com/jobs/view/athletic-specialist-volleyball-at-santa-ana-unified-school-district-4260059297",
+      "https://sv.linkedin.com/jobs/job-coach-empleos",
+      "https://sv.linkedin.com/jobs/view/athletic-specialist-competitive-cheer-at-santa-ana-unified-school-district-4354365156",
+      "https://am.linkedin.com/jobs/view/senior-technical-writer-at-ni-national-instruments-2011538165"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "el_salvador_volleyball_federation",
+      "entity_name": "El Salvador Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sv.linkedin.com/jobs/view/athletic-specialist-competitive-cheer-at-santa-ana-unified-school-district-4354365156",
+        "https://sv.linkedin.com/jobs/job-coach-empleos",
+        "https://triptap.com",
+        "https://am.linkedin.com/jobs/view/senior-technical-writer-at-ni-national-instruments-2011538165",
+        "https://sv.linkedin.com/jobs/view/athletic-specialist-volleyball-at-santa-ana-unified-school-district-4260059297",
+        "https://worldofvolley.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "El Salvador Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:41:39.628655",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International sports news aggregation",
+            "Global league coverage (Brazil, Italy, Poland, Turkey, Germany, France)",
+            "Sponsorship visibility (e.g., Vodafone Sultanlar Ligi, Credem Banca)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 192,
+              "elapsed_seconds": 9.48889708518982
+            }
+          ],
+          "reasoning": "The content provided is a list of international volleyball match results and news headlines from countries like Brazil, Italy, Poland, and Turkey. There is no mention of the El Salvador Volleyball Federation, nor are there any procurement signals, job postings, or technology investments specific to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:41:44.965021",
+          "domain_explored": "https://triptap.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video embedding (Play Video)",
+              "Search/Filter UI components (Destination, Dates, Budget)",
+              "Responsive web design"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Travel Aggregation",
+            "Generic Destination Marketing",
+            "Standard Booking Engine UI (Flights, Hotels, Vacations)",
+            "Global Tourism Scope (North America, Europe, Asia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 237,
+              "elapsed_seconds": 2.4553349018096924
+            }
+          ],
+          "reasoning": "The content is clearly from a consumer-facing travel planning platform (Triptap.com). It focuses on generic tourist itineraries, booking engines for hotels/flights, and popular global destinations (e.g., Los Angeles, Cancun, Banff). There is zero relevance to the El Salvador Volleyball Federation, sports governance, or B2B procurement processes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:41:48.259302",
+          "domain_explored": "https://sv.linkedin.com/jobs/view/athletic-specialist-volleyball-at-santa-ana-unified-school-district-4260059297",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:41:56.615086",
+          "domain_explored": "https://sv.linkedin.com/jobs/job-coach-empleos",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Relationship Coach (LiftTalk.com)",
+              "Psychic Coach (LiftTalk.com)",
+              "Mystic Coach (LiftTalk.com)",
+              "Part-Time Financial Coach (My Secure Advantage)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "B2C Service Roles",
+            "Remote Contracting (Gig Economy)",
+            "Wellness & Lifestyle Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.779375076293945
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Job Coach' roles in El Salvador. The listings (e.g., Psychic Coach, Relationship Coach, Financial Coach) are for B2C service providers or remote contractors, primarily for entities like LiftTalk.com and My Secure Advantage. There is no connection to the El Salvador Volleyball Federation, sports management, or relevant procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:42:04.402765",
+          "domain_explored": "https://sv.linkedin.com/jobs/view/athletic-specialist-competitive-cheer-at-santa-ana-unified-school-district-4354365156",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Athletic Specialist Competitive Cheer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Costa Rica vs El Salvador)",
+            "Sector Mismatch (K-12 Education vs Sports Federation)",
+            "Role Irrelevance (Cheerleading vs Volleyball)",
+            "Generic HR Compliance Requirements (CPR/First Aid/Background Checks)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 266,
+              "elapsed_seconds": 4.0334367752075195
+            }
+          ],
+          "reasoning": "The content describes a job opening for an 'Athletic Specialist Competitive Cheer' at the Santa Ana Unified School District. The location is explicitly listed as Santa Ana, San Jos\u00e9, Costa Rica, which is outside the target geography of El Salvador. Additionally, the entity is a school district (K-12 education), not the National Volleyball Federation. The role focuses on cheerleading, not volleyball, and involves standard compliance requirements rather than procurement or technology investment signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:42:13.718458",
+          "domain_explored": "https://am.linkedin.com/jobs/view/senior-technical-writer-at-ni-national-instruments-2011538165",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Technical Writer at National Instruments (Sonsonate, El Salvador)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Armenia, Sonsonate vs San Salvador)",
+            "Sector Mismatch (Industrial Automation/Engineering vs Sports Federation)",
+            "Entity Mismatch (NI - National Instruments vs El Salvador Volleyball Federation)",
+            "Irrelevant Keywords (Beach volleyball courts mentioned only as company perk)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1703,
+              "output_tokens": 266,
+              "elapsed_seconds": 5.889423131942749
+            }
+          ],
+          "reasoning": "The content is a job posting for National Instruments (NI), a multinational industrial automation company, located in an industrial park in Armenia, Sonsonate. While the job description mentions 'beach volleyball courts' as an employee perk, this is the only connection to the sport. The entity, sector, and location do not align with the El Salvador Volleyball Federation or its procurement needs."
+        }
+      ],
+      "total_input_tokens": 7679,
+      "total_output_tokens": 1222,
+      "estimated_cost_usd": 0.041367
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "El Salvador Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:42:13.719515"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339372",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:18.654600"
+}

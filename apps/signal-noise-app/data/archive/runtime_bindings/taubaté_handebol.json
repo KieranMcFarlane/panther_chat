@@ -1,0 +1,102 @@
+{
+  "entity_id": "taubat\u00e9_handebol",
+  "entity_name": "Taubat\u00e9 Handebol",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "moataubate.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "taubat\u00e9_handebol",
+      "entity_name": "Taubat\u00e9 Handebol",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://moataubate.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Taubat\u00e9 Handebol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:49:46.748852",
+          "domain_explored": "https://moataubate.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Administrative/Staffing: Ot\u00e1vio joining to assist the Board and squad"
+            ],
+            "procurement_indicators": [
+              "Governance Update: Personnel changes to assist the Directorate",
+              "Competitive Activity: Participation in Super Paulist\u00e3o (Finals)",
+              "Operational Status: Active squad reinforcement ('Taubat\u00e9 trazendo refor\u00e7os')"
+            ]
+          },
+          "patterns_found": [
+            "Organizational Restructuring",
+            "Sports Performance Investment",
+            "Multi-sport Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.442054986953735
+            }
+          ],
+          "reasoning": "The content reveals active organizational changes and personnel investments ('Ot\u00e1vio se aproxima de Vitor Rodolfo para auxiliar a Diretoria'), indicating a dynamic governance environment. While there are no explicit RFPs or tech stack details, the focus on 'bringing reinforcements' and 'changes that should occur' suggests a readiness for new partnerships and tools to support the team's competitive standing in the 'Super Paulist\u00e3o'."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:49:49.536290",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 286,
+      "estimated_cost_usd": 0.008364
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Taubat\u00e9 Handebol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:49:49.537796"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358118",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:30.793108"
+}

@@ -1,0 +1,243 @@
+{
+  "entity_id": "ranji_trophy",
+  "entity_name": "Ranji Trophy",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "ranjitrophy.com.in",
+    "nclindia.in",
+    "icc-cricket.com",
+    "keralacricketassociation.com",
+    "espncricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/saurabh-arora-a1566312_jobalert-prjobs-sportspr-activity-7295325899736948736-4Ikt"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ranji_trophy",
+      "entity_name": "Ranji Trophy",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://keralacricketassociation.com",
+        "https://icc-cricket.com",
+        "https://nclindia.in",
+        "https://www.linkedin.com/posts/saurabh-arora-a1566312_jobalert-prjobs-sportspr-activity-7295325899736948736-4Ikt",
+        "https://espncricinfo.com",
+        "https://ranjitrophy.com.in"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ranji Trophy may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:19:24.531541",
+          "domain_explored": "https://ranjitrophy.com.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static Content Display",
+            "Historical Data Aggregation",
+            "Informational Website Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 176,
+              "elapsed_seconds": 4.4947991371154785
+            }
+          ],
+          "reasoning": "The scraped content consists of historical match results, schedules, and points tables for the 2025-2026 Ranji Trophy season. It is purely informational and operational, lacking any corporate governance, financial, or technical infrastructure data. There are no signals regarding technology procurement, vendor selection, or organizational hiring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:19:31.373602",
+          "domain_explored": "https://nclindia.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CricHero App (Scoring)",
+              "YouTube (Streaming)",
+              "Facebook (Social)",
+              "Instagram (Social)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Registration Fees (Rs 1000/-)",
+              "Prize Money Disbursement",
+              "Auction League Operations"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Marketing",
+            "Event Registration Portal",
+            "Private Ownership Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.499415874481201
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as the 'National Cricket League' (NCL), a private organization owned by Mr. Rajveer Singh, rather than the 'Ranji Trophy' (which is governed by the BCCI). The content is entirely focused on player recruitment, trial registration, and prize distribution for private tournaments. There is no governance overlap, procurement intent, or technology stack relevant to the official Ranji Trophy entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:19:38.119306",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Global Governing Body Content",
+            "Sports Journalism & Marketing",
+            "Tournament Fixtures & Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.6458899974823
+            }
+          ],
+          "reasoning": "The scraped content is from the ICC (International Cricket Council) website and focuses on the global T20 World Cup 2026, specifically regarding team squads and warm-up matches. This is a distinct entity from the 'Ranji Trophy', which is a domestic first-class cricket tournament governed by the BCCI (Board of Control for Cricket in India). There is no overlap in procurement signals or governance structure relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:20:10.183794",
+          "domain_explored": "https://keralacricketassociation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure development goals mentioned in Vision/Mission",
+              "Administrative hierarchy identified (Secretary, Joint Secretary, Treasurer)",
+              "Direct contact numbers listed for potential vendor engagement"
+            ]
+          },
+          "patterns_found": [
+            "State-Level Association Affiliation",
+            "Infrastructure Development Mandate",
+            "Administrative Hierarchy",
+            "Vendor Contact Points"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 305,
+              "elapsed_seconds": 23.61736011505127
+            }
+          ],
+          "reasoning": "The content confirms the Kerala Cricket Association (KCA) as a state-affiliated unit of the BCCI responsible for the Ranji Trophy team. While the page is primarily informational and historical, the explicit mention of an 'ambitious project to change the profile' and 'infrastructure development' within the Vision/Mission sections indicates a potential for procurement activities (stadiums, equipment, training). The detailed listing of office bearers (Secretary, Treasurer) provides specific decision-maker contacts for vendor outreach, justifying a weak signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:20:14.623230",
+          "domain_explored": "https://espncricinfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:20:23.592137",
+          "domain_explored": "https://www.linkedin.com/posts/saurabh-arora-a1566312_jobalert-prjobs-sportspr-activity-7295325899736948736-4Ikt",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "PR & Communications Specialist",
+              "Location: Chandigarh",
+              "Entity: Punjab Kings (IPL)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "IPL Franchise Context",
+            "Direct Hiring (No Procurement)",
+            "Marketing/PR Function"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 227,
+              "elapsed_seconds": 5.489474058151245
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Punjab Kings' (an IPL franchise), not the 'Ranji Trophy' (a domestic tournament managed by BCCI). While it operates in the cricket ecosystem, the entity is a commercial franchise rather than the administrative body for the Ranji Trophy. The post indicates direct hiring for a PR role, which is an operational expense, not a procurement signal involving vendors or RFPs."
+        }
+      ],
+      "total_input_tokens": 7316,
+      "total_output_tokens": 1189,
+      "estimated_cost_usd": 0.039783
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ranji Trophy may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:20:23.594403"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417589",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:13.442928"
+}

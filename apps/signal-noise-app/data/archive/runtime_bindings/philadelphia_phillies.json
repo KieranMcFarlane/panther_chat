@@ -1,0 +1,317 @@
+{
+  "entity_id": "philadelphia_phillies",
+  "entity_name": "Philadelphia Phillies",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "philliesnation.com",
+    "mlbshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/philadelphia-phillies-jobs",
+      "https://www.linkedin.com/jobs/philadelphia-phillies-jobs-worldwide",
+      "https://do.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/view/associate-software-engineer-data-engineering-at-philadelphia-phillies-4317368035",
+      "https://www.linkedin.com/jobs/view/junior-graphic-designer-at-philadelphia-phillies-4345828026",
+      "https://www.linkedin.com/jobs/view/major-league-video-technology-associate-at-philadelphia-phillies-4333180666",
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/posts/jon-joaquin-63863a1_sports-jobs-and-careers-with-the-philadelphia-activity-7158115605269635074-bjBP"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "philadelphia_phillies",
+      "entity_name": "Philadelphia Phillies",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://do.linkedin.com/company/major-league-baseball/jobs",
+        "https://www.linkedin.com/jobs/philadelphia-phillies-jobs-worldwide",
+        "https://mlbshop.com",
+        "https://philliesnation.com",
+        "https://www.linkedin.com/jobs/view/associate-software-engineer-data-engineering-at-philadelphia-phillies-4317368035",
+        "https://www.linkedin.com/jobs/philadelphia-phillies-jobs",
+        "https://www.linkedin.com/jobs/view/junior-graphic-designer-at-philadelphia-phillies-4345828026"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Philadelphia Phillies may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:27:52.439530",
+          "domain_explored": "https://philliesnation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports roster management",
+            "Contract negotiations (Player personnel)",
+            "Fan engagement content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 155,
+              "elapsed_seconds": 1.8855350017547607
+            }
+          ],
+          "reasoning": "The content is strictly focused on sports news, player roster moves, and opinion pieces regarding the Phillies' on-field performance. There are no mentions of business operations, technology infrastructure, job postings, or vendor procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:27:55.311793",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:28:01.854492",
+          "domain_explored": "https://www.linkedin.com/jobs/philadelphia-phillies-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Engineering",
+              "Software Engineering"
+            ],
+            "job_postings": [
+              "Associate Software Engineer, Data Engineering (Philadelphia, PA)",
+              "Data Operator (Clearwater, FL)"
+            ],
+            "procurement_indicators": [
+              "Investment in data infrastructure",
+              "Potential future software procurement to support new engineering hires"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Technology/Data)",
+            "Digital Transformation (Data Engineering)",
+            "Recruitment Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 301,
+              "elapsed_seconds": 3.0140151977539062
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for technical roles, specifically 'Associate Software Engineer, Data Engineering' and 'Data Operator'. This indicates an internal focus on building data capabilities and software infrastructure. While not a direct procurement signal (like an RFP), hiring for these roles often precedes technology procurement (e.g., new cloud tools, databases, or analytics platforms) or indicates a shift towards in-house development over vendor purchasing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:28:11.179953",
+          "domain_explored": "https://www.linkedin.com/jobs/philadelphia-phillies-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Engineering",
+              "Software Engineering"
+            ],
+            "job_postings": [
+              "Data Operator (Clearwater, FL)",
+              "Associate Software Engineer, Data Engineering (Philadelphia, PA)"
+            ],
+            "procurement_indicators": [
+              "Expansion of Data Team",
+              "Investment in Internal Tech Capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Technology/Data)",
+            "Digital Transformation (Data Engineering)",
+            "Recruitment Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 302,
+              "elapsed_seconds": 5.875632286071777
+            }
+          ],
+          "reasoning": "The scraped content reveals specific technology roles within the organization, specifically 'Data Operator' and 'Associate Software Engineer, Data Engineering'. This indicates an active internal investment in data infrastructure and software capabilities. While not a direct procurement signal (like an RFP), the hiring for Data Engineering suggests a potential future need for related software tools, cloud infrastructure, or data platforms, warranting a weak signal for potential procurement opportunities in the tech sector."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:28:19.680599",
+          "domain_explored": "https://do.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform Engineering",
+              "Sales & Marketing Automation",
+              "Digital Media Asset Management"
+            ],
+            "job_postings": [
+              "Senior Software Engineer, Web Platform (New York)",
+              "Senior Coordinator, Sales, Marketing & Brand Experience (Vero Beach)",
+              "Photo Editor (Seasonal)"
+            ],
+            "procurement_indicators": [
+              "Investment in proprietary web platforms (Custom Dev vs Off-the-shelf)",
+              "Centralized content creation tools (Photo Editing)",
+              "Marketing & Brand Experience management"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Technology/Data)",
+            "Job Postings (Marketing/Partnerships)",
+            "League-Level Operations",
+            "Digital Transformation (Web Platform)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1573,
+              "output_tokens": 347,
+              "elapsed_seconds": 4.94822883605957
+            }
+          ],
+          "reasoning": "While this page is for the league entity (MLB) rather than the specific team entity (Philadelphia Phillies), it provides strong context on the overarching technology stack and operational standards that the Phillies are likely integrated into or emulating. The 'Senior Software Engineer, Web Platform' role indicates a centralized investment in digital infrastructure, which often trickles down to team-level procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:28:26.537867",
+          "domain_explored": "https://www.linkedin.com/jobs/view/associate-software-engineer-data-engineering-at-philadelphia-phillies-4317368035",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Python",
+              "TypeScript",
+              "Go",
+              "SQL",
+              "MySQL",
+              "Postgres",
+              "Cloud-based data platforms",
+              "Statcast (MLB data)",
+              "ETL/ELT tools"
+            ],
+            "job_postings": [
+              "Associate Software Engineer, Data Engineering (Hourly Part-Time Seasonal)"
+            ],
+            "procurement_indicators": [
+              "Investment in scalable data pipelines",
+              "Management of cloud-based data platforms",
+              "Infrastructure for predictive modeling and dashboards"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Technology/Data)",
+            "Data Engineering & Analytics Infrastructure",
+            "Cloud-Based Data Platforms",
+            "Digital Transformation (R&D)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1648,
+              "output_tokens": 347,
+              "elapsed_seconds": 3.363853931427002
+            }
+          ],
+          "reasoning": "The job posting confirms active investment in data infrastructure and engineering capabilities within the Research & Development department. While this is a recruitment signal rather than a direct purchase order, it indicates the organization is building internal capacity to manage complex data pipelines (Statcast, biomechanics) and cloud platforms, which often precedes or accompanies procurement of related software tools and cloud services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:28:35.565344",
+          "domain_explored": "https://www.linkedin.com/jobs/view/junior-graphic-designer-at-philadelphia-phillies-4345828026",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud (Photoshop, Illustrator, InDesign, Lightroom)",
+              "Figma",
+              "Adobe After Effects",
+              "Adobe Premiere"
+            ],
+            "job_postings": [
+              "Junior Graphic Designer"
+            ],
+            "procurement_indicators": [
+              "Software Licensing (Adobe Creative Cloud)",
+              "Collaboration Tools (Figma)",
+              "Digital Asset Management (DAM) usage implied by 'shared systems and servers'",
+              "Print Production Vendor Management"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings (Creative/Marketing)",
+            "Digital Asset Management",
+            "Brand Marketing Operations",
+            "Adobe Creative Cloud Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1720,
+              "output_tokens": 329,
+              "elapsed_seconds": 5.594090938568115
+            }
+          ],
+          "reasoning": "While this is a creative role rather than a direct procurement role, it confirms active investment in the marketing technology stack. The requirement for 'Adobe Creative Cloud' and 'Figma' indicates software procurement needs. The mention of 'shared systems and servers' and 'sponsorships' implies the use of Digital Asset Management (DAM) systems and collaboration tools, which are relevant procurement categories for marketing operations."
+        }
+      ],
+      "total_input_tokens": 9262,
+      "total_output_tokens": 1781,
+      "estimated_cost_usd": 0.054501
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Philadelphia Phillies may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:28:35.567153"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.308825",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:49.648896"
+}

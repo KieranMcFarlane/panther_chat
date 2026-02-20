@@ -1,0 +1,338 @@
+{
+  "entity_id": "sc_dhfk_leipzig",
+  "entity_name": "SC DHfK Leipzig",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "scdhfk-handball.de",
+    "scdhfk.de",
+    "scdhfk-finswimming.de",
+    "globalsportsarchive.com",
+    "daikin-hbl.de",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-sc-dhfk-leipzig-at-kinexon-4306293184",
+      "https://de.linkedin.com/company/schnellestelle-de/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sc_dhfk_leipzig",
+      "entity_name": "SC DHfK Leipzig",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.02,
+        0.0,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://daikin-hbl.de",
+        "https://globalsportsarchive.com",
+        "https://scdhfk-finswimming.de",
+        "https://de.linkedin.com/company/schnellestelle-de/jobs",
+        "https://scdhfk.de",
+        "https://scdhfk-handball.de",
+        "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-sc-dhfk-leipzig-at-kinexon-4306293184",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialized Sports Technology Procurement",
+        "Performance Analytics Investment",
+        "Vendor Partnership (Kinexon)",
+        "Data-Driven Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SC DHfK Leipzig may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:00:25.861415",
+          "domain_explored": "https://scdhfk-handball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing System (URL structure /tickets/ suggests a dedicated portal)",
+              "Event Management Tools (Public Viewing organization)",
+              "CMS (WordPress/Custom PHP implied by URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "High-frequency ticket sales operations",
+              "Event organization (Public Viewing at 'Vodkaria')",
+              "Venue naming rights management (QUARTERBACK Immobilien ARENA)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Operations",
+            "Event Management",
+            "Sponsorship Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 323,
+              "elapsed_seconds": 5.9137349128723145
+            }
+          ],
+          "reasoning": "The content confirms the entity is actively operating in a professional sports league (Bundesliga) with high-volume ticketing and event management needs. While no direct RFP is visible, the explicit 'Jetzt Tickets sichern' (Secure tickets now) calls-to-action and the management of 'Public Viewing' events indicate a reliance on ticketing platforms and event management software. The presence of a naming rights sponsor ('QUARTERBACK Immobilien ARENA') suggests active sponsorship management, often supported by CRM tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:00:35.870389",
+          "domain_explored": "https://scdhfk.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Livestreaming Software",
+              "Voting/Polling Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Management (European Championships, German Meisterschaften)",
+              "Digital Audience Engagement (Online voting, Livestreams)",
+              "Facility Management (Bootsverleih, Grillplatz, Beachvolleyball)"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Sport Operations",
+            "Event Hosting Infrastructure",
+            "Digital Engagement (Voting/Livestreaming)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 260,
+              "elapsed_seconds": 6.573317050933838
+            }
+          ],
+          "reasoning": "The content confirms SC DHfK Leipzig as a large multi-sport organization (20+ departments) hosting major events (European Championships, German Meisterschaften). The mention of 'Livestream' and online voting for 'Sportler des Jahres' indicates a need for digital event and engagement software, though specific procurement intent is not explicit."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:00:44.784606",
+          "domain_explored": "https://scdhfk-finswimming.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting: 25. Leipziger Sprintpokal (Dec 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Sub-brand Digital Presence",
+            "Informational Content",
+            "Event Hosting (Sprintpokal)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 194,
+              "elapsed_seconds": 5.486429929733276
+            }
+          ],
+          "reasoning": "The scraped content is limited to the homepage hero section and a news sidebar. It confirms the existence of a Finswimming sub-department and their hosting of the 'Leipziger Sprintpokal', but it contains no technical infrastructure details, no procurement signals, and no governance information. The content is purely informational and promotional."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:00:52.374590",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregator",
+            "Irrelevant Content",
+            "No Entity Specificity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 149,
+              "elapsed_seconds": 3.1260969638824463
+            }
+          ],
+          "reasoning": "The scraped content is a generic navigation menu for 'globalsportsarchive.com', listing global soccer leagues (UEFA, Premier League, etc.). It contains zero references to SC DHfK Leipzig, handball, or specific procurement activities. This is irrelevant noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:00:55.128744",
+          "domain_explored": "https://daikin-hbl.de",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:01:01.024032",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile App Storefront",
+            "Consumer Entertainment Content",
+            "Irrelevance to Entity Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1578,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.6226203441619873
+            }
+          ],
+          "reasoning": "The content provided is a generic scrape of the Apple App Store homepage (apps.apple.com), featuring trending games like Roblox, Pok\u00e9mon TCG, and Genshin Impact. There is absolutely no connection to SC DHfK Leipzig, professional sports operations, or business procurement activities. This represents a complete loss of signal relevance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:01:11.730914",
+          "domain_explored": "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-sc-dhfk-leipzig-at-kinexon-4306293184",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Kinexon (LPS/IMU)",
+              "Player Tracking Systems",
+              "Performance Analytics Software"
+            ],
+            "job_postings": [
+              "Tracking Operator (m/f/d)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Technology Management (Partnership with Kinexon)",
+              "Investment in High-Performance Sports Hardware",
+              "Adoption of Data Analytics for Training/Match Analysis"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Sports Technology Procurement",
+            "Performance Analytics Investment",
+            "Vendor Partnership (Kinexon)",
+            "Data-Driven Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1647,
+              "output_tokens": 288,
+              "elapsed_seconds": 6.1489479541778564
+            }
+          ],
+          "reasoning": "The URL explicitly references a job posting for a 'Tracking Operator' role at SC DHfK Leipzig, posted by vendor partner Kinexon. This is a direct procurement signal indicating the club is investing in player tracking infrastructure and requires specialized personnel to manage this technology. It confirms a shift towards data-driven performance analysis."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:01:22.433348",
+          "domain_explored": "https://de.linkedin.com/company/schnellestelle-de/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Assistenz der Gesch\u00e4ftsf\u00fchrung / Teamassistenz (w/m/d)",
+                "vendor": "schnelleStelle.de",
+                "location": "Markkleeberg",
+                "relevance": "Indicates operational capacity of a local vendor linked to SC DHfK events"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Partnership",
+                "description": "Connection to 'schnellestelle.de Firmenlauf Leipzig' suggests procurement of event management or staffing services."
+              },
+              {
+                "type": "Affiliate Entity",
+                "description": "Listing of 'Fitness- und Gesundheitszentrum SC DHfK Leipzig' in related business networks."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Regional Vendor Ecosystem",
+            "Shared Service Infrastructure",
+            "Event Operations Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1709,
+              "output_tokens": 391,
+              "elapsed_seconds": 7.614932060241699
+            }
+          ],
+          "reasoning": "While the scraped content is primarily for a third-party recruiting agency (schnelleStelle.de), the 'Similar Pages' section explicitly lists 'Fitness- und Gesundheitszentrum SC DHfK Leipzig' and 'schnellestelle.de Firmenlauf Leipzig'. This indicates a business relationship or shared ecosystem between SC DHfK Leipzig and this vendor, likely for event staffing or operational support. It confirms the entity utilizes local service providers for event operations."
+        }
+      ],
+      "total_input_tokens": 10653,
+      "total_output_tokens": 1780,
+      "estimated_cost_usd": 0.058659
+    },
+    "procurement_signals": [
+      "Specialized Sports Technology Procurement",
+      "Performance Analytics Investment",
+      "Vendor Partnership (Kinexon)",
+      "Data-Driven Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SC DHfK Leipzig may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:01:22.435754"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349608",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:50.675457"
+}

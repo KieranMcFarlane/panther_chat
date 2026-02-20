@@ -104,7 +104,7 @@ async def test_league_with_brightdata():
     print(f"\n🔍 Testing targeted searches for Premier League:\n")
     
     for hyp in hypotheses[:3]:
-        print(f"🎯 Hypothesis: {hyp['statement'][:60]}...")
+        print(f"🎯 Hypothesis: {hyp['statement']}")
         
         # Use next_signals to generate targeted searches
         for signal in hyp['metadata']['next_signals'][:2]:

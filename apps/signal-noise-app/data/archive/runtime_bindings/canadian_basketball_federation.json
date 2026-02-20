@@ -1,0 +1,395 @@
+{
+  "entity_id": "canadian_basketball_federation",
+  "entity_name": "Canadian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "fcbayern.com",
+    "basketnews.com",
+    "eurohoops.net",
+    "hoyatalk2.proboards.com",
+    "theupside.us",
+    "bahamaslocal.com",
+    "newspaperarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/cebleague_jobalert-cebljobs-activity-7414456515430076416-X0xO",
+      "https://ca.linkedin.com/jobs/basketball-coach-jobs",
+      "https://ca.linkedin.com/jobs/basketball-player-jobs",
+      "https://ca.linkedin.com/jobs/assistant-basketball-coach-jobs",
+      "https://www.linkedin.com/posts/cebleague_ceblseasonvii-jobalert-cebljobs-activity-7347032813709250560-p9Ee",
+      "https://ca.linkedin.com/jobs/view/community-basketball-coach-at-asian-canadian-basketball-association-4366479869"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "canadian_basketball_federation",
+      "entity_name": "Canadian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/cebleague_ceblseasonvii-jobalert-cebljobs-activity-7347032813709250560-p9Ee",
+        "https://hoyatalk2.proboards.com",
+        "https://www.linkedin.com/posts/cebleague_jobalert-cebljobs-activity-7414456515430076416-X0xO",
+        "https://ca.linkedin.com/jobs/basketball-coach-jobs",
+        "https://ca.linkedin.com/jobs/assistant-basketball-coach-jobs",
+        "https://fcbayern.com",
+        "https://eurohoops.net",
+        "https://basketnews.com",
+        "https://newspaperarchive.com",
+        "https://ca.linkedin.com/jobs/basketball-player-jobs",
+        "https://bahamaslocal.com",
+        "https://theupside.us"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Canadian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:47:49.597247",
+          "domain_explored": "https://fcbayern.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:47:52.469892",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:47:58.808125",
+          "domain_explored": "https://eurohoops.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event Management",
+            "Ticket Sales Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 513,
+              "output_tokens": 145,
+              "elapsed_seconds": 3.2190473079681396
+            }
+          ],
+          "reasoning": "The content discusses Euroleague ticket sales for the 2026 Final Four. While this implies the existence of ticketing platforms, it is a consumer-facing announcement rather than a B2B procurement signal or organizational insight relevant to the Canadian Basketball Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:48:05.080213",
+          "domain_explored": "https://hoyatalk2.proboards.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ProBoards (Forum Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Forum Hosting",
+            "User-Generated Content",
+            "Cookie Consent Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 854,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.9086811542510986
+            }
+          ],
+          "reasoning": "The content is a standard cookie policy and welcome message for a ProBoards forum (HoyaTalk). It is a fan/community platform with no administrative, governance, or procurement relationship to the Canadian Basketball Federation. It contains zero technology stack or procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:48:08.251940",
+          "domain_explored": "https://theupside.us",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:48:14.676139",
+          "domain_explored": "https://bahamaslocal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Business Directory",
+            "Local News Aggregation",
+            "Automotive Advertising",
+            "Irrelevant Geographic Scope (Bahamas vs Canada)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.6219048500061035
+            }
+          ],
+          "reasoning": "The scraped content is from 'BahamasLocal.com', a general business directory and news portal for the Bahamas. It contains no information regarding the Canadian Basketball Federation, Canadian procurement processes, or relevant sports governance. The content is focused on local businesses (auto sales, insurance, beauty supplies) and is geographically irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:48:17.518674",
+          "domain_explored": "https://newspaperarchive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:48:25.925450",
+          "domain_explored": "https://www.linkedin.com/posts/cebleague_jobalert-cebljobs-activity-7414456515430076416-X0xO",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Management Systems",
+              "Payroll Software",
+              "Accounting Software"
+            ],
+            "job_postings": [
+              "Manager, Finance and Accounting"
+            ],
+            "procurement_indicators": [
+              "Financial System Optimization",
+              "Process Efficiency Implementation",
+              "Executive Reporting Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Job Postings",
+            "Finance and Accounting Operations",
+            "Executive Level Reporting",
+            "Payment Processing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 289,
+              "elapsed_seconds": 5.038656949996948
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Manager, Finance and Accounting' role. While this is an HR signal rather than a direct RFP, it indicates organizational growth and investment in financial infrastructure. The specific mention of 'implementing efficient and effective processes' and 'executive level reporting' suggests a need for robust financial systems (ERP/Accounting software), which often leads to procurement decisions in the near term."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:48:33.186119",
+          "domain_explored": "https://ca.linkedin.com/jobs/basketball-coach-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Basketball Development Officer - AGS Youth Soccer Club (Multiple Locations: Etobicoke, Toronto, Brampton, Mississauga)",
+              "Sport Coach - Volunteer Success (Alliston)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Youth/Amateur Sports Focus",
+            "Geographic Dispersion",
+            "Volunteer/Entry-Level Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.7989749908447266
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Basketball Coach' roles in Canada. The listings are primarily for local youth clubs (e.g., AGS Youth Soccer Club) and volunteer organizations. There is no mention of the Canadian Basketball Federation, national team operations, or corporate procurement activities such as RFPs, technology acquisition, or executive management hiring relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:48:40.870841",
+          "domain_explored": "https://ca.linkedin.com/jobs/basketball-player-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Basketball Development Officer",
+                "employer": "AGS Youth Soccer Club",
+                "location": "Etobicoke/Toronto, Ontario",
+                "relevance": "Low - Amateur sports, not Federation procurement"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Youth/Amateur Sports Focus",
+            "Geographic Dispersion",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1736,
+              "output_tokens": 308,
+              "elapsed_seconds": 4.402023792266846
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Basketball Player' roles, which is irrelevant to the procurement operations of the Canadian Basketball Federation. The listings are for low-level operational roles (e.g., Basketball Development Officer at a Youth Soccer Club) rather than executive, procurement, or technology positions. Furthermore, the content is heavily gated by LinkedIn's authentication UI, providing no substantive intelligence regarding the Federation's vendor partnerships, technology stack, or governance structure."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:48:46.848798",
+          "domain_explored": "https://ca.linkedin.com/jobs/assistant-basketball-coach-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Youth Basketball Coach at AGS Youth Soccer Club",
+              "Assistant Basketball Coach at various amateur/youth levels"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Youth/Amateur Sports Focus",
+            "Geographic Dispersion",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1791,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.649549961090088
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Assistant Basketball Coach' roles. The listings are dominated by youth/amateur organizations (e.g., AGS Youth Soccer Club) and are geographically dispersed (Brampton, Toronto). There is no specific connection to the Canadian Basketball Federation, nor are there any procurement signals, executive roles, or technology investments indicative of the Federation's operations. The page is largely blocked by an authentication gate, offering no actionable intelligence."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T19:48:54.059550",
+          "domain_explored": "https://www.linkedin.com/posts/cebleague_ceblseasonvii-jobalert-cebljobs-activity-7347032813709250560-p9Ee",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Corporate Partnerships"
+            ],
+            "procurement_indicators": [
+              "Strategic Brand Collaborations",
+              "National Sponsorship Growth"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Management",
+            "Revenue Growth Operations",
+            "National Brand Collaboration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1858,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.8337018489837646
+            }
+          ],
+          "reasoning": "The content confirms organizational growth and commercial activity through the hiring of a Director of Corporate Partnerships. While this is a job posting and not a direct procurement tender, it indicates an active phase of business development and partnership management which often correlates with future procurement needs for supporting tools (CRM, partnership activation platforms). It validates the entity's commercial capacity."
+        }
+      ],
+      "total_input_tokens": 11600,
+      "total_output_tokens": 1871,
+      "estimated_cost_usd": 0.062865
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Canadian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:48:54.060627"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.257898",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:41:51.755931"
+}

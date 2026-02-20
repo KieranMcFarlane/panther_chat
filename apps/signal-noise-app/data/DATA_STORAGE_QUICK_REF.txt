@@ -1,0 +1,164 @@
+================================================================================
+HYPOTHESIS-DRIVEN DISCOVERY: WHERE TO FIND DATA
+================================================================================
+
+📍 ENTITY RUNTIME DATA - WHERE TO FIND IT
+================================================================================
+
+1. HYPOTHESES (Primary Storage)
+   Location: FalkorDB Graph Database (sports_intelligence)
+   Node: (:Hypothesis {hypothesis_id, entity_id, status, confidence, metadata})
+   
+   How to Access:
+   ├─ Python: HypothesisRepository.get_hypothesis(id, entity_id)
+   ├─ Cypher: MATCH (h:Hypothesis {entity_id: "arsenal-fc"}) RETURN h
+   └─ File: N/A (stored in graph database)
+
+2. DISCOVERED URLS & EVIDENCE
+   Location: Inside Hypothesis node metadata field
+   Path: hypothesis.metadata['discovered_urls']
+   
+   Example:
+   [
+     "https://arsenal.com/careers",
+     "https://linkedin.com/company/arsenal",
+     "https://arsenal.com/about"
+   ]
+
+3. REASONING LOGS (AI Decision Trail)
+   Location: Inside Hypothesis node metadata field
+   Path: hypothesis.metadata['hop_history']
+   
+   Contains per-hop:
+   ├─ hop_type: "official_site" | "linkedin" | "job_boards"
+   ├─ url: "https://..."
+   ├─ decision: "ACCEPT" | "WEAK_ACCEPT" | "REJECT" | "NO_PROGRESS"
+   ├─ confidence_delta: +0.06 | +0.02 | 0.0
+   ├─ justification: "Why this decision was made"
+   ├─ evidence_found: "Actual text discovered"
+   ├─ reasoning: "Detailed AI reasoning process"
+   └─ timestamp: "2026-02-03T06:12:00Z"
+
+4. LEDGER (Audit Trail)
+   Location: FalkorDB + File System
+   
+   FalkorDB stores:
+   ├─ All hypothesis state changes
+   ├─ Iteration counts (accepted, rejected, no_progress)
+   ├─ Confidence progression over time
+   ├─ Lifecycle transitions (ACTIVE → PROMOTED, etc.)
+   └─ Timestamps (created_at, last_updated, promoted_at, etc.)
+   
+   Files store:
+   ├─ data/discovery_report_final_*.json (completed discoveries)
+   ├─ data/discovery_report_intermediate_*.json (checkpoints)
+   └─ data/rollout_metrics.jsonl (execution metrics)
+
+5. RUNTIME BINDINGS
+   Location: backend/data/runtime_bindings/
+   File: template_runtime_binding.py
+   
+   Maps:
+   ├─ Templates → Hypotheses
+   ├─ Hypotheses → Entities
+   └─ Configuration (max_iterations, confidence_threshold)
+
+================================================================================
+QUICK ACCESS EXAMPLES
+================================================================================
+
+Get All Data for Arsenal FC:
+--------------------------------------------------------------------------------
+
+from backend.hypothesis_persistence_native import HypothesisRepository
+import json
+
+repo = HypothesisRepository()
+await repo.initialize()
+
+# Get all hypotheses
+hypotheses = await repo.get_hypotheses_for_entity("arsenal-fc")
+
+for h in hypotheses:
+    print(f"\n{'='*60}")
+    print(f"Hypothesis: {h.hypothesis_id}")
+    print(f"Confidence: {h.confidence:.2f}")
+    print(f"Status: {h.status}")
+    
+    if h.metadata:
+        # Discovered URLs
+        print(f"\n🔗 URLs ({len(h.metadata.get('discovered_urls', []))}):")
+        for url in h.metadata.get('discovered_urls', []):
+            print(f"  - {url}")
+        
+        # Evidence excerpts
+        print(f"\n📄 Evidence ({len(h.metadata.get('evidence_excerpts', []))}):")
+        for evidence in h.metadata.get('evidence_excerpts', [])[:3]:
+            print(f"  - {evidence[:80]}...")
+        
+        # Reasoning steps
+        print(f"\n🧠 Reasoning ({len(h.metadata.get('hop_history', []))} hops):")
+        for i, hop in enumerate(h.metadata.get('hop_history', []), 1):
+            print(f"  {i}. {hop['hop_type']}: {hop['decision']} (+{hop['confidence_delta']:.2f})")
+            print(f"     {hop['reasoning']}")
+            print(f"     URL: {hop['url']}")
+
+Export Complete Ledger to File:
+--------------------------------------------------------------------------------
+
+import json
+from datetime import datetime
+
+ledger = {
+    'entity_id': 'arsenal-fc',
+    'export_timestamp': datetime.now().isoformat(),
+    'hypotheses': [
+        {
+            'hypothesis_id': h.hypothesis_id,
+            'confidence': h.confidence,
+            'status': h.status,
+            'iterations': h.iterations_attempted,
+            'metadata': h.metadata
+        }
+        for h in hypotheses
+    ]
+}
+
+with open('data/arsenal_fc_ledger.json', 'w') as f:
+    json.dump(ledger, f, indent=2)
+
+print("✅ Ledger exported to data/arsenal_fc_ledger.json")
+
+================================================================================
+FILE LOCATIONS SUMMARY
+================================================================================
+
+DATA TYPE                    FILE/LOCATION                      FORMAT
+──────────────────────────────────────────────────────────────────────
+Hypotheses                  FalkorDB (graph)                    Graph nodes
+Metadata (JSON)              FalkorDB (node field)               JSON string
+Discovered URLs              FalkorDB (metadata)                  JSON array
+Evidence                     FalkorDB (metadata)                  JSON array
+Reasoning                    FalkorDB (metadata)                  JSON array
+Execution Logs               data/discovery_*.log                 Text
+Final Reports                data/discovery_report_final_*.json     JSON
+Intermediate Reports          data/discovery_report_intermediate_*.json JSON
+Metrics                     data/rollout_metrics.jsonl            JSON Lines
+Cache State                  In-memory (LRU)                    Python dict
+Entity Data                 data/all_entities*.json               JSON
+Runtime Bindings            backend/data/runtime_bindings/     Python
+Checkpoints                 data/discovery_checkpoint.json       JSON
+
+================================================================================
+KEY METADATA FIELDS
+================================================================================
+
+Field                          Contains                          Example
+────────────────────────────────────────────────────────────────────
+discovered_urls               All URLs explored during discovery    ["https://arsenal.com/careers"]
+evidence_excerpts              Relevant text/content discovered     ["Arsenal is hiring for CRM..."]
+hop_history                    Per-hop reasoning trail              [{hop_type, decision, reasoning}]
+cost_breakdown                 Cost accounting details                {api_calls: 5, total_cost: 0.15}
+reasoning_summary              Overall reasoning summary             "Total 5 hops across 3 categories"
+
+================================================================================

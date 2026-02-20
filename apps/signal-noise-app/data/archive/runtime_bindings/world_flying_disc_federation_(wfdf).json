@@ -1,0 +1,45 @@
+{
+  "entity_id": "world_flying_disc_federation_(wfdf)",
+  "entity_name": "World Flying Disc Federation (WFDF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_flying_disc_federation_(wfdf)",
+      "entity_name": "World Flying Disc Federation (WFDF)",
+      "total_iterations": 15,
+      "completed_iterations": 0,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0
+      ],
+      "explored_domains": [],
+      "explored_channels": {},
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Flying Disc Federation (WFDF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [],
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "estimated_cost_usd": 0.0
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Flying Disc Federation (WFDF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:21:33.075891"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463996",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:30.494230"
+}

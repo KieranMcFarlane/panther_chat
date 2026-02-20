@@ -1,0 +1,141 @@
+{
+  "entity_id": "sabadell_handbol",
+  "entity_name": "Sabadell Handbol",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "handbolsabadell.cat",
+    "web.sabadell.cat",
+    "play.google.com",
+    "fcbarcelona.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sabadell_handbol",
+      "entity_name": "Sabadell Handbol",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://handbolsabadell.cat",
+        "https://web.sabadell.cat",
+        "https://fcbarcelona.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sabadell Handbol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:46:07.473352",
+          "domain_explored": "https://handbolsabadell.cat",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:46:11.638606",
+          "domain_explored": "https://web.sabadell.cat",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:46:19.446926",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_app_store_content",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.629936933517456
+            }
+          ],
+          "reasoning": "The provided content is a generic list of popular mobile games (e.g., Candy Crush, Roblox, PUBG) from the Google Play Store. It contains no information regarding 'Sabadell Handbol', its business operations, technology stack, or procurement activities. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:46:26.002799",
+          "domain_explored": "https://fcbarcelona.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "incorrect_entity_target",
+            "generic_sports_content",
+            "ecommerce_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.227703094482422
+            }
+          ],
+          "reasoning": "The content analyzed is from FC Barcelona (fcbarcelona.fr), not the target entity Sabadell Handbol. While both are sports organizations, the content is purely consumer-facing (ticket sales, merchandise, news) and contains no procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2872,
+      "total_output_tokens": 306,
+      "estimated_cost_usd": 0.013206
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sabadell Handbol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:46:26.004376"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359275",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:28.485896"
+}

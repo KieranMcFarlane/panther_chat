@@ -1,0 +1,129 @@
+{
+  "entity_id": "grenada_volleyball_association",
+  "entity_name": "Grenada Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "gocgrenada.com",
+    "theconnectiongrenada.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "grenada_volleyball_association",
+      "entity_name": "Grenada Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://theconnectiongrenada.com",
+        "https://gocgrenada.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Grenada Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:54:22.129646",
+          "domain_explored": "https://gocgrenada.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Website CMS (Presence of generic placeholder text suggests a template-based CMS like WordPress or similar)",
+              "Email Marketing (Mailchimp or similar implied by 'Subscribe Now' section)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Athletes Assistance Funding (Program requiring management/oversight)",
+              "Investor Contact Option (Suggests vendor/sponsorship management)",
+              "Executive Board Structure (Standard governance: President, VP, General Secretary, Treasurer)"
+            ]
+          },
+          "patterns_found": [
+            "Governing Body Structure",
+            "Funding & Assistance Programs",
+            "Digital Engagement (Newsletter/Contact)",
+            "Placeholder Content (CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 346,
+              "elapsed_seconds": 5.022780895233154
+            }
+          ],
+          "reasoning": "The content is from the Grenada Olympic Committee (GOC), the parent organization of the Grenada Volleyball Association (GVA). While it confirms the GVA exists under this governance structure, the page itself is a general overview with placeholder blog text. However, the presence of an 'Athletes Assistance Funding' program and a 'Contact for investor options' section indicates a flow of funds and potential administrative needs that trickle down to associations like the GVA."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:54:30.514052",
+          "domain_explored": "https://theconnectiongrenada.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Ecosystem Validation",
+                "description": "Confirms 'Culture & Recreation' as a primary category for local initiatives, validating the sector's presence."
+              },
+              {
+                "type": "Contact Verification",
+                "description": "Identified 'The Connection' as a potential hub for information sharing, though not directly a procurement source."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Community Directory Listing",
+            "Categorized Non-Profit Ecosystem",
+            "Physical Office Location (HQ)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.679886102676392
+            }
+          ],
+          "reasoning": "The content is a generic directory listing for 'The Connection'. While it confirms the existence of a community ecosystem in Grenada, it does not contain specific procurement signals (RFPs, tech stack) for the Grenada Volleyball Association. However, it validates the operational environment and provides a verified contact channel for the region's non-profit sector."
+        }
+      ],
+      "total_input_tokens": 2785,
+      "total_output_tokens": 643,
+      "estimated_cost_usd": 0.018000000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Grenada Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:54:30.516407"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.342185",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:03.172707"
+}

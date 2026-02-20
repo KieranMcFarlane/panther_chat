@@ -1,0 +1,203 @@
+{
+  "entity_id": "andorran_ice_sports_federation",
+  "entity_name": "Andorran Ice Sports Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "skatelog.com",
+    "nationalteamsoficehockey.com",
+    "andorra.worldplaces.me",
+    "romaingazave.com",
+    "eurohockey.com",
+    "doitineurope.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "andorran_ice_sports_federation",
+      "entity_name": "Andorran Ice Sports Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://romaingazave.com",
+        "https://nationalteamsoficehockey.com",
+        "https://andorra.worldplaces.me",
+        "https://doitineurope.com",
+        "https://eurohockey.com",
+        "https://skatelog.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Andorran Ice Sports Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:17:24.465043",
+          "domain_explored": "https://skatelog.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:17:34.266507",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Historical and statistical data focus",
+            "General audience content (B2C)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 208,
+              "elapsed_seconds": 5.408618927001953
+            }
+          ],
+          "reasoning": "The scraped content from 'nationalteamsoficehockey.com' is a global news aggregator and informational site regarding international ice hockey history and tournaments. It contains no specific information about the Andorran Ice Sports Federation, its internal governance, technology stack, or procurement activities. The content is purely editorial and historical, lacking the operational context required to identify procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:17:40.278586",
+          "domain_explored": "https://andorra.worldplaces.me",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer review aggregation (B2C)",
+            "Local business directory listings",
+            "User-generated content (UGC)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.823413372039795
+            }
+          ],
+          "reasoning": "The scraped content from 'andorra.worldplaces.me' is a consumer-facing review and directory site. It contains user feedback about restaurants and retail shops (e.g., 'La Sangria Restaurant', 'Tend\u00e8ncies', 'SKIZ'). There is no content related to the Andorran Ice Sports Federation, government procurement, or enterprise technology stacks."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:17:52.247868",
+          "domain_explored": "https://romaingazave.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Service Contract / Workshop",
+                "entity": "Andorran Ice Sports Federation (FAEG)",
+                "vendor": "RG Performance / Romain Gazave",
+                "details": "Engagement as a Guest Coach/Trainer for National Team Skaters and Coaches in Canillo, Andorra (2021).",
+                "source": "romaingazave.com"
+              },
+              {
+                "type": "Strategic Vendor",
+                "vendor": "RG Performance / Romain Gazave",
+                "details": "Specializes in high-level choreography and technical education, working with multiple National Federations (Spain, France, Sweden, Belgium).",
+                "relevance": "High - Indicates the type of external expertise the Federation procures."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation",
+            "Service Provider Sourcing",
+            "National Team Training Procurement",
+            "Workshop and Camp Organization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 413,
+              "elapsed_seconds": 4.866053104400635
+            }
+          ],
+          "reasoning": "The content confirms a direct commercial relationship between the Andorran Ice Sports Federation (FAEG) and the entity Romain Gazave (RG Performance) for the delivery of high-performance training services. While this does not represent a technology procurement or a public tender, it validates the Federation's procurement of specialized coaching services and confirms their engagement in vendor partnerships for national team development."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:17:55.170170",
+          "domain_explored": "https://eurohockey.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:17:58.165406",
+          "domain_explored": "https://doitineurope.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4353,
+      "total_output_tokens": 798,
+      "estimated_cost_usd": 0.025029
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Andorran Ice Sports Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:17:58.166461"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305444",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:19.940636"
+}

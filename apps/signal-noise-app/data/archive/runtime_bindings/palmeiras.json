@@ -1,0 +1,125 @@
+{
+  "entity_id": "palmeiras",
+  "entity_name": "Palmeiras",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "palmeiras.com.br",
+    "palmeirasstore.com",
+    "ingressospalmeiras.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "palmeiras",
+      "entity_name": "Palmeiras",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://palmeirasstore.com",
+        "https://ingressospalmeiras.com.br",
+        "https://palmeiras.com.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Palmeiras may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:50:24.615963",
+          "domain_explored": "https://palmeiras.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard Cookie Consent Banner",
+            "Generic Navigation Links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 476,
+              "output_tokens": 149,
+              "elapsed_seconds": 3.3507940769195557
+            }
+          ],
+          "reasoning": "The provided content consists solely of the homepage header, navigation links ('Site oficial', 'Entrar no site'), and a standard cookie policy notice. There is no substantive information regarding technology stack, job postings, or procurement intent within this text fragment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:51:27.375281",
+          "domain_explored": "https://palmeirasstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:51:38.090419",
+          "domain_explored": "https://ingressospalmeiras.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Requirement Error",
+            "Client-Side Rendering Dependency"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.8204689025878906
+            }
+          ],
+          "reasoning": "The target URL (ingressospalmeiras.com.br) returned a generic error message stating that JavaScript is required to view the content. The scraper used in this iteration does not execute client-side JavaScript, meaning the actual procurement signals (ticketing systems, vendor links, or technology stacks) are hidden behind the application layer and were not retrieved."
+        }
+      ],
+      "total_input_tokens": 1031,
+      "total_output_tokens": 322,
+      "estimated_cost_usd": 0.007923
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Palmeiras may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:51:38.092331"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.115552",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:06.000010"
+}

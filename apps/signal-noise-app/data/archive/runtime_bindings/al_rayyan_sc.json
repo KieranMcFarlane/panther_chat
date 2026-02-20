@@ -1,0 +1,193 @@
+{
+  "entity_id": "al_rayyan_sc",
+  "entity_name": "Al Rayyan SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "alrayyansc.com",
+    "alrayyan.shop",
+    "alrayyansc.qa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_rayyan_sc",
+      "entity_name": "Al Rayyan SC",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://alrayyan.shop",
+        "https://alrayyansc.com",
+        "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox",
+        "https://alrayyansc.qa"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Rayyan SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:59:20.714351",
+          "domain_explored": "https://alrayyansc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (YouTube, Snapchat, Instagram, Facebook, Flickr)",
+              "Twitter/X Integration (Tweets by AlrayyanSC)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Standard Sports Club Content",
+            "Social Media Integration",
+            "League Table Display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.5909478664398193
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing sports news, match results, and player updates. There are no mentions of corporate strategy, technology infrastructure, job vacancies, or vendor partnerships. The presence of social media links (YouTube, Snapchat, Instagram) confirms standard marketing operations but offers no procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:59:26.683617",
+          "domain_explored": "https://alrayyan.shop",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/ and /products/)",
+              "Newsletter Marketing Tool (Klaviyo or Shopify native)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active inventory management (Keychains, Scarves, Bottles, Caps)",
+              "Outsourced manufacturing/bulk procurement for club merchandise",
+              "Digital marketing vendor requirement for newsletter management"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform (Shopify)",
+            "Digital Merchandising",
+            "Newsletter Marketing Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1274,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.0472679138183594
+            }
+          ],
+          "reasoning": "The discovery of the dedicated shop subdomain (alrayyan.shop) confirms the club has moved beyond basic operations to active digital commerce. The site structure (collections, products, newsletter) indicates a supply chain for physical goods (merchandise/accessories) and a need for e-commerce platform maintenance, inventory management, and digital marketing services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:59:36.305103",
+          "domain_explored": "https://alrayyansc.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (Inferred from URL structure /backdoor/)",
+              "PHP/MySQL (Standard for WordPress stack)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Website Redesign/Relaunch Project",
+              "Web Hosting & Maintenance Services",
+              "CMS Administration"
+            ]
+          },
+          "patterns_found": [
+            "CMS Backdoor Detection",
+            "Active Development Lifecycle",
+            "User Authentication Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 590,
+              "output_tokens": 232,
+              "elapsed_seconds": 4.288601875305176
+            }
+          ],
+          "reasoning": "While the site is in maintenance mode, the presence of a 'backdoor' URL structure and user login endpoints indicates an active Content Management System (likely WordPress) undergoing development or migration. This implies a procurement need for web development, hosting, or maintenance services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:59:53.170532",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7163622945930625026-Z9ox",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Target",
+            "Generic Job Aggregator Content",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 178,
+              "elapsed_seconds": 13.32845425605774
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn post from 'Futboljobs.com' advertising a coaching position for 'Yeshiva University' in New York. This content is completely unrelated to Al Rayyan SC (Qatar). It represents a false positive in the scraping process or irrelevant noise, providing zero intelligence regarding Al Rayyan's procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 4742,
+      "total_output_tokens": 908,
+      "estimated_cost_usd": 0.027846000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Rayyan SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:59:53.175546"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220350",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:39.564684"
+}

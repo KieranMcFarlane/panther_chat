@@ -1,0 +1,205 @@
+{
+  "entity_id": "stade_toulousain",
+  "entity_name": "Stade Toulousain",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "tier1_professional_clubs",
+  "discovered_domains": [
+    "stadetoulousain.fr",
+    "top14.lnr.fr",
+    "toulousebaseball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/view/chef-d%E2%80%99%C3%A9quipe-d%E2%80%99entretien-des-espaces-verts-at-stade-toulousain-tennis-padel-4366757347"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "stade_toulousain",
+      "entity_name": "Stade Toulousain",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://stadetoulousain.fr",
+        "https://fr.linkedin.com/jobs/view/chef-d%E2%80%99%C3%A9quipe-d%E2%80%99entretien-des-espaces-verts-at-stade-toulousain-tennis-padel-4366757347",
+        "https://top14.lnr.fr",
+        "https://toulousebaseball.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Stade Toulousain may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:14:03.184881",
+          "domain_explored": "https://stadetoulousain.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Service Offering",
+                "description": "ST Business Connection (Networking event)",
+                "source": "Navigation/News"
+              },
+              {
+                "type": "Service Offering",
+                "description": "Service \u00e9v\u00e8nementiel (Event organization at stadium)",
+                "source": "Navigation"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Content is primarily sports journalism and match results",
+            "Navigation structure reveals Business/Event services (latent capability)",
+            "No explicit vendor selection or technology implementation signals in text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 301,
+              "elapsed_seconds": 5.548887014389038
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage news feed and sports results (scores, upcoming fixtures, press conferences). While the navigation menu confirms the existence of 'Business' and 'Event' services (latent capability), the specific text analyzed contains no active procurement signals, RFPs, or technology investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:14:17.033299",
+          "domain_explored": "https://top14.lnr.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Consumer-facing marketing (B2C)",
+            "Statistical data display",
+            "Partnership branding (MyRugby x iad)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 219,
+              "elapsed_seconds": 5.268647193908691
+            }
+          ],
+          "reasoning": "The content is sourced from the LNR (Ligue Nationale de Rugby) official Top 14 website. This is a governing body and media property, not the direct procurement channel for Stade Toulousain. While it confirms the ecosystem Stade Toulousain operates in, it contains no specific signals regarding Stade Toulousain's internal purchasing, technology stack, or vendor selection processes. The 'MyRugby x iad' link is a consumer promotion, not a B2B procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:14:27.900489",
+          "domain_explored": "https://toulousebaseball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: This is a grassroots sports club, not the commercial headquarters.",
+              "Budget Scope: Likely limited to equipment and field maintenance, not enterprise software."
+            ]
+          },
+          "patterns_found": [
+            "Omnisport subsidiary structure",
+            "Historical rebranding (Tigers -> Stade Toulousain)",
+            "B2C recruitment focus ('Nous rejoindre', 'Venir au Club')",
+            "Sports federation alignment (FFBS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1491,
+              "output_tokens": 261,
+              "elapsed_seconds": 5.177819728851318
+            }
+          ],
+          "reasoning": "The content confirms that 'Stade Toulousain de Baseball' is a distinct, amateur sports section subsidiary of the main Stade Toulousain entity. The focus is exclusively on athletic performance, player recruitment, and youth training. There are no signals of business operations, technology procurement, or vendor management relevant to the main entity's commercial procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:14:40.379823",
+          "domain_explored": "https://fr.linkedin.com/jobs/view/chef-d%E2%80%99%C3%A9quipe-d%E2%80%99entretien-des-espaces-verts-at-stade-toulousain-tennis-padel-4366757347",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)"
+            ],
+            "job_postings": [
+              {
+                "title": "Chef d\u2019\u00e9quipe d\u2019entretien des espaces verts",
+                "entity": "Stade Toulousain Tennis Padel",
+                "type": "Full-time",
+                "contact": "sandrine.metge@asttp.com"
+              }
+            ],
+            "procurement_indicators": [
+              "Manual workflow (CV via email)",
+              "Subsidiary autonomy (ASTTP domain)"
+            ]
+          },
+          "patterns_found": [
+            "Subsidiary Entity Discovery (Stade Toulousain Tennis Padel)",
+            "Manual Recruitment Process (Email-based applications)",
+            "Facilities Management Operations",
+            "LinkedIn Usage for Recruitment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1583,
+              "output_tokens": 336,
+              "elapsed_seconds": 5.771177053451538
+            }
+          ],
+          "reasoning": "While the specific role (Green Space Team Leader) is operational and not a direct procurement signal, the discovery of the subsidiary entity 'Stade Toulousain Tennis Padel' and the observation of a manual, low-tech recruitment process (email applications to a generic domain) provide valuable context on the organization's digital maturity and operational structure. This suggests a decentralized structure where procurement decisions may be made at the facility level."
+        }
+      ],
+      "total_input_tokens": 5871,
+      "total_output_tokens": 1117,
+      "estimated_cost_usd": 0.034367999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Stade Toulousain may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:14:40.383246"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.270732",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:30.023882"
+}

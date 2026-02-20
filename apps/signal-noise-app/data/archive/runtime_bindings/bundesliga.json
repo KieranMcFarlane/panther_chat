@@ -1,0 +1,361 @@
+{
+  "entity_id": "bundesliga",
+  "entity_name": "Bundesliga",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "bundesliga.com",
+    "fantasy.bundesliga.com",
+    "play.google.com",
+    "fcbayern.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/bundesliga-jobs",
+      "https://www.linkedin.com/jobs/bundesliga-jobs-new-york",
+      "https://www.linkedin.com/showcase/sporting-jobs-germany/",
+      "https://hr.linkedin.com/jobs/view/software-engineer-at-once-sport-4177532142"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bundesliga",
+      "entity_name": "Bundesliga",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/showcase/sporting-jobs-germany/",
+        "https://fantasy.bundesliga.com",
+        "https://fcbayern.com",
+        "https://bundesliga.com",
+        "https://hr.linkedin.com/jobs/view/software-engineer-at-once-sport-4177532142",
+        "https://www.linkedin.com/jobs/bundesliga-jobs-new-york",
+        "https://www.linkedin.com/jobs/bundesliga-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bundesliga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:13:44.440433",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Marketing",
+            "Fan Engagement",
+            "Media Distribution"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 451,
+              "output_tokens": 160,
+              "elapsed_seconds": 4.309873104095459
+            }
+          ],
+          "reasoning": "The scraped content is a standard sports news article titled 'Watch Matchday 20 highlights'. It focuses on game results and video highlights. There is no mention of technology vendors, job openings, or strategic procurement initiatives. This content is purely consumer-facing and does not contain B2B intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:13:53.706099",
+          "domain_explored": "https://fantasy.bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Apps (iOS/Android)",
+              "User Authentication Systems",
+              "Live Data Feeds (Player stats/matchday performance)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "App Store Maintenance (Apple/Google)",
+              "Prize Fulfillment Logistics (Tickets/Merchandise)",
+              "Real-time Data Integration"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform",
+            "Mobile Application Distribution",
+            "Gamification",
+            "User Registration/Authentication"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.997159957885742
+            }
+          ],
+          "reasoning": "The content confirms the operation of a digital product (Fantasy Manager) requiring backend infrastructure, app store management, and user analytics. While no direct procurement signals are present, the existence of this platform implies ongoing vendor relationships for app maintenance, hosting, and potentially prize fulfillment/logistics."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:14:27.866907",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Ecosystem",
+            "General Consumer App Distribution",
+            "Platform Agnostic Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.7328951358795166
+            }
+          ],
+          "reasoning": "The scraped content represents the generic Google Play Store homepage, listing popular consumer applications (Free Fire, Ludo King, Clash of Clans) unrelated to the Bundesliga entity. There is no mention of Bundesliga, DFL, sports technology procurement, or enterprise software. This indicates the crawler has drifted to a general entertainment platform with no relevance to the target entity's procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:14:56.106717",
+          "domain_explored": "https://fcbayern.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Automation (likely)",
+              "CRM Systems",
+              "Push Notification Services",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Explicit consent for data transfer to 'Partners' (Vendor Ecosystem)",
+              "Requirement for personalized content delivery (Data Analytics/ML procurement)",
+              "Compliance with data privacy regulations (Legal/Tech vendor spend)"
+            ]
+          },
+          "patterns_found": [
+            "Data Privacy Compliance (DSGVO)",
+            "Third-Party Data Sharing Architecture",
+            "Newsletter & Push Notification Infrastructure",
+            "Digital Content Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 312,
+              "elapsed_seconds": 21.451931953430176
+            }
+          ],
+          "reasoning": "The content reveals explicit data processing architecture and vendor partnerships. The newsletter signup section details a complex data flow involving user interaction tracking, data merging, and sharing with 'Partners' (sponsors/tech vendors). This indicates a procurement need for CRM, Marketing Automation, and Data Management Platforms (DMP) to handle consent and personalization."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:15:04.491559",
+          "domain_explored": "https://www.linkedin.com/jobs/bundesliga-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Automation Platforms (implied by WSC Sports)",
+              "Partnership Management Tools"
+            ],
+            "job_postings": [
+              "Strategic Partnerships Lead (WSC Sports)",
+              "Legal Counsel (WSC Sports)"
+            ],
+            "procurement_indicators": [
+              "Active partnership expansion by technology vendors",
+              "Vendor-side investment in legal counsel for media rights/commercial contracts"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Ecosystem Hiring",
+            "Partnership Management",
+            "Legal & Compliance Outsourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.2054879665374756
+            }
+          ],
+          "reasoning": "While the page does not list direct DFL (Bundesliga) internal procurement roles, it reveals the hiring activities of key technology partners (WSC Sports). The 'Strategic Partnerships Lead' role specifically indicates active vendor management and business development within the sports technology sector, which serves as a proxy signal for the broader ecosystem's procurement and partnership activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:15:18.785472",
+          "domain_explored": "https://www.linkedin.com/jobs/bundesliga-jobs-new-york",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Automated Video Highlighting",
+              "AI/ML Content Generation",
+              "Sports Tech Platforms"
+            ],
+            "job_postings": [
+              "Strategic Partnerships Lead (WSC Sports)",
+              "Legal Counsel (WSC Sports)"
+            ],
+            "procurement_indicators": [
+              "Vendor Ecosystem Growth",
+              "Partnership Management Investment",
+              "Legal Support for Tech Contracts"
+            ]
+          },
+          "patterns_found": [
+            "Ecosystem Partner Hiring",
+            "Technology Vendor Expansion",
+            "Partnership Management",
+            "Legal & Compliance Outsourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 289,
+              "elapsed_seconds": 9.3820059299469
+            }
+          ],
+          "reasoning": "The content reveals job postings for WSC Sports (a known technology partner of Bundesliga for automated highlights) in New York. While these are not direct DFL (Bundesliga) employees, the 'Strategic Partnerships Lead' and 'Legal Counsel' roles at a key vendor indicate active investment in the partnership ecosystem and technology infrastructure that supports Bundesliga operations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:15:24.880392",
+          "domain_explored": "https://www.linkedin.com/showcase/sporting-jobs-germany/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of specialized recruitment agencies (Sporting Jobs / Sporting Group International) for talent acquisition",
+              "Outsourcing of executive search and 'elite talent' sourcing",
+              "Vendor relationship with 'iconic clubs in the Bundesliga and Bundesliga 2'"
+            ]
+          },
+          "patterns_found": [
+            "Executive Recruitment Services",
+            "Vendor Relationship Management",
+            "Talent Acquisition Outsourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1669,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.4980521202087402
+            }
+          ],
+          "reasoning": "The content describes a third-party recruitment agency ('Sporting Jobs Germany') that explicitly lists Bundesliga clubs as clients. While this confirms the league's reliance on external vendors for HR and executive search, it is an indirect signal of procurement activity compared to direct job postings or RFPs. It establishes the existence of a vendor ecosystem."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:15:37.195180",
+          "domain_explored": "https://hr.linkedin.com/jobs/view/software-engineer-at-once-sport-4177532142",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "C#",
+              "Avalonia UI",
+              "Skia",
+              "FFmpeg",
+              "AWS",
+              "ONNX Runtime",
+              "PyTorch",
+              "OpenCV"
+            ],
+            "job_postings": [
+              "Software Engineer at Once Sport (Vendor to Bundesliga)"
+            ],
+            "procurement_indicators": [
+              "Direct confirmation of B2B sales to Bundesliga clubs",
+              "Expenditure on Video Analysis & AI Software",
+              "Usage of Cloud Infrastructure (AWS) via vendors",
+              "B2B hourly billing models for software services"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Software Procurement",
+            "Video Analysis & AI Technology Stack",
+            "B2B Service Models",
+            "Vendor Ecosystem Identification"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1734,
+              "output_tokens": 358,
+              "elapsed_seconds": 3.6322338581085205
+            }
+          ],
+          "reasoning": "While this is a job posting for a vendor (Once Sport) rather than the Bundesliga itself, it explicitly confirms a commercial procurement relationship. The text states that Once Sport has 'clients... including prominent clubs and coaches from Bundesliga.' This identifies a specific software vendor within the Bundesliga procurement ecosystem, reveals the technology stack being procured (C#, Avalonia UI, AI/CV/ML), and highlights the adoption of advanced video analysis tools by Bundesliga clubs."
+        }
+      ],
+      "total_input_tokens": 11358,
+      "total_output_tokens": 2121,
+      "estimated_cost_usd": 0.065889
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bundesliga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:15:37.198334"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418443",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:55:00.289282"
+}

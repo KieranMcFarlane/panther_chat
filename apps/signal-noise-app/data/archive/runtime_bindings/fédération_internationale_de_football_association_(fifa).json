@@ -1,0 +1,413 @@
+{
+  "entity_id": "f\u00e9d\u00e9ration_internationale_de_football_association_(fifa)",
+  "entity_name": "F\u00e9d\u00e9ration Internationale de Football Association (FIFA)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "fifaworldcup26.hospitality.fifa.com",
+    "fifadigitalarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/2386774590/",
+      "https://www.linkedin.com/jobs/view/3057240550/",
+      "https://lt.linkedin.com/jobs/view/senior-manager-transport-integration-fifa-world-cup-2026-at-fifa-world-cup-2026%E2%84%A2-canada-mexico-usa-3730329050",
+      "https://www.linkedin.com/jobs/view/3612040196",
+      "https://ke.linkedin.com/jobs/view/317304719?trk=seokp-job",
+      "https://gy.linkedin.com/jobs/view/general-secretary-guyana-football-federation-at-fifa-4139653705",
+      "https://www.linkedin.com/jobs/view/732122214/"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_football_association_(fifa)",
+      "entity_name": "F\u00e9d\u00e9ration Internationale de Football Association (FIFA)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.34,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.16,
+        0.22,
+        0.28,
+        0.34
+      ],
+      "explored_domains": [
+        "https://fifaworldcup26.hospitality.fifa.com",
+        "https://lt.linkedin.com/jobs/view/senior-manager-transport-integration-fifa-world-cup-2026-at-fifa-world-cup-2026%E2%84%A2-canada-mexico-usa-3730329050",
+        "https://inside.fifa.com",
+        "https://fifadigitalarchive.com",
+        "https://www.linkedin.com/jobs/view/3057240550/",
+        "https://www.linkedin.com/jobs/view/2386774590/",
+        "https://www.linkedin.com/jobs/view/3612040196",
+        "https://ke.linkedin.com/jobs/view/317304719?trk=seokp-job"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Global Talent Development Scheme (TDS)",
+        "Strategic Consultancy Procurement",
+        "Member Association Support Services",
+        "Performance Analytics & KPI Implementation",
+        "Applicant Tracking System (ATS) Usage",
+        "Intelligence & Investigation Operations",
+        "Stakeholder Management (Betting Operators & Regulators)",
+        "Sports Integrity Compliance Frameworks",
+        "Anti-Match Manipulation Technologies",
+        "Transport Technology & Mapping Systems Procurement",
+        "Cross-Border Logistics Integration (Canada/Mexico/USA)",
+        "Smart City/Traffic Management Software",
+        "Large-Scale Fleet & Vendor Coordination",
+        "Global Technical Framework Deployment",
+        "Member Association (MA) Capacity Building",
+        "High-Performance Talent Identification Systems",
+        "Safeguarding & Child Protection Compliance",
+        "Educational Content & Workshop Procurement",
+        "Cross-Border Relocation & Logistics",
+        "Regional Consultant & Expert Portfolio Procurement",
+        "FIFA Forward Programme Implementation",
+        "Infrastructure & Facilities Development Support",
+        "SharePoint & MS Office Collaboration Ecosystem"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Football Association (FIFA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:13:50.773340",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward-funded refurbishment of Intwari Stadium (Burundi)",
+              "FIFA Women\u2019s Champions Cup 2026 legacy programs",
+              "Elite female coach generation initiatives"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Investment Signals",
+            "Women's Game Development Initiatives",
+            "Global Event Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1378,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.2660889625549316
+            }
+          ],
+          "reasoning": "While the content is primarily news and editorial, it reveals specific operational investment areas. The 'FIFA Forward-funded refurbishment' of Intwari Stadium indicates active infrastructure procurement. The focus on the 'FIFA Women\u2019s Champions Cup' and 'growing the women\u2019s game' suggests upcoming vendor needs for event management, marketing, and training services associated with these new tournaments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:14:04.497146",
+          "domain_explored": "https://fifaworldcup26.hospitality.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms",
+              "E-commerce Systems (Hospitality Sales)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: On Location (Official Hospitality Provider)",
+              "Scope: 104 matches, 16 cities (Canada, Mexico, US)",
+              "Services: Premium tickets, food & beverage, entertainment, private suites"
+            ]
+          },
+          "patterns_found": [
+            "Event Hospitality & Logistics",
+            "Official Sponsor/Vendor Partnerships",
+            "Multi-National Venue Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 283,
+              "elapsed_seconds": 6.906789064407349
+            }
+          ],
+          "reasoning": "The content confirms the operational scale of the FIFA World Cup 2026 across 16 cities in North America. It explicitly identifies 'On Location' as the 'Official Hospitality Provider,' indicating a major vendor partnership for food & beverage, premium ticketing, and suite management. While this is a B2C page, it signals significant upstream procurement requirements for event logistics, catering, and venue services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:14:22.529868",
+          "domain_explored": "https://fifadigitalarchive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:14:31.439591",
+          "domain_explored": "https://www.linkedin.com/jobs/view/2386774590/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Applicant Tracking System (ATS)",
+              "Business Intelligence (implied by quantitative analysis requirements)",
+              "KPI Monitoring Software"
+            ],
+            "job_postings": [
+              {
+                "role": "High Performance Strategy Consultant (Freelancer)",
+                "department": "People & Strategy / Football Global Ecosystem",
+                "type": "Contract / Freelance",
+                "focus": "Talent Development Scheme (TDS) implementation and analysis"
+              }
+            ],
+            "procurement_indicators": [
+              "External Consultancy Engagement",
+              "Global Program Implementation (TDS)",
+              "Investment in Member Association Capability Building",
+              "Data Analysis & Reporting Requirements"
+            ]
+          },
+          "patterns_found": [
+            "Global Talent Development Scheme (TDS)",
+            "Strategic Consultancy Procurement",
+            "Member Association Support Services",
+            "Performance Analytics & KPI Implementation",
+            "Applicant Tracking System (ATS) Usage"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1526,
+              "output_tokens": 409,
+              "elapsed_seconds": 5.519707918167114
+            }
+          ],
+          "reasoning": "This job posting provides explicit evidence of a strategic procurement initiative: the 'Talent Development Scheme (TDS)'. FIFA is actively procuring high-level strategic consultancy services (freelance/contract) to define roadmaps, KPIs, and business solutions for its member associations. This indicates a budget for professional services and an intent to invest in performance analysis tools and training frameworks."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:14:57.881736",
+          "domain_explored": "https://www.linkedin.com/jobs/view/3057240550/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Match Monitoring Systems",
+              "Intelligence Gathering Platforms",
+              "Whistleblowing/Reporting Tools"
+            ],
+            "job_postings": [
+              "Senior Integrity Manager (D\u00fcbendorf, Zurich) - Focus on match manipulation investigations and stakeholder coordination."
+            ],
+            "procurement_indicators": [
+              "Vendor management for betting operator data",
+              "Procurement of workshop and training services",
+              "Investigation support tools and software",
+              "Legal and regulatory compliance consulting"
+            ]
+          },
+          "patterns_found": [
+            "Intelligence & Investigation Operations",
+            "Stakeholder Management (Betting Operators & Regulators)",
+            "Sports Integrity Compliance Frameworks",
+            "Anti-Match Manipulation Technologies"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 363,
+              "elapsed_seconds": 21.25050115585327
+            }
+          ],
+          "reasoning": "The job posting for a Senior Integrity Manager reveals a dedicated operational unit focused on protecting football matches and competitions. The specific requirement to coordinate investigations and maintain relationships with betting operators and regulators indicates a reliance on third-party data and intelligence services. This role supports the procurement of monitoring tools, legal frameworks, and educational platforms necessary for the FIFA Integrity Initiative."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:15:06.137573",
+          "domain_explored": "https://lt.linkedin.com/jobs/view/senior-manager-transport-integration-fifa-world-cup-2026-at-fifa-world-cup-2026%E2%84%A2-canada-mexico-usa-3730329050",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Transport Mapping & Routing Software",
+              "Traffic Management Systems",
+              "Transport Operations Center (TOC) Infrastructure",
+              "Fleet Management/Tracking Software"
+            ],
+            "job_postings": [
+              "Senior Manager, Transport Integration (FIFA World Cup 2026)"
+            ],
+            "procurement_indicators": [
+              "Explicit requirement to 'recruit mapping experts and implementation of required technology'",
+              "Management of 'transport technology and IT system requirements, including development/adaption of required software'",
+              "Oversight of 'depot locations and setup' implying infrastructure contracts",
+              "Integration with 'Host Cities' for public transport operational plans"
+            ]
+          },
+          "patterns_found": [
+            "Transport Technology & Mapping Systems Procurement",
+            "Cross-Border Logistics Integration (Canada/Mexico/USA)",
+            "Smart City/Traffic Management Software",
+            "Large-Scale Fleet & Vendor Coordination"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1680,
+              "output_tokens": 405,
+              "elapsed_seconds": 3.23771595954895
+            }
+          ],
+          "reasoning": "The job description explicitly mandates the procurement and implementation of transport technology, including mapping software and IT systems. It highlights a complex operational requirement involving 16 venues across 3 countries, necessitating significant vendor partnerships for public transport, traffic management, and fleet operations. This is a direct signal of upcoming RFPs for logistics, software, and engineering services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:16:04.170823",
+          "domain_explored": "https://www.linkedin.com/jobs/view/3612040196",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Talent Identification Software",
+              "Performance Analytics Tools",
+              "Collaborative Platforms (for global TDS coordination)"
+            ],
+            "job_postings": [
+              "FIFA Talent Coach (Global Deployment)"
+            ],
+            "procurement_indicators": [
+              "Deployment of standardized 'FIFA frameworks & tools' to Member Associations",
+              "Requirement for 'educational material' and 'virtual workshops' (Digital Content/LMS)",
+              "Strict adherence to 'safeguarding and child protection guidelines' (Compliance/Consulting)",
+              "Global relocation logistics for 2-year assignments (HR Services)"
+            ]
+          },
+          "patterns_found": [
+            "Global Technical Framework Deployment",
+            "Member Association (MA) Capacity Building",
+            "High-Performance Talent Identification Systems",
+            "Safeguarding & Child Protection Compliance",
+            "Educational Content & Workshop Procurement",
+            "Cross-Border Relocation & Logistics"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1749,
+              "output_tokens": 409,
+              "elapsed_seconds": 51.54867601394653
+            }
+          ],
+          "reasoning": "The job posting confirms the operational execution of the FIFA Talent Development Scheme (TDS). While primarily a coaching role, it reveals significant procurement drivers: the need for 'FIFA frameworks & tools' (software/analytics), 'educational material' (content creation/DMO), and 'safeguarding' compliance services. It also highlights the logistical complexity of relocating staff globally for 2-year periods, indicating a need for HR mobility and relocation vendors."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:16:17.326416",
+          "domain_explored": "https://ke.linkedin.com/jobs/view/317304719?trk=seokp-job",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft SharePoint",
+              "Microsoft Office Suite"
+            ],
+            "job_postings": [
+              "Regional Office Project Coordinator (Central & North America) - Panama"
+            ],
+            "procurement_indicators": [
+              "Establishment of a portfolio of Regional consultants and experts",
+              "Defining Terms of Reference (ToR) for external resources",
+              "Support for FIFA Forward projects (often involving infrastructure grants)",
+              "Facilities and sports infrastructure project management"
+            ]
+          },
+          "patterns_found": [
+            "Regional Consultant & Expert Portfolio Procurement",
+            "FIFA Forward Programme Implementation",
+            "Infrastructure & Facilities Development Support",
+            "SharePoint & MS Office Collaboration Ecosystem"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1817,
+              "output_tokens": 346,
+              "elapsed_seconds": 6.647825717926025
+            }
+          ],
+          "reasoning": "The job description explicitly mentions 'establishing a portfolio of Regional consultants and experts' and 'defining terms of reference,' which are direct procurement activities. It also highlights support for 'facilities and sports infrastructure,' indicating capital expenditure or construction management needs in the region. The requirement for SharePoint knowledge confirms the use of enterprise collaboration software."
+        }
+      ],
+      "total_input_tokens": 11172,
+      "total_output_tokens": 2461,
+      "estimated_cost_usd": 0.070431
+    },
+    "procurement_signals": [
+      "Global Talent Development Scheme (TDS)",
+      "Strategic Consultancy Procurement",
+      "Member Association Support Services",
+      "Performance Analytics & KPI Implementation",
+      "Applicant Tracking System (ATS) Usage",
+      "Intelligence & Investigation Operations",
+      "Stakeholder Management (Betting Operators & Regulators)",
+      "Sports Integrity Compliance Frameworks",
+      "Anti-Match Manipulation Technologies",
+      "Transport Technology & Mapping Systems Procurement",
+      "Cross-Border Logistics Integration (Canada/Mexico/USA)",
+      "Smart City/Traffic Management Software",
+      "Large-Scale Fleet & Vendor Coordination",
+      "Global Technical Framework Deployment",
+      "Member Association (MA) Capacity Building",
+      "High-Performance Talent Identification Systems",
+      "Safeguarding & Child Protection Compliance",
+      "Educational Content & Workshop Procurement",
+      "Cross-Border Relocation & Logistics",
+      "Regional Consultant & Expert Portfolio Procurement",
+      "FIFA Forward Programme Implementation",
+      "Infrastructure & Facilities Development Support",
+      "SharePoint & MS Office Collaboration Ecosystem"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Football Association (FIFA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:16:17.328283"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.197828",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:31.532491"
+}

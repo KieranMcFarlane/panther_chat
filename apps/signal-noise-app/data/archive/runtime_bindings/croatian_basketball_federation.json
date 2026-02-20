@@ -1,0 +1,121 @@
+{
+  "entity_id": "croatian_basketball_federation",
+  "entity_name": "Croatian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "sportanddev.org",
+    "croatia.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "croatian_basketball_federation",
+      "entity_name": "Croatian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportanddev.org",
+        "https://croatia.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Croatian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:37:39.287798",
+          "domain_explored": "https://sportanddev.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MOOC platforms (for capacity building)",
+              "Event management platforms (implied by 'Upcoming events' section)"
+            ],
+            "job_postings": [
+              "General 'Jobs and Opportunities' section exists (unspecified roles)"
+            ],
+            "procurement_indicators": [
+              "Event Hosting: 'The Republic of Croatia and the City of Zadar become the world stage of 3x3 basketball' (29 Jan 2026)",
+              "Education Initiatives: '10,000+ learners join MOOC... boost your capacity'",
+              "Sector Engagement: '2026 Sport Fundraising Summit' (Potential interest in fundraising optimization)"
+            ]
+          },
+          "patterns_found": [
+            "Event Hosting & Infrastructure Requirements",
+            "International Federation Partnerships",
+            "Sector-Specific Education & Training Needs"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 382,
+              "elapsed_seconds": 3.4359941482543945
+            }
+          ],
+          "reasoning": "While the site is a general platform for 'sport for development', it contains a specific news article mentioning the 'Republic of Croatia and the City of Zadar' hosting a 3x3 basketball event. This signals potential procurement activity related to event management, infrastructure, or local vendor partnerships by the Croatian Basketball Federation (or related local bodies) to support hosting duties. The presence of 'Sport Fundraising Summit' and 'MOOC' links indicates potential future investment in fundraising tools or educational platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:37:44.821189",
+          "domain_explored": "https://croatia.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Cultural Information",
+            "Tourism Promotion",
+            "Historical Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 172,
+              "elapsed_seconds": 1.8762948513031006
+            }
+          ],
+          "reasoning": "The content from croatia.eu is a general informational portal about the country's culture, geography, and history. While it mentions 'Sport' in a historical context, it lacks specific procurement signals, vendor needs, or operational details regarding the Croatian Basketball Federation. This source is too broad for targeted procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 2789,
+      "total_output_tokens": 554,
+      "estimated_cost_usd": 0.016676999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Croatian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:37:44.822488"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.266085",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:07.615520"
+}

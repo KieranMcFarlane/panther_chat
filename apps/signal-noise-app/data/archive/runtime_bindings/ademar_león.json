@@ -1,0 +1,128 @@
+{
+  "entity_id": "ademar_le\u00f3n",
+  "entity_name": "Ademar Le\u00f3n",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "ademar.com",
+    "eurohandball.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ademar_le\u00f3n",
+      "entity_name": "Ademar Le\u00f3n",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://eurohandball.com",
+        "https://ademar.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ademar Le\u00f3n may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:18:21.156623",
+          "domain_explored": "https://ademar.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:18:27.213596",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls",
+            "Tournament schedules"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.4883081912994385
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) general news portal and focuses on match results (Denmark, Croatia), player awards (Gidsel), and future tournament schedules. There is no mention of 'Ademar Le\u00f3n', nor are there any procurement signals, technology stacks, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:18:34.306634",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile gaming storefront content",
+            "Consumer application listings",
+            "In-app purchase advertisements",
+            "Generic entertainment content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.701996088027954
+            }
+          ],
+          "reasoning": "The scraped content is a generic list of mobile games and applications from the Google Play Store. It contains no information regarding Ademar Le\u00f3n, its operations, or its procurement activities. The content is entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2813,
+      "total_output_tokens": 335,
+      "estimated_cost_usd": 0.013464
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ademar Le\u00f3n may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:18:34.307477"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351040",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:35.160328"
+}

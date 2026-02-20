@@ -1,0 +1,80 @@
+{
+  "entity_id": "al_ahly_sc",
+  "entity_name": "Al Ahly SC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "alahlyegypt.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ahly_sc",
+      "entity_name": "Al Ahly SC",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://alahlyegypt.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ahly SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:31:34.889535",
+          "domain_explored": "https://alahlyegypt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Empty Content Signal",
+            "Token Limit Constraint"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 360,
+              "output_tokens": 138,
+              "elapsed_seconds": 32.69582915306091
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Loading...' placeholders and a note about token limits. There is no actual text, HTML, or data from the Al Ahly SC website to analyze for procurement signals, technology stacks, or governance patterns."
+        }
+      ],
+      "total_input_tokens": 360,
+      "total_output_tokens": 138,
+      "estimated_cost_usd": 0.00315
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ahly SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:31:34.890871"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.348789",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:57.790150"
+}

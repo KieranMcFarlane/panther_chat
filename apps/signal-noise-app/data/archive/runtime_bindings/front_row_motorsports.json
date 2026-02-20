@@ -1,0 +1,262 @@
+{
+  "entity_id": "front_row_motorsports",
+  "entity_name": "Front Row Motorsports",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "front-row-motorsports.square.site",
+    "fordracing.com",
+    "zanesmithracing.com",
+    "explorecabarrus.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/metrology-engineer-at-front-row-motorsports-4323479669",
+      "https://www.linkedin.com/jobs/view/director-of-graphic-design-at-front-row-motorsports-4301517199"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "front_row_motorsports",
+      "entity_name": "Front Row Motorsports",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/director-of-graphic-design-at-front-row-motorsports-4301517199",
+        "https://fordracing.com",
+        "https://front-row-motorsports.square.site",
+        "https://www.linkedin.com/jobs/view/metrology-engineer-at-front-row-motorsports-4323479669",
+        "https://zanesmithracing.com",
+        "https://explorecabarrus.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active_Job_Posting",
+        "Technical_Equipment_Procurement",
+        "Quality_Control_Infrastructure",
+        "Engineering_Software_Stack",
+        "Creative_Software_Stack",
+        "In_House_Production_Capabilities",
+        "Asset_Management_Requirements",
+        "New_Business_Support"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Front Row Motorsports may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:13:52.255036",
+          "domain_explored": "https://front-row-motorsports.square.site",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:13:59.602857",
+          "domain_explored": "https://fordracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospitality Sales (Tickets for 2026 VIP Hospitality)",
+              "Sponsor Visibility (Oracle Red Bull Racing, Visa Cash App)",
+              "Event Scheduling (Global Race Calendar)"
+            ]
+          },
+          "patterns_found": [
+            "OEM_Brand_Content",
+            "Global_Motorsports_News",
+            "Hospitality_Promotions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.4144489765167236
+            }
+          ],
+          "reasoning": "The analyzed content is from the official Ford Racing website, which serves as a global marketing and news portal for Ford's broad motorsport initiatives (F1, Le Mans, NASCAR, Off-Road). While Front Row Motorsports (FRM) is a Ford team, this page contains high-level brand storytelling and general race schedules, not specific operational data regarding FRM's internal procurement, vendor selection, or technology stack. The entity context is too broad (Ford Corporate vs. FRM Team) to derive actionable procurement intelligence for the specific target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:14:08.446895",
+          "domain_explored": "https://zanesmithracing.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1254)"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:14:15.064185",
+          "domain_explored": "https://explorecabarrus.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional_Tourism_Promotion",
+            "Destination_Marketing",
+            "Hospitality_Content",
+            "Generic_Motorsports_References"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.77642822265625
+            }
+          ],
+          "reasoning": "The content is from the Cabarrus County Convention & Visitors Bureau (CVB), a regional tourism organization. While it mentions motorsports attractions relevant to the area where Front Row Motorsports is located, it is a consumer-facing travel guide. It contains no corporate data, vendor solicitations, or internal operational intelligence regarding Front Row Motorsports."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:14:23.052476",
+          "domain_explored": "https://www.linkedin.com/jobs/view/metrology-engineer-at-front-row-motorsports-4323479669",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Coordinate Measuring Machines (CMM)",
+              "Hexagon Manufacturing Intelligence (ROMER)",
+              "ScanTech / Creaform Scanners",
+              "Autodesk PowerInspect",
+              "GOM Inspect",
+              "PCDMIS",
+              "CAM2",
+              "Polyworks",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Metrology Engineer (Entry Level, Full-time)"
+            ],
+            "procurement_indicators": [
+              "Investment in optical surface scanning and measurement tools",
+              "Requirement for QC/Inspection software licenses",
+              "Adherence to GD&T and build tolerances implies procurement of precision fabrication components"
+            ]
+          },
+          "patterns_found": [
+            "Active_Job_Posting",
+            "Technical_Equipment_Procurement",
+            "Quality_Control_Infrastructure",
+            "Engineering_Software_Stack"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 381,
+              "elapsed_seconds": 4.450251817703247
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a Metrology Engineer, which serves as a strong proxy for current and near-future procurement activities. The 'Preferred Qualifications' section explicitly lists specific hardware (Hexagon/ROMER arms, ScanTech, Creaform) and software (Polyworks, PowerInspect, GOM Inspect) that the organization utilizes or intends to utilize. This indicates a need for vendors supplying precision measurement hardware, software licenses, and maintenance services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:14:29.608927",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-of-graphic-design-at-front-row-motorsports-4301517199",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Illustrator",
+              "Adobe Photoshop",
+              "Adobe Lightroom",
+              "Adobe InDesign",
+              "Adobe After Effects",
+              "Blender"
+            ],
+            "job_postings": [
+              "Director of Graphic Design"
+            ],
+            "procurement_indicators": [
+              "Adobe Creative Cloud Licensing",
+              "3D Rendering Software (Blender)",
+              "Large Format Vinyl Printing Materials",
+              "Pit Equipment & Hauler Branding Materials",
+              "Fire Suit & Uniform Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Creative_Software_Stack",
+            "In_House_Production_Capabilities",
+            "Asset_Management_Requirements",
+            "New_Business_Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 319,
+              "elapsed_seconds": 2.872382164001465
+            }
+          ],
+          "reasoning": "This job posting provides explicit details on the software ecosystem required for creative production and asset management. It confirms the procurement of Adobe Creative Cloud licenses and 3D rendering tools (Blender). It also reveals a reliance on in-house vinyl printing and application teams, indicating a supply chain for physical printing materials and large-format printing hardware."
+        }
+      ],
+      "total_input_tokens": 5987,
+      "total_output_tokens": 1162,
+      "estimated_cost_usd": 0.035391000000000006
+    },
+    "procurement_signals": [
+      "Active_Job_Posting",
+      "Technical_Equipment_Procurement",
+      "Quality_Control_Infrastructure",
+      "Engineering_Software_Stack",
+      "Creative_Software_Stack",
+      "In_House_Production_Capabilities",
+      "Asset_Management_Requirements",
+      "New_Business_Support"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Front Row Motorsports may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:14:29.610215"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366216",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:50.147796"
+}

@@ -1,0 +1,218 @@
+{
+  "entity_id": "bm_granollers",
+  "entity_name": "BM Granollers",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "bmgranollers.cat",
+    "granollerscup.com",
+    "eurohandball.com",
+    "fcbarcelona.com",
+    "ec.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bm_granollers",
+      "entity_name": "BM Granollers",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://eurohandball.com",
+        "https://ec.europa.eu",
+        "https://bmgranollers.cat",
+        "https://granollerscup.com",
+        "https://fcbarcelona.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BM Granollers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:20:50.850084",
+          "domain_explored": "https://bmgranollers.cat",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (BMG Store)",
+              "Digital Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Strategic Partnership: Svelta (Collaborator for women's sports formation)",
+              "Active Vendor: Fraikin (Sponsor/Naming rights)",
+              "Active Vendor: KH-7 (Sponsor/Naming rights)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Acquisition",
+            "Digital Ticketing Operations",
+            "E-commerce Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.8417701721191406
+            }
+          ],
+          "reasoning": "The content reveals a new strategic partnership with 'Svelta' for women's sports formation, indicating active vendor acquisition. The presence of 'Comprar entrades' (Buy tickets) and the 'BMG Store' confirms active e-commerce and ticketing operations, implying the need for payment processing and inventory management platforms. However, the content is largely templated sports data, limiting deep procurement insights."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:21:03.010953",
+          "domain_explored": "https://granollerscup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Scale: 450+ Teams, 7000+ Players",
+              "Infrastructure: 25 Courts/Venues required",
+              "Logistics: Coordination across 21 countries and 5 continents"
+            ]
+          },
+          "patterns_found": [
+            "Large-scale Event Operations",
+            "International Tournament Management",
+            "Multi-venue Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 249,
+              "elapsed_seconds": 4.006973028182983
+            }
+          ],
+          "reasoning": "The content confirms BM Granollers organizes the 'Granollers Cup,' a massive international handball event (450+ teams, 7000+ players, 25 venues). While this is a marketing page, the scale of operations implies significant procurement needs for sports infrastructure, logistics, accommodation, and digital event management tools. However, the content itself is purely informational/promotional, lacking explicit technical or vendor signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:21:10.390212",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Cookie Wall / Access Restriction"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.869572162628174
+            }
+          ],
+          "reasoning": "The scraped content from eurohandball.com focuses on general European handball news, match results (Denmark, Croatia), and EHF tournament schedules. There is no mention of BM Granollers, specific procurement activities, or vendor partnerships relevant to the target entity. The content is largely blocked by cookie preferences, further limiting visibility."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:21:22.889063",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic Web CMS",
+              "E-commerce Platform (Shop)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "General Sports Content",
+            "Consumer-Facing E-commerce"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 194,
+              "elapsed_seconds": 7.8178300857543945
+            }
+          ],
+          "reasoning": "The analyzed content is from FC Barcelona (fcbarcelona.com), a distinct entity from the target BM Granollers. While both are Catalan sports clubs, the content focuses on consumer ticketing, fan merchandise, and general sports news rather than BM Granollers' specific procurement operations. There are no relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:21:33.062103",
+          "domain_explored": "https://ec.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Institutional Portal",
+            "Language Selection Interface",
+            "Irrelevant Governance Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1263,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.1990537643432617
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of the European Commission (ec.europa.eu), consisting primarily of language selection links and navigation elements. There is no specific content related to BM Granollers, handball, or specific procurement activities relevant to the target entity. This is a high-level governance page unrelated to the specific sports club procurement investigation."
+        }
+      ],
+      "total_input_tokens": 6987,
+      "total_output_tokens": 1074,
+      "estimated_cost_usd": 0.037071
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BM Granollers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:21:33.063702"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350937",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:25.995855"
+}

@@ -1,0 +1,96 @@
+{
+  "entity_id": "women's_premier_league_(wpl)",
+  "entity_name": "Women's Premier League (WPL)",
+  "template_id": "tpl_tier_1_professional_leagues_v1",
+  "cluster_id": "tier_1_professional_leagues",
+  "discovered_domains": [
+    "apps.apple.com",
+    "olympics.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "women's_premier_league_(wpl)",
+      "entity_name": "Women's Premier League (WPL)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://olympics.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Women's Premier League (WPL) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:13:12.959414",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General consumer mobile app content",
+            "Gaming and entertainment marketing",
+            "Black History Month promotional features"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 182,
+              "elapsed_seconds": 12.31552004814148
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Apple App Store homepage, featuring consumer applications (Roblox, Pok\u00e9mon, Genshin Impact) and editorial sections (Apps We Love). There is absolutely no mention of the Women's Premier League (WPL), sports management, enterprise procurement, or B2B technology. This data is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:13:45.808488",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1364,
+      "total_output_tokens": 182,
+      "estimated_cost_usd": 0.006822
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Women's Premier League (WPL) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:13:45.809805"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417997",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:42.087154"
+}

@@ -1,0 +1,148 @@
+{
+  "entity_id": "2._bundesliga",
+  "entity_name": "2. Bundesliga",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "bundesliga.com",
+    "schalke04.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/giuseppegiuliani_careers-search-job-openings-cryptocom-activity-6894319112206610432-n44I?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "2._bundesliga",
+      "entity_name": "2. Bundesliga",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://schalke04.de",
+        "https://www.linkedin.com/posts/giuseppegiuliani_careers-search-job-openings-cryptocom-activity-6894319112206610432-n44I?trk=public_profile_like_view",
+        "https://bundesliga.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "2. Bundesliga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:02:05.481317",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is consumer-facing sports journalism",
+            "Focus on player transfers (operational expenditure)",
+            "No B2B or governance signals detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 462,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.8224833011627197
+            }
+          ],
+          "reasoning": "The provided content is a standard news update regarding the January 2026 transfer window. It focuses on player comings and goings (roster management) rather than organizational procurement, technology acquisition, or structural governance. There are no signals of vendor selection, RFPs, or technology stack implementation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:02:12.031901",
+          "domain_explored": "https://schalke04.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "Sports Journalism",
+            "E-Commerce Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.570383071899414
+            }
+          ],
+          "reasoning": "The scraped content is from the website of FC Schalke 04 (a specific club within the 2. Bundesliga), not the governing body of the 2. Bundesliga itself. The content consists of sports news, player interviews, and shop links, which are consumer-facing and do not contain B2B procurement signals relevant to the league's governance or technology stack."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:02:21.316066",
+          "domain_explored": "https://www.linkedin.com/posts/giuseppegiuliani_careers-search-job-openings-cryptocom-activity-6894319112206610432-n44I?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Managing Director of Crypto.com Exchange"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "Recruitment Marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.5218732357025146
+            }
+          ],
+          "reasoning": "The content analyzed is a LinkedIn post by Giuseppe G. announcing a new role at Crypto.com. The entity 'Crypto.com' is completely unrelated to the target entity '2. Bundesliga' (German football league). The content is personal career news and general recruitment marketing, containing no procurement signals, technology stacks, or governance information relevant to the 2. Bundesliga."
+        }
+      ],
+      "total_input_tokens": 3372,
+      "total_output_tokens": 556,
+      "estimated_cost_usd": 0.018456
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "2. Bundesliga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:02:21.322147"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447006",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:54.253394"
+}

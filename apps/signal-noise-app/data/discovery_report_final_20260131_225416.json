@@ -1,0 +1,9 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 3,
+  "successful_bindings": 3,
+  "failed_entities": [],
+  "start_time": "2026-01-31T22:54:15.988082",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-31T22:54:16.028040"
+}

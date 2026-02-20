@@ -1,0 +1,140 @@
+{
+  "entity_id": "al_ahly_basketball",
+  "entity_name": "Al Ahly Basketball",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "bb_developing_market",
+  "discovered_domains": [
+    "alahlyegypt.com",
+    "wikidata.org",
+    "playmakerstats.com",
+    "kingfut.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ahly_basketball",
+      "entity_name": "Al Ahly Basketball",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kingfut.com",
+        "https://playmakerstats.com",
+        "https://wikidata.org",
+        "https://alahlyegypt.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ahly Basketball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:16:30.180732",
+          "domain_explored": "https://alahlyegypt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Unavailable"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 364,
+              "output_tokens": 141,
+              "elapsed_seconds": 3.127351760864258
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Loading...' placeholders and truncation indicators. No actual text, HTML, or data from the target URL (alahlyegypt.com) was available for analysis. Consequently, no procurement signals, technology stacks, or governance patterns could be identified."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:16:33.079696",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:16:35.966970",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:16:44.482993",
+          "domain_explored": "https://kingfut.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Football vs. Basketball)",
+            "Sports Transfer News",
+            "Generic Sports Journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.019155979156494
+            }
+          ],
+          "reasoning": "The scraped content from KingFut.com pertains exclusively to Al Ahly SC (the football club), focusing on player transfers (e.g., Hamza Abdelkarim, Youssef Belammari) and match results. There is zero intersection with Al Ahly Basketball, nor are there any procurement, technology, or business operation signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 1813,
+      "total_output_tokens": 316,
+      "estimated_cost_usd": 0.010179
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ahly Basketball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:16:44.485553"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216099",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:05.865682"
+}

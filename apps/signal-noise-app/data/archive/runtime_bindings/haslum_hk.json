@@ -1,0 +1,252 @@
+{
+  "entity_id": "haslum_hk",
+  "entity_name": "Haslum HK",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "haslumhk.no",
+    "eurohandball.com",
+    "play.google.com",
+    "wikipedia.nucleos.com",
+    "direktesport.no",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "haslum_hk",
+      "entity_name": "Haslum HK",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://commons.wikimedia.org",
+        "https://eurohandball.com",
+        "https://haslumhk.no",
+        "https://direktesport.no",
+        "https://wikipedia.nucleos.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Haslum HK may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:45:20.844842",
+          "domain_explored": "https://haslumhk.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsor/Partner management (Potential for CRM or sponsorship tools)",
+              "Event management (Matches/Games)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club structure (Handball)",
+            "Partner/Sponsor ecosystem",
+            "Content management (Archive/News)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 403,
+              "output_tokens": 202,
+              "elapsed_seconds": 4.941645860671997
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and footer of a sports club website (Haslum HK). It contains links to matches, archives, and partners, but lacks the substantive text, job descriptions, or technical documentation required to identify specific procurement signals or technology stacks."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:45:30.757663",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Cookie consent/GDPR walls",
+            "Tournament schedules",
+            "Sponsorship visibility (Machineseeker)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.3119211196899414
+            }
+          ],
+          "reasoning": "The provided content is from the European Handball Federation (eurohandball.com), a general sports news and governing body site. It contains no specific information regarding 'Haslum HK' (Haslum H\u00e5ndballklubb). The content focuses on tournament results (Denmark champions, Gidsel MVP), future schedules for 2025/2026, and cookie consent notices. There are no procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:45:37.730371",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer B2C content",
+            "App store aggregation",
+            "Gaming/Entertainment focus",
+            "Generic platform navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.0098040103912354
+            }
+          ],
+          "reasoning": "The content provided is a direct scrape of the Google Play Store homepage (or a localized version for a Swedish user), featuring mobile games like 'Arknights', 'Clash of Clans', and 'Persona5'. There is absolutely no relation to 'Haslum HK' (the handball club) or corporate procurement activities. This represents a complete loss of relevance to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:46:00.894264",
+          "domain_explored": "https://wikipedia.nucleos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (Offline Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Static content aggregation",
+            "Educational resource distribution",
+            "Open-source software utilization (Kiwix)",
+            "No commercial transactional elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 862,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.800467014312744
+            }
+          ],
+          "reasoning": "The content is a directory for offline versions of Wikipedia and Wiktionary, powered by Kiwix. It is a static educational resource repository with no connection to Haslum HK's operations, governance, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:46:11.599322",
+          "domain_explored": "https://direktesport.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Infrastructure",
+              "Paywall/Subscription Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Media Streaming Platform",
+            "Consumer Content Aggregation",
+            "Subscription/Paywall Models",
+            "Cookie Consent Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 557,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.7632861137390137
+            }
+          ],
+          "reasoning": "The scraped content from 'direktesport.no' indicates a consumer-facing media platform specializing in sports streaming. The presence of 'Laster...' (Loading) and typical media site scripts suggests a content delivery focus rather than corporate procurement operations. This platform is likely a vendor or media partner, not the source of Haslum HK's internal procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:46:20.802517",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MediaWiki (Wiki software)",
+              "RSS Feeds"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Open-Source Content Aggregation",
+            "Non-Profit/Community Contribution Model",
+            "Static Media Repository",
+            "Generic Public Domain Licensing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1603,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.483419895172119
+            }
+          ],
+          "reasoning": "The content is from Wikimedia Commons, a free media file repository. It focuses on public domain images, user contributions, and generic categorization (Nature, Society, Science). There is no connection to Haslum HK, commercial procurement, or enterprise technology stacks. It is a static resource for media consumption, not a source for business intelligence."
+        }
+      ],
+      "total_input_tokens": 6284,
+      "total_output_tokens": 1202,
+      "estimated_cost_usd": 0.036882
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Haslum HK may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:46:20.805058"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.355885",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:46.992460"
+}

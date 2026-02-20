@@ -1,0 +1,204 @@
+{
+  "entity_id": "bermuda_football_association",
+  "entity_name": "Bermuda Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bermudafa.com",
+    "inside.fifa.com",
+    "wikiwand.com",
+    "footsail.com",
+    "bernews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bermuda_football_association",
+      "entity_name": "Bermuda Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://bermudafa.com",
+        "https://wikiwand.com",
+        "https://bernews.com",
+        "https://inside.fifa.com",
+        "https://footsail.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bermuda Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:29:48.149748",
+          "domain_explored": "https://bermudafa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FIFA/CONCACAF Regulatory Compliance Systems",
+              "Statutory Governance Frameworks"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Statutory authority to borrow/lend money (Investment/Banking services)",
+              "Requirement for international regulatory compliance (Potential for specialized software)",
+              "Congress-based decision making (Vendor approval likely requires committee)"
+            ]
+          },
+          "patterns_found": [
+            "Statutory Governance Structure",
+            "FIFA/CONCACAF Compliance Requirements",
+            "Congress-based Voting Model"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.9282891750335693
+            }
+          ],
+          "reasoning": "The content provides foundational governance context (BFA Act 1970) and confirms the entity's statutory structure. While no direct procurement signals (RFPs/Tenders) are present, the explicit mention of FIFA/CONCACAF membership implies a mandatory requirement for compliance, player registration systems, and financial reporting tools that adhere to international football governing body standards. This establishes a baseline capability for procurement but lacks immediate intent signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:29:54.973724",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding (General): The content mentions 'FIFA Forward-funded refurbishment', confirming the existence of capital improvement funds, but no specific call for vendors or Bermuda-specific projects are listed in this text."
+            ]
+          },
+          "patterns_found": [
+            "FIFA Forward Program Funding",
+            "Women's Football Development Initiatives",
+            "Global Sports Governance News"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 287,
+              "elapsed_seconds": 3.827430009841919
+            }
+          ],
+          "reasoning": "The content provided is from FIFA's global news portal (inside.fifa.com) and focuses on high-level international governance, the FIFA Women's Champions Cup, and general FIFA Forward program updates in Burundi. While the FIFA Forward program is a known funding mechanism for member associations like Bermuda, this specific content does not contain specific procurement signals, technology investments, or RFPs relevant to the Bermuda Football Association. It is generic global news rather than local entity intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:29:57.809326",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:30:07.776837",
+          "domain_explored": "https://footsail.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Grant writing services for clubs",
+              "Fundraising drive management",
+              "Educational tour and clinic organization",
+              "USL franchise formation support (Business Development)"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Service Provider",
+            "Grant Writing & Fundraising Support",
+            "Event Management & Logistics",
+            "Educational Clinic Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 288,
+              "elapsed_seconds": 6.433114051818848
+            }
+          ],
+          "reasoning": "FootSail is identified as a key service provider and partner to the local football ecosystem rather than the governing body itself. While the Bermuda FA is the primary target, FootSail's activities in 'grant writing,' 'fundraising drives,' and 'event management' suggest they handle procurement-adjacent functions for local clubs. This indicates a market where external consultants are utilized for capacity building, which implies potential for B2B procurement or partnerships if the BFA lacks internal resources."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:30:16.388569",
+          "domain_explored": "https://bernews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Local Business & Crime Reporting",
+            "No Entity-Specific Signals"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 208,
+              "elapsed_seconds": 5.110152959823608
+            }
+          ],
+          "reasoning": "The scraped content from Bernews represents a general news homepage with no specific mentions of the Bermuda Football Association (BFA), football governance, or sports procurement. The content focuses on banking (Clarien Bank), local charities (BBBS), weather events, and general crime/politics. Without specific search terms or a direct link to a BFA-related article, this general news feed does not advance the procurement intelligence gathering for the target entity."
+        }
+      ],
+      "total_input_tokens": 5827,
+      "total_output_tokens": 1099,
+      "estimated_cost_usd": 0.033965999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bermuda Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:30:16.390771"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204650",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:37.908008"
+}

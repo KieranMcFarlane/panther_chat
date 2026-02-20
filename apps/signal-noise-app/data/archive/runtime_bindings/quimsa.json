@@ -1,0 +1,144 @@
+{
+  "entity_id": "quimsa",
+  "entity_name": "Quimsa",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "aaquimsa.com",
+    "basketball.latinbasket.com",
+    "laliganacional.com.ar",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "quimsa",
+      "entity_name": "Quimsa",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://laliganacional.com.ar",
+        "https://aaquimsa.com",
+        "https://basketball.latinbasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Quimsa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:03:37.925849",
+          "domain_explored": "https://aaquimsa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Likely framework: React, Vue, or Angular based on CSR requirement)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-Side Rendering (CSR) Dependency",
+            "Content Obstruction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 372,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.515526294708252
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a JavaScript activation prompt ('Por favor, activ\u00e1 JavaScript...'). This indicates the site relies heavily on client-side rendering to display content. Since the scraper did not execute the JavaScript, no actual text, links, or data regarding procurement, technology stacks, or job postings were captured."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:03:44.673920",
+          "domain_explored": "https://basketball.latinbasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Player Statistics",
+            "Game Recaps",
+            "Irrelevant Domain Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.580268144607544
+            }
+          ],
+          "reasoning": "The scraped content from latinbasket.com is strictly sports journalism, focusing on player awards (Leonardo Lema), game statistics, and league standings. It contains zero corporate governance, technology infrastructure, or business procurement signals relevant to the Quimsa entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:03:47.833280",
+          "domain_explored": "https://laliganacional.com.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:03:50.780924",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1770,
+      "total_output_tokens": 353,
+      "estimated_cost_usd": 0.010605
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Quimsa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:03:50.782568"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.219287",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:42.945636"
+}

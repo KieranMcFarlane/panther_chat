@@ -1,0 +1,26 @@
+{
+  "total_templates": 1,
+  "high_quality_count": 0,
+  "low_quality_count": 1,
+  "min_confidence": 0.58,
+  "max_confidence": 0.58,
+  "avg_confidence": 0.58,
+  "validation_reports": [
+    {
+      "template_id": "tpl_elite_clubs_high_digital_v1",
+      "cluster_id": "elite_clubs_high_digital",
+      "confidence_score": 0.58,
+      "validation_rate": 0.0,
+      "channel_coverage": 0.7,
+      "pattern_clarity": 1.0,
+      "sample_representativeness": 0.0,
+      "meets_threshold": false,
+      "validated_at": "2026-01-28T12:21:16.001924"
+    }
+  ],
+  "high_quality_templates": [],
+  "low_quality_templates": [
+    "tpl_elite_clubs_high_digital_v1"
+  ],
+  "generated_at": "2026-01-28T12:21:16.001943"
+}

@@ -1,0 +1,133 @@
+{
+  "entity_id": "belarus_football_federation",
+  "entity_name": "Belarus Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "team.abff.by",
+    "inside.fifa.com",
+    "fifafoundation.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belarus_football_federation",
+      "entity_name": "Belarus Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://fifafoundation.org",
+        "https://team.abff.by"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belarus Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:15:51.169073",
+          "domain_explored": "https://team.abff.by",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:15:56.761754",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (General availability, not specific to Belarus)"
+            ]
+          },
+          "patterns_found": [
+            "Global sports governance news",
+            "FIFA Forward program funding",
+            "Women's football development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.6091949939727783
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal (inside.fifa.com), not the Belarus Football Federation (ABFF). While it mentions funding programs (FIFA Forward) that the ABFF might theoretically access, there are no direct procurement signals, technology stacks, or specific vendor opportunities related to the target entity (Belarus) in this text. The content is high-level sports news."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:16:05.091932",
+          "domain_explored": "https://fifafoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Education Programme (General initiative)",
+              "Sports infrastructure reconstruction (General initiative)"
+            ]
+          },
+          "patterns_found": [
+            "Global social impact governance structure",
+            "Infrastructure reconstruction programs",
+            "Digital Education Programme initiative",
+            "FIFA Legends ambassador network"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.0662100315093994
+            }
+          ],
+          "reasoning": "The content describes the FIFA Foundation's global governance, board composition, and social impact programs (infrastructure, education). While 'Digital Education Programme' and 'reconstruction of sports infrastructure' are relevant categories, the content is high-level marketing/mission material. It lacks specific procurement signals, vendor selection processes, or technology stack details relevant to the Belarus Football Federation's specific operational procurement."
+        }
+      ],
+      "total_input_tokens": 2837,
+      "total_output_tokens": 481,
+      "estimated_cost_usd": 0.015726
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belarus Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:16:05.093492"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.203901",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:35.595302"
+}

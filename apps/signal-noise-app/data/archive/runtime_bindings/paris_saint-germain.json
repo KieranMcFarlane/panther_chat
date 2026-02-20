@@ -1,0 +1,257 @@
+{
+  "entity_id": "paris_saint-germain",
+  "entity_name": "Paris Saint-Germain",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "grandgeneve.psgacademypro.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/paris-saint-germain-jobs-worldwide",
+      "https://www.linkedin.com/jobs/paris-saint-germain-jobs",
+      "https://www.linkedin.com/company/psgequity/jobs",
+      "https://www.linkedin.com/jobs/international-jobs-paris",
+      "https://fr.linkedin.com/jobs/paris-saint-germain-emplois",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris_saint-germain",
+      "entity_name": "Paris Saint-Germain",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/psgequity/jobs",
+        "https://grandgeneve.psgacademypro.com",
+        "https://www.linkedin.com/jobs/international-jobs-paris",
+        "https://www.linkedin.com/jobs/paris-saint-germain-jobs-worldwide",
+        "https://www.linkedin.com/jobs/paris-saint-germain-jobs",
+        "https://fr.linkedin.com/jobs/paris-saint-germain-emplois"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris Saint-Germain may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:15:59.436292",
+          "domain_explored": "https://grandgeneve.psgacademypro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Learning Platforms (ICL Academy, Dwight Global)",
+              "Hybrid Learning Infrastructure",
+              "Video Streaming/Testimonial Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with ICL Academy for US High School Diploma",
+              "Partnership with Dwight Global for #1 Online Private High School",
+              "Outsourced educational curriculum for student-athletes",
+              "Campus facilities management (Performance center, gym, spa)"
+            ]
+          },
+          "patterns_found": [
+            "Educational Partnership Procurement",
+            "Hybrid Learning Infrastructure",
+            "International Campus Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 372,
+              "elapsed_seconds": 3.018733024597168
+            }
+          ],
+          "reasoning": "The content reveals a specific operational unit (PSG Academy Pro Residency Grand Gen\u00e8ve) that relies on third-party partnerships for core service delivery. Specifically, the academy outsources its academic curriculum to 'ICL Academy' and 'Dwight Global' (online high schools) and utilizes a hybrid learning model. This indicates procurement activity related to EdTech licenses, online learning platforms, and potentially facilities management for the 'state-of-the-art' campus in \u00c9vian, France. While not a direct corporate procurement signal for the main club, it highlights B2B dependencies in the PSG Academy franchise ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:16:18.939583",
+          "domain_explored": "https://www.linkedin.com/jobs/paris-saint-germain-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Document Management Systems (inferred from Documentalist role)",
+              "HR Information Systems (inferred from HR BP role)"
+            ],
+            "job_postings": [
+              "ASSISTANT MEDICAL F/H - CDI (Poissy)",
+              "ASSISTANT DOCUMENTALISTE F/H \u2013 CDD (Boulogne-Billancourt)",
+              "CDI - HR BUSINESS PARTNER - F/H (Poissy)"
+            ],
+            "procurement_indicators": [
+              "Medical Supply Procurement (implied by Medical Assistant role)",
+              "HR Services & Software Procurement (implied by HR BP role)",
+              "Information Archiving Services (implied by Documentalist role)"
+            ]
+          },
+          "patterns_found": [
+            "Medical Operations Staffing",
+            "Information Management & Documentation",
+            "Human Resources Expansion",
+            "Geographic Distribution (Poissy vs. Boulogne-Billancourt)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 395,
+              "elapsed_seconds": 3.355480194091797
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for operational support roles (Medical Assistant, Documentalist) and strategic HR functions. While these are not direct procurement signals, the 'Assistant Documentalist' role suggests information management needs that often correlate with procurement software or record-keeping systems. The 'HR Business Partner' role indicates organizational growth, which drives procurement of HR tech and employee services. The distinction between Poissy (Training Center) and Boulogne (HQ) locations helps map operational infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:16:27.785599",
+          "domain_explored": "https://www.linkedin.com/jobs/paris-saint-germain-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1322)"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:16:32.431333",
+          "domain_explored": "https://www.linkedin.com/company/psgequity/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity: PSG Equity (Investment Arm)",
+              "Status: Access Blocked/Restricted"
+            ]
+          },
+          "patterns_found": [
+            "Access Restriction",
+            "Corporate Subsidiary Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 532,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.156324863433838
+            }
+          ],
+          "reasoning": "The target URL (PSG Equity jobs) returned a 'Forbidden' error, preventing the extraction of procurement signals. While PSG Equity represents the club's investment arm, the lack of accessible data requires a negative signal to prune this specific path, though the entity itself remains relevant for future M&A-related procurement analysis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:16:41.073865",
+          "domain_explored": "https://www.linkedin.com/jobs/international-jobs-paris",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results",
+            "Irrelevant Entities (Universit\u00e9 Paris Cit\u00e9, US Embassy)",
+            "No Entity Match"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.1036219596862793
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'International jobs in Paris'. None of the listings (Universit\u00e9 Paris Cit\u00e9, US Embassy, Agriconomie.com) are affiliated with Paris Saint-Germain. The content provides zero intelligence regarding PSG's procurement, technology stack, or hiring needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:16:52.408077",
+          "domain_explored": "https://fr.linkedin.com/jobs/paris-saint-germain-emplois",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Document Management Systems (DMS)",
+              "Medical Records Software",
+              "HR Information Systems"
+            ],
+            "job_postings": [
+              "ASSISTANT MEDICAL F/H - CDI (Poissy, \u00cele-de-France)",
+              "ASSISTANT DOCUMENTALISTE F/H \u2013 CDD (Boulogne-Billancourt, \u00cele-de-France)"
+            ],
+            "procurement_indicators": [
+              "Recruitment of administrative support staff suggests potential procurement of office supplies and software licenses.",
+              "Medical assistant hiring indicates continued vendor relationships with medical suppliers and equipment providers.",
+              "Fixed-term contract (CDD) for documentation suggests project-based work or digital archiving initiatives."
+            ]
+          },
+          "patterns_found": [
+            "Medical Operations Staffing",
+            "Information Management & Documentation",
+            "Administrative Support Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.773850202560425
+            }
+          ],
+          "reasoning": "The content reveals specific active job postings that signal operational expansion and support needs. The 'Assistant Documentaliste' role indicates a need for information governance and document management systems, while the 'Assistant Medical' role confirms ongoing investment in medical infrastructure and staff."
+        }
+      ],
+      "total_input_tokens": 6520,
+      "total_output_tokens": 1473,
+      "estimated_cost_usd": 0.041655
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris Saint-Germain may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:16:52.408938"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.120916",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:29:02.846092"
+}

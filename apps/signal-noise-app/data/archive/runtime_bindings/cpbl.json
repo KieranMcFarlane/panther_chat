@@ -1,0 +1,321 @@
+{
+  "entity_id": "cpbl",
+  "entity_name": "CPBL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "en.cpbl.com.tw",
+    "cpbl.com.tw",
+    "cpblbaseball.ca",
+    "cpblstats.com",
+    "cliftonparkbaseballleague.com",
+    "sabrasianbaseball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/view/senior-procurement-analyst-professional-services-at-computershare-australia-4308851288",
+      "https://be.linkedin.com/jobs/view/research-assistant-bachelor-master-title-at-universit%C3%A9-libre-de-bruxelles-4125063410"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cpbl",
+      "entity_name": "CPBL",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/senior-procurement-analyst-professional-services-at-computershare-australia-4308851288",
+        "https://cpblstats.com",
+        "https://en.cpbl.com.tw",
+        "https://cpbl.com.tw",
+        "https://cliftonparkbaseballleague.com",
+        "https://sabrasianbaseball.com",
+        "https://be.linkedin.com/jobs/view/research-assistant-bachelor-master-title-at-universit%C3%A9-libre-de-bruxelles-4125063410",
+        "https://cpblbaseball.ca"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CPBL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:04:19.132410",
+          "domain_explored": "https://en.cpbl.com.tw",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js (inferred from template syntax like {{ }})",
+              "CPBLTV (mentioned as a platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Public-facing website content",
+            "Sports statistics and game results",
+            "Template variable syntax (Vue.js/JS) visible in raw text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.746317148208618
+            }
+          ],
+          "reasoning": "The scraped content consists of raw HTML/JavaScript template code and text related to game scores, team standings, and player statistics for the 2025 Taiwan Series. There is no information regarding organizational structure, procurement needs, technology vendors, or job postings."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:04:32.699546",
+          "domain_explored": "https://cpbl.com.tw",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js (Syntax detected: {{ calWinTeamInfo.TeamName }}, {{ dateFormat(...) }})",
+              "Google Analytics (Implied by standard web tracking needs, though syntax is raw Vue)"
+            ],
+            "job_postings": [
+              "Professional Referee Selection (2026) - Indicates HR procurement for specialized labor"
+            ],
+            "procurement_indicators": [
+              "2026 World Baseball Classic National Team Uniform Case (2026\u5e74\u4e16\u754c\u68d2\u7403\u7d93\u5178\u8cfd\u570b\u5bb6\u4ee3\u8868\u968a\u5718\u9ad4\u5236\u670d\u6848)",
+              "2026 World Baseball Classic National Team Venue Rental Case (\u5834\u5730\u79df\u7528\u6848)",
+              "2026 World Baseball Classic National Team Game Baseball Bat Case (\u6bd4\u8cfd\u7528\u7403\u68d2\u6848)",
+              "Professional Referee Selection Method (\u5c08\u696d\u88c1\u5224\u7504\u9078\u8fa6\u6cd5)"
+            ]
+          },
+          "patterns_found": [
+            "Procurement Announcements (Tender/Procurement Case)",
+            "Government Procurement Act (GPA) Terminology",
+            "Vendor/Service Solicitation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 350,
+              "elapsed_seconds": 9.384013175964355
+            }
+          ],
+          "reasoning": "The content contains a specific section labeled 'announcement' (\u65b0\u805e\u516c\u544a) which lists explicit procurement notices. These include 'Uniform Case', 'Venue Rental Case', and 'Baseball Bat Case' for the 2026 World Baseball Classic. The use of the term '\u6848' (Case) is a standard procurement signal in Taiwan, indicating active sourcing or tendering processes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:04:39.409798",
+          "domain_explored": "https://cpblbaseball.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js (inferred from {{widget}} syntax)",
+              "Twitter Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: This is a Canadian amateur league, unrelated to the Taiwanese professional league procurement signals found previously."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (CPBL Baseball Canada vs. CPBL Taiwan)",
+            "Sports League Operations (Showcases, Game Results)",
+            "Template Variable Syntax (Vue.js/JS)",
+            "Event Management (TBD, Schedules)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.8633370399475098
+            }
+          ],
+          "reasoning": "The content confirms the target entity is 'CPBL Baseball' (Canadian Premier Baseball League), a Canadian amateur baseball organization, not the 'Chinese Professional Baseball League' (CPBL Taiwan) identified in Iteration 2. The content focuses on game results, player showcases, and league operations with no indicators of B2B procurement, enterprise technology adoption, or government tendering processes."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:04:41.916050",
+          "domain_explored": "https://cpblstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:04:48.328021",
+          "domain_explored": "https://cliftonparkbaseballleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Clifton Park, NY vs. CPBL Taiwan)",
+            "Youth Sports Operations (Registration, Umpires, Fundraisers)",
+            "Local Sponsorships (Mohawk Auto Group, Dick's Sporting Goods)",
+            "Community Announcements (Obituaries, GoFundMe)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 210,
+              "elapsed_seconds": 2.832432270050049
+            }
+          ],
+          "reasoning": "The content confirms this entity is a local youth baseball league in New York (Clifton Park Baseball League), unrelated to the professional CPBL (Chinese Professional Baseball League) in Taiwan. The site focuses on player registration, local fundraising, and community events rather than enterprise procurement or technology investments."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:04:53.916769",
+          "domain_explored": "https://sabrasianbaseball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video hosting)",
+              "Zoom (Webinars)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (SABR - Society for American Baseball Research)",
+            "Editorial Content (Historical baseball articles, player polls)",
+            "Educational/Research Focus (Zoom talks, book excerpts)",
+            "No Corporate Governance or Procurement Language"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1638,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.9271678924560547
+            }
+          ],
+          "reasoning": "The scraped content belongs to SABR (Society for American Baseball Research), specifically their Asian Baseball committee. It contains historical articles, player polls, and event recaps. There is no connection to the CPBL (Chinese Professional Baseball League) corporate entity, nor are there any signals regarding procurement, vendor management, or technology acquisition."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:05:24.340114",
+          "domain_explored": "https://au.linkedin.com/jobs/view/senior-procurement-analyst-professional-services-at-computershare-australia-4308851288",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Computershare vs. CPBL)",
+            "Generic Job Board Artifacts (LinkedIn)",
+            "Irrelevant Industry Listings (Nike, Roku, BetterUp, Manna Organics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1736,
+              "output_tokens": 207,
+              "elapsed_seconds": 25.387423038482666
+            }
+          ],
+          "reasoning": "The provided content is a LinkedIn job search results page for a Senior Procurement Analyst role at Computershare Australia. This is completely unrelated to the target entity, CPBL (Chinese Professional Baseball League). The content contains generic job listings for unrelated companies (Nike, Roku, etc.) and provides no intelligence regarding CPBL's procurement activities, technology stack, or governance."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:05:31.438832",
+          "domain_explored": "https://be.linkedin.com/jobs/view/research-assistant-bachelor-master-title-at-universit%C3%A9-libre-de-bruxelles-4125063410",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Spectrophotometer",
+              "Biotechnology"
+            ],
+            "job_postings": [
+              {
+                "title": "Research Assistant - Bachelor/Master title",
+                "entity": "Universit\u00e9 libre de Bruxelles",
+                "department": "CPBL Department (Chemistry and Physics of Biological/Living systems)",
+                "location": "Brussels, Belgium",
+                "focus": "Plant biostimulation, Bioactive compounds"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (ULB - Universit\u00e9 libre de Bruxelles vs. CPBL Taiwan)",
+            "Department Name Collision (CPBL Department - Chemistry and Physics of Biological/Living systems)",
+            "Academic Recruitment (Research Assistant, Pre-PhD)",
+            "Scientific Research Context (Plant biostimulation, Bioactive compounds)",
+            "Generic Job Board Artifacts (LinkedIn)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1826,
+              "output_tokens": 399,
+              "elapsed_seconds": 3.280593156814575
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn job posting for a Research Assistant at the Universit\u00e9 libre de Bruxelles (ULB) in Belgium. While the acronym 'CPBL' appears in the text, it refers to the 'Chemistry and Physics of Biological/Living systems' (CPBL) department within ULB, not the Chinese Professional Baseball League (CPBL) in Taiwan. The content focuses on academic research in plant biostimulation and sustainable agriculture, which is unrelated to sports league procurement, operations, or technology infrastructure."
+        }
+      ],
+      "total_input_tokens": 10998,
+      "total_output_tokens": 1888,
+      "estimated_cost_usd": 0.06131400000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CPBL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:05:31.441934"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.414467",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:07.770020"
+}

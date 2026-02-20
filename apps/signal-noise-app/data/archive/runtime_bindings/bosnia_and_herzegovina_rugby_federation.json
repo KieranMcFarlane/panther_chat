@@ -1,0 +1,81 @@
+{
+  "entity_id": "bosnia_and_herzegovina_rugby_federation",
+  "entity_name": "Bosnia and Herzegovina Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/metal-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bosnia_and_herzegovina_rugby_federation",
+      "entity_name": "Bosnia and Herzegovina Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/metal-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bosnia and Herzegovina Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:41:44.396429",
+          "domain_explored": "https://www.linkedin.com/jobs/metal-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform content",
+            "Irrelevant industry sector (Manufacturing/Industrial)",
+            "Authentication gating"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1376,
+              "output_tokens": 170,
+              "elapsed_seconds": 5.677198886871338
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn jobs search page for the 'Metal' sector, containing manufacturing roles (e.g., Production Officer, Plant Manager) unrelated to the Bosnia and Herzegovina Rugby Federation. There are no signals relevant to sports management, rugby operations, or federation procurement."
+        }
+      ],
+      "total_input_tokens": 1376,
+      "total_output_tokens": 170,
+      "estimated_cost_usd": 0.006678
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bosnia and Herzegovina Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:41:44.397526"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.286769",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:25.176388"
+}

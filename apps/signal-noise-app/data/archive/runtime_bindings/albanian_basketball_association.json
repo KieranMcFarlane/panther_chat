@@ -1,0 +1,339 @@
+{
+  "entity_id": "albanian_basketball_association",
+  "entity_name": "Albanian Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "dl1.en-us.nina.az",
+    "reporteri.net",
+    "best-basketball-tips.com",
+    "justapedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://al.linkedin.com/jobs/view/head-basketball-coach-at-klubi-shum%C3%ABsport%C3%ABsh-apolonia-3913844067",
+      "https://al.linkedin.com/jobs/view/basketball-player-at-shoqata-e-basketbollit-vllaznia-3407603395",
+      "https://al.linkedin.com/jobs/view/match-reporter-at-individual-3065322543",
+      "https://al.linkedin.com/jobs/view/sportsbook-manager-at-partnerstree-ltd-3742446926?trk=public_post_main-feed-card_feed-job-posting-content",
+      "https://al.linkedin.com/jobs/view/national-sports-consultant-for-development-of-guidance-note-on-mainstreaming-gender-in-sports-tirana-at-un-women-3710256746"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "albanian_basketball_association",
+      "entity_name": "Albanian Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://al.linkedin.com/jobs/view/match-reporter-at-individual-3065322543",
+        "https://al.linkedin.com/jobs/view/national-sports-consultant-for-development-of-guidance-note-on-mainstreaming-gender-in-sports-tirana-at-un-women-3710256746",
+        "https://dl1.en-us.nina.az",
+        "https://best-basketball-tips.com",
+        "https://al.linkedin.com/jobs/view/basketball-player-at-shoqata-e-basketbollit-vllaznia-3407603395",
+        "https://reporteri.net",
+        "https://justapedia.org",
+        "https://al.linkedin.com/jobs/view/head-basketball-coach-at-klubi-shum%C3%ABsport%C3%ABsh-apolonia-3913844067",
+        "https://al.linkedin.com/jobs/view/sportsbook-manager-at-partnerstree-ltd-3742446926?trk=public_post_main-feed-card_feed-job-posting-content",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Albanian Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:38:11.776029",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:38:18.457931",
+          "domain_explored": "https://dl1.en-us.nina.az",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_content_aggregator",
+            "irrelevant_navigation_structure",
+            "absence_of_target_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 585,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.23716402053833
+            }
+          ],
+          "reasoning": "The scraped content represents a generic content aggregator or directory page listing random historical and sports topics (Papal Palace, Northern Ireland Commonwealth Games, etc.). There is absolutely no mention of the Albanian Basketball Association, nor any procurement, job, or technology signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:38:21.297314",
+          "domain_explored": "https://reporteri.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:38:29.007554",
+          "domain_explored": "https://best-basketball-tips.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "personal_blog_platform",
+            "user_generated_content_model",
+            "generic_basketball_fan_content",
+            "absence_of_governance_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.2965612411499023
+            }
+          ],
+          "reasoning": "The scraped content reveals that 'best-basketball-tips.com' is a personal blog project started in 2007, dedicated to sharing general basketball tips and history. It explicitly invites users to write articles and share content, indicating a user-generated content model rather than an official organizational presence. While 'Albania' appears in a long list of countries covered by the blog, there is no connection to the official Albanian Basketball Association, nor are there any signals of procurement, enterprise technology usage, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:38:32.025273",
+          "domain_explored": "https://justapedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:39:01.688012",
+          "domain_explored": "https://al.linkedin.com/jobs/view/head-basketball-coach-at-klubi-shum%C3%ABsport%C3%ABsh-apolonia-3913844067",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Basketball Coach - Klubi Shum\u00ebsport\u00ebsh Apolonia"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "irrelevant_recruitment",
+            "low_level_sports_operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 190,
+              "elapsed_seconds": 26.28869605064392
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Klubi Shum\u00ebsport\u00ebsh Apolonia' (a local sports club in Fier), not the Albanian Basketball Association (FSHB). While it confirms basketball activity in Albania, it is a hiring event for a coaching role at a club level, which does not constitute a procurement signal or technology investment for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:39:10.695586",
+          "domain_explored": "https://al.linkedin.com/jobs/view/basketball-player-at-shoqata-e-basketbollit-vllaznia-3407603395",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Basketball Player (Import) - Shoqata e Basketbollit Vllaznia"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "irrelevant_recruitment",
+            "low_level_sports_operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1540,
+              "output_tokens": 206,
+              "elapsed_seconds": 5.438961982727051
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Shoqata e Basketbollit Vllaznia' (Vllaznia Basketball Association), a specific club entity based in Shkod\u00ebr, not the 'Albanian Basketball Association' (the national governing body). The recruitment is for playing talent (Positions 3/4, 5), which is an operational sports expense rather than a procurement signal for technology, infrastructure, or governance services."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:39:19.435515",
+          "domain_explored": "https://al.linkedin.com/jobs/view/match-reporter-at-individual-3065322543",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Match reporter (Individual/Global)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "gig_economy_recruitment",
+            "crowdsourced_data_collection",
+            "individual_recruiter_profile",
+            "low_value_freelance_tasks"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1691,
+              "output_tokens": 200,
+              "elapsed_seconds": 5.349308967590332
+            }
+          ],
+          "reasoning": "The content is a job posting from an individual recruiter ('Michael Bumba') seeking freelance sports fans to collect match data for a fee (\u20ac35-\u20ac65). It is not associated with the Albanian Basketball Association (FSHB) and represents a low-level operational task rather than organizational procurement or technology investment."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:39:27.382107",
+          "domain_explored": "https://al.linkedin.com/jobs/view/sportsbook-manager-at-partnerstree-ltd-3742446926?trk=public_post_main-feed-card_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sportsbook Manager at Partnerstree Ltd (Tirana, Albania)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "gambling_sector_divergence",
+            "recruitment_agency_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.647983074188232
+            }
+          ],
+          "reasoning": "The job posting is for a 'Sportsbook Manager' at 'Partnerstree Ltd', a gambling/betting company, not the Albanian Basketball Association. While the job description mentions 'Basketball' as a market knowledge area, this refers to betting odds/coverage, not the governance or procurement of the sport itself. The entity is a commercial gambling operator, which contradicts the target entity profile."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:39:34.294518",
+          "domain_explored": "https://al.linkedin.com/jobs/view/national-sports-consultant-for-development-of-guidance-note-on-mainstreaming-gender-in-sports-tirana-at-un-women-3710256746",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "National sports consultant for development of guidance note on mainstreaming gender in sports",
+                "entity": "UN Women",
+                "focus": "Gender equality in sports (Football, Basketball, Volleyball)",
+                "relevance": "Indirect - Establishes governance framework affecting target entity"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Policy Framework Development",
+                "description": "Creation of guidelines for sports agencies to promote gender equality.",
+                "implication": "Target entity (Albanian Basketball Association) may need to procure training, compliance tools, or consulting services to align with new UN Women guidelines."
+              }
+            ]
+          },
+          "patterns_found": [
+            "consultancy_procurement",
+            "sports_governance_reform",
+            "stakeholder_engagement_opportunity",
+            "gender_mainstreaming_policy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1844,
+              "output_tokens": 416,
+              "elapsed_seconds": 3.5375001430511475
+            }
+          ],
+          "reasoning": "While this is a UN Women procurement posting (entity mismatch), it explicitly targets the Albanian sports ecosystem and specifically names 'basketball' as a key focus area. The consultancy requires engagement with sports agencies/institutions in Albania to create guidelines. This signals a policy-driven procurement environment where the Albanian Basketball Association is a likely stakeholder or target beneficiary, indicating potential for partnerships or compliance-related vendor needs."
+        }
+      ],
+      "total_input_tokens": 10469,
+      "total_output_tokens": 1623,
+      "estimated_cost_usd": 0.055751999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Albanian Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:39:34.296603"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.245084",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:25.460087"
+}

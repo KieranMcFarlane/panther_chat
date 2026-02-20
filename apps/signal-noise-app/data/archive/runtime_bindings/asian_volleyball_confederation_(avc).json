@@ -1,0 +1,221 @@
+{
+  "entity_id": "asian_volleyball_confederation_(avc)",
+  "entity_name": "Asian Volleyball Confederation (AVC)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "asianvolleyball.net",
+    "inside.cev.eu",
+    "oca.asia",
+    "svleague.jp",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "asian_volleyball_confederation_(avc)",
+      "entity_name": "Asian Volleyball Confederation (AVC)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://oca.asia",
+        "https://svleague.jp",
+        "https://inside.cev.eu",
+        "https://asianvolleyball.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Asian Volleyball Confederation (AVC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:29:56.289171",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Systems",
+              "Scheduling/Calendar Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic partnership expansion (Volleyball World, SV.LEAGUE)",
+              "Operational alignment requirements"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Governance",
+            "Event Calendar Coordination",
+            "Stakeholder Alignment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 835,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.1121222972869873
+            }
+          ],
+          "reasoning": "The content indicates high-level strategic coordination between AVC, Volleyball World, and SV.LEAGUE. While not a direct procurement signal (RFP), the alignment of competition calendars and 'future collaboration' suggests upcoming operational needs for event management software, scheduling tools, or collaborative platforms to support these integrated efforts."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:30:10.733688",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Establishment of Strength and Conditioning Teams (OSCG)",
+              "Government support for Event Bids (EuroVolley 2028)",
+              "Investment in Scouting Infrastructure (Azerbaijan)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Regional Scope Divergence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 227,
+              "elapsed_seconds": 10.680933237075806
+            }
+          ],
+          "reasoning": "The scraped content is from the European Volleyball Confederation (CEV), not the Asian Volleyball Confederation (AVC). While the content reveals relevant sports industry activities (scouting, government bids, S&C team establishment), it applies to the European region and different stakeholders (OSCG, Montenegro). This data cannot be used to infer procurement intent for the AVC target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:30:27.015532",
+          "domain_explored": "https://oca.asia",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "OCA recognized by IOC",
+              "45 member NOCs structure"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Regional Scope Divergence",
+            "Content Focus: Athlete Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 237,
+              "elapsed_seconds": 7.925811767578125
+            }
+          ],
+          "reasoning": "The content is from the Olympic Council of Asia (OCA), the governing body for multi-sport events in Asia (e.g., Asian Games). While OCA is a parent/peer organization to AVC, this specific page is focused on 'Who We Are' and promoting individual athletes (Eko Yuli Irawan, Mutaz Barshim, etc.). It lacks specific procurement signals, technology stacks, or vendor partnership details relevant to AVC's specific operations. The entity is distinct enough that procurement data here would not reliably signal AVC's intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:30:35.732892",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "National Scope Divergence",
+            "Content Focus: League Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 534,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.4104793071746826
+            }
+          ],
+          "reasoning": "The scraped content originates from 'svleague.jp', which is the official domain of the V.League (Japan's domestic professional volleyball league). While the V.League is a member of the AVC, it is a distinct national entity with its own procurement operations. The content focuses on league-specific navigation (Men/Women categories) rather than AVC-wide governance or procurement signals. This represents a scope divergence from the target entity (Asian Volleyball Confederation)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:30:46.382866",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy Web Architecture (indicated by 'www-old' subdomain)",
+              "Static Content Publishing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Regional Scope Divergence",
+            "Legacy Infrastructure",
+            "Content Focus: Event Results & Schedules"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 239,
+              "elapsed_seconds": 4.333031892776489
+            }
+          ],
+          "reasoning": "The content is explicitly from the European Volleyball Confederation (CEV), evidenced by the URL (www-old.cev.eu), copyright (\u00a9 CEV 2011), and focus on European competitions (EuroVolley, Champions League). While the 'old' subdomain indicates a legacy web infrastructure, this data pertains to the European entity and does not provide procurement signals for the Asian Volleyball Confederation (AVC). The entity mismatch is the primary disqualifier."
+        }
+      ],
+      "total_input_tokens": 5787,
+      "total_output_tokens": 1146,
+      "estimated_cost_usd": 0.034551
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Asian Volleyball Confederation (AVC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:30:46.384030"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.329404",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:33.321069"
+}

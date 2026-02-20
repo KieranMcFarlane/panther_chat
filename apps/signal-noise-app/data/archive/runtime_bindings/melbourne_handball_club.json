@@ -1,0 +1,147 @@
+{
+  "entity_id": "melbourne_handball_club",
+  "entity_name": "Melbourne Handball Club",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "melbournehandballclub.com",
+    "handballaustralia.org.au",
+    "handball-planet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "melbourne_handball_club",
+      "entity_name": "Melbourne Handball Club",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball-planet.com",
+        "https://handballaustralia.org.au",
+        "https://melbournehandballclub.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Melbourne Handball Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:32:30.971019",
+          "domain_explored": "https://melbournehandballclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contact link (/contact) present, but content is not visible in this scrape."
+            ]
+          },
+          "patterns_found": [
+            "Static content repetition",
+            "Call to Action (CTA) for recruitment",
+            "Basic web presence"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1299,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.6263890266418457
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive marketing copy ('Melbourne Handball Club welcomes all kinds of players...') and a single 'Join us' call to action. There are no technical indicators, job postings, governance details, or infrastructure mentions that signal procurement activity. The content is purely promotional and user-facing."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:32:42.411660",
+          "domain_explored": "https://handballaustralia.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Content",
+            "Team Announcement",
+            "Event Coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 500,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.101813316345215
+            }
+          ],
+          "reasoning": "The content is a sports announcement regarding the 'Aussie Crocs' national handball team launching their Asian Championship campaign. This is standard sports federation news (roster announcements, event previews) and contains no information regarding business operations, technology acquisition, or vendor procurement for the Melbourne Handball Club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:33:14.742248",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "Tournament Results (EHF EURO 2026)",
+            "Player Transfer Announcements",
+            "Award Ceremonies (MVP, Coach of the Year)",
+            "Video Content Gallery"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 229,
+              "elapsed_seconds": 24.801817178726196
+            }
+          ],
+          "reasoning": "The scraped content from 'Handball Planet' is a global sports news outlet covering international handball (EHF, IHF), European professional clubs, and high-profile player transfers. It contains no information regarding the Melbourne Handball Club's local operations, governance, or procurement needs. The content is strictly editorial and focused on elite-level professional sports, distinct from the semi-professional or amateur context of the target entity."
+        }
+      ],
+      "total_input_tokens": 3259,
+      "total_output_tokens": 601,
+      "estimated_cost_usd": 0.018792
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Melbourne Handball Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:33:14.745351"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.357940",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:35.111238"
+}

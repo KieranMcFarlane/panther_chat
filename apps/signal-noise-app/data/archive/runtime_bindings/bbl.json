@@ -1,0 +1,453 @@
+{
+  "entity_id": "bbl",
+  "entity_name": "BBL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "bigbash.com.au",
+    "esports.bbl.co",
+    "easycredit-bbl.de",
+    "shop.cricket.com.au",
+    "groupe-bbl.com",
+    "melbournerenegades.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hk.linkedin.com/company/bangkok-bank-pcl/jobs",
+      "https://vn.linkedin.com/jobs/view/credit-acceptance-staff-officer-corporate-credit-at-bangkok-bank-pcl-vietnam-4252115973",
+      "https://lv.linkedin.com/jobs/view/454787619?trk=job_view_company_other_jobs",
+      "https://la.linkedin.com/jobs/view/job-opportunity-for-vientiane-branch-laos-at-bangkok-bank-4320218731",
+      "https://www.linkedin.com/posts/bangkok-bank-pcl_bangkokbank-bangkokbankcareer-careers-activity-7112343845568221184-S99b",
+      "https://ie.linkedin.com/jobs/view/customs-operations-clerk-at-groupe-bbl-3565921280?trk=public_post_feed-job-posting-content",
+      "https://www.linkedin.com/posts/bangkok-bank-pcl_bangkokbank-bangkokbankcareers-bbl-activity-7259873627980902400-W7FP"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bbl",
+      "entity_name": "BBL",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://esports.bbl.co",
+        "https://groupe-bbl.com",
+        "https://la.linkedin.com/jobs/view/job-opportunity-for-vientiane-branch-laos-at-bangkok-bank-4320218731",
+        "https://vn.linkedin.com/jobs/view/credit-acceptance-staff-officer-corporate-credit-at-bangkok-bank-pcl-vietnam-4252115973",
+        "https://www.linkedin.com/posts/bangkok-bank-pcl_bangkokbank-bangkokbankcareer-careers-activity-7112343845568221184-S99b",
+        "https://melbournerenegades.com.au",
+        "https://lv.linkedin.com/jobs/view/454787619?trk=job_view_company_other_jobs",
+        "https://easycredit-bbl.de",
+        "https://bigbash.com.au",
+        "https://shop.cricket.com.au",
+        "https://hk.linkedin.com/company/bangkok-bank-pcl/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BBL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:28:20.459026",
+          "domain_explored": "https://bigbash.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android)",
+              "E-commerce Platform (shop.cricket.com.au)",
+              "Digital Analytics (implied by 'live stats' and 'personalised video')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "App Store presence indicates ongoing mobile development contracts",
+              "UTM parameters in shop links suggest active digital marketing campaigns",
+              "Centralized merchandise hub implies vendor management for retail operations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Strategy",
+            "E-commerce Integration",
+            "Mobile-First Distribution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.1457679271698
+            }
+          ],
+          "reasoning": "The content confirms BBL utilizes a proprietary mobile app for fan engagement (live stats, video) and integrates directly with a centralized e-commerce platform (shop.cricket.com.au) for merchandise. While this indicates existing technology investments, it suggests a potential procurement pipeline for app maintenance, analytics services, or e-commerce platform support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:28:30.046345",
+          "domain_explored": "https://esports.bbl.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting/Streaming (Video embeds)",
+              "E-commerce Platform (Merchandise store)",
+              "CMS (News/Updates management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active merchandise sales channel (Digital Procurement/Logistics)",
+              "Sponsorship activation with Intel (Tech Partnership)",
+              "Multi-regional structure (BBL EMEA / BBL PCIFIC)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Merchandise E-commerce",
+            "Sponsorship Ecosystem (Intel)",
+            "Content Management & Video Hosting",
+            "Regional Brand Segmentation (EMEA/PACIFIC)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 333,
+              "elapsed_seconds": 6.518613815307617
+            }
+          ],
+          "reasoning": "The content confirms BBL operates a distinct esports vertical (BBL Esports) with dedicated digital infrastructure. While no direct procurement requests are visible, the presence of an active 'Shop Now' e-commerce flow, video content hosting for roster reveals, and active sponsorship integration (Intel Monsters Reloaded) indicates a need for digital merchandising platforms, content delivery networks, and partnership management tools. This validates the organization's digital maturity and potential for vendor engagement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:28:38.280633",
+          "domain_explored": "https://easycredit-bbl.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing/Shop Platform (implied by 'direkt zum Shop')",
+              "Content Management (GameCenter, Boxscores)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Management (EasyCredit, Skechers)",
+              "Event Ticketing Systems",
+              "Digital Statistics/Performance Tracking"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (German Basketball Bundesliga)",
+            "Sports League Operations (Scheduling, Scores, Ticketing)",
+            "Sponsorship Display (EasyCredit, Skechers)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 306,
+              "elapsed_seconds": 5.134282112121582
+            }
+          ],
+          "reasoning": "The content analyzed from 'easycredit-bbl.de' pertains to the German Basketball Bundesliga (BBL), not the Australian Big Bash League (BBL) cricket entity defined in the context. While the domain structure and league operations are similar, the procurement signals detected (e.g., ticketing platforms, sponsorship assets) apply to a different legal entity and geography. This represents a false positive in the search process, requiring a negative adjustment to confidence to refocus on the correct entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:28:47.268141",
+          "domain_explored": "https://shop.cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/ and UI patterns)",
+              "E-commerce Platform",
+              "Digital Payment Gateways"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Merchandising Agreement",
+              "Supply Chain for Replica Sports Apparel",
+              "Inventory Liquidation Strategy (Sale events)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized E-commerce Operations",
+            "Inventory Management & Merchandising",
+            "Promotional Campaign Management",
+            "Product SKU Proliferation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 289,
+              "elapsed_seconds": 4.9112229347229
+            }
+          ],
+          "reasoning": "The content confirms BBL utilizes a centralized, league-wide e-commerce platform (shop.cricket.com.au) rather than team-specific stores. While this is a consumer-facing page and not a procurement document, the existence of a complex inventory matrix (multiple teams, genders, styles) and promotional mechanics indicates an underlying supply chain and e-commerce infrastructure procurement requirement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:28:58.456176",
+          "domain_explored": "https://groupe-bbl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-Client Solutions (Web Access)",
+              "Free WebTools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Lead Logistics Services (LLS)",
+              "Supply Chain Information Systems",
+              "Transport Management"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (French Logistics Federation)",
+            "Supply Chain & Transport Operations",
+            "Federated Business Model (Autonomous Subsidiaries)",
+            "Web-based Client Tools (E-Client Solutions)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 278,
+              "elapsed_seconds": 6.365455150604248
+            }
+          ],
+          "reasoning": "The scraped content from 'groupe-bbl.com' clearly identifies the entity as a French logistics and transport federation (Groupe BBL), specializing in freight forwarding, customs, and contract logistics. This is a distinct entity from the Australian sports organization (Big Bash League) targeted in previous iterations. While there are procurement-relevant activities (logistics management, web tools), they apply to the wrong entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:29:07.664625",
+          "domain_explored": "https://melbournerenegades.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Player Contract Renewals (Operational Expenditure)",
+              "Digital Content Publishing Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Sports Franchise Operations (Melbourne Renegades)",
+            "Content Management System (CMS) Usage",
+            "Player Contract & Asset Management",
+            "Public Relations & Communications"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1637,
+              "output_tokens": 263,
+              "elapsed_seconds": 5.326367139816284
+            }
+          ],
+          "reasoning": "The content confirms the entity is the Melbourne Renegades (a BBL franchise). While the text focuses on sports news (player contracts, match reports), the presence of structured news articles and URLs indicates a CMS. This supports the hypothesis of digital operations requiring procurement (web hosting, CMS maintenance), though no direct procurement signals (RFPs, tech stack details) are present in this specific text."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:29:13.921633",
+          "domain_explored": "https://hk.linkedin.com/company/bangkok-bank-pcl/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Anti-Money Laundering Manager",
+              "Senior Human Resources Manager",
+              "Senior Credit Risk Manager",
+              "Treasury Sales Specialist",
+              "Internal Auditor"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Banking vs. Sports)",
+            "Financial Services Operations",
+            "Regulatory Compliance (AML)",
+            "Regional Expansion (SE Asia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1704,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.863694190979004
+            }
+          ],
+          "reasoning": "The scraped content belongs to Bangkok Bank PCL, a financial institution, and is completely unrelated to the Big Bash League (BBL) or cricket. The job listings (Anti-Money Laundering, Credit Risk) confirm the banking sector context. There is zero relevance to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:29:25.285308",
+          "domain_explored": "https://vn.linkedin.com/jobs/view/credit-acceptance-staff-officer-corporate-credit-at-bangkok-bank-pcl-vietnam-4252115973",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Credit Acceptance Staff/Officer (Corporate Credit)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Banking vs. Sports)",
+            "Financial Services Operations (Corporate Credit)",
+            "Regulatory Compliance (Bank of Thailand, Local Laws)",
+            "Risk Management (Credit Analysis, Litigation Support)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1780,
+              "output_tokens": 228,
+              "elapsed_seconds": 7.689671039581299
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Credit Acceptance Staff/Officer' at Bangkok Bank PCL (BBL) in Vietnam. While the acronym BBL matches, the entity is a financial institution, not the Big Bash League (Cricket). The operational context involves lending policies, credit risk ratings, and banking regulations, which are irrelevant to sports procurement intelligence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:29:33.059157",
+          "domain_explored": "https://lv.linkedin.com/jobs/view/454787619?trk=job_view_company_other_jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Word, Excel, PowerPoint)"
+            ],
+            "job_postings": [
+              "Investor Service Specialist"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Banking vs. Sports)",
+            "Financial Services Operations (Securities, Custody, Settlement)",
+            "Regulatory Compliance (Capital Market Regulations)",
+            "General IT Literacy (MS Office) vs. Tech Procurement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1856,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.2436559200286865
+            }
+          ],
+          "reasoning": "The content is a job posting for an 'Investor Service Specialist' at Bangkok Bank (BBL). This confirms the entity mismatch identified in previous iterations (Iterations 7 & 8), where BBL refers to the banking sector, not the Big Bash League (BBL). The role focuses on securities processing, custody services, and client relationship management within a financial context, which contradicts the procurement hypothesis related to sports operations, digital fan engagement, or cricket-related technology."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T15:29:40.196001",
+          "domain_explored": "https://la.linkedin.com/jobs/view/job-opportunity-for-vientiane-branch-laos-at-bangkok-bank-4320218731",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Oracle General Ledger Fusion Application",
+              "Application Development Framework Desktop Integration (ADFDI)",
+              "SWIFT Network"
+            ],
+            "job_postings": [
+              "Budget & Planning Officer",
+              "EDP & Swift Officer",
+              "Compliance Officer"
+            ],
+            "procurement_indicators": [
+              "Use of Oracle Cloud Infrastructure",
+              "Regulatory Reporting Requirements"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Banking vs. Sports)",
+            "Financial Services Operations (Budget & Planning)",
+            "Core Banking Technology (Oracle Fusion, SWIFT)",
+            "Regulatory Compliance (Bank of Lao PDR)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1941,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.721022844314575
+            }
+          ],
+          "reasoning": "The content is a job posting for Bangkok Bank (BBL) in Laos. While the acronym matches, the entity is a financial institution, not the Big Bash League (BBL) sports entity. The technologies listed (Oracle Fusion, SWIFT) are specific to banking operations and do not represent relevant procurement signals for the sports league target."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T15:29:43.044071",
+          "domain_explored": "https://www.linkedin.com/posts/bangkok-bank-pcl_bangkokbank-bangkokbankcareer-careers-activity-7112343845568221184-S99b",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 16216,
+      "total_output_tokens": 2796,
+      "estimated_cost_usd": 0.090588
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BBL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:29:43.044785"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416861",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:33.568191"
+}

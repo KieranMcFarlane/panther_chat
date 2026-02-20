@@ -1,0 +1,449 @@
+{
+  "entity_id": "scottish_cricket_union",
+  "entity_name": "Scottish Cricket Union",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "icc-cricket.com",
+    "acscricket.com",
+    "grokipedia.com",
+    "i.imgci.com",
+    "memories.scot",
+    "manuscripts.nls.uk",
+    "wikiwand.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/director-of-finance-and-corporate-services-at-cricket-scotland-4278080342",
+      "https://uk.linkedin.com/jobs/view/equality-diversity-and-inclusion-lead-at-cricket-scotland-4000080590",
+      "https://www.linkedin.com/posts/cricket-jobs_roles-of-the-week-in-the-world-of-cricket-activity-7355928846518370304-zw9G",
+      "https://uk.linkedin.com/jobs/director-of-cricket-jobs",
+      "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "scottish_cricket_union",
+      "entity_name": "Scottish Cricket Union",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.13999999999999999,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.13999999999999999,
+        0.13999999999999999,
+        0.13999999999999999
+      ],
+      "explored_domains": [
+        "https://i.imgci.com",
+        "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613",
+        "https://uk.linkedin.com/jobs/director-of-cricket-jobs",
+        "https://wikiwand.com",
+        "https://www.linkedin.com/posts/cricket-jobs_roles-of-the-week-in-the-world-of-cricket-activity-7355928846518370304-zw9G",
+        "https://icc-cricket.com",
+        "https://memories.scot",
+        "https://acscricket.com",
+        "https://grokipedia.com",
+        "https://uk.linkedin.com/jobs/view/director-of-finance-and-corporate-services-at-cricket-scotland-4278080342",
+        "https://manuscripts.nls.uk",
+        "https://uk.linkedin.com/jobs/view/equality-diversity-and-inclusion-lead-at-cricket-scotland-4000080590"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Senior Leadership Hiring (Director Level)",
+        "Corporate Services & Systems Optimization",
+        "Data Governance & Compliance (GDPR/DPO)",
+        "Commercial Strategy Oversight",
+        "Finance & Risk Management",
+        "Strategic EDI Transformation",
+        "Data-Driven Governance (Surveys/Audits)",
+        "Training & Education Programs",
+        "Committee-Based Oversight"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Scottish Cricket Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:21:00.952737",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "Global Governing Body Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 166,
+              "elapsed_seconds": 4.1201770305633545
+            }
+          ],
+          "reasoning": "The scraped content originates from the ICC (International Cricket Council) website and focuses exclusively on global tournament news (T20 World Cup 2026), squad announcements, and match fixtures. There is no mention of the Scottish Cricket Union (SCU), its domestic operations, or any procurement activities specific to the entity being analyzed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:21:08.105556",
+          "domain_explored": "https://acscricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Search Engine Database",
+              "Triwizard Technologies (Vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Collaborative arrangement with Triwizard Technologies (India)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Historical/Statistical Focus",
+            "Third-Party Partnership (Triwizard Technologies)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.727567195892334
+            }
+          ],
+          "reasoning": "The content identifies the entity as the Association of Cricket Statisticians (ACS), a historical research body, not the Scottish Cricket Union. While it mentions a technology partnership with Triwizard Technologies, this is a concluded arrangement for a specific member tool, not a procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:21:11.905286",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:21:14.901442",
+          "domain_explored": "https://i.imgci.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:21:23.773548",
+          "domain_explored": "https://memories.scot",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Third-Party Heritage/Charity Focus",
+            "Historical/Reminiscence Content",
+            "No Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 201,
+              "elapsed_seconds": 4.865629196166992
+            }
+          ],
+          "reasoning": "The content describes 'Memories Scotland', a heritage and reminiscence project. While it mentions cricket as one of the sports covered in its archive, the entity itself is a heritage/charity initiative (partnered with libraries), not the governing body for cricket (Scottish Cricket Union). There are no signals of commercial procurement, technology investment, or governance related to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:21:34.735848",
+          "domain_explored": "https://manuscripts.nls.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ArchivesSpace (v4.1.1)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Archival/Heritage Focus",
+            "Third-Party Platform (ArchivesSpace)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 956,
+              "output_tokens": 199,
+              "elapsed_seconds": 8.072644710540771
+            }
+          ],
+          "reasoning": "The content is clearly attributed to the National Library of Scotland (NLS), evidenced by the domain 'nls.uk' and the 'Archives and Manuscripts Catalogue' branding. This is a heritage/archival platform, not a sports governing body. The presence of 'ArchivesSpace v4.1.1' indicates a specific library technology stack, which is irrelevant to the procurement needs of the Scottish Cricket Union."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:21:37.537295",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:21:46.934297",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/director-of-finance-and-corporate-services-at-cricket-scotland-4278080342",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Finance & Membership Systems (ERP/CRM potential)",
+              "Data Management Platforms (GDPR compliance)",
+              "Ticketing Systems"
+            ],
+            "job_postings": [
+              "Director of Finance and Corporate Services (Senior Leadership Team)"
+            ],
+            "procurement_indicators": [
+              "Review of Financial & Administrative Systems (Fit for purpose optimization)",
+              "Data Governance & Compliance Implementation",
+              "Commercial Strategy Support (Sponsorship/Revenue tools)",
+              "Audit & Risk Management Services"
+            ]
+          },
+          "patterns_found": [
+            "Senior Leadership Hiring (Director Level)",
+            "Corporate Services & Systems Optimization",
+            "Data Governance & Compliance (GDPR/DPO)",
+            "Commercial Strategy Oversight",
+            "Finance & Risk Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1662,
+              "output_tokens": 402,
+              "elapsed_seconds": 5.875824689865112
+            }
+          ],
+          "reasoning": "The job posting for 'Director of Finance and Corporate Services' is a high-value procurement signal. It explicitly identifies the individual responsible for 'Corporate Services' and 'Data Management', which typically encompasses IT, software, and vendor management. The requirement to 'ensure finance, membership, and administrative systems are fit for purpose' indicates a direct intent to audit, optimize, or procure new enterprise systems (ERP/CRM). Additionally, the oversight of 'key national projects' and 'commercial strategy' suggests upcoming RFPs for event management and partnership services."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:21:54.900259",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/equality-diversity-and-inclusion-lead-at-cricket-scotland-4000080590",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Survey Platforms",
+              "HR Information Systems (HRIS)",
+              "Data Analytics Tools"
+            ],
+            "job_postings": [
+              "Equality, Diversity and Inclusion Lead"
+            ],
+            "procurement_indicators": [
+              "4-Year EDI Strategy Implementation",
+              "Requirement for data collection and analysis tools",
+              "Need for external training delivery and resource development"
+            ]
+          },
+          "patterns_found": [
+            "Strategic EDI Transformation",
+            "Data-Driven Governance (Surveys/Audits)",
+            "Training & Education Programs",
+            "Committee-Based Oversight"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1740,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.6046600341796875
+            }
+          ],
+          "reasoning": "The posting confirms a strategic 4-year EDI initiative requiring data collection tools, survey platforms, and training resources. It signals a move towards data-driven governance and likely procurement of HR/L&D tech or consultancy services to support the 'Transforming Through Unity' strategy."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:22:01.154327",
+          "domain_explored": "https://www.linkedin.com/posts/cricket-jobs_roles-of-the-week-in-the-world-of-cricket-activity-7355928846518370304-zw9G",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Finance"
+            ],
+            "procurement_indicators": [
+              "Strategic Financial Leadership",
+              "Corporate Services Oversight"
+            ]
+          },
+          "patterns_found": [
+            "Senior Leadership Hiring (Director of Finance)",
+            "Corporate Services & Systems Optimization",
+            "Financial Governance & Budget Control"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1817,
+              "output_tokens": 243,
+              "elapsed_seconds": 2.9176578521728516
+            }
+          ],
+          "reasoning": "This content corroborates the finding from Iteration 8 regarding the 'Director of Finance' role. While it is a secondary source (an aggregator post) and lacks the specific detail of the original job description, it confirms the active recruitment for a senior financial leadership position. This role typically holds budget authority and influence over procurement decisions, justifying a weak signal for procurement capability."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:22:10.166217",
+          "domain_explored": "https://uk.linkedin.com/jobs/director-of-cricket-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Search Interface",
+            "Sign-in/Gating Wall",
+            "Unrelated Search Results (Joint Impact Model, Conundrum)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1885,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.7215893268585205
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the query 'Director Of Cricket'. The content is dominated by UI elements (sign-in prompts, password fields) and lists vacancies for unrelated entities (Joint Impact Model, Conundrum). There is no specific mention of 'Scottish Cricket Union' or 'Cricket Scotland' in the provided text, nor are there specific procurement signals beyond generic job listings."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T19:22:16.831814",
+          "domain_explored": "https://hk.linkedin.com/jobs/view/general-manager-at-hong-kong-scottish-rfc-3998010613",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms",
+              "Content Creation Software",
+              "Online Shop Platforms"
+            ],
+            "job_postings": [
+              {
+                "title": "General Manager",
+                "entity": "Hong Kong Scottish RFC",
+                "location": "Hong Kong SAR",
+                "seniority": "Director",
+                "focus": "Operations, Administration, Sponsorship"
+              }
+            ],
+            "procurement_indicators": [
+              "Kit design and ordering process",
+              "Online shop sales promotion",
+              "Ordering stationery"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context (Hong Kong Scottish RFC vs Scottish Cricket Union)",
+            "Geographic Mismatch (Hong Kong SAR vs Scotland)",
+            "Sport Mismatch (Rugby Focus vs Cricket Focus)",
+            "Operational Role (General Management vs Procurement/Tech)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1957,
+              "output_tokens": 376,
+              "elapsed_seconds": 2.902139186859131
+            }
+          ],
+          "reasoning": "The content describes a General Manager role for the Hong Kong Scottish Rugby Football Club (RFC). Although the entity shares the 'Scottish' name, it is a distinct organization based in Hong Kong SAR focused on Rugby, whereas the target entity is the Scottish Cricket Union (Cricket Scotland) based in Scotland. The role focuses on general administration, social media, and event management rather than strategic procurement or technology investment."
+        }
+      ],
+      "total_input_tokens": 14292,
+      "total_output_tokens": 2281,
+      "estimated_cost_usd": 0.07709099999999999
+    },
+    "procurement_signals": [
+      "Senior Leadership Hiring (Director Level)",
+      "Corporate Services & Systems Optimization",
+      "Data Governance & Compliance (GDPR/DPO)",
+      "Commercial Strategy Oversight",
+      "Finance & Risk Management",
+      "Strategic EDI Transformation",
+      "Data-Driven Governance (Surveys/Audits)",
+      "Training & Education Programs",
+      "Committee-Based Oversight"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Scottish Cricket Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:22:16.833984"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301785",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:53.079355"
+}

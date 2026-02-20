@@ -1,0 +1,427 @@
+{
+  "entity_id": "cyprus_basketball_federation",
+  "entity_name": "Cyprus Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cbf-shop.com",
+    "commonwealthofnations.org",
+    "jccsmart.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://cy.linkedin.com/jobs/view/commercial-manager-at-cyprus-basketball-federation-official-3736637293",
+      "https://cy.linkedin.com/jobs/view/%CE%B3%CE%B5%CE%BD%CE%B9%CE%BA%CF%8C%CF%82-%CE%B4%CE%B9%CE%B5%CF%85%CE%B8%CF%85%CE%BD%CF%84%CE%AE%CF%82-at-cyprus-basketball-federation-4333235007",
+      "https://cy.linkedin.com/jobs/view/video-content-creator-at-fiba-eurobasket-2025-cyprus-loc-4213248162",
+      "https://cy.linkedin.com/jobs/view/marketing-and-commercial-manager-at-fiba-eurobasket-2025-cyprus-loc-4021522329",
+      "https://cy.linkedin.com/jobs/view/event-management-intern-%E2%80%93-paid-internship-at-fiba-eurobasket-2025-cyprus-loc-4139493650",
+      "https://cy.linkedin.com/jobs/view/marketing-and-commercial-manager-at-fiba-eurobasket-2025-cyprus-loc-4078226817",
+      "https://cy.linkedin.com/jobs/view/ticketing-executive-at-fiba-eurobasket-2025-cyprus-loc-4136744377",
+      "https://cy.linkedin.com/jobs/view/volunteers-at-fiba-eurobasket-2025-cyprus-group-at-fiba-eurobasket-2025-cyprus-loc-4162334701"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cyprus_basketball_federation",
+      "entity_name": "Cyprus Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.32,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.14,
+        0.2,
+        0.26,
+        0.32
+      ],
+      "explored_domains": [
+        "https://jccsmart.com",
+        "https://cy.linkedin.com/jobs/view/commercial-manager-at-cyprus-basketball-federation-official-3736637293",
+        "https://commonwealthofnations.org",
+        "https://cy.linkedin.com/jobs/view/video-content-creator-at-fiba-eurobasket-2025-cyprus-loc-4213248162",
+        "https://cy.linkedin.com/jobs/view/%CE%B3%CE%B5%CE%BD%CE%B9%CE%BA%CF%8C%CF%82-%CE%B4%CE%B9%CE%B5%CF%85%CE%B8%CF%85%CE%BD%CF%84%CE%AE%CF%82-at-cyprus-basketball-federation-4333235007",
+        "https://cy.linkedin.com/jobs/view/event-management-intern-%E2%80%93-paid-internship-at-fiba-eurobasket-2025-cyprus-loc-4139493650",
+        "https://cy.linkedin.com/jobs/view/marketing-and-commercial-manager-at-fiba-eurobasket-2025-cyprus-loc-4021522329",
+        "https://cbf-shop.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Commercial Leadership",
+        "CRM & Digital Infrastructure Requirements",
+        "Event-Specific Subsidiary Formation (Eurobasket 2025)",
+        "Outsourced Agency Management",
+        "Data-Driven Sales Operations",
+        "Executive Leadership Procurement",
+        "Strategic Planning & Budgeting Authority",
+        "Operational Management Scope",
+        "Digital Literacy Requirements",
+        "External Recruitment Process",
+        "Event-Specific Subsidiary Operations",
+        "Digital Content Production Procurement",
+        "Social Media Infrastructure Requirements",
+        "Short-Term High-Volume Contracting",
+        "Vendor-Grade Software Stack Needs",
+        "CRM & Sales Technology Requirements",
+        "Outsourced Agency Management",
+        "Event-Based Commercial Strategy",
+        "Data-Driven Decision Making",
+        "Sponsorship & Hospitality Procurement",
+        "Event Operations & Logistics Support",
+        "Vendor & Sponsor Coordination",
+        "Accreditation & Ticketing Infrastructure",
+        "Broadcasting (TV) Operations Requirements",
+        "Subsidiary Entity Management (CBF Eurobasket 2025 Ltd)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cyprus Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:17:45.906128",
+          "domain_explored": "https://cbf-shop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (SaaS)",
+              "Payment Gateway (implied)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active retail operations requiring inventory replenishment",
+              "Pre-order logistics for Eurobasket 2025 jerseys",
+              "Supplier relationships for 'Your Name' custom t-shirts"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Procurement",
+            "Event-Based Retail (Eurobasket 2025)",
+            "Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.078486919403076
+            }
+          ],
+          "reasoning": "The content confirms the Cyprus Basketball Federation operates an active e-commerce channel (cbf-shop.com). While this is not a direct procurement signal for *new* enterprise software, it indicates an ongoing need for inventory procurement (sporting goods, apparel) and the use of a hosted e-commerce solution (likely Shopify or similar SaaS based on URL structure and UI elements). The 'Eurobasket 2025' pre-order activity suggests upcoming logistics and inventory handling needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:17:52.000366",
+          "domain_explored": "https://commonwealthofnations.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "General Directory Listing",
+            "Geographic Scope Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.054882049560547
+            }
+          ],
+          "reasoning": "The content provided is from the Commonwealth of Nations website, a broad international organization directory. While it lists Cyprus as a member state, the content is generic, high-level information about the Commonwealth (government structure, trade, tourism) and does not contain specific procurement signals, technology stacks, or governance details related to the Cyprus Basketball Federation. There is no actionable intelligence regarding the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:17:54.821232",
+          "domain_explored": "https://jccsmart.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:18:14.833347",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/commercial-manager-at-cyprus-basketball-federation-official-3736637293",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Software",
+              "Data Analytics Tools",
+              "Digital Sales Platforms"
+            ],
+            "job_postings": [
+              {
+                "role": "Commercial Manager",
+                "entity": "CBF Eurobasket 2025 Ltd",
+                "focus": "Sponsorship, Ticketing, Advertising, Merchandising, Hospitality",
+                "reporting_line": "CEO"
+              }
+            ],
+            "procurement_indicators": [
+              "Management of outsourced agencies and partners",
+              "Requirement for CRM tools and data extraction capabilities",
+              "Need for commercial sales strategy implementation",
+              "Formation of dedicated subsidiary (CBF Eurobasket 2025 Ltd) for event hosting"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Commercial Leadership",
+            "CRM & Digital Infrastructure Requirements",
+            "Event-Specific Subsidiary Formation (Eurobasket 2025)",
+            "Outsourced Agency Management",
+            "Data-Driven Sales Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 415,
+              "elapsed_seconds": 16.480833053588867
+            }
+          ],
+          "reasoning": "The job posting for a Commercial Manager at CBF Eurobasket 2025 Ltd provides explicit evidence of procurement intent and organizational structure. The requirement for 'CRM management' and oversight of 'outsourced agencies/partners' indicates a need for technology procurement and vendor management. The formation of a specific subsidiary for the event suggests a dedicated budget and decision-making body for the 2025 project, significantly raising the confidence level for commercial opportunities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:18:23.498601",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/%CE%B3%CE%B5%CE%BD%CE%B9%CE%BA%CF%8C%CF%82-%CE%B4%CE%B9%CE%B5%CF%85%CE%B8%CF%85%CE%BD%CF%84%CE%AE%CF%82-at-cyprus-basketball-federation-4333235007",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "General Office Software (implied by 'computer knowledge')",
+              "Budgeting & Planning Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "General Director (\u0393\u03b5\u03bd\u03b9\u03ba\u03cc\u03c2 \u0394\u03b9\u03b5\u03c5\u03b8\u03c5\u03bd\u03c4\u03ae\u03c2)",
+                "seniority": "Executive / Entry Level (per LinkedIn tag, but description implies Seniority)",
+                "contract_type": "Full-time, 2 Years (Renewable)",
+                "deadline": "November 5, 2025",
+                "recruitment_channel": "External (OEB - Employers and Industrialists Federation)"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget Authority: Responsible for budget preparation and implementation.",
+              "Strategic Sourcing: Creation of operational plans for promotion and development.",
+              "Vendor Management: Oversight of communication with partners and stakeholders.",
+              "Organizational Restructuring: Hiring for this role suggests a push for professionalization."
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Procurement",
+            "Strategic Planning & Budgeting Authority",
+            "Operational Management Scope",
+            "Digital Literacy Requirements",
+            "External Recruitment Process"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1611,
+              "output_tokens": 475,
+              "elapsed_seconds": 5.087539911270142
+            }
+          ],
+          "reasoning": "The job posting for 'General Director' (\u0393\u03b5\u03bd\u03b9\u03ba\u03cc\u03c2 \u0394\u03b9\u03b5\u03c5\u03b8\u03c5\u03bd\u03c4\u03ae\u03c2) confirms active procurement of high-level human capital to drive organizational transformation. The role explicitly mandates budget creation, strategic planning, and operational management of leagues and national teams, indicating a centralization of procurement decision-making. The requirement for 'excellent computer knowledge' and the management of the 'product' of basketball suggests a need for modern management tools and infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:18:32.156630",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/video-content-creator-at-fiba-eurobasket-2025-cyprus-loc-4213248162",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Premiere Pro",
+              "Apple Final Cut Pro",
+              "CapCut",
+              "Social Media Platforms (Instagram, TikTok, YouTube, LinkedIn)"
+            ],
+            "job_postings": [
+              "Video content Executive (Fixed-term: Apr 2025 - Sep 2025)"
+            ],
+            "procurement_indicators": [
+              "Hardware procurement for filming (cameras, lighting, audio equipment)",
+              "Software licensing for video editing and post-production",
+              "Potential outsourcing of creative services if internal capacity is exceeded",
+              "Marketing technology stack for scheduling and analytics",
+              "Collaboration tools for real-time updates between Marketing and Commercial divisions"
+            ]
+          },
+          "patterns_found": [
+            "Event-Specific Subsidiary Operations",
+            "Digital Content Production Procurement",
+            "Social Media Infrastructure Requirements",
+            "Short-Term High-Volume Contracting",
+            "Vendor-Grade Software Stack Needs"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1684,
+              "output_tokens": 414,
+              "elapsed_seconds": 4.98170804977417
+            }
+          ],
+          "reasoning": "The job posting confirms the active operational phase of the CBF Eurobasket 2025 Ltd subsidiary. It reveals specific procurement needs for professional video production workflows, including hardware (cameras for live events) and software (Adobe Premiere, Final Cut). The requirement for 'multi-platform use' indicates a need for social media management tools and analytics platforms. The fixed-term contract nature (April-Sept 2025) highlights a temporary but intensive resource scaling phase."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:18:40.174716",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/marketing-and-commercial-manager-at-fiba-eurobasket-2025-cyprus-loc-4021522329",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Software",
+              "Data Analytics Tools",
+              "Digital Marketing Platforms",
+              "Ticketing Systems"
+            ],
+            "job_postings": [
+              "Marketing and Commercial Manager (FIBA EuroBasket 2025 - Cyprus LOC)"
+            ],
+            "procurement_indicators": [
+              "Management of outsourced agencies and partners",
+              "Implementation of marketing and commercial sales strategy",
+              "Procurement of advertising and merchandising channels",
+              "Hospitality and sponsorship vendor management",
+              "Fixed-term contract infrastructure setup (June 2024 - Sept 2025)"
+            ]
+          },
+          "patterns_found": [
+            "CRM & Sales Technology Requirements",
+            "Outsourced Agency Management",
+            "Event-Based Commercial Strategy",
+            "Data-Driven Decision Making",
+            "Sponsorship & Hospitality Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1763,
+              "output_tokens": 389,
+              "elapsed_seconds": 4.532559871673584
+            }
+          ],
+          "reasoning": "This job posting for a Marketing and Commercial Manager at the CBF Eurobasket 2025 Ltd subsidiary confirms active procurement planning for the 2025 event. It explicitly identifies the need for CRM tools, the management of outsourced agencies (vendors), and the procurement of services related to sponsorship, ticketing, and advertising. It reinforces the pattern of a specialized subsidiary (CBF Eurobasket 2025 Ltd) handling distinct commercial operations separate from the federation's general activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:18:47.517365",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/event-management-intern-%E2%80%93-paid-internship-at-fiba-eurobasket-2025-cyprus-loc-4139493650",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Accreditation Management Systems",
+              "Broadcasting/Tech Infrastructure",
+              "Social Media Management Tools"
+            ],
+            "job_postings": [
+              "Event Management Intern (FIBA EuroBasket 2025 - Cyprus LOC)"
+            ],
+            "procurement_indicators": [
+              "Vendor and Partner Coordination",
+              "TV Operation Outsourcing",
+              "Hospitality Services Procurement",
+              "Event Logistics Support"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Logistics Support",
+            "Vendor & Sponsor Coordination",
+            "Accreditation & Ticketing Infrastructure",
+            "Broadcasting (TV) Operations Requirements",
+            "Subsidiary Entity Management (CBF Eurobasket 2025 Ltd)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1842,
+              "output_tokens": 308,
+              "elapsed_seconds": 3.942415237426758
+            }
+          ],
+          "reasoning": "This posting confirms the operational scale of the Eurobasket 2025 project, specifically highlighting the need for coordination with external vendors, sponsors, and partners. It identifies specific operational areas requiring procurement support, such as TV operations, accreditation systems, and hospitality logistics."
+        }
+      ],
+      "total_input_tokens": 11191,
+      "total_output_tokens": 2516,
+      "estimated_cost_usd": 0.071313
+    },
+    "procurement_signals": [
+      "Strategic Commercial Leadership",
+      "CRM & Digital Infrastructure Requirements",
+      "Event-Specific Subsidiary Formation (Eurobasket 2025)",
+      "Outsourced Agency Management",
+      "Data-Driven Sales Operations",
+      "Executive Leadership Procurement",
+      "Strategic Planning & Budgeting Authority",
+      "Operational Management Scope",
+      "Digital Literacy Requirements",
+      "External Recruitment Process",
+      "Event-Specific Subsidiary Operations",
+      "Digital Content Production Procurement",
+      "Social Media Infrastructure Requirements",
+      "Short-Term High-Volume Contracting",
+      "Vendor-Grade Software Stack Needs",
+      "CRM & Sales Technology Requirements",
+      "Outsourced Agency Management",
+      "Event-Based Commercial Strategy",
+      "Data-Driven Decision Making",
+      "Sponsorship & Hospitality Procurement",
+      "Event Operations & Logistics Support",
+      "Vendor & Sponsor Coordination",
+      "Accreditation & Ticketing Infrastructure",
+      "Broadcasting (TV) Operations Requirements",
+      "Subsidiary Entity Management (CBF Eurobasket 2025 Ltd)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cyprus Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:18:47.520338"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.266478",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:31.686290"
+}

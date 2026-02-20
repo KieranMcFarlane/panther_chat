@@ -1,0 +1,274 @@
+{
+  "entity_id": "rangers",
+  "entity_name": "Rangers",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "rangers.co.uk",
+    "rangersintl.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/rangers-football-club-jobs",
+      "https://www.linkedin.com/jobs/new-york-rangers-jobs",
+      "https://uk.linkedin.com/jobs/view/academy-tutor-english-at-rangers-football-club-4358307617",
+      "https://au.linkedin.com/jobs/ranger-jobs-new-south-wales",
+      "https://au.linkedin.com/jobs/view/compliance-officer-ranger-2-positions-available-at-careers-at-council-4360771588"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rangers",
+      "entity_name": "Rangers",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rangers.co.uk",
+        "https://au.linkedin.com/jobs/view/compliance-officer-ranger-2-positions-available-at-careers-at-council-4360771588",
+        "https://au.linkedin.com/jobs/ranger-jobs-new-south-wales",
+        "https://uk.linkedin.com/jobs/view/academy-tutor-english-at-rangers-football-club-4358307617",
+        "https://uk.linkedin.com/jobs/rangers-football-club-jobs",
+        "https://www.linkedin.com/jobs/new-york-rangers-jobs",
+        "https://rangersintl.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rangers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:59:33.960693",
+          "domain_explored": "https://rangers.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:59:51.431572",
+          "domain_explored": "https://rangersintl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure)",
+              "WooCommerce (implied by /shop link)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Partnership page (generic)",
+              "Foundation/CSR activities"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Different League/Market"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1126,
+              "output_tokens": 226,
+              "elapsed_seconds": 11.604085922241211
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'rangersintl.com' belongs to Rangers International FC (The Flying Antelopes), a Nigerian football club based in Enugu, playing in the NPFL. This is a distinct entity from the target subject (Rangers FC, Scotland). The content focuses on local fan engagement and history, with no relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:00:05.289485",
+          "domain_explored": "https://uk.linkedin.com/jobs/rangers-football-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "signal": "Job Search Pollution",
+                "details": "LinkedIn search algorithm associated 'Rangers' with unrelated entity 'BOXT'."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Search Result Pollution",
+            "False Positive Association"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1264,
+              "output_tokens": 210,
+              "elapsed_seconds": 5.832866191864014
+            }
+          ],
+          "reasoning": "The search query 'Rangers Football Club' returned results exclusively for 'BOXT', a company based in Leeds, England. There is no entity overlap between Rangers (Glasgow, Scotland) and BOXT (Leeds, England). The search results are polluted and do not contain relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:00:11.820122",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-rangers-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Search Result Pollution",
+            "False Positive Association"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.1835691928863525
+            }
+          ],
+          "reasoning": "The scraped content explicitly refers to the 'New York Rangers' (Madison Square Garden Sports Corp) and 'New York Life Insurance Company', which are distinct entities from the target 'Rangers' (Rangers Football Club, Scotland). The geographic context is 'New York, NY' and 'West Palm Beach, FL', confirming the mismatch. This is a false positive generated by keyword ambiguity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:00:28.539192",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/academy-tutor-english-at-rangers-football-club-4358307617",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Search Result Pollution",
+            "Geographic Mismatch",
+            "Paywall/Gating"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 187,
+              "elapsed_seconds": 9.864248991012573
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn login wall and a list of unrelated job postings (e.g., Menlo School in California, Al Ain). The URL suggests a specific role ('Academy Tutor English at Rangers Football Club'), but the scraped text contains zero information about this specific role, the entity 'Rangers', or any procurement-related activity. It is a false positive or a blocked page."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:00:38.066068",
+          "domain_explored": "https://au.linkedin.com/jobs/ranger-jobs-new-south-wales",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ranger (Careers at Council)",
+              "Ranger (City of Wagga Wagga)",
+              "Manager City Rangers (City of Sydney)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Semantic Ambiguity",
+            "Search Result Pollution"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.2348647117614746
+            }
+          ],
+          "reasoning": "The content lists job openings for 'Rangers' within the context of Australian local government councils (e.g., City of Sydney, Liverpool City Council). These roles pertain to park/wildlife management, not the Rangers Football Club entity. The geographic location (New South Wales, Australia) and the hiring entities (Councils) confirm this is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:00:51.047280",
+          "domain_explored": "https://au.linkedin.com/jobs/view/compliance-officer-ranger-2-positions-available-at-careers-at-council-4360771588",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Compliance Officer - Ranger"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Semantic Ambiguity",
+            "Sector Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1659,
+              "output_tokens": 183,
+              "elapsed_seconds": 4.641678094863892
+            }
+          ],
+          "reasoning": "The content refers to 'Careers at Council' in Yass, New South Wales, Australia. This is a local government body (municipal), not the Rangers Football Club entity. The term 'Ranger' here denotes a park/compliance officer role, distinct from the sports entity. There is no relevance to the target entity's procurement activities."
+        }
+      ],
+      "total_input_tokens": 8672,
+      "total_output_tokens": 1213,
+      "estimated_cost_usd": 0.044211
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rangers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:00:51.048594"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.139081",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:55.360825"
+}

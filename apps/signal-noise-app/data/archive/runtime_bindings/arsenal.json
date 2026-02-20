@@ -1,0 +1,355 @@
+{
+  "entity_id": "arsenal",
+  "entity_name": "Arsenal",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "arsenal.com",
+    "premierleague.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/arsenal-f.c-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/arsenal-jobs",
+      "https://uk.linkedin.com/jobs/arsenal-f.c-jobs",
+      "https://www.linkedin.com/jobs/arsenal-football-club-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/view/academy-kit-assistant-pdp-casual-at-arsenal-football-club-4325786667"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "arsenal",
+      "entity_name": "Arsenal",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/jobs/arsenal-football-club-jobs-worldwide",
+        "https://uk.linkedin.com/jobs/arsenal-f.c-jobs",
+        "https://arsenal.com",
+        "https://uk.linkedin.com/jobs/arsenal-jobs",
+        "https://premierleague.com",
+        "https://uk.linkedin.com/jobs/view/academy-kit-assistant-pdp-casual-at-arsenal-football-club-4325786667",
+        "https://www.linkedin.com/jobs/arsenal-f.c-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Arsenal may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:45:23.097038",
+          "domain_explored": "https://arsenal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is exclusively sports journalism and marketing",
+            "No corporate governance or technical infrastructure signals",
+            "Focus on match results, player welfare, and fan engagement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.0052568912506104
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news, match reports, video highlights, and promotional material for tickets and merchandise. There is no presence of corporate strategy, technology infrastructure, job postings, or vendor management information relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:45:38.676297",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level commercial partnerships (e.g., Cloud & AI Partner)",
+            "Generic sports navigation (Transfer window, Fantasy PL)",
+            "Repetitive structural markup (lists of partners)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1179,
+              "output_tokens": 214,
+              "elapsed_seconds": 12.323893070220947
+            }
+          ],
+          "reasoning": "The content is sourced from the Premier League's main domain, not Arsenal's specific corporate infrastructure. While it lists 'Official Cloud & AI Partner' categories, these are league-wide sponsorships (e.g., Oracle) rather than specific procurement signals or technology stack implementations by Arsenal. There is no actionable intelligence regarding Arsenal's specific vendor selection, job openings, or RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:45:45.828968",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic mobile application marketplace interface",
+            "Consumer-facing content (games, entertainment)",
+            "Automated recommendation algorithms",
+            "Standardized app metadata (ratings, pricing, categories)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.5678393840789795
+            }
+          ],
+          "reasoning": "The content provided is a raw scrape of the Google Play Store homepage. It lists popular consumer games (e.g., Roblox, Candy Crush, PUBG) and generic app categories. There is no content related to Arsenal Football Club, corporate governance, or enterprise procurement. This URL is irrelevant to the objective of finding procurement signals for the entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:45:52.625569",
+          "domain_explored": "https://www.linkedin.com/jobs/arsenal-f.c-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Teamtailor (Recruitment/ATS)",
+              "LinkedIn (Job Distribution)"
+            ],
+            "job_postings": [
+              "Casual Stadium Tour Photo Sales Host (Arsenal Football Club)",
+              "1st Team Performance Coach (Kroenke Sports & Entertainment)",
+              "Senior Financial Controller (Corrigan Collection - Potential Vendor/Partner)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment by parent organization (Kroenke Sports & Entertainment)",
+              "Merchandising partner activity (FOCO) requiring financial analysis",
+              "Use of SaaS recruitment tools (Teamtailor) by the ecosystem"
+            ]
+          },
+          "patterns_found": [
+            "Direct hiring signals (Arsenal Football Club postings)",
+            "Indirect ecosystem hiring (Kroenke Sports & Entertainment)",
+            "Vendor ecosystem signals (Teamtailor, FOCO)",
+            "Operational roles (Sales, Finance, Logistics)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 402,
+              "elapsed_seconds": 3.453160047531128
+            }
+          ],
+          "reasoning": "While the scraped content is noisy and contains false positives (jobs at vendors like Teamtailor and partners like FOCO), it confirms active hiring by the parent entity (Kroenke Sports & Entertainment) and the club itself (Arsenal Football Club). The presence of roles like 'Pricing, Cost, & Margin Analyst' at merchandise partners and 'Head of Enterprise Sales' at recruitment tech vendors indicates a surrounding ecosystem of B2B activity, even if direct procurement roles are not visible in this specific snippet."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:46:03.948597",
+          "domain_explored": "https://uk.linkedin.com/jobs/arsenal-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Teamtailor (ATS)",
+              "LinkedIn Jobs"
+            ],
+            "job_postings": [
+              "Casual Stadium Tour Photo Sales Host",
+              "Junior Motion Graphics Designer"
+            ],
+            "procurement_indicators": [
+              "Use of Applicant Tracking System (Teamtailor)",
+              "Outsourced creative roles (Two Circles agency)"
+            ]
+          },
+          "patterns_found": [
+            "Direct hiring signals (Arsenal Football Club postings)",
+            "Indirect ecosystem hiring (Kroenke Sports & Entertainment)",
+            "Vendor ecosystem signals (Teamtailor, FOCO)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1640,
+              "output_tokens": 319,
+              "elapsed_seconds": 7.464097023010254
+            }
+          ],
+          "reasoning": "The scraped content confirms the existence of an active hiring channel for Arsenal, validating the entity's operational presence on LinkedIn. While the specific text provided is mostly UI chrome (login forms), the metadata and job titles (e.g., 'Casual Stadium Tour Photo Sales Host', 'Junior Motion Graphics Designer') confirm active recruitment. This indicates a procurement need for HR services and vendor tools (Teamtailor), though specific high-value procurement signals (RFPs, tech stack) are not visible in this specific snippet."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:46:10.701879",
+          "domain_explored": "https://uk.linkedin.com/jobs/arsenal-f.c-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Teamtailor (Recruitment CRM/ATS)"
+            ],
+            "job_postings": [
+              "Casual Stadium Tour Photo Sales Host (Arsenal Football Club)",
+              "Head of Enterprise Sales (SaaS) (Teamtailor)",
+              "Pricing, Cost, & Margin Analyst (FOCO)",
+              "Senior Financial Controller (Corrigan Collection)",
+              "Chef - Emirates Stadium (Delaware North)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Catering: Delaware North",
+              "Outsourced Merchandising/Retail: FOCO",
+              "HR Tech Stack: Teamtailor"
+            ]
+          },
+          "patterns_found": [
+            "Direct hiring signals (Arsenal Football Club postings)",
+            "Indirect ecosystem hiring (Kroenke Sports & Entertainment)",
+            "Vendor ecosystem signals (Teamtailor, FOCO)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1714,
+              "output_tokens": 387,
+              "elapsed_seconds": 3.4730801582336426
+            }
+          ],
+          "reasoning": "The content provides a direct view into the hiring ecosystem surrounding Arsenal. While it confirms direct hiring for operational roles (e.g., Stadium Tour Host), the significant procurement intelligence lies in the identification of key vendors. The presence of 'Teamtailor' (Recruitment CRM/ATS) and 'Delaware North' (Catering/Hospitality) confirms specific technology and service provider relationships. The 'Pricing, Cost, & Margin Analyst' role at FOCO suggests active merchandise retail management. This validates the 'Vendor ecosystem' pattern established in previous iterations."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:46:28.376602",
+          "domain_explored": "https://www.linkedin.com/jobs/arsenal-football-club-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment Platform)",
+              "Teamtailor (ATS - inferred from previous iterations)",
+              "Salesforce (inferred via Two Circles partnership)"
+            ],
+            "job_postings": [
+              "Casual Stadium Tour Photo Sales Host (Arsenal Football Club)",
+              "Commercial Insights Analyst (Two Circles - Partner)",
+              "Commercial Sales Lead, Partnership Sales (Two Circles - Partner)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for commercial operations via partner agencies",
+              "Outsourcing of digital sales/analytics functions to Two Circles"
+            ]
+          },
+          "patterns_found": [
+            "Direct hiring signals (Arsenal Football Club postings)",
+            "Indirect ecosystem hiring (Kroenke Sports & Entertainment)",
+            "Vendor ecosystem signals (Teamtailor, FOCO)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1793,
+              "output_tokens": 375,
+              "elapsed_seconds": 14.226526975631714
+            }
+          ],
+          "reasoning": "The content confirms the presence of direct hiring signals from Arsenal Football Club (e.g., Casual Stadium Tour Photo Sales Host), validating the entity's active recruitment. However, the specific job roles identified are operational/matchday staff rather than procurement or technical decision-makers. The presence of partner agencies (Two Circles) and hospitality vendors (DoubleTree) reinforces the ecosystem map but does not yet reveal specific technology procurement intent."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:46:45.643350",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/academy-kit-assistant-pdp-casual-at-arsenal-football-club-4325786667",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Teamworks (Athlete Management System)",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Academy Kit Assistant (PDP) - Casual"
+            ],
+            "procurement_indicators": [
+              "Stock inventory maintenance",
+              "Kit order processing support",
+              "Database management requirements"
+            ]
+          },
+          "patterns_found": [
+            "Operational Technology Usage (Teamworks)",
+            "Supply Chain & Inventory Management",
+            "Procurement Support Role (Kit Assistant)",
+            "Vendor Ecosystem (Microsoft Office)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1881,
+              "output_tokens": 268,
+              "elapsed_seconds": 13.56298279762268
+            }
+          ],
+          "reasoning": "While this is an operational role rather than a strategic procurement posting, it reveals specific technology infrastructure ('Teamworks') and supply chain processes (inventory management, kit ordering) used by the Academy. This confirms the existence of a structured operational environment that requires software and logistics vendors."
+        }
+      ],
+      "total_input_tokens": 12623,
+      "total_output_tokens": 2359,
+      "estimated_cost_usd": 0.073254
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Arsenal may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:46:45.644071"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.117299",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:28.470501"
+}

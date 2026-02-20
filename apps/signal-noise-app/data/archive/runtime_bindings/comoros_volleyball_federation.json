@@ -1,0 +1,238 @@
+{
+  "entity_id": "comoros_volleyball_federation",
+  "entity_name": "Comoros Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "voleysur.org",
+    "shop.volleyballworld.com",
+    "comorosfootball.com",
+    "en.tournoi-des-iles.com",
+    "finixsports.wordpress.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/ana-kuntz_jobsearch-careertips-applications-activity-7340462700839227393-Bj_-"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "comoros_volleyball_federation",
+      "entity_name": "Comoros Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://finixsports.wordpress.com",
+        "https://www.linkedin.com/posts/ana-kuntz_jobsearch-careertips-applications-activity-7340462700839227393-Bj_-",
+        "https://shop.volleyballworld.com",
+        "https://en.tournoi-des-iles.com",
+        "https://voleysur.org",
+        "https://comorosfootball.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Comoros Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:42:40.120256",
+          "domain_explored": "https://voleysur.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "regional_confederation_news",
+            "event_calendar_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.7068448066711426
+            }
+          ],
+          "reasoning": "The scraped content is from the South American Volleyball Confederation (CSV) website, not the Comoros Volleyball Federation. The content focuses on South American regional events (Chile, Brazil, Peru) and CSV governance. There is no information regarding Comoros, its procurement activities, or its technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:42:55.191518",
+          "domain_explored": "https://shop.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (inferred from 'collections', 'products' URL structure)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_product_listing",
+            "global_merchandising",
+            "irrelevant_entity_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 200,
+              "elapsed_seconds": 7.867408990859985
+            }
+          ],
+          "reasoning": "The scraped content is from 'shop.volleyballworld.com', a global e-commerce platform for Volleyball World/FIVB merchandise. It lists retail jerseys for international teams (Netherlands, Italy, China, Poland) and contains no information regarding the Comoros Volleyball Federation's internal operations, governance, or procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:43:30.953314",
+          "domain_explored": "https://comorosfootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "sports_news_coverage",
+            "wrong_federation_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 779,
+              "output_tokens": 171,
+              "elapsed_seconds": 28.451129913330078
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'comorosfootball.com', which is the domain for the Comoros Football Federation (F\u00e9d\u00e9ration Comorienne de Football), not the Comoros Volleyball Federation. The content is purely sports journalism regarding the COSAFA Cup and contains no procurement, technology, or governance signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:43:43.807001",
+          "domain_explored": "https://en.tournoi-des-iles.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook (Social Media)",
+              "Standard Web CMS"
+            ],
+            "job_postings": [
+              "Volunteer Call (General)",
+              "Sponsorship/Partnership Roles (Implied)"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Packages (RFP for advertisers)",
+              "Vendor needs for multi-discipline event infrastructure (July 2025)",
+              "Operational requirements for Beach Volleyball specific events"
+            ]
+          },
+          "patterns_found": [
+            "multi_sport_event_organization",
+            "sponsorship_acquisition",
+            "volunteer_coordination",
+            "beach_volleyball_discipline_inclusion",
+            "event_infrastructure_requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 335,
+              "elapsed_seconds": 4.474520921707153
+            }
+          ],
+          "reasoning": "While the 'Tournoi des \u00celes' is a multi-sport event and not the Federation itself, it is a major operational entity in the Comoros sports ecosystem scheduled for July 2025. The explicit inclusion of 'beach volleyball' as a discipline creates a direct operational link. The site actively solicits sponsors and partners, indicating a procurement cycle for event services, equipment, and marketing. This represents a peripheral but valid signal for sports-related procurement in the region."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:43:49.815467",
+          "domain_explored": "https://finixsports.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:43:56.612513",
+          "domain_explored": "https://www.linkedin.com/posts/ana-kuntz_jobsearch-careertips-applications-activity-7340462700839227393-Bj_-",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "career_coaching_content",
+            "personal_branding_strategy",
+            "generic_recruitment_advice",
+            "irrelevant_entity_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.292742967605591
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn post about personal job hunting strategies (video intros, outreach) authored by an individual (Ana Kuntz). It has no relation to the Comoros Volleyball Federation, contains no procurement signals, and does not reflect the entity's activities or technology stack."
+        }
+      ],
+      "total_input_tokens": 6671,
+      "total_output_tokens": 1042,
+      "estimated_cost_usd": 0.035643
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Comoros Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:43:56.614134"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337105",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:48.828112"
+}

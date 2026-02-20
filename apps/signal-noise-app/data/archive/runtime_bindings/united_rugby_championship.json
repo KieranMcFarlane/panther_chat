@@ -1,0 +1,305 @@
+{
+  "entity_id": "united_rugby_championship",
+  "entity_name": "United Rugby Championship",
+  "template_id": "tpl_rugby_governance_ecosystem_v1",
+  "cluster_id": "rugby_league_admin",
+  "discovered_domains": [
+    "unitedrugby.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/jobs/view/videographer-at-united-rugby-championship-3755472268",
+      "https://ie.linkedin.com/jobs/view/senior-editorial-manager-at-united-rugby-championship-3714724983",
+      "https://ie.linkedin.com/jobs/view/media-public-relations-manager-at-pro14-rugby-2735720983",
+      "https://uk.linkedin.com/jobs/the-rugby-jobs?trk=amworks_jserp_redirect&position=1&pageNum=0",
+      "https://ie.linkedin.com/jobs/view/phd-student-at-university-college-dublin-4021589128"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "united_rugby_championship",
+      "entity_name": "United Rugby Championship",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://ie.linkedin.com/jobs/view/videographer-at-united-rugby-championship-3755472268",
+        "https://ie.linkedin.com/jobs/view/media-public-relations-manager-at-pro14-rugby-2735720983",
+        "https://uk.linkedin.com/jobs/the-rugby-jobs?trk=amworks_jserp_redirect&position=1&pageNum=0",
+        "https://ie.linkedin.com/jobs/view/phd-student-at-university-college-dublin-4021589128",
+        "https://ie.linkedin.com/jobs/view/senior-editorial-manager-at-united-rugby-championship-3714724983",
+        "https://unitedrugby.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "United Rugby Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:47:18.397251",
+          "domain_explored": "https://unitedrugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:47:24.044678",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "consumer_app_store_data",
+            "gaming_and_entertainment_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.5690701007843018
+            }
+          ],
+          "reasoning": "The scraped content is from the Apple App Store 'Today' feed, featuring consumer mobile games (Roblox, Pok\u00e9mon, Genshin Impact) and general productivity apps. There is absolutely no content related to the United Rugby Championship, sports management, enterprise procurement, or corporate governance. This data is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:47:32.125446",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/videographer-at-united-rugby-championship-3755472268",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Editing Software",
+              "Motion Graphics Tools",
+              "Visual Effects (VFX) Software",
+              "Color Grading Tools",
+              "Sound Design Software"
+            ],
+            "job_postings": [
+              {
+                "title": "Videographer / Video & motion creator",
+                "type": "12 Month Contract",
+                "department": "Marketing - Brand & Content",
+                "requirements": "5+ years experience, end-to-end production, motion design, creative direction",
+                "location": "Dublin, Ireland (with travel to London)"
+              }
+            ],
+            "procurement_indicators": [
+              "Internal Capacity Building: Hiring senior creative staff reduces immediate need for external production agencies.",
+              "Hardware/Software Spend: High-end video production roles imply a need for significant investment in editing workstations and software licenses.",
+              "Strategic Focus: Explicit mention of 'URC\u2019s growth strategy' and 'A Different League' brand positioning indicates budget allocation towards brand marketing."
+            ]
+          },
+          "patterns_found": [
+            "job_posting",
+            "content_procurement",
+            "marketing_expansion",
+            "contract_hiring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 505,
+              "elapsed_seconds": 4.758028030395508
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a Videographer/Video & Motion Creator at United Rugby Championship. While this is a personnel hire rather than a B2B vendor procurement, it provides strong signals regarding the organization's internal investment in content production capabilities. The requirement for '5 years of experience' and 'highly skilled editor' proficiency indicates a build-up of internal technical capacity. This suggests potential future procurement needs for supporting software, hardware, or external agencies for larger campaigns, justifying a weak signal for procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:47:38.987614",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/senior-editorial-manager-at-united-rugby-championship-3714724983",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "Digital Analytics Platforms",
+              "Social Media Management Tools"
+            ],
+            "job_postings": [
+              "Senior Editorial Manager (12-month contract)"
+            ],
+            "procurement_indicators": [
+              "Investment in 'owned and operated digital channels'",
+              "Requirement for 'interpret data' suggesting analytics procurement",
+              "Budget allocation for content production and storytelling campaigns"
+            ]
+          },
+          "patterns_found": [
+            "content_procurement",
+            "digital_transformation",
+            "contract_hiring",
+            "marketing_expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.1924259662628174
+            }
+          ],
+          "reasoning": "The job posting for a Senior Editorial Manager confirms active investment in content infrastructure and digital channels. While this is a personnel hire rather than a direct vendor RFP, it indicates a budget for content production tools, analytics platforms, and potentially external agencies to support the 'owned and operated digital channels' mentioned in the description."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:47:47.279415",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/media-public-relations-manager-at-pro14-rugby-2735720983",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Media Public Relations Manager"
+            ],
+            "procurement_indicators": [
+              "Communications Strategy Implementation",
+              "Media Event Management"
+            ]
+          },
+          "patterns_found": [
+            "job_posting",
+            "marketing_expansion",
+            "stakeholder_management",
+            "communications_strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 240,
+              "elapsed_seconds": 4.89174485206604
+            }
+          ],
+          "reasoning": "The content is a job posting for a Media Public Relations Manager. While it confirms organizational growth and investment in brand visibility ('most talked about rugby competition'), it focuses on organic relationship building with journalists rather than external vendor procurement or technology acquisition. It supports the 'marketing_expansion' pattern established in previous iterations but does not provide direct procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:47:54.357057",
+          "domain_explored": "https://uk.linkedin.com/jobs/the-rugby-jobs?trk=amworks_jserp_redirect&position=1&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Membership Experience Host - Everlast Gyms (Rugby, England)",
+              "Academy Manager - Heart of England Training (Rugby, England)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "geographic_disambiguation_failure",
+            "generic_job_board_noise",
+            "irrelevant_search_results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1634,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.073288917541504
+            }
+          ],
+          "reasoning": "The search query 'The Rugby' returned results for the town of Rugby, England (e.g., Everlast Gyms, Heart of England Training), rather than the United Rugby Championship organization. The content is a generic job listing page requiring login, with no specific procurement signals, technology stacks, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:48:14.649026",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/phd-student-at-university-college-dublin-4021589128",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Kitman Labs",
+              "StatSports",
+              "Catapult",
+              "Stats Perform",
+              "VALD"
+            ],
+            "job_postings": [
+              "PhD Student - Injury Surveillance and Athletic Performance (UCD/URC)"
+            ],
+            "procurement_indicators": [
+              "Funded research study across all 16 URC clubs",
+              "Requirement for data management systems and visualization tools",
+              "Standardization of data collection across multiple Unions (IRFU, FIR, SRU, SARU, WRU)"
+            ]
+          },
+          "patterns_found": [
+            "academic_partnership",
+            "data_governance_framework",
+            "performance_analytics_procurement",
+            "athlete_management_systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1698,
+              "output_tokens": 350,
+              "elapsed_seconds": 16.65117597579956
+            }
+          ],
+          "reasoning": "While this is a PhD posting (hiring), the project description reveals significant procurement and technology infrastructure for the United Rugby Championship (URC). It confirms the existence of a centralized 'Injury Surveillance Project' involving all 16 clubs and specific unions. The 'Preferred' qualifications explicitly list vendor technologies (Kitman, StatSports, Catapult, Stats Perform, VALD), indicating active procurement and usage of these performance data platforms. This signals a mature data stack and vendor reliance."
+        }
+      ],
+      "total_input_tokens": 9264,
+      "total_output_tokens": 1786,
+      "estimated_cost_usd": 0.054582000000000006
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "United Rugby Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:48:14.650305"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449372",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:00.535444"
+}

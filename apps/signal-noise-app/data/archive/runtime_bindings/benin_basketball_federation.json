@@ -1,0 +1,113 @@
+{
+  "entity_id": "benin_basketball_federation",
+  "entity_name": "Benin Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "africa-press.net",
+    "pmnewsnigeria.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "benin_basketball_federation",
+      "entity_name": "Benin Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://africa-press.net",
+        "https://pmnewsnigeria.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Benin Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:46:03.520738",
+          "domain_explored": "https://africa-press.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "High volume of irrelevant political/economic content",
+            "Absence of specific entity mentions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.711155891418457
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage and navigation structure of 'Africa Press', a general news aggregator. While the site lists 'B\u00e9nin' in its French section, the content provided is a list of headlines regarding geopolitics, economy, and general sports (Handball, Football) across Africa. There is no specific mention of the 'Benin Basketball Federation', 'FEBABB', or any associated procurement activities, job postings, or technology investments specific to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:46:12.255786",
+          "domain_explored": "https://pmnewsnigeria.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "High volume of entertainment/political content",
+            "Geographic mismatch (Nigeria vs Benin)",
+            "No entity-specific mentions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.3460469245910645
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a Nigerian news aggregator (PM News Nigeria). The articles focus on entertainment (Grammys), politics, and general crime news. There is no mention of the Benin Basketball Federation, nor any procurement signals relevant to the entity. The geographic scope (Nigeria) further invalidates the relevance to the target entity based in Benin."
+        }
+      ],
+      "total_input_tokens": 2786,
+      "total_output_tokens": 421,
+      "estimated_cost_usd": 0.014673000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Benin Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:46:12.257818"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252505",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:38:07.725662"
+}

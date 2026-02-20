@@ -1,0 +1,49 @@
+{
+  "total_rfps_detected": 0,
+  "verified_rfps": 0,
+  "rejected_rfps": 0,
+  "entities_checked": 2,
+  "highlights": [],
+  "scoring_summary": {
+    "avg_confidence": 0.0,
+    "avg_fit_score": 0.0,
+    "top_opportunity": "None"
+  },
+  "quality_metrics": {
+    "brightdata_detections": 0,
+    "perplexity_verifications": 0,
+    "verified_rate": 0.0,
+    "placeholder_urls_rejected": 0,
+    "expired_rfps_rejected": 0,
+    "competitive_intel_gathered": 0
+  },
+  "discovery_breakdown": {
+    "linkedin_posts": 0,
+    "linkedin_jobs": 0,
+    "tender_platforms": 0,
+    "sports_news_sites": 0,
+    "official_websites": 0,
+    "linkedin_success_rate": 0.35,
+    "tender_platform_success_rate": 0.3
+  },
+  "perplexity_usage": {
+    "discovery_queries": 2,
+    "validation_queries": 0,
+    "competitive_intel_queries": 0,
+    "total_queries": 2,
+    "estimated_cost": 0.02
+  },
+  "brightdata_usage": {
+    "targeted_domain_queries": 0,
+    "broad_web_queries": 0,
+    "total_queries": 0,
+    "estimated_cost": 0.0
+  },
+  "cost_comparison": {
+    "total_cost": 0.02,
+    "cost_per_verified_rfp": 0.02,
+    "estimated_old_system_cost": 3.0,
+    "savings_vs_old_system": 2.98
+  },
+  "generated_at": "2026-02-06T03:19:20.372041+00:00"
+}

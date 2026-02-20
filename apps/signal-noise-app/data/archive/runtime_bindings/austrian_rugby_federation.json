@@ -1,0 +1,364 @@
+{
+  "entity_id": "austrian_rugby_federation",
+  "entity_name": "Austrian Rugby Federation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "rugby-austria.at",
+    "portaldoholanda.com.br",
+    "a.osmarks.net",
+    "wikiwand.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/rugby-jobs",
+      "https://au.linkedin.com/jobs/rugby-union-jobs",
+      "https://au.linkedin.com/jobs/view/development-engagement-coordinator-at-australian-rugby-foundation-4357642614",
+      "https://au.linkedin.com/jobs/view/chief-executive-officer-at-rugby-union-players-%E2%80%8B-association-rupa-4360887650",
+      "https://au.linkedin.com/jobs/view/fan-communications-specialist-men-s-rwc-2027-at-world-rugby-4353462429",
+      "https://au.linkedin.com/jobs/rugby-australia-jobs",
+      "https://au.linkedin.com/jobs/marketing-rugby-jobs",
+      "https://au.linkedin.com/jobs/view/join-sydney-s-most-successful-rugby-club-in-2026-rugby-union-coaches-and-managers-2026-at-hunters-hill-rugby-union-football-club-4318178176"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_rugby_federation",
+      "entity_name": "Austrian Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/fan-communications-specialist-men-s-rwc-2027-at-world-rugby-4353462429",
+        "https://a.osmarks.net",
+        "https://portaldoholanda.com.br",
+        "https://au.linkedin.com/jobs/rugby-jobs",
+        "https://au.linkedin.com/jobs/view/development-engagement-coordinator-at-australian-rugby-foundation-4357642614",
+        "https://wikiwand.com",
+        "https://rugby-austria.at",
+        "https://au.linkedin.com/jobs/rugby-union-jobs",
+        "https://au.linkedin.com/jobs/view/chief-executive-officer-at-rugby-union-players-%E2%80%8B-association-rupa-4360887650"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:12:09.905381",
+          "domain_explored": "https://rugby-austria.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - implied by site structure",
+              "Event Management / Registration Forms (implied by 'Tryout' link)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Nationwide Tryouts (Event Operations)",
+              "Talent Identification Campaign (Marketing/Scouting)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Requirement",
+            "Recruitment/Talent ID Campaign",
+            "Standardized Web Presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 548,
+              "output_tokens": 279,
+              "elapsed_seconds": 5.642766952514648
+            }
+          ],
+          "reasoning": "The content reveals an active 'Nationwide Tryout' campaign scheduled for September 20th. While the text is repetitive, the presence of a specific call-to-action link (/tryoutday/) indicates an active operational need for event management, registration handling, and participant communication. This suggests potential procurement or usage of event software, CRM tools for talent ID, or marketing services, though the specific vendors are not visible in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:12:18.102669",
+          "domain_explored": "https://portaldoholanda.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vue.js or Angular (indicated by '{{ news.title }}' template syntax)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Geographic Context",
+            "News Aggregator Structure",
+            "Template Syntax (Vue.js/Angular indicators)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 224,
+              "elapsed_seconds": 4.521146774291992
+            }
+          ],
+          "reasoning": "The scraped content is from 'portaldoholanda.com.br', a Brazilian news portal focused on Amazonas/Manaus politics and general news. It contains no relation to the Austrian Rugby Federation, Austrian sports governance, or European procurement signals. The content is purely journalistic/opinion-based and includes template syntax (e.g., '{{ news.title }}'), indicating raw data from a news feed rather than a corporate procurement page."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:12:24.235513",
+          "domain_explored": "https://a.osmarks.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kiwix (ZIM Reader)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Offline Content Reader (Kiwix)",
+            "No-Script Fallback Page",
+            "Unrelated Personal Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 528,
+              "output_tokens": 162,
+              "elapsed_seconds": 3.2572500705718994
+            }
+          ],
+          "reasoning": "The target URL resolves to a personal domain (osmarks.net) serving a static instance of Kiwix, an offline Wikipedia reader. This is a technical utility page with no relation to the Austrian Rugby Federation, sports governance, or procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:12:27.004112",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:12:33.287846",
+          "domain_explored": "https://au.linkedin.com/jobs/rugby-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chief Executive Officer - Rugby Union Players' Association (Australia)",
+              "Rugby Coach - First XV - St Augustine's College (Australia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Australia vs Austria)",
+            "Generic Job Aggregator",
+            "Authentication Gate (No Public Data)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.44380784034729
+            }
+          ],
+          "reasoning": "The scraped content is from the Australian LinkedIn subdomain (au.linkedin.com) and lists roles specifically for Australian entities (e.g., Rugby Union Players' Association, St Augustine's College). There is no relevance to the Austrian Rugby Federation. Furthermore, the content is primarily login-gated UI elements rather than actual job descriptions or procurement data."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:12:45.137787",
+          "domain_explored": "https://au.linkedin.com/jobs/rugby-union-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chief Executive Officer - Rugby Union Players' Association (RUPA) - Australia",
+              "Senior Stadium Event Manager - AFL - Australia"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Australia vs Austria)",
+            "Authentication Gate (No Public Data)",
+            "Generic Job Aggregator",
+            "Unrelated Entity (RUPA, AFL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 241,
+              "elapsed_seconds": 8.374852895736694
+            }
+          ],
+          "reasoning": "The scraped content confirms the URL targets the Australian job market (.au domain), listing roles for the Rugby Union Players' Association (RUPA) and the AFL in Australia. This is irrelevant to the Austrian Rugby Federation. Additionally, the content is largely gated behind authentication forms, preventing the extraction of usable procurement intelligence or technology stack details."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:12:59.771553",
+          "domain_explored": "https://au.linkedin.com/jobs/view/development-engagement-coordinator-at-australian-rugby-foundation-4357642614",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Excel, PowerPoint, Word)",
+              "CRM databases (Salesforce, Raisers Edge mentioned as advantageous)"
+            ],
+            "job_postings": [
+              "Development & Engagement Coordinator"
+            ],
+            "procurement_indicators": [
+              "Outsourced Events Agency usage",
+              "External Marketing Agency usage",
+              "Excel-based financial tracking (potential gap for BI tool procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Australia vs Austria)",
+            "Entity Mismatch (Australian Rugby Foundation vs Austrian Rugby Federation)",
+            "Philanthropic/Non-Profit Operational Model",
+            "Donor Management (CRM) Usage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1681,
+              "output_tokens": 328,
+              "elapsed_seconds": 10.825230121612549
+            }
+          ],
+          "reasoning": "The content describes a job opening for the 'Australian Rugby Foundation' (ARF) located in Sydney, Australia. This is a distinct entity from the target 'Austrian Rugby Federation' (\u00d6sterreichischer Rugby Verband). While the operational context (CRM usage, event management) is relevant to rugby administration, the geographic and entity mismatch renders this irrelevant to the specific procurement intelligence goal for the Austrian entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:13:07.358204",
+          "domain_explored": "https://au.linkedin.com/jobs/view/chief-executive-officer-at-rugby-union-players-%E2%80%8B-association-rupa-4360887650",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chief Executive Officer at Rugby Union Players' Association (RUPA)"
+            ],
+            "procurement_indicators": [
+              "Executive Search Firm Engagement (Tomas Petkovich)",
+              "Industrial Relations & Negotiation Services",
+              "Governance & Compliance Consulting"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Australia vs Austria)",
+            "Entity Mismatch (RUPA vs Austrian Rugby Federation)",
+            "Authentication Gate (LinkedIn)",
+            "Executive Recruitment (C-Level Hiring)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1773,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.743313789367676
+            }
+          ],
+          "reasoning": "The content pertains to the Rugby Union Players' Association (RUPA) in Australia, not the Austrian Rugby Federation. While it is a procurement signal (hiring a CEO), the entity and location are incorrect for the current target."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:13:15.132461",
+          "domain_explored": "https://au.linkedin.com/jobs/view/fan-communications-specialist-men-s-rwc-2027-at-world-rugby-4353462429",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Platforms",
+              "Data Analytics Tools",
+              "Ticketing Systems"
+            ],
+            "job_postings": [
+              "Fan Communications Specialist - Men's RWC 2027"
+            ],
+            "procurement_indicators": [
+              "External CRM Agency Management",
+              "Data-led fan communications strategy",
+              "Integration with wider business systems"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Australia vs Austria)",
+            "Entity Mismatch (World Rugby/RWCA vs Austrian Rugby Federation)",
+            "Event-Specific Scope (RWC 2027)",
+            "Authentication Gate (LinkedIn)",
+            "CRM/Agency Management Role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1852,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.6672470569610596
+            }
+          ],
+          "reasoning": "While the content contains strong procurement signals (CRM strategy, external agency management, data-led fan engagement), the context is entirely misaligned with the target entity. The role is for the Rugby World Cup 2027 in Australia, hosted by World Rugby/RWCA, not the Austrian Rugby Federation. The geographic and entity mismatches make this irrelevant to the user's specific procurement intelligence goal."
+        }
+      ],
+      "total_input_tokens": 10950,
+      "total_output_tokens": 2009,
+      "estimated_cost_usd": 0.062985
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:13:15.135717"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.285685",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:31.746119"
+}

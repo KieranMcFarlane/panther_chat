@@ -1,0 +1,96 @@
+{
+  "entity_id": "yomiuri_giants",
+  "entity_name": "Yomiuri Giants",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "tier_1_professional_clubs",
+  "discovered_domains": [
+    "tokyo-dome.co.jp",
+    "japanball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "yomiuri_giants",
+      "entity_name": "Yomiuri Giants",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tokyo-dome.co.jp",
+        "https://japanball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Yomiuri Giants may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:19:59.465195",
+          "domain_explored": "https://tokyo-dome.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:20:12.861993",
+          "domain_explored": "https://japanball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Fan-focused content (YouTube, Travel, Hall of Fame)",
+            "League-wide updates (NPB, Samurai Japan)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 175,
+              "elapsed_seconds": 5.147196292877197
+            }
+          ],
+          "reasoning": "The provided content from japanball.com is a sports news aggregator and fan blog focused on NPB league updates, player transfers, and travel guides. It contains no corporate governance information, technology infrastructure details, or procurement signals relevant to the Yomiuri Giants organization."
+        }
+      ],
+      "total_input_tokens": 1385,
+      "total_output_tokens": 175,
+      "estimated_cost_usd": 0.00678
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Yomiuri Giants may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:20:12.863261"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309496",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:56:10.704386"
+}

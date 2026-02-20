@@ -1,0 +1,176 @@
+{
+  "entity_id": "international_federation_of_sport_climbing_(ifsc)",
+  "entity_name": "International Federation of Sport Climbing (IFSC)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "worldclimbing.com",
+    "ifsc-climbing.org",
+    "images.ifsc-climbing.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_federation_of_sport_climbing_(ifsc)",
+      "entity_name": "International Federation of Sport Climbing (IFSC)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.1
+      ],
+      "explored_domains": [
+        "https://ifsc-climbing.org",
+        "https://images.ifsc-climbing.org",
+        "https://worldclimbing.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Digital Asset Management (DAM) Implementation",
+        "Media API Integration",
+        "AI-Driven Content Transformation",
+        "Scalable Cloud Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Federation of Sport Climbing (IFSC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:49:40.438441",
+          "domain_explored": "https://worldclimbing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video CMS (implied by 'ALL VIDEOS' section)",
+              "Web Content Management (Press Release publishing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Operations: UK 2027, China 2026, Gunsan 2026",
+              "Media Rights: Financial Times feature (PR/Comms spend)",
+              "Digital Media: High-frequency video content production"
+            ]
+          },
+          "patterns_found": [
+            "Global Event Expansion (UK, China, Korea)",
+            "Media Content Production (Video/Press)",
+            "Olympic Cycle Marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1375,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.477792024612427
+            }
+          ],
+          "reasoning": "The content reveals a significant expansion of the IFSC event calendar for 2026 and 2027 (Great Britain, China, Gunsan). While no direct RFPs are visible, the geographic expansion of events signals a strong underlying need for event logistics, local vendor contracting, and potentially increased broadcast/digital infrastructure in these new regions to support the 'World Climbing' brand growth."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:50:06.452468",
+          "domain_explored": "https://ifsc-climbing.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting/Streaming (implied by 'Videos' section)",
+              "Content Management System (CMS) for news/press releases"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Location Expansion: UK (2027), China, Gunsan/Korea (2026)",
+              "Press Release Volume: Indicating active PR agency or media tool usage",
+              "Para Series Launch: New event series requiring specific operational procurement"
+            ]
+          },
+          "patterns_found": [
+            "Global Event Expansion (UK, China, Korea)",
+            "Media Content Production (Video/Press)",
+            "Olympic Cycle Marketing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 311,
+              "elapsed_seconds": 18.821821928024292
+            }
+          ],
+          "reasoning": "The content confirms active organizational growth through the scheduling of major international events in the UK, China, and Korea for 2026-2027. While no direct procurement notices are present in this snippet, the expansion of the 'World Climbing Para Series' and the confirmation of new national calendars imply upcoming requirements for event services, local vendor procurement, and media production capabilities to support these new locations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:50:16.468347",
+          "domain_explored": "https://images.ifsc-climbing.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cloudinary (Image & Video API Platform)",
+              "Cloudinary AI (Generative, LLM, Content-Aware)",
+              "Cloudinary DAM (Digital Asset Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract with Cloudinary for enterprise media management",
+              "Utilization of AI transformation tools for content workflows",
+              "Investment in API-driven media delivery infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Digital Asset Management (DAM) Implementation",
+            "Media API Integration",
+            "AI-Driven Content Transformation",
+            "Scalable Cloud Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.320145845413208
+            }
+          ],
+          "reasoning": "The content confirms that IFSC uses a dedicated subdomain (images.ifsc-climbing.org) powered by Cloudinary. This is a strong procurement signal indicating an active investment in a Digital Asset Management (DAM) and media optimization platform. The presence of specific AI features (Generative, LLM) suggests a focus on automating media workflows for their high-volume global event coverage."
+        }
+      ],
+      "total_input_tokens": 4294,
+      "total_output_tokens": 894,
+      "estimated_cost_usd": 0.026292
+    },
+    "procurement_signals": [
+      "Digital Asset Management (DAM) Implementation",
+      "Media API Integration",
+      "AI-Driven Content Transformation",
+      "Scalable Cloud Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Federation of Sport Climbing (IFSC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:50:16.470248"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.456962",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:09.773821"
+}

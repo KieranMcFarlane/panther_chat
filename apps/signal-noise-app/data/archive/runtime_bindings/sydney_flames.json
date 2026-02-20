@@ -1,0 +1,130 @@
+{
+  "entity_id": "sydney_flames",
+  "entity_name": "Sydney Flames",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "wnbl.com.au",
+    "sydneykings.com",
+    "austadiums.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sydney_flames",
+      "entity_name": "Sydney Flames",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sydneykings.com",
+        "https://austadiums.com",
+        "https://wnbl.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sydney Flames may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:27:46.713203",
+          "domain_explored": "https://wnbl.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Status: Active (Competing in WNBL 25/26 Season)",
+              "Performance Context: Low Ladder Position (SYD - 88.8%)"
+            ]
+          },
+          "patterns_found": [
+            "Competitive Performance Monitoring",
+            "League-Wide Content Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.79649019241333
+            }
+          ],
+          "reasoning": "The content is a league-level (WNBL) news feed and ladder standings. While it confirms Sydney Flames (SYD) as an active entity in the league, it contains no specific information regarding Sydney Flames' internal operations, technology stack, hiring, or procurement activities. The mention of Sydney Flames is purely statistical (game results)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:28:00.960437",
+          "domain_explored": "https://sydneykings.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:28:10.465107",
+          "domain_explored": "https://austadiums.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Monitoring: Identified upcoming fixture 'Perth Lynx v Sydney Flames' at Perth HPC on Sat 7:00 PM"
+            ]
+          },
+          "patterns_found": [
+            "Competitive Intelligence Gathering",
+            "Venue Logistics Monitoring"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.3965089321136475
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event schedule from Austadiums, a third-party sports data aggregator. While it lists a Sydney Flames game (Perth Lynx v Sydney Flames), it provides no data regarding Sydney Flames' internal operations, technology stack, or procurement activities. It is purely informational regarding fixtures and venues."
+        }
+      ],
+      "total_input_tokens": 2784,
+      "total_output_tokens": 406,
+      "estimated_cost_usd": 0.014442
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sydney Flames may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:28:10.466313"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233954",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:57:52.627429"
+}

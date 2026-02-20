@@ -1,0 +1,266 @@
+{
+  "entity_id": "kano_pillars_basketball",
+  "entity_name": "Kano Pillars Basketball",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "basketball.afrobasket.com",
+    "grokipedia.com",
+    "theeagleonline.com.ng",
+    "punchng.com",
+    "leadership.ng",
+    "premiumtimesng.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/emmanueltyonum-495287142_economy-jobs-industry-sports-is-not-entertainment-activity-7417546770790060032-9RGS"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kano_pillars_basketball",
+      "entity_name": "Kano Pillars Basketball",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://basketball.afrobasket.com",
+        "https://theeagleonline.com.ng",
+        "https://www.linkedin.com/posts/emmanueltyonum-495287142_economy-jobs-industry-sports-is-not-entertainment-activity-7417546770790060032-9RGS",
+        "https://premiumtimesng.com",
+        "https://grokipedia.com",
+        "https://punchng.com",
+        "https://leadership.ng"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kano Pillars Basketball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:37:47.941318",
+          "domain_explored": "https://basketball.afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Player transfer announcements",
+            "Game results reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.4412567615509033
+            }
+          ],
+          "reasoning": "The provided content is a general sports news feed covering African basketball (Afrobasket). It focuses on game results, player signings, and league standings for various teams (e.g., Al Ahly, Zamalek). There is no mention of 'Kano Pillars', nor are there any signals regarding procurement, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:37:54.594117",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:38:05.716745",
+          "domain_explored": "https://theeagleonline.com.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General political news",
+            "Entertainment industry coverage",
+            "Presidential press releases"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 871,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.7288360595703125
+            }
+          ],
+          "reasoning": "The scraped content from 'theeagleonline.com.ng' focuses entirely on political news (President Tinubu) and entertainment (Fela). There is absolutely no mention of Kano Pillars Basketball, sports administration, or procurement activities. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:38:15.388349",
+          "domain_explored": "https://punchng.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General healthcare news",
+            "International aid policy analysis",
+            "Public health reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 549,
+              "output_tokens": 168,
+              "elapsed_seconds": 1.882275104522705
+            }
+          ],
+          "reasoning": "The content provided is a news article regarding US aid and HIV/AIDS in Nigeria. It contains no information regarding Kano Pillars Basketball, its operations, procurement activities, or technology stack. The domain (punchng.com) is a general news outlet and this specific article is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:38:30.962460",
+          "domain_explored": "https://leadership.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General political news coverage",
+            "Award ceremony reporting",
+            "Opinion/Editorial content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 741,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.9400298595428467
+            }
+          ],
+          "reasoning": "The provided content is a snippet from a general news site (Leadership.ng) discussing a 'LEADERSHIP Award' and political meritocracy. There is no mention of Kano Pillars Basketball, sports management, or any procurement-related activities such as RFPs, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:38:44.438947",
+          "domain_explored": "https://premiumtimesng.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General healthcare news",
+            "Editorial content",
+            "Medical industry analysis"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 856,
+              "output_tokens": 161,
+              "elapsed_seconds": 4.240111827850342
+            }
+          ],
+          "reasoning": "The scraped content from Premium Times focuses exclusively on medical malpractice and hospital dysfunction. This is a national news publication covering public health policy, which is unrelated to the procurement activities, technology stack, or governance of a specific basketball club (Kano Pillars)."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:38:54.152367",
+          "domain_explored": "https://www.linkedin.com/posts/emmanueltyonum-495287142_economy-jobs-industry-sports-is-not-entertainment-activity-7417546770790060032-9RGS",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital platforms",
+              "Broadcasting technology"
+            ],
+            "job_postings": [
+              "Sports administrators",
+              "Technical consultants",
+              "Analysts",
+              "Facility managers"
+            ],
+            "procurement_indicators": [
+              "Import of sports management expertise",
+              "Sponsorship procurement",
+              "Investment in infrastructure and technology"
+            ]
+          },
+          "patterns_found": [
+            "Sports industry economic analysis",
+            "Sponsorship and partnership strategies",
+            "Sports management and governance commentary",
+            "Professional services demand (consulting, administration)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 329,
+              "elapsed_seconds": 5.657909870147705
+            }
+          ],
+          "reasoning": "The content is a high-level industry opinion piece about the African sports economy, not specific to Kano Pillars. However, it highlights the sector's need for 'administrators, consultants, and technical expertise' and discusses 'sponsorships' and 'digital platforms.' This signals a broader market context where teams like Kano Pillars operate, indicating a potential need for professional services and technology adoption, even if no direct procurement action is mentioned."
+        }
+      ],
+      "total_input_tokens": 6048,
+      "total_output_tokens": 1169,
+      "estimated_cost_usd": 0.035679
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kano Pillars Basketball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:38:54.153655"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230347",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:58.296046"
+}

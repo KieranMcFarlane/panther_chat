@@ -1,0 +1,265 @@
+{
+  "entity_id": "brazilian_volleyball_confederation",
+  "entity_name": "Brazilian Volleyball Confederation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "sportradar.com",
+    "efdeportes.com",
+    "app.sponsorpitch.com",
+    "sportsedtv.com",
+    "ojs.fiepbulletin.net",
+    "m.pasqualottoegt.com.br",
+    "tech.sportbusiness.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brazilian_volleyball_confederation",
+      "entity_name": "Brazilian Volleyball Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://app.sponsorpitch.com",
+        "https://efdeportes.com",
+        "https://tech.sportbusiness.com",
+        "https://sportsedtv.com",
+        "https://m.pasqualottoegt.com.br",
+        "https://ojs.fiepbulletin.net",
+        "https://sportradar.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brazilian Volleyball Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:27:41.228376",
+          "domain_explored": "https://sportradar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-Powered Game Recommendations (Vaix)",
+              "Bettor Sense (Responsible Gaming)",
+              "Bio-analytics (Orreco integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports technology vendor marketing content",
+            "Focus on betting/igaming and US sports (NBA)",
+            "Generic corporate news (M&A, financial results)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.816862106323242
+            }
+          ],
+          "reasoning": "The content is from Sportradar's corporate website, which is a vendor marketing site. While Sportradar is a potential vendor for the Brazilian Volleyball Confederation (CBV), this specific content does not indicate a procurement signal *from* CBV. It lists general partners (not explicitly CBV in this snippet) and global news. There is no specific evidence of a relationship, intent to purchase, or ongoing RFP involving the Brazilian Volleyball Confederation in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:27:53.936328",
+          "domain_explored": "https://efdeportes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic journal structure (Vol. 30, N\u00fam. 332)",
+            "General sports commentary (FIFA World Cup 2026)",
+            "Educational/Physical Education research topics",
+            "No corporate or commercial entity identifiers"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.881861686706543
+            }
+          ],
+          "reasoning": "The content is from an academic journal (EFDeportes) focused on physical education and sports science. The text discusses the 2026 FIFA World Cup and lists academic articles unrelated to the Brazilian Volleyball Confederation's procurement needs. There are no signals of vendor purchasing, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:28:04.064430",
+          "domain_explored": "https://app.sponsorpitch.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SaaS marketing landing page structure",
+            "B2B sales platform value proposition",
+            "Generic 'partners/suppliers' navigation labels",
+            "Testimonial-based social proof (e.g., Matt Duncan, Brackets For Good)",
+            "Repetitive UI text scraping artifacts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.5029869079589844
+            }
+          ],
+          "reasoning": "The content is exclusively marketing copy for SponsorPitch, a third-party SaaS platform for sponsorship sales. While the text contains keywords like 'suppliers' and 'partners', these are generic UI navigation elements for the platform's users (rights holders), not specific procurement data or intent signals from the Brazilian Volleyball Confederation. There is no mention of the entity, specific technologies, or relevant decision-makers."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:28:14.492441",
+          "domain_explored": "https://sportsedtv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video hosting/streaming",
+              "User Authentication System",
+              "Subscription Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C SaaS platform structure",
+            "User authentication flows (Login/Sign Up)",
+            "Subscription-based access model",
+            "Educational content marketing (Coaching libraries)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.864276170730591
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive user interface elements (Login forms, password recovery, sign-up prompts) and marketing copy for a sports education video library. This is a consumer-facing or coach-facing platform, not a procurement portal or a vendor site indicating B2B sales to the Confederation. There is no signal of governance, RFPs, or enterprise technology acquisition relevant to the Brazilian Volleyball Confederation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:28:24.664615",
+          "domain_explored": "https://ojs.fiepbulletin.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic journal structure (Open Journal Systems/OJS)",
+            "Educational/Physical Education research focus",
+            "Historical publication context (Est. 1931)",
+            "General knowledge dissemination purpose"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 975,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.8520050048828125
+            }
+          ],
+          "reasoning": "The content describes the 'FIEP Bulletin', an academic journal focused on Physical Education and Sports Sciences. It is a scholarly publication for disseminating research, not a commercial entity or a procurement portal for the Brazilian Volleyball Confederation. There are no signals of vendor selection, technology purchasing, or governance related to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:28:47.749953",
+          "domain_explored": "https://m.pasqualottoegt.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Real estate marketing vocabulary (Empreendimento, Plantas, Torres)",
+            "High-end luxury property branding (Pininfarina, Yachthouse)",
+            "B2C sales funnel structure (Call to Action buttons)",
+            "Property development focus (Conhe\u00e7a, Lan\u00e7amentos)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 754,
+              "output_tokens": 199,
+              "elapsed_seconds": 16.23320770263672
+            }
+          ],
+          "reasoning": "The content is exclusively focused on marketing luxury real estate properties (Yachthouse, Vitra, La Citta) developed by Pasqualotto. There is no connection to sports governance, volleyball operations, or the procurement of technical services for the Brazilian Volleyball Confederation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:28:50.597158",
+          "domain_explored": "https://tech.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 7577,
+      "total_output_tokens": 1370,
+      "estimated_cost_usd": 0.043281
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brazilian Volleyball Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:28:50.598012"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.334930",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:58.303280"
+}

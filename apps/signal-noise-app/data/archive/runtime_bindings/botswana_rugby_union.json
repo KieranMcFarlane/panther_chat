@@ -1,0 +1,123 @@
+{
+  "entity_id": "botswana_rugby_union",
+  "entity_name": "Botswana Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "botswanarugbyunion.co.bw",
+    "rugbyafrique.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/naledi-chabe-49b213339_worldrugby-impactbeyondcareers-careersupport-activity-7312797389466071040-9JrJ"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "botswana_rugby_union",
+      "entity_name": "Botswana Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://botswanarugbyunion.co.bw",
+        "https://rugbyafrique.com",
+        "https://www.linkedin.com/posts/naledi-chabe-49b213339_worldrugby-impactbeyondcareers-careersupport-activity-7312797389466071040-9JrJ"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Botswana Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:26:41.741942",
+          "domain_explored": "https://botswanarugbyunion.co.bw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 22 column 9 (char 1260)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:26:44.547131",
+          "domain_explored": "https://rugbyafrique.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:26:52.625160",
+          "domain_explored": "https://www.linkedin.com/posts/naledi-chabe-49b213339_worldrugby-impactbeyondcareers-careersupport-activity-7312797389466071040-9JrJ",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Professional Networking)",
+              "World Rugby Platforms (Program Management)"
+            ],
+            "job_postings": [
+              "Naledi Chabe (Individual selected for external development program, not a direct hire by BRU)"
+            ],
+            "procurement_indicators": [
+              "Participation in World Rugby 'Impact Beyond 2025' program (External Funding Source)",
+              "Focus on 'Women in Rugby' initiatives (Target for specific vendor services)",
+              "Need for 'Professional skills training' and 'Career planning' (Potential Training Services RFPs)",
+              "Mentorship programs (Potential for CRM or Volunteer Management Software)"
+            ]
+          },
+          "patterns_found": [
+            "Global Partnership Engagement",
+            "Human Capital Development",
+            "External Funding Dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 351,
+              "elapsed_seconds": 4.796309947967529
+            }
+          ],
+          "reasoning": "While this specific post is an individual achievement announcement rather than a direct tender, it confirms Botswana Rugby Union's (BRU) active participation in World Rugby's 'Impact Beyond 2025' program. This signals a reliance on external funding bodies and a focus on human resource development, which are key precursors to procurement for training services, event management, and administrative support tools."
+        }
+      ],
+      "total_input_tokens": 1447,
+      "total_output_tokens": 351,
+      "estimated_cost_usd": 0.009606
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Botswana Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:26:52.625616"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.287371",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:09.781025"
+}

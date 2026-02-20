@@ -1,0 +1,368 @@
+{
+  "entity_id": "german_baseball_and_softball_federation",
+  "entity_name": "German Baseball and Softball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "wbsceurope.org",
+    "wikidata.org",
+    "grokipedia.com",
+    "educa2.madrid.org",
+    "clove-technology.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/baseball-and-softball-umpire-at-city-of-monroe-4367136420",
+      "https://www.linkedin.com/jobs/view/denny-s-general-manager-at-giants-baseball-softball-camps-4368108985?refId=o32Td0XCzw9e4SneuUmpiA%3D%3D&trackingId=z3XU6bTRcJFnJ60GonQWkQ%3D%3D&position=11&pageNum=0",
+      "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+      "https://www.linkedin.com/jobs/softball-instructor-jobs",
+      "https://www.linkedin.com/jobs/baseball-scouting-jobs",
+      "https://www.linkedin.com/jobs/view/professional-baseball-softball-instructors-at-el1-sports-3809999392",
+      "https://www.linkedin.com/jobs/director-baseball-operations-jobs",
+      "https://www.linkedin.com/jobs/view/designer-wbc-seasonal-at-major-league-baseball-mlb-4309284967"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_baseball_and_softball_federation",
+      "entity_name": "German Baseball and Softball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://clove-technology.com",
+        "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+        "https://www.linkedin.com/jobs/view/baseball-and-softball-umpire-at-city-of-monroe-4367136420",
+        "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+        "https://wikidata.org",
+        "https://grokipedia.com",
+        "https://www.linkedin.com/jobs/view/denny-s-general-manager-at-giants-baseball-softball-camps-4368108985?refId=o32Td0XCzw9e4SneuUmpiA%3D%3D&trackingId=z3XU6bTRcJFnJ60GonQWkQ%3D%3D&position=11&pageNum=0",
+        "https://wbsceurope.org",
+        "https://www.linkedin.com/jobs/softball-instructor-jobs",
+        "https://educa2.madrid.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Baseball and Softball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:22:29.590578",
+          "domain_explored": "https://wbsceurope.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Registration Platforms (implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue and service procurement for 2026 convention",
+              "Operational requirement for event management software"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Logistics",
+            "Venue Procurement (Barcelona)",
+            "Registration Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 459,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.279592275619507
+            }
+          ],
+          "reasoning": "The announcement of the 'European Softball Blue Convention in Barcelona' indicates an active event management cycle. While the content is primarily informational, hosting a large-scale convention implies underlying procurement for venue services, catering, and registration technology. This signals operational activity but not immediate enterprise software procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:22:39.317543",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Wikibase",
+              "SPARQL",
+              "Pretalx (Event Scheduling)",
+              "Telegram"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base Content",
+            "Community Event Listings",
+            "Open Source Technology Stack (Wikibase/SPARQL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 221,
+              "elapsed_seconds": 2.5177478790283203
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a Wikimedia Foundation project. It contains no specific information regarding the 'German Baseball and Softball Federation' (DBV). The content describes general data management features, community events (WikidataCon), and open-source tools. There are no procurement signals, RFPs, or vendor partnerships related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:22:45.241955",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:22:55.554004",
+          "domain_explored": "https://educa2.madrid.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:23:06.317458",
+          "domain_explored": "https://clove-technology.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "Consumer Electronics Retail",
+            "Refurbished Hardware Sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.3401708602905273
+            }
+          ],
+          "reasoning": "The content is scraped from 'Clove Technology', a B2C/B2B retailer of smartphones and electronics. It displays product listings, prices, and specifications (e.g., 'Apple iMac', 'Google Pixel Watch'). There is no connection to the German Baseball and Softball Federation, nor are there any governance, RFP, or technology stack signals relevant to the target entity's procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:23:16.118808",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MLB Ballpark App (Mobile Product)",
+              "Data Engineering"
+            ],
+            "job_postings": [
+              "Human Resources Coordinator",
+              "Receptionist",
+              "Director, Product - MLB Ballpark App",
+              "Intelligence Analyst",
+              "Senior Accountant"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (MLB vs. DBV)",
+            "General HR & Admin Recruitment",
+            "Product Management (Fan Engagement Apps)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 256,
+              "elapsed_seconds": 4.931338787078857
+            }
+          ],
+          "reasoning": "The content analyzed is from the Major League Baseball (MLB) corporate careers page, not the German Baseball and Softball Federation (DBV). While MLB is a major industry player, their hiring activities (HR, Product Directors for the MLB App) do not constitute procurement signals for the German federation. The entity context is incorrect for the target objective."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:23:25.467394",
+          "domain_explored": "https://www.linkedin.com/jobs/view/baseball-and-softball-umpire-at-city-of-monroe-4367136420",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Baseball and Softball Umpire - City of Monroe (Monroe, WI)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (City of Monroe vs. German Baseball Federation)",
+            "Local Government Recruitment (Park & Recreation Dept)",
+            "Operational/Field Staffing (Umpires)",
+            "Hourly Wage Compensation Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1664,
+              "output_tokens": 243,
+              "elapsed_seconds": 5.246561050415039
+            }
+          ],
+          "reasoning": "The content is a job posting for umpires by the City of Monroe (Wisconsin, USA) Parks and Recreation Department. This represents a direct entity mismatch with the target entity, the German Baseball and Softball Federation (DBV). The role is operational (on-field officiating) rather than strategic procurement or technology-focused, and the hiring entity is a local US government body, not a national sports federation."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:23:39.141258",
+          "domain_explored": "https://www.linkedin.com/jobs/view/denny-s-general-manager-at-giants-baseball-softball-camps-4368108985?refId=o32Td0XCzw9e4SneuUmpiA%3D%3D&trackingId=z3XU6bTRcJFnJ60GonQWkQ%3D%3D&position=11&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General Manager (Denny's / Giants Baseball & Softball Camps)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Denny's Restaurant vs. German Baseball Federation)",
+            "Entity Mismatch (Giants Baseball & Softball Camps vs. German Baseball Federation)",
+            "Food & Beverage Operations (Restaurant Management)",
+            "Local Store Marketing (B2C)",
+            "Hospitality Industry Standards"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1775,
+              "output_tokens": 271,
+              "elapsed_seconds": 7.906018018722534
+            }
+          ],
+          "reasoning": "The content describes a General Manager position for a Denny's restaurant located in Globe, AZ, associated with 'Giants Baseball & Softball Camps'. This represents a significant entity mismatch from the target 'German Baseball and Softball Federation'. The role is focused on restaurant operations, food safety, and local store marketing, which are not relevant to the procurement signals (technology, governance, RFPs) of the target German entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:23:47.226301",
+          "domain_explored": "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Coordinator, Softball Instruction at Major League Baseball (MLB)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (MLB vs. German Baseball Federation)",
+            "Operational/Field Staffing (Softball Instruction)",
+            "Grassroots Sports Development (Youth Academy)",
+            "Local Program Management (New Orleans)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1874,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.493122100830078
+            }
+          ],
+          "reasoning": "The job posting is for a Coordinator of Softball Instruction at Major League Baseball (MLB) in New Orleans. This is an operational role focused on on-field coaching, player development, and clinic management. There is a clear entity mismatch (MLB vs. German Baseball Federation) and the role does not involve procurement, technology acquisition, or administrative governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:24:10.688480",
+          "domain_explored": "https://www.linkedin.com/jobs/softball-instructor-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Women's Soccer Coach (California State University)",
+              "On-site Athletic Coordinator (Avondale Elementary School District)",
+              "LA Dodgers Training Academy Baseball Instructors (EL1 Sports)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (US-based vs. German Federation)",
+            "Operational/Field Staffing (Instructors/Coaches)",
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (US/CA/AZ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1946,
+              "output_tokens": 273,
+              "elapsed_seconds": 16.078388929367065
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Softball Instructor' roles within the United States. The entities listed (e.g., LA Dodgers, EL1 Sports, Avondale Elementary School District) are US-based and unrelated to the German Baseball and Softball Federation (DBV). These are operational coaching roles, not procurement or technology leadership positions relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 12262,
+      "total_output_tokens": 1922,
+      "estimated_cost_usd": 0.06561600000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Baseball and Softball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:24:10.691564"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.315031",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:22:51.923745"
+}

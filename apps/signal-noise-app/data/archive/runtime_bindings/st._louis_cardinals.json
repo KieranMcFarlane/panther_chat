@@ -1,0 +1,356 @@
+{
+  "entity_id": "st._louis_cardinals",
+  "entity_name": "St. Louis Cardinals",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "redbirdrants.com",
+    "mlbshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/st-louis-cardinals-jobs",
+      "https://www.linkedin.com/jobs/st-louis-cardinals-jobs-greater-st.-louis",
+      "https://www.linkedin.com/jobs/st.-louis-cardinals-jobs",
+      "https://www.linkedin.com/jobs/view/fan-engagement-internship-part-time-at-st-louis-cardinals-4345662015",
+      "https://www.linkedin.com/jobs/view/direct-sales-representative-at-st-louis-cardinals-4366692830",
+      "https://www.linkedin.com/jobs/view/community-outreach-team-member-part-time-seasonal-at-st-louis-cardinals-4345810298",
+      "https://www.linkedin.com/jobs/view/radio-booth-assistant-part-time-seasonal-at-st-louis-cardinals-4365242736",
+      "https://www.linkedin.com/jobs/view/database-administrator-at-st-louis-cardinals-4364048604",
+      "https://www.linkedin.com/jobs/view/usher-part-time-seasonal-at-st-louis-cardinals-4359602986"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "st._louis_cardinals",
+      "entity_name": "St. Louis Cardinals",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.18,
+        0.24
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/fan-engagement-internship-part-time-at-st-louis-cardinals-4345662015",
+        "https://www.linkedin.com/jobs/view/direct-sales-representative-at-st-louis-cardinals-4366692830",
+        "https://www.linkedin.com/jobs/st-louis-cardinals-jobs",
+        "https://www.linkedin.com/jobs/st-louis-cardinals-jobs-greater-st.-louis",
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/st.-louis-cardinals-jobs",
+        "https://redbirdrants.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Recruitment for Technical Infrastructure",
+        "Data Management & CRM Expansion",
+        "Technology Stack Modernization",
+        "Active Recruitment for Technical Infrastructure",
+        "Data Management & CRM Expansion",
+        "Technology Stack Modernization",
+        "Active Recruitment for Technical Infrastructure",
+        "Data Management & CRM Expansion",
+        "Technology Stack Modernization",
+        "CRM & Sales Technology Stack Disclosure",
+        "Revenue Operations Expansion",
+        "Digital Sales Automation"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "St. Louis Cardinals may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:18:19.268386",
+          "domain_explored": "https://redbirdrants.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High content noise ratio",
+            "Fan-focused editorial content",
+            "Lack of corporate governance data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 802,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.39723801612854
+            }
+          ],
+          "reasoning": "The source provided (Redbird Rants) is a fan-operated sports blog (SB Nation network). The content consists entirely of navigation menus, repetitive links to 'News', 'Rumors', and 'Prospects', and general sports commentary. There is zero presence of corporate strategy, technology infrastructure, job postings, or procurement intent within the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:18:28.693493",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Fanatics/CommerceRef)",
+              "Product Recommendation Engine"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Licensing Agreement (MLB)",
+              "Centralized Merchandising Vendor (Fanatics)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Interface",
+            "League-Level Aggregation",
+            "Standardized Merchandise Catalog"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.026052713394165
+            }
+          ],
+          "reasoning": "The content is derived from the league-level e-commerce platform (MLBShop.com/Fanatics). While it confirms the St. Louis Cardinals participate in the centralized MLB licensing model, it offers zero insight into the team's specific procurement operations, technology stack, or vendor decision-making process. This is a consumer-facing destination, not a corporate governance signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:18:37.966373",
+          "domain_explored": "https://www.linkedin.com/jobs/st-louis-cardinals-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Platforms (Salesforce/Dynamics)",
+              "Database Management Systems (SQL/Oracle/Cloud DB)",
+              "Data Analytics/BI Tools"
+            ],
+            "job_postings": [
+              "Database Administrator (St Louis, MO)",
+              "CRM Administrator (St Louis, MO)"
+            ],
+            "procurement_indicators": [
+              "Technical Talent Acquisition",
+              "Infrastructure Maintenance & Scaling",
+              "Customer Data Management Investment"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment for Technical Infrastructure",
+            "Data Management & CRM Expansion",
+            "Technology Stack Modernization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.518177032470703
+            }
+          ],
+          "reasoning": "The content provides direct evidence of active hiring for technical roles that manage core business infrastructure. The presence of 'Database Administrator' and 'CRM Administrator' roles indicates immediate procurement needs for database licensing, CRM software (likely Salesforce or Microsoft Dynamics given the MLB context), and associated cloud infrastructure. These are high-value procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:18:48.687607",
+          "domain_explored": "https://www.linkedin.com/jobs/st-louis-cardinals-jobs-greater-st.-louis",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Platforms (Salesforce/Oracle/Adobe potential)",
+              "Database Management Systems (SQL/Oracle/Cloud DB)",
+              "Data Infrastructure"
+            ],
+            "job_postings": [
+              "Database Administrator",
+              "CRM Administrator"
+            ],
+            "procurement_indicators": [
+              "Investment in Data Architecture",
+              "CRM System Optimization or Implementation",
+              "Technical Talent Acquisition"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment for Technical Infrastructure",
+            "Data Management & CRM Expansion",
+            "Technology Stack Modernization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.1259241104125977
+            }
+          ],
+          "reasoning": "The content confirms active hiring for critical technical roles, specifically Database and CRM Administrators. This indicates a clear procurement intent for backend infrastructure, data management systems, and customer relationship platforms. The presence of these roles suggests an active budget for technology implementation and maintenance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:18:59.807205",
+          "domain_explored": "https://www.linkedin.com/jobs/st.-louis-cardinals-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Platforms (Salesforce/Microsoft Dynamics likely)",
+              "Database Management Systems (SQL/Oracle)",
+              "Data Infrastructure"
+            ],
+            "job_postings": [
+              "Database Administrator",
+              "CRM Administrator",
+              "Direct Sales Representative",
+              "Part-Time Game Day Event Staff",
+              "Radio Booth Assistant"
+            ],
+            "procurement_indicators": [
+              "Expansion of data management capabilities",
+              "CRM system administration or implementation",
+              "Investment in technical talent to support digital transformation"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment for Technical Infrastructure",
+            "Data Management & CRM Expansion",
+            "Technology Stack Modernization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 310,
+              "elapsed_seconds": 6.949632167816162
+            }
+          ],
+          "reasoning": "The content confirms active hiring for critical technical roles, specifically Database and CRM Administrators. These roles indicate a clear intent to invest in and manage complex technology stacks, which correlates with software procurement, data licensing, and infrastructure needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:19:08.897591",
+          "domain_explored": "https://www.linkedin.com/jobs/view/fan-engagement-internship-part-time-at-st-louis-cardinals-4345662015",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Scraping Error / Content Mismatch",
+            "Irrelevant Search Results",
+            "Medical Sector Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1671,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.1035850048065186
+            }
+          ],
+          "reasoning": "The scraped content does not contain the target job description ('Fan Engagement Internship'). Instead, it captures a list of 'Physical Therapy Technician' jobs from unrelated entities (George Washington University, OakBend Medical Center). This indicates a redirection error or a scraping failure where the page content did not match the URL context. No procurement signals for the St. Louis Cardinals are present."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:19:18.301732",
+          "domain_explored": "https://www.linkedin.com/jobs/view/direct-sales-representative-at-st-louis-cardinals-4366692830",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "Conversica",
+              "LinkedIn Sales Navigator",
+              "SalesIntel",
+              "Microsoft Office",
+              "Outlook"
+            ],
+            "job_postings": [
+              "Direct Sales Representative (Entry Level, Ticket Sales)"
+            ],
+            "procurement_indicators": [
+              "Active utilization of Salesforce as CRM system",
+              "Procurement of Conversica for AI-driven sales automation/lead engagement",
+              "Procurement of SalesIntel for sales intelligence and data enrichment",
+              "Procurement of LinkedIn Sales Navigator for social selling",
+              "Investment in training staff on specific sales technology stack"
+            ]
+          },
+          "patterns_found": [
+            "CRM & Sales Technology Stack Disclosure",
+            "Revenue Operations Expansion",
+            "Digital Sales Automation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1737,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.83530592918396
+            }
+          ],
+          "reasoning": "The job posting explicitly lists the technology stack required for the role, providing direct evidence of current software procurement and utilization. It confirms the organization's investment in digital sales tools and CRM infrastructure."
+        }
+      ],
+      "total_input_tokens": 10211,
+      "total_output_tokens": 1825,
+      "estimated_cost_usd": 0.058008000000000004
+    },
+    "procurement_signals": [
+      "Active Recruitment for Technical Infrastructure",
+      "Data Management & CRM Expansion",
+      "Technology Stack Modernization",
+      "Active Recruitment for Technical Infrastructure",
+      "Data Management & CRM Expansion",
+      "Technology Stack Modernization",
+      "Active Recruitment for Technical Infrastructure",
+      "Data Management & CRM Expansion",
+      "Technology Stack Modernization",
+      "CRM & Sales Technology Stack Disclosure",
+      "Revenue Operations Expansion",
+      "Digital Sales Automation"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "St. Louis Cardinals may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:19:18.303484"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307627",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:46.632432"
+}

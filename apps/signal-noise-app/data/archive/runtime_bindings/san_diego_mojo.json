@@ -1,0 +1,127 @@
+{
+  "entity_id": "san_diego_mojo",
+  "entity_name": "San Diego Mojo",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "provolleyball.com",
+    "shopsdmojo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "san_diego_mojo",
+      "entity_name": "San Diego Mojo",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://provolleyball.com",
+        "https://shopsdmojo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "San Diego Mojo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:11:12.632935",
+          "domain_explored": "https://provolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "League-wide CMS (implied by shared infrastructure)",
+              "Ticketing platform (implied by 'View Schedule' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Franklin Sports (Equipment)",
+              "Vendor: REN Athletics (Apparel)",
+              "Vendor: Spalding (Balls/Game Equipment)",
+              "Partner: USA Volleyball (Governing body)"
+            ]
+          },
+          "patterns_found": [
+            "League-wide vendor standardization",
+            "Equipment and apparel procurement",
+            "Governing body partnership"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 814,
+              "output_tokens": 279,
+              "elapsed_seconds": 3.2261900901794434
+            }
+          ],
+          "reasoning": "The content identifies specific corporate partners (Franklin Sports, REN Athletics, Spalding) associated with the league and the San Diego Mojo team. This indicates a procurement reliance on league-level negotiated contracts for equipment and apparel rather than individual team sourcing. The presence of USA Volleyball suggests governance and potential software/data sharing overlaps."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:11:21.340403",
+          "domain_explored": "https://shopsdmojo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/ and /products/)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Apparel and Outerwear Inventory",
+              "Fulfillment and Logistics Services",
+              "Payment Processing Solutions"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Utilization",
+            "Direct-to-Consumer Merchandise Strategy",
+            "Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.2268218994140625
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce storefront (shopsdmojo.com) for merchandise sales. While this confirms the entity's commercial activity, it provides limited insight into backend procurement or enterprise technology stacks beyond the obvious need for e-commerce infrastructure and inventory supply."
+        }
+      ],
+      "total_input_tokens": 2224,
+      "total_output_tokens": 521,
+      "estimated_cost_usd": 0.014487
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "San Diego Mojo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:11:21.342437"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324208",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:11.361417"
+}

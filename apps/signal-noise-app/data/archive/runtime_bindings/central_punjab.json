@@ -1,0 +1,217 @@
+{
+  "entity_id": "central_punjab",
+  "entity_name": "Central Punjab",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "online-admissions.ucp.edu.pk",
+    "mcom.pgc.edu.pk",
+    "hep.punjab.gov.pk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://pk.linkedin.com/jobs/view/salesperson-at-university-of-central-punjab-ucp-4353722233",
+      "https://pk.linkedin.com/jobs/view/dispatcher-at-university-of-central-punjab-4355200965"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "central_punjab",
+      "entity_name": "Central Punjab",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://pk.linkedin.com/jobs/view/dispatcher-at-university-of-central-punjab-4355200965",
+        "https://mcom.pgc.edu.pk",
+        "https://online-admissions.ucp.edu.pk",
+        "https://hep.punjab.gov.pk",
+        "https://pk.linkedin.com/jobs/view/salesperson-at-university-of-central-punjab-ucp-4353722233"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Admissions Platform",
+        "Academic Program Expansion (AI, Data Science)",
+        "International Program Integration",
+        "Virtual Campus Tours"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Central Punjab may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:17:46.831777",
+          "domain_explored": "https://online-admissions.ucp.edu.pk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Admissions Portal",
+              "Virtual Tour Technology",
+              "Business Analytics Software",
+              "Digital Marketing Tools",
+              "AI & Robotics Lab Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operation of dedicated subdomain for admissions (online-admissions.ucp.edu.pk)",
+              "Curriculum expansion requiring specialized software (BS Artificial Intelligence, MS Data Science)",
+              "International program management requiring compliance and tracking tools",
+              "Scholarship management system (1.3B rupees distributed)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Admissions Platform",
+            "Academic Program Expansion (AI, Data Science)",
+            "International Program Integration",
+            "Virtual Campus Tours"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 369,
+              "elapsed_seconds": 3.830038070678711
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated online admissions portal (online-admissions.ucp.edu.pk). This indicates a clear procurement need for web hosting, application processing software, and potentially CRM tools to manage student data. Furthermore, the curriculum lists specific technologies (AI, Data Science, Digital Marketing) which often require specialized software licenses and lab equipment, signaling future procurement opportunities in the EdTech sector."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:17:51.123695",
+          "domain_explored": "https://mcom.pgc.edu.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:18:23.799223",
+          "domain_explored": "https://hep.punjab.gov.pk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:18:31.812308",
+          "domain_explored": "https://pk.linkedin.com/jobs/view/salesperson-at-university-of-central-punjab-ucp-4353722233",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Tools"
+            ],
+            "job_postings": [
+              "Salesperson"
+            ],
+            "procurement_indicators": [
+              "CRM Software Usage",
+              "Sales Strategy Development"
+            ]
+          },
+          "patterns_found": [
+            "CRM Utilization",
+            "Sales Operations Expansion",
+            "Digital Recruitment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.6425561904907227
+            }
+          ],
+          "reasoning": "The job posting explicitly mentions 'Proficiency in using CRM tools' as a requirement for a Salesperson role. This confirms the active use of CRM software within the organization. While this is an operational signal rather than a direct procurement tender, it validates the technology stack and indicates an investment in sales infrastructure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:18:38.267864",
+          "domain_explored": "https://pk.linkedin.com/jobs/view/dispatcher-at-university-of-central-punjab-4355200965",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Onfleet",
+              "Cartwheel",
+              "Air Call",
+              "Slack",
+              "GSuite"
+            ],
+            "job_postings": [
+              "Catering Delivery Dispatcher (Remote/Hybrid)"
+            ],
+            "procurement_indicators": [
+              "Hardware requirements (Laptops, Headsets)",
+              "Software subscriptions (Logistics management platforms)",
+              "Remote connectivity solutions (Backup internet/ISP services)"
+            ]
+          },
+          "patterns_found": [
+            "Logistics & Supply Chain Operations",
+            "Remote Operations Infrastructure",
+            "SaaS Utilization (Logistics Tech)",
+            "Hybrid Workforce Enablement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 345,
+              "elapsed_seconds": 2.9622910022735596
+            }
+          ],
+          "reasoning": "While the job posting is technically for a third-party client (Dragonfly Tech) leveraging UCP's hiring platform or alumni network (recruited by Muhammad Anas), it provides insight into the operational ecosystem surrounding UCP. It highlights a demand for logistics-specific SaaS tools (Onfleet, Cartwheel) and remote infrastructure, suggesting a regional capability for managing international logistics operations. It confirms the region's activity in the digital gig economy and BPO sector, which often requires procurement of hardware and software licenses."
+        }
+      ],
+      "total_input_tokens": 4401,
+      "total_output_tokens": 922,
+      "estimated_cost_usd": 0.027033
+    },
+    "procurement_signals": [
+      "Digital Admissions Platform",
+      "Academic Program Expansion (AI, Data Science)",
+      "International Program Integration",
+      "Virtual Campus Tours"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Central Punjab may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:18:38.269434"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.294468",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:52.592567"
+}

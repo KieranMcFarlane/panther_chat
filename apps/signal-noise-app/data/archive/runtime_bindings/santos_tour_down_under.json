@@ -1,0 +1,157 @@
+{
+  "entity_id": "santos_tour_down_under",
+  "entity_name": "Santos Tour Down Under",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "event_organizers",
+  "discovered_domains": [
+    "tourdownunder.com.au",
+    "allthetdu.com",
+    "ahc.sa.gov.au",
+    "barossa.sa.gov.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "santos_tour_down_under",
+      "entity_name": "Santos Tour Down Under",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://allthetdu.com",
+        "https://barossa.sa.gov.au",
+        "https://ahc.sa.gov.au",
+        "https://tourdownunder.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Santos Tour Down Under may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:47:46.522779",
+          "domain_explored": "https://tourdownunder.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting/Streaming)",
+              "CMS (Internal content management for race results/reports)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Naming Rights Sponsorships: Santos, Ziptrak, efex, MyWoosh, Yamaha, Wilson Parking, Health Partners",
+              "Service Provider: Decathlon (CMA CGM Team reference - potential partnership)",
+              "Digital Platform: YouTube (for 'Race Highlights' and 'Last KM' content)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Integration",
+            "Content Distribution via Third-Party Platforms",
+            "Jersey Naming Rights Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 310,
+              "elapsed_seconds": 3.5433831214904785
+            }
+          ],
+          "reasoning": "The content reveals a mature sponsorship ecosystem where specific vendors (Ziptrak, efex, MyWoosh, Yamaha, Wilson Parking, Health Partners) have procured naming rights for race classifications. The use of YouTube playlists indicates a procurement decision for video hosting/distribution. While no direct RFPs are visible, the 'presented by' tags confirm active vendor partnerships and procurement of marketing services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:48:14.686454",
+          "domain_explored": "https://allthetdu.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Distribution (All stages map 2.3MB pdf)",
+              "Web Publishing Platform (allthetdu.com - likely WordPress or similar CMS given the structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Sales: Contact David Rossi for 'sponsorship opportunities'",
+              "Event Services: Procurement of entertainment (Hot Dub Time Machine), Kids Zone operators (Ali Durham), and Expo vendors",
+              "Naming Rights: Active procurement of stage naming rights (Ziptrak, Health Partners, Hyundai, EFEX)",
+              "Infrastructure: Setup requirements for Tour Village, Tarntanyangga/Victoria Square"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Integration",
+            "Event Infrastructure & Vendor Procurement",
+            "Third-Party Content Aggregation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 370,
+              "elapsed_seconds": 22.538764715194702
+            }
+          ],
+          "reasoning": "The content is a detailed event schedule for the 2026 Santos Tour Down Under hosted on a third-party site (allthetdu.com). While it does not contain direct RFPs or tech stack data, it provides high-value procurement signals regarding the sponsorship ecosystem (Health Partners, Ziptrak, Hyundai, EFEX) and event management vendors (Hot Dub Time Machine, specific logistics providers). The contact for 'sponsorship opportunities' indicates an active channel for vendor engagement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:48:19.019818",
+          "domain_explored": "https://ahc.sa.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:48:23.540621",
+          "domain_explored": "https://barossa.sa.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2781,
+      "total_output_tokens": 680,
+      "estimated_cost_usd": 0.018543
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Santos Tour Down Under may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:48:23.541547"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.385835",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:05.942226"
+}

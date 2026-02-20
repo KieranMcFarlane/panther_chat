@@ -1,0 +1,200 @@
+{
+  "entity_id": "world_supersport_300_championship",
+  "entity_name": "World Supersport 300 Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "worldsbk.com",
+    "kawasaki.fi",
+    "racing.kawasaki.eu",
+    "bikesportnews.com",
+    "rk-europe.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_supersport_300_championship",
+      "entity_name": "World Supersport 300 Championship",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bikesportnews.com",
+        "https://racing.kawasaki.eu",
+        "https://rk-europe.com",
+        "https://worldsbk.com",
+        "https://kawasaki.fi"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Supersport 300 Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:30:25.083464",
+          "domain_explored": "https://worldsbk.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:30:37.238205",
+          "domain_explored": "https://kawasaki.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "brand_affiliation",
+            "racing_team_structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 412,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.589416980743408
+            }
+          ],
+          "reasoning": "The analyzed content from kawasaki.fi is a localized marketing site for the Finnish market, primarily serving as a portal to the official Kawasaki Racing Team Europe (BbKRT) site. It contains general information about the WorldSBK team and rider profiles but lacks specific procurement signals, technology infrastructure details, or organizational decision-making patterns relevant to the World Supersport 300 Championship organizers."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:30:50.821302",
+          "domain_explored": "https://racing.kawasaki.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Newsletter Subscription Form (Generic)",
+              "Cookie Consent Manager"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Privacy Policy Link (Governance)",
+              "Data Collection Mechanism (Newsletter)"
+            ]
+          },
+          "patterns_found": [
+            "marketing_automation",
+            "data_collection",
+            "compliance_framework"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1433,
+              "output_tokens": 248,
+              "elapsed_seconds": 6.4138548374176025
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of navigation menus, a newsletter subscription form, and standard cookie/GDPR consent notices. While the presence of a newsletter form indicates the use of marketing technology (CRM/Email tools), it is a standard feature for consumer engagement rather than a specific procurement signal or intent for the WorldSSP300 championship specifically. No RFPs, job postings, or strategic investment details were found."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:31:00.201902",
+          "domain_explored": "https://bikesportnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "BSB announces new insurance partner (Bennetts departure)",
+              "LCR Honda / Gresini Ducati livery launches (Marketing procurement)"
+            ]
+          },
+          "patterns_found": [
+            "sponsorship_churn",
+            "market_news_aggregation",
+            "brand_visibility"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 260,
+              "elapsed_seconds": 3.012542963027954
+            }
+          ],
+          "reasoning": "The content is a motorsport news feed (BikeSportNews) covering MotoGP, WorldSBK, and BSB. While it mentions 'BSB announces new insurance partner' (sponsorship procurement) and 'Bennetts departure', these are secondary market signals and do not provide direct insight into the procurement operations, technology stack, or governance of the World Supersport 300 Championship entity itself. The site also appears to have a beta placeholder for 'Women & Golf', indicating a generic content management setup rather than specific target intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:31:14.422421",
+          "domain_explored": "https://rk-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "ISO 9001 Certification (Quality Management)",
+              "OEM Model Supply 2024 (Supply Chain Activity)"
+            ]
+          },
+          "patterns_found": [
+            "cookie_consent_overlay",
+            "iso_9001_compliance",
+            "oem_manufacturing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 226,
+              "elapsed_seconds": 6.08960485458374
+            }
+          ],
+          "reasoning": "The scraped content is dominated by a repetitive Privacy Policy and Cookie Consent overlay, which obscures the actual business content. While 'ISO 9001' and 'OEM Manufacturer' suggest a B2B manufacturing context (likely RK Racing or similar), there are no explicit procurement signals, technology stacks, or job postings visible in this text segment. The entity appears to be a vendor/supplier rather than the Championship organizer itself."
+        }
+      ],
+      "total_input_tokens": 4842,
+      "total_output_tokens": 919,
+      "estimated_cost_usd": 0.028311000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Supersport 300 Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:31:14.423350"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.374775",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:43.765293"
+}

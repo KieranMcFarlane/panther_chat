@@ -1,0 +1,165 @@
+{
+  "entity_id": "guam_volleyball_federation",
+  "entity_name": "Guam Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "guamvolleyballusa.wixsite.com",
+    "postguam.com",
+    "guamnoc.org",
+    "guampdn.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guam_volleyball_federation",
+      "entity_name": "Guam Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://guamvolleyballusa.wixsite.com",
+        "https://postguam.com",
+        "https://guamnoc.org",
+        "https://guampdn.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guam Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:53:54.846934",
+          "domain_explored": "https://guamvolleyballusa.wixsite.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:54:04.261992",
+          "domain_explored": "https://postguam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "news_scraping_noise"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 665,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.076202154159546
+            }
+          ],
+          "reasoning": "The scraped content from postguam.com is entirely unrelated to the Guam Volleyball Federation. It consists of repeated headlines regarding a Guam Fire Department rescue operation. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:54:16.642420",
+          "domain_explored": "https://guamnoc.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webflow (inferred from cdn.prod.website-files.com)",
+              "PDF Document Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inaugural Marianas Games (June 2026) - Potential event tech/ticketing needs",
+              "National Federation Guidelines - Standardized compliance requirements",
+              "GNOC Annual Report - Indicates budget/reporting cycles"
+            ]
+          },
+          "patterns_found": [
+            "governance_documentation",
+            "event_planning_infrastructure",
+            "membership_management_forms",
+            "hosting_infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 316,
+              "elapsed_seconds": 5.058143854141235
+            }
+          ],
+          "reasoning": "The Guam National Olympic Committee (GNOC) site provides the governing context for the Guam Volleyball Federation (GVF). While no direct procurement for GVF was found, the discovery of the 'Inaugural Marianas Games' (June 2026) and the availability of 'National Federation Guidelines' and 'Membership Applications' indicate an active ecosystem requiring administrative and event management support. The use of Webflow (cdn.prod.website-files.com) suggests a preference for low-code/no-code CMS solutions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:54:25.764714",
+          "domain_explored": "https://guampdn.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "public_safety_announcement",
+            "environmental_monitoring",
+            "irrelevant_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 812,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.4740538597106934
+            }
+          ],
+          "reasoning": "The content is a public safety warning regarding box jellyfish from the Department of Agriculture's Division of Aquatic and Wildlife Resources (DAWR). It contains no information regarding the Guam Volleyball Federation, its operations, or any procurement activities."
+        }
+      ],
+      "total_input_tokens": 2909,
+      "total_output_tokens": 615,
+      "estimated_cost_usd": 0.017952000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guam Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:54:25.766471"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.342390",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:32.006254"
+}

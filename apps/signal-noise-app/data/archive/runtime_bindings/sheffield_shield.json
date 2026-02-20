@@ -1,0 +1,250 @@
+{
+  "entity_id": "sheffield_shield",
+  "entity_name": "Sheffield Shield",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "cricket.com.au",
+    "cricketnsw.com.au",
+    "wacricket.com.au",
+    "cricketvictoria.com.au",
+    "saca.com.au",
+    "sydneycricketground.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sheffield_shield",
+      "entity_name": "Sheffield Shield",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://sydneycricketground.com.au",
+        "https://cricketvictoria.com.au",
+        "https://cricketnsw.com.au",
+        "https://wacricket.com.au",
+        "https://saca.com.au",
+        "https://cricket.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sheffield Shield may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:14:51.306500",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Player Movement Reporting",
+            "Match Results Coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 164,
+              "elapsed_seconds": 3.253180980682373
+            }
+          ],
+          "reasoning": "The content provided is strictly sports journalism focusing on player injuries (Hazlewood), team squad announcements (WNCL), and match results (T20 defeat). There is no mention of corporate strategy, technology acquisition, job vacancies, or organizational governance related to the Sheffield Shield entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:15:02.652924",
+          "domain_explored": "https://cricketnsw.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Team Selection Announcements",
+            "Match Scheduling",
+            "Personnel Changes (Coaching Staff)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 161,
+              "elapsed_seconds": 2.0777668952941895
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sporting news, match results, and team logistics for Cricket NSW (Breakers, Blues, Premier Cricket). There are no signals related to business operations, procurement, technology acquisition, or corporate governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:15:13.396403",
+          "domain_explored": "https://wacricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Sponsorship Branding (CSBP)",
+            "Regional Event Coverage",
+            "Player Retirement Announcements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.5102109909057617
+            }
+          ],
+          "reasoning": "The scraped content from wacricket.com.au is exclusively focused on sports journalism, covering match results (WNCL), regional tournaments (Country Week), and player announcements. While the presence of 'CSBP' (a likely sponsor) indicates commercial partnerships, there are no signals regarding procurement processes, technology stack acquisition, or corporate governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:15:30.514708",
+          "domain_explored": "https://cricketvictoria.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fever (Official Ticketing Partner)",
+              "RMIT (Educational Partner)"
+            ],
+            "job_postings": [
+              "Career Opportunities (Link Present)"
+            ],
+            "procurement_indicators": [
+              "Australian Cricket Infrastructure Fund (ACIF) 2025-26 Grant Administration",
+              "RMIT Partnership Extension (Education Services)",
+              "TAC Partnership (Community Safety Campaign)",
+              "CitiPower Centre Venue Hire (Event Services)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Grant Administration",
+            "Academic Partnership Extension",
+            "Venue Hire & Event Services",
+            "Community Safety Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 324,
+              "elapsed_seconds": 3.759162187576294
+            }
+          ],
+          "reasoning": "While the page is primarily news and marketing, it reveals specific operational mechanisms that imply procurement activity. The administration of the 'Australian Cricket Infrastructure Fund' suggests a need for grant management software or services. The extension of the RMIT partnership indicates an active vendor management cycle. The presence of 'Career Opportunities' (though not detailed in the snippet) is a direct signal for HR procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:15:43.215922",
+          "domain_explored": "https://saca.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Match Results Coverage",
+            "Team Selection Announcements",
+            "Video Content Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.3189969062805176
+            }
+          ],
+          "reasoning": "The scraped content from saca.com.au is exclusively focused on sports journalism, match reporting (WNCL, Premier Cricket), and player awards. There are no visible signals regarding procurement activities, technology infrastructure, or administrative operations on this landing page."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:15:53.724105",
+          "domain_explored": "https://sydneycricketground.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Event Scheduling",
+            "Ticketing Operations",
+            "Venue Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 139,
+              "elapsed_seconds": 1.8930020332336426
+            }
+          ],
+          "reasoning": "The content is exclusively focused on event listings, match schedules (Sheffield Shield, AFL, T20), and ticketing. There are no references to corporate governance, technology infrastructure, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 8875,
+      "total_output_tokens": 1147,
+      "estimated_cost_usd": 0.04383
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sheffield Shield may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:15:53.725699"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.417676",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:05.506385"
+}

@@ -1,0 +1,269 @@
+{
+  "entity_id": "al_ittihad",
+  "entity_name": "Al Ittihad",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "ittihadclub.sa",
+    "alittihadfc.ae",
+    "alittihad-store.com",
+    "saff.com.sa"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_al-ittihad-private-school-careers-jobs-vacancies-activity-7352223172395474944-HsOY",
+      "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_hiring-jobs-dubai-activity-7421084416783020032-O3ce",
+      "https://www.linkedin.com/posts/jobs-archives_jobsarchives-job-alittihadprivateschool-activity-7420695600595329024-Vp1K"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ittihad",
+      "entity_name": "Al Ittihad",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ittihadclub.sa",
+        "https://alittihadfc.ae",
+        "https://saff.com.sa",
+        "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_al-ittihad-private-school-careers-jobs-vacancies-activity-7352223172395474944-HsOY",
+        "https://www.linkedin.com/posts/jobs-archives_jobsarchives-job-alittihadprivateschool-activity-7420695600595329024-Vp1K",
+        "https://alittihad-store.com",
+        "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_hiring-jobs-dubai-activity-7421084416783020032-O3ce"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ittihad may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:37:53.497871",
+          "domain_explored": "https://ittihadclub.sa",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:38:09.569318",
+          "domain_explored": "https://alittihadfc.ae",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 23 column 9 (char 1658)"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:38:22.877437",
+          "domain_explored": "https://alittihad-store.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify indicators)",
+              "Payment Gateway (Recurring/Deferred support)",
+              "Tax Calculation API"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Shipping & Logistics Requirements",
+              "Inventory Management (Jersey stock levels)",
+              "Merchandising Procurement (Official Kits)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Global Logistics & Tax Calculation",
+            "Recurring/Deferred Payment Support",
+            "Merchandise Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 285,
+              "elapsed_seconds": 5.206003904342651
+            }
+          ],
+          "reasoning": "The content confirms the use of a sophisticated e-commerce platform (likely Shopify based on DOM structure) capable of handling international sales (EUR currency), tax calculations, and recurring payments. This indicates a mature commercial operation requiring procurement for inventory management, logistics, and payment gateway services, though specific vendor intent is not explicit."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:38:32.721209",
+          "domain_explored": "https://saff.com.sa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Sports News Content",
+            "General Sports Journalism",
+            "Futsal & Beach Soccer Coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.859877824783325
+            }
+          ],
+          "reasoning": "The scraped content from saff.com.sa is a sports news portal covering the Saudi National Futsal and Beach Soccer teams (e.g., 'Green Futsal', 'Green Beach Soccer'). There is no mention of 'Al Ittihad' club, corporate procurement, job postings, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:38:42.338942",
+          "domain_explored": "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_al-ittihad-private-school-careers-jobs-vacancies-activity-7352223172395474944-HsOY",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Business Teacher",
+              "Science Lead Teacher",
+              "Physics Teacher",
+              "Homeroom Teachers",
+              "Career and Guidance Counselor"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational Sector Hiring",
+            "Entity Name Collision",
+            "Geographic Mismatch (Dubai vs Jeddah)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 223,
+              "elapsed_seconds": 4.226584196090698
+            }
+          ],
+          "reasoning": "The content refers to 'Al Ittihad Private School' located in Dubai, which is an educational institution distinct from the 'Al Ittihad' football club entity based in Jeddah, Saudi Arabia. While the name matches, the sector (Education vs Sports) and location (UAE vs KSA) indicate this is a false positive for the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:38:50.636825",
+          "domain_explored": "https://www.linkedin.com/posts/mohamed-althaf-5b6945242_hiring-jobs-dubai-activity-7421084416783020032-O3ce",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Middle and High School English Teacher",
+              "Arabic Teacher",
+              "Science Teacher",
+              "Physics Teacher",
+              "Art Teacher",
+              "Homeroom Teacher",
+              "Math Teacher"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational Sector Hiring",
+            "Entity Name Collision",
+            "Geographic Mismatch (Dubai vs Jeddah)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.9954590797424316
+            }
+          ],
+          "reasoning": "The content refers to 'Al Ittihad Private School' located in Dubai, which is a distinct entity from 'Al Ittihad' (the football club) based in Jeddah, Saudi Arabia. This represents a false positive match based on the shared name 'Al Ittihad' and does not provide intelligence regarding the football club's procurement activities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:39:29.156328",
+          "domain_explored": "https://www.linkedin.com/posts/jobs-archives_jobsarchives-job-alittihadprivateschool-activity-7420695600595329024-Vp1K",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Middle and High School English Teacher",
+              "Arabic Teacher",
+              "Science Teacher",
+              "Physics Teacher",
+              "Art Teacher",
+              "Homeroom Teacher",
+              "Math Teacher"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational Sector Hiring",
+            "Entity Name Collision",
+            "Geographic Mismatch (Dubai vs Jeddah)",
+            "Recruitment Agency Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1687,
+              "output_tokens": 240,
+              "elapsed_seconds": 5.339925050735474
+            }
+          ],
+          "reasoning": "The content refers to 'Al Ittihad Private School Al Mamzar', an educational institution located in Dubai (UAE). This is a distinct entity from 'Al Ittihad' (the Saudi football club based in Jeddah). The hiring is for teaching roles, which does not align with the procurement or technology stack analysis of the sports club."
+        }
+      ],
+      "total_input_tokens": 7722,
+      "total_output_tokens": 1142,
+      "estimated_cost_usd": 0.040296
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ittihad may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:39:29.157691"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.137659",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:34.021247"
+}

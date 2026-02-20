@@ -1,0 +1,351 @@
+{
+  "entity_id": "laliga",
+  "entity_name": "LaLiga",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "laliga.com",
+    "www2.laligastore.com",
+    "laligaselect.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/laliga/jobs/",
+      "https://www.linkedin.com/jobs/laliga-jobs-worldwide",
+      "https://es.linkedin.com/company/laliga/jobs",
+      "https://www.linkedin.com/jobs/laliga-jobs-worldwide?f_C=13042200%2C670735",
+      "https://fr.linkedin.com/company/laliga/jobs",
+      "https://pl.linkedin.com/company/laliga/jobs",
+      "https://pt.linkedin.com/company/laliga/jobs",
+      "https://hk.linkedin.com/jobs/view/laliga-delegate-in-hong-kong-at-laliga-4052034395",
+      "https://sg.linkedin.com/jobs/view/commercial-director-singapore-at-laliga-3924235786"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "laliga",
+      "entity_name": "LaLiga",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/laliga-jobs-worldwide?f_C=13042200%2C670735",
+        "https://laligaselect.com",
+        "https://www.linkedin.com/jobs/laliga-jobs-worldwide",
+        "https://es.linkedin.com/company/laliga/jobs",
+        "https://www.linkedin.com/company/laliga/jobs/",
+        "https://fr.linkedin.com/company/laliga/jobs",
+        "https://laliga.com",
+        "https://www2.laligastore.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LaLiga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:22:14.573396",
+          "domain_explored": "https://laliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Existing Partnership: Luckia Games S.A. (Sponsorship)",
+              "Existing Partnership: Movistar LALIGA (Broadcasting)",
+              "Existing Partnership: DAZN (Broadcasting)"
+            ]
+          },
+          "patterns_found": [
+            "Sports results reporting",
+            "Sponsorship display (Luckia Games)",
+            "Broadcasting partnerships (Movistar, DAZN)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 211,
+              "elapsed_seconds": 4.106276035308838
+            }
+          ],
+          "reasoning": "The content is exclusively focused on football match results, player statistics, and upcoming fixtures. While it lists existing sponsors and broadcasters, there is no information regarding internal procurement activities, technology investments, or job openings."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:22:24.010051",
+          "domain_explored": "https://www2.laligastore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Payment Gateways (Visa, Mastercard, Amex, PayPal, Maestro)",
+              "Email Marketing (Sign up & Save)",
+              "A/B Testing / Experimentation Platform (Show More Qualified Experiments)",
+              "GlobalSight / Translation Management (gsId/rc tags)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Fanatics, LLC (Global Merchandise & E-commerce Partner)",
+              "Service: Logistics & Fulfillment (Delivery & Shipping)",
+              "Service: Customer Support Outsourcing (Help/Track Order)",
+              "Service: Affiliate Marketing Management"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Outsourcing",
+            "Global Logistics Partnership",
+            "Digital Marketing Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 339,
+              "elapsed_seconds": 2.997992992401123
+            }
+          ],
+          "reasoning": "While the page is consumer-facing, the footer reveals critical procurement intelligence: the e-commerce operations are fully outsourced to Fanatics, LLC. This indicates a strategic reliance on third-party vendors for core revenue streams (merchandising). The presence of payment gateways (Visa, PayPal), shipping logistics, and 'Worry Free Shopping' infrastructure confirms a complex supply chain managed by partners."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:22:37.285894",
+          "domain_explored": "https://laligaselect.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting Platforms (Vimeo/YouTube/Wistia - inferred from 'Watch video' embeds)",
+              "Athlete Management Systems (AMS) - implied for tracking recruits"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Management Services (Scouting events across USA)",
+              "Travel & Accommodation Procurement (Madrid showcase logistics)",
+              "Sports Performance Data Analytics (Player evaluation and tracking)",
+              "Venue Rental & Training Facilities (Madrid and local club camps)"
+            ]
+          },
+          "patterns_found": [
+            "International Sports Operations",
+            "Event Management & Logistics",
+            "Talent Scouting Infrastructure",
+            "Educational/Training Program Outsourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.986408948898315
+            }
+          ],
+          "reasoning": "The content reveals a distinct operational division (LaLiga Select) focused on North American talent recruitment. While this is primarily a marketing/brand extension, it implies procurement needs for international travel logistics, event hosting (Showcases in Madrid), venue management, and potentially software for tracking athlete data. It confirms LaLiga's investment in global infrastructure, but specific vendor procurement signals are indirect."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:22:43.121321",
+          "domain_explored": "https://www.linkedin.com/company/laliga/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Measures"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 529,
+              "output_tokens": 141,
+              "elapsed_seconds": 3.02492618560791
+            }
+          ],
+          "reasoning": "The content provided indicates a '403 Forbidden' error, meaning the target URL (LinkedIn Jobs) blocked the scraping attempt. No data regarding job postings, technology stacks, or procurement indicators could be extracted from this iteration."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:22:53.893039",
+          "domain_explored": "https://www.linkedin.com/jobs/laliga-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Gestor de Marketing (Marketing Manager) - Madrid, Spain",
+              "Coordinador de Control de Gesti\u00f3n (Management Control Coordinator) - Madrid, Spain"
+            ],
+            "procurement_indicators": [
+              "Expansion of Marketing Operations capacity",
+              "Investment in Financial/Management Control infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Operations Hiring",
+            "Financial Control & Management Recruitment",
+            "Madrid HQ Centralization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 286,
+              "elapsed_seconds": 2.89420485496521
+            }
+          ],
+          "reasoning": "While the page contains authentication walls, the scraped text successfully extracted specific job titles. The presence of roles like 'Gestor de Marketing' and 'Coordinador de Control de Gesti\u00f3n' indicates active internal hiring, which correlates with organizational growth and potential future procurement needs to support new staff (software, hardware, services). However, the lack of technical details in the snippets prevents a stronger classification."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:22:59.220470",
+          "domain_explored": "https://es.linkedin.com/company/laliga/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Measures",
+            "URL Parameter Enforcement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 637,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.528773784637451
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error, indicating that the content is protected against automated scraping. No data regarding job postings, technology stacks, or procurement indicators could be extracted from this specific page."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:23:11.700057",
+          "domain_explored": "https://www.linkedin.com/jobs/laliga-jobs-worldwide?f_C=13042200%2C670735",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Generative AI Tools (implied by Dise\u00f1ador IA)",
+              "Digital Asset Management (DAM) Systems",
+              "Project Management Software",
+              "Digital Marketing Platforms"
+            ],
+            "job_postings": [
+              "Project Manager IT / Transformaci\u00f3n Digital",
+              "Dise\u00f1ador IA y Contenido Gr\u00e1fico",
+              "Beca Activos Digitales",
+              "Gestor de Marketing",
+              "Coordinador de Control de Gesti\u00f3n"
+            ],
+            "procurement_indicators": [
+              "Active Digital Transformation Program",
+              "Centralized Operations in Madrid",
+              "Investment in Creative AI Technologies",
+              "Recruitment for Financial Control (Budget availability)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Management",
+            "AI & Graphic Design Integration",
+            "Digital Asset Management (Internship)",
+            "Madrid HQ Centralization",
+            "Marketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1689,
+              "output_tokens": 392,
+              "elapsed_seconds": 7.1820149421691895
+            }
+          ],
+          "reasoning": "While the page is a job listing aggregator (low direct procurement signal), the specific roles advertised reveal internal investment priorities. The 'Project Manager IT / Transformaci\u00f3n Digital' role is a direct indicator of active change management and potential software/system procurement. The 'Dise\u00f1ador IA' role indicates adoption of generative AI tools, and 'Beca Activos Digitales' suggests a need for digital asset management (DAM) systems."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:23:17.560367",
+          "domain_explored": "https://fr.linkedin.com/company/laliga/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Anti-Scraping Measures",
+            "URL Parameter Enforcement",
+            "Regional Redundancy (France)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 759,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.055820941925049
+            }
+          ],
+          "reasoning": "The attempt to access the French regional subdomain of LinkedIn resulted in a 403 Forbidden error, identical to the issues encountered in Iterations 4 and 6. The error message 'Use only company name in the URL' indicates strict bot mitigation and URL parameter enforcement. This provides no new procurement intelligence or job posting data."
+        }
+      ],
+      "total_input_tokens": 9402,
+      "total_output_tokens": 2046,
+      "estimated_cost_usd": 0.058896
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LaLiga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:23:17.561866"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418299",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:15.560206"
+}

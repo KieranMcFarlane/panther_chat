@@ -1,0 +1,209 @@
+{
+  "entity_id": "cant\u00f9_volley",
+  "entity_name": "Cant\u00f9 Volley",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "canturino.com",
+    "volleynews.it",
+    "sanbernardo.it",
+    "boylesports.com",
+    "footboom1.com",
+    "888sport.es"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cant\u00f9_volley",
+      "entity_name": "Cant\u00f9 Volley",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://volleynews.it",
+        "https://888sport.es",
+        "https://canturino.com",
+        "https://boylesports.com",
+        "https://footboom1.com",
+        "https://sanbernardo.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cant\u00f9 Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:47:51.433885",
+          "domain_explored": "https://canturino.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (inferred from wp_postmeta structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "CMS Metadata Structure",
+            "Local News Aggregation",
+            "Sports Categorization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.7919251918792725
+            }
+          ],
+          "reasoning": "The scraped content consists of raw PHP array dumps (likely WordPress `wp_postmeta` table data) and navigation menu structure from a local news outlet (canturino.com). While 'Volley' is listed as a category, there is no specific content, text, or articles related to 'Cant\u00f9 Volley' in this snippet. The data represents backend database structure rather than business intelligence regarding the volleyball club's operations or procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:48:02.526515",
+          "domain_explored": "https://volleynews.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "League Standings & Results",
+            "Player Transfer Market (Mercato)",
+            "Generic CMS Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 190,
+              "elapsed_seconds": 2.599414110183716
+            }
+          ],
+          "reasoning": "The scraped content from VolleyNews.it is a sports news aggregator focused on match results, standings, and player transfers for the Italian volleyball leagues (Superlega, A1, A2). There is no content related to Cant\u00f9 Volley's internal operations, technology stack, or procurement activities. The mention of 'Mercato' refers to player trading, not vendor purchasing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:48:18.764889",
+          "domain_explored": "https://sanbernardo.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:48:52.045092",
+          "domain_explored": "https://boylesports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:49:02.281687",
+          "domain_explored": "https://footboom1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Match Predictions & Betting Content",
+            "Transfer Market News (Mercato)",
+            "Video Content Hosting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.3139560222625732
+            }
+          ],
+          "reasoning": "The scraped content from footboom1.com is a Ukrainian sports news feed focusing on football (soccer) match results, predictions, and player transfers. There is no content related to Cant\u00f9 Volley, volleyball, or corporate procurement activities (RFPs, tech stack, job postings). The entity is a sports media outlet, not a target for procurement intelligence regarding the volleyball club."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:49:13.294311",
+          "domain_explored": "https://888sport.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Online Gambling & Betting Services",
+            "Consumer Marketing Content",
+            "Gaming License Compliance (DGOJ Spain)",
+            "Mobile App Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1558,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.594896078109741
+            }
+          ],
+          "reasoning": "The content is exclusively focused on B2C sports betting services, odds, and gambling promotions for 888sport. It contains no information regarding Cant\u00f9 Volley's operations, procurement needs, or technology stack. This is irrelevant vendor noise."
+        }
+      ],
+      "total_input_tokens": 5822,
+      "total_output_tokens": 763,
+      "estimated_cost_usd": 0.028911
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cant\u00f9 Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:49:13.294853"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328762",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:19:10.577367"
+}

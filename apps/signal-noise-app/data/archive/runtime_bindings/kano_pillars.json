@@ -1,0 +1,240 @@
+{
+  "entity_id": "kano_pillars",
+  "entity_name": "Kano Pillars",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "enyimbafc.net",
+    "basketball.afrobasket.com",
+    "npfl.com.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ng.linkedin.com/jobs/player-development-jobs-nigeria?countryRedirected=1&trk=jobs_jserp_pagination_3&start=0&count=25",
+      "https://www.linkedin.com/posts/west-ham-united_all-jobs-everywhere-activity-6844562989094334464-dSdl"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kano_pillars",
+      "entity_name": "Kano Pillars",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://basketball.afrobasket.com",
+        "https://enyimbafc.net",
+        "https://ng.linkedin.com/jobs/player-development-jobs-nigeria?countryRedirected=1&trk=jobs_jserp_pagination_3&start=0&count=25",
+        "https://npfl.com.ng",
+        "https://www.linkedin.com/posts/west-ham-united_all-jobs-everywhere-activity-6844562989094334464-dSdl"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kano Pillars may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:11:26.122286",
+          "domain_explored": "https://enyimbafc.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook (Social Media)",
+              "Twitter (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Roster Analysis (Enyimba FC)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Competitor Intelligence",
+            "Social Media Integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.9250218868255615
+            }
+          ],
+          "reasoning": "The scraped content is from Enyimba FC, a direct competitor to Kano Pillars in the NPFL. While this provides competitive intelligence (e.g., player roster, social media following), it contains zero procurement signals relevant to Kano Pillars' internal operations, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:11:34.658241",
+          "domain_explored": "https://basketball.afrobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Competitor Intelligence",
+            "Market Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.199230194091797
+            }
+          ],
+          "reasoning": "The scraped content from 'basketball.afrobasket.com' focuses on general African basketball league news, game results, and player transfers for teams like Al Ahly, Zamalek, and C. Ferroviario. There is zero mention of 'Kano Pillars', nor are there any procurement signals, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:11:56.360153",
+          "domain_explored": "https://npfl.com.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcast Streaming Platforms",
+              "League Management Systems (implied by table/schedule data)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized League Partnerships (NPFL Partners)",
+              "Broadcast Rights Procurement (Matchday 24 broadcast schedule)",
+              "League-wide Technology Standards"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Context",
+            "Broadcast Operations",
+            "Competitive Positioning",
+            "Regulatory Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 302,
+              "elapsed_seconds": 5.195955038070679
+            }
+          ],
+          "reasoning": "While the page is a league-wide aggregator and not a direct procurement portal for Kano Pillars, it provides critical context for the entity's operating environment. The identification of Kano Pillars in the league table (with a points deduction) confirms their active status. The mention of 'NPFL PARTNERS' and broadcast schedules indicates a centralized procurement structure where the league handles major vendor contracts (e.g., broadcast, technology), which Kano Pillars is subject to as a member club."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:12:05.463174",
+          "domain_explored": "https://ng.linkedin.com/jobs/player-development-jobs-nigeria?countryRedirected=1&trk=jobs_jserp_pagination_3&start=0&count=25",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting",
+            "Access Denied",
+            "Data Unavailability"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 547,
+              "output_tokens": 134,
+              "elapsed_seconds": 3.3632612228393555
+            }
+          ],
+          "reasoning": "The request to LinkedIn was blocked due to rate limiting (429 Too Many Requests). No content was retrieved, making it impossible to identify procurement signals, job postings, or technology stacks for Kano Pillars."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:12:16.333145",
+          "domain_explored": "https://www.linkedin.com/posts/west-ham-united_all-jobs-everywhere-activity-6844562989094334464-dSdl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter",
+              "Online Trading Platforms (implied by job title)"
+            ],
+            "job_postings": [
+              "Womens Team Athletic Development Coach",
+              "Online Trading Manager",
+              "Marketing Executive",
+              "Editorial Content Executive",
+              "Student Engagement Officer",
+              "Lifestyle Advisor",
+              "Community Assistant",
+              "Full-Time Ticket Office Representative",
+              "Academy Performance Nutritionist",
+              "Assistant Groundstaff",
+              "Supporter Liaison Officer",
+              "Retail Sales Assistants",
+              "Ticket Office Assistants"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment (West Ham)",
+              "Digital Commerce Investment (West Ham)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Irrelevance",
+            "Market Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 369,
+              "elapsed_seconds": 5.974239826202393
+            }
+          ],
+          "reasoning": "The content provided is a job posting from West Ham United FC, a club in the English Premier League. This constitutes a complete Entity Mismatch with the target entity, Kano Pillars (NPFL, Nigeria). While the content reveals standard football club operational roles (Online Trading, Ticketing, Groundstaff), it offers no actionable intelligence for Kano Pillars' specific procurement environment."
+        }
+      ],
+      "total_input_tokens": 6320,
+      "total_output_tokens": 1168,
+      "estimated_cost_usd": 0.03648
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kano Pillars may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:12:16.334410"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.184354",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:02:54.552809"
+}

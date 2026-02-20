@@ -48,7 +48,7 @@ def test_entity_type_questions():
         print(f"\n📊 SPORT_CLUB Questions: {len(club_questions)}")
         for q in club_questions[:3]:
             print(f"   - {q.question_id}")
-            print(f"     Question: {q.question[:60]}...")
+            print(f"     Question: {q.question}")
             print(f"     YP Services: {[s.value for s in q.yp_service_fit]}")
             print(f"     Budget: {q.budget_range}")
             print(f"     Positioning: {q.positioning_strategy.value}")
@@ -58,7 +58,7 @@ def test_entity_type_questions():
         print(f"\n📊 SPORT_FEDERATION Questions: {len(fed_questions)}")
         for q in fed_questions[:2]:
             print(f"   - {q.question_id}")
-            print(f"     Question: {q.question[:60]}...")
+            print(f"     Question: {q.question}")
             print(f"     YP Services: {[s.value for s in q.yp_service_fit]}")
 
         # Test SPORT_LEAGUE questions
@@ -121,7 +121,7 @@ def test_hypothesis_generation():
 
         print(f"   Generated {len(hypotheses)} hypotheses")
         for h in hypotheses:
-            print(f"   - {h['statement'][:70]}... (confidence: {h['confidence']:.2f})")
+            print(f"   - {h['statement']} (confidence: {h['confidence']:.2f})")
 
         print("\n✅ TEST 2 PASSED: Hypothesis generation working correctly")
         return True
@@ -255,7 +255,7 @@ def test_hop_mapping():
 
         print(f"\n📋 Generated Hop Plans:")
         for plan in hop_plans:
-            print(f"   - {plan['hop_type'].value}: {plan['query'][:60]}... (priority: {plan['priority']})")
+            print(f"   - {plan['hop_type'].value}: {plan['query']} (priority: {plan['priority']})")
 
         print("\n✅ TEST 5 PASSED: Hop type mapping working correctly")
         return True
@@ -287,7 +287,7 @@ def test_enhanced_dossier_generator():
         print(f"📊 Retrieved {len(questions)} questions for SPORT_CLUB")
 
         for q in questions:
-            print(f"   - {q['question_id']}: {q['question'][:50]}...")
+            print(f"   - {q['question_id']}: {q['question']}")
             print(f"     YP Services: {', '.join(q['yp_service_fit'])}")
 
         # Test contact validation
@@ -347,7 +347,7 @@ async def test_full_integration():
                 budget = hyp['metadata']['budget_range']
                 positioning = hyp['metadata']['positioning_strategy']
 
-                print(f"   - {hyp['statement'][:60]}...")
+                print(f"   - {hyp['statement']}")
                 print(f"     YP: {', '.join(yp_services)}, Budget: {budget}, Positioning: {positioning}")
 
             all_results.append({

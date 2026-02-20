@@ -1,0 +1,112 @@
+{
+  "entity_id": "minaur_baia_mare",
+  "entity_name": "Minaur Baia Mare",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "csminaur.ro",
+    "old.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "minaur_baia_mare",
+      "entity_name": "Minaur Baia Mare",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://old.eurohandball.com",
+        "https://csminaur.ro"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Minaur Baia Mare may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:55:11.195338",
+          "domain_explored": "https://csminaur.ro",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league data ingestion",
+            "Countdown timers",
+            "Sponsorship links (traditionrolex.com)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.203740119934082
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports league standings (Liga Zimbrilor, Liga Florilor MOL, Liga 3), match results, and scheduled games. There are no mentions of business operations, technology infrastructure, job openings, or procurement notices. The content is purely informational for fans regarding handball and football teams."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:55:19.548621",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Calendar UI",
+            "Sports Federation Navigation",
+            "Future Date Scaffolding (2025-2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.670357942581177
+            }
+          ],
+          "reasoning": "The content provided is raw HTML scaffolding for a calendar widget from the European Handball Federation (old.eurohandball.com). It contains no specific data, text, or links related to 'Minaur Baia Mare'. It is purely structural navigation code for future dates, offering zero insight into the entity's procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 2765,
+      "total_output_tokens": 352,
+      "estimated_cost_usd": 0.013575
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Minaur Baia Mare may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:55:19.550885"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352225",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:23.490052"
+}

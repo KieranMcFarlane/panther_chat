@@ -1,0 +1,154 @@
+{
+  "entity_id": "el_salvador_baseball_federation",
+  "entity_name": "El Salvador Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "triptap.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sv.linkedin.com/jobs/view/athletic-specialist-baseball-at-santa-ana-unified-school-district-4354620218",
+      "https://sv.linkedin.com/jobs/employment-empleos"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "el_salvador_baseball_federation",
+      "entity_name": "El Salvador Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sv.linkedin.com/jobs/view/athletic-specialist-baseball-at-santa-ana-unified-school-district-4354620218",
+        "https://sv.linkedin.com/jobs/employment-empleos",
+        "https://triptap.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "El Salvador Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:55:19.101356",
+          "domain_explored": "https://triptap.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "b2c_consumer_platform",
+            "travel_industry_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 159,
+              "elapsed_seconds": 5.509789943695068
+            }
+          ],
+          "reasoning": "The scraped content from 'triptap.com' is a B2C travel booking platform offering custom itineraries, hotels, and flights. It contains absolutely no information regarding the El Salvador Baseball Federation, its governance, or its procurement activities. This is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:55:30.739209",
+          "domain_explored": "https://sv.linkedin.com/jobs/view/athletic-specialist-baseball-at-santa-ana-unified-school-district-4354620218",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Athletic Specialist Baseball - Santa Ana Unified School District (Costa Rica)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "geo_mismatch",
+            "entity_mismatch",
+            "education_sector_noise",
+            "job_posting_irrelevant"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.808187246322632
+            }
+          ],
+          "reasoning": "The content is a job posting for an 'Athletic Specialist Baseball' role located in Santa Ana, San Jose, Costa Rica, under the 'Santa Ana Unified School District'. This is a direct mismatch for the target entity 'El Salvador Baseball Federation' (which is in El Salvador, not Costa Rica) and represents an educational hiring event rather than a federation procurement signal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:55:42.056299",
+          "domain_explored": "https://sv.linkedin.com/jobs/employment-empleos",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Virtual Assistant (Valatam)",
+              "Operations Assistant (Valatam)",
+              "Senior Executive Assistant (Scale Up Recruiting Partners)",
+              "Talent Acquisition Specialist (Teamswell)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_job_board_noise",
+            "b2c_recruitment_platform",
+            "entity_mismatch",
+            "irrelevant_roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.911256790161133
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Employment' in El Salvador. It lists roles for unrelated entities (Valatam, Scale Up Recruiting Partners, Teamswell) such as Virtual Assistants and Talent Acquisition Specialists. There is no mention of the El Salvador Baseball Federation, nor any specific procurement signals, RFPs, or technology investments relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4270,
+      "total_output_tokens": 617,
+      "estimated_cost_usd": 0.022065
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "El Salvador Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:55:42.058541"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314323",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:28.183737"
+}

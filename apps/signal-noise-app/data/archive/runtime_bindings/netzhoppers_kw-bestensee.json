@@ -1,0 +1,222 @@
+{
+  "entity_id": "netzhoppers_kw-bestensee",
+  "entity_name": "Netzhoppers KW-Bestensee",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "netzhoppers.org",
+    "gopsusports.com",
+    "sofascore.com",
+    "volleybox.net",
+    "vbl-web.dataproject.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "netzhoppers_kw-bestensee",
+      "entity_name": "Netzhoppers KW-Bestensee",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://vbl-web.dataproject.com",
+        "https://sofascore.com",
+        "https://gopsusports.com",
+        "https://netzhoppers.org",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Netzhoppers KW-Bestensee may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:12:35.405866",
+          "domain_explored": "https://netzhoppers.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DYN VOLLEYBALL (Streaming Platform)",
+              "Social Media Platforms (Instagram, TikTok, Facebook)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticket Sales Channels (Online & Physical)",
+              "Retail Partnerships (Hugendubel, Schmitz Katze)",
+              "Media Rights Holder (Dyn Volleyball)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Operations",
+            "Physical POS Infrastructure",
+            "Digital Media Rights",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.720125913619995
+            }
+          ],
+          "reasoning": "The content reveals operational infrastructure requirements for ticket sales (online and physical POS at Hugendubel and Schmitz Katze) and media distribution (DYN VOLLEYBALL). While not direct procurement, these indicate reliance on third-party service providers for ticketing systems, retail partnerships, and broadcasting infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:12:47.588527",
+          "domain_explored": "https://gopsusports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile App (Penn State Athletics)",
+              "Ticket Central (Penn State)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content",
+            "Mobile App Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.4443538188934326
+            }
+          ],
+          "reasoning": "The scraped content is from 'gopsusports.com' (Penn State Athletics), which is completely unrelated to the target entity 'Netzhoppers KW-Bestensee' (a German volleyball club). The content describes a mobile app for Penn State sports news and ticketing. There are zero procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:12:59.979273",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Content Aggregation",
+            "Consumer-Facing Application"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.5102219581604004
+            }
+          ],
+          "reasoning": "The scraped content from Sofascore.com is a generic sports results page focused on global football (UEFA, Premier League, etc.). There is absolutely no mention of 'Netzhoppers KW-Bestensee', volleyball, or the German Bundesliga. The content is purely consumer-facing (live scores, stats) and contains no procurement signals, job postings, or technology stack information relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:13:08.906731",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Content Aggregation",
+            "Consumer-Facing Application"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.6477859020233154
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is a volleyball-specific news and transfer portal. It contains no information regarding Netzhoppers KW-Bestensee, its internal operations, or its procurement needs. The content is entirely focused on global player transfers, rumors, and community statistics, making it irrelevant to the target entity's procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:13:45.455242",
+          "domain_explored": "https://vbl-web.dataproject.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DataProject (Sports Data Provider)",
+              "VBL Web Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League Membership Compliance (1. Bundesliga)",
+              "Usage of Centralized League Management Platform"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Content Aggregation",
+            "Consumer-Facing Application"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 263,
+              "elapsed_seconds": 27.999615907669067
+            }
+          ],
+          "reasoning": "The scraped content is from the 'VBL' (Volleyball Bundesliga) digital platform, a centralized league management system provided by DataProject. While it confirms Netzhoppers KW-Bestensee is an active participant in the 1. Bundesliga (ranking 7th), the site is a third-party aggregator for league statistics and standings. It does not contain information about Netzhoppers' internal procurement operations, technology stack, or business administration. It is a 'read-only' view of game data."
+        }
+      ],
+      "total_input_tokens": 7258,
+      "total_output_tokens": 1068,
+      "estimated_cost_usd": 0.037794
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Netzhoppers KW-Bestensee may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:13:45.456297"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321728",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:27.760229"
+}

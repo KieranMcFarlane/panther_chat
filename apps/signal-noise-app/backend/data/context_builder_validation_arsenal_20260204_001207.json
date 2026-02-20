@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-02-04T00:12:07.726363+00:00",
+  "metrics": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "total_iterations": 10,
+    "final_confidence": 0.05,
+    "confidence_band": "EXPLORATORY",
+    "accept_count": 0,
+    "weak_accept_count": 0,
+    "reject_count": 0,
+    "no_progress_count": 10,
+    "justifications_with_quotes": 0,
+    "justifications_with_urls": 0,
+    "justifications_generic": 10,
+    "avg_accept_delta": 0.0,
+    "avg_weak_accept_delta": 0.0,
+    "total_confidence_increase": -0.45,
+    "iterations_to_070": 0,
+    "max_confidence_reached": 0.05,
+    "claude_errors": 0,
+    "iteration_details": [
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "official_site",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "press_release",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "careers_page",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "official_site",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "press_release",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "careers_page",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "official_site",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "press_release",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "linkedin_job_posting",
+        "has_quote": false,
+        "justification_length": 16
+      },
+      {
+        "decision": "NO_PROGRESS",
+        "confidence_delta": 0.0,
+        "justification": "Evaluation error",
+        "evidence_found": "",
+        "evidence_type": null,
+        "hop_type": "press_release",
+        "has_quote": false,
+        "justification_length": 16
+      }
+    ]
+  }
+}

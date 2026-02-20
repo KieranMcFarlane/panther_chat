@@ -1,0 +1,357 @@
+{
+  "entity_id": "french_baseball_and_softball_federation",
+  "entity_name": "French Baseball and Softball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "wbsceurope.org",
+    "newfanzoneblog.wordpress.com",
+    "milujeme-baseball.cz",
+    "littleleague.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+      "https://www.linkedin.com/jobs/view/professional-baseball-softball-instructors-at-el1-sports-3809999392",
+      "https://www.linkedin.com/jobs/softball-instructor-jobs",
+      "https://www.linkedin.com/jobs/view/youth-baseball-softball-umpire-pay-grade-1-at-geneva-lakes-family-ymca-4352112223?refId=wjgVIuXLT%2FILfPtP3sI9uQ%3D%3D&trackingId=%2FqplknIf%2BhOzAkOezPvltA%3D%3D&position=21&pageNum=0",
+      "https://www.linkedin.com/jobs/baseball-scouting-jobs",
+      "https://www.linkedin.com/jobs/view/baseball-and-softball-umpire-at-city-of-monroe-4367136420",
+      "https://www.linkedin.com/jobs/view/middle-school-baseball-coach-grades-4-8-at-french-american-international-school-san-francisco-ca-4366667378",
+      "https://www.linkedin.com/jobs/director-baseball-operations-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_baseball_and_softball_federation",
+      "entity_name": "French Baseball and Softball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+        "https://www.linkedin.com/jobs/view/professional-baseball-softball-instructors-at-el1-sports-3809999392",
+        "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+        "https://newfanzoneblog.wordpress.com",
+        "https://milujeme-baseball.cz",
+        "https://wbsceurope.org",
+        "https://www.linkedin.com/jobs/view/youth-baseball-softball-umpire-pay-grade-1-at-geneva-lakes-family-ymca-4352112223?refId=wjgVIuXLT%2FILfPtP3sI9uQ%3D%3D&trackingId=%2FqplknIf%2BhOzAkOezPvltA%3D%3D&position=21&pageNum=0",
+        "https://www.linkedin.com/jobs/softball-instructor-jobs",
+        "https://littleleague.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Baseball and Softball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:29:30.173225",
+          "domain_explored": "https://wbsceurope.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:29:48.402208",
+          "domain_explored": "https://newfanzoneblog.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "geographic_mismatch",
+            "sports_domain_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1316,
+              "output_tokens": 159,
+              "elapsed_seconds": 14.031383991241455
+            }
+          ],
+          "reasoning": "The content is entirely focused on the Nigeria Basketball Federation (NBBF) and Nigerian government officials. It contains zero information regarding the French Baseball and Softball Federation (FFBS), its procurement activities, or its technology stack. The entity and geography are incorrect."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:30:05.211439",
+          "domain_explored": "https://milujeme-baseball.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Fundraising campaign (Kotl\u00e1\u0159ka)"
+            ]
+          },
+          "patterns_found": [
+            "geographic_mismatch",
+            "entity_mismatch",
+            "content_type_news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 583,
+              "output_tokens": 184,
+              "elapsed_seconds": 12.280138731002808
+            }
+          ],
+          "reasoning": "The source 'milujeme-baseball.cz' is a Czech media outlet focused on Czech baseball news. The specific article discusses a Czech club (Kotl\u00e1\u0159ka) seeking financial donations, which is a fundraising activity rather than a B2B procurement signal for the French Baseball and Softball Federation. There is no relevance to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:30:13.986679",
+          "domain_explored": "https://littleleague.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: T-Mobile Little League Call Up Grant",
+              "Event: 2026 Little League World Series logos unveiled"
+            ]
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_marketing",
+            "sponsorship_signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.9554660320281982
+            }
+          ],
+          "reasoning": "The content is from Little League.org, a US-based organization (Williamsport, PA), which is a distinct entity from the French Baseball and Softball Federation (FFBS). The content focuses on US-specific events (LLWS), sponsorships (T-Mobile), and general youth baseball administration. While it shares the sport domain, it provides no procurement intelligence regarding the French federation's operations, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:30:21.309217",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Human Resources Coordinator",
+              "Receptionist (Temp to Perm)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_job_board"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1545,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.8841028213500977
+            }
+          ],
+          "reasoning": "The scraped content is a job listing page for Major League Baseball (MLB), a US-based entity. The target entity is the French Baseball and Softball Federation (FFBS). While the content type (jobs) is relevant to procurement intelligence, the entity is completely different, and the geographic scope (US/NY) does not align with the French target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:30:27.365995",
+          "domain_explored": "https://www.linkedin.com/jobs/view/coordinator-softball-instruction-at-major-league-baseball-mlb-4306948320",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Workspace",
+              "MS Excel",
+              "MS Word",
+              "MS PowerPoint"
+            ],
+            "job_postings": [
+              "Coordinator, Softball Instruction - Major League Baseball (MLB)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_job_board",
+            "focus_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.413818120956421
+            }
+          ],
+          "reasoning": "The content is a job posting for Major League Baseball (MLB), a US-based entity, located in New Orleans, LA. This is a direct mismatch for the French Baseball and Softball Federation (FFBS). The role focuses on on-field softball instruction and youth academy operations, not procurement or technology implementation within the French federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:30:48.322099",
+          "domain_explored": "https://www.linkedin.com/jobs/view/professional-baseball-softball-instructors-at-el1-sports-3809999392",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Professional Baseball & Softball Instructors",
+                "entity": "EL1 Sports",
+                "location": "New Jersey, United States",
+                "type": "Part-time"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_job_board",
+            "sector_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1671,
+              "output_tokens": 237,
+              "elapsed_seconds": 16.708989143371582
+            }
+          ],
+          "reasoning": "The content is a job posting for EL1 Sports, a private training company and MLB partner located in New Jersey, United States. It is not the French Baseball and Softball Federation (FFBS). The geographic location (US vs France) and the entity type (Private Training vs National Federation) contradict the procurement hypothesis for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:30:58.958992",
+          "domain_explored": "https://www.linkedin.com/jobs/softball-instructor-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Women's Soccer Coach (California State University, Bakersfield)",
+              "On-site Athletic Coordinator (AVONDALE ELEMENTARY SCHOOL DISTRICT)",
+              "LA Dodgers Training Academy Baseball Instructors (EL1 Sports)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_job_board",
+            "irrelevant_roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1721,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.595319747924805
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job board search result page for 'Softball Instructor' roles. The listings are primarily for US-based entities (e.g., California State University, AVONDALE ELEMENTARY SCHOOL DISTRICT, LA Dodgers/EL1 Sports). There is no mention of the French Baseball and Softball Federation (FFBS) or any French-based procurement activities. The roles listed are operational/instructional, not procurement-related."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:31:07.140325",
+          "domain_explored": "https://www.linkedin.com/jobs/view/youth-baseball-softball-umpire-pay-grade-1-at-geneva-lakes-family-ymca-4352112223?refId=wjgVIuXLT%2FILfPtP3sI9uQ%3D%3D&trackingId=%2FqplknIf%2BhOzAkOezPvltA%3D%3D&position=21&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Youth Baseball/Softball Umpire - Pay Grade 1",
+                "entity": "Geneva Lakes Family YMCA",
+                "location": "El Paso, TX",
+                "type": "Seasonal/Part-Time"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "entity_mismatch",
+            "geographic_mismatch",
+            "content_type_job_board",
+            "role_operational"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1812,
+              "output_tokens": 244,
+              "elapsed_seconds": 4.673635244369507
+            }
+          ],
+          "reasoning": "The job posting is for a Youth Baseball/Softball Umpire at the Geneva Lakes Family YMCA, located in El Paso, TX. This represents a complete mismatch with the target entity (French Baseball and Softball Federation) on both organizational (YMCA vs. Federation) and geographic (USA vs. France) levels. The role is operational/officiating rather than procurement-related."
+        }
+      ],
+      "total_input_tokens": 11745,
+      "total_output_tokens": 1738,
+      "estimated_cost_usd": 0.061305
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Baseball and Softball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:31:07.142329"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314822",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:11.675685"
+}

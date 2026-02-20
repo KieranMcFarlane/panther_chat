@@ -1,0 +1,121 @@
+{
+  "entity_bindings": {
+    "borussia-dortmund": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "borussia-dortmund",
+      "entity_name": "Borussia Dortmund",
+      "discovered_domains": [
+        "bvb.de",
+        "borussia-dortmund.de"
+      ],
+      "discovered_channels": {
+        "jobs_board": [
+          "https://www.linkedin.com/jobs/search/?keywords=CRM&f_C=620617&geoId=101282230"
+        ],
+        "official_site": [
+          "https://bvb.de"
+        ],
+        "press": [
+          "https://bvb.de/en/news/press-releases"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Hire": [
+          "Senior CRM Manager at Borussia Dortmund",
+          "Head of Digital Transformation hired"
+        ],
+        "Digital Transformation": [
+          "BVB implements new Salesforce CRM system",
+          "Data analytics platform partnership announced"
+        ],
+        "Partnership": [
+          "BVB partners with Salesforce for fan engagement"
+        ]
+      },
+      "confidence_adjustment": 0.15,
+      "version": 1,
+      "created_at": "2026-01-29T03:03:33.848604",
+      "last_used": "2026-01-29T03:03:33.850613",
+      "usage_count": 6,
+      "success_rate": 0.7919020000000001,
+      "state": "PROMOTED",
+      "promoted_at": "2026-01-29T03:03:33.849676",
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "fc-bayern-munich": {
+      "template_id": "tier_1_club_centralized_procurement",
+      "entity_id": "fc-bayern-munich",
+      "entity_name": "FC Bayern Munich",
+      "discovered_domains": [
+        "fcbayern.com",
+        "fc-bayern-munich.com"
+      ],
+      "discovered_channels": {
+        "jobs_board": [
+          "https://example.com/jobs_board"
+        ],
+        "official_site": [
+          "https://example.com/official_site"
+        ],
+        "press": [
+          "https://example.com/press"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Hire": [
+          "CRM Manager"
+        ],
+        "Partnership": [
+          "SAP partnership"
+        ]
+      },
+      "confidence_adjustment": 0.1,
+      "version": 1,
+      "created_at": "2026-01-29T03:03:33.851048",
+      "last_used": "2026-01-29T03:03:33.851058",
+      "usage_count": 4,
+      "success_rate": 0.81775,
+      "state": "PROMOTED",
+      "promoted_at": "2026-01-29T03:03:33.851060",
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    },
+    "test-governance-entity": {
+      "template_id": "test_governance_integration",
+      "entity_id": "test-governance-entity",
+      "entity_name": "Test Governance Entity",
+      "discovered_domains": [],
+      "discovered_channels": {
+        "jobs_board": [
+          "https://linkedin.com/jobs/..."
+        ],
+        "official_site": [
+          "https://example.com"
+        ]
+      },
+      "enriched_patterns": {
+        "Strategic Hire": [
+          "CRM Manager"
+        ]
+      },
+      "confidence_adjustment": 0.1,
+      "version": 1,
+      "created_at": "2026-01-29T03:01:23.048837",
+      "last_used": "2026-01-29T03:01:23.048839",
+      "usage_count": 3,
+      "success_rate": 0.7,
+      "state": "PROMOTED",
+      "promoted_at": "2026-01-29T03:01:23.048839",
+      "frozen_at": null,
+      "retired_at": null,
+      "metadata": {}
+    }
+  },
+  "metadata": {
+    "total_bindings": 3,
+    "last_updated": "2026-01-29T03:03:33.851079"
+  }
+}

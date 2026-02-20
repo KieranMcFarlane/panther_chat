@@ -1,0 +1,127 @@
+{
+  "entity_id": "esperance_de_tunis",
+  "entity_name": "Esperance de Tunis",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "esperance-de-tunis.net",
+    "onefootball.com",
+    "diwansport.com",
+    "playmakerstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "esperance_de_tunis",
+      "entity_name": "Esperance de Tunis",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://esperance-de-tunis.net",
+        "https://diwansport.com",
+        "https://onefootball.com",
+        "https://playmakerstats.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Esperance de Tunis may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:19:57.884205",
+          "domain_explored": "https://esperance-de-tunis.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports content management",
+            "Multi-language support (Arabic/French)",
+            "Social media integration (Facebook, Twitter, Instagram, Youtube)",
+            "Live streaming links (broadcaster aggregation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.198885917663574
+            }
+          ],
+          "reasoning": "The scraped content is exclusively sports-related information (match results, standings, handball/volleyball news) and website navigation elements. There are no corporate governance documents, job postings, or technology infrastructure details present in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:20:02.832546",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:20:10.075659",
+          "domain_explored": "https://diwansport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:20:43.436377",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 182,
+      "estimated_cost_usd": 0.006813
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Esperance de Tunis may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:20:43.437576"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.182027",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:21.861515"
+}

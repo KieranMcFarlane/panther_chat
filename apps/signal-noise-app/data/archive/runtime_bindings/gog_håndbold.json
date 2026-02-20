@@ -1,0 +1,256 @@
+{
+  "entity_id": "gog_h\u00e5ndbold",
+  "entity_name": "GOG H\u00e5ndbold",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "goghaandbold.dk",
+    "sofascore.com",
+    "globalsportsarchive.com",
+    "aalborghaandbold.dk",
+    "wikidata.org",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gog_h\u00e5ndbold",
+      "entity_name": "GOG H\u00e5ndbold",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://aalborghaandbold.dk",
+        "https://commons.wikimedia.org",
+        "https://globalsportsarchive.com",
+        "https://wikidata.org",
+        "https://sofascore.com",
+        "https://goghaandbold.dk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "GOG H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:00:35.737464",
+          "domain_explored": "https://goghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPORT24 (E-commerce platform)",
+              "Facebook (Social Media)",
+              "Podcast distribution platforms (Audio hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active sponsorship management (Sponsor/indtjenings udvalget)",
+              "Partnership with Energi Fyn (Energy infrastructure/EV charging)",
+              "Merchandise/Shop management (SPORT24 Klubshop)",
+              "Event organization (GOG CUP 2025, Final4 transport)",
+              "Member administration system (Implied by 'Indmeldelse'/'Udmeldelse' links)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship/Partnership Management",
+            "Energy/Infrastructure Partnerships",
+            "Event Management (Final4)",
+            "Member Administration (Indmeldelse/Udmeldelse)",
+            "Digital Content Creation (Podcast)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 357,
+              "elapsed_seconds": 4.273421049118042
+            }
+          ],
+          "reasoning": "The content reveals a mature organizational structure with specific committees (Sponsor/indtjenings udvalget, SoMe-udvalget) and active commercial partnerships (Energi Fyn). While no direct RFPs are visible, the reliance on external partners for energy solutions and the management of a large member base indicate a need for CRM and administrative software. The 'SPORT24 Klubshop' suggests an e-commerce procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:00:46.332671",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Generic Sports Data Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 166,
+              "elapsed_seconds": 1.8747210502624512
+            }
+          ],
+          "reasoning": "The provided content is scraped from Sofascore, a live sports score aggregator. It contains generic text about football leagues (UEFA, Premier League, etc.) and gambling advertisements. There is absolutely no mention of GOG H\u00e5ndbold, their specific operations, vendors, or procurement activities. This content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:01:00.765393",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Data Aggregation",
+            "Irrelevant Content (Soccer Focus)",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 166,
+              "elapsed_seconds": 6.63034200668335
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic navigation menu for soccer leagues (UEFA, Premier League, etc.) and contains no information regarding GOG H\u00e5ndbold, handball, or procurement activities. It is a sports data aggregator with no relevance to the target entity's purchasing intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:01:08.915045",
+          "domain_explored": "https://aalborghaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership Agreements (Samarbejdsaftaler) - Industry Context",
+              "Academy Structure (Eliteakademi) - Industry Context"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Aalborg H\u00e5ndbold)",
+            "Generic Fan Engagement Content",
+            "Ticket Sales & Merchandise",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1502,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.4487428665161133
+            }
+          ],
+          "reasoning": "The scraped content is from Aalborg H\u00e5ndbold, a completely different entity than the target GOG H\u00e5ndbold. While the content reveals standard sports club operations (ticketing, merchandise, academy partnerships), it provides zero procurement intelligence for GOG. The presence of 'Samarbejdsaftaler' (Partnership agreements) and 'Eliteakademi' indicates procurement capability exists in the industry, but since this is the wrong entity, it cannot be used to infer GOG's specific intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:01:17.622743",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Knowledge Base",
+            "User-Generated Content",
+            "Open Data Repository",
+            "No Entity-Specific Procurement Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 222,
+              "elapsed_seconds": 3.0291600227355957
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikidata, a free and open knowledge base. While it mentions structured data, SPARQL services, and the Wikibase suite, these are infrastructure descriptions for the platform itself, not specific usage or procurement signals for the target entity 'GOG H\u00e5ndbold'. There is no mention of GOG H\u00e5ndbold, their vendors, or their specific technology stack within this generic text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:01:26.372273",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "User-Generated Content",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.9406790733337402
+            }
+          ],
+          "reasoning": "The content is the generic landing page and navigation structure for Wikimedia Commons, a free media repository. There is no mention of GOG H\u00e5ndbold, procurement activities, or specific business operations. It serves as a host for generic media files and does not contain actionable procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 8869,
+      "total_output_tokens": 1333,
+      "estimated_cost_usd": 0.046602
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "GOG H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:01:26.373784"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351881",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:23.482408"
+}

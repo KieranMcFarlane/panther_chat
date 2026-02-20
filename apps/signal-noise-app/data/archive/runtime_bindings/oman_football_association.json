@@ -1,0 +1,135 @@
+{
+  "entity_id": "oman_football_association",
+  "entity_name": "Oman Football Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "the-waff.com",
+    "the-afc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oman_football_association",
+      "entity_name": "Oman Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://the-afc.com",
+        "https://inside.fifa.com",
+        "https://the-waff.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oman Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:02:49.068405",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports governance news",
+            "FIFA Forward funding program",
+            "Women's football development initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.7278120517730713
+            }
+          ],
+          "reasoning": "The content provided is from FIFA's global news feed and discusses general football governance, the FIFA Women's Champions Cup, and stadium refurbishment in Burundi. There is no mention of the Oman Football Association (OFA), specific vendors, or procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:02:56.243170",
+          "domain_explored": "https://the-waff.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Video Conferencing (implied by remote meetings)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "AI implementation plan presented to member associations",
+              "Future development strategy review (Jan 2026)",
+              "Expansion of tournaments (3 women's tournaments in 2026)"
+            ]
+          },
+          "patterns_found": [
+            "Artificial Intelligence (AI) implementation strategy",
+            "Future development strategy discussions (2026)",
+            "Regional governance and tournament hosting",
+            "Women's football development initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 319,
+              "elapsed_seconds": 3.630362033843994
+            }
+          ],
+          "reasoning": "The content reveals that the West Asian Football Federation (WAFF), of which Oman is a key member, is actively planning to implement Artificial Intelligence technologies and has outlined a future development strategy for 2026. While this is a regional body rather than the Oman FA directly, regional strategies often dictate national technology adoption and procurement budgets. The specific mention of an 'AI plan' indicates a future procurement pipeline for tech vendors."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:02:59.069012",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2778,
+      "total_output_tokens": 488,
+      "estimated_cost_usd": 0.015654
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oman Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:02:59.069326"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.208247",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:28.302433"
+}

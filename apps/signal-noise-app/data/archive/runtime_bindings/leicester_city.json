@@ -1,0 +1,237 @@
+{
+  "entity_id": "leicester_city",
+  "entity_name": "Leicester City",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "leicester.gov.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/leicestershire-county-council-jobs-greater-leicester-area",
+      "https://uk.linkedin.com/jobs/total-jobs-greater-leicester-area",
+      "https://uk.linkedin.com/company/leicester-and-leicestershire-careers-hub",
+      "https://www.linkedin.com/posts/leicester-city-council_leicester-city-council-jobs-leicester-city-activity-7151696357303488512-LGmj",
+      "https://uk.linkedin.com/jobs/view/transport-professional-engineer-and-senior-engineer-at-leicester-city-council-4363443357",
+      "https://www.linkedin.com/posts/leicester-city-council_careers-opportunities-jobs-activity-7383787560524849152-SOd1"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "leicester_city",
+      "entity_name": "Leicester City",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/total-jobs-greater-leicester-area",
+        "https://uk.linkedin.com/company/leicester-and-leicestershire-careers-hub",
+        "https://leicester.gov.uk",
+        "https://uk.linkedin.com/jobs/view/transport-professional-engineer-and-senior-engineer-at-leicester-city-council-4363443357",
+        "https://www.linkedin.com/posts/leicester-city-council_leicester-city-council-jobs-leicester-city-activity-7151696357303488512-LGmj",
+        "https://uk.linkedin.com/jobs/leicestershire-county-council-jobs-greater-leicester-area"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Leicester City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:14:52.354333",
+          "domain_explored": "https://leicester.gov.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:15:01.861990",
+          "domain_explored": "https://uk.linkedin.com/jobs/leicestershire-county-council-jobs-greater-leicester-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Social Worker - Returning to Social Work (Leicestershire County Council)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Login Wall / Dynamic Content",
+            "Social Services Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 205,
+              "elapsed_seconds": 5.890590190887451
+            }
+          ],
+          "reasoning": "The scraped content is from Leicestershire County Council, not Leicester City (Unitary Authority), representing an entity mismatch. Additionally, the content is primarily a login wall and repetitive HTML structure with only one visible job posting ('Social Worker') which is unrelated to technology procurement or digital transformation. No actionable procurement signals were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:15:11.995485",
+          "domain_explored": "https://uk.linkedin.com/jobs/total-jobs-greater-leicester-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Laboratory Equipment Technician (BSI)",
+              "Data Analyst (Harnham)",
+              "Engineering Trainee"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Login Wall / Dynamic Content",
+            "Generic Search Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 230,
+              "elapsed_seconds": 6.157594919204712
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search page for the keyword 'Total' in the Leicester area, rather than specific information about the entity 'Leicester City'. The content is dominated by login prompts and repetitive HTML elements. The visible job listings (e.g., BSI, Harnham) are private sector roles unrelated to Leicester City Council procurement. There is no actionable procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:15:20.915435",
+          "domain_explored": "https://uk.linkedin.com/company/leicester-and-leicestershire-careers-hub",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1616)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:15:28.238579",
+          "domain_explored": "https://www.linkedin.com/posts/leicester-city-council_leicester-city-council-jobs-leicester-city-activity-7151696357303488512-LGmj",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate Engagement)"
+            ],
+            "job_postings": [
+              "Social Care",
+              "Housing",
+              "Finance",
+              "Business Support",
+              "Sports and Leisure"
+            ],
+            "procurement_indicators": [
+              "High recruitment volume (1435 offers made)",
+              "Public inquiry about recruitment agency usage (Vendor Relationship Signal)",
+              "Reference to dedicated careers site infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Entity Match",
+            "Recruitment Volume",
+            "Departmental Scope",
+            "Social Engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 318,
+              "elapsed_seconds": 3.5910210609436035
+            }
+          ],
+          "reasoning": "The content confirms the correct entity (Leicester City Council) and provides specific operational metrics (674 vacancies, 1435 offers). While primarily a branding post, the high volume of hiring and the breadth of departments listed (finance, business support, housing) indicate active internal operations that often precede or require external procurement support (e.g., recruitment agencies, HR tech). The comment regarding recruitment agencies further validates potential vendor engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:15:38.342275",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/transport-professional-engineer-and-senior-engineer-at-leicester-city-council-4363443357",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Hybrid Work Platforms",
+              "Project Management Software",
+              "CAD / Design Software"
+            ],
+            "job_postings": [
+              "Transport Professional Engineer and Senior Engineer (Band 5-11, \u00a342k-\u00a354k)"
+            ],
+            "procurement_indicators": [
+              "Active delivery of highways and transport schemes",
+              "Contract and construction management responsibilities",
+              "Public realm and bus infrastructure development"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Investment",
+            "Project Portfolio Expansion",
+            "Hybrid Work Infrastructure",
+            "Vendor Management Role"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1636,
+              "output_tokens": 320,
+              "elapsed_seconds": 6.2959349155426025
+            }
+          ],
+          "reasoning": "The job posting confirms active investment in 'Major Transport Projects' including highways, public realm, and bus infrastructure. While primarily a recruitment signal, the scale of the portfolio ('large portfolio of projects currently in process') implies ongoing or upcoming procurement for construction, design services, and materials. The role also involves 'contract and construction management,' indicating a need for vendor engagement tools and services."
+        }
+      ],
+      "total_input_tokens": 6065,
+      "total_output_tokens": 1073,
+      "estimated_cost_usd": 0.03429
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Leicester City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:15:38.343180"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.119195",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:21.763194"
+}

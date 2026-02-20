@@ -1,0 +1,29 @@
+{
+  "entity": {
+    "id": "international-canoe-federation",
+    "name": "International Canoe Federation",
+    "timestamp": "2026-02-07T12:35:48.491649"
+  },
+  "overall_confidence": 0,
+  "key_intelligence": {
+    "decision_makers": 0,
+    "opportunities": 5,
+    "mutual_connections": 0,
+    "linkedin_posts_analyzed": 0
+  },
+  "positioning": {
+    "strategy": "SOLUTION_PROVIDER",
+    "approach": "Response Mode",
+    "timing": "Within 24 hours",
+    "channel": "Email + LinkedIn + Phone",
+    "expected_response_rate": "60%",
+    "urgency": "HIGH",
+    "rationale": "Active procurement detected - immediate RFP response required"
+  },
+  "recommended_actions": [
+    "Position as SOLUTION_PROVIDER",
+    "Engage via Email + LinkedIn + Phone",
+    "Timing: Within 24 hours",
+    "Expected response rate: 60%"
+  ]
+}

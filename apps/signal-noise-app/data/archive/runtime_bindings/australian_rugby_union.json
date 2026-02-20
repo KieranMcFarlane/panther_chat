@@ -1,0 +1,260 @@
+{
+  "entity_id": "australian_rugby_union",
+  "entity_name": "Australian Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "rugby.com.au",
+    "australianrugbyfoundation.org.au",
+    "ausport.gov.au",
+    "rugbyclub.com.au",
+    "venueswest.wa.gov.au",
+    "cits.wa.gov.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "australian_rugby_union",
+      "entity_name": "Australian Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://cits.wa.gov.au",
+        "https://ausport.gov.au",
+        "https://rugbyclub.com.au",
+        "https://venueswest.wa.gov.au",
+        "https://rugby.com.au",
+        "https://australianrugbyfoundation.org.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Australian Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:57:49.964712",
+          "domain_explored": "https://rugby.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High volume of sports journalism content (match reports, player signings)",
+            "Focus on 2026 season preparation and game analysis",
+            "Absence of corporate or business operation keywords"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 190,
+              "elapsed_seconds": 3.3519821166992188
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match results, and player updates (e.g., 'Wallabies v France', 'Super Rugby Pacific'). There is no mention of technology vendors, infrastructure projects, job vacancies, or strategic business initiatives that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:58:09.405358",
+          "domain_explored": "https://australianrugbyfoundation.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Structure Confirmation: Australian Rugby Foundation operates as the fundraising/donation arm.",
+              "Program Areas: Grassroots, Women's Rugby, First Nations pathways, Player Welfare."
+            ]
+          },
+          "patterns_found": [
+            "Fundraising and donation appeals",
+            "Community impact storytelling",
+            "Alumni/Former player engagement (Classic Wallabies)",
+            "Grassroots and welfare program descriptions"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.156859874725342
+            }
+          ],
+          "reasoning": "The content analyzed is from the Australian Rugby Foundation (ARF), the charitable arm of the organization. The text is purely marketing and fundraising-focused ('legacy of impact', 'donate', 'partnerships'), with no technical specifications, RFPs, or business operation signals. It confirms the entity structure but provides zero procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:58:18.723148",
+          "domain_explored": "https://ausport.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "AIS Podium Project: Construction of new High Performance Testing and Training Centre (Government funded)",
+              "ASC Grant Programs: Women Leaders in Sport (WLIS) funding distribution"
+            ]
+          },
+          "patterns_found": [
+            "Government funding announcements (ASC, AIS Podium Project)",
+            "Broad sector-wide strategies (Win Well, Play Well)",
+            "Grant distribution programs (Women Leaders in Sport)",
+            "Educational and health resources (Concussion, Clearinghouse)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 319,
+              "elapsed_seconds": 2.9902541637420654
+            }
+          ],
+          "reasoning": "The scraped content is from the Australian Sports Commission (ausport.gov.au), the federal government funding body, not the commercial entity 'Australian Rugby Union' (Rugby Australia). While the AIS Podium Project represents major construction procurement, it is a government-led infrastructure initiative for the AIS campus in Canberra, not a direct procurement signal for Rugby Union's operations or technology stack. This content is relevant to the broader sports ecosystem but does not provide specific procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:58:24.965556",
+          "domain_explored": "https://rugbyclub.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Grants Programs (Disbursement of funds, not procurement of services)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (NSW focus vs National)",
+            "Grassroots Funding Distribution",
+            "Social Club/Alumni focus",
+            "Historical narrative content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.4755053520202637
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'The Rugby Club' focused on New South Wales (NSW), whereas the target entity is the national 'Australian Rugby Union'. The site is dedicated to social fellowship, alumni engagement, and distributing grants to grassroots programs, rather than the corporate procurement or operational infrastructure of the national body."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:58:34.197670",
+          "domain_explored": "https://venueswest.wa.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Careers section link detected (generic)"
+            ],
+            "procurement_indicators": [
+              "Partner With Us section (Context: Venue commercial partnerships/sponsorships)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (State Government Statutory Authority vs National Sporting Body)",
+            "Venue Management Focus (Operations, Events, Patronage)",
+            "Generic Partnership Language (Sponsorship/Marketing focus)",
+            "High Asset Value ($3.3b) indicating infrastructure focus rather than corporate procurement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1617,
+              "output_tokens": 292,
+              "elapsed_seconds": 3.3761839866638184
+            }
+          ],
+          "reasoning": "The scraped content confirms the entity is VenuesWest, a Western Australian Government statutory authority managing stadiums (like HBF Park/Perth Oval), not the Australian Rugby Union (ARU). While ARU may utilize these venues, this page represents the venue owner/manager's operations, not ARU's procurement activities. The 'Partner With Us' link refers to commercial partnerships/sponsorships for the venues, not ARU vendor procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:58:41.766392",
+          "domain_explored": "https://cits.wa.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Searchable database (Aboriginal history index)",
+              "Film production infrastructure (Perth Film Studios)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "$300m Capital Works completion (Perth Film Studios)",
+              "$10m election commitment (Chung Wah Community Centre)",
+              "$2.5m election commitment (Indian Society of WA)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (State Government Dept vs National Body)",
+            "Sector-Wide Governance (Safeguarding, Member Protection)",
+            "Infrastructure Funding (Capital Works, Film Studios)",
+            "Broad Industry Support (Creative Industries, Tourism)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 302,
+              "elapsed_seconds": 2.8338968753814697
+            }
+          ],
+          "reasoning": "The content represents the Western Australian State Government department (DCITS), not the Australian Rugby Union (ARU). While there are 'Sport' keywords, the context is state-level governance, funding distribution, and statutory regulation (e.g., Safeguarding 101, WAIS Para Unit). There is no direct procurement signal for the national entity Rugby Australia."
+        }
+      ],
+      "total_input_tokens": 9167,
+      "total_output_tokens": 1573,
+      "estimated_cost_usd": 0.051096
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Australian Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:58:41.768167"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.285479",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:10:14.912818"
+}

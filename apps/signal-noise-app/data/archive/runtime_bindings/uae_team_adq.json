@@ -1,0 +1,122 @@
+{
+  "entity_id": "uae_team_adq",
+  "entity_name": "UAE Team ADQ",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "uaeteamadq.com",
+    "letourfemmes.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "uae_team_adq",
+      "entity_name": "UAE Team ADQ",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://letourfemmes.fr",
+        "https://uaeteamadq.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "UAE Team ADQ may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:07:32.882302",
+          "domain_explored": "https://uaeteamadq.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "IHC sponsorship renewal through 2029",
+              "ADQ partnership renewal (July 2025)",
+              "UCI Mobility Forum participation (Dec 2024)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Renewal Cycle",
+            "Strategic Partnership Stability",
+            "Corporate Governance Alignment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.7567901611328125
+            }
+          ],
+          "reasoning": "The content confirms significant long-term commercial agreements (IHC through 2029, ADQ renewal). While not direct procurement of *technology*, these renewals indicate budget stability and vendor retention patterns. The lack of technical stack details or job postings prevents a stronger 'ACCEPT', but the financial health signals procurement capability."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:07:47.193129",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zwift (Event Sponsorship Platform)",
+              "Tissot (Timekeeping/Official Sponsor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Analysis: Team SD Worx, Visma, FDJ-Suez performance tracking",
+              "Roster Status: Confirmation of M. SQUIBAN on roster for 2025 cycle"
+            ]
+          },
+          "patterns_found": [
+            "Competitive Benchmarking",
+            "Event Sponsorship Ecosystem",
+            "Zwift Partnership Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 294,
+              "elapsed_seconds": 6.60825777053833
+            }
+          ],
+          "reasoning": "The scraped content is from the Tour de France Femmes official website (letourfemmes.fr), not the UAE Team ADQ corporate domain. While the content lists 'UAE TEAM ADQ' and rider 'M. SQUIBAN' in the 2025 rankings, this is operational performance data rather than a procurement signal. The mention of 'Parrain\u00e9 par ZWIFT' indicates a sponsorship relationship between the event organizer and Zwift, not necessarily a direct procurement signal for the team itself, although it confirms the digital ecosystem the team operates within."
+        }
+      ],
+      "total_input_tokens": 2763,
+      "total_output_tokens": 516,
+      "estimated_cost_usd": 0.016029
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "UAE Team ADQ may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:07:47.194097"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384077",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:27:57.512830"
+}

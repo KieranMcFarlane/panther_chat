@@ -1,0 +1,291 @@
+{
+  "entity_id": "scuderia_ferrari_hp",
+  "entity_name": "Scuderia Ferrari HP",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "ferrari.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/ferrari/jobs",
+      "https://sg.linkedin.com/company/ferrari/jobs",
+      "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7391791403221172224-ePRA",
+      "https://dk.linkedin.com/company/ferrari/jobs",
+      "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7390341854711533568-zAJr",
+      "https://zw.linkedin.com/company/ferrari/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "scuderia_ferrari_hp",
+      "entity_name": "Scuderia Ferrari HP",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://ferrari.com",
+        "https://sg.linkedin.com/company/ferrari/jobs",
+        "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7391791403221172224-ePRA",
+        "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7390341854711533568-zAJr",
+        "https://dk.linkedin.com/company/ferrari/jobs",
+        "https://www.linkedin.com/company/ferrari/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Scuderia Ferrari HP may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:15:03.749792",
+          "domain_explored": "https://ferrari.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:15:14.603947",
+          "domain_explored": "https://www.linkedin.com/company/ferrari/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full Stack Web Development (F1 Performance Analysis)",
+              "Regulatory Compliance Software",
+              "Budgeting & ERP Systems"
+            ],
+            "job_postings": [
+              "Material Planner Internship (Maranello)",
+              "F1 Full Stack Web Developer (Maranello)",
+              "Endurance & Corse Clienti Budget and Administration Specialist",
+              "Vehicle Certification & Regulatory Affairs Internship"
+            ],
+            "procurement_indicators": [
+              "Supply Chain Optimization (Material Planning)",
+              "Financial Governance (Budget Administration)",
+              "IT Capacity Building (Web Development)"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain Planning (Material Planner)",
+            "Digital Transformation in F1 (Full Stack Developer)",
+            "Budget Administration (Corse Clienti)",
+            "Regulatory Compliance (Certification)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 406,
+              "elapsed_seconds": 7.508384943008423
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn provides a snapshot of current operational roles. While not direct procurement solicitations, the 'Material Planner' and 'Budget and Administration Specialist' roles indicate active supply chain management and financial control operations. The 'F1 Full Stack Web Developer' role suggests ongoing investment in internal software tools, which often involves procuring third-party APIs or cloud infrastructure. These roles confirm organizational capabilities relevant to procurement but do not show immediate purchasing intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:15:21.141748",
+          "domain_explored": "https://sg.linkedin.com/company/ferrari/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full Stack Web Development (F1 context)",
+              "Regulatory Affairs Software",
+              "Mechanical Design Tools"
+            ],
+            "job_postings": [
+              "Material Planner Internship (Maranello)",
+              "F1 Full Stack Web Developer (Maranello)",
+              "Endurance & Corse Clienti Budget and Administration Specialist",
+              "Business & Network Development Controller Internship",
+              "Vehicle Certification & Regulatory Affairs Concept & Innovation Internship"
+            ],
+            "procurement_indicators": [
+              "Material Planning (Supply Chain)",
+              "Budget Administration (Financial Control)",
+              "Network Development (Vendor/Partner Management)"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain Planning (Material Planner)",
+            "Digital Transformation in F1 (Full Stack Developer)",
+            "Budget Administration (Corse Clienti)",
+            "Network Development Control"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 420,
+              "elapsed_seconds": 3.031205892562866
+            }
+          ],
+          "reasoning": "The scraped content from the Ferrari LinkedIn jobs page confirms active recruitment in areas adjacent to procurement and supply chain management. Specifically, the 'Material Planner Internship' indicates supply chain activity, while the 'Business & Network Development Controller' and 'Budget and Administration Specialist' roles suggest financial governance and vendor/network management functions. Although no direct 'Procurement Manager' or 'Buyer' roles are visible in this snippet, the Material Planner role is a strong proxy for supply chain operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:15:28.955522",
+          "domain_explored": "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7391791403221172224-ePRA",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ANSA",
+              "ANSYS",
+              "CAD",
+              "Python",
+              "C++"
+            ],
+            "job_postings": [
+              "CFD Methodology Engineer"
+            ],
+            "procurement_indicators": [
+              "Usage of ANSYS (Enterprise CAE Software)",
+              "Usage of ANSA (Pre-processing Software)",
+              "Investment in CFD workflow efficiency"
+            ]
+          },
+          "patterns_found": [
+            "CFD Workflow Optimization",
+            "High-Performance Computing (HPC) Software",
+            "Engineering Simulation Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 274,
+              "elapsed_seconds": 4.272952079772949
+            }
+          ],
+          "reasoning": "The content confirms Scuderia Ferrari HP is actively investing in technical capabilities for Computational Fluid Dynamics (CFD). While this is a job posting, the specific mention of 'optimisation of advanced CFD workflows' and the explicit listing of enterprise software (ANSA, ANSYS) indicates a reliance on and likely procurement of high-value engineering software licenses and HPC resources."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:15:39.278442",
+          "domain_explored": "https://dk.linkedin.com/company/ferrari/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Development Stack (implied by F1 Full Stack Web Developer role)"
+            ],
+            "job_postings": [
+              "Material Planner Internship (Maranello)",
+              "Vehicle Demo & Mule Design Internship",
+              "Endurance & Corse Clienti Budget and Administration Specialist",
+              "F1 Aerodynamicist",
+              "F1 Mechanical Design Engineer",
+              "F1 Full Stack Web Developer",
+              "Business & Network Development Controller Internship",
+              "Vehicle Certification & Regulatory Affairs Concept & Innovation Internship"
+            ],
+            "procurement_indicators": [
+              "Supply Chain Management: Active recruitment for Material Planning roles indicates ongoing supply chain operations.",
+              "Budget Control: Specific role for 'Endurance & Corse Clienti Budget' suggests active financial administration and vendor budget management.",
+              "Network Development: 'Business & Network Development Controller' implies oversight of partnerships and supply network expansion."
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain Planning (Material Planner Internship)",
+            "Digital Transformation in F1 (Full Stack Web Developer)",
+            "Budget Administration (Endurance & Corse Clienti)",
+            "Regulatory Compliance (Vehicle Certification)",
+            "Network Development (Business Controller)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 526,
+              "elapsed_seconds": 7.055588960647583
+            }
+          ],
+          "reasoning": "The content provides a list of recent job postings from Ferrari's Denmark/Global LinkedIn page. While it confirms ongoing recruitment in key areas like Supply Chain (Material Planner) and Digital Transformation (F1 Full Stack Developer), the information is largely redundant with previous iterations (Iteration 2 & 3). The 'Material Planner' role is a direct procurement signal, and 'Business & Network Development Controller' suggests financial governance, but the lack of specific technology stack details or RFP information limits the strength of the signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:15:47.720534",
+          "domain_explored": "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7390341854711533568-zAJr",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CAD Tools",
+              "Simulation Software",
+              "Aerodynamics Analysis Tools"
+            ],
+            "job_postings": [
+              "Mechanical Design Engineer (Maranello)"
+            ],
+            "procurement_indicators": [
+              "Requirement for state-of-the-art CAD tools",
+              "Investment in simulation software for innovative solutions",
+              "Focus on automotive component design"
+            ]
+          },
+          "patterns_found": [
+            "Mechanical Design Engineering",
+            "CAD & Simulation Software Procurement",
+            "Aerodynamics Component Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1692,
+              "output_tokens": 272,
+              "elapsed_seconds": 5.0322229862213135
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a Mechanical Design Engineer role specifically requiring 'state-of-the-art CAD tools & simulation software'. This indicates ongoing usage and likely procurement or maintenance of high-end engineering software licenses (e.g., Siemens NX, CATIA, ANSYS) to support aerodynamic and component innovation."
+        }
+      ],
+      "total_input_tokens": 7690,
+      "total_output_tokens": 1898,
+      "estimated_cost_usd": 0.05154
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Scuderia Ferrari HP may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:15:47.722374"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362665",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:55.293367"
+}

@@ -1,0 +1,187 @@
+{
+  "entity_id": "reyer_venezia",
+  "entity_name": "Reyer Venezia",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "reyer.it",
+    "reyerstore.it",
+    "reyer.vivaticket.it",
+    "cda.veneziaunica.it",
+    "legabasket.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "reyer_venezia",
+      "entity_name": "Reyer Venezia",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://reyer.vivaticket.it",
+        "https://reyer.it",
+        "https://legabasket.it",
+        "https://reyerstore.it",
+        "https://cda.veneziaunica.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Reyer Venezia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:11:48.385767",
+          "domain_explored": "https://reyer.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WhatsApp (Channel/Marketing)",
+              "Subdomain hosting (schoolcup.reyer.it)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in content creation (Podcast 'Tra Sogni e Ossessioni')",
+              "Event organization infrastructure (School Cup tournament management)",
+              "Direct-to-consumer communication channel setup (WhatsApp)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Engagement",
+            "Content Marketing Strategy",
+            "Community Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 283,
+              "elapsed_seconds": 2.4721221923828125
+            }
+          ],
+          "reasoning": "The content reveals active investments in digital engagement channels, specifically WhatsApp for fan communication and a dedicated subdomain for the 'School Cup' tournament. While not direct procurement, the use of a specific subdomain (schoolcup.reyer.it) and a dedicated WhatsApp channel indicates a structured approach to digital marketing and community management, which often requires third-party tools or agency support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:11:58.229589",
+          "domain_explored": "https://reyerstore.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/)",
+              "Slideshow/Carousel UI components"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Procurement: Active management of 'Collezione 25/26' and 'Divise Ufficiali' stock",
+              "Logistics Partners: Requirement for shipping and fulfillment services for online orders",
+              "Platform Maintenance: Ongoing need for e-commerce hosting and support"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Merchandise Management",
+            "Digital Sales Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.551279067993164
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce platform (reyerstore.it) for merchandise sales. While this indicates a procurement category for retail logistics and inventory management, the content itself is purely consumer-facing (product listings) and does not reveal B2B vendor relationships or technology stack details."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:12:05.298654",
+          "domain_explored": "https://reyer.vivaticket.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:12:14.327099",
+          "domain_explored": "https://cda.veneziaunica.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:12:25.617489",
+          "domain_explored": "https://legabasket.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League Operations Data",
+            "Sports Analytics",
+            "Content Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.874595880508423
+            }
+          ],
+          "reasoning": "The scraped content consists of raw game scores, scheduling data, and automated match reports from the LegaBasket website. While this confirms Reyer Venezia's active participation in the league, it provides no insight into their internal procurement activities, technology stack, or business operations. The data is purely operational/competitive rather than commercial."
+        }
+      ],
+      "total_input_tokens": 4266,
+      "total_output_tokens": 737,
+      "estimated_cost_usd": 0.023853
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Reyer Venezia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:12:25.618387"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.211994",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:22.632712"
+}

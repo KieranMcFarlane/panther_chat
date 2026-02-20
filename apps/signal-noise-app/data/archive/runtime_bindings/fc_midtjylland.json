@@ -1,0 +1,145 @@
+{
+  "entity_id": "fc_midtjylland",
+  "entity_name": "FC Midtjylland",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-fc-midtjylland-looks-activity-7249117598687137792-FING",
+      "https://www.linkedin.com/posts/jobs4-football_football-soccer-j4f-activity-6734808816027799552-UPp3"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_midtjylland",
+      "entity_name": "FC Midtjylland",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/jobs4-football_football-soccer-j4f-activity-6734808816027799552-UPp3",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-fc-midtjylland-looks-activity-7249117598687137792-FING"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "New Headcount Creation",
+        "Data-Driven Transformation",
+        "Operational Logistics Focus",
+        "Specialized Role Creation",
+        "Data-Driven Scouting",
+        "Talent Identification Investment"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Midtjylland may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:02:20.763499",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%A2%F0%9D%97%95-%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%A5%F0%9D%97%A7-fc-midtjylland-looks-activity-7249117598687137792-FING",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics Platforms",
+              "Dashboarding Tools (e.g., Power BI, Tableau)",
+              "Contract Management Systems",
+              "Player Logistics Software"
+            ],
+            "job_postings": [
+              "Head of Football Insights"
+            ],
+            "procurement_indicators": [
+              "Newly created position suggests budget allocation for new tools",
+              "Focus on 'contract administration' indicates potential need for digital contract management solutions",
+              "Role involves 'player logistics', suggesting potential interest in specialized travel or management software"
+            ]
+          },
+          "patterns_found": [
+            "New Headcount Creation",
+            "Data-Driven Transformation",
+            "Operational Logistics Focus"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 326,
+              "elapsed_seconds": 18.71484899520874
+            }
+          ],
+          "reasoning": "The recruitment of a 'Head of Football Insights' for a newly created position is a strong procurement signal. It indicates a strategic shift towards data-driven decision-making and centralized contract administration. This role typically requires the acquisition or implementation of new analytics platforms, dashboarding tools, and contract management software to fulfill its objectives."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:02:28.858481",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4-football_football-soccer-j4f-activity-6734808816027799552-UPp3",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software",
+              "Scouting Platforms"
+            ],
+            "job_postings": [
+              "Video Scout"
+            ],
+            "procurement_indicators": [
+              "Headcount Expansion",
+              "Operational Investment in Scouting"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Role Creation",
+            "Data-Driven Scouting",
+            "Talent Identification Investment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.893045902252197
+            }
+          ],
+          "reasoning": "The post explicitly confirms a recruitment drive for a 'Video Scout' role. This indicates active procurement of human capital specialized in video analysis, reinforcing the organization's commitment to data-driven player recruitment and performance analysis."
+        }
+      ],
+      "total_input_tokens": 2868,
+      "total_output_tokens": 530,
+      "estimated_cost_usd": 0.016554
+    },
+    "procurement_signals": [
+      "New Headcount Creation",
+      "Data-Driven Transformation",
+      "Operational Logistics Focus",
+      "Specialized Role Creation",
+      "Data-Driven Scouting",
+      "Talent Identification Investment"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Midtjylland may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:02:28.883222"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.174253",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:52.994768"
+}

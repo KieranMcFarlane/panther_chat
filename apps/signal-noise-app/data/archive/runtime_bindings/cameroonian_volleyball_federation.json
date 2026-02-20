@@ -1,0 +1,161 @@
+{
+  "entity_id": "cameroonian_volleyball_federation",
+  "entity_name": "Cameroonian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "stopblablacam.com",
+    "worldofvolley.com",
+    "cameroon-concord.com",
+    "mimimefoinfos.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cameroonian_volleyball_federation",
+      "entity_name": "Cameroonian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://stopblablacam.com",
+        "https://mimimefoinfos.com",
+        "https://worldofvolley.com",
+        "https://cameroon-concord.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cameroonian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:38:51.757175",
+          "domain_explored": "https://stopblablacam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Public sector budgeting (Mincommerce, FEICOM)",
+            "Political reporting",
+            "Social sector reporting (Education, Health)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 194,
+              "elapsed_seconds": 5.461836099624634
+            }
+          ],
+          "reasoning": "The scraped content from 'stopblablacam.com' is a general news aggregator covering broad Cameroonian socio-political and economic topics (e.g., Mpox, US aid, urban markets). There is absolutely no mention of the Cameroonian Volleyball Federation (FECAVOLLEY), sports infrastructure, or sports-related procurement. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:38:59.160302",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International sports journalism",
+            "Match results aggregation",
+            "Player transfer news",
+            "Global league coverage (Italy, Turkey, Poland, France, Germany)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.3633859157562256
+            }
+          ],
+          "reasoning": "The content is exclusively focused on international professional volleyball results, player transfers, and league standings. There is zero mention of the Cameroonian Volleyball Federation, local governance, or procurement activities within the Cameroon market."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:39:06.297186",
+          "domain_explored": "https://cameroon-concord.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Political activism and opposition reporting",
+            "General sports news (Indomitable Lions, AFCON)",
+            "Human rights and legal news",
+            "Geopolitical commentary"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.7309980392456055
+            }
+          ],
+          "reasoning": "The source 'cameroon-concord.com' is a political news and opinion blog focused on regime change, opposition figures (Tchiroma), and general sports. It lacks the administrative structure, tender notices, or operational reporting required to derive procurement signals for the Volleyball Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:39:09.145933",
+          "domain_explored": "https://mimimefoinfos.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4252,
+      "total_output_tokens": 545,
+      "estimated_cost_usd": 0.020930999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cameroonian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:39:09.146325"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335484",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:35.760319"
+}

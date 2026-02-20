@@ -1,0 +1,194 @@
+{
+  "entity_id": "costa_rican_basketball_federation",
+  "entity_name": "Costa Rican Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "costaricabasketball.com",
+    "selecaoppge.unb.br",
+    "floridatechsports.com",
+    "amcostarica.com",
+    "newspaperarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/soccer-jobs-markham-on"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "costa_rican_basketball_federation",
+      "entity_name": "Costa Rican Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://amcostarica.com",
+        "https://selecaoppge.unb.br",
+        "https://newspaperarchive.com",
+        "https://floridatechsports.com",
+        "https://costaricabasketball.com",
+        "https://ca.linkedin.com/jobs/soccer-jobs-markham-on"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Costa Rican Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:55:01.142586",
+          "domain_explored": "https://costaricabasketball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:55:05.940460",
+          "domain_explored": "https://selecaoppge.unb.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_aggregation",
+            "spam/scraped_content_farm",
+            "domain_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 179,
+              "elapsed_seconds": 1.7618229389190674
+            }
+          ],
+          "reasoning": "The target URL (selecaoppge.unb.br) is returning scraped content related to US sports (NBA, NFL), entertainment (Spotify), and weather, which is completely unrelated to the Costa Rican Basketball Federation. This indicates a compromised domain, a content farm, or a misconfigured server. There is no information regarding Costa Rican basketball, governance, or procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:55:08.815583",
+          "domain_explored": "https://floridatechsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:55:14.988444",
+          "domain_explored": "https://amcostarica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "domain_mismatch",
+            "generic_news_aggregator",
+            "scraped_navigation_noise",
+            "irrelevant_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.214650869369507
+            }
+          ],
+          "reasoning": "The content provided is from 'amcostarica.com', a general news and lifestyle outlet, not the official domain of the Costa Rican Basketball Federation. The text consists entirely of repetitive navigation menus, classified ad categories, and generic site headers (Real Estate, Garden, Tourism, etc.). There is zero mention of the Federation, basketball operations, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:55:17.627602",
+          "domain_explored": "https://newspaperarchive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:55:24.628221",
+          "domain_explored": "https://ca.linkedin.com/jobs/soccer-jobs-markham-on",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Basketball Development Officer at AGS Youth Soccer Club (Etobicoke/Toronto, Canada)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "domain_mismatch",
+            "geographic_mismatch",
+            "entity_mismatch",
+            "scraped_navigation_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.133808135986328
+            }
+          ],
+          "reasoning": "The content is a job listing page for 'Soccer Jobs in Markham' (Ontario, Canada) hosted on LinkedIn. While it contains a listing for a 'Basketball Development Officer', the role is with 'AGS Youth Soccer Club' in Canada, not the Costa Rican Basketball Federation. The geographic location (Markham/Etobicoke), the domain (LinkedIn), and the hiring entity are all irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4427,
+      "total_output_tokens": 583,
+      "estimated_cost_usd": 0.022025999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Costa Rican Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:55:24.630664"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.265973",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:19:54.931609"
+}

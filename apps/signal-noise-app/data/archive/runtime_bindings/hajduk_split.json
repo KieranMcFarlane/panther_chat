@@ -1,0 +1,291 @@
+{
+  "entity_id": "hajduk_split",
+  "entity_name": "Hajduk Split",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "hajduk.hr",
+    "hajduk.mojekarte.hr",
+    "dribbble.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hr.linkedin.com/jobs/view/human-resources-specialist-at-hnk-hajduk-split-4102710501",
+      "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-4005600397",
+      "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-3746264002"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hajduk_split",
+      "entity_name": "Hajduk Split",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://dribbble.com",
+        "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-4005600397",
+        "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-3746264002",
+        "https://hajduk.mojekarte.hr",
+        "https://hr.linkedin.com/jobs/view/human-resources-specialist-at-hnk-hajduk-split-4102710501",
+        "https://hajduk.hr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hajduk Split may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:53:26.534467",
+          "domain_explored": "https://hajduk.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Ticket sales operations",
+            "Matchday logistics",
+            "Fan engagement (standard)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 423,
+              "output_tokens": 143,
+              "elapsed_seconds": 3.734771966934204
+            }
+          ],
+          "reasoning": "The content provided is strictly operational, focusing on ticket sales for a specific match (Hajduk - Slaven Belupo). It contains no information regarding technology acquisition, job vacancies, or strategic vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:53:36.146135",
+          "domain_explored": "https://hajduk.mojekarte.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "mojekarte.hr (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Ticketing operations",
+            "Seasonal subscription management",
+            "Member-based purchase restrictions",
+            "Dynamic pricing tiers"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1309,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.8271291255950928
+            }
+          ],
+          "reasoning": "The scraped content is exclusively user-facing ticketing data (prices, categories, purchase buttons) from the 'mojekarte.hr' platform. It reveals the use of a specific ticketing vendor but contains no information regarding internal procurement needs, RFPs, or technology investment decisions."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:53:47.148212",
+          "domain_explored": "https://dribbble.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic design marketplace",
+            "Freelance service listings",
+            "Irrelevant promotional content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 184,
+              "elapsed_seconds": 4.4776611328125
+            }
+          ],
+          "reasoning": "The content provided is from Dribbble, a general-purpose portfolio and freelance marketplace for designers. It contains generic promotional banners, navigation elements, and random design portfolios (e.g., 'Crypto wallet', 'Fitness App'). There is no specific mention of Hajduk Split, nor any procurement signals, RFPs, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:54:10.431543",
+          "domain_explored": "https://hr.linkedin.com/jobs/view/human-resources-specialist-at-hnk-hajduk-split-4102710501",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "HRIS (implied by database management requirements)"
+            ],
+            "job_postings": [
+              {
+                "role": "Human Resources Specialist",
+                "department": "Human Resources",
+                "type": "Contract / Entry level",
+                "status": "Closed (1 year ago)",
+                "key_requirements": [
+                  "VSS Psychology",
+                  "HR Process Management",
+                  "Onboarding organization",
+                  "Training coordination",
+                  "Employer branding implementation"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Coordination of internal and external education (Training Vendor Procurement)",
+              "Support in development of employer branding projects (Marketing/Agency Procurement)",
+              "Managing employee databases (Potential Software Procurement)",
+              "Process of change organization (Consulting/Software Procurement)"
+            ]
+          },
+          "patterns_found": [
+            "HR Transformation & Organizational Change",
+            "Internal Process Digitization (HRIS)",
+            "Employer Branding Investment",
+            "Training & Education Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 469,
+              "elapsed_seconds": 17.316088914871216
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, the responsibilities explicitly mention 'process change,' 'systematization of workstations,' and 'managing employee databases.' This indicates an internal drive for HR transformation, which often precedes or requires the procurement of HRIS (Human Resource Information System) software, recruitment platforms, or external training services. It confirms the entity is actively investing in its operational infrastructure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:54:31.945111",
+          "domain_explored": "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-4005600397",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office (Excel, PowerPoint)",
+              "CRM (implied by 'lead generation' and membership management)"
+            ],
+            "job_postings": [
+              {
+                "role": "Marketing Coordinator",
+                "entity": "Udruga Na\u0161 Hajduk",
+                "focus": "Membership growth, Campaign planning, Vendor coordination",
+                "status": "Closed (posted 1 year ago)"
+              }
+            ],
+            "procurement_indicators": [
+              "Coordination of external marketing agencies",
+              "Budget planning for marketing activities",
+              "Procurement of promotional materials production (text, print, photo, video)",
+              "Budget allocation for education and conferences"
+            ]
+          },
+          "patterns_found": [
+            "Membership Growth Strategy",
+            "External Vendor Management (Agencies)",
+            "Marketing Budget Planning",
+            "Content Production Procurement",
+            "CRM & Lead Generation Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1591,
+              "output_tokens": 415,
+              "elapsed_seconds": 15.0883047580719
+            }
+          ],
+          "reasoning": "The job posting for a Marketing Coordinator at 'Udruga Na\u0161 Hajduk' (the membership association of Hajduk Split) reveals active investment in membership growth and the 'Za sva vrimena' campaign. While this is an internal hiring event, the role explicitly involves coordinating with external marketing agencies, managing production budgets for promotional materials (print, photo, video), and supporting sales/lead generation. This indicates a procurement function for marketing services and creative production, managed by this role."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:54:58.144174",
+          "domain_explored": "https://hr.linkedin.com/jobs/view/marketing-coordinator-at-udruga-na%C5%A1-hajduk-3746264002",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office"
+            ],
+            "job_postings": [
+              "Marketing Coordinator (Udruga Na\u0161 Hajduk)"
+            ],
+            "procurement_indicators": [
+              "Budget planning and tracking for marketing activities",
+              "Coordination of production for marketing materials (print, photo, video)",
+              "Cooperation with external partners and marketing agencies"
+            ]
+          },
+          "patterns_found": [
+            "Membership Growth Strategy",
+            "External Vendor Management (Agencies)",
+            "Marketing Budget Planning",
+            "Content Production Procurement",
+            "Campaign Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1660,
+              "output_tokens": 317,
+              "elapsed_seconds": 18.24587082862854
+            }
+          ],
+          "reasoning": "The job posting confirms the existence of a structured marketing department within 'Udruga Na\u0161 Hajduk' (the membership association arm of Hajduk Split). While the role itself is an operational hire, the responsibilities explicitly include managing external partners and marketing agencies, as well as coordinating the production of promotional materials (print, photo, video). This indicates a procurement channel for creative services and marketing technology, though it is an indirect signal."
+        }
+      ],
+      "total_input_tokens": 7953,
+      "total_output_tokens": 1715,
+      "estimated_cost_usd": 0.049584
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hajduk Split may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:54:58.145503"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.172390",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:36:19.205815"
+}

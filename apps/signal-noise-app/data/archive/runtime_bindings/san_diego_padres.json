@@ -1,0 +1,346 @@
+{
+  "entity_id": "san_diego_padres",
+  "entity_name": "San Diego Padres",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "tier_1_professional_clubs",
+  "discovered_domains": [
+    "sandiego.org",
+    "mlbshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/san-diego-padres-jobs",
+      "https://www.linkedin.com/jobs/san-diego-padres-jobs-worldwide?f_C=19643&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/sr-special-events-crew-at-san-diego-padres-4365256925",
+      "https://www.linkedin.com/jobs/view/pad-squad-at-san-diego-padres-4329015553",
+      "https://www.linkedin.com/jobs/view/executive-assistant-to-the-chief-operating-officer-at-san-diego-padres-4359332047",
+      "https://www.linkedin.com/company/major-league-baseball/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "san_diego_padres",
+      "entity_name": "San Diego Padres",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.18,
+        0.18
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/executive-assistant-to-the-chief-operating-officer-at-san-diego-padres-4359332047",
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/view/pad-squad-at-san-diego-padres-4329015553",
+        "https://www.linkedin.com/jobs/view/sr-special-events-crew-at-san-diego-padres-4365256925",
+        "https://www.linkedin.com/jobs/san-diego-padres-jobs",
+        "https://sandiego.org",
+        "https://www.linkedin.com/jobs/san-diego-padres-jobs-worldwide?f_C=19643&trk=top-card_top-card-primary-button-top-card-primary-cta"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Hiring (High Volume)",
+        "Multi-Location Operations",
+        "Event Management Focus",
+        "Athletic Operations Expansion",
+        "Active Hiring (High Volume)",
+        "Multi-Location Operations",
+        "Event Management Focus",
+        "Vendor Management Scope",
+        "Multi-Venue Operations",
+        "Event Logistics Procurement",
+        "Merchandise Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "San Diego Padres may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:15:07.960827",
+          "domain_explored": "https://sandiego.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Tourism Content",
+            "General City Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.0685338973999023
+            }
+          ],
+          "reasoning": "The content provided is from 'sandiego.org', which is the official website for the San Diego Tourism Authority (Visit San Diego). It focuses on visitor information, events (Farmers Insurance Open), and neighborhood guides. It contains no information regarding the San Diego Padres baseball team, their internal operations, or their procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:15:14.841716",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "B2C E-commerce Content",
+            "League-Level Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.3800787925720215
+            }
+          ],
+          "reasoning": "The content is from mlbshop.com, a centralized B2C e-commerce platform for the entire MLB league. While it lists the San Diego Padres as a merchandise option, it provides no insight into the Padres' internal procurement operations, technology stack, or vendor decision-making. It is strictly consumer-facing sales data."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:15:28.025197",
+          "domain_explored": "https://www.linkedin.com/jobs/san-diego-padres-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment Platform)",
+              "HRIS / ATS (Inferred from high volume of postings)"
+            ],
+            "job_postings": [
+              "Coordinator, Special Events Administration",
+              "Associate, Athletic Training",
+              "Assistant, Groundskeeper",
+              "Intern, Minor League Strength & Conditioning",
+              "50/50 Raffle Sales Ambassador Lead"
+            ],
+            "procurement_indicators": [
+              "Expansion of Athletic Training staff implies potential procurement of medical/fitness equipment.",
+              "Special Events coordination role suggests upcoming vendor sourcing for events.",
+              "Groundskeeper hiring indicates facilities maintenance supply needs.",
+              "Sales Ambassador role implies point-of-sale (POS) or payment processing requirements."
+            ]
+          },
+          "patterns_found": [
+            "Active Hiring (High Volume)",
+            "Multi-Location Operations",
+            "Event Management Focus",
+            "Athletic Operations Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 405,
+              "elapsed_seconds": 3.5056118965148926
+            }
+          ],
+          "reasoning": "The scraped content confirms active recruitment (54 jobs) directly under the San Diego Padres entity. This indicates organizational growth and budget allocation for new personnel, which correlates with procurement needs for onboarding, HR software, and operational equipment. The specific roles (Athletic Training, Groundskeeping, Special Events) suggest upcoming vendor requirements for specialized equipment, facilities maintenance, and event services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:15:50.661038",
+          "domain_explored": "https://www.linkedin.com/jobs/san-diego-padres-jobs-worldwide?f_C=19643&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter"
+            ],
+            "job_postings": [
+              "Coordinator, Special Events Administration",
+              "Associate, Athletic Training",
+              "Assistant, Groundskeeper",
+              "Intern, Minor League Strength & Conditioning",
+              "50/50 Raffle Sales Ambassador Lead"
+            ],
+            "procurement_indicators": [
+              "Event Coordination (Potential Vendor Sourcing)",
+              "Facilities Management (Groundskeeping)",
+              "Operational Logistics (Raffle Sales)"
+            ]
+          },
+          "patterns_found": [
+            "Active Hiring (High Volume)",
+            "Multi-Location Operations",
+            "Event Management Focus"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 301,
+              "elapsed_seconds": 18.602723121643066
+            }
+          ],
+          "reasoning": "The content confirms active recruitment across multiple operational verticals (Admin, Sports Science, Facilities, Game Day Ops). While direct procurement roles are not listed in this snippet, the 'Coordinator, Special Events Administration' role indicates potential for vendor management and event procurement. The multi-state hiring (CA, TX, AZ) confirms organizational scale."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:16:02.031859",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sr-special-events-crew-at-san-diego-padres-4365256925",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sr. Special Events Crew",
+                "department": "Special Events and Finest Collective",
+                "status": "Part-Time; Non-Exempt",
+                "pay_range": "$22.50/hr",
+                "locations": [
+                  "Petco Park",
+                  "EVE",
+                  "Diamond Room",
+                  "The Rady Shell at Jacobs Park"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Direct vendor interaction during set-up/breakdown",
+              "Merchandise inventory management",
+              "Equipment certification requirements (e.g., Forklift)",
+              "Multi-venue event logistics"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Management Scope",
+            "Multi-Venue Operations",
+            "Event Logistics Procurement",
+            "Merchandise Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 356,
+              "elapsed_seconds": 5.122369050979614
+            }
+          ],
+          "reasoning": "This job posting confirms the Padres' reliance on external vendors for event execution. The explicit requirement to 'Communicate with contracted vendors' indicates a decentralized procurement model where operational staff manage vendor performance. The scope across Petco Park, EVE, and The Rady Shell suggests a consolidated vendor ecosystem for event services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:16:11.957983",
+          "domain_explored": "https://www.linkedin.com/jobs/view/pad-squad-at-san-diego-padres-4329015553",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Administrative Secretary",
+              "Senior Police Records Specialist",
+              "Police Dispatcher (Lateral)",
+              "Library Associate (Hourly)",
+              "Librarian I (Hourly)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Municipal Governance Content",
+            "Public Sector Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.0954670906066895
+            }
+          ],
+          "reasoning": "The scraped content is a job listing page for the City of Chula Vista, a municipal government entity. It contains listings for administrative, police, and library roles. There is no content, relationship, or signal connecting this page to the San Diego Padres or their procurement activities."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:16:23.226733",
+          "domain_explored": "https://www.linkedin.com/jobs/view/executive-assistant-to-the-chief-operating-officer-at-san-diego-padres-4359332047",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Search Results",
+            "Unrelated Sectors (Education, Non-Profit, Healthcare)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1712,
+              "output_tokens": 202,
+              "elapsed_seconds": 3.7715892791748047
+            }
+          ],
+          "reasoning": "The provided content represents a generic LinkedIn search results page for 'Annual Giving Coordinator' roles. The specific URL target (Executive Assistant to COO at San Diego Padres) is not present in the text. Instead, the results list unrelated entities such as University of Saint Joseph, Rock & Roll Hall of Fame, and University of Maryland Medical System. There is no content relevant to the San Diego Padres or their procurement activities."
+        }
+      ],
+      "total_input_tokens": 10667,
+      "total_output_tokens": 1810,
+      "estimated_cost_usd": 0.059151
+    },
+    "procurement_signals": [
+      "Active Hiring (High Volume)",
+      "Multi-Location Operations",
+      "Event Management Focus",
+      "Athletic Operations Expansion",
+      "Active Hiring (High Volume)",
+      "Multi-Location Operations",
+      "Event Management Focus",
+      "Vendor Management Scope",
+      "Multi-Venue Operations",
+      "Event Logistics Procurement",
+      "Merchandise Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "San Diego Padres may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:16:23.228571"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.308925",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:08.612901"
+}

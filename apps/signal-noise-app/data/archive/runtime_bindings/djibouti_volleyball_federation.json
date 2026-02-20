@@ -1,0 +1,279 @@
+{
+  "entity_id": "djibouti_volleyball_federation",
+  "entity_name": "Djibouti Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleybox.net",
+    "aicolympic.org",
+    "gosaxons.com",
+    "paralympic.org",
+    "mybharat.gov.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-sports-fitness-at-kbr-inc-4328801714",
+      "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-at-kbr-inc-3695893713",
+      "https://tr.linkedin.com/jobs/view/director-of-sales-marketing-at-djibouti-palace-kempinski-4301274941"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "djibouti_volleyball_federation",
+      "entity_name": "Djibouti Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://paralympic.org",
+        "https://mybharat.gov.in",
+        "https://tr.linkedin.com/jobs/view/director-of-sales-marketing-at-djibouti-palace-kempinski-4301274941",
+        "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-at-kbr-inc-3695893713",
+        "https://aicolympic.org",
+        "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-sports-fitness-at-kbr-inc-4328801714",
+        "https://gosaxons.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Djibouti Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:53:06.562065",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:53:13.601667",
+          "domain_explored": "https://aicolympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_scope",
+            "generic_partner_listing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 399,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.338085889816284
+            }
+          ],
+          "reasoning": "The content is from the International Olympic Committee's 'AI for IOC' initiative (aicolympic.org). While it lists partners, these are global strategic technology partners (e.g., Alibaba, Intel) for the IOC itself, not the Djibouti Volleyball Federation. There is no direct procurement signal, vendor selection, or technology stack information specific to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:53:16.926056",
+          "domain_explored": "https://gosaxons.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:53:23.420964",
+          "domain_explored": "https://paralympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_scope",
+            "global_governing_body_content",
+            "event_marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.3210439682006836
+            }
+          ],
+          "reasoning": "The content is from the International Paralympic Committee (IPC), the global governing body. It focuses on general Games news (Milano Cortina 2026, LA28), sports explainers, and historical context. There is no mention of the Djibouti Volleyball Federation, nor is there specific procurement, vendor, or technology stack information relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:53:30.894207",
+          "domain_explored": "https://mybharat.gov.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_scope",
+            "wrong_geographic_context",
+            "government_portal_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 171,
+              "elapsed_seconds": 3.823137044906616
+            }
+          ],
+          "reasoning": "The content is from 'mybharat.gov.in', which is the official portal for the Government of India's Ministry of Youth Affairs and Sports. This is completely unrelated to the Djibouti Volleyball Federation. The content focuses on youth engagement, quizzes, and volunteering within India, offering no procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:53:38.680108",
+          "domain_explored": "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-sports-fitness-at-kbr-inc-4328801714",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "MWR Supervisor - Sports & Fitness",
+                "employer": "KBR, Inc.",
+                "location": "Camp Lemonnier, Djibouti",
+                "relevance": "Indicates local demand for sports facility management and equipment maintenance"
+              }
+            ],
+            "procurement_indicators": [
+              "Requirement for fitness equipment maintenance and inventory management",
+              "Organization of sports tournaments and events (potential sponsorship/vendor opportunities)",
+              "Operations management within the Djibouti sports sector"
+            ]
+          },
+          "patterns_found": [
+            "vendor_ecosystem_discovery",
+            "contractor_ops_scope",
+            "fitness_equipment_procurement_signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 349,
+              "elapsed_seconds": 4.430506944656372
+            }
+          ],
+          "reasoning": "While this is a job posting by a contractor (KBR) for a military base (Camp Lemonnier) rather than the Federation itself, it reveals the local operational ecosystem. The role involves managing fitness facilities and equipment inventory, which suggests a market for sports gear and maintenance services in Djibouti that the Federation likely also participates in. It confirms the presence of organized sports infrastructure and potential vendor partnerships."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:53:59.874490",
+          "domain_explored": "https://dj.linkedin.com/jobs/view/djboss-mwr-supervisor-at-kbr-inc-3695893713",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MWR facility computers",
+              "Fitness equipment (preventive maintenance required)"
+            ],
+            "job_postings": [
+              {
+                "title": "DJBOSS: MWR Supervisor",
+                "employer": "KBR, Inc.",
+                "location": "Djibouti, Djibouti",
+                "requirements": "Volleyball Sports Official Certification, Fitness Equipment Maintenance, CPR/First Aid",
+                "relevance": "High - Directly manages sports facilities and volleyball activities in Djibouti."
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced MWR operations (KBR contract)",
+              "Requirement for certified sports officials (Volleyball)",
+              "Need for fitness equipment maintenance and procurement",
+              "Facility management and turf maintenance needs"
+            ]
+          },
+          "patterns_found": [
+            "vendor_ecosystem_discovery",
+            "contractor_ops_scope",
+            "sports_officiating_requirements",
+            "fitness_equipment_maintenance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 439,
+              "elapsed_seconds": 18.151934146881104
+            }
+          ],
+          "reasoning": "The job posting for an MWR Supervisor at KBR in Djibouti explicitly requires 'Sports Official Certification/s (minimum one or more of the following: Volleyball...)'. This confirms that volleyball is an active component of the MWR (Morale, Welfare, and Recreation) program managed by KBR in Djibouti. While this is a contractor role (KBR) rather than a direct Federation procurement, it establishes the operational ecosystem and the presence of organized volleyball, which creates a potential vendor ecosystem for equipment, officiating, and event management services."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:54:03.018313",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/director-of-sales-marketing-at-djibouti-palace-kempinski-4301274941",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6566,
+      "total_output_tokens": 1305,
+      "estimated_cost_usd": 0.039273
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Djibouti Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:54:03.018927"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339014",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:26.084702"
+}

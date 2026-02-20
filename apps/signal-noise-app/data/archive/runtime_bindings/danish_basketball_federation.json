@@ -1,0 +1,147 @@
+{
+  "entity_id": "danish_basketball_federation",
+  "entity_name": "Danish Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "vrijetijd.brugge.be",
+    "play.fiba3x3.com",
+    "basketball-festival.dk",
+    "sportcal.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "danish_basketball_federation",
+      "entity_name": "Danish Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://vrijetijd.brugge.be",
+        "https://basketball-festival.dk",
+        "https://sportcal.com",
+        "https://play.fiba3x3.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Danish Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:00:28.494074",
+          "domain_explored": "https://vrijetijd.brugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online booking platform",
+              "Municipal reservation system"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Municipal facility rental listings"
+            ]
+          },
+          "patterns_found": [
+            "municipal_infrastructure_management",
+            "public_recreation_platform",
+            "multi-sport_facility_booking"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 223,
+              "elapsed_seconds": 5.089380979537964
+            }
+          ],
+          "reasoning": "The scraped content is from 'vrijetijd.brugge.be', the leisure services portal for the City of Bruges (Belgium), not the Danish Basketball Federation. While it lists 'Basketbal' as an activity available for booking in municipal sports halls, this is a consumer-facing reservation interface for facility rental, not a procurement signal or strategic document from the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:00:31.354921",
+          "domain_explored": "https://play.fiba3x3.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:00:37.279700",
+          "domain_explored": "https://basketball-festival.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "event_management",
+            "youth_tournament",
+            "repetitive_content_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 731,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.5971791744232178
+            }
+          ],
+          "reasoning": "The content is strictly promotional for a specific youth event (Aarhus Basketball Festival 2026). It contains no information regarding the Danish Basketball Federation's governance, technology stack, or procurement needs. The repetitive nature of the text suggests a low-quality scrape or a simple landing page with no embedded business intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:00:40.162620",
+          "domain_explored": "https://sportcal.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2096,
+      "total_output_tokens": 394,
+      "estimated_cost_usd": 0.012198
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Danish Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:00:40.167788"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.266898",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:58.136743"
+}

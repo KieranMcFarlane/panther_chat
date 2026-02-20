@@ -1,0 +1,207 @@
+{
+  "entity_id": "strade_bianche_donne",
+  "entity_name": "Strade Bianche Donne",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "elite-wheels.com",
+    "letourfemmes.fr",
+    "velo.outsideonline.com",
+    "cyclingweekly.com",
+    "procyclingstats.com",
+    "cyclingfans.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "strade_bianche_donne",
+      "entity_name": "Strade Bianche Donne",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://elite-wheels.com",
+        "https://velo.outsideonline.com",
+        "https://procyclingstats.com",
+        "https://cyclingfans.com",
+        "https://letourfemmes.fr",
+        "https://cyclingweekly.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Strade Bianche Donne may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:08:30.606099",
+          "domain_explored": "https://elite-wheels.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce product catalog",
+            "Irrelevant vendor content",
+            "No organizational entity match"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 190,
+              "elapsed_seconds": 4.996325731277466
+            }
+          ],
+          "reasoning": "The scraped content is from 'Elitewheels', a third-party commercial vendor selling bicycle components. It contains product listings (Drive TT, Velo Six II, etc.) and marketing copy. There is absolutely no connection to 'Strade Bianche Donne' (the women's cycling race entity), nor are there any signals regarding the race organizer's procurement, technology stack, or governance. This is irrelevant noise."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:08:43.705827",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant organizational entity (Tour de France Femmes vs Strade Bianche Donne)",
+            "Public race results and news content",
+            "Consumer-facing navigation (Palmar\u00e8s, Actualit\u00e9s, Inscription)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 215,
+              "elapsed_seconds": 5.700955152511597
+            }
+          ],
+          "reasoning": "The scraped content is from 'letourfemmes.fr', the official website of the Tour de France Femmes. This is a distinct entity from 'Strade Bianche Donne'. The content consists of race results (Palmar\u00e8s 2025), news about the 'Grand D\u00e9part Grande-Bretagne 2027', and registration links for 'L'\u00c9tape Femmes'. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:08:55.057747",
+          "domain_explored": "https://velo.outsideonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports media publication",
+            "Consumer gear reviews and bike testing",
+            "Race results and news reporting",
+            "Editorial content structure (Authors, Updates, Trending sections)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 210,
+              "elapsed_seconds": 4.23598313331604
+            }
+          ],
+          "reasoning": "The content is clearly from a consumer-facing cycling news and gear review publication (Velo/Outside). It focuses on race results (e.g., Mathieu van der Poel, Remco Evenepoel), equipment reviews (Best Smart Trainers, Gravel Bikes), and industry news. There is no connection to the organizational entity 'Strade Bianche Donne' or any procurement activities related to the race organization."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:09:01.235284",
+          "domain_explored": "https://cyclingweekly.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:09:09.959264",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Race results database",
+            "UCI race calendar listings",
+            "Team rosters and rider statistics",
+            "Consumer-facing sports content",
+            "Advertisement placement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.3580238819122314
+            }
+          ],
+          "reasoning": "The content is strictly a sports data aggregation platform (ProcyclingStats) displaying race results, calendars, and rider rankings. While 'Strade Bianche Donne' appears as a calendar entry, this is a static listing of a sporting event, not an organizational entity with procurement operations. There are no corporate signals, vendor solicitations, or technology infrastructure details present."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:09:42.578706",
+          "domain_explored": "https://cyclingfans.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5821,
+      "total_output_tokens": 821,
+      "estimated_cost_usd": 0.029778
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Strade Bianche Donne may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:09:42.579974"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.409778",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:09:23.288506"
+}

@@ -1,0 +1,392 @@
+{
+  "entity_id": "mumbai",
+  "entity_name": "Mumbai",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "traditional_domestic_clubs",
+  "discovered_domains": [
+    "mumbaicity.gov.in",
+    "mumbaisuburban.gov.in",
+    "mumbaiindians.com",
+    "maharashtratourism.gov.in",
+    "mcgm.gov.in",
+    "mmrda.maharashtra.gov.in",
+    "mumbaiport.gov.in",
+    "mumbaipolice.gov.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://in.linkedin.com/jobs/jobs-in-mumbai",
+      "https://in.linkedin.com/jobs/jobs-in-mumbai-metropolitan-region",
+      "https://in.linkedin.com/jobs/career-jobs-mumbai",
+      "https://in.linkedin.com/jobs/entry-level-jobs-mumbai-metropolitan-region",
+      "https://in.linkedin.com/jobs/linkedin-jobs-mumbai",
+      "https://in.linkedin.com/jobs/multinational-company-in-mumbai-jobs",
+      "https://in.linkedin.com/jobs/careers-jobs-mumbai-metropolitan-region",
+      "https://in.linkedin.com/jobs/walk-in-interview-jobs-mumbai-metropolitan-region",
+      "https://in.linkedin.com/jobs/google-jobs-mumbai",
+      "https://in.linkedin.com/jobs/high-demand-jobs-mumbai-metropolitan-region"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mumbai",
+      "entity_name": "Mumbai",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://mcgm.gov.in",
+        "https://mumbaicity.gov.in",
+        "https://mumbaisuburban.gov.in",
+        "https://mumbaiindians.com",
+        "https://in.linkedin.com/jobs/linkedin-jobs-mumbai",
+        "https://mumbaipolice.gov.in",
+        "https://in.linkedin.com/jobs/jobs-in-mumbai",
+        "https://maharashtratourism.gov.in",
+        "https://in.linkedin.com/jobs/entry-level-jobs-mumbai-metropolitan-region",
+        "https://mmrda.maharashtra.gov.in",
+        "https://in.linkedin.com/jobs/jobs-in-mumbai-metropolitan-region",
+        "https://in.linkedin.com/jobs/career-jobs-mumbai",
+        "https://mumbaiport.gov.in"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "E-Tender (Manpower Supply)",
+        "Incentives for ICT under Maharashtra Tourism Policy (MTP) \u2013 2024",
+        "Provisional Registration (PR) for application for Incentives",
+        "Regional Tourism Development Scheme (RTDS)",
+        "Sponsorship Application",
+        "Industrial Status Policy"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mumbai may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:27:18.940929",
+          "domain_explored": "https://mumbaicity.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:27:32.771735",
+          "domain_explored": "https://mumbaisuburban.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:27:44.434057",
+          "domain_explored": "https://mumbaiindians.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports franchise content",
+            "Fan engagement messaging",
+            "WPL (Women's Premier League) references"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 629,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.2878856658935547
+            }
+          ],
+          "reasoning": "The content is from the Mumbai Indians cricket franchise website, not the Municipal Corporation of Greater Mumbai (MCGM) or a government body. The text discusses sports team performance and fan sentiment, which is irrelevant to public sector procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:27:59.799919",
+          "domain_explored": "https://maharashtratourism.gov.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ICT (Information and Communication Technology)",
+              "E-Tendering Platforms"
+            ],
+            "job_postings": [
+              "Manpower Supply (via E-Tender)"
+            ],
+            "procurement_indicators": [
+              "E-Tender for Manpower Supply",
+              "ICT Incentives under Tourism Policy 2024",
+              "Regional Tourism Development Scheme (RTDS)",
+              "Sponsorship Policy & Applications",
+              "Provisional Registration for Incentives"
+            ]
+          },
+          "patterns_found": [
+            "E-Tender (Manpower Supply)",
+            "Incentives for ICT under Maharashtra Tourism Policy (MTP) \u2013 2024",
+            "Provisional Registration (PR) for application for Incentives",
+            "Regional Tourism Development Scheme (RTDS)",
+            "Sponsorship Application",
+            "Industrial Status Policy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 390,
+              "elapsed_seconds": 2.993680238723755
+            }
+          ],
+          "reasoning": "The content provides explicit evidence of procurement activity and investment incentives relevant to the Mumbai/Maharashtra region. The presence of an active 'E-Tender (Manpower Supply)' link indicates immediate procurement intent. Furthermore, the 'Maharashtra Tourism Policy (MTP) 2024' explicitly lists 'Incentives for ICT' (Information and Communication Technology), signaling a strong intent for digital transformation and technology procurement. The 'Sponsorship Application' and 'Regional Tourism Development Scheme' suggest budget availability for infrastructure and events."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:28:15.579052",
+          "domain_explored": "https://mcgm.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:28:30.074067",
+          "domain_explored": "https://mmrda.maharashtra.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T10:28:45.037194",
+          "domain_explored": "https://mumbaiport.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T10:29:00.638100",
+          "domain_explored": "https://mumbaipolice.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T10:29:07.395704",
+          "domain_explored": "https://in.linkedin.com/jobs/jobs-in-mumbai",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Platform access restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 687,
+              "output_tokens": 146,
+              "elapsed_seconds": 2.476199150085449
+            }
+          ],
+          "reasoning": "The scraped content contains only a rate-limiting error message from LinkedIn ('Requests rate to linkedin.com is too high'). There is no actual job market data, technology stack information, or procurement signals available to analyze from this specific attempt."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T10:29:13.013622",
+          "domain_explored": "https://in.linkedin.com/jobs/jobs-in-mumbai-metropolitan-region",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Platform access restriction",
+            "API throttling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 740,
+              "output_tokens": 139,
+              "elapsed_seconds": 2.4600589275360107
+            }
+          ],
+          "reasoning": "The scraped content is an error message indicating that the request rate to LinkedIn has exceeded the limit (15000/min). There is no actual content regarding jobs, procurement, or technology stacks to analyze."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T10:29:18.620432",
+          "domain_explored": "https://in.linkedin.com/jobs/career-jobs-mumbai",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "API throttling (15000/min limit)",
+            "Platform access restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 793,
+              "output_tokens": 142,
+              "elapsed_seconds": 2.2302260398864746
+            }
+          ],
+          "reasoning": "The scraped content is an error message from LinkedIn indicating that the request rate has exceeded the platform's limit. There is no content related to jobs, procurement, or technology stacks to analyze."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T10:29:27.674364",
+          "domain_explored": "https://in.linkedin.com/jobs/entry-level-jobs-mumbai-metropolitan-region",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "API throttling (15000/min limit)",
+            "Platform access restriction",
+            "Account Manager reference"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 856,
+              "output_tokens": 159,
+              "elapsed_seconds": 3.909839153289795
+            }
+          ],
+          "reasoning": "The scraped content is a system error message indicating that the request rate to LinkedIn has exceeded the limit of 15000 requests per minute. There is no content related to jobs, procurement, or technology stacks available to analyze."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T10:29:38.935948",
+          "domain_explored": "https://in.linkedin.com/jobs/linkedin-jobs-mumbai",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "API throttling (15000/min limit)",
+            "Platform access restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 914,
+              "output_tokens": 151,
+              "elapsed_seconds": 5.803084135055542
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a rate-limiting error message from LinkedIn. It provides no information regarding job postings, procurement signals, or technology stacks within Mumbai. This is a technical barrier, not a data source."
+        }
+      ],
+      "total_input_tokens": 6085,
+      "total_output_tokens": 1283,
+      "estimated_cost_usd": 0.037500000000000006
+    },
+    "procurement_signals": [
+      "E-Tender (Manpower Supply)",
+      "Incentives for ICT under Maharashtra Tourism Policy (MTP) \u2013 2024",
+      "Provisional Registration (PR) for application for Incentives",
+      "Regional Tourism Development Scheme (RTDS)",
+      "Sponsorship Application",
+      "Industrial Status Policy"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mumbai may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:29:38.939357"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.293376",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:48.195067"
+}

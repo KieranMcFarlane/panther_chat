@@ -1,0 +1,315 @@
+{
+  "entity_id": "austria_wien",
+  "entity_name": "Austria Wien",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "fk-austria.at",
+    "vereine.oefb.at",
+    "bundesliga.at"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364635034",
+      "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364626898",
+      "https://at.linkedin.com/jobs/view/channel-operation-manager-at-huawei-austria-4304061751",
+      "https://at.linkedin.com/jobs/view/senior-scientist-m-w-d-scientific-operations-services-r-d-plasma-at-octapharma-austria-4345928247",
+      "https://at.linkedin.com/jobs/view/software-developer-all-gender-at-alten-austria-4309765338",
+      "https://at.linkedin.com/jobs/view/group-associate-project-manager-m-f-d-quality-control-at-octapharma-austria-4366372025",
+      "https://at.linkedin.com/jobs/view/go-to-market-gtm-manager-m-w-d-at-vivo-austria-4255806933",
+      "https://at.linkedin.com/jobs/view/exchange-secretary-at-iaeste-austria-3845600577",
+      "https://at.linkedin.com/jobs/view/team-lead-m-f-d-product-process-development-at-octapharma-austria-4317893504"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austria_wien",
+      "entity_name": "Austria Wien",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://at.linkedin.com/jobs/view/channel-operation-manager-at-huawei-austria-4304061751",
+        "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364626898",
+        "https://fk-austria.at",
+        "https://at.linkedin.com/jobs/view/senior-scientist-m-w-d-scientific-operations-services-r-d-plasma-at-octapharma-austria-4345928247",
+        "https://at.linkedin.com/jobs/view/software-developer-all-gender-at-alten-austria-4309765338",
+        "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364635034",
+        "https://bundesliga.at",
+        "https://vereine.oefb.at"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austria Wien may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:26:18.617948",
+          "domain_explored": "https://fk-austria.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ADMIRAL Sportwetten (Betting Integration/Partner)",
+              "Viola TV (In-house Video Platform)",
+              "Ticketing System (Implied via 'Ticket Link' and 'Abo' management)",
+              "Social Media Stack (Facebook, Instagram, Threads, Twitter/X, Bluesky, TikTok, YouTube)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sports Betting Partnership (ADMIRAL)",
+              "Hospitality Event Management ('Violetter Ball 2026')",
+              "Season Ticket/Subscription Sales ('Fr\u00fchjahrs-Abo 2026')",
+              "Merchandising (Macron kit supplier)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem",
+            "Digital Content Production",
+            "Ticketing & Membership Management",
+            "Sports Betting Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 387,
+              "elapsed_seconds": 4.8803551197052
+            }
+          ],
+          "reasoning": "The content reveals Austria Wien's commercial partnerships and digital engagement infrastructure. While no direct procurement requests (RFPs) are visible, the identification of specific technology partners (ADMIRAL for sports betting/betting widgets) and the heavy emphasis on 'Viola TV' and 'Violet Diary' content production indicates a reliance on digital media tools. The presence of a 'Ticket Link' and membership drives suggests active use of Ticketing/Fan Relationship Management software. These are confirmed capabilities that represent potential expansion points or vendor renewal targets."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:26:25.522567",
+          "domain_explored": "https://vereine.oefb.at",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:26:33.919863",
+          "domain_explored": "https://bundesliga.at",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:26:46.357847",
+          "domain_explored": "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364635034",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Group Project Manager (m/f/d) - International Production Integration at Octapharma Austria"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Pharmaceutical Manufacturing",
+            "GxP/GMP Compliance",
+            "Technology Transfer"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.28411602973938
+            }
+          ],
+          "reasoning": "The content analyzed is a job posting for Octapharma Austria, a biopharmaceutical company, and is completely unrelated to FK Austria Wien (the football club). There is no overlap in industry, procurement needs, or organizational structure."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:26:56.518112",
+          "domain_explored": "https://at.linkedin.com/jobs/view/group-project-manager-m-f-d-international-production-integration-temporary-at-octapharma-austria-4364626898",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "GxP/GMP Compliance Systems",
+              "Project Management Tools (Corporate PMO)"
+            ],
+            "job_postings": [
+              "Group Project Manager - International Production Integration"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Pharmaceutical Manufacturing",
+            "GxP/GMP Compliance",
+            "Technology Transfer",
+            "Biotechnology R&D"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.341571092605591
+            }
+          ],
+          "reasoning": "The content is a job posting for Octapharma Austria, a biopharmaceutical company. While located in Vienna, this entity is entirely unrelated to FK Austria Wien (the football club). The role focuses on technology transfer for plasma protein production, which does not intersect with the sports, media, or event management procurement needs of the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:27:10.159142",
+          "domain_explored": "https://at.linkedin.com/jobs/view/channel-operation-manager-at-huawei-austria-4304061751",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ICT Infrastructure",
+              "Cloud Services",
+              "Smart Devices"
+            ],
+            "job_postings": [
+              "Channel Operation Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ICT Infrastructure & Telecommunications",
+            "Channel Partner Management",
+            "B2B Sales Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1627,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.330925941467285
+            }
+          ],
+          "reasoning": "The content is a job posting for Huawei Austria, a direct competitor in the technology infrastructure space, and is unrelated to the procurement activities of Austria Wien (the football club). It describes channel management and sales operations roles within the telecommunications sector."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:27:20.795860",
+          "domain_explored": "https://at.linkedin.com/jobs/view/senior-scientist-m-w-d-scientific-operations-services-r-d-plasma-at-octapharma-austria-4345928247",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office 365",
+              "Generative AI",
+              "Scientific Software Platforms"
+            ],
+            "job_postings": [
+              "Senior Scientist (m/w/d) - Scientific Operations Services - R&D Plasma"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Pharmaceutical Manufacturing",
+            "Biopharmaceutical R&D",
+            "GxP/GMP Compliance",
+            "Scientific Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1704,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.278932809829712
+            }
+          ],
+          "reasoning": "The content is a job posting for Octapharma Austria, a pharmaceutical company, and focuses on scientific research, plasma product lifecycle management, and GxP compliance. It has no relation to Austria Wien (the football club) or its procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:27:37.599966",
+          "domain_explored": "https://at.linkedin.com/jobs/view/software-developer-all-gender-at-alten-austria-4309765338",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              ".NET (C#)",
+              "SQL Server",
+              "CUDA",
+              "C++",
+              "Docker",
+              "Azure DevOps",
+              "Git"
+            ],
+            "job_postings": [
+              "Software Developer (all gender) at ALTEN Austria"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Engineering Service Provider (ALTEN)",
+            "Supply Chain Software Development",
+            "High-Performance Computing (HPC)",
+            "Inventory Management Optimization"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 272,
+              "elapsed_seconds": 7.33620285987854
+            }
+          ],
+          "reasoning": "The job posting is for a Software Developer role at ALTEN Austria, an engineering service provider. While the role involves backend solutions (.NET, SQL) and supply chain analytics, it is a technical engineering position rather than a procurement or strategic sourcing role for Austria Wien. There is no connection to the target entity (Austria Wien) or its specific procurement needs (sports management, ticketing, sponsorship)."
+        }
+      ],
+      "total_input_tokens": 9510,
+      "total_output_tokens": 1469,
+      "estimated_cost_usd": 0.050565
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austria Wien may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:27:37.600687"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.174982",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:03.234445"
+}

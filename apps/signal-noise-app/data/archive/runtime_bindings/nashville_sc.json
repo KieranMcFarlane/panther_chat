@@ -1,0 +1,416 @@
+{
+  "entity_id": "nashville_sc",
+  "entity_name": "Nashville SC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "nashvillesc.com",
+    "geodispark.com",
+    "mlsstore.com",
+    "mlssoccer.com",
+    "nashvillesoccerarchive.com",
+    "nashville.gov"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/nashville-soccer-club-jobs",
+      "https://www.linkedin.com/posts/bradley-weinstein_sports-jobs-and-careers-with-nashville-sc-activity-7176288496842625024-iuqd",
+      "https://www.linkedin.com/jobs/sports-jobs-nashville-tn",
+      "https://www.linkedin.com/jobs/view/retail-lead-nashville-sc-at-gamblingcareers-com-4367948714",
+      "https://www.linkedin.com/posts/eric-topolewski-2510b9199_sports-jobs-and-careers-with-nashville-sc-activity-7176289286646833154-nImU",
+      "https://www.linkedin.com/jobs/geodis-jobs-nashville-metropolitan-area",
+      "https://www.linkedin.com/jobs/beverage-industry-jobs-nashville-metropolitan-area"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nashville_sc",
+      "entity_name": "Nashville SC",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14
+      ],
+      "explored_domains": [
+        "https://nashvillesoccerarchive.com",
+        "https://www.linkedin.com/jobs/view/retail-lead-nashville-sc-at-gamblingcareers-com-4367948714",
+        "https://www.linkedin.com/posts/bradley-weinstein_sports-jobs-and-careers-with-nashville-sc-activity-7176288496842625024-iuqd",
+        "https://geodispark.com",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/posts/eric-topolewski-2510b9199_sports-jobs-and-careers-with-nashville-sc-activity-7176289286646833154-nImU",
+        "https://nashville.gov",
+        "https://nashvillesc.com",
+        "https://mlsstore.com",
+        "https://www.linkedin.com/jobs/sports-jobs-nashville-tn",
+        "https://www.linkedin.com/jobs/nashville-soccer-club-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Organizational Expansion",
+        "Creative Services Demand",
+        "Operational Support Investment",
+        "Community Engagement Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nashville SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:51:20.349365",
+          "domain_explored": "https://nashvillesc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Sponsorship/Partnership",
+                "details": "Vanderbilt Health presenting 2026 Preseason Training."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Renewal (Vanderbilt Health)",
+            "Seasonal Operations (Preseason Logistics)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.837942123413086
+            }
+          ],
+          "reasoning": "The scraped content is limited to press releases regarding match postponements and roster announcements. While the mention of 'Presented by Vanderbilt Health' confirms an ongoing major partnership, there are no explicit signals of new procurement activities, technology adoption, or RFPs in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:51:23.162655",
+          "domain_explored": "https://geodispark.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:51:27.305830",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:51:34.376323",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Wide Transfer Activity",
+            "Competitor Roster Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.787627935409546
+            }
+          ],
+          "reasoning": "The scraped content from MLSSoccer.com focuses exclusively on league-wide transfer news (Red Bull New York, Inter Miami, San Jose Earthquakes, etc.). There is no mention of Nashville SC, nor are there any signals regarding Nashville SC's specific procurement needs, technology stack, or operational governance. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:51:43.077808",
+          "domain_explored": "https://nashvillesoccerarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Research",
+            "Fan Engagement",
+            "Local Soccer Ecosystem"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 198,
+              "elapsed_seconds": 3.4753541946411133
+            }
+          ],
+          "reasoning": "The content is from a personal blog ('Nashville Soccer Archive') focused on historical research and storytelling regarding Nashville's soccer history (Nashville Diamonds, Nashville Metros). It explicitly states the author is not affiliated with the club's operations ('Nashville\u2019s own local MLS club barely acknowledges its own history'). There are no signals regarding current procurement activities, technology stacks, or business operations of Nashville SC."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:51:47.115920",
+          "domain_explored": "https://nashville.gov",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:51:55.366649",
+          "domain_explored": "https://www.linkedin.com/jobs/nashville-soccer-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud (Inferred from Graphic Designer role)",
+              "CRM / Ticketing Systems (Inferred from Community Engagement role)",
+              "Event Management Platforms (Inferred from Special Events role)"
+            ],
+            "job_postings": [
+              "Coordinator, Special Events",
+              "Academy - Head Coach",
+              "Graphic Designer",
+              "Executive Assistant & Front Office Administrator",
+              "Community Engagement Coordinator"
+            ],
+            "procurement_indicators": [
+              "Headcount Growth (37 active jobs)",
+              "Marketing/Design Capacity Expansion",
+              "Event Operations Scaling"
+            ]
+          },
+          "patterns_found": [
+            "Organizational Expansion",
+            "Creative Services Demand",
+            "Operational Support Investment",
+            "Community Engagement Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 363,
+              "elapsed_seconds": 4.65662693977356
+            }
+          ],
+          "reasoning": "The discovery of 37 active job postings, including roles in Graphic Design, Special Events, and Community Engagement, indicates active internal investment and organizational growth. While these are not direct procurement roles, the 'Graphic Designer' and 'Coordinator' postings signal a need for supporting software (Adobe Creative Cloud, Project Management tools) and event services/logistics, which are downstream procurement needs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:52:10.831471",
+          "domain_explored": "https://www.linkedin.com/posts/bradley-weinstein_sports-jobs-and-careers-with-nashville-sc-activity-7176288496842625024-iuqd",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)",
+              "ATS (Applicant Tracking System - implied)"
+            ],
+            "job_postings": [
+              "2024 Summer Internship Program (Multiple Departments)"
+            ],
+            "procurement_indicators": [
+              "Seasonal staffing ramp-up",
+              "Infrastructure scaling for 'The Castle' (Geodis Park)",
+              "Training and development procurement"
+            ]
+          },
+          "patterns_found": [
+            "Seasonal Workforce Planning",
+            "Operational Scalability",
+            "Talent Pipeline Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1661,
+              "output_tokens": 275,
+              "elapsed_seconds": 11.784049034118652
+            }
+          ],
+          "reasoning": "The content confirms Nashville SC is actively expanding operational capacity for the 2024 season through a structured internship program. While this is an HR signal, it correlates with procurement needs for onboarding tools, workforce management software, and increased hardware/software licensing for temporary staff. It indicates organizational growth but lacks direct vendor purchasing intent."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:52:29.659893",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-jobs-nashville-tn",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Coordinator, Special Events",
+                "entity": "Nashville Soccer Club",
+                "recency": "3 weeks ago",
+                "implication": "Requires vendor management for event logistics, catering, and activation."
+              },
+              {
+                "role": "Manager, Social Media",
+                "entity": "Tennessee Titans",
+                "recency": "19 minutes ago",
+                "implication": "Indicates local market demand for content creation and social management tools."
+              }
+            ],
+            "procurement_indicators": [
+              "Active recruitment for event coordination roles implies upcoming vendor needs for matchday experiences.",
+              "Growth in local sports jobs suggests a competitive market for operational talent and supporting software."
+            ]
+          },
+          "patterns_found": [
+            "Event Operations Expansion",
+            "Local Sports Ecosystem Growth",
+            "Competitor Benchmarking (Titans)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1717,
+              "output_tokens": 435,
+              "elapsed_seconds": 15.083240985870361
+            }
+          ],
+          "reasoning": "The search results confirm Nashville SC is actively hiring for a 'Coordinator, Special Events', signaling continued investment in event management and operations. While the page is a general aggregate for Nashville sports jobs (containing noise like i9 Sports and Stranger Soccer), the presence of the specific NSC role validates the organizational expansion pattern identified in Iteration 7. The listing for the Tennessee Titans (Manager, Social Media) provides a secondary benchmark for local sports market compensation and tech stack requirements."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T18:52:37.496819",
+          "domain_explored": "https://www.linkedin.com/jobs/view/retail-lead-nashville-sc-at-gamblingcareers-com-4367948714",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "POS Systems (implied by sales metrics)",
+              "Inventory Management Software",
+              "Two-step Network Duo Security"
+            ],
+            "job_postings": [
+              "Retail Lead"
+            ],
+            "procurement_indicators": [
+              "Vendor Management: Fanatics (mentioned in values/standards)",
+              "Inventory Procurement: Stockroom organization and sales execution",
+              "Operational Tools: Network security hardware/software for verification"
+            ]
+          },
+          "patterns_found": [
+            "Merchandising Operations Expansion",
+            "Third-Party Vendor Reliance (Fanatics)",
+            "Game Day Operational Scalability",
+            "Retail Performance Metrics (UPT, Per Cap)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1786,
+              "output_tokens": 316,
+              "elapsed_seconds": 4.267757892608643
+            }
+          ],
+          "reasoning": "The job posting confirms Nashville SC is investing in retail operations management for the 'store and/or venue'. While this is an operational role rather than a direct procurement role, it indicates reliance on third-party retail partners (Fanatics) and a focus on sales metrics (UPT, Per Cap), which signals downstream procurement needs for inventory, POS systems, and merchandising supplies."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T18:52:46.465153",
+          "domain_explored": "https://www.linkedin.com/posts/eric-topolewski-2510b9199_sports-jobs-and-careers-with-nashville-sc-activity-7176289286646833154-nImU",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "2024 Summer Mascot Internship"
+            ],
+            "procurement_indicators": [
+              "Seasonal Operational Budgeting",
+              "Game Day Logistics Scaling"
+            ]
+          },
+          "patterns_found": [
+            "Seasonal Workforce Planning",
+            "Game Day Operations Support",
+            "Brand Asset Management (Mascot Program)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1870,
+              "output_tokens": 230,
+              "elapsed_seconds": 5.594483137130737
+            }
+          ],
+          "reasoning": "While this is a seasonal internship posting rather than a direct procurement role, it indicates active investment in Game Day operations and brand engagement assets. The need for seasonal support staff suggests scaling requirements for event logistics and merchandise/brand management, which often correlates with increased vendor spend for uniforms, logistics, and event supplies during the season."
+        }
+      ],
+      "total_input_tokens": 12945,
+      "total_output_tokens": 2192,
+      "estimated_cost_usd": 0.071715
+    },
+    "procurement_signals": [
+      "Organizational Expansion",
+      "Creative Services Demand",
+      "Operational Support Investment",
+      "Community Engagement Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nashville SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:52:46.465775"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.153753",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:39.555367"
+}

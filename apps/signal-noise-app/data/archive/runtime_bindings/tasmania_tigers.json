@@ -1,0 +1,144 @@
+{
+  "entity_id": "tasmania_tigers",
+  "entity_name": "Tasmania Tigers",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "aus_state_teams",
+  "discovered_domains": [
+    "cricket.com.au",
+    "saca.com.au",
+    "themercury.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tasmania_tigers",
+      "entity_name": "Tasmania Tigers",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://saca.com.au",
+        "https://themercury.com.au",
+        "https://cricket.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tasmania Tigers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:29:48.789909",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Player injury reports",
+            "Match scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 182,
+              "elapsed_seconds": 9.52574610710144
+            }
+          ],
+          "reasoning": "The content provided is from the general Cricket Australia homepage and focuses exclusively on national team match results, player injuries (Hazlewood, Marsh), and squad announcements. There is no mention of the 'Tasmania Tigers' entity, nor are there any signals regarding technology investments, job postings, or organizational procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:30:11.768455",
+          "domain_explored": "https://saca.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports match results and schedules",
+            "Player squad announcements",
+            "Generic sports news aggregation",
+            "Video content hosting (features/highlights)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 220,
+              "elapsed_seconds": 14.174691200256348
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports news, match reports (WNCL, T20I), player awards, and video highlights. There is no mention of business operations, technology infrastructure, or organizational procurement needs. Furthermore, the source domain (saca.com.au) represents the South Australian Cricket Association, which is a distinct entity from the target (Tasmania Tigers), making this content irrelevant to the specific procurement intelligence goal."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:30:30.411597",
+          "domain_explored": "https://themercury.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Utility regulation news",
+            "Pricing adjustments",
+            "Infrastructure budget debates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 666,
+              "output_tokens": 171,
+              "elapsed_seconds": 4.033473014831543
+            }
+          ],
+          "reasoning": "The content focuses on TasWater (a water utility) and the Tasmanian Economic Regulator. It discusses consumer pricing and infrastructure delays. There is no mention of the Tasmania Tigers (cricket entity), nor are there any signals regarding sports procurement, technology investments, or vendor partnerships relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3426,
+      "total_output_tokens": 573,
+      "estimated_cost_usd": 0.018873
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tasmania Tigers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:30:30.412346"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302430",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:49.420941"
+}

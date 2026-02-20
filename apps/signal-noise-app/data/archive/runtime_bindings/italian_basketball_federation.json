@@ -1,0 +1,175 @@
+{
+  "entity_id": "italian_basketball_federation",
+  "entity_name": "Italian Basketball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "about.macron.com",
+    "ibsaitaly.it",
+    "crunchbase.com",
+    "media.stellantis.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "italian_basketball_federation",
+      "entity_name": "Italian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://media.stellantis.com",
+        "https://crunchbase.com",
+        "https://about.macron.com",
+        "https://ibsaitaly.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Italian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:57:59.743698",
+          "domain_explored": "https://about.macron.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Branding Content",
+            "Generic Marketing Copy"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.17722225189209
+            }
+          ],
+          "reasoning": "The content is a repetitive 'About Us' page for Macron (a sportswear manufacturer). It contains generic branding slogans ('Become Your Own Hero') and high-level mission statements about quality and innovation. There is no specific information regarding the Italian Basketball Federation's procurement activities, technology stack, or governance patterns. This is vendor-side content, not federation-side procurement data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:58:09.918320",
+          "domain_explored": "https://ibsaitaly.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Pharmaceutical Industry Content",
+            "Corporate Social Responsibility (CSR) Reporting",
+            "Generic Marketing/News Section"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.5268120765686035
+            }
+          ],
+          "reasoning": "The scraped content is from IBSA Italy (a pharmaceutical company), not the Italian Basketball Federation (FIP). The content focuses on ESG goals, sustainability manifestos, and pharmaceutical news (e.g., 'AestETHICS', 'Mind the Patient'). There is zero relevance to basketball federation procurement operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:58:37.981262",
+          "domain_explored": "https://crunchbase.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Navigation",
+            "Irrelevant Market Trends",
+            "Global Financial Data Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.360506772994995
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage of Crunchbase, a platform for financial market intelligence. It contains trending news about global entities (e.g., Anthropic, BitGo, Tyson Foods) and platform navigation elements. There is no specific content, profile, or data related to the 'Italian Basketball Federation' (FIP). Consequently, this URL does not provide any procurement signals, technology stack details, or governance patterns for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:59:01.751735",
+          "domain_explored": "https://media.stellantis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Automotive Industry Content",
+            "Brand Marketing Communications",
+            "Generic Newsletter Signup"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 190,
+              "elapsed_seconds": 16.81023406982422
+            }
+          ],
+          "reasoning": "The content is exclusively from Stellantis (a multinational automotive manufacturing corporation) and its subsidiaries (Maserati, Peugeot, Alfa Romeo, Lancia). It contains press releases regarding Formula E, car launches, and corporate strategy. There is absolutely no connection, content, or relevance to the Italian Basketball Federation (FIP) or its procurement activities."
+        }
+      ],
+      "total_input_tokens": 5732,
+      "total_output_tokens": 758,
+      "estimated_cost_usd": 0.028566
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Italian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:59:01.753119"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269841",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:54.688421"
+}

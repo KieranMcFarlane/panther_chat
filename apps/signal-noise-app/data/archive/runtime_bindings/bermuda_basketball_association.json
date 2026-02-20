@@ -1,0 +1,146 @@
+{
+  "entity_id": "bermuda_basketball_association",
+  "entity_name": "Bermuda Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bermudabasketball.net",
+    "bermudayouthbasketball.com",
+    "latinbasket.com",
+    "givebermuda.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bermuda_basketball_association",
+      "entity_name": "Bermuda Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://latinbasket.com",
+        "https://givebermuda.org",
+        "https://bermudabasketball.net",
+        "https://bermudayouthbasketball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bermuda Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:17:09.154352",
+          "domain_explored": "https://bermudabasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Partnership: National Sports Center Pavilion",
+              "Event Vendor: Charity Golf Tournament logistics/photography",
+              "Governance Activity: Annual General Meeting (Jan 29th)"
+            ]
+          },
+          "patterns_found": [
+            "Governance Cycle",
+            "Event Management",
+            "Venue Utilization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1143,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.1708250045776367
+            }
+          ],
+          "reasoning": "The content confirms active governance operations (Executive Committee, AGM) and event management activities (Charity Golf Tournament). While no direct procurement requests are visible, the reliance on the 'National Sports Center' indicates a potential venue partnership or lease agreement, and the 'Charity Golf Tournament' suggests third-party vendor relationships for event logistics and photography."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:17:12.240598",
+          "domain_explored": "https://bermudayouthbasketball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:17:19.679605",
+          "domain_explored": "https://latinbasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope",
+            "News Aggregator",
+            "Sports Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.1238648891448975
+            }
+          ],
+          "reasoning": "The scraped content from latinbasket.com is a sports news aggregator focusing on professional leagues in Argentina, Uruguay, Brazil, and the wider Latin American region. It contains game results, player awards, and transfer rumors. There is absolutely no content related to the Bermuda Basketball Association, Bermuda-based governance, or local procurement activities. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:17:23.383927",
+          "domain_explored": "https://givebermuda.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2583,
+      "total_output_tokens": 424,
+      "estimated_cost_usd": 0.014109
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bermuda Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:17:23.384714"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252687",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:14.860938"
+}

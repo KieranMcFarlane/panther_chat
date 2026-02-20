@@ -1,0 +1,220 @@
+{
+  "entity_id": "atl\u00e9tico_de_madrid",
+  "entity_name": "Atl\u00e9tico de Madrid",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "en.atleticodemadrid.com",
+    "realmadrid.com",
+    "fs.campusatleticodemadrid.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/laliga/jobs/",
+      "https://fr.linkedin.com/company/laliga/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "atl\u00e9tico_de_madrid",
+      "entity_name": "Atl\u00e9tico de Madrid",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://en.atleticodemadrid.com",
+        "https://realmadrid.com",
+        "https://fs.campusatleticodemadrid.com",
+        "https://www.linkedin.com/company/laliga/jobs/",
+        "https://fr.linkedin.com/company/laliga/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Atl\u00e9tico de Madrid may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:46:29.807964",
+          "domain_explored": "https://en.atleticodemadrid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Red & White (Membership Platform)",
+              "Territorio Atleti (Ticketing System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of digital membership platforms",
+              "Stadium naming rights partnership (Riyadh Air)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform (Red & White)",
+            "Ticketing & Tour Management (Territorio Atleti)",
+            "Sponsorship Integration (Riyadh Air)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 263,
+              "elapsed_seconds": 4.629080772399902
+            }
+          ],
+          "reasoning": "The content reveals specific platforms in use for fan engagement and ticketing ('Red & White', 'Territorio Atleti'), indicating active investment in digital membership infrastructure. While not a direct procurement signal, the existence of these platforms suggests a focus on CRM and digital experience capabilities. The 'Riyadh Air Metropolitano' naming confirms a major sponsorship deal, though historical."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:46:39.788198",
+          "domain_explored": "https://realmadrid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "Match Reports",
+            "CSR Initiatives (Green Bracelets)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1083,
+              "output_tokens": 177,
+              "elapsed_seconds": 4.3552281856536865
+            }
+          ],
+          "reasoning": "The content provided is from realmadrid.com, a direct competitor to Atl\u00e9tico de Madrid. It contains sports journalism (match reports, player injuries, quotes) and corporate social responsibility news (cancer awareness). There are absolutely no procurement signals, technology stacks, or business operations relevant to Atl\u00e9tico de Madrid's purchasing patterns in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:46:50.685312",
+          "domain_explored": "https://fs.campusatleticodemadrid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "HTML5 Video",
+              "E-commerce Registration Forms",
+              "Payment Gateways (Implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital platform maintenance for fs.campusatleticodemadrid.com",
+              "Registration management system licensing",
+              "Video hosting/streaming services"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Platform",
+            "Customer Registration Systems",
+            "Digital Marketing Funnel",
+            "Content Delivery Network (CDN)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.7836999893188477
+            }
+          ],
+          "reasoning": "The content is a consumer-facing landing page for 'Campus Atleti' (Soccer Camps). While it does not contain direct procurement signals (like RFPs), it confirms the use of a digital platform capable of handling registrations, payments, and content delivery. This indicates a need for backend e-commerce infrastructure, CRM integration for participant data, and web hosting services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:47:20.962499",
+          "domain_explored": "https://www.linkedin.com/company/laliga/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Scraping Error/Restriction"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 533,
+              "output_tokens": 145,
+              "elapsed_seconds": 27.875052213668823
+            }
+          ],
+          "reasoning": "The target entity is Atl\u00e9tico de Madrid, but the analyzed URL corresponds to La Liga (a separate governing body/competitor). Additionally, the content indicates a 'Forbidden' status or scraping restriction, meaning no valid procurement data was retrieved for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:47:27.615215",
+          "domain_explored": "https://fr.linkedin.com/company/laliga/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Access Restriction / Anti-Scraping Mechanism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 576,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.793916940689087
+            }
+          ],
+          "reasoning": "The content indicates a 'Forbidden' error and explicitly states 'Use only company name in the URL'. This confirms two issues: 1) The target entity is LaLiga, not Atl\u00e9tico de Madrid (Entity Mismatch), and 2) The scraping attempt was blocked by the platform's security configuration, yielding no analyzable procurement data."
+        }
+      ],
+      "total_input_tokens": 5021,
+      "total_output_tokens": 1018,
+      "estimated_cost_usd": 0.030333
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Atl\u00e9tico de Madrid may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:47:27.617047"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.143374",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:45.680415"
+}

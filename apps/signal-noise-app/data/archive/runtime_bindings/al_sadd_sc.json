@@ -1,0 +1,153 @@
+{
+  "entity_id": "al_sadd_sc",
+  "entity_name": "Al Sadd SC",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "store.al-saddclub.com",
+    "al-saddclub.com",
+    "transfermarkt.us"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_sadd_sc",
+      "entity_name": "Al Sadd SC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://store.al-saddclub.com",
+        "https://transfermarkt.us",
+        "https://al-saddclub.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Sadd SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:34:12.457392",
+          "domain_explored": "https://store.al-saddclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WooCommerce (Inferred from URL structure /product-category/)",
+              "WordPress (Inferred CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active inventory of Match Kits, Training Gear, Fashion, and Accessories",
+              "Digital storefront operations requiring vendor support for hosting/maintenance",
+              "Supply chain for branded merchandise manufacturing"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Utilization",
+            "Merchandise Inventory Management",
+            "Direct-to-Consumer (DTC) Sales Channel"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 521,
+              "output_tokens": 287,
+              "elapsed_seconds": 6.963191032409668
+            }
+          ],
+          "reasoning": "The discovery of a dedicated e-commerce subdomain (store.al-saddclub.com) confirms the use of digital retail infrastructure. While this is not a direct procurement of services, it indicates an active supply chain for physical goods (kits, training gear, fashion) and a need for e-commerce platform maintenance, inventory management systems, and potentially logistics/shipping partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:34:19.624233",
+          "domain_explored": "https://al-saddclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Stadium Utilization (Jassim Bin Hamad, Al Arabi, Yadegar-e-Imam)",
+              "Sponsorship Visibility (Doha Bank)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Operations Management",
+            "Venue Logistics",
+            "Scheduling & Event Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.400268077850342
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on match fixtures, results, and player profiles. While this confirms the entity operates in a high-capacity sports environment, it contains no explicit signals regarding procurement activities, technology acquisition, or vendor partnerships. The presence of 'Doha Bank Starts League' suggests sponsorship, but not direct procurement intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:34:25.973225",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Industry Content",
+            "Global Transfer Market Data",
+            "Third-Party News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.3449058532714844
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt.us consists of generic global football transfer news, rumors, and market valuations (e.g., Tottenham, Arsenal, Manchester United). There is absolutely no mention of Al Sadd SC, its specific operations, or any procurement activities (RFPs, job postings, or technology investments) related to the entity. This source is irrelevant to the specific procurement intelligence of Al Sadd SC."
+        }
+      ],
+      "total_input_tokens": 3391,
+      "total_output_tokens": 701,
+      "estimated_cost_usd": 0.020687999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Sadd SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:34:25.974801"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220433",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:36.940178"
+}

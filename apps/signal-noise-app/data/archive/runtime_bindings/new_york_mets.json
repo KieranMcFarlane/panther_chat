@@ -1,0 +1,307 @@
+{
+  "entity_id": "new_york_mets",
+  "entity_name": "New York Mets",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/new-york-mets-jobs",
+      "https://www.linkedin.com/jobs/new-york-mets-jobs-worldwide",
+      "https://www.linkedin.com/jobs/new-york-mets-jobs-new-york",
+      "https://www.linkedin.com/jobs/view/workday-functional-analyst-at-new-york-mets-4354135266",
+      "https://www.linkedin.com/jobs/new-york-mets-jobs-port-st-lucie-fl",
+      "https://www.linkedin.com/jobs/view/junior-data-engineer-at-new-york-mets-4354135253",
+      "https://www.linkedin.com/jobs/view/event-concierge-at-new-york-mets-4351606841",
+      "https://www.linkedin.com/jobs/view/software-engineering-associate-baseball-systems-at-new-york-mets-4352990729"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_york_mets",
+      "entity_name": "New York Mets",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.26
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/new-york-mets-jobs-new-york",
+        "https://www.linkedin.com/jobs/new-york-mets-jobs-worldwide",
+        "https://www.linkedin.com/jobs/new-york-mets-jobs",
+        "https://www.linkedin.com/jobs/new-york-mets-jobs-port-st-lucie-fl",
+        "https://www.linkedin.com/jobs/view/workday-functional-analyst-at-new-york-mets-4354135266"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Proprietary Software Development",
+        "Baseball Analytics Investment",
+        "In-house Engineering Talent Acquisition",
+        "Proprietary Software Development",
+        "Baseball Analytics Investment",
+        "In-house Engineering Talent Acquisition",
+        "HRIS/ERP Implementation (Workday)",
+        "Proprietary Software Development (Baseball Systems)",
+        "Data Visualization Investment",
+        "In-house Technical Talent Acquisition",
+        "HRIS/ERP Implementation (Workday)",
+        "In-house Technical Talent Acquisition",
+        "Human Capital Management Optimization",
+        "Data Governance & Security"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New York Mets may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:51:48.521207",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-mets-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Proprietary Baseball Systems",
+              "Internal Software Development Stack"
+            ],
+            "job_postings": [
+              {
+                "title": "Software Engineering Associate, Baseball Systems",
+                "location": "Queens, NY",
+                "posted": "2 weeks ago",
+                "department": "Baseball Operations / Technology"
+              }
+            ],
+            "procurement_indicators": [
+              "Expansion of internal engineering capabilities",
+              "Investment in sports technology/analytics",
+              "Direct hiring for software maintenance and development"
+            ]
+          },
+          "patterns_found": [
+            "Proprietary Software Development",
+            "Baseball Analytics Investment",
+            "In-house Engineering Talent Acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 329,
+              "elapsed_seconds": 5.275576829910278
+            }
+          ],
+          "reasoning": "The content reveals a direct job posting for a 'Software Engineering Associate, Baseball Systems' located in Queens, NY. This is a strong procurement signal indicating the New York Mets are investing in building and maintaining proprietary software infrastructure for baseball operations, likely requiring associated development tools, cloud infrastructure, and analytics licenses."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:51:55.224798",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-mets-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Proprietary Baseball Systems",
+              "Internal Development Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Software Engineering Associate, Baseball Systems",
+                "location": "Queens, NY",
+                "recency": "2 weeks ago",
+                "signal": "High"
+              }
+            ],
+            "procurement_indicators": [
+              "Hiring for software engineering roles implies procurement of hardware (workstations) and software licenses (IDEs, cloud infrastructure).",
+              "Investment in 'Baseball Systems' suggests a budget allocation for performance analysis technologies."
+            ]
+          },
+          "patterns_found": [
+            "Proprietary Software Development",
+            "Baseball Analytics Investment",
+            "In-house Engineering Talent Acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 322,
+              "elapsed_seconds": 2.68388295173645
+            }
+          ],
+          "reasoning": "The discovery of the 'Software Engineering Associate, Baseball Systems' role confirms active procurement activity related to sports analytics infrastructure. This indicates a shift towards building proprietary tools rather than solely relying on external vendors, representing a significant technology investment."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:52:04.481904",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-mets-jobs-new-york",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Workday (HRIS/ERP)",
+              "Custom Baseball Systems (Proprietary)",
+              "Data Visualization Tools"
+            ],
+            "job_postings": [
+              "Workday Functional Analyst",
+              "Software Engineering Associate, Baseball Systems"
+            ],
+            "procurement_indicators": [
+              "Enterprise Software Management",
+              "Internal Development Capabilities",
+              "HR Tech Stack Modernization"
+            ]
+          },
+          "patterns_found": [
+            "HRIS/ERP Implementation (Workday)",
+            "Proprietary Software Development (Baseball Systems)",
+            "Data Visualization Investment",
+            "In-house Technical Talent Acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.547826051712036
+            }
+          ],
+          "reasoning": "The discovery of a 'Workday Functional Analyst' posting is a significant procurement signal, indicating investment in HRIS/ERP enterprise software. The 'Software Engineering Associate, Baseball Systems' posting reinforces the ongoing build-out of proprietary analytics infrastructure. These roles suggest active management of enterprise software licenses and internal tool development."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:52:14.884408",
+          "domain_explored": "https://www.linkedin.com/jobs/view/workday-functional-analyst-at-new-york-mets-4354135266",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Workday HCM",
+              "Workday Recruiting",
+              "Workday Advanced Compensation",
+              "Workday Payroll",
+              "Workday Benefits"
+            ],
+            "job_postings": [
+              {
+                "title": "Workday Functional Analyst",
+                "salary_range": "$110,000 - $135,000",
+                "location": "Queens, NY",
+                "focus": "System configuration, maintenance, and optimization of HR modules."
+              }
+            ],
+            "procurement_indicators": [
+              "SaaS Subscription Management (Workday)",
+              "System Integration Needs (Internal/External systems)",
+              "Reporting & Analytics Tools (Dashboards for HR Leadership)",
+              "Security & Compliance Governance"
+            ]
+          },
+          "patterns_found": [
+            "HRIS/ERP Implementation (Workday)",
+            "In-house Technical Talent Acquisition",
+            "Human Capital Management Optimization",
+            "Data Governance & Security"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 373,
+              "elapsed_seconds": 3.5528221130371094
+            }
+          ],
+          "reasoning": "The job posting for a 'Workday Functional Analyst' confirms the active implementation and optimization of Workday HCM modules (Recruiting, Benefits, Payroll). This indicates a significant investment in HR technology infrastructure and a need for integration support, representing a clear procurement signal for SaaS management and potential complementary tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:52:27.901845",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-mets-jobs-port-st-lucie-fl",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Food Service Management Systems (implied via Aramark)",
+              "Nutrition Tracking Software (potential need for Performance Chef role)"
+            ],
+            "job_postings": [
+              "Performance Chef (Direct Hire - Port St Lucie)",
+              "Warehouse Worker (Aramark - Clover Park)",
+              "Retail Sales Worker (Aramark - Clover Park)"
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership: Aramark handles F&B, Warehousing, and Retail for Clover Park",
+              "Capital Investment: Planning for '2026 Spring Training' suggests budget allocation for upcoming season infrastructure",
+              "Operational Strategy: Direct control over 'Performance' roles vs. Outsourced 'Service' roles"
+            ]
+          },
+          "patterns_found": [
+            "Outsourced Facilities Management (Aramark Partnership)",
+            "Sports Science & Nutrition Investment (Performance Chef)",
+            "Seasonal Operations Planning (Spring Training 2026)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 398,
+              "elapsed_seconds": 7.554749011993408
+            }
+          ],
+          "reasoning": "The content reveals the operational ecosystem of the Mets' Spring Training facility (Clover Park). While most listings are low-skill roles outsourced to vendor Aramark (confirming an existing Facilities/F&B vendor relationship), the direct hiring of a 'Performance Chef' indicates an internal investment in player nutrition and sports science infrastructure. This shifts the procurement profile from pure IT/Corporate to include Sports Performance operations."
+        }
+      ],
+      "total_input_tokens": 7461,
+      "total_output_tokens": 1726,
+      "estimated_cost_usd": 0.048272999999999996
+    },
+    "procurement_signals": [
+      "Proprietary Software Development",
+      "Baseball Analytics Investment",
+      "In-house Engineering Talent Acquisition",
+      "Proprietary Software Development",
+      "Baseball Analytics Investment",
+      "In-house Engineering Talent Acquisition",
+      "HRIS/ERP Implementation (Workday)",
+      "Proprietary Software Development (Baseball Systems)",
+      "Data Visualization Investment",
+      "In-house Technical Talent Acquisition",
+      "HRIS/ERP Implementation (Workday)",
+      "In-house Technical Talent Acquisition",
+      "Human Capital Management Optimization",
+      "Data Governance & Security"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New York Mets may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:52:27.903445"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.308560",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:22.792683"
+}

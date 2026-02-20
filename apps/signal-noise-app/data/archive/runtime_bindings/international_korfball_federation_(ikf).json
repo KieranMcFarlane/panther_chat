@@ -1,0 +1,157 @@
+{
+  "entity_id": "international_korfball_federation_(ikf)",
+  "entity_name": "International Korfball Federation (IKF)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "usakorfball.org",
+    "sponsoo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/loylogic_loylogiclife-loylogic-careers-activity-6928314659477336064-inB6"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_korfball_federation_(ikf)",
+      "entity_name": "International Korfball Federation (IKF)",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sponsoo.com",
+        "https://usakorfball.org",
+        "https://www.linkedin.com/posts/loylogic_loylogiclife-loylogic-careers-activity-6928314659477336064-inB6"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Korfball Federation (IKF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:55:50.110534",
+          "domain_explored": "https://usakorfball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Google)",
+              "Web Hosting (implied by site presence)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "IKF YouTube Channel maintenance",
+              "World Games 2025 preparation (Chengdu)",
+              "Cross-organizational content syndication"
+            ]
+          },
+          "patterns_found": [
+            "Digital Asset Management",
+            "Content Distribution Network",
+            "Strategic Partnership",
+            "Event Association"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 862,
+              "output_tokens": 246,
+              "elapsed_seconds": 5.069415807723999
+            }
+          ],
+          "reasoning": "While this is a partner site (USA Korfball), it explicitly links to the IKF's primary content channel (YouTube). This confirms IKF's investment in video hosting and digital content distribution. The mention of the 'World Games 2025' indicates a future major event cycle where digital services (streaming, stats, social) are typically procured."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:56:01.451299",
+          "domain_explored": "https://sponsoo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Platform lists 'Associations' as a potential user type, but no specific association (like IKF) is mentioned in the provided text."
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Marketplace",
+            "Generic Sports Platform",
+            "Irrelevant Portfolio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 251,
+              "elapsed_seconds": 8.104840993881226
+            }
+          ],
+          "reasoning": "The scraped content is from Sponsoo, a third-party sponsorship marketplace. While it lists 'Associations' as a category, the content is generic platform marketing (portfolio stats, benefits for sponsors) rather than specific information regarding the International Korfball Federation (IKF). There is no evidence that IKF uses this platform, nor does the page reveal any internal procurement signals, technology stacks, or governance patterns specific to IKF. It is a dead end for entity-specific intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:56:12.022388",
+          "domain_explored": "https://www.linkedin.com/posts/loylogic_loylogiclife-loylogic-careers-activity-6928314659477336064-inB6",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Group Finance Controller (Loylogic - Riga Office)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "HR/Recruitment Focus",
+            "Corporate Culture Content",
+            "Third-Party Entity (Loylogic)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 202,
+              "elapsed_seconds": 7.0661561489105225
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post from Loylogic, a third-party loyalty rewards company, focused on internal culture (Team Breakfasts) and a specific job opening (Group Finance Controller). There is no mention of the International Korfball Federation (IKF), nor are there any signals regarding IKF's procurement, technology stack, or governance. This is irrelevant noise for the target entity."
+        }
+      ],
+      "total_input_tokens": 3759,
+      "total_output_tokens": 699,
+      "estimated_cost_usd": 0.021762
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Korfball Federation (IKF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:56:12.023160"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458856",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:17.334716"
+}

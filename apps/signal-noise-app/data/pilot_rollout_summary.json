@@ -1,0 +1,19 @@
+{
+  "stage": "PILOT",
+  "entities_processed": 10,
+  "total_cost_usd": 4.500000000000002,
+  "avg_cost_usd": 0.4500000000000002,
+  "total_iterations": 150,
+  "avg_iterations": 15.0,
+  "actionable_count": 0,
+  "actionable_rate": 0.0,
+  "duration_seconds": 0.112092,
+  "cache_stats": {
+    "hit_rate": 0.0,
+    "item_count": 150,
+    "size_mb": 0.0263214111328125,
+    "hits": 0,
+    "misses": 0
+  },
+  "timestamp": "2026-02-03T01:18:54.225206"
+}

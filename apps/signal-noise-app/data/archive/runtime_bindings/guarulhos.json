@@ -1,0 +1,425 @@
+{
+  "entity_id": "guarulhos",
+  "entity_name": "Guarulhos",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "guarulhos.sp.gov.br",
+    "guarucoop.com.br",
+    "thesaopauloairport.com",
+    "group-indigo.com",
+    "latamairlines.com",
+    "pullmanguarulhos.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/unicargo-jobs-worldwide",
+      "https://www.linkedin.com/company/ab-inbev/jobs",
+      "https://www.linkedin.com/company/ache-laboratorios/jobs/",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3963192321&geoId=106057199&keywords=Google&location=Brasil&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true",
+      "https://www.linkedin.com/jobs/search/?currentJobId=4185276192&f_C=76171420&f_CR=100459316&geoId=92000000&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=DD",
+      "https://www.linkedin.com/jobs/exchange-jobs-latin-america",
+      "https://www.linkedin.com/jobs/sideral-linhas-a%C3%A9reas-ltda.-jobs-worldwide",
+      "https://www.linkedin.com/jobs/aumovio-jobs-worldwide",
+      "https://www.linkedin.com/jobs/fuga-jobs-worldwide",
+      "https://www.linkedin.com/jobs/coop-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guarulhos",
+      "entity_name": "Guarulhos",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/ache-laboratorios/jobs/",
+        "https://pullmanguarulhos.com",
+        "https://latamairlines.com",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3963192321&geoId=106057199&keywords=Google&location=Brasil&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true",
+        "https://thesaopauloairport.com",
+        "https://www.linkedin.com/company/ab-inbev/jobs",
+        "https://guarucoop.com.br",
+        "https://guarulhos.sp.gov.br",
+        "https://group-indigo.com",
+        "https://www.linkedin.com/jobs/search/?currentJobId=4185276192&f_C=76171420&f_CR=100459316&geoId=92000000&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=DD",
+        "https://www.linkedin.com/jobs/unicargo-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guarulhos may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:37:41.187743",
+          "domain_explored": "https://guarulhos.sp.gov.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:37:48.528465",
+          "domain_explored": "https://guarucoop.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Transportation/Logistics",
+            "B2C Services",
+            "Cooperative Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1273,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.822885036468506
+            }
+          ],
+          "reasoning": "The entity 'Guarucoop' is a transportation cooperative (taxi services) and not the municipal government of Guarulhos. The content focuses on consumer-facing services (booking taxis, discounts, payment methods) rather than public sector governance, technology procurement, or RFPs. Therefore, it does not fit the target profile for municipal procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:38:01.401391",
+          "domain_explored": "https://thesaopauloairport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Travel Services",
+            "Affiliate Marketing",
+            "Passenger Information Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 152,
+              "elapsed_seconds": 9.410162925720215
+            }
+          ],
+          "reasoning": "The content is a B2C travel guide for passengers, offering services like car rentals, taxis, and flight tracking. It lacks corporate governance structure, technology investment details, or public sector procurement notices relevant to the municipality of Guarulhos."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:38:09.383769",
+          "domain_explored": "https://group-indigo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "EV Charging Infrastructure",
+              "Urban Mobility Management Systems",
+              "Fleet Management (V\u00e9lib', Smovengo)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "M&A Expansion (Indigo Park Colombia acquisition)",
+              "Public-Private Partnership Model (Ville de Nice, Madrid, etc.)",
+              "Service Contracts (Street parking management)"
+            ]
+          },
+          "patterns_found": [
+            "B2B Service Provider (Parking/Mobility)",
+            "M&A Activity (Acquisition of Central Parking System Colombia)",
+            "Global Operations (500+ cities)",
+            "Public-Private Partnerships (PPP)",
+            "Infrastructure Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 355,
+              "elapsed_seconds": 4.778253078460693
+            }
+          ],
+          "reasoning": "The content is from the corporate website of INDIGO Group, a global parking and mobility management company. While they operate in Guarulhos (Brazil), the entity is a private vendor/service provider, not the municipal government or a public body issuing procurement tenders. The content describes their service offerings (parking, EV charging, bike logistics) and corporate news, but does not contain procurement signals *from* Guarulhos (such as RFPs or government spending). This is a 'vendor' entity, not a 'buyer' entity in the context of municipal procurement analysis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:38:12.345905",
+          "domain_explored": "https://latamairlines.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:38:21.196436",
+          "domain_explored": "https://pullmanguarulhos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine",
+              "Google Maps Integration",
+              "Virtual Tour"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Hospitality Services",
+            "Hotel/Accommodation",
+            "Consumer Booking Engine",
+            "Accor Brand (International Chain)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.04630184173584
+            }
+          ],
+          "reasoning": "The content is exclusively marketing material for a luxury hotel (Pullman by Accor). It focuses on guest amenities (rooms, steakhouse, pool), booking functionality, and customer reviews. There are no signals of government procurement, B2B vendor selection, or corporate technology investment relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:38:29.468892",
+          "domain_explored": "https://www.linkedin.com/jobs/unicargo-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ajudante (Assistant)",
+              "Analista Operacional Expedi\u00e7\u00e3o (Operational Expedition Analyst)"
+            ],
+            "procurement_indicators": [
+              "Active hiring in Guarulhos region",
+              "Logistics/Supply Chain operations presence"
+            ]
+          },
+          "patterns_found": [
+            "Logistics/Transportation Operations",
+            "Manual Labor Recruitment (Ajudante/Assistant)",
+            "Expedition/Shipping Analysis Roles",
+            "Local Entity Presence (Guarulhos, S\u00e3o Paulo)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1618,
+              "output_tokens": 303,
+              "elapsed_seconds": 4.975571870803833
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for 'Unicargo' in Guarulhos, specifically for logistics roles ('Ajudante', 'Analista Operacional Expedi\u00e7\u00e3o'). While Unicargo appears to be a logistics service provider rather than the municipal government itself, active hiring in logistics operations within Guarulhos suggests a healthy commercial sector and potential B2B demand for operational support, fleet management, or HR services. It confirms business activity in the region but does not directly show public procurement intent."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:38:37.360024",
+          "domain_explored": "https://www.linkedin.com/company/ab-inbev/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Aprendiz Qualidade (Guarulhos) - Ambev"
+            ],
+            "procurement_indicators": [
+              "Local facility presence in Guarulhos",
+              "Quality Assurance operations",
+              "Apprentice recruitment suggests active local hiring"
+            ]
+          },
+          "patterns_found": [
+            "Manufacturing Operations (Quality Assurance)",
+            "Apprenticeship Programs (Youth Training)",
+            "Geographic Relevance (Guarulhos)",
+            "Subsidiary Operations (Ambev/AB InBev)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1682,
+              "output_tokens": 268,
+              "elapsed_seconds": 4.297374963760376
+            }
+          ],
+          "reasoning": "While AB InBev is a global manufacturing entity and not a direct government procurement portal, the discovery of a specific job posting in Guarulhos ('Aprendiz Qualidade') confirms active industrial operations within the target geography. This indicates a local presence with potential supply chain and procurement needs (indirect procurement), even if direct public bidding signals are absent."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T11:38:45.321423",
+          "domain_explored": "https://www.linkedin.com/company/ache-laboratorios/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LIMS (Laboratory Information Management System) - implied by 'Analista Desenvolvimento Anal\u00edtico'",
+              "Marketing Automation Platforms - implied by 'Analista de Marketing S\u00eanior'",
+              "ERP/Financial Systems - implied by 'Analista Financeiro S\u00eanior'"
+            ],
+            "job_postings": [
+              "Analista Desenvolvimento Anal\u00edtico Pleno - Estabilidade (Guarulhos)",
+              "Analista de Marketing S\u00eanior (Unidade MIP) (Guarulhos)",
+              "T\u00e9cnico Mec\u00e2nico de Manuten\u00e7\u00e3o Pleno (Guarulhos)",
+              "Coordenador(a) de Com\u00e9rcio Exterior (Guarulhos)"
+            ],
+            "procurement_indicators": [
+              "R&D Investment: Hiring for Stability and Analytical Development suggests procurement of lab equipment and software.",
+              "Facility Management: Mechanical maintenance roles imply ongoing facility upkeep contracts.",
+              "Marketing Expansion: Senior Marketing role indicates potential investment in marketing tools and agencies."
+            ]
+          },
+          "patterns_found": [
+            "Pharmaceutical Manufacturing Operations",
+            "R&D and Quality Control (Estabilidade/Analytical Development)",
+            "Facility Maintenance (Mechanical Technicians)",
+            "Marketing Operations (MIP Unit)",
+            "Geographic Relevance (Guarulhos, SP)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1749,
+              "output_tokens": 510,
+              "elapsed_seconds": 4.744842052459717
+            }
+          ],
+          "reasoning": "Ach\u00e9 Laborat\u00f3rios is a major pharmaceutical entity with significant operations in Guarulhos. The job listings indicate active investment in R&D (Analytical Development/Stability), facility maintenance (Mechanical Technicians), and marketing. While these roles are operational, the 'Analista de Marketing S\u00eanior' and 'Analista Desenvolvimento Anal\u00edtico' roles suggest potential for software procurement (CRM, Analytics, LIMS) and scientific instrumentation. The volume of employees (6,500+) confirms a large procurement budget, though specific intent is not explicit in this snippet."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T11:38:53.314546",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3963192321&geoId=106057199&keywords=Google&location=Brasil&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Pessoa Desenvolvedora Front-end at Globo (Rio de Janeiro)",
+              "APOIO ADMINISTRATIVO at G4F (Bras\u00edlia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results",
+            "Authentication Wall",
+            "Broad Keyword Matching",
+            "Geographic Irrelevance (Rio de Janeiro, Bras\u00edlia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.979368209838867
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the keyword 'Google' in Brazil, not specific to the entity Guarulhos. The content is dominated by authentication prompts (Sign in/Join now) and lists job postings for entities like Globo and G4F in locations other than Guarulhos (e.g., Rio de Janeiro, Bras\u00edlia). There are no specific procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T11:39:00.184703",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=4185276192&f_C=76171420&f_CR=100459316&geoId=92000000&origin=JOB_SEARCH_PAGE_JOB_FILTER&sortBy=DD",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "Engenheira(o) mec\u00e2nica(o) JR (Junior Mechanical Engineer)",
+              "Auxiliar de Produ\u00e7\u00e3o (Production Assistant)",
+              "Quality Shift Supervisor"
+            ],
+            "procurement_indicators": [
+              "Active Manufacturing Facility (Hitachi Energy)",
+              "Industrial Expansion/Maintenance (Quality & Engineering roles)",
+              "Supply Chain Operations (Implied by manufacturing scale)"
+            ]
+          },
+          "patterns_found": [
+            "Manufacturing Operations (Transformers/Energy)",
+            "Engineering Recruitment (Mechanical/Quality)",
+            "Production Support Roles (Auxiliar de Produ\u00e7\u00e3o)",
+            "Geographic Relevance (Guarulhos, S\u00e3o Paulo)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1927,
+              "output_tokens": 352,
+              "elapsed_seconds": 3.227053642272949
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for manufacturing and engineering roles at Hitachi Energy located in Guarulhos. While the roles are primarily operational (Mechanical Engineer, Production Assistant, Quality Supervisor) rather than direct procurement positions, the presence of a major manufacturing facility implies ongoing procurement needs for raw materials, MRO (Maintenance, Repair, and Operations), and industrial services. This confirms industrial activity in the target region."
+        }
+      ],
+      "total_input_tokens": 14567,
+      "total_output_tokens": 2565,
+      "estimated_cost_usd": 0.082176
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guarulhos may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:39:00.185552"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320900",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:44.446967"
+}

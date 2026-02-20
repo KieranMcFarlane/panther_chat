@@ -1,0 +1,130 @@
+{
+  "entity_id": "dynamo_kyiv",
+  "entity_name": "Dynamo Kyiv",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "fcdynamo.com",
+    "dynamo.kiev.ua",
+    "tripadvisor.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dynamo_kyiv",
+      "entity_name": "Dynamo Kyiv",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://dynamo.kiev.ua",
+        "https://fcdynamo.com",
+        "https://tripadvisor.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dynamo Kyiv may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:00:20.682944",
+          "domain_explored": "https://fcdynamo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Academy team match reports",
+            "Training camp logistics"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.774515151977539
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news headlines, match reports (U19, U14, U15, U16), and training updates. There is no mention of corporate strategy, technology acquisition, job vacancies, or procurement notices. This content is irrelevant to B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:00:35.131717",
+          "domain_explored": "https://dynamo.kiev.ua",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook Login (Social Auth)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Fan engagement features (Betting/Predictions)",
+            "Social media integration (Facebook Login)",
+            "User-generated content (Blogs)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 203,
+              "elapsed_seconds": 11.127416610717773
+            }
+          ],
+          "reasoning": "The content analyzed is from a sports news portal (dynamo.kiev.ua), not the official corporate entity of FC Dynamo Kyiv. The site focuses on fan engagement, match reports, and general sports news. There are no corporate governance documents, technology infrastructure details, or procurement opportunities present in this content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:00:38.073857",
+          "domain_explored": "https://tripadvisor.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2757,
+      "total_output_tokens": 363,
+      "estimated_cost_usd": 0.013716
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dynamo Kyiv may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:00:38.074913"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.179289",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:10.717057"
+}

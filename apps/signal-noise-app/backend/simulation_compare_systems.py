@@ -93,6 +93,102 @@ class OldRalphLoopSimulator:
         )
 
 
+class EarlyStopOnlySimulator:
+    """
+    Simulates confidence-gated early stopping WITHOUT:
+    - EIG prioritization
+    - Explicit hypothesis objects
+    - Lifecycle management
+
+    Purpose: Isolate the benefit of early stopping alone.
+    """
+
+    def __init__(self, cost_per_hop=0.02):
+        self.cost_per_hop = cost_per_hop
+
+    def should_stop_early(self, confidences: Dict[str, float], iterations: int) -> bool:
+        """Check if we should stop based on confidence thresholds"""
+        # High confidence lock-in
+        if any(conf >= 0.85 for conf in confidences.values()):
+            return True
+
+        # All categories highly confident
+        if iterations > 10 and all(conf >= 0.90 for conf in confidences.values()):
+            return True
+
+        # Max iterations
+        if iterations >= 30:
+            return True
+
+        return False
+
+    def simulate(self, entity: EntityCharacteristics) -> SimulationResult:
+        """Simulate early-stop-only discovery on an entity"""
+        categories = ["CRM", "Digital Transformation", "C-Suite", "Data Analytics", "Fan Engagement"]
+
+        # Simple confidence tracking (no hypothesis objects)
+        confidences = {cat: 0.5 for cat in categories}
+
+        total_iterations = 0
+
+        # Discovery loop with early stopping
+        while total_iterations < 30:
+            # Random category selection (NO EIG prioritization)
+            category = random.choice(categories)
+
+            # Execute one hop
+            total_iterations += 1
+
+            # Simulate discovery outcome (same logic as new system)
+            base_detection = entity.digital_maturity * entity.signal_density
+            detection_prob = base_detection + random.uniform(-0.15, 0.15)
+            detection_prob = max(0.0, min(1.0, detection_prob))
+
+            # Determine decision type (same as new system)
+            rand = random.random()
+
+            if detection_prob > 0.6:
+                # Strong signal
+                if rand < 0.5:
+                    delta = 0.06  # ACCEPT
+                else:
+                    delta = 0.02  # WEAK_ACCEPT
+            elif detection_prob > 0.3:
+                # Weak signal
+                if rand < 0.3:
+                    delta = 0.02  # WEAK_ACCEPT
+                else:
+                    delta = 0.0   # NO_PROGRESS
+            else:
+                # No signal or contradictory
+                delta = 0.0  # REJECT or NO_PROGRESS
+
+            # Update confidence
+            confidences[category] += delta
+            confidences[category] = max(0.0, min(1.0, confidences[category]))
+
+            # Check early stopping (after first few iterations)
+            if total_iterations > 5:
+                if self.should_stop_early(confidences, total_iterations):
+                    break
+
+        # Calculate results
+        total_cost = total_iterations * self.cost_per_hop
+        actionables = sum(1 for conf in confidences.values() if conf >= 0.70)
+        hypotheses_status = {cat: ("PROMOTED" if conf >= 0.70 else "ACTIVE") for cat, conf in confidences.items()}
+        avg_confidence = statistics.mean(confidences.values())
+
+        return SimulationResult(
+            entity_id=entity.entity_id,
+            iterations=total_iterations,
+            total_cost=total_cost,
+            final_confidences=confidences,
+            actionables_found=actionables,
+            hypotheses_status=hypotheses_status,
+            avg_confidence=avg_confidence
+        )
+
+
 class HypothesisDrivenSimulator:
     """
     Simulates the NEW Hypothesis-Driven Discovery:
@@ -254,80 +350,112 @@ def generate_synthetic_entities(count: int = 100) -> List[EntityCharacteristics]
     return entities
 
 
-def print_statistics(old_results: List[SimulationResult], new_results: List[SimulationResult]):
+def print_statistics(old_results: List[SimulationResult], early_stop_results: List[SimulationResult], new_results: List[SimulationResult]):
     """Print comparative statistics"""
 
-    print("\n" + "="*80)
+    print("\n" + "="*90)
     print("SIMULATION RESULTS: 100 ENTITIES")
-    print("="*80)
+    print("="*90)
 
     # Overall statistics
     old_total_cost = sum(r.total_cost for r in old_results)
+    early_total_cost = sum(r.total_cost for r in early_stop_results)
     new_total_cost = sum(r.total_cost for r in new_results)
     old_total_iterations = sum(r.iterations for r in old_results)
+    early_total_iterations = sum(r.iterations for r in early_stop_results)
     new_total_iterations = sum(r.iterations for r in new_results)
     old_total_actionables = sum(r.actionables_found for r in old_results)
+    early_total_actionables = sum(r.actionables_found for r in early_stop_results)
     new_total_actionables = sum(r.actionables_found for r in new_results)
 
     print("\n📊 AGGREGATE METRICS")
-    print("-" * 80)
-    print(f"{'Metric':<40} {'Old System':<20} {'New System':<20} {'Improvement':<20}")
-    print("-" * 80)
+    print("-" * 90)
+    print(f"{'Metric':<40} {'Old':<12} {'Early-Stop':<12} {'Hypothesis':<12} {'vs Old':<15}")
+    print("-" * 90)
 
     cost_savings = ((old_total_cost - new_total_cost) / old_total_cost) * 100
-    print(f"{'Total Cost':<40} ${old_total_cost:.2f}<{' ' * (20-len(f'${old_total_cost:.2f}'))} ${new_total_cost:.2f}<{' ' * (20-len(f'${new_total_cost:.2f}'))} {cost_savings:+.1f}%")
+    print(f"{'Total Cost':<40} ${old_total_cost:.2f}     ${early_total_cost:.2f}     ${new_total_cost:.2f}     {cost_savings:+.1f}%")
 
     iter_reduction = ((old_total_iterations - new_total_iterations) / old_total_iterations) * 100
-    print(f"{'Total Iterations':<40} {old_total_iterations}<{' ' * 15} {new_total_iterations}<{' ' * 15} {iter_reduction:+.1f}%")
+    print(f"{'Total Iterations':<40} {old_total_iterations:<10} {early_total_iterations:<10} {new_total_iterations:<10} {iter_reduction:+.1f}%")
 
     if old_total_actionables > 0:
         actionables_increase = ((new_total_actionables - old_total_actionables) / old_total_actionables) * 100
-        print(f"{'Total Actionables':<40} {old_total_actionables}<{' ' * 15} {new_total_actionables}<{' ' * 15} {actionables_increase:+.1f}%")
+        print(f"{'Total Actionables':<40} {old_total_actionables:<10} {early_total_actionables:<10} {new_total_actionables:<10} {actionables_increase:+.1f}%")
     else:
-        print(f"{'Total Actionables':<40} {old_total_actionables}<{' ' * 15} {new_total_actionables}<{' ' * 15} +∞ (old found none)")
+        print(f"{'Total Actionables':<40} {old_total_actionables:<10} {early_total_actionables:<10} {new_total_actionables:<10} +∞ (old found none)")
 
     old_avg_cost_per_actionable = old_total_cost / old_total_actionables if old_total_actionables > 0 else 0
+    early_avg_cost_per_actionable = early_total_cost / early_total_actionables if early_total_actionables > 0 else 0
     new_avg_cost_per_actionable = new_total_cost / new_total_actionables if new_total_actionables > 0 else 0
     if old_avg_cost_per_actionable > 0:
         actionable_cost_improvement = ((old_avg_cost_per_actionable - new_avg_cost_per_actionable) / old_avg_cost_per_actionable) * 100
-        print(f"{'Cost per Actionable':<40} ${old_avg_cost_per_actionable:.2f}<{' ' * (20-len(f'${old_avg_cost_per_actionable:.2f}'))} ${new_avg_cost_per_actionable:.2f}<{' ' * (20-len(f'${new_avg_cost_per_actionable:.2f}'))} {actionable_cost_improvement:+.1f}%")
+        print(f"{'Cost per Actionable':<40} ${old_avg_cost_per_actionable:.2f}     ${early_avg_cost_per_actionable:.2f}     ${new_avg_cost_per_actionable:.2f}     {actionable_cost_improvement:+.1f}%")
     else:
-        print(f"{'Cost per Actionable':<40} N/A (old found none)<{' ' * 20} ${new_avg_cost_per_actionable:.2f}<{' ' * 15}")
+        print(f"{'Cost per Actionable':<40} N/A (old found none)        ${early_avg_cost_per_actionable:.2f}     ${new_avg_cost_per_actionable:.2f}")
+
+    # Causality isolation section
+    print("\n🔬 CAUSALITY ISOLATION")
+    print("-" * 90)
+
+    # Early stopping impact
+    early_stop_savings = ((old_total_cost - early_total_cost) / old_total_cost) * 100
+    early_stop_actionable_change = ((early_total_actionables - old_total_actionables) / old_total_actionables * 100) if old_total_actionables > 0 else 0
+    print(f"\n💡 Early Stopping Alone:")
+    print(f"   Cost reduction: {early_stop_savings:.1f}%")
+    print(f"   Actionables change: {early_stop_actionable_change:+.1f}%")
+
+    # EIG + hypotheses impact (beyond early stopping)
+    eig_savings = ((early_total_cost - new_total_cost) / early_total_cost) * 100 if early_total_cost > 0 else 0
+    eig_actionable_increase = ((new_total_actionables - early_total_actionables) / early_total_actionables * 100) if early_total_actionables > 0 else 0
+    print(f"\n🎯 EIG + Hypotheses (beyond early stop):")
+    print(f"   Additional cost reduction: {eig_savings:.1f}%")
+    print(f"   Additional actionables: {eig_actionable_increase:+.1f}%")
+
+    print(f"\n🏆 CONCLUSION:")
+    print(f"   Early stopping explains: {early_stop_savings:.1f}% of cost savings")
+    print(f"   EIG + hypotheses explain: {eig_savings:.1f}% of additional cost savings + {eig_actionable_increase:+.1f}% more actionables")
 
     # Per-entity statistics
     old_avg_cost = statistics.mean(r.total_cost for r in old_results)
+    early_avg_cost = statistics.mean(r.total_cost for r in early_stop_results)
     new_avg_cost = statistics.mean(r.total_cost for r in new_results)
     old_avg_iter = statistics.mean(r.iterations for r in old_results)
+    early_avg_iter = statistics.mean(r.iterations for r in early_stop_results)
     new_avg_iter = statistics.mean(r.iterations for r in new_results)
     old_std_cost = statistics.stdev(r.total_cost for r in old_results)
+    early_std_cost = statistics.stdev(r.total_cost for r in early_stop_results)
     new_std_cost = statistics.stdev(r.total_cost for r in new_results)
 
     print("\n📊 PER-ENTITY STATISTICS")
-    print("-" * 80)
-    print(f"{'Metric':<40} {'Old System':<20} {'New System':<20} {'Improvement':<20}")
-    print("-" * 80)
+    print("-" * 90)
+    print(f"{'Metric':<40} {'Old':<12} {'Early-Stop':<12} {'Hypothesis':<12} {'vs Old':<15}")
+    print("-" * 90)
 
     avg_cost_reduction = ((old_avg_cost - new_avg_cost) / old_avg_cost) * 100
-    print(f"{'Average Cost per Entity':<40} ${old_avg_cost:.2f} ± ${old_std_cost:.2f}     ${new_avg_cost:.2f} ± ${new_std_cost:.2f}     {avg_cost_reduction:+.1f}%")
+    print(f"{'Average Cost per Entity':<40} ${old_avg_cost:.2f}     ${early_avg_cost:.2f}     ${new_avg_cost:.2f}     {avg_cost_reduction:+.1f}%")
 
     avg_iter_reduction = ((old_avg_iter - new_avg_iter) / old_avg_iter) * 100
-    print(f"{'Average Iterations per Entity':<40} {old_avg_iter:.1f}<{' ' * 15} {new_avg_iter:.1f}<{' ' * 15} {avg_iter_reduction:+.1f}%")
+    print(f"{'Average Iterations per Entity':<40} {old_avg_iter:.1f}        {early_avg_iter:.1f}        {new_avg_iter:.1f}        {avg_iter_reduction:+.1f}%")
 
     old_min_cost = min(r.total_cost for r in old_results)
+    early_min_cost = min(r.total_cost for r in early_stop_results)
     new_min_cost = min(r.total_cost for r in new_results)
     old_max_cost = max(r.total_cost for r in old_results)
+    early_max_cost = max(r.total_cost for r in early_stop_results)
     new_max_cost = max(r.total_cost for r in new_results)
 
-    print(f"{'Min Cost per Entity':<40} ${old_min_cost:.2f}<{' ' * 15} ${new_min_cost:.2f}<{' ' * 15}")
-    print(f"{'Max Cost per Entity':<40} ${old_max_cost:.2f}<{' ' * 15} ${new_max_cost:.2f}<{' ' * 15}")
+    print(f"{'Min Cost per Entity':<40} ${old_min_cost:.2f}        ${early_min_cost:.2f}        ${new_max_cost:.2f}")
+    print(f"{'Max Cost per Entity':<40} ${old_max_cost:.2f}        ${early_max_cost:.2f}        ${new_max_cost:.2f}")
 
     # Confidence distribution
     old_avg_conf = statistics.mean(r.avg_confidence for r in old_results)
+    early_avg_conf = statistics.mean(r.avg_confidence for r in early_stop_results)
     new_avg_conf = statistics.mean(r.avg_confidence for r in new_results)
 
     print(f"\n📊 CONFIDENCE QUALITY")
-    print("-" * 80)
-    print(f"{'Average Final Confidence':<40} {old_avg_conf:.3f}<{' ' * 15} {new_avg_conf:.3f}<{' ' * 15}")
+    print("-" * 90)
+    print(f"{'Average Final Confidence':<40} {old_avg_conf:.3f}        {early_avg_conf:.3f}        {new_avg_conf:.3f}")
 
     # Lifecycle status distribution (new system only)
     status_counts = {"PROMOTED": 0, "DEGRADED": 0, "SATURATED": 0, "ACTIVE": 0}
@@ -336,7 +464,7 @@ def print_statistics(old_results: List[SimulationResult], new_results: List[Simu
             status_counts[status] += 1
 
     print(f"\n📊 NEW SYSTEM: LIFECYCLE DISTRIBUTION")
-    print("-" * 80)
+    print("-" * 90)
     total_hypotheses = sum(status_counts.values())
     for status, count in status_counts.items():
         percentage = (count / total_hypotheses) * 100
@@ -344,7 +472,7 @@ def print_statistics(old_results: List[SimulationResult], new_results: List[Simu
 
     # Detailed breakdown by cost quartile
     print(f"\n📊 COST DISTRIBUTION BREAKDOWN")
-    print("-" * 80)
+    print("-" * 90)
 
     new_sorted = sorted(new_results, key=lambda r: r.total_cost)
     quartile_size = len(new_sorted) // 4
@@ -365,9 +493,9 @@ def print_statistics(old_results: List[SimulationResult], new_results: List[Simu
 
     # Top 10 entities by actionables
     print(f"\n🏆 TOP 10 ENTITIES (by actionables found)")
-    print("-" * 80)
+    print("-" * 90)
     print(f"{'Entity ID':<15} {'System':<12} {'Cost':<10} {'Iters':<8} {'Actionables':<12}")
-    print("-" * 80)
+    print("-" * 90)
 
     old_sorted_by_actionables = sorted(old_results, key=lambda r: r.actionables_found, reverse=True)[:10]
     new_sorted_by_actionables = sorted(new_results, key=lambda r: r.actionables_found, reverse=True)[:10]
@@ -378,16 +506,16 @@ def print_statistics(old_results: List[SimulationResult], new_results: List[Simu
         print(f"{old_r.entity_id:<15} {'OLD':<12} ${old_r.total_cost:<9.2f} {old_r.iterations:<8} {old_r.actionables_found:<12}")
         print(f"{'':15} {'NEW':<12} ${new_r.total_cost:<9.2f} {new_r.iterations:<8} {new_r.actionables_found:<12}")
         if i < 9:
-            print(f"{'-'*80}")
+            print(f"{'-'*90}")
 
 
 def main():
-    """Run simulation comparing both systems"""
+    """Run simulation comparing all three systems"""
 
-    print("\n" + "="*80)
+    print("\n" + "="*90)
     print("SYSTEM COMPARISON SIMULATION")
-    print("Old Ralph Loop vs Hypothesis-Driven Discovery")
-    print("="*80)
+    print("Old vs Early-Stop-Only vs Hypothesis-Driven Discovery")
+    print("="*90)
 
     # Generate 100 synthetic entities
     print("\n🎲 Generating 100 synthetic entities...")
@@ -399,21 +527,28 @@ def main():
     old_results = [old_simulator.simulate(entity) for entity in entities]
     print(f"   ✅ Completed {len(old_results)} entities")
 
+    # Simulate early-stop-only system
+    print("\n🔄 Simulating EARLY-STOP-ONLY (confidence-gated, no EIG)...")
+    early_stop_simulator = EarlyStopOnlySimulator(cost_per_hop=0.02)
+    early_stop_results = [early_stop_simulator.simulate(entity) for entity in entities]
+    print(f"   ✅ Completed {len(early_stop_results)} entities")
+
     # Simulate new system
-    print("\n🔄 Simulating NEW Hypothesis-Driven Discovery...")
+    print("\n🔄 Simulating FULL HYPOTHESIS-DRIVEN (EIG + hypotheses)...")
     new_simulator = HypothesisDrivenSimulator(cost_per_hop=0.02)
     new_results = [new_simulator.simulate(entity) for entity in entities]
     print(f"   ✅ Completed {len(new_results)} entities")
 
     # Print statistics
-    print_statistics(old_results, new_results)
+    print_statistics(old_results, early_stop_results, new_results)
 
     # Scaling projections
-    print("\n" + "="*80)
+    print("\n" + "="*90)
     print("SCALING PROJECTIONS")
-    print("="*80)
+    print("="*90)
 
     old_avg_cost = statistics.mean(r.total_cost for r in old_results)
+    early_avg_cost = statistics.mean(r.total_cost for r in early_stop_results)
     new_avg_cost = statistics.mean(r.total_cost for r in new_results)
 
     scenarios = [
@@ -423,34 +558,33 @@ def main():
         ("Phase 3 (All UK sports entities, ~500K)", 500000),
     ]
 
-    print(f"\n{'Scenario':<40} {'Old Cost':<15} {'New Cost':<15} {'Savings':<15}")
-    print("-" * 80)
+    print(f"\n{'Scenario':<40} {'Old':<12} {'Early-Stop':<12} {'Hypothesis':<12}")
+    print("-" * 90)
 
     for scenario_name, entity_count in scenarios:
         old_cost = old_avg_cost * entity_count
+        early_cost = early_avg_cost * entity_count
         new_cost = new_avg_cost * entity_count
-        savings = old_cost - new_cost
-        savings_pct = (savings / old_cost) * 100
+        print(f"{scenario_name:<40} ${old_cost:>8,.0f}   ${early_cost:>8,.0f}   ${new_cost:>8,.0f}")
 
-        print(f"{scenario_name:<40} ${old_cost:>10,.0f}   ${new_cost:>10,.0f}   ${savings:>10,.0f} ({savings_pct:>5.1f}%)")
-
-    print("\n" + "="*80)
+    print("\n" + "="*90)
     print("SIMULATION COMPLETE")
-    print("="*80)
+    print("="*90)
 
     # Save detailed results
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_file = f"data/simulation_results_{timestamp}.txt"
+    output_file = f"data/simulation_results_3way_{timestamp}.txt"
 
     with open(output_file, 'w') as f:
-        f.write("ENTITY-BY-ENTITY RESULTS\n")
-        f.write("="*80 + "\n\n")
+        f.write("ENTITY-BY-ENTITY RESULTS (3-WAY COMPARISON)\n")
+        f.write("="*90 + "\n\n")
 
-        for i, (old_r, new_r) in enumerate(zip(old_results, new_results)):
+        for i, (old_r, early_r, new_r) in enumerate(zip(old_results, early_stop_results, new_results)):
             f.write(f"Entity: {old_r.entity_id}\n")
-            f.write(f"  OLD: ${old_r.total_cost:.2f}, {old_r.iterations} iters, {old_r.actionables_found} actionables\n")
-            f.write(f"  NEW: ${new_r.total_cost:.2f}, {new_r.iterations} iters, {new_r.actionables_found} actionables\n")
-            f.write(f"  Savings: ${old_r.total_cost - new_r.total_cost:.2f} ({((old_r.total_cost - new_r.total_cost)/old_r.total_cost)*100:.1f}%)\n")
+            f.write(f"  OLD:           ${old_r.total_cost:.2f}, {old_r.iterations} iters, {old_r.actionables_found} actionables\n")
+            f.write(f"  EARLY-STOP:    ${early_r.total_cost:.2f}, {early_r.iterations} iters, {early_r.actionables_found} actionables\n")
+            f.write(f"  HYPOTHESIS:    ${new_r.total_cost:.2f}, {new_r.iterations} iters, {new_r.actionables_found} actionables\n")
+            f.write(f"  Savings (vs Old): ${old_r.total_cost - new_r.total_cost:.2f} ({((old_r.total_cost - new_r.total_cost)/old_r.total_cost)*100:.1f}%)\n")
             f.write("\n")
 
     print(f"\n💾 Detailed results saved to: {output_file}")

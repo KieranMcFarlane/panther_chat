@@ -1,0 +1,191 @@
+{
+  "entity_id": "flamengo",
+  "entity_name": "Flamengo",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "flamengo.com.br",
+    "flamengofc.com.br",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/clube-de-regatas-do-flamengo-jobs-worldwide",
+      "https://sk.linkedin.com/jobs/view/senior-accountant-at-flamengo-kv%C4%9Btiny-2767384760?refId=p2XulPKMMLyrUzM3Evqsyg%3D%3D&trackingId=TvTOelwi218LIs0nk9zZ1Q%3D%3D&position=11&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "flamengo",
+      "entity_name": "Flamengo",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://onefootball.com",
+        "https://sk.linkedin.com/jobs/view/senior-accountant-at-flamengo-kv%C4%9Btiny-2767384760?refId=p2XulPKMMLyrUzM3Evqsyg%3D%3D&trackingId=TvTOelwi218LIs0nk9zZ1Q%3D%3D&position=11&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://flamengo.com.br",
+        "https://www.linkedin.com/jobs/clube-de-regatas-do-flamengo-jobs-worldwide",
+        "https://flamengofc.com.br"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Flamengo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:12:50.376213",
+          "domain_explored": "https://flamengo.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:13:01.891334",
+          "domain_explored": "https://flamengofc.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP (detected in portal URL: portal_indexInscricao-32.php)",
+              "JavaScript (Required for site functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legacy Portal Infrastructure (Potential modernization opportunity, but no active signal)",
+              "Event Management Operations (Ballet, Festivals)"
+            ]
+          },
+          "patterns_found": [
+            "Member Portal (Legacy PHP)",
+            "Event Management (Mengofolia)",
+            "Sports Facilities (Academia/V\u00f4lei)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 254,
+              "elapsed_seconds": 5.9323410987854
+            }
+          ],
+          "reasoning": "The content is focused on B2C member services, event schedules (Mengofolia), and facility updates (Academia/V\u00f4lei). While there is a link to a 'Solicitar Coringa' (ticket/entry request) and a PHP-based member portal, these are operational, member-facing tools rather than corporate procurement signals or technology stack upgrades."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:13:05.137575",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:13:13.003772",
+          "domain_explored": "https://www.linkedin.com/jobs/clube-de-regatas-do-flamengo-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs"
+            ],
+            "job_postings": [
+              "Atendente (Attendant/Clerk) - Greater Rio de Janeiro",
+              "TREINADOR ESPORTIVO (Gin\u00e1stica Art\u00edstica Feminina) - Juvenil e Adulto (Coach)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for operational roles",
+              "Use of professional recruitment platforms"
+            ]
+          },
+          "patterns_found": [
+            "Operational Hiring (Atendente)",
+            "Sports Coaching Staff (Gin\u00e1stica Art\u00edstica)",
+            "LinkedIn Recruitment Portal Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.375505208969116
+            }
+          ],
+          "reasoning": "While the content is largely repetitive login-gated text, specific job titles ('Atendente', 'TREINADOR ESPORTIVO') are visible. This confirms active HR operations and hiring capacity, a prerequisite for procurement, but lacks specific technical or purchasing signals to warrant a full ACCEPT."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:13:22.243161",
+          "domain_explored": "https://sk.linkedin.com/jobs/view/senior-accountant-at-flamengo-kv%C4%9Btiny-2767384760?refId=p2XulPKMMLyrUzM3Evqsyg%3D%3D&trackingId=TvTOelwi218LIs0nk9zZ1Q%3D%3D&position=11&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant (Flamengo kv\u011btiny - Slovakia)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Florist vs. Sports Club)",
+            "False Positive Brand Name",
+            "Irrelevant Geography (Slovakia vs. Brazil)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1583,
+              "output_tokens": 208,
+              "elapsed_seconds": 5.892167091369629
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Flamengo kv\u011btiny' (Flamengo Flowers), a retail florist chain based in Slovakia/Czech Republic and owned by ST.NICOLAUS GROUP. This is a false positive match for the target entity 'Clube de Regatas do Flamengo' (the Brazilian sports club). The job posting for a Senior Accountant is unrelated to the procurement intelligence of the Brazilian entity."
+        }
+      ],
+      "total_input_tokens": 4442,
+      "total_output_tokens": 713,
+      "estimated_cost_usd": 0.024021
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Flamengo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:13:22.245142"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.115337",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:50.938366"
+}

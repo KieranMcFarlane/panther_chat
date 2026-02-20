@@ -1,0 +1,145 @@
+{
+  "entity_id": "corinthians_basquete",
+  "entity_name": "Corinthians Basquete",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "corinthians.com.br",
+    "meutimao.com.br",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "corinthians_basquete",
+      "entity_name": "Corinthians Basquete",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://meutimao.com.br",
+        "https://corinthians.com.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Corinthians Basquete may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:38:53.520909",
+          "domain_explored": "https://corinthians.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports schedule data",
+            "Venue naming rights (Neo Qu\u00edmica Arena)",
+            "Repetitive content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.051008939743042
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of a repetitive list of football match schedules for 2026 (Supercopa do Brasil, Paulist\u00e3o, Campeonato Brasileiro). There is no mention of 'Corinthians Basquete', nor are there any signals regarding technology procurement, job postings, or governance structures. The content is irrelevant to the specific entity and focus areas defined."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:39:19.619263",
+          "domain_explored": "https://meutimao.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Fan engagement metrics (likes/shares)",
+            "Repetitive sports journalism structure",
+            "Title celebration content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 954,
+              "output_tokens": 184,
+              "elapsed_seconds": 18.21580219268799
+            }
+          ],
+          "reasoning": "The scraped content from 'Meu Tim\u00e3o' is a sports news portal focused on match results, player performance, and fan engagement (likes/comments). There are no indicators of corporate operations, technology infrastructure, or procurement activities. The content is purely related to on-field performance and fan interaction."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:39:31.790053",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports data aggregation",
+            "Global competition indexing",
+            "Static navigation structure",
+            "No entity-specific content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.514787197113037
+            }
+          ],
+          "reasoning": "The scraped content is a generic global sports index (Global Sports Archive) focusing on soccer leagues and tournaments worldwide. It contains no specific information regarding 'Corinthians Basquete', nor does it contain procurement signals, technology stacks, or governance data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3783,
+      "total_output_tokens": 547,
+      "estimated_cost_usd": 0.019554000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Corinthians Basquete may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:39:31.790842"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.234199",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:25.087273"
+}

@@ -1,0 +1,264 @@
+{
+  "entity_id": "london_scottish",
+  "entity_name": "London Scottish",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "londonscottish.com",
+    "londonscottishgolfclub.com",
+    "londonscottishhouse.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/community-engagement-officer-at-london-scottish-rfc-4336061864",
+      "https://uk.linkedin.com/jobs/community-engagement-officer-jobs-london-colney"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "london_scottish",
+      "entity_name": "London Scottish",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/community-engagement-officer-at-london-scottish-rfc-4336061864",
+        "https://londonscottish.com",
+        "https://londonscottishgolfclub.com",
+        "https://uk.linkedin.com/jobs/community-engagement-officer-jobs-london-colney",
+        "https://londonscottishhouse.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive-Level Hiring (Strategic Investment)",
+        "Revenue Generation Targets",
+        "Grant Funding Management",
+        "Brand & Marketing Consolidation",
+        "Stakeholder Partnership Management (RFU, SRU, Local Councils)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "London Scottish may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:25:30.384110",
+          "domain_explored": "https://londonscottish.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kitlocker (Third-party Merchandise Platform)",
+              "Likely CMS-based site structure (implied by dynamic navigation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced E-commerce: Merchandise operations handled via 'london-scottish-fc.kitlocker.store', indicating a B2B partnership for retail."
+            ]
+          },
+          "patterns_found": [
+            "Standard Sports Club Navigation Structure",
+            "E-commerce Integration (Kitlocker)",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 253,
+              "elapsed_seconds": 4.025839805603027
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of main navigation menu items and footer links. While this confirms the site structure and identifies a third-party e-commerce vendor (Kitlocker), it contains no specific signals regarding active procurement, job vacancies, or technology upgrades. It serves only as a site map."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:25:41.971228",
+          "domain_explored": "https://londonscottishgolfclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Booking System (Specific vendor TBD)",
+              "Content Management System (CMS)",
+              "Payment Processing (Implied by 'Book')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Hire & Catering Procurement",
+              "Membership Management Software Usage",
+              "Online Tee-Time Booking System"
+            ]
+          },
+          "patterns_found": [
+            "Online Booking System (B2C SaaS)",
+            "Venue Hire & Catering Services",
+            "Membership Management (CRM)",
+            "CMS Content Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 289,
+              "elapsed_seconds": 4.112285852432251
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing, the explicit mention of an 'online booking system' for green fees and the management of 'membership options' indicates the use of SaaS platforms (Booking Engines, CRM). The 'Venue Hire' section suggests procurement needs for catering and event management vendors. This confirms the entity operates as a service business requiring digital tools, justifying a small confidence increase."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:25:58.960450",
+          "domain_explored": "https://londonscottishhouse.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Booking Engine (B2C SaaS)",
+              "E-commerce Platform (Online Shop)",
+              "Payment Processing (QR Code/Donation Links)",
+              "CMS (Static Site)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Entity (London SH Ltd)",
+              "Compliance Framework (AML, Anti-Bribery Policies)",
+              "Capital Maintenance Needs (Grade 2 Listed Building Repairs)",
+              "Service Outsourcing (Virtual Office, Parking Management)"
+            ]
+          },
+          "patterns_found": [
+            "Social Enterprise Governance",
+            "Facilities Management Services",
+            "Venue & Hospitality Operations",
+            "Charitable Trust Structure",
+            "Online Booking & E-commerce"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 389,
+              "elapsed_seconds": 8.142335891723633
+            }
+          ],
+          "reasoning": "The content reveals London Scottish House (LSH) as a distinct entity from the rugby club, operating as a Grade 2 listed social enterprise and charity. The presence of 'Online Booking', 'Accommodation', 'Online Shop', and 'Events & Hospitality' indicates a commercial operation requiring B2C SaaS tools (Booking engines, CRM). The explicit listing of 'Anti-Money Laundering', 'Anti-Bribery', and 'Fair Trade' policies suggests a mature governance structure typical of organizations with formal procurement compliance requirements. The mention of 'London SH Ltd' (Company Number 14076418) confirms a corporate vehicle capable of entering contracts."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:26:13.121184",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/community-engagement-officer-at-london-scottish-rfc-4336061864",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Customer Relationship Management)",
+              "Event Management Platforms",
+              "Social Media Management Tools",
+              "Analytics/Reporting Software"
+            ],
+            "job_postings": [
+              "Community Engagement Officer (Executive Level)"
+            ],
+            "procurement_indicators": [
+              "Budget allocation for 'competitive salary' and benefits",
+              "Upcoming 150th Anniversary (2028) capital projects/events",
+              "Grant funding acquisition and management",
+              "Revenue generation via holiday camps and clinics",
+              "Partnership development with external sporting bodies (RFU/SRU)"
+            ]
+          },
+          "patterns_found": [
+            "Executive-Level Hiring (Strategic Investment)",
+            "Revenue Generation Targets",
+            "Grant Funding Management",
+            "Brand & Marketing Consolidation",
+            "Stakeholder Partnership Management (RFU, SRU, Local Councils)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 410,
+              "elapsed_seconds": 5.81469202041626
+            }
+          ],
+          "reasoning": "The posting for a Community Engagement Officer reveals a strategic shift towards commercializing community outreach. The role sits on the Executive Team, indicating high-level governance involvement. Key procurement triggers include the requirement to manage grant funding applications, deliver revenue-generating holiday camps, and coordinate with external bodies (RFU, SRU). This signals a need for CRM systems, event management software, and potentially external consultancy for major upcoming milestones like the 150th anniversary in 2028."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:26:30.787413",
+          "domain_explored": "https://uk.linkedin.com/jobs/community-engagement-officer-jobs-london-colney",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive Assistant at LoopMe (Unrelated)",
+              "Community Engagement Officer at Association Of British Orchestras (Unrelated)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results Page",
+            "Unrelated Entities (Association Of British Orchestras, LoopMe)",
+            "Login Wall / Gated Content",
+            "Geographic Mismatch (London Colney vs London Scottish)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 255,
+              "elapsed_seconds": 3.8914778232574463
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn search results page for 'Community Engagement Officer' roles in 'London Colney'. It lists jobs for unrelated entities such as the 'Association of British Orchestras' and 'LoopMe'. There is no mention of London Scottish, nor is there specific procurement intelligence relevant to the target entity. The content is effectively noise generated by a broad search query."
+        }
+      ],
+      "total_input_tokens": 7401,
+      "total_output_tokens": 1596,
+      "estimated_cost_usd": 0.046143
+    },
+    "procurement_signals": [
+      "Executive-Level Hiring (Strategic Investment)",
+      "Revenue Generation Targets",
+      "Grant Funding Management",
+      "Brand & Marketing Consolidation",
+      "Stakeholder Partnership Management (RFU, SRU, Local Councils)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "London Scottish may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:26:30.789968"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280467",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:30.070012"
+}

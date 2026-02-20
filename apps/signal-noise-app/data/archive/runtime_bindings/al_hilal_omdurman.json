@@ -1,0 +1,176 @@
+{
+  "entity_id": "al_hilal_omdurman",
+  "entity_name": "Al Hilal Omdurman",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "sundownsfc.co.za",
+    "footballdatabase.eu",
+    "livesoccertv.com",
+    "footystats.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_hilal_omdurman",
+      "entity_name": "Al Hilal Omdurman",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://footballdatabase.eu",
+        "https://sundownsfc.co.za",
+        "https://livesoccertv.com",
+        "https://footystats.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Hilal Omdurman may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:24:52.018261",
+          "domain_explored": "https://sundownsfc.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "navigation_structure_only"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.07855486869812
+            }
+          ],
+          "reasoning": "The scraped content is from the website of Mamelodi Sundowns FC (sundownsfc.co.za), a South African football club. This is completely unrelated to the target entity, Al Hilal Omdurman (Sudan). The content contains only navigation menu items and links to team fixtures, news, and galleries. There are no procurement signals, job postings, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:24:58.935888",
+          "domain_explored": "https://footballdatabase.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "aggregation_site",
+            "statistical_content",
+            "token_limit_truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 417,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.4911141395568848
+            }
+          ],
+          "reasoning": "The target URL (footballdatabase.eu) is a third-party sports statistics aggregator. It contains no information regarding Al Hilal Omdurman's internal operations, procurement needs, or technology stack. The content provided is truncated generic site text, offering no actionable intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:25:06.055144",
+          "domain_explored": "https://livesoccertv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "broadcast_schedule",
+            "third_party_aggregation",
+            "consumer_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.565321922302246
+            }
+          ],
+          "reasoning": "The content is a TV schedule listing for sports matches. While it mentions 'Al Hilal vs Al-Ahli', this is purely fixture data for broadcast purposes (Fox Soccer Plus, fuboTV). It provides no insight into the internal operations, technology stack, or procurement activities of the Al Hilal Omdurman entity. The domain is a media aggregator."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:25:13.789315",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "statistical_aggregation",
+            "odds_betting_data",
+            "global_league_coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.288743019104004
+            }
+          ],
+          "reasoning": "The content is entirely focused on global football statistics, match odds, and league tables. It is a third-party data aggregation site (FootyStats) and contains no information regarding Al Hilal Omdurman's internal operations, governance, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 4699,
+      "total_output_tokens": 670,
+      "estimated_cost_usd": 0.024147000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Hilal Omdurman may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:25:13.791417"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.185499",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:31.308296"
+}

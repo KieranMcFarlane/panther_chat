@@ -1,0 +1,127 @@
+{
+  "entity_id": "oberwart_gunners",
+  "entity_name": "Oberwart Gunners",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "grokipedia.com",
+    "zoominfo.com",
+    "basketballaustria.tv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "oberwart_gunners",
+      "entity_name": "Oberwart Gunners",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://zoominfo.com",
+        "https://basketballaustria.tv"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Oberwart Gunners may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:11:22.093114",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:11:29.815232",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "generic_sales_testimonials",
+            "irrelevant_b2b_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1386,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.6854398250579834
+            }
+          ],
+          "reasoning": "The provided content is generic marketing copy from ZoomInfo's homepage. It contains no specific information regarding 'Oberwart Gunners', their procurement activities, technology stack, or decision-making structure. The text describes ZoomInfo's product features and contains testimonials from unrelated entities (Seismic, McGriff), serving as noise rather than a signal for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:11:39.695781",
+          "domain_explored": "https://basketballaustria.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "javascript_dependency",
+            "client_side_rendering",
+            "empty_content_state"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 465,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.3396241664886475
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a browser compatibility message requiring JavaScript. This indicates the site is a client-side rendered application (likely a video streaming platform) that returned no usable HTML content for analysis. There are no procurement signals, technology stack details, or business intelligence available in this raw data."
+        }
+      ],
+      "total_input_tokens": 1851,
+      "total_output_tokens": 357,
+      "estimated_cost_usd": 0.010908000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Oberwart Gunners may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:11:39.697783"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227604",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:15:16.556815"
+}

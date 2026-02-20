@@ -1,0 +1,411 @@
+{
+  "entity_id": "rb_leipzig",
+  "entity_name": "RB Leipzig",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "rbleipzig.com",
+    "redbullshop.com",
+    "bundesliga.com",
+    "redbull.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/rb-leipzig-jobs-worldwide",
+      "https://www.linkedin.com/company/red-bull/jobs",
+      "https://sg.linkedin.com/company/red-bull/jobs",
+      "https://www.linkedin.com/jobs/professional-jobs-leipzig?trk=public_jobs_related_jserp_link",
+      "https://de.linkedin.com/jobs/rb-leipzig-stellen",
+      "https://www.linkedin.com/jobs/red-bull-jobs/?f_C=165686%2C12427919%2C2728219&geoId=103883259&trk=top-companies-2022-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rb_leipzig",
+      "entity_name": "RB Leipzig",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://rbleipzig.com",
+        "https://de.linkedin.com/jobs/rb-leipzig-stellen",
+        "https://www.linkedin.com/company/red-bull/jobs",
+        "https://www.linkedin.com/jobs/rb-leipzig-jobs-worldwide",
+        "https://sg.linkedin.com/company/red-bull/jobs",
+        "https://www.linkedin.com/jobs/professional-jobs-leipzig?trk=public_jobs_related_jserp_link",
+        "https://redbullshop.com",
+        "https://bundesliga.com",
+        "https://redbull.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation Hiring",
+        "Financial Governance Expansion",
+        "Performance Analytics Investment",
+        "Academy/Training Structure Procurement",
+        "Financial Governance Expansion",
+        "Digital Analytics Investment",
+        "Performance Science Procurement",
+        "Direct RB Leipzig Hiring"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RB Leipzig may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:40:15.211160",
+          "domain_explored": "https://rbleipzig.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive placeholder text",
+            "German language repetition",
+            "Lack of semantic content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 372,
+              "output_tokens": 152,
+              "elapsed_seconds": 2.809028148651123
+            }
+          ],
+          "reasoning": "The provided content consists solely of the repeated German word 'Erfolgreich' (Successful) and appears to be truncated or placeholder text. There is no semantic information regarding job postings, technology stacks, or procurement activities to analyze."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:40:35.173185",
+          "domain_explored": "https://redbullshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory management for RB Leipzig branded merchandise",
+              "Global logistics for 'International Collection'"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce interface",
+            "Global brand aggregation",
+            "Merchandise inventory management",
+            "Repetitive promotional content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 211,
+              "elapsed_seconds": 9.10832691192627
+            }
+          ],
+          "reasoning": "The content is from the consumer-facing Red Bull Shop. While RB Leipzig is listed as a 'Team' entity, the page content is strictly focused on retail sales (goggles, jerseys, collaborations) and lacks any B2B procurement context, technology infrastructure details, or organizational governance signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:40:43.024561",
+          "domain_explored": "https://bundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C sports journalism",
+            "Transfer window aggregation",
+            "Generic league-wide content",
+            "Lack of entity-specific granularity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 559,
+              "output_tokens": 207,
+              "elapsed_seconds": 4.527544736862183
+            }
+          ],
+          "reasoning": "The content is a high-level, league-wide news update regarding the January transfer window. While transfer activity implies player procurement, this specific page is a journalistic summary rather than a procurement signal, job posting, or technology investment indicator specific to RB Leipzig. It lacks the necessary granularity (vendor names, tech stack, or organizational roles) to be actionable for procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:40:49.361858",
+          "domain_explored": "https://redbull.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global brand content aggregation",
+            "B2C product marketing (Energy Drinks)",
+            "Sports journalism (Formula 1)",
+            "High content repetition (scraping artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.313807725906372
+            }
+          ],
+          "reasoning": "The content is entirely focused on global Red Bull brand marketing (F1 news, energy drink products) and lacks any specific governance, operational, or procurement relevance to the RB Leipzig football club entity. The domain is too broad and does not serve as a source for club-specific procurement signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:40:57.356823",
+          "domain_explored": "https://www.linkedin.com/jobs/rb-leipzig-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Analytics Tools (Adobe/GA4)",
+              "Data Visualization Platforms (Tableau/PowerBI)",
+              "ERP Systems (SAP/Oracle)",
+              "CRM Systems (Salesforce/HubSpot)",
+              "Nutrition Tracking Software"
+            ],
+            "job_postings": [
+              "Digital Analytics Manager (m/w/*)",
+              "Financial Accountant (m/w/*)",
+              "Performance Nutritionist Academy (m/f/*)"
+            ],
+            "procurement_indicators": [
+              "Digital Transformation & Data Strategy",
+              "Financial Compliance & Accounting Standards",
+              "Sports Science & Nutrition Supply Chain",
+              "Academy Program Operations"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Hiring",
+            "Financial Governance Expansion",
+            "Performance Analytics Investment",
+            "Academy/Training Structure Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1561,
+              "output_tokens": 415,
+              "elapsed_seconds": 4.533951044082642
+            }
+          ],
+          "reasoning": "The content reveals direct procurement and organizational expansion signals through active job postings. The 'Digital Analytics Manager' role indicates investment in data infrastructure and analytics platforms (e.g., Adobe Analytics, Google Analytics 360, Tableau). The 'Financial Accountant' role suggests financial governance and ERP system usage (e.g., SAP). The 'Performance Nutritionist Academy' role highlights procurement related to sports science, nutrition supply chains, and educational program management. These roles confirm active budget allocation for technology, operations, and performance infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:41:06.713030",
+          "domain_explored": "https://www.linkedin.com/company/red-bull/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "Global E-Commerce Platforms"
+            ],
+            "job_postings": [
+              "Communications Manager - Music (Salzburg)",
+              "Intern Marketing (Hamburg)",
+              "International Category Development Manager E-Commerce (Salzburg)",
+              "Regional Wholesale Manager (Cairo)"
+            ],
+            "procurement_indicators": [
+              "International Category Development (E-Commerce)",
+              "Regional Wholesale Management"
+            ]
+          },
+          "patterns_found": [
+            "Global Brand Aggregation",
+            "B2C Marketing Focus",
+            "Geographic Dispersion",
+            "Student/Intern Recruitment Volume"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1618,
+              "output_tokens": 327,
+              "elapsed_seconds": 6.009476900100708
+            }
+          ],
+          "reasoning": "The content is scraped from the global Red Bull parent company page, not the RB Leipzig entity. While it reveals high-level corporate functions (E-Commerce, Wholesale Management), the specific job listings are geographically dispersed (Salzburg, Cairo, Bursa, Scotland) and focused on consumer marketing (Student Marketeers) rather than the specific procurement or operational infrastructure of the football club RB Leipzig. This represents a dilution of the target entity scope."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:41:14.164097",
+          "domain_explored": "https://sg.linkedin.com/company/red-bull/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Communications Manager - Music",
+              "Intern Marketing - Hamburg",
+              "International Category Development Manager E-Commerce",
+              "Regional Wholesale Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Brand Aggregation",
+            "B2C Marketing Focus",
+            "Geographic Dispersion",
+            "Student/Field Marketing Roles",
+            "Music/Event Communications"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1668,
+              "output_tokens": 253,
+              "elapsed_seconds": 4.223652124404907
+            }
+          ],
+          "reasoning": "The content is scraped from the global Red Bull corporate page, not the RB Leipzig entity. The job listings (Communications Manager - Music, Student Marketeer, Regional Wholesale Manager) are focused on consumer marketing, music events, and beverage sales distribution. There are no signals relevant to the procurement, operations, or digital transformation of the football club RB Leipzig."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:41:21.832796",
+          "domain_explored": "https://www.linkedin.com/jobs/professional-jobs-leipzig?trk=public_jobs_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Leipzig Cabin Crew Opportunities",
+                "company": "Emirates",
+                "relevance": "Low - Geographic match only, unrelated entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Geographic Aggregation",
+            "Unrelated Industry Recruitment (Aviation)",
+            "Login Gating / Authentication Wall",
+            "High Noise-to-Signal Ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1730,
+              "output_tokens": 260,
+              "elapsed_seconds": 3.9541478157043457
+            }
+          ],
+          "reasoning": "The content represents a generic geographic search for 'Professional Jobs in Leipzig' rather than specific roles at RB Leipzig. The primary listing is for Emirates Airline cabin crew, which is unrelated to the football club's operations. The page is dominated by repetitive login prompts and generic interface text, offering no specific insights into RB Leipzig's procurement, technology stack, or hiring needs."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:41:37.052419",
+          "domain_explored": "https://de.linkedin.com/jobs/rb-leipzig-stellen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Analytics Platforms",
+              "Financial Accounting Software (ERP)",
+              "Performance Nutrition Tracking"
+            ],
+            "job_postings": [
+              "Financial Accountant (m/w/*)",
+              "Digital Analytics Manager (m/w/*)",
+              "Performance Nutritionist Academy (m/f/*)"
+            ],
+            "procurement_indicators": [
+              "Financial Governance Expansion",
+              "Performance Analytics Investment",
+              "Academy/Training Program Supply Chain"
+            ]
+          },
+          "patterns_found": [
+            "Financial Governance Expansion",
+            "Digital Analytics Investment",
+            "Performance Science Procurement",
+            "Direct RB Leipzig Hiring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1790,
+              "output_tokens": 320,
+              "elapsed_seconds": 11.534690141677856
+            }
+          ],
+          "reasoning": "The content lists specific job postings directly under the 'RB Leipzig' entity, confirming active recruitment in Finance, Digital Analytics, and Performance Nutrition. These roles indicate specific departmental growth and associated procurement needs (software, nutrition supplies, financial tools). Unlike previous iterations, this is not a generic brand aggregate but a specific functional listing for the target entity."
+        }
+      ],
+      "total_input_tokens": 12201,
+      "total_output_tokens": 2328,
+      "estimated_cost_usd": 0.071523
+    },
+    "procurement_signals": [
+      "Digital Transformation Hiring",
+      "Financial Governance Expansion",
+      "Performance Analytics Investment",
+      "Academy/Training Structure Procurement",
+      "Financial Governance Expansion",
+      "Digital Analytics Investment",
+      "Performance Science Procurement",
+      "Direct RB Leipzig Hiring"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RB Leipzig may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:41:37.053421"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.125016",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:21.281127"
+}

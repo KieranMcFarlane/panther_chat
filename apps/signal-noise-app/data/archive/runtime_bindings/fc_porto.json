@@ -1,0 +1,147 @@
+{
+  "entity_id": "fc_porto",
+  "entity_name": "FC Porto",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "fcporto.pt",
+    "fcportolondon.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/4347724689/?utm_source=teamlyzer"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_porto",
+      "entity_name": "FC Porto",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fcporto.pt",
+        "https://apps.apple.com",
+        "https://www.linkedin.com/jobs/view/4347724689/?utm_source=teamlyzer",
+        "https://fcportolondon.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Porto may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:25:31.791550",
+          "domain_explored": "https://fcporto.pt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:25:44.615501",
+          "domain_explored": "https://fcportolondon.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership management (S\u00f3cio)",
+              "Event organization services"
+            ]
+          },
+          "patterns_found": [
+            "fan_engagement_platform",
+            "regional_delegation_structure",
+            "static_informational_site"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 442,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.5808188915252686
+            }
+          ],
+          "reasoning": "The content is from a regional fan delegation (London) and focuses on membership, social events, and fan club logistics. It lacks corporate governance, technology infrastructure details, or procurement intent relevant to the main FC Porto entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:25:48.072362",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:26:15.301929",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4347724689/?utm_source=teamlyzer",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_job_aggregation",
+            "irrelevant_search_results",
+            "united_states_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 176,
+              "elapsed_seconds": 19.75584363937378
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Engenheiro' (Engineer) roles in the United States. The entities listed (Honeywell, St. Onge Company, Centerline Logistics, City of Riverside) are unrelated to FC Porto. There is no content, link, or signal indicating FC Porto's procurement activities, technology stack, or hiring needs."
+        }
+      ],
+      "total_input_tokens": 1912,
+      "total_output_tokens": 350,
+      "estimated_cost_usd": 0.010986
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Porto may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:26:15.304544"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352398",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:14.154408"
+}

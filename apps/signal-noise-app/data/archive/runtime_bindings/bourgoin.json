@@ -1,0 +1,363 @@
+{
+  "entity_id": "bourgoin",
+  "entity_name": "Bourgoin",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "bourgoincognac.com",
+    "bourgoinjallieu.fr",
+    "perso.ens-lyon.fr",
+    "fcbourgoinjallieu.com",
+    "bestwestern-hotel-bourgoin.com",
+    "hebschool.ca"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://fr.linkedin.com/jobs/oui-emplois-bourgoin-jallieu",
+      "https://www.linkedin.com/jobs/consultant-jobs-lyon?trk=guest_job_search_related_jserp_link",
+      "https://www.linkedin.com/jobs/jobs-in-lyon?countryRedirected=1",
+      "https://www.linkedin.com/jobs/bouygues-energies-%26-services-jobs-worldwide",
+      "https://www.linkedin.com/jobs/rexel-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/duve-jobs-worldwide",
+      "https://bg.linkedin.com/jobs/view/associate-corporate-counsel-at-thermo-fisher-scientific-4021123566"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bourgoin",
+      "entity_name": "Bourgoin",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bourgoinjallieu.fr",
+        "https://perso.ens-lyon.fr",
+        "https://www.linkedin.com/jobs/jobs-in-lyon?countryRedirected=1",
+        "https://www.linkedin.com/jobs/rexel-france-jobs-worldwide",
+        "https://fcbourgoinjallieu.com",
+        "https://bestwestern-hotel-bourgoin.com",
+        "https://bourgoincognac.com",
+        "https://www.linkedin.com/jobs/bouygues-energies-%26-services-jobs-worldwide",
+        "https://hebschool.ca",
+        "https://fr.linkedin.com/jobs/oui-emplois-bourgoin-jallieu",
+        "https://www.linkedin.com/jobs/consultant-jobs-lyon?trk=guest_job_search_related_jserp_link"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bourgoin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:49:42.891829",
+          "domain_explored": "https://bourgoincognac.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:49:45.698353",
+          "domain_explored": "https://bourgoinjallieu.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:49:48.568818",
+          "domain_explored": "https://perso.ens-lyon.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:49:57.704872",
+          "domain_explored": "https://fcbourgoinjallieu.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with SAFTI (Insurance/Financial Services network)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Entity",
+            "Partnership Content",
+            "Future Date Anomaly (2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 742,
+              "output_tokens": 232,
+              "elapsed_seconds": 5.09475302696228
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'FC Bourgoin Jallieu' (Football Club), which is a sports organization, distinct from the industrial or commercial entities typically targeted for procurement intelligence in this context. The content focuses on a partner profile (SAFTI) rather than procurement needs or technology implementation. Additionally, the presence of a future date (2026) suggests potential data corruption or a system error on the source page, rendering it unreliable for current intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:50:30.503578",
+          "domain_explored": "https://bestwestern-hotel-bourgoin.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:50:38.612935",
+          "domain_explored": "https://hebschool.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "School Cash Online (Payment Portal)",
+              "PowerSchool (Implied by 'Report Cards Going Digital' standard in Alberta)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Transformation (Report Cards)",
+              "Outsourced Services (School Cash Online, Transportation)"
+            ]
+          },
+          "patterns_found": [
+            "Educational Institution Entity",
+            "K-12 School Context",
+            "Parent/Student Focus",
+            "Future Date Anomaly (2026)",
+            "Public Sector Governance (NLPS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.5097029209136963
+            }
+          ],
+          "reasoning": "The content confirms the entity is H.E. Bourgoin Middle School, a public school under Northern Lights Public Schools (NLPS) in Alberta. The focus is on student activities (Crazy Hair Day), operational logistics (School Cash Online, Bus Status), and administrative updates (Report Cards Going Digital). There are no procurement signals, corporate decision-making structures, or technology investment indicators relevant to a commercial vendor targeting 'Bourgoin'. This is a distinct entity from the target."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:50:51.815897",
+          "domain_explored": "https://fr.linkedin.com/jobs/oui-emplois-bourgoin-jallieu",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Wall",
+            "Dynamic Content Placeholder",
+            "Generic UI Text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 172,
+              "elapsed_seconds": 9.376744031906128
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's authentication interface (login forms, password recovery, and legal links) rather than actual job listings or company data. The content is blocked behind a login wall, preventing the extraction of specific procurement signals, technology stacks, or job postings relevant to the entity 'Bourgoin'."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:50:58.743958",
+          "domain_explored": "https://www.linkedin.com/jobs/consultant-jobs-lyon?trk=guest_job_search_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ivalua (mentioned in Capgemini job listing, indicates regional activity, not target entity adoption)"
+            ],
+            "job_postings": [
+              "Consultant Junior H/F - ADVENTS",
+              "Consultante / Consultant fonctionnel/e Senior Ivalua - Capgemini"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Wall",
+            "Generic Job Aggregator",
+            "Geographic Mismatch (Lyon vs Bourgoin-Jallieu)",
+            "Dynamic Content Placeholder"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1636,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.3026981353759766
+            }
+          ],
+          "reasoning": "The content represents a generic, authenticated LinkedIn job feed for the broader Lyon metropolitan area rather than the specific target entity 'Bourgoin'. While a specific procurement technology (Ivalua) is mentioned in a job title, it is associated with Capgemini (a vendor/consultancy), not the target entity Bourgoin. The page requires login to view details, preventing verification of relevance. No direct signals regarding Bourgoin's internal procurement, governance, or tech stack were found."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:51:07.542424",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-lyon?countryRedirected=1",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Charg\u00e9 d'accueil - Forum r\u00e9fugi\u00e9s",
+              "Charg\u00e9 d'Accompagnement Social - Forum r\u00e9fugi\u00e9s",
+              "Responsable du service scolarit\u00e9 centrale - Universit\u00e9 Claude Bernard Lyon 1"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Lyon/Villeurbanne vs Bourgoin-Jallieu)",
+            "Generic Job Aggregator",
+            "Non-Profit/Educational Context",
+            "Authentication Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.214601993560791
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job feed for the Lyon metropolitan area. The entities listed (Forum r\u00e9fugi\u00e9s, Universit\u00e9 Claude Bernard Lyon 1) are located in Lyon or Villeurbanne, not Bourgoin-Jallieu. There are no direct mentions of 'Bourgoin', nor are there specific procurement signals (RFPs, tech investments) relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:51:13.700754",
+          "domain_explored": "https://www.linkedin.com/jobs/bouygues-energies-%26-services-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Contract Manager (Italy)",
+              "Junior Project Buyer (UK)",
+              "Planner (Italy)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Bouygues vs Bourgoin)",
+            "Phonetic Similarity Error",
+            "Generic Job Aggregator",
+            "Geographic Dispersion (Worldwide/Italy/UK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.6785709857940674
+            }
+          ],
+          "reasoning": "The scraped content is for 'Bouygues Energies & Services', a large multinational industrial services firm, not 'Bourgoin'. The similarity is purely phonetic/orthographic. This entity is unrelated to the target procurement intelligence gathering for Bourgoin."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T19:51:20.307543",
+          "domain_explored": "https://www.linkedin.com/jobs/rexel-france-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Acheteur (H/F) - CDI - Paris (17\u00e8me) at Rexel France",
+              "Responsable R\u00e9gional des Ventes - Alsace H/F at Rexel France"
+            ],
+            "procurement_indicators": [
+              "Rexel is hiring for 'Acheteur' (Buyer) roles, but this is irrelevant to the target entity Bourgoin."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Rexel vs Bourgoin)",
+            "Phonetic Similarity Error",
+            "Authentication Wall",
+            "Generic Job Aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1825,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.2050259113311768
+            }
+          ],
+          "reasoning": "The scraped content is for 'Rexel France', a large electrical distribution company, and is unrelated to the target entity 'Bourgoin'. The URL likely appeared in search results due to phonetic similarity or keyword proximity, but the content confirms a different corporate entity. The page is also largely behind an authentication wall."
+        }
+      ],
+      "total_input_tokens": 10760,
+      "total_output_tokens": 1689,
+      "estimated_cost_usd": 0.057615
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bourgoin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:51:20.308618"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.276788",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:05.510022"
+}

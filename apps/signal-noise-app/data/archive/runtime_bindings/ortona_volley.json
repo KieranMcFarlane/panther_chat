@@ -1,0 +1,230 @@
+{
+  "entity_id": "ortona_volley",
+  "entity_name": "Ortona Volley",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "legavolley.it",
+    "grokipedia.com",
+    "lubevolley.it",
+    "fliphtml5.com",
+    "metropolitanmagazine.it",
+    "notiziedabruzzo.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ortona_volley",
+      "entity_name": "Ortona Volley",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://metropolitanmagazine.it",
+        "https://legavolley.it",
+        "https://grokipedia.com",
+        "https://fliphtml5.com",
+        "https://notiziedabruzzo.it",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ortona Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:50:55.443190",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Sponsorship Structure (Credem Banca, Del Monte)",
+              "Centralized Digital Platform (LegaVolley.it)"
+            ]
+          },
+          "patterns_found": [
+            "Generic League Navigation Structure",
+            "Standardized Team Listings",
+            "Public Statistical Archives"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 251,
+              "elapsed_seconds": 3.986083745956421
+            }
+          ],
+          "reasoning": "The content provided is a standard navigation menu and team roster for the broader Lega Volley league (SuperLega, A2, A3). It lists competitor teams (e.g., Itas Trentino, Lube Civitanova) and generic league resources (stats, media, documents). There is no specific mention of 'Ortona Volley' (which plays in Serie A2/A3) or any specific procurement, technology, or job signals related to the target entity. This content represents the broader ecosystem noise rather than a specific signal for Ortona."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:50:58.705388",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:51:05.045433",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Lube Volley vs Ortona Volley)",
+            "Generic News Aggregation",
+            "Fan Engagement Content",
+            "Sponsorship Branding (Del Monte\u00ae)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.9397289752960205
+            }
+          ],
+          "reasoning": "The scraped content is from Lube Volley (lubevolley.it), a different entity than the target Ortona Volley. The content consists of sports news, match results, and ticket sales, which are operational activities rather than procurement signals. There is no relevant intelligence for Ortona Volley on this page."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:51:11.088798",
+          "domain_explored": "https://fliphtml5.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FlipHTML5 (SaaS)",
+              "ChatGPT Integration",
+              "Pexels & Pixabay APIs"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SaaS Product Landing Page",
+            "Generic Marketing Copy",
+            "B2C/B2B Feature Listing",
+            "No Entity Specific Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 195,
+              "elapsed_seconds": 3.187268018722534
+            }
+          ],
+          "reasoning": "The scraped content is the homepage of FlipHTML5, a generic SaaS platform for creating digital flipbooks. There is absolutely no mention of 'Ortona Volley', nor any specific context linking this tool to the target entity. This is a vendor site, not a procurement signal from the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:51:17.029501",
+          "domain_explored": "https://metropolitanmagazine.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Navigation Structure",
+            "Broad Topic Taxonomy (Sport > Pallavolo)",
+            "Editorial Content Focus (Lifestyle, News, Gossip)",
+            "Standard Social Media Integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.9736902713775635
+            }
+          ],
+          "reasoning": "The target URL is a general interest online magazine (Metropolitan Magazine). While the site contains a taxonomy link for 'Pallavolo' (Volleyball), the content is purely editorial news aggregation and lifestyle journalism. There is no specific content related to 'Ortona Volley', nor are there any backend, corporate, or procurement-related signals (RFPs, vendor lists, tech stacks) associated with the target entity. The entity 'Ortona Volley' is not mentioned in the provided header/navigation text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:51:25.531459",
+          "domain_explored": "https://notiziedabruzzo.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Healthcare Sector Content",
+            "Regional News Aggregation",
+            "Entity Mismatch (Medical vs. Sports)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 921,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.5887792110443115
+            }
+          ],
+          "reasoning": "The content is a regional news article regarding a new cardiology procedure at the 'Renzetti' hospital in Lanciano. This represents a complete entity mismatch with the target 'Ortona Volley' (a sports organization). There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6729,
+      "total_output_tokens": 1032,
+      "estimated_cost_usd": 0.035667000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ortona Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:51:25.533210"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328937",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:21.153634"
+}

@@ -1,0 +1,352 @@
+{
+  "entity_id": "belgian_football_association",
+  "entity_name": "Belgian Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "footbel-prod2018.belgianfootball.be",
+    "play.google.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/royal-belgian-football-association-jobs",
+      "https://be.linkedin.com/jobs/football-jobs",
+      "https://be.linkedin.com/jobs/uefa-jobs",
+      "https://www.linkedin.com/jobs/view/3399269559",
+      "https://be.linkedin.com/jobs/view/education-manager-at-royal-belgian-football-association-4364381510",
+      "https://be.linkedin.com/jobs/view/internships-at-royal-belgian-football-association-4216310211",
+      "https://be.linkedin.com/jobs/view/data-scientist-at-royal-belgian-football-association-4340354415",
+      "https://be.linkedin.com/jobs/view/event-specialist-at-royal-belgian-football-association-4306206717",
+      "https://be.linkedin.com/jobs/voetbal-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_football_association",
+      "entity_name": "Belgian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://be.linkedin.com/jobs/football-jobs",
+        "https://www.linkedin.com/jobs/view/3399269559",
+        "https://be.linkedin.com/jobs/uefa-jobs",
+        "https://inside.fifa.com",
+        "https://footbel-prod2018.belgianfootball.be",
+        "https://be.linkedin.com/jobs/view/education-manager-at-royal-belgian-football-association-4364381510",
+        "https://be.linkedin.com/jobs/royal-belgian-football-association-jobs",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:55:48.124477",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.009171962738037
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global website (inside.fifa.com) and focuses on international tournaments (Women's Champions Cup) and global development programs (FIFA Forward). It contains no information regarding the Belgian Football Association (RBFA/KBVB), its local procurement activities, technology stack, or governance patterns. This is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:55:54.832965",
+          "domain_explored": "https://footbel-prod2018.belgianfootball.be",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:56:04.428989",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Content",
+            "Irrelevant Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.7958381175994873
+            }
+          ],
+          "reasoning": "The content provided is a direct scrape of the Google Play Store homepage (localized in Arabic). It lists consumer video games (e.g., Arknights, Clash of Clans, Harry Potter: Hogwarts Mystery) and device categories. There is absolutely no relation to the Belgian Football Association, its operations, or its procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:56:07.807946",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:56:17.740910",
+          "domain_explored": "https://be.linkedin.com/jobs/royal-belgian-football-association-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Legal Assistant (Tubize)",
+              "Education Manager (Tubize)"
+            ],
+            "procurement_indicators": [
+              "Organizational Growth (Hiring)",
+              "Investment in Education Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Active Hiring",
+            "Legal Department Expansion",
+            "Education/Training Management",
+            "Tubize HQ Location"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 262,
+              "elapsed_seconds": 3.770576000213623
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for the Royal Belgian Football Association (RBFA) at their Tubize headquarters. While the specific roles (Legal Assistant, Education Manager) are operational rather than direct procurement or IT leadership, active hiring indicates organizational health and potential budget availability. The 'Education Manager' role specifically suggests investment in training infrastructure, which often requires LMS or related software procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:56:29.220258",
+          "domain_explored": "https://be.linkedin.com/jobs/football-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Futbol Teknik Direkt\u00f6r\u00fc - Future Football Stars Academy",
+              "Commercial Junior Aviation - Air Charter Service",
+              "Copywriter - Napoleon Sports & Casino",
+              "Learning & Development Internship - Toyota Motor Europe"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Search Results",
+            "Irrelevant Sectors (Aviation, Automotive, Gambling)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 272,
+              "elapsed_seconds": 4.7447509765625
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search for 'football jobs' in Belgium, not specific career pages for the Belgian Football Association (RBFA). The listings are for unrelated entities such as 'Future Football Stars Academy' (Genk), 'Air Charter Service', 'Napoleon Sports & Casino', and 'Toyota Motor Europe'. None of these postings originate from the target entity, and the content does not contain procurement signals relevant to the RBFA."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:56:41.092615",
+          "domain_explored": "https://be.linkedin.com/jobs/uefa-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Education Manager (Tubize, Walloon Region)",
+              "Legal Assistant (Tubize, Walloon Region)"
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion (Legal & Education Depts)",
+              "Active Recruitment Phase"
+            ]
+          },
+          "patterns_found": [
+            "Active Hiring",
+            "Legal Department Expansion",
+            "Education/Training Management",
+            "Entity Match"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1620,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.8529510498046875
+            }
+          ],
+          "reasoning": "The search query for 'UEFA jobs' successfully surfaced relevant job postings for the target entity, the Royal Belgian Football Association (RBFA). While the search context was broader (UEFA), the results confirm active recruitment within the RBFA, specifically for Legal and Education departments. This indicates organizational growth and potential future procurement needs in software, training materials, or legal services, though no direct procurement signals are present in the text."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:56:49.075625",
+          "domain_explored": "https://www.linkedin.com/jobs/view/3399269559",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Analytics Platforms",
+              "Performance Data Tools",
+              "Video Analysis Software"
+            ],
+            "job_postings": [
+              {
+                "role": "Head Coach Red Devils",
+                "status": "Closed (3 years ago)",
+                "requirement": "Must support choices with data, technology, and objective parameters"
+              }
+            ],
+            "procurement_indicators": [
+              "Requirement for data-driven tools",
+              "Utilization of modern facility technologies",
+              "Integration of objective parameters in strategy"
+            ]
+          },
+          "patterns_found": [
+            "Data-Driven Decision Making",
+            "Technology Integration in Sports",
+            "High-Profile Recruitment",
+            "Infrastructure Utilization (Tubize)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1672,
+              "output_tokens": 347,
+              "elapsed_seconds": 3.3283531665802
+            }
+          ],
+          "reasoning": "While this is a sporting role (Head Coach), the job description explicitly requires the candidate to 'support choices with data, technology and objective parameters.' This confirms the RBFA's investment in sports analytics, performance data tools, and video analysis platforms. It also highlights the utilization of their new high-tech facility in Tubize. This signals a procurement need for advanced sports software and data services."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:57:04.584093",
+          "domain_explored": "https://be.linkedin.com/jobs/view/education-manager-at-royal-belgian-football-association-4364381510",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Potential LMS (Learning Management System)",
+              "Video Analysis Platforms (mentioned in context of 'Elite Video Analyst' courses)",
+              "Digital Collaboration Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Education Manager",
+                "department": "Sportif",
+                "location": "Tubize, Walloon Region, Belgium",
+                "focus": "Coach Training (UEFA Pro, A License), Strategic Vision, Quality Assurance"
+              }
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion (Hiring in Sportif Dept)",
+              "Standardization Requirements (Need for uniform tools/platforms)",
+              "External Partnerships (Interaction with ACFF, Voetbal Vlaanderen, UEFA)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Education Management",
+            "Stakeholder Coordination (UEFA/FIFA)",
+            "Operational Excellence & Standardization",
+            "Training Program Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 450,
+              "elapsed_seconds": 6.8783838748931885
+            }
+          ],
+          "reasoning": "The job posting confirms the RBFA is actively investing in its 'Sportif' department by hiring an Education Manager. While this is a human resource investment rather than a direct procurement signal, it indicates organizational growth and a focus on standardizing training programs. This role involves coordinating with external bodies (UEFA/FIFA) and managing complex educational curriculums, which often requires subsequent procurement of Learning Management Systems (LMS), content creation tools, or external consultancy services. The mention of 'modern learning environments' suggests a potential future need for digital education technologies."
+        }
+      ],
+      "total_input_tokens": 10858,
+      "total_output_tokens": 1936,
+      "estimated_cost_usd": 0.061614
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:57:04.585048"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204199",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:33.347227"
+}

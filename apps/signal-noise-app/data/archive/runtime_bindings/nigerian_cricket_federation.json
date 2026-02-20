@@ -1,0 +1,255 @@
+{
+  "entity_id": "nigerian_cricket_federation",
+  "entity_name": "Nigerian Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "cricket.sitesng.com",
+    "emergingcricket.com",
+    "africacricket.com",
+    "nigeria.org.my",
+    "theconversation.com",
+    "naijatrends.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nigerian_cricket_federation",
+      "entity_name": "Nigerian Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://cricket.sitesng.com",
+        "https://naijatrends.ng",
+        "https://nigeria.org.my",
+        "https://emergingcricket.com",
+        "https://theconversation.com",
+        "https://africacricket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nigerian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:37:42.646870",
+          "domain_explored": "https://cricket.sitesng.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Basic CMS (sitesng.com platform)",
+              "Web Hosting"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tournament Hosting (Sub-Regional T20 Qualifying Tournament)",
+              "Grassroots Development (School sports curricula integration)",
+              "Infrastructure for 'fast-rising sport' growth",
+              "Event Promotion and Marketing"
+            ]
+          },
+          "patterns_found": [
+            "Grassroots Development Programs",
+            "Event Hosting & Tournament Management",
+            "International Compliance (ICC Affiliation)",
+            "School Curriculum Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.4747438430786133
+            }
+          ],
+          "reasoning": "The content indicates active organizational growth and 'adequate plans' for player development and school integration. While no direct RFPs are visible, the focus on 'making the sports more viral' and hosting international qualifiers (Sub-Regional T20) suggests a need for event management software, training equipment, and marketing services. The site structure (sitesng.com) indicates a basic web presence, implying potential for digital transformation procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:37:49.763749",
+          "domain_explored": "https://emergingcricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Cricket Media Coverage",
+            "Regional Team Listings (Africa)",
+            "Event Calendars"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.010828971862793
+            }
+          ],
+          "reasoning": "The provided content is a navigation menu and site map from 'Emerging Cricket', a third-party media outlet. While it lists 'Nigeria' under regional teams, it contains no specific information regarding the Nigerian Cricket Federation's internal operations, technology stack, or procurement activities. It is a directory, not a source of intelligence for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:38:00.138223",
+          "domain_explored": "https://africacricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Project: Nigeria new turf wicket opening (Apr 2025)",
+              "Event Procurement: Hosting West Africa Trophy T20 in Abuja (Dec 2025)",
+              "Institutional Partnership: Visit to Zambia High Commission in Abuja (Dec 2025)",
+              "Funding/Support: NCF appreciates ICC for support (Nov 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Development (New Turf Wicket)",
+            "Regional Event Hosting (West Africa Trophy)",
+            "Stakeholder Relations (ICC Support & High Commission Visits)",
+            "Administrative Restructuring (ACA Leadership)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 322,
+              "elapsed_seconds": 3.0717718601226807
+            }
+          ],
+          "reasoning": "The content confirms active operational growth and infrastructure investment by the NCF (e.g., 'Nigeria new turf wicket opening' and hosting the 'West Africa Trophy'). While specific procurement documents (RFPs) are absent, the physical expansion of facilities and the hosting of international tournaments strongly imply underlying procurement for construction, event management, and logistics. The mention of ICC support further validates funding availability."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:38:07.038544",
+          "domain_explored": "https://nigeria.org.my",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Yahoo Mail (nigeriankl@yahoo.com - indicates legacy/low-tech infrastructure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Diplomatic Mission Focus",
+            "Consular Services (Passports, Visas)",
+            "General Trade Promotion",
+            "Irrelevant Cultural Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 247,
+              "elapsed_seconds": 2.8733248710632324
+            }
+          ],
+          "reasoning": "The scraped content is from the website of the High Commission of the Federal Republic of Nigeria in Kuala Lumpur (nigeria.org.my). This entity is a diplomatic mission responsible for consular services, trade promotion, and citizen welfare in Malaysia/Brunei. It has no administrative, operational, or procurement relationship with the Nigerian Cricket Federation. The content focuses entirely on diplomacy, visas, and tourism, offering zero signals relevant to sports federation procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:38:23.109373",
+          "domain_explored": "https://theconversation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic News Aggregation",
+            "General Science & Policy Commentary",
+            "Irrelevant Content (Genetics, Geology, Global Politics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 162,
+              "elapsed_seconds": 13.024362087249756
+            }
+          ],
+          "reasoning": "The scraped content represents a general news and academic analysis feed (The Conversation) covering topics unrelated to the Nigerian Cricket Federation. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:38:31.808997",
+          "domain_explored": "https://naijatrends.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Content Categorization (Lifestyle, Tech Startups, Agriculture)",
+            "Social Media Integration",
+            "User Account Management (Login/Recovery)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.3091492652893066
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and header of a general Nigerian news and lifestyle blog (Naijatrends.ng). While it contains a 'Sports' category, the content is purely navigational and focuses on general consumer news, entertainment, and trends. There is no specific mention of the Nigerian Cricket Federation, nor are there any procurement signals, RFPs, or technology stack indicators relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 9030,
+      "total_output_tokens": 1441,
+      "estimated_cost_usd": 0.048705
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nigerian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:38:31.810357"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301541",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:38:56.496887"
+}

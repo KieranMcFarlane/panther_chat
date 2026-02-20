@@ -1,0 +1,406 @@
+{
+  "entity_id": "cardiff_city",
+  "entity_name": "Cardiff City",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "cardiffcityfc.co.uk",
+    "cardiffcityfcstore.com",
+    "cardiffcitystadiumevents.co.uk",
+    "cardiffcityforum.co.uk",
+    "newsnow.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/cardiff-city-jobs-cardiff_jobsrmine-activity-7423291696702164992-tLyu",
+      "https://uk.linkedin.com/jobs/view/wu19%E2%80%99s-assistant-coach-at-cardiff-city-football-club-4342878034",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%A6%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%B5-%F0%9D%97%96%F0%9D%97%AE-activity-7316067584301289473-bAkk",
+      "https://www.linkedin.com/posts/saint-louis-jobs_hiring-jobs-jobseekers-activity-7187641850327896065-saL0",
+      "https://www.linkedin.com/posts/saint-louis-jobs_hiring-opentowork-jobs-activity-7284312315284381696-Kthw",
+      "https://www.linkedin.com/posts/saint-louis-jobs_hiring-opentowork-jobs-activity-7281796716201148416-xGXM",
+      "https://www.linkedin.com/posts/saint-louis-jobs_httpswwwjobsrminecomusmissourisaint-louis-activity-7282413966553698305-Jftn",
+      "https://www.linkedin.com/posts/saint-louis-jobs_httpswwwjobsrminecomusmissourisaint-louis-activity-7093369592089051136-XbDu",
+      "https://uk.linkedin.com/jobs/view/corporate-finance-associate-at-acca-careers-4338515267"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cardiff_city",
+      "entity_name": "Cardiff City",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://cardiffcityfc.co.uk",
+        "https://cardiffcityforum.co.uk",
+        "https://www.linkedin.com/posts/saint-louis-jobs_hiring-jobs-jobseekers-activity-7187641850327896065-saL0",
+        "https://uk.linkedin.com/jobs/view/wu19%E2%80%99s-assistant-coach-at-cardiff-city-football-club-4342878034",
+        "https://www.linkedin.com/posts/cardiff-city-jobs-cardiff_jobsrmine-activity-7423291696702164992-tLyu",
+        "https://newsnow.co.uk",
+        "https://www.linkedin.com/posts/saint-louis-jobs_hiring-opentowork-jobs-activity-7284312315284381696-Kthw",
+        "https://cardiffcityfcstore.com",
+        "https://cardiffcitystadiumevents.co.uk",
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%A6%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%B5-%F0%9D%97%96%F0%9D%97%AE-activity-7316067584301289473-bAkk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Talent Acquisition (Sports Operations)",
+        "Departmental Expansion (Technical Scouting)",
+        "Affiliated Club Procurement (Ownership Group Scope)",
+        "Vendor Usage (Recruitment Agency: Football Careers)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cardiff City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:51:59.277518",
+          "domain_explored": "https://cardiffcityfc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Streaming Platform (Generic)",
+              "E-commerce Platform (Superstore)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail operations (Superstore)",
+              "Digital media operations (Streaming)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce/Retail Operations (Superstore)",
+            "Digital Content Delivery (Live Streaming)",
+            "Sports Operations (Player Loans, Match Reports)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.171962261199951
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations (match reports, player loans, fixtures) and consumer-facing retail (kit sales). While 'Live Streaming' and 'Match Centre' imply underlying technology infrastructure, there are no explicit procurement signals such as technology vendor names, implementation announcements, or job postings related to IT/Procurement in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:52:06.687545",
+          "domain_explored": "https://cardiffcityfcstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Jonas Sports (E-commerce Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing agreements with brands (Fresh Ego Kid, Foco, MurWalls)",
+              "International logistics capability (Multi-currency: GBP, EUR, USD, AUD, CNY, MYR)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations",
+            "Merchandise Management",
+            "Licensing Partnerships (Fresh Ego Kid, Foco, MurWalls)",
+            "Digital Payments (Multi-currency support)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 270,
+              "elapsed_seconds": 3.9506747722625732
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the club's retail storefront navigation and product listings. While it confirms the use of an e-commerce platform ('Powered by Jonas Sports') and active merchandise licensing, it contains no information regarding procurement intent, technology stack implementation details, or corporate governance. This is a consumer-facing page, not a source for procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:52:09.418420",
+          "domain_explored": "https://cardiffcitystadiumevents.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:52:15.266493",
+          "domain_explored": "https://cardiffcityforum.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "phpBB (Forum Software)",
+              "Google AdSense (Monetization)",
+              "Mobile Style (Responsive Design)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External Affiliate Link (annisabraham.co.uk)"
+            ]
+          },
+          "patterns_found": [
+            "User-Generated Content (UGC) Platform",
+            "Community Sentiment Monitoring",
+            "Legacy Forum Technology (phpBB)",
+            "Affiliate Linking (Books)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.879694700241089
+            }
+          ],
+          "reasoning": "The target is a fan-operated forum (phpBB) rather than an official corporate channel. While it contains high volumes of discussion regarding the club, it lacks direct procurement signals such as RFPs, official technology stack disclosures, or corporate decision-making structures. The only commercial signal is an external affiliate link to 'annisabraham.co.uk' for books, which is a retail transaction rather than a procurement signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:52:23.671152",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevance to Entity Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1563,
+              "output_tokens": 157,
+              "elapsed_seconds": 3.0576701164245605
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow consists of generic UK and world news headlines (politics, crime, finance, entertainment). There is absolutely no mention of Cardiff City, the Cardiff City Stadium, or any associated procurement activities, vendor partnerships, or technology investments specific to the entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:52:31.563856",
+          "domain_explored": "https://www.linkedin.com/posts/cardiff-city-jobs-cardiff_jobsrmine-activity-7423291696702164992-tLyu",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment/Marketing)"
+            ],
+            "job_postings": [
+              "Deputy Head"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment Campaign",
+              "Organizational Expansion"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition",
+            "Educational Sector Hiring",
+            "LinkedIn Showcase Page Utilization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.5652289390563965
+            }
+          ],
+          "reasoning": "The content confirms active hiring via the 'Cardiff City jobs' LinkedIn showcase page. However, the specific role 'Deputy Head' indicates operations within the educational sector (likely Cardiff City FC's Foundation or associated community schools), not the core football club's commercial or technical procurement. This signals organizational growth but limited direct procurement intent for corporate software/services."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:53:09.345931",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/wu19%E2%80%99s-assistant-coach-at-cardiff-city-football-club-4342878034",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Authentication Barrier",
+            "Irrelevant Geographic Targeting (United States)",
+            "Scraped Noise (Repeated UI Elements)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 205,
+              "elapsed_seconds": 33.01590180397034
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for 'Head Soccer Coach' roles in the United States. It contains no specific information regarding Cardiff City Football Club, the specific 'WU19's Assistant Coach' role mentioned in the URL, or any procurement activities. The content is entirely composed of login prompts and irrelevant job listings (Eureka College, University of Redlands)."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:53:16.733684",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%A6%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%B5-%F0%9D%97%96%F0%9D%97%AE-activity-7316067584301289473-bAkk",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software (implied by 'video packages')",
+              "Player Profiling Databases",
+              "Data Visualization Tools (implied by 'visual breakdowns')"
+            ],
+            "job_postings": [
+              "Lead Technical Scout",
+              "Senior Technical Scout"
+            ],
+            "procurement_indicators": [
+              "Expansion of Technical Scouting Department",
+              "Outsourced Recruitment Management (Football Careers)",
+              "Multi-club Data Standardization Needs"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition (Sports Operations)",
+            "Departmental Expansion (Technical Scouting)",
+            "Affiliated Club Procurement (Ownership Group Scope)",
+            "Vendor Usage (Recruitment Agency: Football Careers)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1817,
+              "output_tokens": 360,
+              "elapsed_seconds": 3.961193084716797
+            }
+          ],
+          "reasoning": "This content represents a direct procurement signal for human capital within the sporting operations sector. The hiring of 'Lead' and 'Senior' Technical Scouts indicates an expansion or restructuring of the recruitment department. Crucially, the mention of 'affiliated clubs in the ownership group' suggests that procurement decisions and data workflows may extend beyond Cardiff City FC to other entities within the ownership network, increasing the potential scale of software and data service requirements."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:53:24.713286",
+          "domain_explored": "https://www.linkedin.com/posts/saint-louis-jobs_hiring-jobs-jobseekers-activity-7187641850327896065-saL0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Product Delivery Manager - Digital Technology",
+                "entity": "Edward Jones",
+                "location": "Saint Louis, United States",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Saint Louis, MO vs Cardiff, UK)",
+            "Corporate Entity Mismatch (Edward Jones vs Cardiff City FC)",
+            "Aggregator Content Reposting",
+            "Algorithmic Noise (Keyword Matching)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1899,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.677558183670044
+            }
+          ],
+          "reasoning": "The content is a job posting for Edward Jones in Saint Louis, United States. Although it is posted by the 'Cardiff City jobs, Cardiff' aggregator page, the content is entirely unrelated to Cardiff City Football Club's operations, procurement, or technology stack. It represents algorithmic noise where the aggregator reposts content based on broad keyword matches (e.g., 'jobs') rather than entity relevance."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:53:51.433434",
+          "domain_explored": "https://www.linkedin.com/posts/saint-louis-jobs_hiring-opentowork-jobs-activity-7284312315284381696-Kthw",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Des Peres, MO vs Cardiff, UK)",
+            "Keyword Spamming (Title mentions 'Cardiff City', Body describes 'Saint Louis')",
+            "Entity Mismatch (Job description unrelated to Football Club operations)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1983,
+              "output_tokens": 236,
+              "elapsed_seconds": 23.195368766784668
+            }
+          ],
+          "reasoning": "The content is a 'bait-and-switch' job posting. While the headline explicitly includes 'Cardiff City jobs, Cardiff', the job description clearly describes a position in Des Peres, Missouri (United States) for a generic marketing role. The mention of 'Cardiff City' is an SEO keyword injection tactic by an aggregator or bot to gain visibility, rather than a genuine signal from the Cardiff City FC organization. There is no procurement relevance to the target entity."
+        }
+      ],
+      "total_input_tokens": 14773,
+      "total_output_tokens": 2264,
+      "estimated_cost_usd": 0.07827899999999999
+    },
+    "procurement_signals": [
+      "Talent Acquisition (Sports Operations)",
+      "Departmental Expansion (Technical Scouting)",
+      "Affiliated Club Procurement (Ownership Group Scope)",
+      "Vendor Usage (Recruitment Agency: Football Careers)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cardiff City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:53:51.435341"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.157972",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:34.727434"
+}

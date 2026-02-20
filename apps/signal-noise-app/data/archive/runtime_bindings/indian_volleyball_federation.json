@@ -1,0 +1,168 @@
+{
+  "entity_id": "indian_volleyball_federation",
+  "entity_name": "Indian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "sports-india.com",
+    "volleyliveindia1.wordpress.com",
+    "thebridge.in",
+    "fulfilment.gem.gov.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "indian_volleyball_federation",
+      "entity_name": "Indian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://thebridge.in",
+        "https://sports-india.com",
+        "https://volleyliveindia1.wordpress.com",
+        "https://fulfilment.gem.gov.in"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Indian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:26:54.636749",
+          "domain_explored": "https://sports-india.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Requirement",
+            "Bot Detection",
+            "Access Denial"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 487,
+              "output_tokens": 174,
+              "elapsed_seconds": 4.383781909942627
+            }
+          ],
+          "reasoning": "The target URL (sports-india.com) is protected by a client-side rendering mechanism or bot detection service (Cloudflare or similar) that requires JavaScript to load content. The scraped text only contains the loading screen and access instructions, providing zero intelligence regarding the Indian Volleyball Federation's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:27:05.303925",
+          "domain_explored": "https://volleyliveindia1.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Coverage",
+            "Tournament Results",
+            "Player Statistics",
+            "Future Event Qualification (2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 196,
+              "elapsed_seconds": 4.2214579582214355
+            }
+          ],
+          "reasoning": "The content is a sports news report detailing match results, player statistics, and rankings for the Asian U16 Volleyball Championship. It focuses on past athletic performance and future qualification for the 2026 World Championship. There is no mention of organizational structure, technology acquisition, budget allocation, or vendor partnerships related to the Indian Volleyball Federation's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:27:20.449445",
+          "domain_explored": "https://thebridge.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Data Analytics Platforms",
+              "Sports Performance Tracking",
+              "Digital Growth Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Stupa Sports (Data/Analytics)",
+              "Event: Union Budget 2026-27 (Funding context)",
+              "Trend: Federations adapting data-driven growth"
+            ]
+          },
+          "patterns_found": [
+            "Data Analytics Adoption",
+            "Vendor Partnership (Stupa Sports)",
+            "Digital Transformation in Sports",
+            "Budgetary Analysis (Union Budget)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 283,
+              "elapsed_seconds": 7.014415979385376
+            }
+          ],
+          "reasoning": "The content reveals a specific vendor, Stupa Sports, actively marketing data-driven solutions to federations. While not a direct tender from the Volleyball Federation, it establishes the technological ecosystem and vendor landscape the federation operates within. The mention of the Union Budget 2026 indicates a potential upcoming cycle for government-funded sports infrastructure and technology procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:27:41.046315",
+          "domain_explored": "https://fulfilment.gem.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3349,
+      "total_output_tokens": 653,
+      "estimated_cost_usd": 0.019842
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Indian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:27:41.047220"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345001",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:28.223491"
+}

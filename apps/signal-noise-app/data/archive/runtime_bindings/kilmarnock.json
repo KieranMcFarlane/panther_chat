@@ -1,0 +1,395 @@
+{
+  "entity_id": "kilmarnock",
+  "entity_name": "Kilmarnock",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "kilmarnockfc.co.uk",
+    "killieshop.co.uk",
+    "kilmarnockva.com",
+    "fckillie.killiefc.com",
+    "newsnow.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/apply-for-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/to-apply-for-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/opportunity-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/human-resources-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/information-technology-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/generation-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/apprentice-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/confidential-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/general-manager-jobs-kilmarnock",
+      "https://uk.linkedin.com/jobs/finance-assistant-jobs-kilmarnock?trk=public_jobs_search-for-more-jobs-link"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kilmarnock",
+      "entity_name": "Kilmarnock",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.039999999999999994,
+        0.019999999999999993,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fckillie.killiefc.com",
+        "https://uk.linkedin.com/jobs/human-resources-jobs-kilmarnock",
+        "https://uk.linkedin.com/jobs/information-technology-jobs-kilmarnock",
+        "https://uk.linkedin.com/jobs/to-apply-for-jobs-kilmarnock",
+        "https://uk.linkedin.com/jobs/opportunity-jobs-kilmarnock",
+        "https://newsnow.co.uk",
+        "https://kilmarnockfc.co.uk",
+        "https://killieshop.co.uk",
+        "https://uk.linkedin.com/jobs/apply-for-jobs-kilmarnock",
+        "https://kilmarnockva.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kilmarnock may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:56:16.198885",
+          "domain_explored": "https://kilmarnockfc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (In-house/External)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Community facility expansion and sustainability investment (Nov 2025)",
+              "Hospitality suite operations (1869 Suite, Champions Lounge)",
+              "Active player transfer market activity (indicating active finance/admin operations)"
+            ]
+          },
+          "patterns_found": [
+            "Community Infrastructure Investment",
+            "Digital Ticketing Operations",
+            "Hospitality & Commercial Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 276,
+              "elapsed_seconds": 2.863328218460083
+            }
+          ],
+          "reasoning": "The content reveals active investment in community facilities ('sustainability investment for new facility') and ongoing digital operations for ticketing. While no direct RFPs are visible, the infrastructure expansion and commercial activities suggest underlying procurement needs for construction, facility services, and digital platform maintenance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:56:29.519994",
+          "domain_explored": "https://killieshop.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "mtc (Web Design & Development Agency)",
+              "Multi-currency payment processing (indicated by template tags)",
+              "Responsive web design"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: 'Responsive website design, development & hosting by mtc'",
+              "Service Operations: 'Free UK Delivery on Orders over \u00a3150'",
+              "Service Operations: 'Worldwide Shipping Available'",
+              "Customer Support: Dedicated phone line (01563 545 310) and email for order help"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Vendor (mtc)",
+            "Digital Operations (Online Store)",
+            "Customer Service Infrastructure",
+            "Logistics & Shipping (Worldwide/UK)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 321,
+              "elapsed_seconds": 6.526930093765259
+            }
+          ],
+          "reasoning": "The content reveals the operational e-commerce platform for Kilmarnock FC. While it does not show active procurement tenders, it identifies a key technology vendor ('mtc') responsible for design, development, and hosting. It also confirms active investment in digital sales channels and logistics, supporting the hypothesis of commercial capability."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:56:37.586300",
+          "domain_explored": "https://kilmarnockva.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:56:49.083288",
+          "domain_explored": "https://fckillie.killiefc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Monolithic CMS (implied by URL structure /en/...)",
+              "Social Media Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Acquisition Funnel ('Sponsor Us' CTA)",
+              "Multi-level Team Administration (U23-U13 structure)",
+              "Digital Asset Management (Match reports, photos, stats)"
+            ]
+          },
+          "patterns_found": [
+            "Women's Sports Infrastructure",
+            "Grassroots Development Operations",
+            "Sponsorship & Partnership Management",
+            "Digital Content Management (Monolithic CMS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.409366846084595
+            }
+          ],
+          "reasoning": "The content reveals a specific sub-entity (FC Kilmarnock Ladies) operating with a dedicated digital presence. While distinct from the main club, it indicates a broader organizational ecosystem requiring operational support. The presence of a 'Sponsor Us' section and structured team management (U23, U15, U13) suggests ongoing needs for sponsorship management tools and administrative software, though no direct procurement intent is explicitly stated."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:56:59.300746",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant News Aggregation",
+            "Political/Royal Family News",
+            "No Commercial Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 708,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.4667978286743164
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow is a generic news feed regarding UK politics (Keir Starmer) and the Royal Family (Prince Andrew/Jeffrey Epstein). It contains absolutely no information regarding Kilmarnock FC, its operations, procurement needs, or technology stack. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:57:09.574458",
+          "domain_explored": "https://uk.linkedin.com/jobs/apply-for-jobs-kilmarnock",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Learning & Development Advisor (NHS Scotland)",
+              "Cabin Crew (Emirates)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (NHS/Emirates)",
+            "No Entity-Specific Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.515220880508423
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for the town of Kilmarnock, not the football club entity. The listings are dominated by external entities like NHS Scotland and Emirates, which are irrelevant to Kilmarnock FC's procurement. There is no content indicating technology stacks, internal hiring, or procurement activities specific to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:57:21.240395",
+          "domain_explored": "https://uk.linkedin.com/jobs/to-apply-for-jobs-kilmarnock",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Customer Service Team Member (Buzzworks Holdings)",
+              "Learning & Development Advisor (NHS Scotland)",
+              "Recepcionista/administrativo (Cl\u00ednica San Agust\u00edn)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Healthcare/Hospitality)",
+            "No Entity-Specific Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1662,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.3833348751068115
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for the town of Kilmarnock, not the specific entity 'Kilmarnock FC'. The listings are for unrelated organizations (NHS Scotland, Buzzworks Holdings, Cl\u00ednica San Agust\u00edn) in the hospitality and healthcare sectors. There are no signals related to sports management, procurement, or the specific entity's operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:57:46.960204",
+          "domain_explored": "https://uk.linkedin.com/jobs/opportunity-jobs-kilmarnock",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Learning & Development Advisor (Neurodevelopmental) - NHS Scotland",
+              "Online Tutor - FindTutors"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Glasgow/NHS)",
+            "No Entity-Specific Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1722,
+              "output_tokens": 216,
+              "elapsed_seconds": 16.73777675628662
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Opportunity' roles in Kilmarnock. The listings are dominated by irrelevant entities such as NHS Scotland and FindTutors (Glasgow). There is no mention of Kilmarnock FC, the Killie Shop, or any affiliated entities. This indicates a low-signal environment for procurement intelligence specific to the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:58:02.593715",
+          "domain_explored": "https://uk.linkedin.com/jobs/human-resources-jobs-kilmarnock",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Human Resources Specialist (e-Careers)",
+              "Human Resources Advisor (HFD)",
+              "HR Assistant Manager (Isio)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Glasgow/Renfrew/East Kilbride)",
+            "Recruitment Agency Listings (Sanderson, Iconic Resourcing)",
+            "No Entity-Specific Hiring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1781,
+              "output_tokens": 274,
+              "elapsed_seconds": 8.513272047042847
+            }
+          ],
+          "reasoning": "The search results for 'Human Resources jobs in Kilmarnock' return generic listings primarily located in Glasgow and surrounding areas (Renfrew, East Kilbride) rather than Kilmarnock itself. The listings are dominated by recruitment agencies (e.g., Sanderson, Iconic Resourcing) and training providers (e-Careers), with no direct connection to the target entity 'Kilmarnock' or its specific infrastructure projects. This indicates a low-signal environment for entity-specific procurement intelligence."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:58:16.224536",
+          "domain_explored": "https://uk.linkedin.com/jobs/information-technology-jobs-kilmarnock",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director of Digital Services - NHS Scotland (Glasgow)",
+              "Technology Support Specialist - Artair Group (West Kilbride)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Glasgow/West Kilbride)",
+            "Entity Mismatch (NHS Scotland/Artair Group)",
+            "Login-Gated Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1854,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.318369150161743
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Information Technology' in Kilmarnock. The visible listings are for external entities (NHS Scotland, Artair Group) located in neighboring cities (Glasgow, West Kilbride). There is no content specific to Kilmarnock FC or its procurement activities. The page requires authentication to view full details, indicating a dead end for scraping without specific targeted URLs."
+        }
+      ],
+      "total_input_tokens": 13593,
+      "total_output_tokens": 2253,
+      "estimated_cost_usd": 0.074574
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kilmarnock may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:58:16.226786"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.140977",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:07.537484"
+}

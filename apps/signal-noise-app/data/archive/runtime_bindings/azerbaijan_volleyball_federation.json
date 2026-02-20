@@ -1,0 +1,150 @@
+{
+  "entity_id": "azerbaijan_volleyball_federation",
+  "entity_name": "Azerbaijan Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "azertag.az",
+    "kids.kiddle.co",
+    "women.volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "azerbaijan_volleyball_federation",
+      "entity_name": "Azerbaijan Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://inside.cev.eu",
+        "https://azertag.az",
+        "https://kids.kiddle.co",
+        "https://women.volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Azerbaijan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:34:24.673997",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Scouting/Analytics Software (Potential)",
+              "Player Management Systems (Potential)"
+            ],
+            "job_postings": [
+              "Scouting Staff (Implied by 'Scouting process continues')"
+            ],
+            "procurement_indicators": [
+              "CEV Solidarity Fund Applications (External Funding)",
+              "National Scouting Program Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Talent Identification Programs",
+            "CEV Solidarity Fund Engagement",
+            "Youth Development Focus"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 268,
+              "elapsed_seconds": 3.2473180294036865
+            }
+          ],
+          "reasoning": "The content explicitly mentions a 'Scouting process' in Azerbaijan for the 'next generation of players' and the opening of the 'CEV Solidarity Fund'. While not a direct RFP, scouting initiatives often require procurement of data management tools, analytics software, or consulting services. The Solidarity Fund represents a potential budget source for federation development projects."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:34:27.508374",
+          "domain_explored": "https://azertag.az",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:34:34.194777",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Educational Content",
+            "Encyclopedia Structure",
+            "Science & Nature Taxonomy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.3796370029449463
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kiddle', a general children's encyclopedia. It contains a sitemap of scientific topics (Biology, Astronomy, Geology) and general knowledge categories. There is absolutely no mention of the Azerbaijan Volleyball Federation, procurement signals, or specific organizational data. This source is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:34:37.605651",
+          "domain_explored": "https://women.volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2808,
+      "total_output_tokens": 443,
+      "estimated_cost_usd": 0.015068999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Azerbaijan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:34:37.607015"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.332890",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:38.009004"
+}

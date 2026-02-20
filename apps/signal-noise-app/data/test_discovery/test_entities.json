@@ -1,0 +1,100 @@
+{
+  "metadata": {
+    "generated_at": "2026-01-28T00:00:00Z",
+    "entity_count": 10,
+    "source": "test",
+    "purpose": "Template discovery validation"
+  },
+  "entities": [
+    {
+      "entity_id": "arsenal_fc",
+      "name": "Arsenal FC",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "liverpool_fc",
+      "name": "Liverpool FC",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "manchester_united",
+      "name": "Manchester United",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "chelsea_fc",
+      "name": "Chelsea FC",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "manchester_city",
+      "name": "Manchester City",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "tottenham_hotspur",
+      "name": "Tottenham Hotspur",
+      "sport": "football",
+      "country": "England",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "real_madrid",
+      "name": "Real Madrid",
+      "sport": "football",
+      "country": "Spain",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "barcelona",
+      "name": "FC Barcelona",
+      "sport": "football",
+      "country": "Spain",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "bayern_munich",
+      "name": "Bayern Munich",
+      "sport": "football",
+      "country": "Germany",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    },
+    {
+      "entity_id": "psg",
+      "name": "Paris Saint-Germain",
+      "sport": "football",
+      "country": "France",
+      "org_type": "club",
+      "estimated_revenue_band": "high",
+      "digital_maturity": "high"
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "entity_id": "scottish_rugby_union",
+  "entity_name": "Scottish Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "scottishrugby.org",
+    "ask.scottishrugby.org",
+    "visitscotland.com",
+    "tartanregister.gov.uk",
+    "apps.apple.com",
+    "glasgowwarriors.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "scottish_rugby_union",
+      "entity_name": "Scottish Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://visitscotland.com",
+        "https://tartanregister.gov.uk",
+        "https://glasgowwarriors.org",
+        "https://scottishrugby.org",
+        "https://ask.scottishrugby.org",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Scottish Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:59:00.609756",
+          "domain_explored": "https://scottishrugby.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Record attendance implies need for robust ticketing/scaling infrastructure",
+              "Focus on 'Numbers' and 'Noise' suggests potential use of analytics platforms"
+            ]
+          },
+          "patterns_found": [
+            "High-traffic event management",
+            "Audience growth and engagement",
+            "Content marketing focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 890,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.1416492462158203
+            }
+          ],
+          "reasoning": "The content provided is a list of news headlines and links related to the Scotland Women's team performance and attendance records. While this indicates organizational growth and high engagement, it contains no explicit information regarding technology procurement, job vacancies, or vendor selection processes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:59:03.821113",
+          "domain_explored": "https://ask.scottishrugby.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:59:10.274454",
+          "domain_explored": "https://visitscotland.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (implied by error messages)",
+              "Social Media Integration (Instagram, Facebook, etc.)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism and destination marketing content",
+            "Consumer-facing travel planning resources",
+            "Generic content management system usage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.415134906768799
+            }
+          ],
+          "reasoning": "The content scraped is from VisitScotland (visitscotland.com), the national tourism body, which is a separate entity from the Scottish Rugby Union (SRU). While there may be broad national partnerships, the content is purely consumer-focused (itineraries, accommodation, travel advice) and contains no specific procurement signals, technology stack details, or governance information relevant to SRU's internal operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:59:18.591486",
+          "domain_explored": "https://tartanregister.gov.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET Web Forms (aspx)",
+              "Cloudflare Email Protection (CDN)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Statutory governance structure",
+              "Public sector funding model"
+            ]
+          },
+          "patterns_found": [
+            "Government statutory register",
+            "Public record administration",
+            "Legacy web technologies (ASP.NET Web Forms)",
+            "Consumer-facing information retrieval"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 712,
+              "output_tokens": 286,
+              "elapsed_seconds": 4.831523180007935
+            }
+          ],
+          "reasoning": "The target URL (tartanregister.gov.uk) is the official Scottish Register of Tartans, a statutory body managed by the National Records of Scotland and supported by the Scottish Government. While Scottish Rugby Union (SRU) utilizes the register for branding, this entity is a government public service, not a commercial arm of SRU. The content focuses on tartan registration, genealogy, and public records, which are irrelevant to SRU's corporate procurement activities (e.g., kit supply, stadium infrastructure, or CRM systems)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:59:23.688994",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing mobile application marketplace",
+            "Generic entertainment and gaming content",
+            "Third-party app store ecosystem (Apple iOS)",
+            "No corporate or governance structure present"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.113248109817505
+            }
+          ],
+          "reasoning": "The scraped content is from the Apple App Store homepage, representing a generic consumer marketplace for mobile applications and games. There is no content related to the Scottish Rugby Union (SRU), its operations, procurement needs, or technology stack. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:59:26.653719",
+          "domain_explored": "https://glasgowwarriors.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4598,
+      "total_output_tokens": 931,
+      "estimated_cost_usd": 0.027759
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Scottish Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:59:26.654643"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291646",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:28.144861"
+}

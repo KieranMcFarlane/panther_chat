@@ -1,0 +1,107 @@
+{
+  "entity_id": "international_sambo_federation_(fias)",
+  "entity_name": "International Sambo Federation (FIAS)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "2013.sambo-fias.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/view/martial-art-instructor-at-new-zealand-sambo-federation-4279246705"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_sambo_federation_(fias)",
+      "entity_name": "International Sambo Federation (FIAS)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://2013.sambo-fias.org",
+        "https://nz.linkedin.com/jobs/view/martial-art-instructor-at-new-zealand-sambo-federation-4279246705"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Sambo Federation (FIAS) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:23:24.893360",
+          "domain_explored": "https://2013.sambo-fias.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:23:36.140888",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/martial-art-instructor-at-new-zealand-sambo-federation-4279246705",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "WhatsApp (Business Communication)",
+              "LinkedIn (Recruitment Platform)"
+            ],
+            "job_postings": [
+              "Martial Art Instructor (New Zealand SAMBO Federation)"
+            ],
+            "procurement_indicators": [
+              "HR & Relocation Services: Budget allocated for visa processing and international relocation.",
+              "Training & Development: Expenditure on international seminars and coach certifications within the FIAS network.",
+              "Recruitment Tools: Usage of LinkedIn Recruiter licenses."
+            ]
+          },
+          "patterns_found": [
+            "Global_Affiliation_Structure",
+            "Talent_Acquisition_Support",
+            "Operational_Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 342,
+              "elapsed_seconds": 3.485917806625366
+            }
+          ],
+          "reasoning": "While this is a job posting for a National Federation (New Zealand) rather than the International Federation (FIAS) directly, it provides critical intelligence on the ecosystem. The explicit mention of 'Professional growth within the FIAS network' and 'International coach seminars' confirms FIAS's role in centralized training and standard setting. The offer of 'visa and documentation support' indicates a budget for relocation and international HR services, which are often handled by specialized procurement vendors."
+        }
+      ],
+      "total_input_tokens": 1417,
+      "total_output_tokens": 342,
+      "estimated_cost_usd": 0.009381
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Sambo Federation (FIAS) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:23:36.144091"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.461921",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:56:24.454947"
+}

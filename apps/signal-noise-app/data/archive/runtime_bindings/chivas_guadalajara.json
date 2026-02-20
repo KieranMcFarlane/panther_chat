@@ -1,0 +1,291 @@
+{
+  "entity_id": "chivas_guadalajara",
+  "entity_name": "Chivas Guadalajara",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "maxmaillots.org",
+    "tienda.ligamx.net",
+    "sjearthquakes.com",
+    "ticketmaster.com",
+    "peacocktv.com",
+    "fcbarcelona.com",
+    "svhall.co.uk",
+    "fightingirish.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chivas_guadalajara",
+      "entity_name": "Chivas Guadalajara",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://maxmaillots.org",
+        "https://ticketmaster.com",
+        "https://svhall.co.uk",
+        "https://fightingirish.com",
+        "https://fcbarcelona.com",
+        "https://peacocktv.com",
+        "https://sjearthquakes.com",
+        "https://tienda.ligamx.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chivas Guadalajara may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:44:09.691627",
+          "domain_explored": "https://maxmaillots.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce retail interface",
+            "Third-party merchandise reseller",
+            "Consumer-facing navigation (Cart, Login, Gift vouchers)",
+            "Unrelated product categories (NBA, F1, Rugby)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.38989520072937
+            }
+          ],
+          "reasoning": "The content is from a third-party e-commerce site (maxmaillots.org) selling replica jerseys and sports merchandise. It is a consumer retail page, not an official corporate or procurement entity associated with Chivas Guadalajara. There are no signals of B2B procurement, technology stack implementation, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:44:16.120713",
+          "domain_explored": "https://tienda.ligamx.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce retail interface",
+            "Multi-tenant league store (Liga MX)",
+            "Consumer-facing navigation (Collections, Products, Cart)",
+            "Generic placeholder text ('Collection name')",
+            "Merchandise catalog (Jerseys, Balones, Gorras)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.0172131061553955
+            }
+          ],
+          "reasoning": "The content is a direct scrape of a consumer-facing e-commerce storefront (tienda.ligamx.net). It lists retail products (jerseys, balls) and prices for multiple Liga MX teams, including Chivas. This is a sales channel, not a procurement or sourcing channel. It reveals no information about Chivas' internal purchasing, vendor selection, or technology stack."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:44:22.649364",
+          "domain_explored": "https://sjearthquakes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (San Jose Earthquakes vs Chivas Guadalajara)",
+            "Sports Marketing Content (Player transfers, Ticket sales)",
+            "Consumer-Facing News (Theme nights, Promotions)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.0715250968933105
+            }
+          ],
+          "reasoning": "The content provided is from the official website of the San Jose Earthquakes, a different entity within Major League Soccer (MLS). The text focuses on player acquisition (Timo Werner), event promotions at Levi's Stadium, and consumer engagement. There are no signals relevant to Chivas Guadalajara's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:44:25.659727",
+          "domain_explored": "https://ticketmaster.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:44:31.979815",
+          "domain_explored": "https://peacocktv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-facing streaming platform",
+            "Geo-restriction messaging (US-only)",
+            "NBCUniversal corporate ownership",
+            "End-user licensing agreements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1083,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.1888582706451416
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer access restrictions, copyright notices, and corporate branding for NBCUniversal's streaming service. There is no information regarding Chivas Guadalajara's internal operations, vendor selection, or procurement needs. This is a downstream distribution channel, not a source of procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:44:38.030059",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (FC Barcelona vs Chivas Guadalajara)",
+            "Consumer-Facing Navigation (Tickets, Museum, Store)",
+            "Sports Marketing Content (Player transfers, Match schedules)",
+            "Fan Engagement Features (Culers registration, Newsletter)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1627,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.8097329139709473
+            }
+          ],
+          "reasoning": "The content is exclusively focused on FC Barcelona, a different entity than the target Chivas Guadalajara. The site structure is consumer-facing, focusing on ticket sales, merchandise, and news updates. There are no procurement signals, technology stack details, or governance patterns relevant to Chivas Guadalajara."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:45:10.330154",
+          "domain_explored": "https://svhall.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Swindon Village Hall vs Chivas Guadalajara)",
+            "Community/Volunteer Governance Structure",
+            "Venue Hire Navigation (Book Room, What's On)",
+            "Local Community Focus (Cheltenham, UK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1696,
+              "output_tokens": 203,
+              "elapsed_seconds": 29.359763860702515
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Swindon Village Hall' in Cheltenham, UK, a community venue run by volunteers. This entity is completely unrelated to Chivas Guadalajara (a Mexican professional football club). The content focuses on room bookings, local clubs, and bar services, presenting no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:45:19.004771",
+          "domain_explored": "https://fightingirish.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "evenue.net (Ticketing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (University of Notre Dame vs Chivas Guadalajara)",
+            "Consumer-Facing Sports News (Game results, Press conferences)",
+            "Ticketing Integration (evenue.net link)",
+            "Sports Navigation Dropdown (Football, Basketball, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 213,
+              "elapsed_seconds": 5.4098310470581055
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the University of Notre Dame's athletics department (Fighting Irish). It contains sports news, game scores, and standard consumer-facing ticket links. There is no connection to Chivas Guadalajara, Liga MX, or relevant procurement activities for the target entity."
+        }
+      ],
+      "total_input_tokens": 10418,
+      "total_output_tokens": 1425,
+      "estimated_cost_usd": 0.052628999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chivas Guadalajara may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:45:19.006600"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.131982",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:07.690772"
+}

@@ -1,0 +1,198 @@
+{
+  "entity_id": "bnei_herzliya",
+  "entity_name": "Bnei Herzliya",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "basket.co.il",
+    "eurohandball.com",
+    "maccabi.co.il",
+    "hapoeluta.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bnei_herzliya",
+      "entity_name": "Bnei Herzliya",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://hapoeluta.org",
+        "https://eurohandball.com",
+        "https://basket.co.il",
+        "https://maccabi.co.il"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bnei Herzliya may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:43:19.853381",
+          "domain_explored": "https://basket.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WinnerLeague.TV (Streaming Platform)",
+              "VOD Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: Penlink (Bnei Herzliya Jersey Sponsor)",
+              "Sponsorship: Rapyd (League Sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "League Management Platform (basket.co.il)",
+            "Sponsorship Integration (Rapyd, Penlink, Toto)",
+            "Content Management (VOD, News Archives)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 274,
+              "elapsed_seconds": 5.698858976364136
+            }
+          ],
+          "reasoning": "The scraped content is from the Israeli Basketball Premier League's official website (basket.co.il). While 'Bnei Herzliya' is listed as a participating team (sponsored by 'Penlink'), the content provides strictly league-level data (standings, stats, history) and general site navigation. There are no specific signals regarding Bnei Herzliya's internal procurement, technology stack, or operational decision-making. The entity is merely a data point in a larger dataset."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:43:25.743694",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content (Handball vs. Basketball)",
+            "Generic Sports News Aggregation",
+            "Cookie Consent Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.6433260440826416
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) website, which covers handball (e.g., Men's EHF EURO 2026, Gidsel MVP). The target entity, Bnei Herzliya, is a basketball team. There is no overlap in sport, league, or entity operations. The content contains no procurement signals relevant to the target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:43:38.010215",
+          "domain_explored": "https://maccabi.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom CMS (data.asp)",
+              "YouTube Integration",
+              "Ticketing Platform (implied by 'Purchase Ticket' links)",
+              "Multi-language Support (ENG/HEB)"
+            ],
+            "job_postings": [
+              "Careers Page Link (\u05d3\u05e8\u05d5\u05e9\u05d9\u05dd) - Generic, no specific roles listed in snippet"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Integration: Rapyd (Title Sponsor)",
+              "SkyBox Partnership Model"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Competitor Analysis",
+            "Sponsorship Naming Rights (Rapyd)",
+            "E-commerce Integration (Ticketing/Merch)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 297,
+              "elapsed_seconds": 7.998850107192993
+            }
+          ],
+          "reasoning": "The scraped content is from Maccabi Tel Aviv (maccabi.co.il), a distinct entity and competitor to the target Bnei Herzliya. While the site reveals industry-standard technologies (ticketing systems, CRM for fan management) and sponsorship structures (Rapyd), these are specific to Maccabi Tel Aviv's operations and do not indicate procurement intent or governance patterns for Bnei Herzliya."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:43:48.349633",
+          "domain_explored": "https://hapoeluta.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (shop.hapoelbc.com)",
+              "Ticketing Management System (hapoelbc.com/tickets)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management",
+              "Digital Ticketing Operations"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Hapoel UTA vs. Bnei Herzliya)",
+            "E-Commerce Integration (Shopify/Subdomain)",
+            "Ticketing Platform (External Link)",
+            "Euroleague Participation (High Budget Context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 262,
+              "elapsed_seconds": 4.087154865264893
+            }
+          ],
+          "reasoning": "The scraped content is from hapoeluta.org (Hapoel 'UTA' Jerusalem/Tel Aviv), which is a completely different entity from the target 'Bnei Herzliya'. While the site displays advanced digital capabilities (e-commerce, ticketing) that would be relevant if found on the target's site, its presence here constitutes a false positive for the specific entity being analyzed."
+        }
+      ],
+      "total_input_tokens": 5756,
+      "total_output_tokens": 1006,
+      "estimated_cost_usd": 0.032358
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bnei Herzliya may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:43:48.351204"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.218139",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:28.985853"
+}

@@ -1,0 +1,63 @@
+{
+  "entities_checked": 5,
+  "total_rfps_detected": 1,
+  "verified_rfps": 1,
+  "highlights": [
+    {
+      "organization": "Premier League",
+      "src_link": "https://www.isportconnect.com/tenders/digital-fan-platform",
+      "source_type": "tender_portal",
+      "discovery_source": "perplexity_priority_1",
+      "discovery_method": "perplexity_primary",
+      "validation_status": "VERIFIED",
+      "date_published": "2025-01-15",
+      "deadline": "2025-03-15",
+      "deadline_days_remaining": 45,
+      "estimated_rfp_date": null,
+      "budget": "\u00a3200,000-300,000",
+      "summary_json": {
+        "title": "Digital Fan Engagement Platform",
+        "confidence": 0.92,
+        "urgency": "high",
+        "fit_score": 53,
+        "source_quality": 0.9
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": true,
+        "url_verified": true,
+        "budget_estimated": true,
+        "verification_sources": [
+          "https://www.isportconnect.com/tenders/digital-fan-platform"
+        ]
+      },
+      "competitive_intel": null
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.92,
+    "avg_fit_score": 53.0,
+    "top_opportunity": "Premier League"
+  },
+  "quality_metrics": {
+    "brightdata_detections": 0,
+    "perplexity_verifications": 0,
+    "verified_rate": 1.0,
+    "placeholder_urls_rejected": 0,
+    "expired_rfps_rejected": 0,
+    "competitive_intel_gathered": 0
+  },
+  "perplexity_usage": {
+    "discovery_queries": 5,
+    "validation_queries": 0,
+    "competitive_intel_queries": 0,
+    "total_queries": 5,
+    "estimated_cost": 0.005
+  },
+  "cost_comparison": {
+    "total_cost": 0.005,
+    "cost_per_verified_rfp": 0.005,
+    "estimated_old_system_cost": 0.05,
+    "savings_vs_old_system": 0.045000000000000005
+  }
+}

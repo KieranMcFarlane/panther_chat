@@ -1,0 +1,158 @@
+{
+  "entity_id": "biarritz_olympique",
+  "entity_name": "Biarritz Olympique",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "emerging_professional_league_clubs",
+  "discovered_domains": [
+    "destination-biarritz.fr",
+    "epcrugby.com",
+    "grokipedia.com",
+    "prod2.lnr.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "biarritz_olympique",
+      "entity_name": "Biarritz Olympique",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://epcrugby.com",
+        "https://prod2.lnr.fr",
+        "https://destination-biarritz.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Biarritz Olympique may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:36:51.255580",
+          "domain_explored": "https://destination-biarritz.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism content management",
+            "Event agenda structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 164,
+              "elapsed_seconds": 7.20529580116272
+            }
+          ],
+          "reasoning": "The scraped content is from the Biarritz Tourism Office website (destination-biarritz.fr). It focuses on visitor information, event agendas (4L Trophy, Habitat Salon), and ticketing. There is no mention of Biarritz Olympique (BO), corporate governance, or procurement activities. This is irrelevant to the target entity's procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:37:01.923402",
+          "domain_explored": "https://epcrugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports league content aggregation",
+            "Navigation menu scraping artifacts",
+            "Generic video/news hosting structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.271646022796631
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive navigation elements and generic links (Pool tables, Latest videos, Latest news) from the EPCR (European Professional Club Rugby) website. This content is purely informational and related to league standings and media. It contains no information regarding Biarritz Olympique's internal operations, technology stack, or procurement activities. This is a false positive in the search chain (league site vs. team site)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:37:07.714204",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:37:20.967544",
+          "domain_explored": "https://prod2.lnr.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Fan engagement features (Premium accounts, Replay)",
+            "Sports performance analytics (Tackles, Tries, Timing)",
+            "Navigation menu scraping artifacts"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 223,
+              "elapsed_seconds": 5.732600688934326
+            }
+          ],
+          "reasoning": "The content is from the Ligue Nationale de Rugby (LNR) official site (prod2.lnr.fr), covering the Pro D2 league. While Biarritz Olympique competes in this league, this page contains generalized league news, statistics (e.g., Tornike Jalagonia, Michael Ruru), and subscription prompts for 'Pro D2 Premium'. There are no specific signals regarding Biarritz Olympique's internal procurement, technology stack, or governance decisions."
+        }
+      ],
+      "total_input_tokens": 3401,
+      "total_output_tokens": 597,
+      "estimated_cost_usd": 0.019158
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Biarritz Olympique may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:37:20.969093"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.272316",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:13.494971"
+}

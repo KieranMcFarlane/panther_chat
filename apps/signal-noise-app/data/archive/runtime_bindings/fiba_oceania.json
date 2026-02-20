@@ -1,0 +1,199 @@
+{
+  "entity_id": "fiba_oceania",
+  "entity_name": "FIBA Oceania",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "global_governance_bodies",
+  "discovered_domains": [
+    "about.fiba.basketball",
+    "refereeing.fiba.basketball",
+    "fiba.basketball",
+    "pacificaussports.gov.au",
+    "basketball.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiba_oceania",
+      "entity_name": "FIBA Oceania",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://pacificaussports.gov.au",
+        "https://about.fiba.basketball",
+        "https://fiba.basketball",
+        "https://refereeing.fiba.basketball",
+        "https://basketball.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIBA Oceania may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:25:12.341290",
+          "domain_explored": "https://about.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic corporate messaging",
+            "Repetitive content structure",
+            "High-level strategic overview"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 183,
+              "elapsed_seconds": 6.584910869598389
+            }
+          ],
+          "reasoning": "The provided content consists almost entirely of repetitive, high-level marketing copy ('What we do', 'Strategy', 'Discover more about basketball'). There are no specific mentions of technology implementations, job vacancies, tenders, or vendor partnerships relevant to FIBA Oceania procurement. The content is too generic to extract actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:25:20.940908",
+          "domain_explored": "https://refereeing.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Recurring Webinar Series (Monday Special Webinar, FRIP Webinar): Indicates reliance on webinar software (e.g., Zoom, Teams), but usage appears operational/standard rather than a new procurement initiative.",
+              "Global Referee Camp & Workshops: Suggests potential requirements for event management, travel, or venue services, but no specific RFP or vendor selection process is visible in this content."
+            ]
+          },
+          "patterns_found": [
+            "Educational content focus",
+            "Repetitive content structure",
+            "Event/Webinar listings",
+            "Rule interpretation updates"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.085589170455933
+            }
+          ],
+          "reasoning": "The scraped content from the refereeing subdomain is focused on educational materials, rule interpretations, and training webinars. While this indicates operational activity, it does not reveal specific procurement signals, technology stacks, or vendor requirements. The content is public-facing and instructional rather than administrative or commercial."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:25:26.589691",
+          "domain_explored": "https://fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: Ameresco (Power Rankings partner)"
+            ]
+          },
+          "patterns_found": [
+            "Consumer-facing sports news aggregation",
+            "High-volume content publishing",
+            "Multimedia embeds (Video/Shares)",
+            "Sponsorship visibility (e.g., Ameresco Power Rankings)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.3254950046539307
+            }
+          ],
+          "reasoning": "The content is entirely focused on fan engagement, sports news, and game results. While there is a sponsorship mention ('Ameresco Power Rankings'), there are no signals regarding back-end procurement, technology infrastructure, or business operations relevant to the Oceania entity's purchasing needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:26:01.250407",
+          "domain_explored": "https://pacificaussports.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:26:07.139613",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom Wiki Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-generated content structure",
+            "Fandom/Wiki platform hosting",
+            "Non-commercial entity context",
+            "High content repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.0139670372009277
+            }
+          ],
+          "reasoning": "The scraped content is from a community-maintained wiki (Fandom) rather than the official FIBA Oceania entity. While it mentions basketball leagues, it lacks authority regarding procurement, governance, or technology investments for the target entity. It is a tertiary source of information with no actionable procurement signals."
+        }
+      ],
+      "total_input_tokens": 5716,
+      "total_output_tokens": 876,
+      "estimated_cost_usd": 0.030288000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIBA Oceania may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:26:07.140231"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.243918",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:51.134601"
+}

@@ -1,0 +1,111 @@
+{
+  "entity_id": "german_cricket_federation",
+  "entity_name": "German Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "grokipedia.com",
+    "cricket.bcattaching.de",
+    "emergingcricket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "german_cricket_federation",
+      "entity_name": "German Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://cricket.bcattaching.de",
+        "https://emergingcricket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "German Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:02:59.881353",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:03:02.684260",
+          "domain_explored": "https://cricket.bcattaching.de",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:03:08.727859",
+          "domain_explored": "https://emergingcricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_site_navigation",
+            "geographic_listing",
+            "media_content_structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.1467151641845703
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and sitemap of 'Emerging Cricket', a media organization. While it lists 'Germany' under European teams, it contains no specific information regarding the German Cricket Federation's internal operations, technology stack, or procurement activities. It is a secondary source (media) rather than a primary source (organizational entity)."
+        }
+      ],
+      "total_input_tokens": 1422,
+      "total_output_tokens": 182,
+      "estimated_cost_usd": 0.006996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "German Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:03:08.729550"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300725",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:33.365771"
+}

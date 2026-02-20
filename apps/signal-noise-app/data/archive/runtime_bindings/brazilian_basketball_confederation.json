@@ -1,0 +1,178 @@
+{
+  "entity_id": "brazilian_basketball_confederation",
+  "entity_name": "Brazilian Basketball Confederation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "3x3basketball2025.fisu.net",
+    "artsandculture.google.com",
+    "sportbusiness.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brazilian_basketball_confederation",
+      "entity_name": "Brazilian Basketball Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://artsandculture.google.com",
+        "https://3x3basketball2025.fisu.net",
+        "https://sportbusiness.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brazilian Basketball Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:03:53.773757",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform content",
+            "Irrelevant entity context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.7288928031921387
+            }
+          ],
+          "reasoning": "The provided content is the generic homepage text for Wikidata (a Wikimedia project). It contains no specific information regarding the Brazilian Basketball Confederation (CBB), its procurement activities, technology stack, or governance. The content describes Wikidata's features, community events, and general data management tools, which are irrelevant to the target entity's procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:04:04.755643",
+          "domain_explored": "https://3x3basketball2025.fisu.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting: Bras\u00edlia 2025 FISU University World Cup 3\u00d73 Basketball",
+              "Organizer: Brazilian University Sports Confederation (CBDU) in partnership with FISU",
+              "Service Requirements: Accommodation, Transportation, Catering, Visa/Entry services",
+              "Governance: Local Organizing Committee (OC) established"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics Requirements",
+            "Local Organizing Committee (LOC) Formation",
+            "Service Vendor Categories (Accommodation, Transport, Catering)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.7724616527557373
+            }
+          ],
+          "reasoning": "The content confirms a major event (Bras\u00edlia 2025 FISU University World Cup 3\u00d73) is being organized in partnership with the Brazilian University Sports Confederation (CBDU). While the page is informational, the explicit listing of service categories (Accommodation, Transportation, Catering) and the formation of an Organizing Committee indicate active procurement needs for event services and infrastructure. The link to the target entity (CBB) is indirect but strong given the shared geography and sport."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:04:10.512079",
+          "domain_explored": "https://artsandculture.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "API Endpoint Error",
+            "Invalid Content Source"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 482,
+              "output_tokens": 127,
+              "elapsed_seconds": 3.0233330726623535
+            }
+          ],
+          "reasoning": "The target URL returned an error ('this endpoint is not supported') and contains no relevant data regarding the Brazilian Basketball Confederation or its procurement activities. This is a technical dead end."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:04:21.541562",
+          "domain_explored": "https://sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Industry News Aggregation",
+            "High-Level Rights Deals (UEFA, F1, NBA)",
+            "Executive Movements (EuroLeague CEO)",
+            "Generic Sponsorship Trends"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 200,
+              "elapsed_seconds": 3.1184120178222656
+            }
+          ],
+          "reasoning": "The content is a high-level industry news feed covering global sports business (EuroLeague, F1, MLB, Premier League). While it mentions sponsorship and rights deals, there is zero specific mention of the Brazilian Basketball Confederation (CBB), its vendors, or its specific procurement activities. The signals are too generic and unrelated to the target entity to be useful."
+        }
+      ],
+      "total_input_tokens": 4770,
+      "total_output_tokens": 824,
+      "estimated_cost_usd": 0.02667
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brazilian Basketball Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:04:21.544043"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.254529",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:04.045286"
+}

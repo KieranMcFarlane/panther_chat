@@ -1,0 +1,147 @@
+{
+  "entity_id": "egyptian_handball_federation",
+  "entity_name": "Egyptian Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "handball-planet.com",
+    "zoominfo.com",
+    "handballegypt2021.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "egyptian_handball_federation",
+      "entity_name": "Egyptian Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball-planet.com",
+        "https://zoominfo.com",
+        "https://handballegypt2021.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Egyptian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:55:42.090276",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "European tournament focus (EHF EURO 2026)",
+            "Player transfer and coaching changes",
+            "General sports journalism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.6458592414855957
+            }
+          ],
+          "reasoning": "The content is entirely focused on international handball news (EHF EURO 2026 results, player transfers, European coaches). There is no mention of the Egyptian Handball Federation, Egyptian domestic leagues, or local procurement activities. The source is a global news outlet (Handball-Planet) covering European events, which is irrelevant to the specific procurement intelligence of the Egyptian entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:55:48.918254",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Data Provider Marketing Content",
+            "Sales Intelligence Platform Promotion",
+            "Generic GTM (Go-to-Market) Terminology"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.6105868816375732
+            }
+          ],
+          "reasoning": "The content provided is the homepage marketing copy for ZoomInfo, a B2B data intelligence platform. It describes ZoomInfo's services (sales prospecting, AI copilots, data enrichment) rather than the Egyptian Handball Federation's internal operations. There is no specific information regarding the Federation's procurement needs, technology stack, or governance structure. This is a vendor site, not the target entity's site."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:55:58.714114",
+          "domain_explored": "https://handballegypt2021.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'Partners' footer link (No specific vendors listed in text)"
+            ]
+          },
+          "patterns_found": [
+            "Historical Event Archival Content (2021 World Championship)",
+            "Sports Journalism and Results Aggregation",
+            "Spam/Injected Betting Advertisements",
+            "Generic 'Partners' Section without Vendor Details"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.080088138580322
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the results, logistics, and media coverage of the 2021 World Championship (a past event). While there is a 'Partners' section mentioned in the footer, the scraped text does not list specific vendors or technologies, only news headlines and match results. The presence of injected betting spam ('cricket betting site in Bangladesh') further degrades the quality of this source for procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 4261,
+      "total_output_tokens": 658,
+      "estimated_cost_usd": 0.022653
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Egyptian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:55:58.714699"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361533",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:50.643898"
+}

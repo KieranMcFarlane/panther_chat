@@ -1,0 +1,263 @@
+{
+  "entity_id": "czech_ice_hockey_association",
+  "entity_name": "Czech Ice Hockey Association",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "czehockey.cz",
+    "internationalhockeywiki.com",
+    "wikidata.org",
+    "en.hcsparta.cz",
+    "internationalhockey.fandom.com",
+    "nationalteamsoficehockey.com",
+    "eurohockeyclubs.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "czech_ice_hockey_association",
+      "entity_name": "Czech Ice Hockey Association",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://internationalhockey.fandom.com",
+        "https://nationalteamsoficehockey.com",
+        "https://eurohockeyclubs.com",
+        "https://internationalhockeywiki.com",
+        "https://en.hcsparta.cz",
+        "https://czehockey.cz",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Czech Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:55:46.858863",
+          "domain_explored": "https://czehockey.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (HTML5 video tag usage)",
+              "CMS (Content Management System for news aggregation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Logistics for 'T\u00fdden hokeje' (Week of Hockey) - managing 4000+ children",
+              "Marketing Campaign Execution ('Holky na led' cinema distribution)",
+              "Regional Project Management (Tachov success story implies potential for scaling similar projects)"
+            ]
+          },
+          "patterns_found": [
+            "Mass Participation Event Management",
+            "Grassroots Development Projects",
+            "Gender Equality Initiatives (Women's Hockey)",
+            "Regional Championship Structure (M\u010cR kraj\u016f)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 328,
+              "elapsed_seconds": 3.873929977416992
+            }
+          ],
+          "reasoning": "The content reveals a strong operational focus on mass participation events ('T\u00fdden hokeje' with 4000+ children) and regional development. While no direct RFPs are visible, the scale of these logistics-heavy events (Tachov teaching 3500 people, stadium management) indicates a need for event management software, CRM systems for participant registration, and potential procurement of services for the 'Holky na led' cinema campaign."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:55:54.844897",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Data Archiving",
+            "General Sports Information",
+            "League Structure References"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.0470001697540283
+            }
+          ],
+          "reasoning": "The content is from a general knowledge wiki (International Hockey Wiki) focused on historical records, statistics, and league structures. It mentions the 'Czech Extraliga' as a historical entity but contains no information regarding the Czech Ice Hockey Association's internal operations, technology stack, or procurement activities. It is a secondary source of historical trivia, not a primary source for business intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:55:57.640432",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:56:11.333703",
+          "domain_explored": "https://en.hcsparta.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cloudflare"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cloudflare Bot Management",
+            "JavaScript/Cookies Requirement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 853,
+              "output_tokens": 180,
+              "elapsed_seconds": 10.002685785293579
+            }
+          ],
+          "reasoning": "The target URL (en.hcsparta.cz) is a specific club entity (HC Sparta Prague), not the governing body (Czech Ice Hockey Association). Furthermore, the content is entirely blocked by a Cloudflare 'Checking your browser' challenge page. No procurement signals, technology stack details, or governance information can be extracted from a security verification screen."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:56:16.451437",
+          "domain_explored": "https://internationalhockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Information",
+            "Historical Data Archiving",
+            "League Structure References"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.2403461933135986
+            }
+          ],
+          "reasoning": "The content is from a general hockey wiki (Fandom) containing historical data, league structures, and general IIHF member information. It lacks specific procurement signals, technology stack details, or business intelligence regarding the Czech Ice Hockey Association's operations or purchasing intent."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:56:22.899612",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Information",
+            "Historical Data Archiving",
+            "League Structure References",
+            "Global Tournament Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.571692943572998
+            }
+          ],
+          "reasoning": "The scraped content from 'nationalteamsoficehockey.com' is a fan-run or informational aggregation site focused on international results, historical recaps, and global tournament schedules. It contains no operational data regarding the Czech Ice Hockey Association's internal procurement, vendor selection, or technology infrastructure. It is a secondary source of news, not a primary source for organizational signals."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:56:34.358006",
+          "domain_explored": "https://eurohockeyclubs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "EHC Study Tour Hits Prague (Event participation, not direct procurement)"
+            ]
+          },
+          "patterns_found": [
+            "General Sports Information",
+            "League Structure References",
+            "Event Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 232,
+              "elapsed_seconds": 8.148927927017212
+            }
+          ],
+          "reasoning": "The scraped content from eurohockeyclubs.com functions as a news aggregator and results portal for European leagues. While it references Czech leagues (TELH, Maxa-2) and mentions Prague in the context of a study tour, it does not contain specific procurement signals, technology stack details, or governance information directly attributable to the Czech Ice Hockey Association. The content is informational rather than indicative of purchasing intent or organizational infrastructure."
+        }
+      ],
+      "total_input_tokens": 8436,
+      "total_output_tokens": 1305,
+      "estimated_cost_usd": 0.044883
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Czech Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:56:34.359358"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.305827",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:56.666789"
+}

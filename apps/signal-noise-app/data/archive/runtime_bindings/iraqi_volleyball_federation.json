@@ -1,0 +1,151 @@
+{
+  "entity_id": "iraqi_volleyball_federation",
+  "entity_name": "Iraqi Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "riped-online.com",
+    "en.cope.uobaghdad.edu.iq",
+    "kurdistan24.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "iraqi_volleyball_federation",
+      "entity_name": "Iraqi Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.cope.uobaghdad.edu.iq",
+        "https://riped-online.com",
+        "https://kurdistan24.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Iraqi Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:58:43.166655",
+          "domain_explored": "https://riped-online.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ScholarsCentral (Submission System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "academic_journal_scope",
+            "open_access_publishing_model",
+            "editorial_submission_system"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.9927468299865723
+            }
+          ],
+          "reasoning": "The content is the homepage of the 'Revista Iberoamericana de Psicolog\u00eda del Ejercicio y el Deporte' (RIPED), an academic journal. While it covers sports psychology, it is a scholarly publication entity, not the Iraqi Volleyball Federation. There are no signals of procurement, vendor selection, or technology investment related to the federation's operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:58:56.232824",
+          "domain_explored": "https://en.cope.uobaghdad.edu.iq",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content refers to 'College of Physical Education' (University of Baghdad), not the Federation.",
+              "Nature of Entity: Academic/Educational focus vs. Sports Governing Body focus.",
+              "Activity Type: Educational courses and student matches vs. Federation procurement."
+            ]
+          },
+          "patterns_found": [
+            "academic_institution_mission",
+            "educational_enrollment_metrics",
+            "sports_science_research_focus",
+            "generic_web_presence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 287,
+              "elapsed_seconds": 7.665002107620239
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the College of Physical Education and Sport Sciences at the University of Baghdad. While it mentions sports and the 'National Football Team', the context is academic (degrees, faculty, research) rather than the administrative or operational procurement needs of the Iraqi Volleyball Federation. There are no signals of federation governance, tenders, or federation-specific technology stacks."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:59:22.039537",
+          "domain_explored": "https://kurdistan24.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_aggregator",
+            "political_content_focus",
+            "regional_affairs_coverage",
+            "irrelevant_entity_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 183,
+              "elapsed_seconds": 22.759940147399902
+            }
+          ],
+          "reasoning": "The scraped content from kurdistan24.net consists of general news headlines, political updates, and regional affairs (e.g., Iranian nuclear talks, Syrian conflict, Iraqi Parliament). There is no mention of the Iraqi Volleyball Federation, sports procurement, or relevant technology investments. The content is entirely unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 4242,
+      "total_output_tokens": 662,
+      "estimated_cost_usd": 0.022656
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Iraqi Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:59:22.040690"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.345303",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:01.724599"
+}

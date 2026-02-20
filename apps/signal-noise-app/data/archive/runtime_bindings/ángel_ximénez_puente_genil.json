@@ -1,0 +1,175 @@
+{
+  "entity_id": "\u00e1ngel_xim\u00e9nez_puente_genil",
+  "entity_name": "\u00c1ngel Xim\u00e9nez Puente Genil",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "clubbalonmanopuentegenil.es",
+    "barcaacademy.fcbarcelona.com",
+    "globalsportsarchive.com",
+    "bettingexpert.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "\u00e1ngel_xim\u00e9nez_puente_genil",
+      "entity_name": "\u00c1ngel Xim\u00e9nez Puente Genil",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://clubbalonmanopuentegenil.es",
+        "https://globalsportsarchive.com",
+        "https://bettingexpert.com",
+        "https://barcaacademy.fcbarcelona.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "\u00c1ngel Xim\u00e9nez Puente Genil may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:50:51.980729",
+          "domain_explored": "https://clubbalonmanopuentegenil.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship reference: 'Cajasol \u00c1ngel Xim\u00e9nez' (Banking sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Sponsorship Branding (Cajasol)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 620,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.0845890045166016
+            }
+          ],
+          "reasoning": "The content is focused on sports team performance (Liga ASOBAL), pre-season training results, and general club news. There are no signals related to enterprise procurement, technology acquisition, or job vacancies."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:50:58.326826",
+          "domain_explored": "https://barcaacademy.fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Mismatch",
+            "Irrelevant Content",
+            "Marketing/Consumer Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 159,
+              "elapsed_seconds": 1.903904914855957
+            }
+          ],
+          "reasoning": "The scraped content belongs to FC Barcelona's 'Bar\u00e7a Academy' (a global football training network), not the target entity '\u00c1ngel Xim\u00e9nez Puente Genil'. There is no overlap in entity identity, and the content focuses on consumer camps and clinics rather than B2B procurement signals relevant to the target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:51:06.395988",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Irrelevant League Listings",
+            "No Entity Specific Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 167,
+              "elapsed_seconds": 4.467954874038696
+            }
+          ],
+          "reasoning": "The content is a generic navigation sitemap for a global sports archive (soccer leagues). It contains no information regarding '\u00c1ngel Xim\u00e9nez Puente Genil', its operations, governance, or procurement activities. The entity is a handball club, and this content is strictly related to global soccer (football) statistics."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:51:13.277912",
+          "domain_explored": "https://bettingexpert.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Gambling Content",
+            "User Acquisition Focus",
+            "Irrelevant Marketing Copy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 153,
+              "elapsed_seconds": 3.70399808883667
+            }
+          ],
+          "reasoning": "The content is entirely focused on consumer-facing gambling services (tipster competitions, free bets, and bookmaker offers). There is no mention of \u00c1ngel Xim\u00e9nez Puente Genil, nor are there any B2B, procurement, or operational signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4886,
+      "total_output_tokens": 634,
+      "estimated_cost_usd": 0.024168
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "\u00c1ngel Xim\u00e9nez Puente Genil may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:51:13.278536"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351307",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:31.206212"
+}

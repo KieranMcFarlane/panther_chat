@@ -1,0 +1,190 @@
+{
+  "entity_id": "al_naft_sc",
+  "entity_name": "Al Naft SC",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "weareiowa.com",
+    "betsapi.com",
+    "grokipedia.com",
+    "globalsportsarchive.com",
+    "ysscores.com",
+    "boylesports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_naft_sc",
+      "entity_name": "Al Naft SC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ysscores.com",
+        "https://betsapi.com",
+        "https://boylesports.com",
+        "https://globalsportsarchive.com",
+        "https://grokipedia.com",
+        "https://weareiowa.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Naft SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:12:09.676057",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "cookie_consent_overlay",
+            "platform_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 147,
+              "elapsed_seconds": 2.7939982414245605
+            }
+          ],
+          "reasoning": "The provided content is a cookie consent and sign-in wall for 'WeAreIowa' (a local US news station/YouTube channel), which is entirely unrelated to 'Al Naft SC' (an Iraqi oil/sports company). There is no procurement intelligence relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:12:21.644912",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "gambling_betting_content",
+            "live_data_feed",
+            "platform_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 143,
+              "elapsed_seconds": 8.74163007736206
+            }
+          ],
+          "reasoning": "The content is entirely focused on live sports betting results, odds, and API services for gambling platforms (BetsAPI). There is no connection to Al Naft SC (an oil & gas entity) or corporate procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:12:24.730545",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:12:30.657571",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "sports_data_aggregation",
+            "navigation_menu_dump",
+            "no_procurement_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.522160768508911
+            }
+          ],
+          "reasoning": "The content is a scraped navigation menu from a sports statistics website (Global Sports Archive). It lists soccer leagues and tournaments (UEFA, Premier League, etc.) but contains zero information regarding Al Naft SC's operations, procurement needs, or technology stack. The domain is a third-party data source, not the entity or a relevant business partner."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:12:33.723807",
+          "domain_explored": "https://ysscores.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:12:36.545492",
+          "domain_explored": "https://boylesports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4219,
+      "total_output_tokens": 472,
+      "estimated_cost_usd": 0.019737
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Naft SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:12:36.546935"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233544",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:30:13.376760"
+}

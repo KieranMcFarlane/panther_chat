@@ -1,0 +1,189 @@
+{
+  "entity_id": "super_formula_championship",
+  "entity_name": "Super Formula Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "old.superformula.net",
+    "suzukacircuit.jp",
+    "superformula.net",
+    "suzukacircuit-jp.p.translation-proxy.com",
+    "redbull.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "super_formula_championship",
+      "entity_name": "Super Formula Championship",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.02
+      ],
+      "explored_domains": [
+        "https://suzukacircuit.jp",
+        "https://superformula.net",
+        "https://suzukacircuit-jp.p.translation-proxy.com",
+        "https://redbull.com",
+        "https://old.superformula.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Super Formula Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:31:48.142236",
+          "domain_explored": "https://old.superformula.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SFgo (Fan Engagement/CMS Platform)",
+              "E-commerce Platform (Official Online Shop)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sales of 2026 Series Pass via Official Online Shop",
+              "SFgo Trial Coupon distribution",
+              "SFgo Member Status Benefits"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Platform (SFgo)",
+            "E-commerce & Ticketing Operations",
+            "Content Management & Publishing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 311,
+              "elapsed_seconds": 4.2846999168396
+            }
+          ],
+          "reasoning": "The content reveals active usage of 'SFgo' for membership status, benefits, and trial coupons, indicating a deployed CRM or fan engagement platform. The mention of an 'Official Online Shop' for 'Series Pass' sales suggests an e-commerce procurement need or existing vendor relationship. The site structure (old.superformula.net) and content categorization (Release, Race, Column) imply a CMS. However, the content is largely operational/marketing noise rather than explicit procurement signals like RFPs or new tech stack announcements."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:31:51.423309",
+          "domain_explored": "https://suzukacircuit.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:32:07.103426",
+          "domain_explored": "https://superformula.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SFgo (Fan Engagement Platform)",
+              "Official Online Shop (E-commerce system)",
+              "Content Management System (CMS) for News/Columns"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of 'SFgo' membership status and benefits",
+              "Operation of 'SF Official Online Shop' for high-value ticket sales (Gold Pass)",
+              "Digital content publishing workflow (Columns, Race Reports)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Platform (SFgo)",
+            "E-commerce & Ticketing Operations",
+            "Content Management & Publishing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 307,
+              "elapsed_seconds": 9.876580953598022
+            }
+          ],
+          "reasoning": "The scraped content confirms the operation of the 'SFgo' digital platform and an official online shop for ticketing (Series Passes). This indicates an active digital ecosystem requiring maintenance and potential procurement of related services (CRM, payment processing, web hosting). However, the content is primarily operational news (race reports, releases) rather than explicit procurement signals like RFPs or vendor hiring."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:32:11.185652",
+          "domain_explored": "https://suzukacircuit-jp.p.translation-proxy.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:32:18.008681",
+          "domain_explored": "https://redbull.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content (Formula 1 vs Super Formula)",
+            "Consumer Product Marketing (Energy Drinks)",
+            "General Sports News Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.083754062652588
+            }
+          ],
+          "reasoning": "The scraped content is from Red Bull's global media platform and focuses exclusively on Formula 1 (Max Verstappen) and consumer energy drink products. It contains no information regarding the Super Formula Championship, its governance, technology stack, or procurement activities. The entity context is completely mismatched."
+        }
+      ],
+      "total_input_tokens": 4351,
+      "total_output_tokens": 797,
+      "estimated_cost_usd": 0.025008000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Super Formula Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:32:18.011664"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376583",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:42.752572"
+}

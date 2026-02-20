@@ -1,0 +1,136 @@
+{
+  "entity_id": "new_zealand_rugby_union",
+  "entity_name": "New Zealand Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_federation_global_standard",
+  "discovered_domains": [
+    "nzrugby.co.nz",
+    "allblacks.com",
+    "rugbytoolbox.co.nz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_zealand_rugby_union",
+      "entity_name": "New Zealand Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://nzrugby.co.nz",
+        "https://allblacks.com",
+        "https://rugbytoolbox.co.nz"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New Zealand Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:52:51.386343",
+          "domain_explored": "https://nzrugby.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legacy Fund administration and application processing",
+              "Rugby Awards event organization and production",
+              "Mind.Set.Engage program delivery",
+              "First Aid in Rugby (FAIR) training materials and delivery",
+              "Digital platform for 'Get Involved' and 'Learn about NZR' user journeys"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Initiative Management",
+            "Community Funding Programs",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 256,
+              "elapsed_seconds": 5.4244139194488525
+            }
+          ],
+          "reasoning": "The content reveals several operational areas requiring vendor support, specifically the 'Legacy Fund' (grant management software/services), 'Rugby Awards' (event management/production), and 'Mind.Set.Engage' (program delivery). While no direct RFPs are visible, these are established procurement categories for NZR."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:52:59.585581",
+          "domain_explored": "https://allblacks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Operations (Shop/ecommerce presence)",
+              "Sponsorship Management (DHL, Howden, Marvel mentioned)"
+            ]
+          },
+          "patterns_found": [
+            "Consumer-Facing Content",
+            "Merchandising Operations",
+            "Event Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.6017348766326904
+            }
+          ],
+          "reasoning": "The scraped content from allblacks.com is exclusively consumer-facing, focusing on sports news, match results, video highlights, and retail merchandise (Jerseys, Training Range). There are no corporate governance signals, technology infrastructure details, or strategic procurement indicators present in this text."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:53:05.509424",
+          "domain_explored": "https://rugbytoolbox.co.nz",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2772,
+      "total_output_tokens": 454,
+      "estimated_cost_usd": 0.015126
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New Zealand Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:53:05.531359"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.291235",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:21.373317"
+}

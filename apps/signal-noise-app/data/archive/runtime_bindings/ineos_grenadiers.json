@@ -1,0 +1,196 @@
+{
+  "entity_id": "ineos_grenadiers",
+  "entity_name": "Ineos Grenadiers",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "uci_worldteam",
+  "discovered_domains": [
+    "ineosgrenadiers.com",
+    "ineosgrenadier.com",
+    "ineos.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/sportfive_sportsmarketing-careersinsport-activity-7422231998645063680-eYek"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ineos_grenadiers",
+      "entity_name": "Ineos Grenadiers",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://ineos.com",
+        "https://ineosgrenadiers.com",
+        "https://ineosgrenadier.com",
+        "https://www.linkedin.com/posts/sportfive_sportsmarketing-careersinsport-activity-7422231998645063680-eYek"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ineos Grenadiers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:15:21.380075",
+          "domain_explored": "https://ineosgrenadiers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "News Aggregation",
+            "Public Relations Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.113821029663086
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of cycling race results and news headlines (e.g., 'Welsford wins Cadel Criterium', 'Tour Down Under'). There is a high degree of text repetition, indicating a scrape of a news feed or homepage widget. No technical infrastructure, job postings, or corporate governance information is present."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:15:26.716114",
+          "domain_explored": "https://ineosgrenadier.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geo-IP Redirection / Gating",
+            "Cookie Consent / Localization UI",
+            "Content Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 716,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.435863971710205
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of a localization gate (country/language selector) and repeated UI elements. No substantive content regarding operations, technology stack, or procurement activities is visible in this view. The URL also appears to be the consumer automotive product site (Grenadier) rather than the cycling team entity (Grenadiers), which suggests a potential entity mismatch or a dead-end for procurement intelligence regarding the team."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:15:33.917115",
+          "domain_explored": "https://ineos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Capital Expenditure (Grangemouth \u00a3150m, France \u20ac250m)",
+              "M&A Activity (Senior Secured Notes Offering)",
+              "Subsidiary Structure (INEOS Automotive, INEOS Sports)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Umbrella Structure",
+            "Capital Investment Signals",
+            "Strategic Sub-entities",
+            "News Aggregation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 270,
+              "elapsed_seconds": 4.166691064834595
+            }
+          ],
+          "reasoning": "The content confirms INEOS Grenadier operates under the INEOS Group umbrella. While the page is high-level corporate PR, it reveals significant capital investment activities (e.g., \u00a3150m Grangemouth investment, \u20ac250m French investment) and distinct business divisions (Automotive, Sports). This indicates a complex procurement structure where Grenadier-specific procurement may be decentralized or managed through shared services, validating the entity's capacity for large-scale procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:15:40.179102",
+          "domain_explored": "https://www.linkedin.com/posts/sportfive_sportsmarketing-careersinsport-activity-7422231998645063680-eYek",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Sales Manager Sports Partnership",
+                "employer": "SPORTFIVE",
+                "client_focus": "INEOS Grenadiers (among others)"
+              },
+              {
+                "role": "Senior Sales Manager Sports Partnership",
+                "employer": "SPORTFIVE",
+                "client_focus": "INEOS Grenadiers (among others)"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Commercial Sales",
+              "Partnership Management Agency",
+              "Vendor: SPORTFIVE"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Outsourcing",
+            "Third-Party Rights Management",
+            "Vendor Portfolio Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 303,
+              "elapsed_seconds": 2.7905261516571045
+            }
+          ],
+          "reasoning": "The content confirms that INEOS Grenadiers utilizes SPORTFIVE as a commercial partner to manage sales and sports partnerships. This indicates a procurement dependency on external agencies for revenue generation and partnership management. While not a direct RFP, it validates the vendor ecosystem structure."
+        }
+      ],
+      "total_input_tokens": 5046,
+      "total_output_tokens": 944,
+      "estimated_cost_usd": 0.029298
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ineos Grenadiers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:15:40.179805"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.381784",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:05.612348"
+}

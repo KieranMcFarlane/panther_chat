@@ -1,0 +1,120 @@
+{
+  "entity_id": "tour_de_pologne",
+  "entity_name": "Tour de Pologne",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "tourdepologne.pl",
+    "tourdepolognewomen.pl"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_de_pologne",
+      "entity_name": "Tour de Pologne",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://tourdepolognewomen.pl",
+        "https://tourdepologne.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour de Pologne may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:17:35.065319",
+          "domain_explored": "https://tourdepologne.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal/Retention: ORLEN (Title), PZU, Lotto, Lang Team.",
+              "Venue/Service Procurement: Hotel Go\u0142\u0119biewski Karpacz, Bukovina Resort, Kopalnia Soli 'Wieliczka'.",
+              "Media Production: Szymon Gruchalski (Photography services)."
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics & Venue Management",
+            "Sponsorship Hierarchy (Title/Category Sponsors)",
+            "Media & Content Production"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.184444904327393
+            }
+          ],
+          "reasoning": "The content is a high-level overview of the 82nd Tour de Pologne (2026 edition), focusing on race results, stage routes, and general sponsor visibility. While it confirms active operations and major vendor relationships (e.g., ORLEN, PZU, Lotto), it contains no specific signals regarding new procurement solicitations, technology stack changes, or strategic investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:17:41.517213",
+          "domain_explored": "https://tourdepolognewomen.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Management: ORLEN (General Classification), Lotto (Most Active Classification)",
+              "Media Production: Photo galleries (Szymon Gruchalski)",
+              "Strategic Partnership: 'Partner Strategiczny Gospodarz'"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Hierarchy (Strategic Partners)",
+            "Media & Content Production (Photo Galleries)",
+            "Event Marketing (Media Reach Promotion)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.0425541400909424
+            }
+          ],
+          "reasoning": "The content confirms the existence of the 'Tour de Pologne Women' entity and identifies key sponsors (ORLEN, Lotto) and partners (Gospodarz). The mention of 'poznaj si\u0142\u0119 medialn\u0105' (know the media power) indicates active marketing efforts. While no direct procurement signals (RFPs/Tenders) are present in this text, the identification of specific sponsorship categories and media production activities establishes the vendor ecosystem and potential procurement touchpoints."
+        }
+      ],
+      "total_input_tokens": 2774,
+      "total_output_tokens": 542,
+      "estimated_cost_usd": 0.016452
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour de Pologne may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:17:41.521137"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.403548",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:46.792054"
+}

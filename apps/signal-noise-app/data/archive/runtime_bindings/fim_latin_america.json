@@ -1,0 +1,203 @@
+{
+  "entity_id": "fim_latin_america",
+  "entity_name": "FIM Latin America",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fim-latinamerica.com",
+    "fim-moto.com",
+    "fim-musicians.org",
+    "fim-europe.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/client-account-manager-global-fim-latin-america-80-100%25-at-ubs-3388631283"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_latin_america",
+      "entity_name": "FIM Latin America",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fim-moto.com",
+        "https://fim-europe.com",
+        "https://fim-latinamerica.com",
+        "https://fim-musicians.org",
+        "https://ch.linkedin.com/jobs/view/client-account-manager-global-fim-latin-america-80-100%25-at-ubs-3388631283"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM Latin America may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:06:19.033339",
+          "domain_explored": "https://fim-latinamerica.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:06:30.786880",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global governance structure (Commissions for Safety, Sustainability, Mobility)",
+              "Heavy reliance on PDF documentation for regulations and technical standards"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (FIM Global vs. FIM Latin America)",
+            "Sports Federation Content Structure",
+            "Regulatory Documentation Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 271,
+              "elapsed_seconds": 2.607151985168457
+            }
+          ],
+          "reasoning": "The content analyzed is from the global FIM (F\u00e9d\u00e9ration Internationale de Motocyclisme) website, not the specific target entity 'FIM Latin America'. While the global parent company provides context on governance and regulations, it does not contain specific procurement signals, technology stacks, or job postings relevant to the Latin American regional subsidiary. The content is primarily public-facing sports information (calendars, news, regulations) rather than corporate procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:06:41.758676",
+          "domain_explored": "https://fim-musicians.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FIM Global vs. FIM Latin America)",
+            "Labor Rights Advocacy",
+            "Conference Proceedings",
+            "Regulatory/Legal Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1021,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.750095844268799
+            }
+          ],
+          "reasoning": "The content is from the International Federation of Musicians (FIM Global), a distinct entity from FIM Latin America (the target). The content focuses on labor rights, royalty distribution, and regulatory advocacy regarding music streaming. There are no signals of procurement activity, technology acquisition, or vendor management relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:07:16.898469",
+          "domain_explored": "https://fim-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FIM Europe vs. FIM Latin America)",
+            "Sports Federation Content Structure",
+            "Event Reporting Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 656,
+              "output_tokens": 165,
+              "elapsed_seconds": 27.22878885269165
+            }
+          ],
+          "reasoning": "The scraped content is from FIM Europe (fim-europe.com), which is a distinct regional entity from the target FIM Latin America. The content focuses on sports results (SuperEnduro) and event reporting, which does not contain procurement signals relevant to the Latin American branch."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:07:31.630011",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/client-account-manager-global-fim-latin-america-80-100%25-at-ubs-3388631283",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Client Account Manager - Global FIM Latin America",
+                "entity": "UBS",
+                "location": "Geneva, Switzerland / Carouge",
+                "focus": "Financial Intermediaries (LATAM South)",
+                "relevance": "False Positive - Acronym Overlap"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (UBS vs. FIM Latin America)",
+            "Acronym Ambiguity (FIM = Financial Intermediaries Management)",
+            "Job Posting Context (Service Delivery vs. Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1573,
+              "output_tokens": 314,
+              "elapsed_seconds": 7.401546955108643
+            }
+          ],
+          "reasoning": "The scraped content is a job posting from UBS (a global bank) for a 'Client Account Manager' role. The term 'FIM' in the title stands for 'Financial Intermediaries Management' (a business unit/division within UBS), not the target entity 'FIM Latin America'. While the role mentions 'LATAM South' and 'Geneva', it pertains to banking operations and client servicing, not the procurement or governance of the FIM Latin America organization. This is a false positive match on the acronym."
+        }
+      ],
+      "total_input_tokens": 4638,
+      "total_output_tokens": 941,
+      "estimated_cost_usd": 0.028029
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM Latin America may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:07:31.631530"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380140",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:00.225124"
+}

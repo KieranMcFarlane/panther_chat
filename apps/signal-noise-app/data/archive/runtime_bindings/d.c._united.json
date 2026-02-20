@@ -1,0 +1,398 @@
+{
+  "entity_id": "d.c._united",
+  "entity_name": "D.C. United",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "dcunited.com",
+    "mlssoccer.com",
+    "audifield.com",
+    "washington.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/d.c.-united-jobs",
+      "https://www.linkedin.com/jobs/view/event-operations-staff-at-d-c-united-4344457108",
+      "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-d-c-united-4366617069",
+      "https://www.linkedin.com/jobs/view/brand-ambassador-at-d-c-united-4366611575",
+      "https://www.linkedin.com/jobs/view/intern-ticket-sales-service-at-d-c-united-4346246136",
+      "https://www.linkedin.com/jobs/view/intern-events-entertainment-spring-2026-at-d-c-united-4348283766",
+      "https://www.linkedin.com/posts/sportsbusinessventures_careers-dc-united-activity-7169051207984930817-YkwX",
+      "https://www.linkedin.com/jobs/view/senior-director-corporate-partnership-sales-at-d-c-united-4356193690",
+      "https://www.linkedin.com/jobs/view/intern-social-media-at-d-c-united-4346330587"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "d.c._united",
+      "entity_name": "D.C. United",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/event-operations-staff-at-d-c-united-4344457108",
+        "https://www.linkedin.com/jobs/d.c.-united-jobs",
+        "https://washington.org",
+        "https://mlssoccer.com",
+        "https://www.linkedin.com/jobs/view/brand-ambassador-at-d-c-united-4366611575",
+        "https://dcunited.com",
+        "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-d-c-united-4366617069",
+        "https://www.linkedin.com/jobs/view/intern-ticket-sales-service-at-d-c-united-4346246136",
+        "https://audifield.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "D.C. United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:39:43.049306",
+          "domain_explored": "https://dcunited.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (implied by '2026 Ticket Memberships')",
+              "Email Marketing Platform (implied by 'Email Newsletter!')",
+              "Event Management System (implied by 'Audi Field Events')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "International player acquisition (implies legal/HR vendor needs)",
+              "Youth Programs (implies educational/sports equipment procurement)",
+              "Audi Field Events (implies event services/logistics procurement)"
+            ]
+          },
+          "patterns_found": [
+            "International Transfer Operations",
+            "Visa/Compliance Processing",
+            "Ticketing & Event Management Infrastructure",
+            "Youth Academy Program Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 333,
+              "elapsed_seconds": 18.700767040252686
+            }
+          ],
+          "reasoning": "The content is primarily sports news (player signings) and marketing links, lacking explicit procurement language or vendor names. However, the operational complexity of international transfers (Visas, ITCs) and the presence of 'Ticket Memberships' and 'Youth Programs' indicate underlying business activities that require software support (CRM, HRIS, Ticketing platforms). This confirms capability but lacks specific intent signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:39:52.040936",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Transfer Activity",
+            "League-wide Player Movement",
+            "Designated Player Contracts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.8106460571289062
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on league-wide transfer news involving other clubs (San Jose Earthquakes, Orlando City, Houston Dynamo, Austin FC, Inter Miami). There is absolutely no mention of D.C. United, their operations, or their specific procurement needs. This content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:40:03.226338",
+          "domain_explored": "https://audifield.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Booking Platforms",
+              "CRM (for Premium Seating members)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "RFP for Catering and Concession Services",
+              "Construction/Renovation vendors for 'AV Lounge' fit-out",
+              "Event Management Software for booking 'Director's Lounge' and suites"
+            ]
+          },
+          "patterns_found": [
+            "Premium Seating & Hospitality Infrastructure",
+            "Non-Match Day Event Operations",
+            "Venue Rental & Catering Services",
+            "Luxury Space Development (AV Lounge)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 275,
+              "elapsed_seconds": 5.101983070373535
+            }
+          ],
+          "reasoning": "The content focuses on venue operations, specifically premium hospitality (AV Lounge, Premium Clubs) and non-match day event hosting (Congressional School Gala). While this indicates a need for catering, event management, and construction vendors, it is primarily a marketing page rather than a direct procurement signal or technology stack indicator."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:40:14.493044",
+          "domain_explored": "https://washington.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Potential for hospitality partnerships (hotels listed as 'Kid-Friendly')",
+              "Tourism marketing campaigns (We The People series)"
+            ]
+          },
+          "patterns_found": [
+            "Destination Marketing Content",
+            "Visitor Guide Distribution",
+            "Tourism Partnership Opportunities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.8336567878723145
+            }
+          ],
+          "reasoning": "The content analyzed is from Destination DC (washington.org), the official tourism organization for the District of Columbia. While D.C. United operates within this geography, the content focuses on general tourism, hospitality, and city-wide events (e.g., 'America's 250th Anniversary') rather than the specific operational, procurement, or technological needs of the soccer club. There is no direct signal of D.C. United's procurement intent, vendor selection, or technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:40:30.298729",
+          "domain_explored": "https://www.linkedin.com/jobs/d.c.-united-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Marketing Automation Platforms",
+              "CRM Systems (Salesforce/HubSpot)",
+              "Financial Software (QuickBooks/NetSuite/SAP)",
+              "Graphic Design Suites (Adobe Creative Cloud)",
+              "Sports Science/Wearable Tech"
+            ],
+            "job_postings": [
+              "Digital Marketing Lead",
+              "Staff Accountant",
+              "Academy Performance Coach",
+              "1st Team Performance Coach",
+              "Intern, Graphic Design",
+              "Coach, D.C. United Summer Camps (via Headfirst)"
+            ],
+            "procurement_indicators": [
+              "Digital Transformation: Hiring a lead suggests budget allocation for martech stack.",
+              "Outsourced Operations: Youth camps managed by 'Headfirst Professional Sports Camps'.",
+              "Performance Analysis: Investment in coaching staff signals potential procurement of data/analytics tools for player tracking."
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Leadership Hiring",
+            "Financial Control & Accounting Expansion",
+            "High-Performance Sports Science Investment",
+            "Seasonal Camp Operations Outsourcing",
+            "Creative Services Internship Pipeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 491,
+              "elapsed_seconds": 4.35510778427124
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn provides direct visibility into D.C. United's current operational priorities and hiring needs. While not a traditional procurement RFP feed, job postings are a leading indicator of technology adoption and vendor requirements. The 'Digital Marketing Lead' role suggests a need for marketing automation, CRM, and analytics tools. The 'Staff Accountant' role indicates financial system usage. The 'Performance Coach' roles imply investment in sports science and wearable technology vendors. The 'Summer Camps' role confirms the outsourcing model for youth programs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:40:40.986539",
+          "domain_explored": "https://www.linkedin.com/jobs/view/event-operations-staff-at-d-c-united-4344457108",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Event Operations Staff (Part-Time, 2026 Season)"
+            ],
+            "procurement_indicators": [
+              "High-frequency event set-up and breakdown requirements",
+              "Coordination of hospitality spaces and activation areas",
+              "Logistical support for non-match day events (Concerts, UFL, Corporate)",
+              "Requirement for physical labor tools and event infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Use Venue Logistics",
+            "Labor-Intensive Event Operations",
+            "Fan Experience Execution",
+            "Venue Changeover Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1644,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.900609016418457
+            }
+          ],
+          "reasoning": "While this is a part-time, entry-level role with no direct purchasing authority, it confirms high-volume operational activity at Audi Field requiring significant logistical coordination and physical resources. The need for 'set-up/breakdown' and 'space changeovers' implies a supply chain for event materials (staging, seating, cleaning). The mention of 'Fan Experience Programs' suggests procurement of third-party promotional vendors or activation assets managed by this team's leadership."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:40:57.987704",
+          "domain_explored": "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-d-c-united-4366617069",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Software (Specific vendor unspecified, likely Archtics, Salesforce, or Microsoft Dynamics given industry standards)"
+            ],
+            "job_postings": [
+              "Account Executive, Group Sales"
+            ],
+            "procurement_indicators": [
+              "CRM Usage Requirement",
+              "Outbound Sales Tools (Text/Email)",
+              "Event Logistics Support"
+            ]
+          },
+          "patterns_found": [
+            "CRM Pipeline Management",
+            "Group Ticketing Operations",
+            "Community Outreach & Grassroots Marketing",
+            "Bilingual Audience Engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1710,
+              "output_tokens": 295,
+              "elapsed_seconds": 10.451909065246582
+            }
+          ],
+          "reasoning": "The job description explicitly mentions the use of 'CRM tools to manage your sales pipeline,' confirming the utilization of Customer Relationship Management software. While this is a sales role rather than a direct procurement role, the operational requirement for CRM systems and the management of group sales infrastructure (tickets, events) indicates a reliance on technology vendors and potential procurement needs for outreach platforms."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:41:13.807303",
+          "domain_explored": "https://www.linkedin.com/jobs/view/brand-ambassador-at-d-c-united-4366611575",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Brand Ambassador (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Promotional Giveaways Procurement",
+              "Event Staffing & Labor Requirements",
+              "Grassroots Marketing Activation Support"
+            ]
+          },
+          "patterns_found": [
+            "Grassroots Marketing & Field Activation",
+            "Sales Pipeline Support (Lead Generation)",
+            "Event Promotional Logistics",
+            "Part-Time Labor Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1776,
+              "output_tokens": 276,
+              "elapsed_seconds": 9.80699110031128
+            }
+          ],
+          "reasoning": "The posting indicates a need for scalable human capital to support grassroots marketing and lead generation. While this is a hiring event rather than a direct technology purchase, it signals an investment in 'feet-on-the-street' infrastructure to drive sales and fan engagement. The requirement to support sales staff by 'feeding leads' suggests a dependency on manual data capture processes, potentially indicating a need for future mobile CRM or lead retrieval tools."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:42:03.381794",
+          "domain_explored": "https://www.linkedin.com/jobs/view/intern-ticket-sales-service-at-d-c-united-4346246136",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Recommendations",
+            "Unrelated Industry Roles (Luxury, Tech, Finance)",
+            "Broken Search Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1848,
+              "output_tokens": 191,
+              "elapsed_seconds": 40.92211103439331
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job recommendations page ('Box Office Manager', 'Executive Assistant' roles for Breakaway, Givenchy, Pandora, etc.) and does not contain the specific job description or details for the 'Intern, Ticket Sales & Service' role at D.C. United referenced in the URL. There is no actionable procurement intelligence regarding D.C. United in this text."
+        }
+      ],
+      "total_input_tokens": 14284,
+      "total_output_tokens": 2601,
+      "estimated_cost_usd": 0.081867
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "D.C. United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:42:03.383180"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.153293",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:11.780683"
+}

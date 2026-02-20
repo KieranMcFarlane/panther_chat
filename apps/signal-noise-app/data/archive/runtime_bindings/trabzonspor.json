@@ -1,0 +1,333 @@
+{
+  "entity_id": "trabzonspor",
+  "entity_name": "Trabzonspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "trabzonspor.org.tr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ge.linkedin.com/jobs/view/marketing-manager-at-whitebit-georgia-4286707590",
+      "https://ge.linkedin.com/jobs/view/business-development-manager-georgia-on-site-at-whitebit-georgia-4029191973",
+      "https://ge.linkedin.com/jobs/view/customer-support-specialist-georgian-evening-shift-sat%E2%80%93wed-at-whitebit-georgia-4078833059",
+      "https://ge.linkedin.com/jobs/view/smm-specialist-at-whitebit-georgia-4174875828",
+      "https://ge.linkedin.com/jobs/view/product-manager-at-whitebit-georgia-4022649285",
+      "https://ge.linkedin.com/jobs/view/business-development-manager-at-whitebit-georgia-4029215001",
+      "https://ge.linkedin.com/jobs/view/marketing-manager-at-whitebit-georgia-4312427833"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "trabzonspor",
+      "entity_name": "Trabzonspor",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.2,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.2
+      ],
+      "explored_domains": [
+        "https://ge.linkedin.com/jobs/view/business-development-manager-georgia-on-site-at-whitebit-georgia-4029191973",
+        "https://ge.linkedin.com/jobs/view/smm-specialist-at-whitebit-georgia-4174875828",
+        "https://ge.linkedin.com/jobs/view/product-manager-at-whitebit-georgia-4022649285",
+        "https://ge.linkedin.com/jobs/view/marketing-manager-at-whitebit-georgia-4286707590",
+        "https://trabzonspor.org.tr",
+        "https://ge.linkedin.com/jobs/view/customer-support-specialist-georgian-evening-shift-sat%E2%80%93wed-at-whitebit-georgia-4078833059"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Regulatory Compliance Procurement",
+        "AML/KYC Technology Stack",
+        "Financial Monitoring Integration",
+        "Sponsorship Ecosystem Governance",
+        "Sponsorship Ecosystem Procurement",
+        "Product Lifecycle Management Infrastructure",
+        "Fintech Product Strategy & Roadmap",
+        "Cross-Functional Collaboration Tools",
+        "Market Research & Analytics Platforms"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Trabzonspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:15:23.785523",
+          "domain_explored": "https://trabzonspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online Ticketing System",
+              "Real-time Inventory Tracking",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of digital sales channels",
+              "Campaign-specific landing page infrastructure",
+              "High-volume transaction processing capability"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "E-commerce / Online Transaction Processing",
+            "Inventory Management (Card Sales)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 410,
+              "output_tokens": 254,
+              "elapsed_seconds": 6.2989819049835205
+            }
+          ],
+          "reasoning": "The content reveals a specific digital campaign ('Elini Cebine At') and a real-time inventory tracking system for ticket cards (0/10,000). This indicates active usage of an online transaction platform and ticketing management software, suggesting a need for ongoing maintenance, scalability, or user experience vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:15:36.394433",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/marketing-manager-at-whitebit-georgia-4286707590",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Analytics",
+              "Google Ads",
+              "Facebook Ads",
+              "SEO Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Marketing Manager",
+                "entity": "WhiteBIT Georgia",
+                "relation": "Official Partner of Trabzonspor",
+                "focus": "Digital Marketing Strategy & Analytics"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in digital marketing channels by key partner",
+              "Requirement for tracking and reporting tools (potential shared data needs)",
+              "Active management of brand partnership assets"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Procurement",
+            "Partner-Driven Marketing Technology",
+            "Regional Brand Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 372,
+              "elapsed_seconds": 8.89902114868164
+            }
+          ],
+          "reasoning": "While this is a job posting for WhiteBIT Georgia and not Trabzonspor directly, it confirms the active operational nature of the partnership. The requirement for 'Tracking of all existing channels (SEO, Google Ads, Facebook Ads...)' and 'Analysis of the competitive environment' indicates that the partner is investing in marketing infrastructure that promotes the joint brand. This suggests a potential for co-investment or shared technology stacks (analytics/ad serving) involving Trabzonspor's digital assets."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:15:44.688274",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/business-development-manager-georgia-on-site-at-whitebit-georgia-4029191973",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Compliance Management Systems",
+              "KYC/AML Automation Tools",
+              "Risk Assessment Platforms",
+              "Sanction Screening Software"
+            ],
+            "job_postings": [
+              "Head of AML Compliance (WhiteBIT Georgia)"
+            ],
+            "procurement_indicators": [
+              "Creation of technical assignments for IT (Vendor specs)",
+              "Need for NBG (National Bank of Georgia) integration tools",
+              "Implementation of monitoring processes and rules"
+            ]
+          },
+          "patterns_found": [
+            "Regulatory Compliance Procurement",
+            "AML/KYC Technology Stack",
+            "Financial Monitoring Integration",
+            "Sponsorship Ecosystem Governance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.059100866317749
+            }
+          ],
+          "reasoning": "The job posting for 'Head of AML Compliance' at WhiteBIT Georgia explicitly references the partnership with Trabzonspor. The role requires creating 'Technical assignments for IT' to build AML/KYC processes, which is a direct procurement signal for compliance software and monitoring tools. This confirms the sponsor is actively investing in regulatory infrastructure, which often involves third-party vendors."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:15:52.257176",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/customer-support-specialist-georgian-evening-shift-sat%E2%80%93wed-at-whitebit-georgia-4078833059",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Workspace (Google tools)",
+              "Ticketing Systems (Implied by 'Closing tickets')"
+            ],
+            "job_postings": [
+              "Customer Support Specialist (WhiteBIT Georgia)"
+            ],
+            "procurement_indicators": [
+              "Partner Operational Standards",
+              "Data Management Requirements",
+              "Shift-based Infrastructure Support"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Procurement",
+            "Customer Support Operations Infrastructure",
+            "Google Workspace Utilization",
+            "Data Handling & Record-Keeping Compliance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.9977920055389404
+            }
+          ],
+          "reasoning": "While this is a job posting for WhiteBIT Georgia and not a direct procurement request from Trabzonspor, it reinforces the 'Sponsorship Ecosystem' pattern established in Iterations 2 and 3. It confirms the operational scope of the partnership (WhiteBIT explicitly lists Trabzonspor as a partner). The listing reveals the internal technology stack (Google tools) and operational standards (record-keeping, data handling) that Trabzonspor may need to interface with or adopt as part of the partnership integration."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:16:00.039471",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/smm-specialist-at-whitebit-georgia-4174875828",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Platforms (e.g., Hootsuite, Buffer)",
+              "Analytics & Tracking Tools (Engagement/Reach metrics)",
+              "Paid Ad Platforms (Facebook/Instagram, LinkedIn, TikTok Ads)",
+              "Content Creation Tools (Visual/Video editing)"
+            ],
+            "job_postings": [
+              "SMM Specialist at WhiteBIT Georgia"
+            ],
+            "procurement_indicators": [
+              "Budget allocation for Paid Social Media Ads",
+              "Procurement of Influencer Marketing/Partnership services",
+              "Subscription-based SMM software tools",
+              "Content production resources"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Procurement",
+            "Digital Marketing Technology Stack",
+            "Social Media Management Tools",
+            "Paid Advertising Infrastructure",
+            "Influencer Marketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1648,
+              "output_tokens": 378,
+              "elapsed_seconds": 4.206975936889648
+            }
+          ],
+          "reasoning": "The job posting confirms the WhiteBIT-Trabzonspor partnership context but focuses on marketing execution rather than direct procurement. It reveals the technology stack required for social media management (SMM tools, analytics platforms) and paid advertising (Meta Ads, LinkedIn Ads), which are procured by the partner to support the joint brand visibility. This indicates a 'Partner-Driven Procurement' model where Trabzonspor benefits from the partner's tech stack."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:16:08.958889",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/product-manager-at-whitebit-georgia-4022649285",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Product Management Software (e.g., Jira, Productboard)",
+              "Analytics Platforms (User Feedback & Data Analysis)",
+              "Roadmap Planning Tools"
+            ],
+            "job_postings": [
+              "Product Manager (WhiteBIT Georgia)"
+            ],
+            "procurement_indicators": [
+              "Budget Management Responsibility",
+              "Product Development Lifecycle Oversight",
+              "Market Research & Vendor Analysis",
+              "Technology Stack Procurement for Product Launch"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem Procurement",
+            "Product Lifecycle Management Infrastructure",
+            "Fintech Product Strategy & Roadmap",
+            "Cross-Functional Collaboration Tools",
+            "Market Research & Analytics Platforms"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 355,
+              "elapsed_seconds": 5.278754234313965
+            }
+          ],
+          "reasoning": "The job posting for a Product Manager at WhiteBIT Georgia confirms active product development and management within the Trabzonspor sponsorship ecosystem. The requirement to 'manage projects, including timelines and budgets' and 'oversee the product development lifecycle' indicates direct procurement authority for product-related technologies and services. The focus on 'market research' and 'user feedback' suggests the acquisition of analytics and customer insight tools."
+        }
+      ],
+      "total_input_tokens": 8280,
+      "total_output_tokens": 1997,
+      "estimated_cost_usd": 0.054794999999999996
+    },
+    "procurement_signals": [
+      "Regulatory Compliance Procurement",
+      "AML/KYC Technology Stack",
+      "Financial Monitoring Integration",
+      "Sponsorship Ecosystem Governance",
+      "Sponsorship Ecosystem Procurement",
+      "Product Lifecycle Management Infrastructure",
+      "Fintech Product Strategy & Roadmap",
+      "Cross-Functional Collaboration Tools",
+      "Market Research & Analytics Platforms"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Trabzonspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:16:08.960702"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.146701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:45.333738"
+}

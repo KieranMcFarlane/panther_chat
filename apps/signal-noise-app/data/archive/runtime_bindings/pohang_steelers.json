@@ -1,0 +1,236 @@
+{
+  "entity_id": "pohang_steelers",
+  "entity_name": "Pohang Steelers",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "fcphshop.com",
+    "steelers.co.kr",
+    "the-afc.com",
+    "onefootball.com",
+    "adelaideunited.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search?keywords=pohang%20steelers%3Cwww.kc009.com%3E,dicas%20cartola%204%20rodada%202024%3Cwww.kc009.com%3E,zn078l9hxa5mkve,MoSIqK7G"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pohang_steelers",
+      "entity_name": "Pohang Steelers",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/search?keywords=pohang%20steelers%3Cwww.kc009.com%3E,dicas%20cartola%204%20rodada%202024%3Cwww.kc009.com%3E,zn078l9hxa5mkve,MoSIqK7G",
+        "https://onefootball.com",
+        "https://adelaideunited.com.au",
+        "https://the-afc.com",
+        "https://steelers.co.kr",
+        "https://fcphshop.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public Tender Announcement (Bid Notice)",
+        "Marketing Services Procurement",
+        "Merchandise Production Sourcing",
+        "Seasonal Budget Execution (2026 Planning)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pohang Steelers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:12:52.650821",
+          "domain_explored": "https://fcphshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (likely Cafe24 or similar Korean CMS)",
+              "Payment Gateway (Shinhan Bank integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: (\uc8fc)\ub514\uc544\uc774\uc5d0\ud504\ucf54\ub9ac\uc544 (DIF Korea) - Merchandising & Operations",
+              "Vendor: \uc5d4\uc5d0\uc774\uce58\uc5d4\uace0\ub3c4(\uc8fc) (NHN GODO) - Hosting Provider",
+              "Banking Partner: Shinhan Bank (Account: 140-011-498318)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Vendor Partnership (DIF Korea)",
+            "Customer Service Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 285,
+              "elapsed_seconds": 4.273044109344482
+            }
+          ],
+          "reasoning": "The content reveals the official online store (fcphshop.com) operated by '(\uc8fc)\ub514\uc544\uc774\uc5d0\ud504\ucf54\ub9ac\uc544' (DIF Korea). While this is a direct vendor relationship, it is operational (merchandise sales) rather than a new procurement signal for technology or infrastructure. The site uses a standard e-commerce template (likely Cafe24 based on structure) and lists specific banking and contact details, indicating established vendor governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:13:03.582056",
+          "domain_explored": "https://steelers.co.kr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "RFP / Bid Notice",
+                "title": "[\uc785\ucc30\uacf5\uace0] 2026 \ud30c\ud2b8\ub108\uc2a4 \ud64d\ubcf4\ubb3c \ubc0f \uae30\ub150\ud488 \uc81c\uc791\uc0ac \uc120\uc815 \uacf5\uace0",
+                "description": "Public tender for the selection of a vendor to produce promotional materials and souvenirs for partners for the 2026 season.",
+                "source_url": "https://steelers.co.kr"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Public Tender Announcement (Bid Notice)",
+            "Marketing Services Procurement",
+            "Merchandise Production Sourcing",
+            "Seasonal Budget Execution (2026 Planning)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.116421937942505
+            }
+          ],
+          "reasoning": "The homepage explicitly features a '[\uc785\ucc30\uacf5\uace0] 2026 \ud30c\ud2b8\ub108\uc2a4 \ud64d\ubcf4\ubb3c \ubc0f \uae30\ub150\ud488 \uc81c\uc791\uc0ac \uc120\uc815 \uacf5\uace0' (Bid Announcement: Selection of 2026 Partners Promotional Materials and Souvenir Manufacturers). This is a direct procurement signal indicating an active RFP process for marketing materials and merchandise manufacturing for the upcoming season."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:13:11.765005",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:13:18.015169",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:13:32.032894",
+          "domain_explored": "https://adelaideunited.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Memberlink (Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership Flexibility Models",
+              "Official Store Discount Integration"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Content",
+            "Fan Engagement Content",
+            "Ticketing Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 226,
+              "elapsed_seconds": 7.460609197616577
+            }
+          ],
+          "reasoning": "The analyzed content belongs to Adelaide United (adelaideunited.com.au), a different entity within the same industry (A-League). While it reveals operational patterns like '3-Game Flexi Memberships' and usage of the 'Memberlink' ticketing platform, there is no direct procurement signal, technology stack, or vendor partnership information relevant to Pohang Steelers. This represents a scope drift error."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:13:41.758208",
+          "domain_explored": "https://www.linkedin.com/jobs/search?keywords=pohang%20steelers%3Cwww.kc009.com%3E,dicas%20cartola%204%20rodada%202024%3Cwww.kc009.com%3E,zn078l9hxa5mkve,MoSIqK7G",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Spam/SEO Injection",
+            "Generic Job Aggregator Content",
+            "Authentication Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1598,
+              "output_tokens": 169,
+              "elapsed_seconds": 4.053067207336426
+            }
+          ],
+          "reasoning": "The search query string contains obvious spam injection parameters ('kc009.com', 'dicas Cartola'). The resulting content displays generic US-based job listings (Lensa) and LinkedIn authentication prompts rather than specific corporate data for Pohang Steelers. There is no verifiable procurement or hiring intent for the target entity."
+        }
+      ],
+      "total_input_tokens": 5880,
+      "total_output_tokens": 956,
+      "estimated_cost_usd": 0.03198
+    },
+    "procurement_signals": [
+      "Public Tender Announcement (Bid Notice)",
+      "Marketing Services Procurement",
+      "Merchandise Production Sourcing",
+      "Seasonal Budget Execution (2026 Planning)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pohang Steelers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:13:41.759998"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.187086",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:42:51.174521"
+}

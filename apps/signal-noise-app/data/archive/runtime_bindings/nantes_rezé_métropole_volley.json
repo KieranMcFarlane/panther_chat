@@ -1,0 +1,216 @@
+{
+  "entity_id": "nantes_rez\u00e9_m\u00e9tropole_volley",
+  "entity_name": "Nantes Rez\u00e9 M\u00e9tropole Volley",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "zoominfo.com",
+    "metropole.nantes.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nantes_rez\u00e9_m\u00e9tropole_volley",
+      "entity_name": "Nantes Rez\u00e9 M\u00e9tropole Volley",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://globalsportsarchive.com",
+        "https://metropole.nantes.fr",
+        "https://zoominfo.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nantes Rez\u00e9 M\u00e9tropole Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:15:39.760252",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation menu",
+            "Historical event listings (2021, 2022)",
+            "External federation links (FIVB, national federations)",
+            "Copyright footer (2011)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 208,
+              "elapsed_seconds": 6.111253023147583
+            }
+          ],
+          "reasoning": "The scraped content is from the general European Volleyball Confederation (CEV) portal navigation and footer. It contains generic links to European Cups, Championships, and historical events (e.g., 2021 Vienna, 2022 Munich). There is no mention of Nantes Rez\u00e9 M\u00e9tropole Volley, nor are there any specific procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:15:49.848041",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Wikibase",
+              "SPARQL",
+              "MediaWiki"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic open-source project landing page",
+            "Community contribution calls (volunteer)",
+            "Event listings (WikidataCon)",
+            "Technical documentation links (SPARQL, API)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.5163421630859375
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a Wikimedia Foundation project. It contains no information specific to 'Nantes Rez\u00e9 M\u00e9tropole Volley'. The content focuses on general community contributions, software development (SPARQL, Wikibase), and events unrelated to the target entity. There are no procurement signals, job postings, or vendor partnerships relevant to the volleyball club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:16:02.005317",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation menu",
+            "Historical event listings",
+            "External federation links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.8961548805236816
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic navigation sitemap for global soccer competitions (UEFA, CONCACAF, etc.). It contains no information regarding Nantes Rez\u00e9 M\u00e9tropole Volley, nor does it contain procurement signals, technology stacks, or governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:16:10.933383",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B SaaS marketing copy",
+            "Sales tool testimonials (SDR, RevOps, CIO roles)",
+            "Platform feature descriptions (AI, Copilot, Intent data)",
+            "Third-party lead generation service provider context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 211,
+              "elapsed_seconds": 3.8059499263763428
+            }
+          ],
+          "reasoning": "The content is the homepage of ZoomInfo, a B2B intelligence and sales software vendor. It describes the vendor's capabilities (AI, CRM enrichment, lead generation) rather than the procurement activities or technology stack of the target entity, Nantes Rez\u00e9 M\u00e9tropole Volley. There is no mention of the volleyball club, its specific vendors, or its purchasing intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:16:52.122741",
+          "domain_explored": "https://metropole.nantes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Municipal infrastructure projects (Busway line 8, Pont Anne-de-Bretagne)",
+              "Public service facility management (piscines, cr\u00e8ches, d\u00e9ch\u00e8teries)"
+            ]
+          },
+          "patterns_found": [
+            "Generic municipal news aggregator",
+            "Citizen service portal (pools, permits, childcare)",
+            "Infrastructure project updates (Busway line 8, bridges)",
+            "Future-dated content (2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 286,
+              "elapsed_seconds": 14.610562086105347
+            }
+          ],
+          "reasoning": "The content represents the public-facing news portal of the Nantes city government. While it confirms the entity operates within the Nantes metropolitan ecosystem, the content is focused on citizen services (childcare, traffic, cinema) and municipal politics rather than the specific procurement, operational, or technological strategies of the Nantes Rez\u00e9 M\u00e9tropole Volley organization. There are no signals of B2B purchasing, vendor selection, or technology stack implementation relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7395,
+      "total_output_tokens": 1104,
+      "estimated_cost_usd": 0.038745
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nantes Rez\u00e9 M\u00e9tropole Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:16:52.132802"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322048",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:32.117868"
+}

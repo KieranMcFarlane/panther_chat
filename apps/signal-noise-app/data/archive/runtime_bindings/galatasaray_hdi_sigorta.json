@@ -1,0 +1,98 @@
+{
+  "entity_id": "galatasaray_hdi_sigorta",
+  "entity_name": "Galatasaray HDI Sigorta",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "galatasaray.org",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "galatasaray_hdi_sigorta",
+      "entity_name": "Galatasaray HDI Sigorta",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://galatasaray.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Galatasaray HDI Sigorta may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:18:39.623451",
+          "domain_explored": "https://galatasaray.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:18:47.460426",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor/Partner: Halkbank ANKARA (identified via match schedule)"
+            ]
+          },
+          "patterns_found": [
+            "sports_event_schedule",
+            "competitor_identification",
+            "entity_name_match"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1390,
+              "output_tokens": 213,
+              "elapsed_seconds": 4.856950044631958
+            }
+          ],
+          "reasoning": "The content is a sports results page from the European Volleyball Confederation (CEV). While it confirms the existence of 'Galatasaray HDI ISTANBUL' as a volleyball team playing in the Champions League, it provides zero information regarding the insurance entity's procurement activities, technology stack, or governance. The entity match is relevant for context but does not advance the procurement intelligence goal."
+        }
+      ],
+      "total_input_tokens": 1390,
+      "total_output_tokens": 213,
+      "estimated_cost_usd": 0.007365
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Galatasaray HDI Sigorta may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:18:47.461607"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319162",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:58.125368"
+}

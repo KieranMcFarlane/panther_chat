@@ -1,0 +1,247 @@
+{
+  "entity_id": "gent\u0096wevelgem_women",
+  "entity_name": "Gent\u0096Wevelgem Women",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "cyclingnews.com",
+    "cyclingfans.com",
+    "cyclist.co.uk",
+    "steephill.tv",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/sales-support-sales-international-at-joseph-ribkoff-inc-4261059570",
+      "https://be.linkedin.com/jobs/empowerment-jobs",
+      "https://be.linkedin.com/jobs/view/key-account-manager-national-accounts-benelux-at-kraft-heinz-4109623017"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gent\u0096wevelgem_women",
+      "entity_name": "Gent\u0096Wevelgem Women",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wikidata.org",
+        "https://steephill.tv",
+        "https://cyclist.co.uk",
+        "https://be.linkedin.com/jobs/view/sales-support-sales-international-at-joseph-ribkoff-inc-4261059570",
+        "https://cyclingfans.com",
+        "https://be.linkedin.com/jobs/view/key-account-manager-national-accounts-benelux-at-kraft-heinz-4109623017",
+        "https://be.linkedin.com/jobs/empowerment-jobs",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gent\u0096Wevelgem Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:15:08.372320",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Race results and athlete interviews",
+            "Equipment technology reviews (consumer focused)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 204,
+              "elapsed_seconds": 1.8637912273406982
+            }
+          ],
+          "reasoning": "The provided content consists of general cycling news articles, race results, and athlete interviews. While there is a mention of 'unreleased TT bikes' and 'race machines' in the context of the Challenge Mallorca tech gallery, this relates to consumer equipment reviews and team sponsorship assets rather than the organizational procurement, enterprise software, or operational infrastructure of the Gent-Wevelgem Women entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:15:11.115820",
+          "domain_explored": "https://cyclingfans.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:15:14.117686",
+          "domain_explored": "https://cyclist.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:15:16.708135",
+          "domain_explored": "https://steephill.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:15:19.900867",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:15:27.093962",
+          "domain_explored": "https://be.linkedin.com/jobs/view/sales-support-sales-international-at-joseph-ribkoff-inc-4261059570",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office (Excel, Word, PowerPoint)"
+            ],
+            "job_postings": [
+              "Sales Support, Sales International"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job posting for fashion retailer (Joseph Ribkoff)",
+            "Location mismatch (Wilde, not race organizer HQ)",
+            "Industry mismatch (Retail Apparel vs Sports Event Management)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 220,
+              "elapsed_seconds": 2.774761915206909
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Sales Support' at Joseph Ribkoff Inc., a fashion apparel company. While the location is in the Flemish Region of Belgium, the entity is a fashion retailer/distributor, not the organizer of the Gent-Wevelgem cycling race. There is no connection to the event's procurement, operations, or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:15:34.749946",
+          "domain_explored": "https://be.linkedin.com/jobs/empowerment-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "People & Culture Partner at Volvo Group (Ghent)",
+              "HR Business Partner at Envalior (Genk)",
+              "Specialists in Youth, Inclusion at NTU International (Brussels)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job aggregation page",
+            "Keyword mismatch ('Empowerment' vs 'Procurement')",
+            "Unrelated industries (Automotive, Chemical, HR Consulting)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1622,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.512600898742676
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Empowerment' roles in Belgium. None of the listings (Volvo, Envalior, NTU International, etc.) are associated with the entity 'Gent\u2013Wevelgem Women' or the event organizer Flanders Classics. There are no signals relevant to sports event procurement, technology stacks, or governance."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:15:40.996907",
+          "domain_explored": "https://be.linkedin.com/jobs/view/key-account-manager-national-accounts-benelux-at-kraft-heinz-4109623017",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Key Account Manager National Accounts Benelux at Kraft Heinz"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job posting for Food & Beverage industry (Kraft Heinz)",
+            "Role focused on Sales/Account Management (Foodservice/QSR)",
+            "Location mismatch (Berchem/Antwerp vs Cycling Event Organizer)",
+            "Entity mismatch (Global CPG Corp vs Local Sports Event)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 256,
+              "elapsed_seconds": 2.4421212673187256
+            }
+          ],
+          "reasoning": "The content is a job posting for a Key Account Manager at Kraft Heinz, a major food processing company. While the location (Berchem, Belgium) is geographically close to potential race organizers, the entity and industry are entirely unrelated to 'Gent-Wevelgem Women' or cycling event management. The role focuses on selling food products to QSR (Quick Service Restaurant) accounts, not procuring event services or technology."
+        }
+      ],
+      "total_input_tokens": 6235,
+      "total_output_tokens": 923,
+      "estimated_cost_usd": 0.032549999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gent\u0096Wevelgem Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:15:40.999275"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.410015",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:31.234751"
+}

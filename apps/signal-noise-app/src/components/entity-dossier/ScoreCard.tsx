@@ -11,7 +11,7 @@
 import React from 'react';
 
 export interface HypothesisStateProps {
-  entity_id: string;
+  entity_id?: string;
   category: string;
   maturity_score: number;
   activity_score: number;

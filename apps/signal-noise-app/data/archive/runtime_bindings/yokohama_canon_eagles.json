@@ -1,0 +1,228 @@
+{
+  "entity_id": "yokohama_canon_eagles",
+  "entity_name": "Yokohama Canon Eagles",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "canon-eagles.jp",
+    "league-one.jp",
+    "yokohamajapan.com",
+    "en.rugby-japan.jp",
+    "quick.pia.jp",
+    "ultimaterugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "yokohama_canon_eagles",
+      "entity_name": "Yokohama Canon Eagles",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://league-one.jp",
+        "https://yokohamajapan.com",
+        "https://quick.pia.jp",
+        "https://en.rugby-japan.jp",
+        "https://ultimaterugby.com",
+        "https://canon-eagles.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Yokohama Canon Eagles may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:36:35.058260",
+          "domain_explored": "https://canon-eagles.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:36:47.720088",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "TicketRugby (Third-party ticketing platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide ticketing outsourcing (Low specificity)"
+            ]
+          },
+          "patterns_found": [
+            "League_One_Schedule_Scraper",
+            "Ticket_Platform_Integration",
+            "Match_Results_Architecture"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 280,
+              "elapsed_seconds": 4.869946002960205
+            }
+          ],
+          "reasoning": "The scraped content is raw HTML/Text data from the League One official website (league-one.jp) containing match schedules, results, and ticket links for multiple teams (e.g., Toyota Verblitz, Suntory Sungoliath). While 'Yokohama Canon Eagles' (\u6a2a\u6d5c\uff25) is mentioned as a participant, this page is a generic league aggregator. It provides no specific information about the Eagles' internal operations, technology stack, or procurement activities. The link to 'ticketrugby.jp' indicates a third-party ticketing vendor, but this is a league-wide standard, not a specific procurement signal for the Eagles' entity at this time."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:36:51.574542",
+          "domain_explored": "https://yokohamajapan.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:37:01.912949",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Media Hosting)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External E-commerce Operation (shop.rugby-japan.jp)",
+              "Digital Fan Engagement Platform (Sakura Club)"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce_Platform_Link",
+            "YouTube_Content_Integration",
+            "Fan_Community_Portal"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 739,
+              "output_tokens": 255,
+              "elapsed_seconds": 4.307801961898804
+            }
+          ],
+          "reasoning": "The scraped content represents the public-facing homepage of the Japan Rugby Football Union (JRFU). While it contains links to an 'Online Shop' and 'Sakura Club' (fan community), these are consumer-facing destinations rather than procurement signals. The content is navigational and promotional, lacking technical implementation details, vendor information, or business intent specific to the Yokohama Canon Eagles entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:37:12.142165",
+          "domain_explored": "https://quick.pia.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "QUICK PIA (ASP Ticketing Platform)",
+              "Pia Smart Gate Solution",
+              "Google Wallet",
+              "Apple Wallet",
+              "Google Pay",
+              "Apple Pay"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Adoption: Yokohama F. Marinos (Local Rival) listed as client",
+              "Competitor Adoption: Kobelco Steelers (Rugby) listed as client",
+              "Use Case: Inbound ticketing solutions for foreign visitors",
+              "Use Case: Reducing ticket purchase friction (no registration required)"
+            ]
+          },
+          "patterns_found": [
+            "Competitor_Ticketing_Analysis",
+            "Digital_Ticketing_ASP",
+            "Mobile_Wallet_Integration",
+            "Inbound_Tourism_Strategy",
+            "Gate_System_Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 391,
+              "elapsed_seconds": 5.768548250198364
+            }
+          ],
+          "reasoning": "The content describes 'QUICK PIA', an ASP service for online ticketing that requires no user registration and integrates with mobile wallets (Google/Apple Pay) and gate systems. While this is a vendor page (Pia Co., Ltd.) and not a direct procurement signal from the Eagles, it establishes a clear technology benchmark used by direct competitors (Yokohama F. Marinos, Kobe Steelers) and peers in the J.League and Japanese Baseball. This indicates a market standard for frictionless ticketing and inbound fan acquisition that the Eagles may need to consider to remain competitive in the Yokohama market."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:37:31.134112",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irish_Team_News",
+            "Video_Content_Aggregation",
+            "Player_Injury_Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 612,
+              "output_tokens": 157,
+              "elapsed_seconds": 12.067052602767944
+            }
+          ],
+          "reasoning": "The content from ultimaterugby.com focuses on the Irish national team's training camp and player status (Bundee Aki, Hugo Keenan). This is sports news aggregation and is completely unrelated to the Yokohama Canon Eagles' procurement activities, technology stack, or business operations."
+        }
+      ],
+      "total_input_tokens": 4255,
+      "total_output_tokens": 1083,
+      "estimated_cost_usd": 0.02901
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Yokohama Canon Eagles may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:37:31.137101"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.274086",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:22.905282"
+}

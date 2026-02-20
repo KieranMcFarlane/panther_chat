@@ -1,0 +1,200 @@
+{
+  "entity_id": "bm_benidorm",
+  "entity_name": "BM Benidorm",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "bmbenidorm.com",
+    "zoominfo.com",
+    "benidorm.org",
+    "en.visitbenidorm.es",
+    "barcaacademy.fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bm_benidorm",
+      "entity_name": "BM Benidorm",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://bmbenidorm.com",
+        "https://barcaacademy.fcbarcelona.com",
+        "https://benidorm.org",
+        "https://en.visitbenidorm.es",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BM Benidorm may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:28:51.111442",
+          "domain_explored": "https://bmbenidorm.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Sponsorship branding (Servigroup Hoteles)",
+            "League match reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.073824882507324
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports match reports, scores, and team news for Balonmano (handball). There is no mention of business operations, technology procurement, job vacancies, or governance structures relevant to business intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:28:54.108221",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:29:00.169608",
+          "domain_explored": "https://benidorm.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Municipal event organization",
+              "Public administration contracts (irrelevant to private sports club)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal governance structure",
+            "Public event management",
+            "Cultural administration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 516,
+              "output_tokens": 237,
+              "elapsed_seconds": 2.7429871559143066
+            }
+          ],
+          "reasoning": "The target entity 'BM Benidorm' is a sports club (likely 'Benidorm Mart' or similar), but the scraped content is from 'benidorm.org', the official website of the Benidorm City Council (Ayuntamiento de Benidorm). While there may be sponsorship relationships, the City Council is a distinct administrative entity. The content focuses on 'Fiestas' (public festivals) and municipal news, which does not constitute direct procurement signals for the sports club entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:29:08.152847",
+          "domain_explored": "https://en.visitbenidorm.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Virtual Reality (VR) platforms",
+              "Web hosting for virtual exhibitions",
+              "3D rendering engines"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourcing of digital exhibition development",
+              "Vendor reliance for 'Benidorm Virtual' platform maintenance"
+            ]
+          },
+          "patterns_found": [
+            "Virtual event infrastructure",
+            "Digital cultural programming",
+            "3D/VR content hosting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 228,
+              "elapsed_seconds": 3.5687942504882812
+            }
+          ],
+          "reasoning": "The content explicitly references 'Benidorm Virtual' and a 'Virtual Exhibition', indicating an investment in digital infrastructure and VR platforms. While this is likely a tourism initiative, it confirms the entity's capability and budget for digital vendor engagement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:29:15.582721",
+          "domain_explored": "https://barcaacademy.fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand mismatch (FC Barcelona vs BM Benidorm)",
+            "B2C consumer content (sports camps/academies)",
+            "Marketing news aggregation",
+            "Irrelevant domain content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 194,
+              "elapsed_seconds": 4.285660982131958
+            }
+          ],
+          "reasoning": "The scraped content is from the official FC Barcelona website (barcaacademy.fcbarcelona.com), which is completely unrelated to the target entity 'BM Benidorm'. The content focuses on promoting football camps, academies, and clinics for FC Barcelona. There are no procurement signals, technology stacks, or governance patterns relevant to BM Benidorm."
+        }
+      ],
+      "total_input_tokens": 3962,
+      "total_output_tokens": 815,
+      "estimated_cost_usd": 0.024111
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BM Benidorm may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:29:15.584969"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359437",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:24.787159"
+}

@@ -1,0 +1,1841 @@
+[
+  {
+    "entity": "Arsenal FC",
+    "templates_processed": 67,
+    "successful_templates": 67,
+    "total_signals": 0,
+    "total_channels": 0,
+    "avg_confidence_boost": 0.0,
+    "results": [
+      {
+        "entity": "Arsenal FC",
+        "template": "tier_1_club_centralized_procurement",
+        "template_id": "tier_1_club_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "mid_tier_club_procurement_intelligence_v1",
+        "template_id": "mid_tier_club_procurement_intelligence_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "emerging_club_latam_football_procurement",
+        "template_id": "emerging_club_latam_football_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "lower_tier_club_procurement_signal_v1",
+        "template_id": "lower_tier_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Tier_1_Football_Club_Procurement_Intelligence",
+        "template_id": "tier_1_football_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "mid_market_league_clubs_procurement_signals",
+        "template_id": "mid_market_league_clubs_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Emerging_Market_State_Club_Procurement_Signal_v1",
+        "template_id": "emerging_market_state_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Global Sports Federation - Centralized Procurement Intelligence",
+        "template_id": "global_sports_federation___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "league_centralized_procurement_football",
+        "template_id": "league_centralized_procurement_football",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "tier_2_football_club_procurement_signals",
+        "template_id": "tier_2_football_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Football League Centralized Procurement Signal Detector",
+        "template_id": "football_league_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "global_federation_procurement_intelligence",
+        "template_id": "global_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "global_federation_procurement_signal_v1",
+        "template_id": "global_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "major_league_franchise_procurement_v1",
+        "template_id": "major_league_franchise_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "european_basketball_club_procurement_signals",
+        "template_id": "european_basketball_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Mid-Market Basketball Club Procurement Intelligence",
+        "template_id": "mid_market_basketball_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Corporate_Basketball_Centralized_Procurement_v1",
+        "template_id": "corporate_basketball_centralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "High-Fidelity Basketball Club Procurement Tracker",
+        "template_id": "high_fidelity_basketball_club_procurement_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "National Basketball League - Strategic Procurement Signal Template",
+        "template_id": "national_basketball_league___strategic_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Basketball_Club_Procurement_Signal_v1",
+        "template_id": "basketball_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "regional_league_basketball_digital_transformation",
+        "template_id": "regional_league_basketball_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "apac_clubs_procurement_centralized_v1",
+        "template_id": "apac_clubs_procurement_centralized_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "latin_american_basketball_procurement_v1",
+        "template_id": "latin_american_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "national_federation_basketball_procurement_v1",
+        "template_id": "national_federation_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "European Basketball League - Digital Procurement Detector",
+        "template_id": "european_basketball_league___digital_procurement_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "latam_basketball_procurement_signals",
+        "template_id": "latam_basketball_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "FIBA_Federation_Procurement_Signal_v1",
+        "template_id": "fiba_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Japan Corporate Rugby Procurement Intelligence",
+        "template_id": "japan_corporate_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Emerging Pro Rugby Procurement Intelligence",
+        "template_id": "emerging_pro_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "rugby_centralized_league_procurement_v1",
+        "template_id": "rugby_centralized_league_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "rugby_national_federations_procurement_intelligence",
+        "template_id": "rugby_national_federations_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "global_rugby_federation_procurement_intelligence",
+        "template_id": "global_rugby_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "cricket_global_governing_bodies_procurement_v1",
+        "template_id": "cricket_global_governing_bodies_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Elite Cricket League - Centralized Procurement Monitor",
+        "template_id": "elite_cricket_league___centralized_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Associate Cricket Federation - Strategic Transformation Tracker",
+        "template_id": "associate_cricket_federation___strategic_transformation_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "domestic_cricket_procurement_signal_v1",
+        "template_id": "domestic_cricket_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "professional_league_teams_procurement_v1",
+        "template_id": "professional_league_teams_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "ICC_Regional_Body_Procurement_Signal",
+        "template_id": "icc_regional_body_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "aus_cricket_developmental_procurement",
+        "template_id": "aus_cricket_developmental_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "NHL_Club_Centralized_Procurement_Signal_v1",
+        "template_id": "nhl_club_centralized_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "ahl_echl_decentralized_procurement_v1",
+        "template_id": "ahl_echl_decentralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "European Ice Hockey Club - Strategic Procurement",
+        "template_id": "european_ice_hockey_club___strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "national_baseball_federation_procurement_intelligence",
+        "template_id": "national_baseball_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Corp_Owned_Volleyball_Procurement_Signal",
+        "template_id": "corp_owned_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "emerging_market_franchise_volleyball_procurement",
+        "template_id": "emerging_market_franchise_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "traditional_european_volleyball_procurement",
+        "template_id": "traditional_european_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "developmental_volleyball_procurement_signal",
+        "template_id": "developmental_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "global_gov_bodies_volleyball_centralized_procurement",
+        "template_id": "global_gov_bodies_volleyball_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "European Handball Club - Centralized Procurement Intelligence",
+        "template_id": "european_handball_club___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Handball_Club_Procurement_Signal_Template",
+        "template_id": "handball_club_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Motorsport Federation Strategic Procurement Monitor",
+        "template_id": "motorsport_federation_strategic_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Premium Motorsport Series - Strategic Procurement Signal",
+        "template_id": "premium_motorsport_series___strategic_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Motorsport_OEM_Factory_Teams_Strategic_Procurement",
+        "template_id": "motorsport_oem_factory_teams_strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "motorsport_privateer_teams_procurement_intelligence",
+        "template_id": "motorsport_privateer_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Motorsport_Development_Series_Procurement_Signal",
+        "template_id": "motorsport_development_series_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "global_governing_federations_low_digital",
+        "template_id": "global_governing_federations_low_digital",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "elite_cycling_worldteam_procurement_intelligence",
+        "template_id": "elite_cycling_worldteam_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "ProTeam Cycling Procurement Intelligence",
+        "template_id": "proteam_cycling_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "elite_cycling_tour_procurement_v1",
+        "template_id": "elite_cycling_tour_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "professional_teams_procurement_intelligence",
+        "template_id": "professional_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "franchise_league_centralized_procurement",
+        "template_id": "franchise_league_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Global Federation Strategic Procurement & Digital Transformation",
+        "template_id": "global_federation_strategic_procurement_&_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Tier 1 League Strategic Procurement Intelligence",
+        "template_id": "tier_1_league_strategic_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Tier 2/3 League Procurement Intelligence",
+        "template_id": "tier_2/3_league_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "IF_Centralized_Tech_Procurement",
+        "template_id": "if_centralized_tech_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Global Sport Gov Core: Centralized Procurement Signal Detector",
+        "template_id": "global_sport_gov_core:_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Arsenal FC",
+        "template": "Emerging_IntFed_Digital_Transformation",
+        "template_id": "emerging_intfed_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      }
+    ]
+  },
+  {
+    "entity": "Chelsea FC",
+    "templates_processed": 67,
+    "successful_templates": 67,
+    "total_signals": 0,
+    "total_channels": 0,
+    "avg_confidence_boost": 0.0,
+    "results": [
+      {
+        "entity": "Chelsea FC",
+        "template": "tier_1_club_centralized_procurement",
+        "template_id": "tier_1_club_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "mid_tier_club_procurement_intelligence_v1",
+        "template_id": "mid_tier_club_procurement_intelligence_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "emerging_club_latam_football_procurement",
+        "template_id": "emerging_club_latam_football_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "lower_tier_club_procurement_signal_v1",
+        "template_id": "lower_tier_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Tier_1_Football_Club_Procurement_Intelligence",
+        "template_id": "tier_1_football_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "mid_market_league_clubs_procurement_signals",
+        "template_id": "mid_market_league_clubs_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Emerging_Market_State_Club_Procurement_Signal_v1",
+        "template_id": "emerging_market_state_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Global Sports Federation - Centralized Procurement Intelligence",
+        "template_id": "global_sports_federation___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "league_centralized_procurement_football",
+        "template_id": "league_centralized_procurement_football",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "tier_2_football_club_procurement_signals",
+        "template_id": "tier_2_football_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Football League Centralized Procurement Signal Detector",
+        "template_id": "football_league_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "global_federation_procurement_intelligence",
+        "template_id": "global_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "global_federation_procurement_signal_v1",
+        "template_id": "global_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "major_league_franchise_procurement_v1",
+        "template_id": "major_league_franchise_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "european_basketball_club_procurement_signals",
+        "template_id": "european_basketball_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Mid-Market Basketball Club Procurement Intelligence",
+        "template_id": "mid_market_basketball_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Corporate_Basketball_Centralized_Procurement_v1",
+        "template_id": "corporate_basketball_centralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "High-Fidelity Basketball Club Procurement Tracker",
+        "template_id": "high_fidelity_basketball_club_procurement_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "National Basketball League - Strategic Procurement Signal Template",
+        "template_id": "national_basketball_league___strategic_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Basketball_Club_Procurement_Signal_v1",
+        "template_id": "basketball_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "regional_league_basketball_digital_transformation",
+        "template_id": "regional_league_basketball_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "apac_clubs_procurement_centralized_v1",
+        "template_id": "apac_clubs_procurement_centralized_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "latin_american_basketball_procurement_v1",
+        "template_id": "latin_american_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "national_federation_basketball_procurement_v1",
+        "template_id": "national_federation_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "European Basketball League - Digital Procurement Detector",
+        "template_id": "european_basketball_league___digital_procurement_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "latam_basketball_procurement_signals",
+        "template_id": "latam_basketball_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "FIBA_Federation_Procurement_Signal_v1",
+        "template_id": "fiba_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Japan Corporate Rugby Procurement Intelligence",
+        "template_id": "japan_corporate_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Emerging Pro Rugby Procurement Intelligence",
+        "template_id": "emerging_pro_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "rugby_centralized_league_procurement_v1",
+        "template_id": "rugby_centralized_league_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "rugby_national_federations_procurement_intelligence",
+        "template_id": "rugby_national_federations_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "global_rugby_federation_procurement_intelligence",
+        "template_id": "global_rugby_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "cricket_global_governing_bodies_procurement_v1",
+        "template_id": "cricket_global_governing_bodies_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Elite Cricket League - Centralized Procurement Monitor",
+        "template_id": "elite_cricket_league___centralized_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Associate Cricket Federation - Strategic Transformation Tracker",
+        "template_id": "associate_cricket_federation___strategic_transformation_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "domestic_cricket_procurement_signal_v1",
+        "template_id": "domestic_cricket_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "professional_league_teams_procurement_v1",
+        "template_id": "professional_league_teams_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "ICC_Regional_Body_Procurement_Signal",
+        "template_id": "icc_regional_body_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "aus_cricket_developmental_procurement",
+        "template_id": "aus_cricket_developmental_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "NHL_Club_Centralized_Procurement_Signal_v1",
+        "template_id": "nhl_club_centralized_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "ahl_echl_decentralized_procurement_v1",
+        "template_id": "ahl_echl_decentralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "European Ice Hockey Club - Strategic Procurement",
+        "template_id": "european_ice_hockey_club___strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "national_baseball_federation_procurement_intelligence",
+        "template_id": "national_baseball_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Corp_Owned_Volleyball_Procurement_Signal",
+        "template_id": "corp_owned_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "emerging_market_franchise_volleyball_procurement",
+        "template_id": "emerging_market_franchise_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "traditional_european_volleyball_procurement",
+        "template_id": "traditional_european_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "developmental_volleyball_procurement_signal",
+        "template_id": "developmental_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "global_gov_bodies_volleyball_centralized_procurement",
+        "template_id": "global_gov_bodies_volleyball_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "European Handball Club - Centralized Procurement Intelligence",
+        "template_id": "european_handball_club___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Handball_Club_Procurement_Signal_Template",
+        "template_id": "handball_club_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Motorsport Federation Strategic Procurement Monitor",
+        "template_id": "motorsport_federation_strategic_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Premium Motorsport Series - Strategic Procurement Signal",
+        "template_id": "premium_motorsport_series___strategic_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Motorsport_OEM_Factory_Teams_Strategic_Procurement",
+        "template_id": "motorsport_oem_factory_teams_strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "motorsport_privateer_teams_procurement_intelligence",
+        "template_id": "motorsport_privateer_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Motorsport_Development_Series_Procurement_Signal",
+        "template_id": "motorsport_development_series_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "global_governing_federations_low_digital",
+        "template_id": "global_governing_federations_low_digital",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "elite_cycling_worldteam_procurement_intelligence",
+        "template_id": "elite_cycling_worldteam_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "ProTeam Cycling Procurement Intelligence",
+        "template_id": "proteam_cycling_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "elite_cycling_tour_procurement_v1",
+        "template_id": "elite_cycling_tour_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "professional_teams_procurement_intelligence",
+        "template_id": "professional_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "franchise_league_centralized_procurement",
+        "template_id": "franchise_league_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Global Federation Strategic Procurement & Digital Transformation",
+        "template_id": "global_federation_strategic_procurement_&_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Tier 1 League Strategic Procurement Intelligence",
+        "template_id": "tier_1_league_strategic_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Tier 2/3 League Procurement Intelligence",
+        "template_id": "tier_2/3_league_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "IF_Centralized_Tech_Procurement",
+        "template_id": "if_centralized_tech_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Global Sport Gov Core: Centralized Procurement Signal Detector",
+        "template_id": "global_sport_gov_core:_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Chelsea FC",
+        "template": "Emerging_IntFed_Digital_Transformation",
+        "template_id": "emerging_intfed_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      }
+    ]
+  },
+  {
+    "entity": "Manchester United",
+    "templates_processed": 67,
+    "successful_templates": 67,
+    "total_signals": 0,
+    "total_channels": 0,
+    "avg_confidence_boost": 0.0,
+    "results": [
+      {
+        "entity": "Manchester United",
+        "template": "tier_1_club_centralized_procurement",
+        "template_id": "tier_1_club_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "mid_tier_club_procurement_intelligence_v1",
+        "template_id": "mid_tier_club_procurement_intelligence_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "emerging_club_latam_football_procurement",
+        "template_id": "emerging_club_latam_football_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "lower_tier_club_procurement_signal_v1",
+        "template_id": "lower_tier_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Tier_1_Football_Club_Procurement_Intelligence",
+        "template_id": "tier_1_football_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "mid_market_league_clubs_procurement_signals",
+        "template_id": "mid_market_league_clubs_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Emerging_Market_State_Club_Procurement_Signal_v1",
+        "template_id": "emerging_market_state_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Global Sports Federation - Centralized Procurement Intelligence",
+        "template_id": "global_sports_federation___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "league_centralized_procurement_football",
+        "template_id": "league_centralized_procurement_football",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "tier_2_football_club_procurement_signals",
+        "template_id": "tier_2_football_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Football League Centralized Procurement Signal Detector",
+        "template_id": "football_league_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "global_federation_procurement_intelligence",
+        "template_id": "global_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "global_federation_procurement_signal_v1",
+        "template_id": "global_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "major_league_franchise_procurement_v1",
+        "template_id": "major_league_franchise_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "european_basketball_club_procurement_signals",
+        "template_id": "european_basketball_club_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Mid-Market Basketball Club Procurement Intelligence",
+        "template_id": "mid_market_basketball_club_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Corporate_Basketball_Centralized_Procurement_v1",
+        "template_id": "corporate_basketball_centralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "High-Fidelity Basketball Club Procurement Tracker",
+        "template_id": "high_fidelity_basketball_club_procurement_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "National Basketball League - Strategic Procurement Signal Template",
+        "template_id": "national_basketball_league___strategic_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Basketball_Club_Procurement_Signal_v1",
+        "template_id": "basketball_club_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "regional_league_basketball_digital_transformation",
+        "template_id": "regional_league_basketball_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "apac_clubs_procurement_centralized_v1",
+        "template_id": "apac_clubs_procurement_centralized_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "latin_american_basketball_procurement_v1",
+        "template_id": "latin_american_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "national_federation_basketball_procurement_v1",
+        "template_id": "national_federation_basketball_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "European Basketball League - Digital Procurement Detector",
+        "template_id": "european_basketball_league___digital_procurement_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "latam_basketball_procurement_signals",
+        "template_id": "latam_basketball_procurement_signals",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "FIBA_Federation_Procurement_Signal_v1",
+        "template_id": "fiba_federation_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Japan Corporate Rugby Procurement Intelligence",
+        "template_id": "japan_corporate_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Emerging Pro Rugby Procurement Intelligence",
+        "template_id": "emerging_pro_rugby_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "rugby_centralized_league_procurement_v1",
+        "template_id": "rugby_centralized_league_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "rugby_national_federations_procurement_intelligence",
+        "template_id": "rugby_national_federations_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "global_rugby_federation_procurement_intelligence",
+        "template_id": "global_rugby_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "cricket_global_governing_bodies_procurement_v1",
+        "template_id": "cricket_global_governing_bodies_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Elite Cricket League - Centralized Procurement Monitor",
+        "template_id": "elite_cricket_league___centralized_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Associate Cricket Federation - Strategic Transformation Tracker",
+        "template_id": "associate_cricket_federation___strategic_transformation_tracker",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "domestic_cricket_procurement_signal_v1",
+        "template_id": "domestic_cricket_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "professional_league_teams_procurement_v1",
+        "template_id": "professional_league_teams_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "ICC_Regional_Body_Procurement_Signal",
+        "template_id": "icc_regional_body_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "aus_cricket_developmental_procurement",
+        "template_id": "aus_cricket_developmental_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "NHL_Club_Centralized_Procurement_Signal_v1",
+        "template_id": "nhl_club_centralized_procurement_signal_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "ahl_echl_decentralized_procurement_v1",
+        "template_id": "ahl_echl_decentralized_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "European Ice Hockey Club - Strategic Procurement",
+        "template_id": "european_ice_hockey_club___strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "national_baseball_federation_procurement_intelligence",
+        "template_id": "national_baseball_federation_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Corp_Owned_Volleyball_Procurement_Signal",
+        "template_id": "corp_owned_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "emerging_market_franchise_volleyball_procurement",
+        "template_id": "emerging_market_franchise_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "traditional_european_volleyball_procurement",
+        "template_id": "traditional_european_volleyball_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "developmental_volleyball_procurement_signal",
+        "template_id": "developmental_volleyball_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "global_gov_bodies_volleyball_centralized_procurement",
+        "template_id": "global_gov_bodies_volleyball_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "European Handball Club - Centralized Procurement Intelligence",
+        "template_id": "european_handball_club___centralized_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Handball_Club_Procurement_Signal_Template",
+        "template_id": "handball_club_procurement_signal_template",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Motorsport Federation Strategic Procurement Monitor",
+        "template_id": "motorsport_federation_strategic_procurement_monitor",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Premium Motorsport Series - Strategic Procurement Signal",
+        "template_id": "premium_motorsport_series___strategic_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Motorsport_OEM_Factory_Teams_Strategic_Procurement",
+        "template_id": "motorsport_oem_factory_teams_strategic_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "motorsport_privateer_teams_procurement_intelligence",
+        "template_id": "motorsport_privateer_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Motorsport_Development_Series_Procurement_Signal",
+        "template_id": "motorsport_development_series_procurement_signal",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "global_governing_federations_low_digital",
+        "template_id": "global_governing_federations_low_digital",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "elite_cycling_worldteam_procurement_intelligence",
+        "template_id": "elite_cycling_worldteam_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "ProTeam Cycling Procurement Intelligence",
+        "template_id": "proteam_cycling_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "elite_cycling_tour_procurement_v1",
+        "template_id": "elite_cycling_tour_procurement_v1",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "professional_teams_procurement_intelligence",
+        "template_id": "professional_teams_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "franchise_league_centralized_procurement",
+        "template_id": "franchise_league_centralized_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Global Federation Strategic Procurement & Digital Transformation",
+        "template_id": "global_federation_strategic_procurement_&_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Tier 1 League Strategic Procurement Intelligence",
+        "template_id": "tier_1_league_strategic_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Tier 2/3 League Procurement Intelligence",
+        "template_id": "tier_2/3_league_procurement_intelligence",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "IF_Centralized_Tech_Procurement",
+        "template_id": "if_centralized_tech_procurement",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Global Sport Gov Core: Centralized Procurement Signal Detector",
+        "template_id": "global_sport_gov_core:_centralized_procurement_signal_detector",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      },
+      {
+        "entity": "Manchester United",
+        "template": "Emerging_IntFed_Digital_Transformation",
+        "template_id": "emerging_intfed_digital_transformation",
+        "signals_detected": 0,
+        "channels_discovered": 0,
+        "confidence_boost": 0.0,
+        "status": "success"
+      }
+    ]
+  }
+]

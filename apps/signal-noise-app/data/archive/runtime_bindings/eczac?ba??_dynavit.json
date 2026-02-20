@@ -1,0 +1,81 @@
+{
+  "entity_id": "eczac?ba??_dynavit",
+  "entity_name": "Eczac?ba?? Dynavit",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "gosupps.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eczac?ba??_dynavit",
+      "entity_name": "Eczac?ba?? Dynavit",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://gosupps.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eczac?ba?? Dynavit may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:28:04.539363",
+          "domain_explored": "https://gosupps.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic E-commerce Product Listing",
+            "Irrelevant Domain (Retail/Consumer)",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.1593849658966064
+            }
+          ],
+          "reasoning": "The content from gosupps.com is a standard e-commerce product catalog page listing consumer health goods (vitamins, shampoos, etc.). It contains no information regarding Eczac?ba?? Dynavit's internal operations, procurement strategies, technology stack, or decision-making structure. The domain is a retailer, not the target entity or a relevant B2B partner."
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 183,
+      "estimated_cost_usd": 0.006819
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eczac?ba?? Dynavit may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:28:04.541276"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.318846",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:28.688059"
+}

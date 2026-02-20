@@ -1,0 +1,205 @@
+{
+  "entity_id": "belgian_basketball_federation",
+  "entity_name": "Belgian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "basketballbelgium.be",
+    "eige.europa.eu",
+    "belganewsagency.eu",
+    "zoominfo.com",
+    "news.europawire.eu",
+    "muckrack.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_basketball_federation",
+      "entity_name": "Belgian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://basketballbelgium.be",
+        "https://eige.europa.eu",
+        "https://belganewsagency.eu",
+        "https://news.europawire.eu",
+        "https://muckrack.com",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:06:18.728909",
+          "domain_explored": "https://basketballbelgium.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Content",
+            "Event Scheduling",
+            "Team Management Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 691,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.9674739837646484
+            }
+          ],
+          "reasoning": "The content provided is strictly sports news regarding the 'Belgian Lions' national team roster and upcoming fixtures against Finland. It contains no information regarding organizational purchasing, technology infrastructure, or administrative hiring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:06:24.130557",
+          "domain_explored": "https://eige.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Policy Research & Advocacy",
+            "EU Agency Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.077012062072754
+            }
+          ],
+          "reasoning": "The content analyzed is from the European Institute for Gender Equality (EIGE), an EU agency. This is entirely unrelated to the Belgian Basketball Federation. The content focuses on gender equality indices, policy toolkits, and violence surveys. There are no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:06:29.893126",
+          "domain_explored": "https://belganewsagency.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevant Domain Content",
+            "Public Sector News (Defence, Culture, Politics)",
+            "No Sports Federation Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.377312183380127
+            }
+          ],
+          "reasoning": "The scraped content from 'belganewsagency.eu' is a general news aggregator covering broad topics such as Defence, Culture, and Politics. While there is a 'SPORTS' section, the specific article (Van der Poel/Cyclo-cross) is general sports reporting. There is no content specific to the Belgian Basketball Federation, its governance, or its procurement activities. The domain is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:06:32.933998",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:06:38.960763",
+          "domain_explored": "https://news.europawire.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevant Domain Content",
+            "Press Release Distribution Service"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 163,
+              "elapsed_seconds": 1.859868049621582
+            }
+          ],
+          "reasoning": "The content is from EuropaWire, a general press release distribution site. The articles provided (Deutsche Telekom, Rheinmetall, Bain Capital, Empa) are unrelated to the Belgian Basketball Federation. There are no signals regarding the federation's procurement, technology stack, or operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:06:41.807886",
+          "domain_explored": "https://muckrack.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5097,
+      "total_output_tokens": 681,
+      "estimated_cost_usd": 0.025506
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:06:41.809033"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252216",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:19.083925"
+}

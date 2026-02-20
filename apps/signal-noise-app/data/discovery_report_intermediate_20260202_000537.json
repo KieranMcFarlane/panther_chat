@@ -1,0 +1,5609 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "boca_juniors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "river_plate",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "racing_club",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "independiente",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "v\u00e9lez_sarsfield",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_lorenzo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "estudiantes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lan\u00fas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rosario_central",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "godoy_cruz",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "talleres",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "defensa_y_justicia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "newell's_old_boys",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "flamengo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "palmeiras",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "corinthians",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "s\u00e3o_paulo_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "santos_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gr\u00eamio",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "internacional",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atl\u00e9tico_mineiro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cruzeiro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fluminense",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "botafogo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vasco_da_gama",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fortaleza",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "arsenal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aston_villa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bournemouth",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brentford",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brighton_&_hove_albion",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chelsea",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "crystal_palace",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "everton",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fulham",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ipswich_town",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leicester_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liverpool",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "manchester_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "manchester_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "newcastle_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nottingham_forest",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "southampton",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tottenham_hotspur",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "west_ham_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wolverhampton_wanderers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burnley",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leeds_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sunderland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "west_bromwich_albion",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sheffield_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "norwich_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "watford",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "middlesbrough",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stoke_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "birmingham_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bolton_wanderers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "charlton_athletic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "derby_county",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "queens_park_rangers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hull_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "preston_north_end",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "blackburn_rovers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bristol_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paris_saint-germain",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "olympique_de_marseille",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "olympique_lyonnais",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "as_monaco",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lille_osc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rc_lens",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stade_rennais",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ogc_nice",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rc_strasbourg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toulouse_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stade_brestois",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "le_havre_ac",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_lorient",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "clermont_foot",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_metz",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sm_caen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aj_auxerre",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bayern_m\u00fcnchen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "borussia_dortmund",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rb_leipzig",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bayer_04_leverkusen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vfb_stuttgart",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eintracht_frankfurt",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vfl_wolfsburg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "borussia_m\u00f6nchengladbach",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "schalke_04",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hamburger_sv",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "1._fc_n\u00fcrnberg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hertha_bsc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_augsburg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tsg_hoffenheim",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "werder_bremen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vfl_bochum",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "1._fc_k\u00f6ln",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mainz_05",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "juventus",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "inter",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ac_milan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "as_roma",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ssc_napoli",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lazio",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atalanta",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiorentina",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "torino",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bologna",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "udinese",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cagliari",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "genoa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hellas_verona",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sassuolo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "empoli",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "parma",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lecce",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "urawa_red_diamonds",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kashima_antlers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "yokohama_f._marinos",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "club_am\u00e9rica",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chivas_guadalajara",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tigres_uanl",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "monterrey",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cruz_azul",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pumas_unam",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "le\u00f3n",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pachuca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toluca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "santos_laguna",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tijuana",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atlas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "quer\u00e9taro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ajax",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "psv_eindhoven",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "feyenoord",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "az_alkmaar",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_utrecht",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_twente",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nec_nijmegen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vitesse_arnhem",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sc_heerenveen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "go_ahead_eagles",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sparta_rotterdam",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rkc_waalwijk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pec_zwolle",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sl_benfica",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_porto",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sporting_cp",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sc_braga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vit\u00f3ria_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_famalic\u00e3o",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moreirense_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gil_vicente_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "boavista_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rio_ave_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "estoril_praia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "casa_pia_ac",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_hilal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_nassr",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ittihad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ahli",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_shabab",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_fateh",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ettifaq",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_taawoun",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_wehda",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "celtic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rangers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hearts",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aberdeen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hibernian",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dundee_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kilmarnock",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "st_mirren",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "motherwell",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ross_county",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "st_johnstone",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dundee_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jeonbuk_hyundai_motors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ulsan_hd_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_seoul",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_madrid",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_barcelona",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atl\u00e9tico_de_madrid",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sevilla_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_sociedad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "athletic_club",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "villarreal_cf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_betis",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "valencia_cf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "celta_vigo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "girona_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "getafe_cf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ca_osasuna",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "deportivo_alav\u00e9s",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rayo_vallecano",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rcd_mallorca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ud_las_palmas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "espanyol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "c\u00e1diz_cf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_zaragoza",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "galatasaray",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fenerbah\u00e7e",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "be?ikta?",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "trabzonspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "adana_demirspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "konyaspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ba?ak?ehir_fk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "antalyaspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sivasspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "alanyaspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bursaspor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "g\u00f6ztepe",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "columbus_crew",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_cincinnati",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "philadelphia_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_england_revolution",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "orlando_city_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "d.c._united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "portland_timbers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austin_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nashville_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sporting_kansas_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "los_angeles_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "la_galaxy",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "inter_miami_cf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "seattle_sounders_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atlanta_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_york_city_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swansea_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cardiff_city",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "premier_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "efl_championship",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "laliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "serie_a",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bundesliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ligue_1",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eredivisie",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "primeira_liga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "scottish_premiership",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "s\u00fcper_lig",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liga_mx",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brasileir\u00e3o_s\u00e9rie_a",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "primera_divisi\u00f3n_(argentina)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saudi_pro_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "j1_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "k_league_1",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "a-league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_super_league_(csl)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "russian_premier_league_(rpl)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belgian_pro_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ekstraklasa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austrian_bundesliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swiss_super_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "danish_superliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "allsvenskan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liga_portugal_2",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "serie_b",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "2._bundesliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ligue_2",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "women's_super_league_(wsl)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nwsl",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fifa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uefa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "conmebol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "concacaf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "caf",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "afc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ofc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "red_star_belgrade",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "partizan_belgrade",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vojvodina_novi_sad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dinamo_zagreb",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hajduk_split",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hnk_rijeka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ifk_g\u00f6teborg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malm\u00f6_ff",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "djurg\u00e5rdens_if",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aik_fotboll",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_copenhagen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "br\u00f8ndby_if",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_midtjylland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rapid_wien",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austria_wien",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "red_bull_salzburg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_basel",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "young_boys",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_z\u00fcrich",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "anderlecht",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "club_brugge",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kaa_gent",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "legia_warsaw",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lech_pozna?",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pogo?_szczecin",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dynamo_kyiv",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shakhtar_donetsk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dnipro-1",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cska_moscow",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "spartak_moscow",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lokomotiv_moscow",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kaizer_chiefs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "orlando_pirates",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mamelodi_sundowns",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tp_mazembe",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "esperance_de_tunis",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wydad_casablanca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "raja_casablanca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ahly_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zamalek_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pyramids_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "enyimba_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kano_pillars",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_merrikh",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_hilal_omdurman",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "persepolis_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "esteghlal_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sepahan_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_sadd_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_duhail_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_rayyan_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pohang_steelers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "suwon_samsung_bluewings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "incheon_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gamba_osaka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vissel_kobe",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cerezo_osaka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "western_sydney_wanderers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_victory",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sydney_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "auckland_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wellington_phoenix",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colo-colo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "universidad_de_chile",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "universidad_cat\u00f3lica",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pe\u00f1arol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nacional",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cerro_porte\u00f1o",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "olimpia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "independiente_del_valle",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ldu_quito",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "emelec",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "deportivo_cali",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atl\u00e9tico_nacional",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "millonarios_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "deportivo_t\u00e1chira",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "caracas_fc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shanghai_port",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shandong_taishan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "beijing_guoan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "serbian_superliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "croatian_football_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_african_premier_division",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "egyptian_premier_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "botola_pro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "persian_gulf_pro_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "qatar_stars_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ukrainian_premier_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tunisian_ligue_professionnelle_1",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nigeria_professional_football_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "asian_football_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "egyptian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_african_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "football_kenya_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "umbro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_balance",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kappa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mitre",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_football_association_(fifa)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "asian_football_confederation_(afc)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "confederation_of_african_football_(caf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "confederation_of_north,_central_america_and_caribbean_association_football_(concacaf)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_american_football_confederation_(conmebol)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oceania_football_confederation_(ofc)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "union_of_european_football_associations_(uefa)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "afghanistan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "albanian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "algerian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "andorran_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "angolan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "anguilla_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "antigua_and_barbuda_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "argentine_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "armenian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aruba_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "football_federation_australia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austrian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "azerbaijan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahamas_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahrain_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bangladesh_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "barbados_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belarus_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belgian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belize_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "benin_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bermuda_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bhutan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bolivian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "botswana_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brazilian_football_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "british_virgin_islands_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brunei_darussalam_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bulgarian_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burkina_faso_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burundi_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cambodian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cameroonian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "canadian_soccer_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cape_verde_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cayman_islands_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "central_african_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chadian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chilean_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_taipei_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colombian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "comoros_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "congolese_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "congo_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "costa_rican_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "croatian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cuban_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cyprus_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "czech_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "danish_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "djibouti_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dominica_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dominican_republic_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ecuadorian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "egyptian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "el_salvador_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "english_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "equatorial_guinea_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eritrean_national_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "estonian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eswatini_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ethiopian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "faroe_islands_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiji_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "finnish_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "french_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gabon_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gambia_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "georgian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "german_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ghana_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gibraltar_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "greek_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "grenada_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guatemalan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guinea_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guinea-bissau_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guyana_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "haitian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "honduran_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hong_kong_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hungarian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "icelandic_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indonesian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iran_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iraq_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "israel_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "italian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ivorian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jamaica_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "japan_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jordan_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kazakhstan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "football_kenya_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kosovo_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kuwait_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kyrgyz_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lao_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "latvian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lebanese_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lesotho_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liberian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "libyan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liechtenstein_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lithuanian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "luxembourg_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "macao_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "madagascar_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malawi_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malaysian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "maldives_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mali_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malta_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mauritanian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mauritius_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mexican_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moldovan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mongolian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "montenegrin_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moroccan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mozambique_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "myanmar_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "namibian_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nepal_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "netherlands_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_zealand_football",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nicaragua_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "niger_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nigerian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "north_korean_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "north_macedonia_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "norwegian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oman_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pakistan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "palestine_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "panama_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "papua_new_guinea_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paraguayan_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "peruvian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "philippine_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "polish_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "portuguese_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "puerto_rico_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "qatar_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "romanian_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "russian_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rwandan_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_kitts_and_nevis_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_lucia_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_vincent_and_the_grenadines_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "samoa_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "boston_celtics",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "los_angeles_lakers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "golden_state_warriors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "miami_heat",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chicago_bulls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_york_knicks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dallas_mavericks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "denver_nuggets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "phoenix_suns",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "philadelphia_76ers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_antonio_spurs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toronto_raptors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brooklyn_nets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cleveland_cavaliers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atlanta_hawks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "houston_rockets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "utah_jazz",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sacramento_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "minnesota_timberwolves",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "milwaukee_bucks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "portland_trail_blazers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_orleans_pelicans",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "memphis_grizzlies",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oklahoma_city_thunder",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "orlando_magic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indiana_pacers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "detroit_pistons",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "charlotte_hornets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "washington_wizards",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "real_madrid_baloncesto",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fc_barcelona_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "anadolu_efes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fenerbah\u00e7e_beko",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "olympiacos",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "panathinaikos",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cska_moscow",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "maccabi_tel_aviv",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "as_monaco_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "virtus_bologna",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "milano_(olimpia_milano)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bayern_munich",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "unicaja_m\u00e1laga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "valencia_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "joventut_badalona",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gran_canaria",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bilbao_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "baxi_manresa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "basket_zaragoza",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cb_murcia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "obradoiro_cab",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "girona_b\u00e0squet",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dar\u00fc??afaka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "p?nar_kar??yaka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bursaspor_basketbol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "galatasaray_basketbol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "be?ikta?_basketbol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "t\u00fcrk_telekom_bk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bah\u00e7e?ehir_koleji",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tofa?_bursa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "petkim_spor",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "merkezefendi_belediyesi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "asvel_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nanterre_92",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "le_mans_sarthe_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cholet_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jl_bourg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "limoges_csp",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "strasbourg_ig",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paris_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bcm_gravelines-dunkerque",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "\u00e9lan_chalon",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brose_bamberg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "alba_berlin",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ratiopharm_ulm",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "basketball_l\u00f6wen_braunschweig",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bg_g\u00f6ttingen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mitteldeutscher_bc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ewe_baskets_oldenburg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "telekom_baskets_bonn",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rasta_vechta",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "crailsheim_merlins",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dinamo_sassari",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "reyer_venezia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pallacanestro_varese",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aquila_basket_trento",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pallacanestro_brescia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vanoli_cremona",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pallacanestro_reggiana",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_basket_brindisi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "universo_treviso_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "scafati_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "perth_wildcats",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sydney_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "adelaide_36ers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brisbane_bullets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tasmania_jackjumpers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_zealand_breakers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "illawarra_hawks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_east_melbourne_phoenix",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cairns_taipans",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liaoning_flying_leopards",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guangdong_southern_tigers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shanghai_sharks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zhejiang_golden_bulls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "beijing_ducks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "xinjiang_flying_tigers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shandong_heroes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jiangsu_dragons",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shenzhen_leopards",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guangzhou_loong_lions",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "\u008ealgiris_kaunas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_rytas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_nept?nas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_wolves",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lietkabelis_panev?\u009eys",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_\u008aiauliai",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_juventus_utena",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aek_athens",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aris_thessaloniki",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "peristeri_bc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "promitheas_patras",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paok_thessaloniki",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kolossos_rodou",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lavrio_bc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "partizan_belgrade",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "crvena_zvezda",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mega_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "budu?nost_podgorica",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cedevita_olimpija",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cibona_zagreb",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zadar",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "unics_kazan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lokomotiv_kuban",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zenit_st._petersburg",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "khimki_moscow",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "avtodor_saratov",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nizhny_novgorod",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "enisey_krasnoyarsk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "flamengo_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "franca_basquete",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "s\u00e3o_paulo_fc_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "minas_t\u00eanis_clube",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bauru_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paulistano",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pinheiros",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ahly_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zamalek_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "petro_de_luanda",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "primeiro_de_agosto",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "as_douanes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "espoir_bc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "\u00e9toile_sportive_du_sahel",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "us_monastir",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_miguel_beermen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "barangay_ginebra_san_miguel",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "magnolia_hotshots",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tnt_tropang_giga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "meralco_bolts",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rain_or_shine_elasto_painters",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ryukyu_golden_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chiba_jets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "alvark_tokyo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nagoya_diamond_dolphins",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kawasaki_brave_thunders",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "utsunomiya_brex",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shimane_susanoo_magic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "seoul_sk_knights",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "busan_kt_sonicboom",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "anyang_kgc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "goyang_orions",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wonju_db_promy",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jeonju_kcc_egis",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hapoel_jerusalem",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hapoel_holon",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hapoel_tel_aviv",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bnei_herzliya",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ironi_nes_ziona",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "estudiantes_de_bah\u00eda_blanca",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "quimsa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_lorenzo_de_almagro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "boca_juniors_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "instituto_de_c\u00f3rdoba",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pe\u00f1arol_de_mar_del_plata",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "atenas_de_c\u00f3rdoba",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_rayyan_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_sadd_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_gharafa_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_shamal_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_wakrah_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nba",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "euroleague",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liga_acb_(spain)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lnb_pro_a_(france)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bbl_(germany)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lega_basket_serie_a_(italy)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bsl_(t\u00fcrkiye)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cba_(china)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nbl_(australia)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wnba",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "b1_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lkl_(lithuanian_basketball_league)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_vojvodina",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_borac_?a?ak",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_dynamic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_split",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_\u008aibenik",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kk_osijek",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hammarby_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "norrk\u00f6ping_dolphins",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "j\u00e4mtland_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_nordsj\u00e6lland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bakken_bears",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "team_fog_n\u00e6stved",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lask_linz_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oberwart_gunners",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kapfenberg_bulls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "servette_star",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fribourg_olympic",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lions_de_gen\u00e8ve",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "club_brugge_basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oostende_bc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "antwerp_giants",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mks_d?browa_g\u00f3rnicza",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "anwil_w?oc?awek",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stal_ostr\u00f3w_wielkopolski",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bc_donetsk",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "budivelnyk_kyiv",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dnipro",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "avtodor_volgograd",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "parma_perm",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "samara",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "orlando_pirates_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cape_town_tigers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "soweto_panthers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rivers_hoopers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kwara_falcons",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kano_pillars_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ferrovi\u00e1rio_de_maputo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "costa_do_sol",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "desportivo_de_maputo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "city_oilers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kcca_panthers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "updf_tomahawks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al-nasr_benghazi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al-ittihad_tripoli",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sharjah_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_wasl_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shabab_al_ahli",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_wahda_damascus",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_jaish_damascus",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ittihad_aleppo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_shorta_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_karkh_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_naft_sc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_ain_club",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "al_bataeh_club",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_boomers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sydney_flames",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "townsville_fire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "caxias_do_sul_basquete",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "corinthians_basquete",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "unifacisa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "club_atl\u00e9tico_goes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malv\u00edn",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aguada",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "deportivo_san_jos\u00e9",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "olimpia_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "libertad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "deportivo_cali",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "titanes_de_barranquilla",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "caribbean_storm",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "trotamundos_de_carabobo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guaros_de_lara",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cocodrilos_de_caracas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "piratas_de_la_guaira",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "blackwater_bossing",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nlex_road_warriors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "converge_fiberxers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "terrafirma_dyip",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kyiv-basket",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cherkaski_mavpy",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "basketligaen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austrian_basketball_bundesliga",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swiss_basketball_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bnxt_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "plk_(polish_basketball_league)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nigerian_premier_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "basketball_national_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mozambican_basketball_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uae_basketball_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "syrian_basketball_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iraqi_basketball_premier_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "diadora",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "spalding",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "molten",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "international_basketball_federation_(fiba)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiba_africa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiba_americas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiba_asia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiba_europe",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiba_oceania",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "afghanistan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "albanian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "algerian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "american_samoa_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "andorran_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "angolan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "antigua_and_barbuda_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "argentine_basketball_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "armenian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aruba_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "australian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austrian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "azerbaijan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahamas_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahrain_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bangladesh_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "barbados_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belarus_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belgian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belize_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "benin_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bermuda_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bhutan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bolivian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "botswana_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brazilian_basketball_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "british_virgin_islands_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brunei_darussalam_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bulgarian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burkina_faso_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burundi_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cambodian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cameroonian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "canadian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cape_verde_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cayman_islands_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "central_african_republic_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chadian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chilean_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_taipei_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colombian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "comoros_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "congolese_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "congo_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "costa_rican_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "croatian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cuban_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cyprus_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "czech_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "danish_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "djibouti_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dominica_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dominican_republic_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ecuadorian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "egyptian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "el_salvador_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "equatorial_guinea_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eritrean_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "estonian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eswatini_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ethiopian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiji_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "finnish_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "french_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gabon_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gambia_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "georgian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "german_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ghana_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gibraltar_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "greek_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "grenada_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guam_basketball_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guatemalan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guinea_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guinea-bissau_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guyana_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "haitian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "honduran_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hong_kong_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hungarian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "icelandic_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indonesian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iran_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iraq_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "irish_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "israel_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "italian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ivorian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jamaica_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "japan_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jordan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kazakhstan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kenya_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kosovo_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kuwait_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kyrgyz_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lao_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "latvian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lebanese_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lesotho_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liberian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "libyan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liechtenstein_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lithuanian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "luxembourg_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "macao_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "madagascar_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malawi_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malaysian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "maldives_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mali_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malta_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mauritanian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mauritius_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mexican_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moldovan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mongolian_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "montenegrin_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moroccan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mozambique_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "myanmar_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "namibian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nepal_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "netherlands_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_zealand_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nicaragua_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "niger_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nigerian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "north_korean_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "north_macedonia_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "norwegian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oman_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pakistan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "palestine_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "panama_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "papua_new_guinea_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paraguayan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "peruvian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "philippine_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "polish_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "portuguese_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "puerto_rico_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "qatar_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "romanian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "russian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rwandan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_kitts_and_nevis_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_lucia_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saint_vincent_and_the_grenadines_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "samoa_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_marino_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "s\u00e3o_tom\u00e9_and_pr\u00edncipe_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saudi_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "scottish_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "senegalese_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "basketball_federation_of_serbia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "seychelles_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sierra_leone_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "singapore_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "slovak_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "slovenian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "solomon_islands_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "somali_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_african_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_sudan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "spanish_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sri_lanka_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sudan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "suriname_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swedish_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swiss_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "syrian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tahiti_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tajikistan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tanzanian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "thai_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "timor-leste_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "togolese_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tonga_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "trinidad_and_tobago_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tunisian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "turkish_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "turkmenistan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "turks_and_caicos_islands_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uganda_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ukrainian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "united_arab_emirates_basketball_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "usa_basketball",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uruguayan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uzbekistan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vanuatu_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "venezuelan_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vietnam_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "virgin_islands_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "yemen_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zambian_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zimbabwe_basketball_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saracens",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "harlequins",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leicester_tigers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "exeter_chiefs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bath_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "northampton_saints",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sale_sharks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bristol_bears",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gloucester_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "newcastle_falcons",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stade_toulousain",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "la_rochelle",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "racing_92",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stade_fran\u00e7ais",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "clermont_auvergne",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toulon",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bordeaux_b\u00e8gles",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "castres_olympique",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leinster",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "munster",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ulster",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "connacht",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "glasgow_warriors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "edinburgh_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cardiff_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ospreys",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "scarlets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "benetton_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zebre_parma",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bulls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lions",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sharks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "stormers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "crusaders",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "blues",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chiefs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hurricanes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "highlanders",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bayonne",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "section_paloise",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lyon",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "montpellier_h\u00e9rault_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "perpignan_(usap)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vannes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "agen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aix-en-provence_(provence_rugby)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aurillac",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "b\u00e9ziers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "biarritz_olympique",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brive",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "carcassonne",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colomiers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dax",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "grenoble",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dragons_rfc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "black_lion",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toyota_cheetahs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "houston_sabercats",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "seattle_seawolves",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_england_free_jacks",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "san_diego_legion",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "old_glory_dc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_atl",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nola_gold",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "dallas_jackals",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "utah_warriors",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chicago_hounds",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toronto_arrows",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saitama_wild_knights",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brave_lupus_tokyo",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kobelco_kobe_steelers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tokyo_sungoliath",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toyota_verblitz",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "yokohama_canon_eagles",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kubota_spears",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mitsubishi_sagamihara_dynaboars",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "shizuoka_blue_revs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hanazono_kintetsu_liners",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "act_brumbies",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "queensland_reds",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nsw_waratahs",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "western_force",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fijian_drua",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moana_pasifika",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pumas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "griquas",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "western_province",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "blue_bulls",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "albi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bourg-en-bresse",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bourgoin",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chamb\u00e9ry",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "marcq-en-baroeul",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "massy",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "narbonne",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nice",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "niort",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "p\u00e9rigueux",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rennes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rouen",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "suresnes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tarbes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cornish_pirates",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ealing_trailfinders",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bedford_blues",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "doncaster_knights",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nottingham_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jersey_reds",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "coventry_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hartpury_rfc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "london_scottish",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ampthill_rufc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "caldy_rfc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinnor_rfc",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mie_honda_heat",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ricoh_black_rams",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "green_rockets_tokatsu",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "toshiba_brave_lupus",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_rebels",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "aironi_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_viadana",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "petrarca_padova",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mogliano_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_rovigo_delta",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colorno_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "valorugby_emilia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_lyons",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiamme_oro_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_calvisano",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_parabiago",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hawke\u0092s_bay_magpies",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bay_of_plenty_steamers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "waikato",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "canterbury",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wellington_lions",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nrl",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "super_league",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "top_14",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "premiership_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "united_rugby_championship",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "super_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "japan_rugby_league_one",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "major_league_rugby_(mlr)",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "world_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "asia_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_africa",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_europe",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oceania_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rugby_americas_north",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sudam\u00e9rica_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "algerian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "american_samoa_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "andorran_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "argentine_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "australian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "austrian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "azerbaijan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bahamas_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "barbados_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "belgian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bermuda_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bosnia_and_herzegovina_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "botswana_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brazilian_rugby_confederation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "british_virgin_islands_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brunei_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bulgarian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burkina_faso_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "burundi_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cambodian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "canadian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cayman_islands_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chilean_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_rugby_football_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chinese_taipei_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "colombian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cook_islands_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "costa_rican_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "croatian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "cyprus_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "czech_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "democratic_republic_of_congo_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "danish_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "egyptian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "england_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eswatini_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "fiji_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "finnish_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "french_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "georgian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "german_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ghana_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guam_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guatemalan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "guyana_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hong_kong_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hungarian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indian_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "indonesian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "iranian_rugby_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "irish_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "israel_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "italian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ivory_coast_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jamaica_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "japan_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "jordan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kazakhstan_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kenya_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "korea_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kyrgyzstan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lao_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "latvian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lebanese_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lesotho_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lithuanian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "luxembourg_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "madagascar_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malaysian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mali_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "malta_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mauritius_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mexican_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moldovan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "monaco_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mongolian_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "montenegro_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "moroccan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "namibian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nepal_rugby_association",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "netherlands_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_zealand_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nigerian_rugby_football_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "niue_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "norwegian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "pakistan_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "panama_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "papua_new_guinea_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "paraguayan_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "peruvian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "philippine_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "polish_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "portuguese_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "qatar_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "romanian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "russian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rwandan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "samoa_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "scottish_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "senegalese_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "serbian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "singapore_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "slovak_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "slovenian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "solomon_islands_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_african_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "spanish_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sri_lanka_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "st._lucia_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "st._vincent_and_the_grenadines_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swedish_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "swiss_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "syrian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tanzanian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "thai_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "togo_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tonga_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "trinidad_and_tobago_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tunisian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "turkish_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uganda_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "ukrainian_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "united_arab_emirates_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "usa_rugby",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uruguayan_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uzbekistan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vanuatu_rugby_football_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "venezuelan_rugby_federation",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wales_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zambian_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "zimbabwe_rugby_union",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chennai_super_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mumbai_indians",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kolkata_knight_riders",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "royal_challengers_bengaluru",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rajasthan_royals",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sunrisers_hyderabad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "delhi_capitals",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "punjab_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lucknow_super_giants",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gujarat_titans",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sydney_sixers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sydney_thunder",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "perth_scorchers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_stars",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "melbourne_renegades",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "adelaide_strikers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "brisbane_heat",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hobart_hurricanes",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "islamabad_united",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "karachi_kings",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lahore_qalandars",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "multan_sultans",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "peshawar_zalmi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "quetta_gladiators",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "birmingham_phoenix",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "london_spirit",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "manchester_originals",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "northern_superchargers",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "oval_invincibles",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "southern_brave",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "trent_rockets",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "welsh_fire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "somerset",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "yorkshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "surrey",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "lancashire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "essex",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hampshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kent",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "middlesex",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "warwickshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "nottinghamshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "durham",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "sussex",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "worcestershire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gloucestershire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "leicestershire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "derbyshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "glamorgan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "northamptonshire",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "victoria",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "new_south_wales",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "queensland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "western_australia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "south_australia",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tasmania",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "mumbai",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "delhi",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "karnataka",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "tamil_nadu",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "gujarat",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "maharashtra",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "punjab",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "bengal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "hyderabad",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "saurashtra",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "rajasthan",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "vidarbha",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "baroda",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "uttar_pradesh",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "andhra",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kerala",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "auckland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "wellington",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "canterbury",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "otago",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "central_districts",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "northern_districts",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "western_province",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "eastern_province",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "kwazulu-natal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "northerns",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "free_state",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "boland",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "border",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-02-02T00:05:37.875369",
+  "last_checkpoint_time": "2026-02-02T00:05:37.992320"
+}

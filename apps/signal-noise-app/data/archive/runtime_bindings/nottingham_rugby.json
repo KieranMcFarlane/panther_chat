@@ -1,0 +1,301 @@
+{
+  "entity_id": "nottingham_rugby",
+  "entity_name": "Nottingham Rugby",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "nottinghamrugby.co.uk",
+    "nottinghamrugbydirect.co.uk",
+    "nottinghamrugbyhistory.co.uk",
+    "nottingham.ac.uk",
+    "nottinghamsport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/business-development-executive-at-tiptopjob-4315186003",
+      "https://www.linkedin.com/posts/joe-davis-54a088167_tuesdays-ten-jobs-lots-of-diversity-activity-7287605169515581441-9vrt"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nottingham_rugby",
+      "entity_name": "Nottingham Rugby",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/business-development-executive-at-tiptopjob-4315186003",
+        "https://nottinghamrugby.co.uk",
+        "https://www.linkedin.com/posts/joe-davis-54a088167_tuesdays-ten-jobs-lots-of-diversity-activity-7287605169515581441-9vrt",
+        "https://nottinghamrugbyhistory.co.uk",
+        "https://nottingham.ac.uk",
+        "https://nottinghamsport.com",
+        "https://nottinghamrugbydirect.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nottingham Rugby may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:00:31.207636",
+          "domain_explored": "https://nottinghamrugby.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Implied by 'Match Tickets' & 'Book Now')",
+              "E-commerce Store (Implied by 'Shop')",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [
+              "Recruitment Section (General HR activity)"
+            ],
+            "procurement_indicators": [
+              "Hospitality Services (Matchday Hospitality)",
+              "Sponsorship Management (Sponsors section)",
+              "Academy Operations (Potential for educational/tech procurement)",
+              "Event Management (Football Fan Zones)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "E-commerce Presence",
+            "Academy/Community Structure",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 350,
+              "elapsed_seconds": 14.416610956192017
+            }
+          ],
+          "reasoning": "The scraped content is primarily navigation and sports results (noise), but the site structure reveals functional capabilities requiring vendor support. The presence of 'Match Tickets', 'Hospitality', 'Shop', and 'Football Fan Zones' indicates an active e-commerce and event management stack. The 'Recruitment' section suggests active HR processes. While no explicit RFP is visible, the operational complexity (Academy, NTU partnership, Sponsors) confirms the entity requires CRM, Ticketing, and ERP solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:00:41.755287",
+          "domain_explored": "https://nottinghamrugbydirect.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Medoc (Site Builder & E-commerce Host)",
+              "Mailchimp (Email Marketing - detected via eepurl.com link)",
+              "Ticketco (Ticketing Platform - referenced in navigation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Web Hosting & Development (Medoc)",
+              "Third-party Ticketing Solution (Ticketco)",
+              "Email Marketing Automation Usage"
+            ]
+          },
+          "patterns_found": [
+            "Legacy E-commerce Platform",
+            "Vendor Partnership (Medoc)",
+            "Digital Marketing Integration (Mailchimp)",
+            "Merchandise Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 301,
+              "elapsed_seconds": 3.3937747478485107
+            }
+          ],
+          "reasoning": "The discovery of the 'Medoc' hosting and e-commerce platform identifies a key technology vendor and indicates a reliance on specialized legacy software for retail operations. The presence of Mailchimp (via eepurl.com) suggests a specific marketing technology stack. While this confirms current vendor partnerships, it does not explicitly signal immediate procurement intent for new systems, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:00:54.847704",
+          "domain_explored": "https://nottinghamrugbyhistory.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical/Archival Content",
+            "Fan-Operated/Unaffiliated Domain",
+            "Static Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.972691059112549
+            }
+          ],
+          "reasoning": "The scraped content from 'nottinghamrugbyhistory.co.uk' consists entirely of historical match statistics, head-to-head records, and 'landmark' event recaps. This domain is an archival or fan-run site separate from the main commercial operations. It contains no corporate governance, technology infrastructure, or commercial procurement signals relevant to the business operations of Nottingham Rugby."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:01:07.035532",
+          "domain_explored": "https://nottingham.ac.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic JavaScript (Browser does not support script)",
+              "Likely Enterprise CMS (Structure suggests Sitecore or similar .NET-based platform common in UK Higher Ed)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Indirect Link: University of Nottingham is a key stakeholder/partner entity"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (University vs. Rugby Club)",
+            "Educational Marketing Content",
+            "Generic CMS Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.9434733390808105
+            }
+          ],
+          "reasoning": "The scraped content belongs to the University of Nottingham (nottingham.ac.uk), a distinct entity from Nottingham Rugby (nottinghamrugby.co.uk). While there is a historical partnership (the 'Medoc' vendor found in Iteration 2 is a University of Nottingham spin-out), this specific page contains only student recruitment messaging and generic navigation. It provides no direct procurement signals for the rugby club's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:01:17.498872",
+          "domain_explored": "https://nottinghamsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Nottingham Forest vs. Nottingham Rugby)",
+            "Sports News Aggregator Content",
+            "Generic Editorial Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 603,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.5151219367980957
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Forest' (Nottingham Forest FC) and 'Fenerbahce', indicating a football (soccer) context rather than rugby. The domain 'nottinghamsport.com' appears to be a general sports news aggregator or specifically focused on Nottingham Forest, not the Nottingham Rugby club entity defined in the prompt. There is no procurement intent or technology stack data relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:01:32.686981",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/business-development-executive-at-tiptopjob-4315186003",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Irrelevant Job Board Content)",
+            "Geographic Irrelevance (United States Focus)",
+            "Sector Mismatch (Financial Services/Aggregators)",
+            "Generic Job Aggregator Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1642,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.253367185592651
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic job listings for 'Account Manager' and 'Financial Services' roles based in the United States (Singapore Airlines, Grubhub, Square, Barbour). There is no mention of Nottingham Rugby, the UK region, or the sports sector. The content appears to be noise from a job aggregator (TipTopJob) or LinkedIn sidebar suggestions, offering zero intelligence regarding Nottingham Rugby's procurement, technology stack, or hiring needs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:01:40.263063",
+          "domain_explored": "https://www.linkedin.com/posts/joe-davis-54a088167_tuesdays-ten-jobs-lots-of-diversity-activity-7287605169515581441-9vrt",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Physiotherapist (Nottingham Rugby Club)"
+            ],
+            "procurement_indicators": [
+              "Clinical Operations Maintenance",
+              "Personnel Supply Chain"
+            ]
+          },
+          "patterns_found": [
+            "Sports Job Aggregation",
+            "Clinical Operations Hiring",
+            "Direct Entity Reference"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1729,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.4023399353027344
+            }
+          ],
+          "reasoning": "The content is a third-party job aggregation post by Joe Davis. While it lists a 'Head Physiotherapist' role for Nottingham Rugby, this is an operational hire rather than a procurement signal. However, it confirms the entity is actively hiring and maintaining clinical operations, which implies ongoing procurement of medical supplies/insurance. It is not a direct procurement signal but confirms organizational activity."
+        }
+      ],
+      "total_input_tokens": 9727,
+      "total_output_tokens": 1775,
+      "estimated_cost_usd": 0.055805999999999994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nottingham Rugby may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:01:40.264991"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.279943",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:46.407054"
+}

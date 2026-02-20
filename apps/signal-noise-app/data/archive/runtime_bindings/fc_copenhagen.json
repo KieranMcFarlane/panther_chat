@@ -1,0 +1,164 @@
+{
+  "entity_id": "fc_copenhagen",
+  "entity_name": "FC Copenhagen",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "fckfanshop.dk",
+    "apps.apple.com",
+    "flashscore.com",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_copenhagen",
+      "entity_name": "FC Copenhagen",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://flashscore.com",
+        "https://fckfanshop.dk",
+        "https://onefootball.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Copenhagen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:37:53.985173",
+          "domain_explored": "https://fckfanshop.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (implied by URL structure /products/ and /collections/)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory clearance activity (Winter Sale ending 16.02.2026)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce retail interface",
+            "Inventory liquidation (Winter Sale)",
+            "Product SKU management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.927211046218872
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the FC Copenhagen fan shop (fckfanshop.dk) featuring a 'Winter Sale' on Adidas apparel. While this confirms the existence of an e-commerce channel, it provides no signals regarding backend procurement, technology acquisition, or enterprise decision-making. It is consumer-facing content, not corporate procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:37:59.819211",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer B2C content",
+            "Mobile app marketplace listings",
+            "Gaming and entertainment trends",
+            "Irrelevant contextual noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.900495767593384
+            }
+          ],
+          "reasoning": "The scraped content from apps.apple.com represents a generic homepage for the App Store, featuring consumer trends (Roblox, Pok\u00e9mon, Marvel SNAP) and editor's choice games. There is absolutely no relation to FC Copenhagen, corporate procurement, or enterprise technology stacks. This is a false positive in the scraping process or a complete lack of relevant data on the target URL."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:38:07.096446",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer B2C content",
+            "Sports results aggregation",
+            "Gambling/Gaming affiliate content",
+            "Generic web interface elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 641,
+              "output_tokens": 172,
+              "elapsed_seconds": 4.046778202056885
+            }
+          ],
+          "reasoning": "The content is from a sports results aggregator (Flashscore) and contains standard consumer-facing data, gambling warnings, and UI loading states. There is no corporate information, technology infrastructure details, or business operations data related to FC Copenhagen's procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:38:10.742542",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3403,
+      "total_output_tokens": 593,
+      "estimated_cost_usd": 0.019104
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Copenhagen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:38:10.744415"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.173936",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:20.896241"
+}

@@ -1,0 +1,298 @@
+{
+  "entity_id": "alba_berlin",
+  "entity_name": "Alba Berlin",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "albaberlin.de",
+    "alba.info",
+    "albaberlinacademy.asia",
+    "euroleaguebasketball.net",
+    "merchandising-onlineshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/alba-berlin-basketballteam-jobs-worldwide",
+      "https://de.linkedin.com/jobs/view/buchhalter-in-finanzbuchhalter-in-m-w-d-rechnungswesen-f%C3%B6rdermittel-vereinsfinanzen-at-alba-berlin-basketballteam-4349861317"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "alba_berlin",
+      "entity_name": "Alba Berlin",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://albaberlinacademy.asia",
+        "https://merchandising-onlineshop.com",
+        "https://albaberlin.de",
+        "https://www.linkedin.com/jobs/alba-berlin-basketballteam-jobs-worldwide",
+        "https://de.linkedin.com/jobs/view/buchhalter-in-finanzbuchhalter-in-m-w-d-rechnungswesen-f%C3%B6rdermittel-vereinsfinanzen-at-alba-berlin-basketballteam-4349861317",
+        "https://euroleaguebasketball.net",
+        "https://alba.info"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Alba Berlin may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:06:07.781213",
+          "domain_explored": "https://albaberlin.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dyn (Broadcasting Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Agreements (VET-CONCEPT, BMA365, SYNTAINICS)",
+              "Media Rights Contract (Live bei Dyn)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Naming Rights (B2B Partnership)",
+            "Digital Broadcasting Rights (Live bei Dyn)",
+            "Ticketing Ecosystem Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 263,
+              "elapsed_seconds": 2.7173662185668945
+            }
+          ],
+          "reasoning": "The content lists upcoming game schedules, which reveals active commercial partnerships through naming rights (e.g., 'VET-CONCEPT Gladiators', 'BMA365 Bamberg', 'SYNTAINICS MBC'). While this does not indicate direct procurement by Alba Berlin, it confirms the entity's active participation in the BBL ecosystem and reliance on digital infrastructure partners like 'Dyn' for broadcasting. This serves as weak validation of the entity's operational status and vendor ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:06:15.345650",
+          "domain_explored": "https://alba.info",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Portal: 'Container bestellen' (Order Containers)",
+              "Mobile App: 'Der mobile Abfuhrkalender' (Waste collection calendar app)",
+              "Joint Ventures: 'Alba und Simon Group starten Joint Venture'",
+              "Shop Link: 'shop.albaclick.de'"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Waste Management vs. Sports)",
+            "Consumer Service Ordering (Container bestellen)",
+            "Sustainability/ESG Messaging",
+            "Legacy Operations (Since 1968)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.8361921310424805
+            }
+          ],
+          "reasoning": "The scraped content from 'alba.info' belongs to the ALBA Group (a waste management and recycling company), not Alba Berlin (the basketball club). While they share the 'ALBA' brand and history (referencing 'ALBA Berlin - Starke Partner'), this page focuses on industrial recycling, waste container ordering, and B2C waste logistics. There are no procurement signals relevant to the basketball club's digital infrastructure, ticketing, or sports operations here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:06:27.341727",
+          "domain_explored": "https://albaberlinacademy.asia",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Video Streaming Platforms (YouTube)",
+              "Social Media Integration (Instagram, LinkedIn, Facebook, Twitter/X)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue and Facility Procurement (Training camps, tournaments)",
+              "Educational Material Sourcing (Curriculum development)",
+              "Corporate Workshop Services (B2B training procurement)",
+              "Digital Content Production Services (Video tutorials, highlights)",
+              "Travel & Logistics (Exhibition game tours, player scouting)",
+              "Event Management (Tournaments, youth leagues)"
+            ]
+          },
+          "patterns_found": [
+            "International Subsidiary Operations",
+            "Educational & Youth Development Procurement",
+            "CSR & Sustainability Partnerships",
+            "Digital Content Production",
+            "Event & Logistics Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 394,
+              "elapsed_seconds": 5.269193887710571
+            }
+          ],
+          "reasoning": "The content confirms Alba Berlin has established a dedicated subsidiary in Hong Kong (Alba Berlin Basketball Academy Asia) to expand its youth development and educational programs. While this is primarily a marketing/operational site, it reveals specific procurement needs for running international operations, including venue rentals, equipment sourcing, digital content production, and educational materials. It confirms the entity's active expansion and operational complexity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:06:43.672156",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms (EuroLeague TV)",
+              "Digital Content Management (Highlights/Magic Moments)"
+            ],
+            "job_postings": [
+              "Executive Governance (Chus Bueno named CEO)"
+            ],
+            "procurement_indicators": [
+              "Title Sponsorship (Etihad Airways)",
+              "Presenting Sponsorships (BKT EuroCup, Motorola Magic Moment)",
+              "Media Rights Acquisition (Serie A Unipol, Frecciarossa Final Eight)",
+              "Event Ticketing Operations (Final Four Athens)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Governance",
+            "Sponsorship Aggregation (Etihad, BKT, Motorola)",
+            "Broadcast Rights Management (Serie A Unipol)",
+            "Event Operations (Final Four)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 345,
+              "elapsed_seconds": 13.19859004020691
+            }
+          ],
+          "reasoning": "The content represents the league governing body (Euroleague Basketball) rather than the specific franchise (Alba Berlin). While Alba Berlin participates in this ecosystem, the procurement signals found here (CEO appointments, league-wide sponsorship deals, broadcast rights) are controlled centrally by the league, not by the individual club's procurement department. This does not provide direct insight into Alba Berlin's specific purchasing intent or technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:07:18.258131",
+          "domain_explored": "https://merchandising-onlineshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:07:25.088565",
+          "domain_explored": "https://www.linkedin.com/jobs/alba-berlin-basketballteam-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Talent Solutions"
+            ],
+            "job_postings": [
+              "Personalreferent:in mit Schwerpunkt Recruiting (30-40 Std.)"
+            ],
+            "procurement_indicators": [
+              "HR Department Expansion",
+              "Internal Recruiting Focus",
+              "Full-time/Part-time Capacity Scaling"
+            ]
+          },
+          "patterns_found": [
+            "HR & Talent Acquisition Expansion",
+            "Internal Capacity Building",
+            "Organizational Growth Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1091,
+              "output_tokens": 294,
+              "elapsed_seconds": 3.554633855819702
+            }
+          ],
+          "reasoning": "The discovery of a dedicated 'Personalreferent:in mit Schwerpunkt Recruiting' (HR Representative focused on Recruiting) posting indicates active investment in internal human resources capabilities. While this is a direct hiring signal rather than a third-party procurement signal, it suggests organizational growth and an increased need for talent management infrastructure. This often precedes or accompanies technology procurement (ATS/HRIS) or increased vendor usage for recruitment services, warranting a weak acceptance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:07:36.161196",
+          "domain_explored": "https://de.linkedin.com/jobs/view/buchhalter-in-finanzbuchhalter-in-m-w-d-rechnungswesen-f%C3%B6rdermittel-vereinsfinanzen-at-alba-berlin-basketballteam-4349861317",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Buchhalter / Finanzbuchhalter (m/w/d) - Rechnungswesen, F\u00f6rdermittel, Vereinsfinanzen"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Login Wall / Authentication Barrier",
+            "Teaser Content (Job Title)",
+            "Platform-Specific UI Clutter"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1720,
+              "output_tokens": 222,
+              "elapsed_seconds": 6.52679181098938
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of LinkedIn's login interface, cookie policies, and generic navigation elements. While the URL slug indicates a relevant job posting ('Buchhalter... F\u00f6rdermittel...'), the actual job description, requirements, and procurement signals are hidden behind a login wall. No actionable intelligence regarding technology stack or procurement needs can be extracted from this text."
+        }
+      ],
+      "total_input_tokens": 8582,
+      "total_output_tokens": 1814,
+      "estimated_cost_usd": 0.052956
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Alba Berlin may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:07:36.164262"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.211420",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:48.625861"
+}

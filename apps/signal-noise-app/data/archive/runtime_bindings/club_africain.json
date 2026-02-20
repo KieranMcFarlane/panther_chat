@@ -1,0 +1,215 @@
+{
+  "entity_id": "club_africain",
+  "entity_name": "Club Africain",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "clubafricain.com",
+    "cab-officiel.com",
+    "clubafricain.tn"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ci.linkedin.com/jobs/view/charg%C3%A9-e-de-communication-at-club-africain-des-entrepreneurs-4353943841",
+      "https://ci.linkedin.com/jobs/view/d%C3%A9l%C3%A9gu%C3%A9-g%C3%A9n%C3%A9ral-at-le-club-africain-des-entrepreneurs-3932551423?trk=public_post_main-feed-card_feed-job-posting-content"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "club_africain",
+      "entity_name": "Club Africain",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://cab-officiel.com",
+        "https://clubafricain.com",
+        "https://clubafricain.tn",
+        "https://ci.linkedin.com/jobs/view/charg%C3%A9-e-de-communication-at-club-africain-des-entrepreneurs-4353943841",
+        "https://ci.linkedin.com/jobs/view/d%C3%A9l%C3%A9gu%C3%A9-g%C3%A9n%C3%A9ral-at-le-club-africain-des-entrepreneurs-3932551423?trk=public_post_main-feed-card_feed-job-posting-content"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Club Africain may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:27:55.748188",
+          "domain_explored": "https://clubafricain.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-side rendering (JS framework)",
+            "Loading state indicators"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 368,
+              "output_tokens": 161,
+              "elapsed_seconds": 4.083693027496338
+            }
+          ],
+          "reasoning": "The provided content consists solely of 'Chargement en cours...' (Loading in progress) repeated text. This indicates the website uses client-side rendering (JavaScript) to load content, which was not captured in the raw text scrape. No actual data regarding procurement, technology, or governance is present to analyze."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:28:25.502315",
+          "domain_explored": "https://cab-officiel.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:28:38.756355",
+          "domain_explored": "https://clubafricain.tn",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news content",
+            "Match reports",
+            "League standings",
+            "Generic WordPress categories"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 168,
+              "elapsed_seconds": 4.267528772354126
+            }
+          ],
+          "reasoning": "The scraped content from clubafricain.tn is exclusively focused on sports news, match results (Derby, Coupe de Tunisie), and team performance analysis. There are no mentions of corporate governance, technology infrastructure, job vacancies, or business operations that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:28:51.519852",
+          "domain_explored": "https://ci.linkedin.com/jobs/view/charg%C3%A9-e-de-communication-at-club-africain-des-entrepreneurs-4353943841",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CMS",
+              "Adobe Suite (Photoshop, InDesign)",
+              "Canva",
+              "Social Media Platforms (LinkedIn, Facebook, WhatsApp)"
+            ],
+            "job_postings": [
+              {
+                "role": "Charg\u00e9(e) de Communication",
+                "entity": "Club Africain des Entrepreneurs",
+                "location": "Abidjan, C\u00f4te d'Ivoire",
+                "date_posted": "1 week ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget management for 'goodies, providers, social ads'",
+              "Intent to outsource graphic production ('via agency')"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Job Posting",
+            "Association/NGO Structure",
+            "B2B Networking Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.602001905441284
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Club Africain des Entrepreneurs' (CAE), an Ivorian association for SMEs founded in 2015. This is a distinct legal entity from 'Club Africain' (the Tunisian sports club established in 1920). The context (Abidjan, C\u00f4te d'Ivoire; focus on SME financing; network I&P) confirms no relation to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:29:01.589864",
+          "domain_explored": "https://ci.linkedin.com/jobs/view/d%C3%A9l%C3%A9gu%C3%A9-g%C3%A9n%C3%A9ral-at-le-club-africain-des-entrepreneurs-3932551423?trk=public_post_main-feed-card_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "D\u00e9l\u00e9gu\u00e9 G\u00e9n\u00e9ral",
+                "entity": "Le Club Africain des Entrepreneurs",
+                "location": "Abidjan, C\u00f4te d'Ivoire",
+                "focus": "Administration, Coordination, Business Development"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Association/NGO Structure",
+            "Job Posting",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.138882875442505
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Le Club Africain des Entrepreneurs', an association based in C\u00f4te d'Ivoire. This is a distinct entity from 'Club Africain', the sports club based in Tunisia. The focus is on general management and business development within an NGO network, not procurement for the sports entity."
+        }
+      ],
+      "total_input_tokens": 4865,
+      "total_output_tokens": 880,
+      "estimated_cost_usd": 0.027795
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Club Africain may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:29:01.590523"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.348870",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:18.539302"
+}

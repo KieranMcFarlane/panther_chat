@@ -1,0 +1,46 @@
+================================================================================
+REAL DISCOVERY COMPARISON REPORT
+================================================================================
+Timestamp: 2026-02-03T19:11:01.642318+00:00
+Entities Tested: 3
+
+SUMMARY
+--------------------------------------------------------------------------------
+Total Cost: $0.0000
+Total Iterations: 0
+Average Confidence: 0.00
+Average Cost: $0.0000
+Average Iterations: 0.0
+Actionable Count: 0/3
+
+BEST PERFORMERS
+--------------------------------------------------------------------------------
+Lowest Cost: liverpool-fc ($0.0000)
+
+ENTITY RESULTS
+--------------------------------------------------------------------------------
+liverpool-fc:
+  Name: Liverpool FC
+  Confidence: 0.00 (EXPLORATORY)
+  Actionable: ❌ NO
+  Iterations: 0
+  Cost: $0.0000
+  Signals: 0
+
+bayern-munich:
+  Name: Bayern Munich
+  Confidence: 0.00 (EXPLORATORY)
+  Actionable: ❌ NO
+  Iterations: 0
+  Cost: $0.0000
+  Signals: 0
+
+psg:
+  Name: Paris Saint-Germain
+  Confidence: 0.00 (EXPLORATORY)
+  Actionable: ❌ NO
+  Iterations: 0
+  Cost: $0.0000
+  Signals: 0
+
+================================================================================

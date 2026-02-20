@@ -1,0 +1,329 @@
+{
+  "entity_id": "bm_logro\u00f1o_la_rioja",
+  "entity_name": "BM Logro\u00f1o La Rioja",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "globalsportsarchive.com",
+    "beach.eurohandball.com",
+    "fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?currentJobId=3895037227&geoId=105646813&location=Espanha&origin=JOBS_HOME_SEARCH_BUTTON&refresh=true",
+      "https://cd.linkedin.com/jobs/jobs-in-peralta",
+      "https://www.linkedin.com/jobs/search/?f_TPR=r2592000&geoId=105646813&location=%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F",
+      "https://cd.linkedin.com/jobs/jobs-in-peralta?countryRedirected=1&position=1&pageNum=0"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bm_logro\u00f1o_la_rioja",
+      "entity_name": "BM Logro\u00f1o La Rioja",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://cd.linkedin.com/jobs/jobs-in-peralta",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://beach.eurohandball.com",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3895037227&geoId=105646813&location=Espanha&origin=JOBS_HOME_SEARCH_BUTTON&refresh=true",
+        "https://fcbarcelona.com",
+        "https://www.linkedin.com/jobs/search/?f_TPR=r2592000&geoId=105646813&location=%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F",
+        "https://cd.linkedin.com/jobs/jobs-in-peralta?countryRedirected=1&position=1&pageNum=0"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BM Logro\u00f1o La Rioja may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:41:12.178432",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content domain (Sports/Handball)",
+            "Cookie consent walls",
+            "Generic event listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 179,
+              "elapsed_seconds": 16.893664121627808
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) website, reporting on sports tournaments (EHF EURO 2026), game results, and MVP awards. There is no connection to 'BM Logro\u00f1o La Rioja' (a Spanish handball club) in terms of procurement signals, technology stack, or governance. The content is purely sports journalism and event scheduling."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:41:21.753947",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content domain (Sports/Soccer)",
+            "Generic event listings and competition hierarchies",
+            "No corporate or governance structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.359628915786743
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of soccer competition listings, league hierarchies, and tournament names. There is no information regarding BM Logro\u00f1o La Rioja's business operations, technology stack, or procurement activities. This domain is strictly a sports archive and does not align with the objective of finding procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:41:30.906948",
+          "domain_explored": "https://beach.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports domain content (Beach Handball)",
+            "Event listings and competition schedules",
+            "Media portal and news aggregation",
+            "Repetitive navigation structures"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.5231940746307373
+            }
+          ],
+          "reasoning": "The content is exclusively focused on beach handball events, player profiles, and competition schedules (EHF). There is no presence of corporate governance, procurement activity, or technology stack information relevant to BM Logro\u00f1o La Rioja."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:41:40.430209",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spotify (Stadium Naming)",
+              "1xBet (Sponsorship)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports domain content (Professional Football Club)",
+            "E-commerce and ticketing focus (Store, Tickets, Kits)",
+            "Fan engagement mechanisms (Culers membership, Newsletter, Draws)",
+            "Generic sports news aggregation (Match reports, Player transfers)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.1949968338012695
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on FC Barcelona's consumer-facing operations: sports news, ticketing, merchandise, and fan club management. There are no signals related to BM Logro\u00f1o La Rioja, nor are there corporate governance, B2B procurement, or technology investment indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:42:02.771182",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3895037227&geoId=105646813&location=Espanha&origin=JOBS_HOME_SEARCH_BUTTON&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Recepcionista - Vincci Hoteles",
+              "Dependiente/a - Prim, S.A.",
+              "Botones - Catalonia Hotels & Resorts"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation (LinkedIn)",
+            "Hospitality and retail focus (Vincci Hoteles, Prim, S.A.)",
+            "Operational roles (Receptionists, Bellhops, Sales clerks)",
+            "Geographic dispersion (Canary Islands, Galicia, Madrid)",
+            "No mention of target entity (BM Logro\u00f1o La Rioja)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 260,
+              "elapsed_seconds": 16.448132038116455
+            }
+          ],
+          "reasoning": "The content represents a generic search results page for jobs in Spain, populated with operational roles in the hospitality and retail sectors (Vincci Hoteles, Prim, S.A.). There is no content, metadata, or hiring activity related to the target entity 'BM Logro\u00f1o La Rioja'. The page is a standard job feed with no procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:42:16.063963",
+          "domain_explored": "https://cd.linkedin.com/jobs/jobs-in-peralta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Associate (Merkal)",
+              "Farm Operator (GAM Family)",
+              "Crew Member (McDonald's)",
+              "Private Tutor (Apprentus)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation (LinkedIn)",
+            "Geographic mismatch (Peralta/Tudela vs Logro\u00f1o)",
+            "Low-skill retail and service roles (Sales, Farm operators, Fast food)",
+            "Education sector tutoring (Apprentus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1701,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.317257881164551
+            }
+          ],
+          "reasoning": "The content represents a generic job listing page for Peralta, Navarre, which is geographically distinct from the target entity BM Logro\u00f1o La Rioja (Logro\u00f1o, La Rioja). The listings are operational roles in retail (Decathlon, Merkal), agriculture (GAM Family), and fast food (McDonald's), with no connection to banking, management, or corporate procurement functions."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:42:25.393512",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?f_TPR=r2592000&geoId=105646813&location=%D0%98%D1%81%D0%BF%D0%B0%D0%BD%D0%B8%D1%8F",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Recepcionista - Hotel Vincci Selecci\u00f3n La Plantaci\u00f3n del Sur 5* (Vincci Hoteles, Adeje)",
+              "DEPENDIENTE/A DE ESTABLECIMIENTO ORTOP\u00c9DICO (Prim, S.A., A Coru\u00f1a)",
+              "Botones (Catalonia Hotels & Resorts, Madrid)",
+              "Parqueteros Y/O Entarimadores (Ferrocarrils Generalitat Valenciana, Alicante)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation (LinkedIn)",
+            "Broad geographic scope (Spain-wide vs. specific Logro\u00f1o/BM La Rioja targeting)",
+            "Hospitality and retail focus (Vincci Hoteles, Prim, S.A., Catalonia Hotels)",
+            "Operational and low-skill roles (Receptionists, Bellhops/Botones, Sales clerks, Floor installers)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1793,
+              "output_tokens": 336,
+              "elapsed_seconds": 3.308184862136841
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search feed for Spain. The listings are dominated by irrelevant sectors (hospitality, retail, transport) and geographic locations (Adeje, A Coru\u00f1a, Madrid, Alicante) that do not align with the target entity 'BM Logro\u00f1o La Rioja' or the specific region of La Rioja. There are no procurement signals, technology investments, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T05:42:37.979642",
+          "domain_explored": "https://cd.linkedin.com/jobs/jobs-in-peralta?countryRedirected=1&position=1&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ingeniero de procesos - Grupo Elastorsa (Arnedo)",
+              "Ingeniero/a de Implementaci\u00f3n de ECN - SEGULA Technologies (Navarra)",
+              "Administrativa/o UTE - Grupo Ortiz (Arnedo)",
+              "Electrical Supervisor - Nordex Group (Gar\u00ednoain)",
+              "Modelador Proyectista - ACCIONA (Navarra)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation (LinkedIn)",
+            "Geographic mismatch (Peralta/Tudela vs Logro\u00f1o)",
+            "Low-skill retail and service roles (Sales, Farm operators, Fast food)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1885,
+              "output_tokens": 296,
+              "elapsed_seconds": 2.5212209224700928
+            }
+          ],
+          "reasoning": "The search results are filtered for 'Peralta' (Navarra) and surrounding areas, which are geographically distinct from Logro\u00f1o (La Rioja). The listings are generic operational roles (Process Engineer, Administrative, Electrical Supervisor) for unrelated industrial entities (Grupo Elastorsa, Nordex, ACCIONA). There is no content related to BM Logro\u00f1o La Rioja, handball management, or associated procurement activities."
+        }
+      ],
+      "total_input_tokens": 12782,
+      "total_output_tokens": 1910,
+      "estimated_cost_usd": 0.066996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BM Logro\u00f1o La Rioja may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:42:37.981073"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351401",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:27.353391"
+}

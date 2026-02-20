@@ -1,0 +1,139 @@
+{
+  "entity_id": "cricket_ireland",
+  "entity_name": "Cricket Ireland",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "cricketireland.ie",
+    "cricketeurope.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/cricket-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cricket_ireland",
+      "entity_name": "Cricket Ireland",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cricketeurope.com",
+        "https://cricketireland.ie",
+        "https://uk.linkedin.com/company/cricket-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cricket Ireland may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:21:36.593885",
+          "domain_explored": "https://cricketireland.ie",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1146)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:21:49.595961",
+          "domain_explored": "https://cricketeurope.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_results_aggregation",
+            "tournament_standings_display",
+            "editorial_match_reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 157,
+              "elapsed_seconds": 3.0369479656219482
+            }
+          ],
+          "reasoning": "The scraped content is purely sports journalism and statistical data (match results, standings, player scores) from CricketEurope. It contains no corporate information, governance details, or technology infrastructure references related to Cricket Ireland's operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:21:57.873824",
+          "domain_explored": "https://uk.linkedin.com/company/cricket-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach \u2013 Netherlands Women\u2019s Cricket Team (KNCB)",
+              "Head of Cricket Operations (Somerset CCC)",
+              "Head Coach \u2013 Indoor Cricket Centre (MCC)",
+              "Operations Manager \u2013 Indoor Cricket Centre (MCC)",
+              "Specialist Batting Consultant (Cricket West Indies)"
+            ],
+            "procurement_indicators": [
+              "Operational leadership investment (Somerset CCC)",
+              "High-performance consulting contracts (Cricket West Indies)",
+              "Facility management recruitment (MCC)"
+            ]
+          },
+          "patterns_found": [
+            "staffing_aggregation",
+            "operational_recruitment",
+            "high_performance_hiring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1442,
+              "output_tokens": 333,
+              "elapsed_seconds": 4.059138774871826
+            }
+          ],
+          "reasoning": "The content is from a third-party aggregator (Cricket Jobs) rather than a direct Cricket Ireland source. While it does not contain specific Cricket Ireland procurement data in this snippet, it validates the ecosystem of operational hiring (Head of Cricket Operations, Specialist Consultants) which implies downstream technology and service procurement needs for similar organizations. It confirms the 'Staffing and Recruiting' pattern exists within the cricket sector."
+        }
+      ],
+      "total_input_tokens": 2829,
+      "total_output_tokens": 490,
+      "estimated_cost_usd": 0.015837
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cricket Ireland may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:21:57.875339"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298980",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:56.035723"
+}

@@ -1,0 +1,159 @@
+{
+  "entity_id": "rugby_viadana",
+  "entity_name": "Rugby Viadana",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "rugbyviadana1970.it",
+    "rugbyunion.fandom.com",
+    "commons.wikimedia.org",
+    "acerbis.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rugby_viadana",
+      "entity_name": "Rugby Viadana",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://rugbyviadana1970.it",
+        "https://acerbis.com",
+        "https://rugbyunion.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Rugby Viadana may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:36:29.280218",
+          "domain_explored": "https://rugbyviadana1970.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:37:10.070428",
+          "domain_explored": "https://rugbyunion.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_wiki_content",
+            "irrelevant_historical_data",
+            "user_generated_content_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 165,
+              "elapsed_seconds": 34.37946271896362
+            }
+          ],
+          "reasoning": "The scraped content is from a generic Rugby Union Wiki (Fandom) and not the official Rugby Viadana entity. It contains generic instructions for editing a wiki and references to the 2007 Rugby World Cup. There is no information regarding Rugby Viadana's operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:37:19.185928",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_media_repository",
+            "irrelevant_content_structure",
+            "no_entity_specific_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.944145917892456
+            }
+          ],
+          "reasoning": "The content is the generic homepage of Wikimedia Commons, a media file repository. It contains no information regarding Rugby Viadana, its operations, procurement activities, or technology stack. It is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:37:30.514525",
+          "domain_explored": "https://acerbis.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_product_catalog",
+            "b2c_sales_interface",
+            "irrelevant_industry_sector",
+            "navigation_menu_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.7393670082092285
+            }
+          ],
+          "reasoning": "The scraped content is from Acerbis.com, a manufacturer of motocross gear and accessories. The content consists of product selection menus (Brand, Year, Model) and promotional calls to action ('Gear up now!', 'Buy now'). There is absolutely no connection to Rugby Viadana, nor are there any procurement signals, job postings, or technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4308,
+      "total_output_tokens": 505,
+      "estimated_cost_usd": 0.020499
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Rugby Viadana may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:37:30.514955"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281313",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:47.591573"
+}

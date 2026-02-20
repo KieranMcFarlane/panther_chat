@@ -1,0 +1,324 @@
+{
+  "entity_id": "world_aquatics",
+  "entity_name": "World Aquatics",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "worldaquatics.com",
+    "worldaquatics-singapore2025.com",
+    "olympics.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://hu.linkedin.com/jobs/view/digital-content-creator-manager-budapest-at-world-aquatics-4071072962",
+      "https://hu.linkedin.com/jobs/view/motion-graphic-designer-at-world-aquatics-4102279186",
+      "https://sg.linkedin.com/jobs/view/administrative-assistant-at-singapore-aquatics-4178868174",
+      "https://hu.linkedin.com/jobs/view/development-manager-education-at-world-aquatics-4358352954"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_aquatics",
+      "entity_name": "World Aquatics",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://hu.linkedin.com/jobs/view/digital-content-creator-manager-budapest-at-world-aquatics-4071072962",
+        "https://sg.linkedin.com/jobs/view/administrative-assistant-at-singapore-aquatics-4178868174",
+        "https://hu.linkedin.com/jobs/view/development-manager-education-at-world-aquatics-4358352954",
+        "https://worldaquatics.com",
+        "https://worldaquatics-singapore2025.com",
+        "https://olympics.com",
+        "https://hu.linkedin.com/jobs/view/motion-graphic-designer-at-world-aquatics-4102279186"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Global Education Ecosystem Management",
+        "Digital Learning Platform Procurement",
+        "Learning Management System (LMS) Governance",
+        "Olympic Solidarity Funding Utilization",
+        "Certification Framework Standardization"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Aquatics may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:30:09.006072",
+          "domain_explored": "https://worldaquatics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Software (Video/Statistical)",
+              "Event Management Systems",
+              "Broadcasting/Streaming Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Performance Analysis Services (Water Polo)",
+              "Event Services for Budapest 2027 (Early Stage)",
+              "Foundation Management & Marketing Services"
+            ]
+          },
+          "patterns_found": [
+            "Performance Analysis Investment",
+            "Event Planning & Logistics (Budapest 2027)",
+            "Foundation & Ambassador Management",
+            "Global Supplier/Partner Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 315,
+              "elapsed_seconds": 7.635848045349121
+            }
+          ],
+          "reasoning": "The content reveals specific operational capabilities and upcoming events that drive procurement needs. The explicit mention of 'Water Polo Performance Analysis' indicates a requirement for video analysis software, data analytics tools, or consulting services. The announcement of the 'Budapest 2027' schedule signals the start of the procurement lifecycle for a major event (logistics, timing, scoring). The 'Global Partners/Suppliers' section confirms an active vendor ecosystem."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:30:16.691140",
+          "domain_explored": "https://worldaquatics-singapore2025.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:30:26.834481",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AR Lens (Augmented Reality)",
+              "Ticketing Platform (tickets.milanocortina2026.org)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Marketing Content",
+            "Ticket Sales Operations",
+            "AR Fan Engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.0810937881469727
+            }
+          ],
+          "reasoning": "The scraped content is from olympics.com, the IOC's consumer-facing portal, rather than World Aquatics' corporate or procurement domain. The content focuses exclusively on fan engagement (Milano Cortina 2026 tickets, AR lenses, merchandise) rather than B2B operations, governance, or vendor acquisition. This indicates a drift away from the target entity (World Aquatics) and provides no actionable procurement intelligence regarding their specific supply chain or technology investments."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:30:39.793675",
+          "domain_explored": "https://hu.linkedin.com/jobs/view/digital-content-creator-manager-budapest-at-world-aquatics-4071072962",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Instagram, Facebook, X, TikTok, YouTube, LinkedIn)",
+              "Content Management Systems (implied)",
+              "Creative Software (Adobe Creative Suite implied)"
+            ],
+            "job_postings": [
+              "Digital Content Creator/Manager (Budapest) - 1 year ago"
+            ],
+            "procurement_indicators": [
+              "Expansion of Digital Team in Budapest",
+              "Requirement to collaborate with external partners (agencies/freelancers)",
+              "Investment in multimedia content production capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Operations",
+            "Social Media Management Stack",
+            "Creative Vendor Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 337,
+              "elapsed_seconds": 4.444216966629028
+            }
+          ],
+          "reasoning": "The job posting confirms World Aquatics is building out a dedicated Digital Team in Budapest. While this is a hiring signal rather than a direct RFP, it indicates active investment in digital infrastructure and content creation tools. The role requires managing 'external partners' and 'multimedia content production', which implies future procurement needs for creative agencies, software (Adobe Creative Cloud, Social Media Management tools), and potentially freelancers."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:30:50.146695",
+          "domain_explored": "https://hu.linkedin.com/jobs/view/motion-graphic-designer-at-world-aquatics-4102279186",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Cloud (Inferred: Photoshop, After Effects, Illustrator, Premiere Pro)",
+              "3D Motion Graphics Software (e.g., Cinema 4D, Blender)",
+              "Digital Asset Management (DAM) Systems"
+            ],
+            "job_postings": [
+              "Motion Graphic Designer (Budapest) - Focus on 2D/3D animation, social media infographics, and broadcast overlays."
+            ],
+            "procurement_indicators": [
+              "Potential procurement of enterprise software licenses for the Digital Team.",
+              "Shift towards insourcing content creation for digital and broadcast channels."
+            ]
+          },
+          "patterns_found": [
+            "In-house Creative Production Expansion",
+            "Digital & Social Media Asset Generation",
+            "Live Broadcast Graphics Support",
+            "Brand Identity Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 359,
+              "elapsed_seconds": 3.5196168422698975
+            }
+          ],
+          "reasoning": "The job posting confirms World Aquatics is investing in internal capabilities to produce high-volume motion graphics and broadcast assets. While this is a hiring signal rather than a direct procurement signal, it indicates a potential reduction in external creative agency spend or a need for software tools (Adobe Creative Cloud, 3D software) to support these new hires. It reinforces the 'Digital Content Operations' pattern identified in Iteration 4."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:31:02.553081",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/administrative-assistant-at-singapore-aquatics-4178868174",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Word, Excel, PowerPoint)",
+              "Membership Databases",
+              "Scheduling Software",
+              "WhatsApp"
+            ],
+            "job_postings": [
+              "Administrative Assistant (Singapore Aquatics)"
+            ],
+            "procurement_indicators": [
+              "Direct responsibility for procurement support tasks",
+              "Vendor liaison for logistical needs and supplies",
+              "Inventory and equipment tracking",
+              "Finance support requirements"
+            ]
+          },
+          "patterns_found": [
+            "Local Federation Procurement Operations",
+            "Vendor & Inventory Management",
+            "Membership Database Administration",
+            "National Pathway Administration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1650,
+              "output_tokens": 323,
+              "elapsed_seconds": 4.844066143035889
+            }
+          ],
+          "reasoning": "While this posting is for Singapore Aquatics (a member federation) and not World Aquatics directly, it reveals the operational structure of the ecosystem. The explicit requirement for 'finance, procurement' experience and the responsibility to 'liaise with vendors' indicates active procurement activity at the national level, which often relies on or is influenced by the governing body's frameworks."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:31:12.268003",
+          "domain_explored": "https://hu.linkedin.com/jobs/view/development-manager-education-at-world-aquatics-4358352954",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Learning Management Systems (LMS)",
+              "Webinar Platforms",
+              "Certification Database Software",
+              "Digital Content Creation Tools"
+            ],
+            "job_postings": [
+              "Development Manager - Education (World Aquatics, Budapest)"
+            ],
+            "procurement_indicators": [
+              "Budget authority for 'education programmes and pathways'",
+              "Requirement for 'quality assurance' and 'alignment' of digital frameworks",
+              "Management of 'Olympic Solidarity initiatives' (funding source)",
+              "Need to maintain 'global network of experts' (logistics/contractors)"
+            ]
+          },
+          "patterns_found": [
+            "Global Education Ecosystem Management",
+            "Digital Learning Platform Procurement",
+            "Learning Management System (LMS) Governance",
+            "Olympic Solidarity Funding Utilization",
+            "Certification Framework Standardization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1723,
+              "output_tokens": 384,
+              "elapsed_seconds": 3.151871919631958
+            }
+          ],
+          "reasoning": "The job description explicitly references 'E-learning And Digital Education' and managing a 'global education ecosystem.' The responsibility to oversee online learning across all sports and implement certification frameworks strongly indicates a need for robust Learning Management Systems (LMS), webinar platforms, and digital content creation tools. This is a clear signal of procurement activity in the EdTech and digital infrastructure space."
+        }
+      ],
+      "total_input_tokens": 9264,
+      "total_output_tokens": 1954,
+      "estimated_cost_usd": 0.057102
+    },
+    "procurement_signals": [
+      "Global Education Ecosystem Management",
+      "Digital Learning Platform Procurement",
+      "Learning Management System (LMS) Governance",
+      "Olympic Solidarity Funding Utilization",
+      "Certification Framework Standardization"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Aquatics may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:31:12.282680"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.449873",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:49.468614"
+}

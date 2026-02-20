@@ -1,0 +1,243 @@
+{
+  "entity_id": "laboral_kutxa\u0096fundaci\u00f3n_euskadi",
+  "entity_name": "Laboral Kutxa\u0096Fundaci\u00f3n Euskadi",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "professional_cycling_teams",
+  "discovered_domains": [
+    "letourfemmes.fr",
+    "lavueltafemenina.es",
+    "la-fleche-wallonne-femmes.be",
+    "liege-bastogne-liege-femmes.be",
+    "wikidata.org",
+    "bobshop.com",
+    "theuaetourwomen.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "laboral_kutxa\u0096fundaci\u00f3n_euskadi",
+      "entity_name": "Laboral Kutxa\u0096Fundaci\u00f3n Euskadi",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://theuaetourwomen.com",
+        "https://lavueltafemenina.es",
+        "https://la-fleche-wallonne-femmes.be",
+        "https://wikidata.org",
+        "https://bobshop.com",
+        "https://letourfemmes.fr",
+        "https://liege-bastogne-liege-femmes.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Laboral Kutxa\u0096Fundaci\u00f3n Euskadi may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:44:15.251655",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event content",
+            "General public news",
+            "Sponsorship branding (Zwift, Tissot)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.5816709995269775
+            }
+          ],
+          "reasoning": "The scraped content is from the official Tour de France Femmes website (letourfemmes.fr). It contains race results, route announcements (Grand D\u00e9part Grande-Bretagne 2027), and general news. There is absolutely no content related to Laboral Kutxa\u2013Fundaci\u00f3n Euskadi, their procurement needs, or their technology stack. This is irrelevant noise for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:44:18.028411",
+          "domain_explored": "https://lavueltafemenina.es",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:44:24.612144",
+          "domain_explored": "https://la-fleche-wallonne-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event results and rankings",
+            "General public news (race reports, celebrations)",
+            "Sponsorship branding (FENIX-DECEUNINCK, FDJ-SUEZ, Canyon//SRAM)",
+            "Media gallery content (images, videos)",
+            "Editorial content (Mur de Huy history, 'Queen' narratives)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.5146937370300293
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on the sporting aspect of the event (La Fl\u00e8che Wallonne Femmes), including race results, rider rankings, photo galleries, and historical editorials. There is no presence of corporate governance, job postings, or technology procurement signals. The entity 'Laboral Kutxa\u2013Fundaci\u00f3n Euskadi' is not mentioned in the text provided, and the content serves a purely informational/fan engagement purpose."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:44:30.102814",
+          "domain_explored": "https://liege-bastogne-liege-femmes.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Dailymotion (Video Player)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event results and rankings",
+            "General public news (race reports, celebrations)",
+            "Sponsorship branding (AG Insurance, FDJ-SUEZ, FENIX-DECEUNINCK)",
+            "Media asset hosting (Dailymotion)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.342439889907837
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 2025 race results, 2026 route announcements, and photo galleries for the Li\u00e8ge-Bastogne-Li\u00e8ge Femmes cycling event. It contains no corporate information, governance details, or technology procurement signals relevant to Laboral Kutxa\u2013Fundaci\u00f3n Euskadi."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:44:32.857344",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:44:41.872957",
+          "domain_explored": "https://bobshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce transactional content",
+            "B2C retail operations",
+            "Product catalogs and pricing",
+            "Consumer promotions (Sales/Coupons)",
+            "Sponsorship branding (UAE Team Emirates, INEOS GRENADIERS, EF Education)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.49446702003479
+            }
+          ],
+          "reasoning": "The scraped content from bobshop.com is exclusively B2C retail data (product listings, prices, discounts) and lacks any B2B governance, procurement intent, or technology investment signals relevant to Laboral Kutxa\u2013Fundaci\u00f3n Euskadi. While it features cycling team branding similar to the target entity's sector, it is a vendor/supplier site, not a source for the target's internal procurement signals."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:44:49.028200",
+          "domain_explored": "https://theuaetourwomen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports event schedule and results",
+            "General public news (race reports, team announcements)",
+            "Sponsorship branding (Al Masaood, Modon, TeamLab)",
+            "Fan engagement content (Official App, Roadbook, Media Gallery)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1655,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.3427042961120605
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 2026 UAE Tour Women's cycling event. It displays race stages, winners, team announcements, and consumer-facing media (app, photos, videos). There are no corporate governance signals, technology infrastructure details, or procurement opportunities relevant to Laboral Kutxa\u2013Fundaci\u00f3n Euskadi."
+        }
+      ],
+      "total_input_tokens": 7585,
+      "total_output_tokens": 1050,
+      "estimated_cost_usd": 0.038505
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Laboral Kutxa\u0096Fundaci\u00f3n Euskadi may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:44:49.028976"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.384910",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:31.039415"
+}

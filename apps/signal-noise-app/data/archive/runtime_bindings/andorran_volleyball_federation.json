@@ -1,0 +1,184 @@
+{
+  "entity_id": "andorran_volleyball_federation",
+  "entity_name": "Andorran Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "wikipedia.nucleos.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/credit-and-collections-specialist-with-english-and-swedish-at-xerox-191122634",
+      "https://www.linkedin.com/jobs/search?keywords=.&location=&geoId=&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "andorran_volleyball_federation",
+      "entity_name": "Andorran Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/search?keywords=.&location=&geoId=&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0",
+        "https://www-old.cev.eu",
+        "https://wikipedia.nucleos.com",
+        "https://www.linkedin.com/jobs/view/credit-and-collections-specialist-with-english-and-swedish-at-xerox-191122634"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Andorran Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:25:22.158203",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Confirmed membership in CEV (Confederation Europ\u00e9enne de Volleyball)",
+              "Potential reliance on CEV centralized digital infrastructure (implied by 'New CEV Website' link)"
+            ]
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (2018-2022)",
+            "Standard footer links to National Federations (including AND)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.962376117706299
+            }
+          ],
+          "reasoning": "The content provided is a navigation dump from the Confederation Europ\u00e9enne de Volleyball (CEV) website, specifically an older version (cev.eu). While it lists 'Andorra (AND)' in the footer links, confirming the federation's existence within the ecosystem, the content contains no specific information regarding the Andorran Volleyball Federation's internal operations, technology stack, or procurement activities. It is purely structural and historical data regarding European-wide competitions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:25:29.355091",
+          "domain_explored": "https://wikipedia.nucleos.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Offline reader interface (Kiwix)",
+            "Generic navigation placeholders",
+            "Lack of specific entity content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 464,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.5177700519561768
+            }
+          ],
+          "reasoning": "The provided content represents the shell or navigation menu of a Kiwix offline reader page (likely a Wikipedia mirror). It contains no specific text, metadata, or links related to the Andorran Volleyball Federation, its procurement activities, or its technology stack. The content is entirely generic infrastructure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:25:35.161109",
+          "domain_explored": "https://www.linkedin.com/jobs/view/credit-and-collections-specialist-with-english-and-swedish-at-xerox-191122634",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP"
+            ],
+            "job_postings": [
+              "Credit and Collections Specialist (Xerox)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity match (Xerox vs. Andorran Volleyball Federation)",
+            "Generic corporate job listing",
+            "Standard ERP usage (SAP) in unrelated sector"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.7183022499084473
+            }
+          ],
+          "reasoning": "The content is a job posting for Xerox (a global document management company) located in Barcelona. While it mentions 'Skiing in Andorra' as a benefit, this is a recreational detail for employees, not a procurement signal or business operation of the Andorran Volleyball Federation. There is no governance, budget, or technology overlap with the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:25:47.047179",
+          "domain_explored": "https://www.linkedin.com/jobs/search?keywords=.&location=&geoId=&trk=public_jobs_jobs-search-bar_search-submit&position=1&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board search results",
+            "Geographic mismatch (United States vs. Andorra)",
+            "Entity mismatch (Herm\u00e8s, Southland Organics vs. Andorran Volleyball Federation)",
+            "Pagination tokens present in URLs"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1599,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.498178005218506
+            }
+          ],
+          "reasoning": "The provided content is a generic search results page from LinkedIn containing listings for companies based in the United States (e.g., Herm\u00e8s, Southland Organics). There is no mention, relevance, or connection to the Andorran Volleyball Federation or Andorra. The content represents noise in the context of the specific entity search."
+        }
+      ],
+      "total_input_tokens": 4935,
+      "total_output_tokens": 874,
+      "estimated_cost_usd": 0.027915000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Andorran Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:25:47.048559"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331532",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:14.029178"
+}

@@ -1,0 +1,200 @@
+{
+  "entity_id": "antigua_and_barbuda_volleyball_association",
+  "entity_name": "Antigua and Barbuda Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "antiguaobserver.com",
+    "norceca.net",
+    "pointville.ag"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ag.linkedin.com/jobs/view/outdoor-pursuits-manager-at-discovery-land-company-3756756472"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "antigua_and_barbuda_volleyball_association",
+      "entity_name": "Antigua and Barbuda Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://antiguaobserver.com",
+        "https://norceca.net",
+        "https://pointville.ag",
+        "https://ag.linkedin.com/jobs/view/outdoor-pursuits-manager-at-discovery-land-company-3756756472"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Antigua and Barbuda Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:26:11.963067",
+          "domain_explored": "https://antiguaobserver.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news coverage (Football, Cricket)",
+            "Local community interest stories",
+            "No specific mentions of Volleyball Association activities"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.3917598724365234
+            }
+          ],
+          "reasoning": "The scraped content from the Daily Observer homepage lists general news headlines, including sports stories focused on Football (ABFA) and Cricket (Leeward Islands Stormers). There are no articles, job postings, or advertisements specifically mentioning the Antigua and Barbuda Volleyball Association, nor any signals of their procurement activities or technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:26:19.988840",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF documentation (Operational Charts, Schedules)",
+              "Standard Web Hosting (Legacy HTML/ASP structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Rotating Hosting Schedule (2002-2030): Indicates long-term event cycles requiring local procurement",
+              "Branding Kit: Suggests marketing material requirements",
+              "Development Centers (CRDVs): Potential infrastructure investment signals"
+            ]
+          },
+          "patterns_found": [
+            "Affiliation listing (Antigua and Barbuda Volleyball Association mentioned)",
+            "Regional governance structure (NORCECA/CAZOVA)",
+            "Event hosting schedules (2026-2030)",
+            "Branding guidelines availability",
+            "Constitutional framework"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 358,
+              "elapsed_seconds": 4.5341761112213135
+            }
+          ],
+          "reasoning": "While the content is from the Confederation level (NORCECA) rather than the local Association, it confirms the existence of the 'Antigua and Barbuda Volleyball Association' as an affiliated entity. It reveals the ecosystem the Association operates within, including upcoming event hosting cycles (which drive local procurement) and mandatory branding/operational standards. This provides context for future procurement needs (hosting, equipment, compliance) but lacks direct local transaction signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:26:28.950901",
+          "domain_explored": "https://pointville.ag",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General local news digest",
+            "PDF/Digital newspaper format",
+            "Non-specific sports coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 650,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.614330291748047
+            }
+          ],
+          "reasoning": "The scraped content represents a local news digest (Xpress Newspaper) without specific mentions of the Antigua and Barbuda Volleyball Association, related tenders, or technology investments. The content is a general archive page and does not contain actionable procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:26:36.223485",
+          "domain_explored": "https://ag.linkedin.com/jobs/view/outdoor-pursuits-manager-at-discovery-land-company-3756756472",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI-powered assessment tools (LinkedIn)",
+              "Inventory Management Systems (implied by 'maintain up to date inventory')"
+            ],
+            "job_postings": [
+              {
+                "title": "Outdoor Pursuits Manager",
+                "entity": "Discovery Land Company / Barbuda Ocean Club",
+                "location": "Codrington, Barbuda",
+                "relevance": "High - Directly involves managing volleyball facilities and equipment procurement for a major luxury development."
+              }
+            ],
+            "procurement_indicators": [
+              "Budget ownership for Outdoor Pursuits department",
+              "Procurement of water and land sports equipment (Volleyball, Kitesurfing, E-foil, etc.)",
+              "Vendor management for 'Contract Employees' and third-party services",
+              "Facility setup and 'early programming' implying new capital investment"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Sports Infrastructure Development",
+            "Equipment Procurement Requirements (Marine/Land)",
+            "Volleyball as a Secondary Activity in Luxury Tourism"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1571,
+              "output_tokens": 437,
+              "elapsed_seconds": 3.9074039459228516
+            }
+          ],
+          "reasoning": "While this is a job posting for Discovery Land Company (Barbuda Ocean Club) and not the Association itself, it reveals significant procurement activity in the local volleyball ecosystem. The role requires managing equipment inventory for multiple sports, including volleyball, and managing third-party vendors. This indicates a demand for sports equipment and facility management services within Antigua and Barbuda, which the Association could leverage or influence."
+        }
+      ],
+      "total_input_tokens": 5028,
+      "total_output_tokens": 1157,
+      "estimated_cost_usd": 0.032438999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Antigua and Barbuda Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:26:36.224205"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331718",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:56.453218"
+}

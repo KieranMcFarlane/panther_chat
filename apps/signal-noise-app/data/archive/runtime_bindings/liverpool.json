@@ -1,0 +1,358 @@
+{
+  "entity_id": "liverpool",
+  "entity_name": "Liverpool",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_tier_club_global",
+  "discovered_domains": [
+    "liverpoolfc.com",
+    "liverpool.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mx.linkedin.com/company/elpuertodeliverpool/jobs",
+      "https://www.linkedin.com/company/elpuertodeliverpool/jobs/",
+      "https://www.linkedin.com/jobs/el-puerto-de-liverpool-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/%28-%29-entry-level-jobs-liverpool",
+      "https://www.linkedin.com/jobs/liverpool-one-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/on-part-time-jobs-liverpool",
+      "https://uk.linkedin.com/jobs/people-in-jobs-liverpool",
+      "https://uk.linkedin.com/jobs/career-path-jobs-liverpool",
+      "https://www.linkedin.com/jobs/liverpool-fc-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/full-time-monday-friday-jobs-liverpool"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liverpool",
+      "entity_name": "Liverpool",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://www.linkedin.com/company/elpuertodeliverpool/jobs/",
+        "https://mx.linkedin.com/company/elpuertodeliverpool/jobs",
+        "https://liverpoolfc.com",
+        "https://www.linkedin.com/jobs/liverpool-one-jobs-worldwide",
+        "https://uk.linkedin.com/jobs/%28-%29-entry-level-jobs-liverpool",
+        "https://liverpool.com",
+        "https://www.linkedin.com/jobs/el-puerto-de-liverpool-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liverpool may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:06:48.348987",
+          "domain_explored": "https://liverpoolfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is purely sports journalism (fixtures, player polls, transfer rumours)",
+            "No corporate governance or commercial technology signals detected",
+            "High volume of duplicate/repetitive content blocks in source"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.252293825149536
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news, match fixtures, and player performance. There are no signals regarding procurement, job postings, or technology infrastructure. The source page is the public-facing sports news portal, not a corporate or careers site."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:06:54.452623",
+          "domain_explored": "https://liverpool.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports journalism content (transfer news, player medicals, loan deals)",
+            "High volume of repetitive sports-related keywords (Mbappe, Chelsea, Rennes, UEFA)",
+            "Absence of corporate governance or B2B technology terminology"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 229,
+              "elapsed_seconds": 2.994454860687256
+            }
+          ],
+          "reasoning": "The scraped content from 'liverpool.com' is exclusively focused on sports journalism, specifically football transfer news, player movements, and match events. There are no signals related to corporate procurement, technology infrastructure, or business operations. The domain appears to be a news aggregation site rather than the official corporate presence of Liverpool City Council or the commercial arm of the football club."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:07:00.204722",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic mobile gaming content (Candy Crush, PUBG, etc.)",
+            "Google Play Store interface elements (Top Charts, Categories)",
+            "Consumer-facing app descriptions and in-app purchase advertisements",
+            "Irrelevant keywords (Bluey, Baby Panda, Solitaire)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 210,
+              "elapsed_seconds": 2.302151918411255
+            }
+          ],
+          "reasoning": "The scraped content is a direct dump of the Google Play Store homepage, listing popular consumer games and apps. There is no connection to the entity 'Liverpool' (corporate or football club), nor are there any B2B, governance, or procurement signals present. This represents a significant deviation from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:07:08.888502",
+          "domain_explored": "https://mx.linkedin.com/company/elpuertodeliverpool/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "E-commerce Platforms",
+              "Site Experience Tools (UX/CRO)",
+              "Sales Analytics Software"
+            ],
+            "job_postings": [
+              "Especialista site experience Ecommerce Belleza",
+              "Analista de ventas",
+              "Analista de Merchandiser jr.",
+              "Becario administrativo / contable"
+            ],
+            "procurement_indicators": [
+              "Digital Experience Investment (Ecommerce Specialist role)",
+              "Retail Operations Scale (29,539 employees)",
+              "Sales & Merchandising Optimization"
+            ]
+          },
+          "patterns_found": [
+            "Ecommerce Specialization",
+            "Digital Experience Roles",
+            "Corporate Retail Structure",
+            "Merchandising & Sales Analytics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 356,
+              "elapsed_seconds": 5.311517953872681
+            }
+          ],
+          "reasoning": "The content confirms the entity 'Liverpool' refers to 'El Puerto de Liverpool', a major Mexican retail corporation, not the UK football club. While the page lists generic retail roles (Visual Merchandising, Sales), it explicitly mentions 'Especialista site experience Ecommerce Belleza', indicating active digital transformation and e-commerce operations. This signals a potential need for related technology vendors (UX, CMS, Analytics), though specific procurement intent is not explicit in this high-level view."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:07:18.107043",
+          "domain_explored": "https://www.linkedin.com/company/elpuertodeliverpool/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ecommerce Platforms",
+              "Site Experience Tools",
+              "Merchandising Software"
+            ],
+            "job_postings": [
+              "Especialista site experience Ecommerce Belleza",
+              "Asesor / consultor de visual merchandising",
+              "Analista de ventas",
+              "Consultor de ventas / merchandiser wholesale",
+              "Becario administrativo / contable",
+              "Especialista de Relaciones Laborales",
+              "Analista de Merchandiser jr.",
+              "Analista jr. contable"
+            ],
+            "procurement_indicators": [
+              "Digital Experience Investment (Ecommerce)",
+              "Workforce Scale (29,539 employees)",
+              "Merchandising Operations"
+            ]
+          },
+          "patterns_found": [
+            "Ecommerce Specialization",
+            "Digital Experience Roles",
+            "Corporate Retail Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 362,
+              "elapsed_seconds": 5.938812017440796
+            }
+          ],
+          "reasoning": "The content confirms the entity is a major Mexican retail corporation (El Puerto de Liverpool) with nearly 30,000 employees, distinct from the football club. While the specific job listings are operational (sales, merchandising, accounting), the presence of an 'Especialista site experience Ecommerce Belleza' role indicates active digital transformation efforts and investment in online customer experience platforms."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:07:37.667066",
+          "domain_explored": "https://www.linkedin.com/jobs/el-puerto-de-liverpool-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Science Tools (implied)",
+              "Analytics Platforms"
+            ],
+            "job_postings": [
+              "Junior Data Scientist",
+              "Recepcionista"
+            ],
+            "procurement_indicators": [
+              "Hiring for data capabilities",
+              "Corporate headquarters operations (Cuajimalpa)"
+            ]
+          },
+          "patterns_found": [
+            "Data Science & Analytics Roles",
+            "Corporate Retail Structure",
+            "Geographic Focus (Mexico City)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 265,
+              "elapsed_seconds": 14.257374048233032
+            }
+          ],
+          "reasoning": "The content confirms the entity is 'El Puerto de Liverpool' (the Mexican retail corporation), not the football club. The presence of a 'Junior Data Scientist' role indicates investment in data analytics, which is a procurement signal for data infrastructure and tools. However, the content is largely repetitive UI elements and low-level operational roles (Recepcionista), limiting the depth of procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:07:45.442896",
+          "domain_explored": "https://uk.linkedin.com/jobs/%28-%29-entry-level-jobs-liverpool",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "STEM Coordinator (Entry Level) - Liverpool Football Club"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment",
+              "Operational Budget Allocation (Community/STEM)"
+            ]
+          },
+          "patterns_found": [
+            "Educational Program Management",
+            "Community Outreach Roles",
+            "Corporate Social Responsibility (CSR) Structure",
+            "Administrative Coordination Functions"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1777,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.2745280265808105
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for a 'STEM Coordinator (Entry Level)' at Liverpool Football Club. While this is not a direct procurement or technology role, it confirms the entity's active hiring and organizational structure, specifically within their CSR/Foundation operations. It indicates operational activity but lacks direct technology or purchasing signals."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:07:56.424759",
+          "domain_explored": "https://www.linkedin.com/jobs/liverpool-one-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Advisor (ARNE)",
+              "Stock Room Assistant (ARNE)",
+              "Store Supervisor (Footasylum)",
+              "Senior Sales Advisor (LFC Foundation)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Retail Job Aggregation",
+            "Third-Party Tenant Hiring (LFC Foundation, ARNE, Footasylum)",
+            "Geographic Confusion (Liverpool City vs. Corporate Entity)",
+            "Operational/Storefront Roles (Sales, Stock, Supervision)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1841,
+              "output_tokens": 275,
+              "elapsed_seconds": 5.374051094055176
+            }
+          ],
+          "reasoning": "The search query 'Liverpool One' targets the shopping destination complex in Liverpool, England, rather than the corporate entity 'El Puerto de Liverpool' (Mexico). The content returned consists of tenant-specific retail roles (ARNE, Footasylum) and local charity roles (LFC Foundation). These are operational storefront positions, not corporate procurement or technology roles. This confirms a geographic and entity mismatch."
+        }
+      ],
+      "total_input_tokens": 12896,
+      "total_output_tokens": 2133,
+      "estimated_cost_usd": 0.070683
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liverpool may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:07:56.431382"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.119285",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:03:54.676262"
+}

@@ -1,0 +1,190 @@
+{
+  "entity_id": "afghanistan_football_federation",
+  "entity_name": "Afghanistan Football Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "the-aff.org",
+    "the-cafa.com",
+    "inside.fifa.com",
+    "the-afc.com",
+    "afghanpremierleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afghanistan_football_federation",
+      "entity_name": "Afghanistan Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://afghanpremierleague.com",
+        "https://the-afc.com",
+        "https://inside.fifa.com",
+        "https://the-aff.org",
+        "https://the-cafa.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Afghanistan Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:27:49.440074",
+          "domain_explored": "https://the-aff.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:27:58.145041",
+          "domain_explored": "https://the-cafa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Direct reference to 'Important Notice for Potential Tender Participants' (visible in news feed)",
+              "Active organization of 'Media and Marketing Webinar' (indicating investment in marketing capabilities)",
+              "Hosting of major events (U18 Women\u2019s Championship, Nations Cup) requiring event management vendors"
+            ]
+          },
+          "patterns_found": [
+            "Tender Notice Reference",
+            "Regional Association Membership",
+            "Media & Marketing Training Initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 325,
+              "elapsed_seconds": 5.464558839797974
+            }
+          ],
+          "reasoning": "While the target entity is the Afghanistan Football Federation (AFF), this content from the Central Asian Football Association (CAFA)\u2014the regional governing body\u2014provides crucial context. The discovery of an 'Important Notice for Potential Tender Participants' indicates active procurement cycles at the confederation level, which often trickle down to member associations or require vendor participation from member nations. Additionally, the focus on 'Media & Marketing' suggests a regional trend toward digital transformation that the AFF may be required to adopt or support."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:28:04.088076",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding Model (Global context)",
+              "Stadium Refurbishment Standards (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "FIFA Forward Program Funding",
+            "Infrastructure Refurbishment Projects",
+            "Women's Game Development Initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 236,
+              "elapsed_seconds": 2.8722729682922363
+            }
+          ],
+          "reasoning": "The content is from FIFA's global news portal and focuses on high-level strategic initiatives (FIFA Forward, Women's Champions Cup) and infrastructure projects in other nations (Burundi). While it confirms the existence of funding mechanisms like FIFA Forward that the AFF might access, it contains no specific procurement signals, vendor solicitations, or technology adoption details specific to the Afghanistan Football Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:28:06.935495",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:28:13.571812",
+          "domain_explored": "https://afghanpremierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Drupal/WordPress implied by structure)",
+              "Video Streaming/Broadcasting Platforms",
+              "Multilingual Content Management (Farsi, Pashto, English)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Partnerships (Roshan, Etisalat, etc. implied by 'Sponsors' link)",
+              "Event Production Services (Matchday operations)",
+              "Media & Broadcasting Rights Management",
+              "Security & Logistics (High-profile government meetings)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Ecosystem",
+            "Event Management Operations",
+            "Digital Content Management",
+            "Government Relations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.680251121520996
+            }
+          ],
+          "reasoning": "The content confirms the operational scale of the APL (a key AFF asset), indicating a need for event management, sponsorship, and digital content services. While no direct tenders are listed, the scale of operations (President-level meetings, multi-team logistics) implies vendor reliance for media, logistics, and event production."
+        }
+      ],
+      "total_input_tokens": 4367,
+      "total_output_tokens": 860,
+      "estimated_cost_usd": 0.026001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Afghanistan Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:28:13.572609"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.199769",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:21.233690"
+}

@@ -1,0 +1,436 @@
+{
+  "entity_id": "lnb_pro_a_(france)",
+  "entity_name": "LNB Pro A (France)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "oreateai.com",
+    "m.betblog.com",
+    "oddspedia.com",
+    "livescore.com",
+    "napoleongames.be",
+    "basketballwa.asn.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mt.linkedin.com/jobs/view/intern-rg-aml-project-workforce-at-betclic-group-3346456473",
+      "https://mt.linkedin.com/jobs/view/talent-acquisition-specialist-at-betclic-group-4161555148",
+      "https://mt.linkedin.com/jobs/view/junior-trading-systems-development-support-specialist-at-betclic-group-3842472160",
+      "https://mt.linkedin.com/jobs/view/rg-aml-analyst-player-protection-at-betclic-group-3405253867",
+      "https://mt.linkedin.com/jobs/view/trader-euro-sports-at-betclic-group-3787415488",
+      "https://mt.linkedin.com/jobs/view/safer-gaming-team-lead-at-betclic-group-3805447384",
+      "https://mt.linkedin.com/jobs/view/talent-acquisition-coordinator-6-months-fixed-term-contract-at-betclic-group-3600177319",
+      "https://mt.linkedin.com/jobs/view/rg-aml-analyst-detection-at-betclic-group-3361371617",
+      "https://mt.linkedin.com/jobs/view/customer-service-training-manager-at-betclic-group-3965918157"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lnb_pro_a_(france)",
+      "entity_name": "LNB Pro A (France)",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://mt.linkedin.com/jobs/view/trader-euro-sports-at-betclic-group-3787415488",
+        "https://mt.linkedin.com/jobs/view/junior-trading-systems-development-support-specialist-at-betclic-group-3842472160",
+        "https://m.betblog.com",
+        "https://oddspedia.com",
+        "https://livescore.com",
+        "https://napoleongames.be",
+        "https://mt.linkedin.com/jobs/view/talent-acquisition-specialist-at-betclic-group-4161555148",
+        "https://mt.linkedin.com/jobs/view/rg-aml-analyst-player-protection-at-betclic-group-3405253867",
+        "https://basketballwa.asn.au",
+        "https://oreateai.com",
+        "https://mt.linkedin.com/jobs/view/intern-rg-aml-project-workforce-at-betclic-group-3346456473"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LNB Pro A (France) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:37:53.186252",
+          "domain_explored": "https://oreateai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "marketing_spam",
+            "ai_essay_writing_service"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 463,
+              "output_tokens": 154,
+              "elapsed_seconds": 5.088921785354614
+            }
+          ],
+          "reasoning": "The content provided is from 'oreateai.com' and is purely marketing copy for an AI essay writing service. It contains no information regarding LNB Pro A, its governance, technology stack, or procurement activities. The text is repetitive and lacks any actionable business intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:37:59.009516",
+          "domain_explored": "https://m.betblog.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_content",
+            "betting_tips",
+            "sportsbook_aggregation",
+            "irrelevant_context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 138,
+              "elapsed_seconds": 2.340606927871704
+            }
+          ],
+          "reasoning": "The content is entirely focused on sports betting, casino reviews, and gambling tips. It contains no information regarding LNB Pro A operations, technology infrastructure, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:38:01.919531",
+          "domain_explored": "https://oddspedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:38:10.515289",
+          "domain_explored": "https://livescore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Clarity (Analytics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "aggregated_scores",
+            "betting_affiliate_links",
+            "generic_sports_content",
+            "consumer_facing_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 204,
+              "elapsed_seconds": 5.651165008544922
+            }
+          ],
+          "reasoning": "The content is from LiveScore.com, a consumer-facing sports aggregation site. It displays real-time scores, standings, and generic betting affiliate links (e.g., 'Betting Sites UK', 'Casino Sites'). There is no content related to LNB Pro A's internal operations, governance, or procurement activities. The mention of 'Ligue 1 France' refers to football, not the LNB Pro A basketball league."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:38:13.347451",
+          "domain_explored": "https://napoleongames.be",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:38:21.583748",
+          "domain_explored": "https://basketballwa.asn.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General Manager Performance and Pathways (Internal Appointment)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "geographic_mismatch",
+            "grassroots_sports_content",
+            "state_team_announcements",
+            "consumer_facing_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.4913859367370605
+            }
+          ],
+          "reasoning": "The content is from Basketball WA (Western Australia), which is a governing body for a different region and league level than LNB Pro A (France). The content focuses on grassroots participation ('Want to play basketball?'), state team championships (U20 Men), and internal staffing appointments. There is no relevance to French professional basketball procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:38:28.731498",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/intern-rg-aml-project-workforce-at-betclic-group-3346456473",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Confluence"
+            ],
+            "job_postings": [
+              {
+                "role": "Intern - RG & AML - Project & Workforce",
+                "entity": "Betclic Group",
+                "location": "Malta",
+                "department": "Regulatory & Compliance"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Partnership Verification",
+                "details": "Betclic explicitly lists 'Betclic Elite (LNB)' as an official partnership."
+              },
+              {
+                "type": "Tooling Procurement",
+                "details": "Role involves testing new procedures and tools for compliance and workforce management."
+              }
+            ]
+          },
+          "patterns_found": [
+            "official_partnership_confirmation",
+            "regulatory_compliance_operations",
+            "workforce_management_tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1606,
+              "output_tokens": 405,
+              "elapsed_seconds": 3.717528820037842
+            }
+          ],
+          "reasoning": "While this is a job posting for Betclic (a gambling operator) rather than the LNB itself, it provides critical verification of the commercial relationship between the two entities. The text explicitly lists 'Betclic Elite in basket-ball (LNB)' as an official partnership. This confirms Betclic as a key sponsor/vendor stakeholder. Additionally, the role involves 'testing new procedures or tools' and 'analyzing reports,' indicating the use of workforce management and compliance software within the partner organization that interacts with the LNB ecosystem."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:38:36.427877",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/talent-acquisition-specialist-at-betclic-group-4161555148",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Applicant Tracking System (ATS)",
+              "HR Information System (HRIS)"
+            ],
+            "job_postings": [
+              "Talent Acquisition Specialist"
+            ],
+            "procurement_indicators": [
+              "Liaising with recruitment agencies",
+              "Administering candidate databases",
+              "Managing full cycle recruitment tools"
+            ]
+          },
+          "patterns_found": [
+            "official_partnership_confirmation",
+            "ats_software_usage",
+            "recruitment_agency_procurement",
+            "hris_procurement_signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1675,
+              "output_tokens": 303,
+              "elapsed_seconds": 4.079846143722534
+            }
+          ],
+          "reasoning": "The content confirms the official partnership between Betclic and the LNB (Betclic Elite), reinforcing the entity connection. While this is a Talent Acquisition job posting, it reveals procurement signals regarding HR technology, specifically the use of an Applicant Tracking System (ATS) and the management of relationships with external recruitment agencies (vendor management). It also indicates administrative control over onboarding and probationary processes, suggesting potential use of HRIS tools."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:38:42.569439",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/junior-trading-systems-development-support-specialist-at-betclic-group-3842472160",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office (Excel)",
+              "Trading Platforms (Internal/Proprietary)",
+              "Quantitative Modelling Tools"
+            ],
+            "job_postings": [
+              "Junior Trading Systems, Development & Support Specialist"
+            ],
+            "procurement_indicators": [
+              "Vendor/Provider Liaison",
+              "Regulatory Compliance Monitoring",
+              "Internal Tool Support"
+            ]
+          },
+          "patterns_found": [
+            "official_partnership_confirmation",
+            "proprietary_trading_systems",
+            "vendor_management_ops",
+            "regulatory_compliance_ops"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1748,
+              "output_tokens": 312,
+              "elapsed_seconds": 2.9255030155181885
+            }
+          ],
+          "reasoning": "The job posting confirms Betclic's status as an official partner of the LNB ('Betclic Elite'). While the role is technical, it involves 'Liaison with Trading Management' regarding platforms and providers, indicating vendor management responsibilities. The role also requires maintaining knowledge on 'Trading Compliance' and 'regulatory frameworks', which implies procurement of legal or compliance services. The focus is on internal support rather than external purchasing, hence the weak signal."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T18:39:00.151247",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/rg-aml-analyst-player-protection-at-betclic-group-3405253867",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI-driven Risk Detection Systems",
+              "Internal Scripts (Automation)",
+              "Customer Database (CRM/DBMS)",
+              "EDD (Enhanced Due Diligence) Reporting Tools"
+            ],
+            "job_postings": [
+              "RG & AML Analyst - Player Protection"
+            ],
+            "procurement_indicators": [
+              "Usage of AI alerts for account monitoring (SaaS potential)",
+              "Reliance on external data for wealth checks (Vendor relationship)",
+              "Inter-departmental communication tools (Collaboration software)"
+            ]
+          },
+          "patterns_found": [
+            "official_partnership_confirmation",
+            "regulatory_compliance_operations",
+            "ai_alert_systems",
+            "internal_risk_management_tools",
+            "cross_departmental_workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1816,
+              "output_tokens": 369,
+              "elapsed_seconds": 14.16075587272644
+            }
+          ],
+          "reasoning": "While this is a job posting for an Analyst role rather than a procurement manager, it confirms the Betclic-LNB partnership and reveals specific internal technology stacks that are likely procured enterprise solutions. The mention of 'AI alerts' and 'scripts' for risk detection indicates the use of automated compliance software (AML/KYC tools). The role involves 'source of income and wealth checks,' suggesting third-party data verification services. This adds depth to the operational infrastructure supporting the partnership."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T18:39:09.557689",
+          "domain_explored": "https://mt.linkedin.com/jobs/view/trader-euro-sports-at-betclic-group-3787415488",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Sports Trading Platforms",
+              "Risk Management Systems",
+              "Provider-driven betting tools"
+            ],
+            "job_postings": [
+              "Trader (Euro Sports) - Betclic Group"
+            ],
+            "procurement_indicators": [
+              "Management of 3rd party providers",
+              "Communication with external providers for reporting/feedback",
+              "Procurement of sports data/coverage feeds"
+            ]
+          },
+          "patterns_found": [
+            "official_partnership_confirmation",
+            "vendor_management_ops",
+            "external_provider_integration",
+            "risk_management_software"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1881,
+              "output_tokens": 297,
+              "elapsed_seconds": 6.0560150146484375
+            }
+          ],
+          "reasoning": "The job description explicitly confirms the partnership between Betclic and the LNB (Betclic Elite). It reveals the procurement function of the 'Trader' role, which involves 'Integration and management of 3rd party providers' and 'lead communication with external providers.' This indicates Betclic procures data feeds or trading tools for sports coverage, which likely applies to their basketball offering."
+        }
+      ],
+      "total_input_tokens": 13601,
+      "total_output_tokens": 2389,
+      "estimated_cost_usd": 0.076638
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LNB Pro A (France) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:39:09.561732"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.415838",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:13.222568"
+}

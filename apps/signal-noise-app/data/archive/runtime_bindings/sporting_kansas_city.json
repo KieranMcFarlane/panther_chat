@@ -1,0 +1,425 @@
+{
+  "entity_id": "sporting_kansas_city",
+  "entity_name": "Sporting Kansas City",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "sportingkc.com",
+    "sportingkcyouth.com",
+    "sportingcitysoccer.com",
+    "sportingkcacademy.com",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/sporting-kansas-city-jobs",
+      "https://www.linkedin.com/jobs/sporting-kansas-city-jobs-worldwide?f_C=1519367&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/director-sports-performance-at-sporting-kansas-city-4343071883",
+      "https://www.linkedin.com/jobs/view/concessions-bartender-2026-season-at-sporting-kansas-city-4345679470",
+      "https://www.linkedin.com/jobs/view/satellite-facility-operations-intern-spring-2026-at-sporting-kansas-city-4332473371",
+      "https://www.linkedin.com/jobs/view/stadium-operations-specialist-at-sporting-kansas-city-4105029792",
+      "https://www.linkedin.com/jobs/view/match-presentation-associate-part-time-seasonal-at-sporting-kansas-city-4336765117",
+      "https://www.linkedin.com/jobs/view/hospitality-catering-associate-2026-season-at-sporting-kansas-city-4345738781",
+      "https://bz.linkedin.com/jobs/view/operations-specialist-sf%2Ba-at-sporting-kansas-city-4219004637"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sporting_kansas_city",
+      "entity_name": "Sporting Kansas City",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/sporting-kansas-city-jobs-worldwide?f_C=1519367&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://sportingcitysoccer.com",
+        "https://sportingkc.com",
+        "https://mlssoccer.com",
+        "https://sportingkcyouth.com",
+        "https://www.linkedin.com/jobs/view/satellite-facility-operations-intern-spring-2026-at-sporting-kansas-city-4332473371",
+        "https://www.linkedin.com/jobs/view/director-sports-performance-at-sporting-kansas-city-4343071883",
+        "https://www.linkedin.com/jobs/sporting-kansas-city-jobs",
+        "https://www.linkedin.com/jobs/view/concessions-bartender-2026-season-at-sporting-kansas-city-4345679470",
+        "https://sportingkcacademy.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sporting Kansas City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:53:55.516918",
+          "domain_explored": "https://sportingkc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news content",
+            "Repetitive scraping artifacts",
+            "Preseason activity reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.289336919784546
+            }
+          ],
+          "reasoning": "The provided content consists exclusively of sports news headlines and match recaps (preseason results, player call-ups, coaching staff). There are no mentions of technology vendors, job postings, RFPs, or infrastructure investments. The content is purely operational/sports-related and does not contain procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:54:04.411200",
+          "domain_explored": "https://sportingkcyouth.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shared Infrastructure (images.mlssoccer.com)",
+              "PDF Document Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational Complexity: Managing 6 distinct components (Network, Affiliates, Camps, Tournaments, Leagues, Fields) implies a need for integrated ERP or CRM solutions.",
+              "Partnership Potential: 'Work with Sporting' section suggests a channel for sponsorship or B2B service procurement.",
+              "Facilities Management: 'Sporting Fields + Athletics' operates as a distinct entity, likely requiring separate procurement for maintenance and operations."
+            ]
+          },
+          "patterns_found": [
+            "Multi-domain ecosystem structure",
+            "Operational segmentation (Camps, Leagues, Tournaments)",
+            "External property management (Sporting Fields + Athletics)",
+            "PDF document hosting on MLS infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 418,
+              "elapsed_seconds": 3.595194101333618
+            }
+          ],
+          "reasoning": "The content reveals a complex operational structure for Sporting KC Youth Soccer involving distinct business lines (Camps, Leagues, Tournaments) and a separate entity for facilities ('Sporting Fields + Athletics'). This segmentation suggests potential procurement needs for specialized management software (CRM/Scheduling) for each vertical. The presence of a 'Work with Sporting' section and the hosting of compliance documents (Accessibility Statement) on a centralized MLS infrastructure indicate administrative overhead and potential vendor engagement for document management or hosting services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:54:07.618513",
+          "domain_explored": "https://sportingcitysoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:54:16.258430",
+          "domain_explored": "https://sportingkcacademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportsEngine (Registration/Management Platform)",
+              "SportNGin (Login/Auth)",
+              "Twitter/X Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Consolidation of web properties (Academy -> Main Domain)",
+              "Outsourced membership management to SportsEngine"
+            ]
+          },
+          "patterns_found": [
+            "Platform Consolidation (Migration to SportingKC.com)",
+            "SportsEngine SaaS Integration",
+            "Single Sign-On (SSO) Architecture",
+            "Legacy Domain Redirection"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.988929033279419
+            }
+          ],
+          "reasoning": "While the page content is largely a redirect notice with repetitive artifacts, the underlying infrastructure reveals specific technology procurement. The presence of SportsEngine (login/registration) and the active redirection of the Academy subdomain to the primary domain indicate a deliberate digital consolidation strategy, reducing the vendor footprint but centralizing operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:54:25.114673",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level content aggregation",
+            "Competitor intelligence (Red Bull New York, Inter Miami, San Jose)",
+            "Player transfer market activity",
+            "Repetitive scraping artifacts"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 201,
+              "elapsed_seconds": 5.827363967895508
+            }
+          ],
+          "reasoning": "The scraped content is from the league-level domain (MLSSoccer.com) and focuses exclusively on player transfer news for other teams (Red Bull New York, Inter Miami, etc.). There are no direct signals related to Sporting Kansas City's procurement, technology stack, or operational needs. The content is irrelevant to the specific entity being investigated."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:54:32.594965",
+          "domain_explored": "https://www.linkedin.com/jobs/sporting-kansas-city-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Guest Services Team Member (Kansas City Chiefs)",
+              "Host - No Other Pub (Kansas City Power & Light District)"
+            ],
+            "procurement_indicators": [
+              "Shared Ownership Structure (Hunt Family/Chiefs connection)"
+            ]
+          },
+          "patterns_found": [
+            "Authentication Gate (Walled Garden)",
+            "Shared Ecosystem (Hunt Family/Chiefs)",
+            "Hospitality & Venue Operations",
+            "Keyword Noise (False Positives)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1635,
+              "output_tokens": 308,
+              "elapsed_seconds": 3.763622999191284
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication UI and generic job listings for the Kansas City Chiefs (a shared entity under the Hunt ownership group) and local hospitality venues (Power & Light District). While the header claims '272 Sporting Kansas City Jobs', the visible listings are for 'Guest Services' and 'Host' roles, which are operational/hospitality focused rather than procurement or technical leadership. The content is blocked behind a login wall, preventing deep analysis of specific technical roles or RFPs."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:54:39.757370",
+          "domain_explored": "https://www.linkedin.com/jobs/sporting-kansas-city-jobs-worldwide?f_C=1519367&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Production Suites (Adobe, Avid, or Apple)",
+              "Sports Performance Analytics (GPS/Vest tracking)",
+              "Stadium Operations Management Software"
+            ],
+            "job_postings": [
+              "Head of Creative",
+              "Video Editor & Producer",
+              "Technical Director, Sporting City",
+              "Stadium Operations Specialist",
+              "Director, Sports Performance"
+            ],
+            "procurement_indicators": [
+              "Capital allocation for content creation tools",
+              "Investment in 'Sporting City' technical infrastructure",
+              "Expansion of sports science capabilities"
+            ]
+          },
+          "patterns_found": [
+            "Creative Production Expansion",
+            "Technical Infrastructure Investment",
+            "Venue Operations Staffing",
+            "High-Performance Sports Science"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 399,
+              "elapsed_seconds": 3.795679807662964
+            }
+          ],
+          "reasoning": "While the page is a job board (historically a weak signal for immediate procurement), the specific roles listed indicate active investment in digital content creation infrastructure (Head of Creative, Video Editor) and technical operations (Technical Director). These roles often precede or require software/hardware procurement (e.g., Adobe Creative Cloud, video editing workstations, sports performance tracking tech). The 'Technical Director, Sporting City' role specifically links back to the ecosystem entity identified in Iteration 3, confirming operational growth in that sector."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:54:49.160205",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-sports-performance-at-sporting-kansas-city-4343071883",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Load Management Systems (e.g., Catapult, Kinexon)",
+              "Player Monitoring & Data Capture Tools",
+              "Wearable GPS/Tracking Tech",
+              "Recovery Technologies (e.g., Cryo, Normatec)",
+              "Data Analysis/Visualization Platforms"
+            ],
+            "job_postings": [
+              "Director, Sports Performance (High-level leadership role)"
+            ],
+            "procurement_indicators": [
+              "Direct oversight of 'performance technologies' implies budget authority for hardware/software procurement.",
+              "Requirement for 'accurate data capture' suggests investment in database or analytics platforms.",
+              "Integration with 'medical' and 'nutrition' departments suggests a need for centralized ERP or CRM-like health systems."
+            ]
+          },
+          "patterns_found": [
+            "Sports Science Technology Stack",
+            "Data-Driven Performance Management",
+            "Integrated Medical & Performance Ecosystem",
+            "High-Value Human Capital Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1789,
+              "output_tokens": 400,
+              "elapsed_seconds": 6.230367183685303
+            }
+          ],
+          "reasoning": "While this is a job posting (personnel, not direct procurement), the 'Essential Functions' explicitly mandate the oversight of 'performance technologies,' 'load management systems,' and 'monitoring' software. This signals a requirement for specialized B2B SaaS tools (GPS trackers, HRV monitoring, force plates) and data integration platforms. The role acts as the primary buyer/user for these high-ticket technical investments."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:54:55.627593",
+          "domain_explored": "https://www.linkedin.com/jobs/view/concessions-bartender-2026-season-at-sporting-kansas-city-4345679470",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Point of Sale (POS) Systems",
+              "Electronic Tablet Ordering",
+              "Inventory Management Software"
+            ],
+            "job_postings": [
+              "Concessions Bartender (2026 Season)"
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership: Argyle Events (Hospitality Management)",
+              "Procurement Category: Food & Beverage Operations",
+              "Procurement Category: POS Hardware & Software"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Vendor Management (Argyle Events)",
+            "Point of Sale (POS) & Mobile Payment Infrastructure",
+            "Inventory Management Systems",
+            "High-Volume Concession Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1865,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.025783061981201
+            }
+          ],
+          "reasoning": "While this is an entry-level role, it confirms the operational relationship between Sporting Kansas City and 'Argyle Events' for hospitality services. It identifies specific technology requirements (electronic tablets, POS systems) and operational processes (inventory management) that are part of the venue's procurement ecosystem."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:55:01.886738",
+          "domain_explored": "https://www.linkedin.com/jobs/view/satellite-facility-operations-intern-spring-2026-at-sporting-kansas-city-4332473371",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Facility Management Software (implied by 'project lists')",
+              "Event Management Systems"
+            ],
+            "job_postings": [
+              "Satellite Facility Operations Intern - Spring 2026"
+            ],
+            "procurement_indicators": [
+              "External facility rentals (B2B/B2C service procurement)",
+              "Facility maintenance supplies and equipment",
+              "Event setup/breakdown resource procurement",
+              "Adherence to 'Sporting KC Standard' (Vendor QA compliance)"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Site Facility Management",
+            "Event-Based Logistics & Operations",
+            "Third-Party Rental Revenue Streams",
+            "Standardized Facility Protocols (Sporting KC Standard)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1950,
+              "output_tokens": 330,
+              "elapsed_seconds": 2.782702922821045
+            }
+          ],
+          "reasoning": "While this is an internship posting, it reveals the operational scope of 'Satellite Facilities' distinct from the main stadium. The mention of 'internal and external rentals' and 'special events' indicates a procurement function related to facility maintenance, event supplies, and vendor management for non-match day revenue generation. It confirms a distributed physical footprint requiring operational support."
+        }
+      ],
+      "total_input_tokens": 14798,
+      "total_output_tokens": 2799,
+      "estimated_cost_usd": 0.08637900000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sporting Kansas City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:55:01.891738"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.154032",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:46.007520"
+}

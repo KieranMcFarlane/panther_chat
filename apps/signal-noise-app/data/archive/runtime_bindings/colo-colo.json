@@ -1,0 +1,189 @@
+{
+  "entity_id": "colo-colo",
+  "entity_name": "Colo-Colo",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "colocolo.cl",
+    "colocolo.org",
+    "csdcolocolo.cl",
+    "colocolosocceracademyusa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colo-colo",
+      "entity_name": "Colo-Colo",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://csdcolocolo.cl",
+        "https://colocolosocceracademyusa.com",
+        "https://colocolo.org",
+        "https://colocolo.cl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colo-Colo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:49:40.446915",
+          "domain_explored": "https://colocolo.cl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript-heavy SPA (Single Page Application)",
+            "Client-side rendering requirement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 368,
+              "output_tokens": 179,
+              "elapsed_seconds": 15.26866626739502
+            }
+          ],
+          "reasoning": "The target URL (colocolo.cl) presents a 'Please enable JavaScript' message. This indicates the site is a Single Page Application (SPA) that relies on client-side rendering. Since the provided content is static HTML without the executed JavaScript payload, no actual text, links, or data regarding procurement, job postings, or technology stacks are visible for analysis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:49:51.269155",
+          "domain_explored": "https://colocolo.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Newsletter Subscription Form (Marketing capability only)",
+              "Ticket Sales Link (E-commerce capability only)"
+            ]
+          },
+          "patterns_found": [
+            "Content Language Mismatch (Indonesian vs Spanish)",
+            "Generic Sports Team Template",
+            "Client-Side Routing (href='#')",
+            "Static Content Display (Scores/Schedules)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1062,
+              "output_tokens": 243,
+              "elapsed_seconds": 5.731158018112183
+            }
+          ],
+          "reasoning": "The scraped content from colocolo.org is in Indonesian, which contradicts the expected Spanish language of the Chilean football club Colo-Colo. The content appears to be a generic sports template or a placeholder site, lacking any corporate governance, procurement, or technical infrastructure details. The links are client-side anchors (#), offering no deep navigation to corporate documents."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:50:03.346310",
+          "domain_explored": "https://csdcolocolo.cl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Legal Department Restructuring (Vendor churn potential)",
+              "Retail Operations (Merchandise procurement)",
+              "Multi-sport facility management"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Sport Governance Structure (Volleyball, Basketball, Futsal)",
+            "Institutional Legal Department Activity",
+            "E-Commerce Capability ('Destacados tienda')",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 289,
+              "elapsed_seconds": 6.182111978530884
+            }
+          ],
+          "reasoning": "The content confirms the entity as the 'Club Social y Deportivo Colo-Colo' (the multi-sport parent organization), distinguishing it from the football franchise. While the page is primarily sports news, the presence of a 'tienda' (store) section and an active 'Direcci\u00f3n Legal' indicates organizational complexity and potential procurement needs for legal services, e-commerce platforms, and sports equipment."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:50:18.174672",
+          "domain_explored": "https://colocolosocceracademyusa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship solicitations (Local South Florida sponsors)",
+              "Affiliate memberships (US Youth Soccer, US Soccer Federation)"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (USA vs Chile)",
+            "Unrelated Legal Entity (Florida Academy)",
+            "Consumer-Facing Content (Youth Training Programs)",
+            "Brand Ambiguity (Likely Unlicensed Usage)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 243,
+              "elapsed_seconds": 7.515975713729858
+            }
+          ],
+          "reasoning": "The content confirms this entity is a youth soccer academy based in South Florida (USA), not the Chilean professional sports club (Colo-Colo). While it shares the brand name, the focus is on local youth development programs, recreational leagues, and UPSL semi-pro teams in the USA. There is no governance or procurement connection to the Chilean entity Colo-Colo."
+        }
+      ],
+      "total_input_tokens": 4416,
+      "total_output_tokens": 954,
+      "estimated_cost_usd": 0.027558
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colo-Colo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:50:18.175983"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.189603",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:58.349372"
+}

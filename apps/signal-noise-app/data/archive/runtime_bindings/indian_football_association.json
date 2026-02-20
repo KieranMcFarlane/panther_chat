@@ -1,0 +1,129 @@
+{
+  "entity_id": "indian_football_association",
+  "entity_name": "Indian Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "the-aiff.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://in.linkedin.com/jobs/view/technical-coordinator-at-all-india-football-federation-4303966922"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "indian_football_association",
+      "entity_name": "Indian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://in.linkedin.com/jobs/view/technical-coordinator-at-all-india-football-federation-4303966922",
+        "https://the-aiff.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Indian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:43:09.893102",
+          "domain_explored": "https://the-aiff.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Journalism Focus",
+            "Tournament Coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.9608359336853027
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines and match reports (U17 Men's/Women's teams, Santosh Trophy, SAFF Championship) with significant repetition. There are no mentions of corporate strategy, technology adoption, job vacancies, or vendor partnerships relevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:43:36.179204",
+          "domain_explored": "https://in.linkedin.com/jobs/view/technical-coordinator-at-all-india-football-federation-4303966922",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "General Software Applications"
+            ],
+            "job_postings": [
+              {
+                "role": "Technical Coordinator",
+                "entity": "Indian Football Association (WB)",
+                "location": "Kolkata",
+                "requirements": "AFC 'A'/'B' Certificates, 5 years experience, MS Office proficiency",
+                "contact": "hr.ifawb@gmail.com"
+              }
+            ],
+            "procurement_indicators": [
+              "Active hiring cycle (Feb 2023 deadline)",
+              "Use of Gmail for corporate HR (indicative of low digital maturity/infrastructure procurement needs)",
+              "Requirement for software proficiency in job specs"
+            ]
+          },
+          "patterns_found": [
+            "HR Recruitment Process",
+            "Technical Skill Requirements",
+            "Operational Software Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 378,
+              "elapsed_seconds": 18.636059045791626
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'Technical Coordinator' role within the Indian Football Association (West Bengal). While this is a direct hiring signal (HR procurement) rather than enterprise technology procurement, the requirement for 'MS Office & other related Software applications' indicates active administrative operations. The presence of a dedicated HR email (hr.ifawb@gmail.com) suggests a structured, albeit potentially low-maturity, procurement/vendor management function."
+        }
+      ],
+      "total_input_tokens": 2789,
+      "total_output_tokens": 541,
+      "estimated_cost_usd": 0.016482
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Indian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:43:36.179806"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205523",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:35.897165"
+}

@@ -1,0 +1,130 @@
+{
+  "entity_id": "atl\u00e9tico_nacional",
+  "entity_name": "Atl\u00e9tico Nacional",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "atlnacional.com.co",
+    "tiendaverde.com.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "atl\u00e9tico_nacional",
+      "entity_name": "Atl\u00e9tico Nacional",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://tiendaverde.com.co",
+        "https://atlnacional.com.co"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Atl\u00e9tico Nacional may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:33:55.464518",
+          "domain_explored": "https://atlnacional.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Tienda Verde)",
+              "Digital Asset Management (DAM) (Media section)",
+              "Ticketing System (Boleter\u00eda)",
+              "Customer Relationship Management (CRM) (Fan line)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active E-commerce store (Tienda Verde) selling merchandise",
+              "Digital media accreditation portal for journalists",
+              "Dedicated fan service line infrastructure",
+              "Partnership with 'Parceros' program (Alcald\u00eda de Medell\u00edn)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement",
+            "E-commerce Operations",
+            "Media Asset Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 327,
+              "elapsed_seconds": 4.197142124176025
+            }
+          ],
+          "reasoning": "The content reveals operational capabilities that imply underlying technology procurement. Specifically, the 'Tienda Verde' (e-commerce) indicates a need for payment processing and inventory management platforms. The 'Media Accreditation' section implies a Digital Asset Management (DAM) system. The 'Fan Service Line' suggests CRM or ticketing software integration. While no direct RFPs are visible, these operational areas are active procurement targets."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:34:04.674419",
+          "domain_explored": "https://tiendaverde.com.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Digital Product Catalog Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership: Nike (Apparel/Footwear Supplier)",
+              "Retail Operations: Inventory for 2026 Kits (Local, Alternate, Third)",
+              "Pricing Strategy: Discount management (e.g., 30% off)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Operations",
+            "Merchandise Management",
+            "Vendor Partnership (Nike)",
+            "Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 268,
+              "elapsed_seconds": 4.543874979019165
+            }
+          ],
+          "reasoning": "The content confirms Atl\u00e9tico Nacional's active e-commerce operations through 'Tienda Verde'. While it validates the commercial capability and the strategic partnership with Nike (a key vendor), it does not reveal specific procurement intent for new technologies or services, focusing instead on consumer-facing retail data."
+        }
+      ],
+      "total_input_tokens": 2765,
+      "total_output_tokens": 595,
+      "estimated_cost_usd": 0.01722
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Atl\u00e9tico Nacional may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:34:04.676119"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.192800",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:50.298862"
+}

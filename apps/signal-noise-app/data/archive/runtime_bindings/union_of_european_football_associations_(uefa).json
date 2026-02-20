@@ -1,0 +1,425 @@
+{
+  "entity_id": "union_of_european_football_associations_(uefa)",
+  "entity_name": "Union of European Football Associations (UEFA)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "lobbyfacts.eu",
+    "austlii.edu.au",
+    "specialolympics.org",
+    "wikidata.org",
+    "press.un.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/globalsportsjobs_uefa-is-hiring-discover-exciting-career-activity-7266865792447619072-YRQW",
+      "https://al.linkedin.com/jobs/view/presidente-ragional-at-fshf-federata-shqiptare-e-futbollit-4352710747",
+      "https://uk.linkedin.com/jobs/view/causal-retail-assistant-reading-fc-at-fanatics-4143252926",
+      "https://www.linkedin.com/jobs/view/director-licensing-at-fanatics-4313438596",
+      "https://uk.linkedin.com/jobs/view/casual-retail-sales-assistant-nba-london-at-fanatics-4356193612?refId=JHo7c7Ff%2BeHO6xL%2F198%2FMw%3D%3D&trackingId=XhPaOtYWEE79wgHKwR6Dbg%3D%3D",
+      "https://www.linkedin.com/jobs/view/director-product-management-personalization-monetization-at-fanatics-4312410810",
+      "https://www.linkedin.com/jobs/view/retail-associate-clemson-at-fanatics-4237258102",
+      "https://www.linkedin.com/jobs/view/inventory-control-lead-at-fanatics-4353056215"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "union_of_european_football_associations_(uefa)",
+      "entity_name": "Union of European Football Associations (UEFA)",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://al.linkedin.com/jobs/view/presidente-ragional-at-fshf-federata-shqiptare-e-futbollit-4352710747",
+        "https://austlii.edu.au",
+        "https://uk.linkedin.com/jobs/view/causal-retail-assistant-reading-fc-at-fanatics-4143252926",
+        "https://www.linkedin.com/posts/globalsportsjobs_uefa-is-hiring-discover-exciting-career-activity-7266865792447619072-YRQW",
+        "https://www.linkedin.com/jobs/view/director-licensing-at-fanatics-4313438596",
+        "https://uk.linkedin.com/jobs/view/casual-retail-sales-assistant-nba-london-at-fanatics-4356193612?refId=JHo7c7Ff%2BeHO6xL%2F198%2FMw%3D%3D&trackingId=XhPaOtYWEE79wgHKwR6Dbg%3D%3D",
+        "https://wikidata.org",
+        "https://lobbyfacts.eu",
+        "https://press.un.org",
+        "https://specialolympics.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Union of European Football Associations (UEFA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:25:43.445100",
+          "domain_explored": "https://lobbyfacts.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Identification of major tech lobbying entities (Microsoft, Amazon, Google) as active in EU regulatory space",
+              "High lobbying spend by NTT Data (10M+ EUR) indicates strong EU presence and potential vendor stability"
+            ]
+          },
+          "patterns_found": [
+            "Lobbying transparency data",
+            "EU register metadata",
+            "Vendor landscape analysis (competitors)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 266,
+              "elapsed_seconds": 3.6356520652770996
+            }
+          ],
+          "reasoning": "The provided content is a list of top lobbying organizations and expenses from the EU Transparency Register (via LobbyFacts). While it lists major tech vendors (Microsoft, Amazon, Google, NTT Data) that UEFA may compete with for talent or partner with, there is no direct mention of UEFA, no specific procurement signals (RFPs, job postings), and no direct technology investment data related to the entity. This is context data, not procurement signal data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:25:53.475039",
+          "domain_explored": "https://austlii.edu.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legal database navigation menu",
+            "Jurisdictional filtering (Australia/NZ)",
+            "Academic journal listings",
+            "Legislation metadata"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 175,
+              "elapsed_seconds": 2.3217039108276367
+            }
+          ],
+          "reasoning": "The content is clearly from the Australasian Legal Information Institute (AustLII), a database of Australian legal materials. It contains navigation menus, database listings, and legal citations. There is absolutely no connection to UEFA, European football administration, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:26:02.454038",
+          "domain_explored": "https://specialolympics.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Special Olympics vs UEFA)",
+            "Donation/Charity CTAs",
+            "Event Branding (Logos)",
+            "Global Reach Statistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.2653090953826904
+            }
+          ],
+          "reasoning": "The scraped content is from 'specialolympics.org', which is a distinct entity from the target organization 'UEFA' (Union of European Football Associations). While both operate in the sports sector, Special Olympics is a non-profit charity organization focused on inclusion, whereas UEFA is the governing body for European football. The content reflects charity operations (donations, athlete stories) rather than UEFA's commercial or governance procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:26:13.097819",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Open Knowledge Base",
+            "Community Contribution Portals",
+            "SPARQL Query Service",
+            "Wikimedia Sister Projects",
+            "Event Announcements (WikidataCon)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 209,
+              "elapsed_seconds": 3.6344032287597656
+            }
+          ],
+          "reasoning": "The content is the homepage of Wikidata, a free and open knowledge base. It contains generic information about data contribution, community events, and technical documentation (SPARQL). There is no specific content related to UEFA, nor are there any procurement signals, vendor solicitations, or technology investment indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:26:21.331174",
+          "domain_explored": "https://press.un.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (United Nations vs UEFA)",
+            "Press Release Aggregation",
+            "Diplomatic Coverage (Security Council, General Assembly)",
+            "Olympic Truce References (Contextual, not procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.501314163208008
+            }
+          ],
+          "reasoning": "The content is exclusively from the United Nations press office (press.un.org), covering diplomatic resolutions, Security Council mandates, and General Assembly proceedings. While there is a mention of the 'Olympic Winter Games' in the context of a ceasefire appeal, this is a diplomatic/political signal, not a procurement or technology investment signal from UEFA. The entity is completely incorrect for the target."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:26:32.599037",
+          "domain_explored": "https://www.linkedin.com/posts/globalsportsjobs_uefa-is-hiring-discover-exciting-career-activity-7266865792447619072-YRQW",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)",
+              "Hubs.ly (Link Management/Tracking)"
+            ],
+            "job_postings": [
+              "General Hiring Campaign (UEFA)",
+              "Multiple Vacancies (implied by 'Explore vacancies' plural)"
+            ],
+            "procurement_indicators": [
+              "HR/Tech Stack Expansion (implied by high volume hiring)",
+              "Vendor Relationship: Global Sports (Recruitment/Marketing)"
+            ]
+          },
+          "patterns_found": [
+            "Recruitment Aggregator (Global Sports)",
+            "High Volume Hiring Indicators (1642 comments/likes)",
+            "Career Portal Redirection (hubs.la)",
+            "Talent Acquisition Branding"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 337,
+              "elapsed_seconds": 7.029072046279907
+            }
+          ],
+          "reasoning": "While the content is a general recruitment advertisement rather than a specific procurement document, it confirms active organizational growth and hiring. The high engagement (1642 reactions) and the use of a specialized sports job aggregator indicate a significant intake of human resources, which correlates with technology adoption and operational scaling. The specific roles are hidden behind redirects, preventing a stronger 'ACCEPT' signal, but the intent to acquire talent (and thus likely supporting tools) is clear."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:26:44.680334",
+          "domain_explored": "https://al.linkedin.com/jobs/view/presidente-ragional-at-fshf-federata-shqiptare-e-futbollit-4352710747",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: President (Regional)",
+              "Entity: FSHF (Albanian Football Association)",
+              "Location: Lezh\u00eb, Albania",
+              "Focus: Sports Administration, Governance"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FSHF vs UEFA)",
+            "Executive Governance Role (President)",
+            "Regional/Local Scope (Lezh\u00eb, Albania)",
+            "Sports Administration Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1733,
+              "output_tokens": 245,
+              "elapsed_seconds": 5.902751922607422
+            }
+          ],
+          "reasoning": "The content is a job posting for the Albanian Football Association (FSHF), a member association of UEFA, not UEFA itself. The role is an executive/governance position (President) focused on regional strategy and sports administration rather than procurement, IT, or business operations. There is no signal relevant to UEFA's central procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T06:27:18.910272",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/causal-retail-assistant-reading-fc-at-fanatics-4143252926",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fanatics Point of Sale System (POS)"
+            ],
+            "job_postings": [
+              {
+                "title": "Casual Retail Assistant",
+                "department": "Retail / Store Operations",
+                "entity": "Fanatics / Reading FC",
+                "location": "Reading, United Kingdom"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Fanatics vs UEFA)",
+            "Retail/Storefront Operations",
+            "Hourly/Wage Labor Indicators",
+            "Local Scope (Reading, UK)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1804,
+              "output_tokens": 298,
+              "elapsed_seconds": 24.82376194000244
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Casual Retail Assistant' at 'Reading FC' (a local football club), managed by 'Fanatics' (a global merchandise vendor). While Fanatics is a major vendor in the sports ecosystem, this specific listing represents a retail operational role (store clerk) rather than a strategic procurement signal for UEFA. The entity is Fanatics, the location is a specific club store, and the role is frontline sales, not procurement or technology implementation."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T06:27:28.850987",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-licensing-at-fanatics-4313438596",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "CRM systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Director, Licensing",
+                "entity": "Fanatics",
+                "location": "New York, NY",
+                "salary": "$140,000 - $190,000",
+                "focus": "Sports Licensing, Brand Management"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Fanatics vs UEFA)",
+            "Licensing/Retail Operations Focus",
+            "Geographic Mismatch (New York, NY)",
+            "Competitor/Vendor Ecosystem (NFL, MLB, MLS)",
+            "Salary Transparency Data ($140k-$190k)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1869,
+              "output_tokens": 307,
+              "elapsed_seconds": 5.426822900772095
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for a 'Director, Licensing' role at Fanatics, a sports merchandise company. While Fanatics is a known vendor/partner in the football ecosystem, this specific role is based in New York and focuses on North American sports (NFL, MLB, NCAA) rather than UEFA operations. The content describes a vendor's internal hiring rather than a direct procurement signal from UEFA."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T06:27:43.883252",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/casual-retail-sales-assistant-nba-london-at-fanatics-4356193612?refId=JHo7c7Ff%2BeHO6xL%2F198%2FMw%3D%3D&trackingId=XhPaOtYWEE79wgHKwR6Dbg%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Fanatics Point of Sale System (POS)"
+            ],
+            "job_postings": [
+              {
+                "title": "Casual Retail Sales Assistant - NBA, London",
+                "entity": "Fanatics",
+                "type": "Retail / Hourly"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Fanatics vs UEFA)",
+            "Retail/Storefront Operations Focus",
+            "Hourly/Wage Labor Indicators",
+            "POS System Usage (Fanatics Internal)",
+            "Event-based Retail (NBA London)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1961,
+              "output_tokens": 282,
+              "elapsed_seconds": 8.426651954650879
+            }
+          ],
+          "reasoning": "The content describes a Casual Retail Sales Assistant position for Fanatics, specifically for an NBA London event. While Fanatics is a major sports merchandise vendor (and potentially a procurement target for UEFA), this specific URL is a low-level retail job posting with no connection to UEFA's internal procurement, technology stack, or governance. It does not contain signals relevant to UEFA's acquisition strategy."
+        }
+      ],
+      "total_input_tokens": 16381,
+      "total_output_tokens": 2553,
+      "estimated_cost_usd": 0.087438
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Union of European Football Associations (UEFA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:27:43.884804"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.199469",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:14.088918"
+}

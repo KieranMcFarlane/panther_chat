@@ -1,0 +1,119 @@
+{
+  "entity_id": "japan_cricket_association",
+  "entity_name": "Japan Cricket Association",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "cricket.or.jp",
+    "icc-cricket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_cricket_association",
+      "entity_name": "Japan Cricket Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://icc-cricket.com",
+        "https://cricket.or.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Cricket Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:09:09.144121",
+          "domain_explored": "https://cricket.or.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom CMS (WordPress structure implied by URL patterns)",
+              "Dedicated League Management Platform (Japan Cricket Blast)",
+              "Live Scoring System (Match Center subdomain)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New 5-Year Strategy 'Kaiho' (Potential upcoming RFPs for strategy implementation partners)",
+              "Operation of 'Japan Women's SIXES' league (Requires event management/logistics support)",
+              "Disaster relief fund management (Requires financial/CRM tools)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Infrastructure Usage",
+            "Strategic Planning Phase",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.433016777038574
+            }
+          ],
+          "reasoning": "The content confirms the use of specific digital platforms (Cricket Blast, Match Center) and highlights a major strategic shift ('Kaiho' 5-year strategy). While no direct procurement requests are visible, the announcement of a new 5-year strategy and the operation of digital leagues indicate a need for supporting services and technology maintenance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:09:23.908899",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Event Coverage",
+            "Content Repetition"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 157,
+              "elapsed_seconds": 11.747276067733765
+            }
+          ],
+          "reasoning": "The scraped content is from the ICC's global news site (icc-cricket.com), not the Japan Cricket Association's domain. It contains generic news about the 2026 T20 World Cup and repetitive UI elements. There is no specific information regarding Japan's domestic procurement, technology stack, or governance structures."
+        }
+      ],
+      "total_input_tokens": 2773,
+      "total_output_tokens": 461,
+      "estimated_cost_usd": 0.015234000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Cricket Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:09:23.910746"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301349",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:12.678529"
+}

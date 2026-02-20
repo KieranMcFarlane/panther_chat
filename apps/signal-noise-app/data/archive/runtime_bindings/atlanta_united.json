@@ -1,0 +1,325 @@
+{
+  "entity_id": "atlanta_united",
+  "entity_name": "Atlanta United",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "atlantaunitedsoccer.com",
+    "mercedesbenzstadium.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/atlanta-united-fc-jobs",
+      "https://www.linkedin.com/jobs/view/communications-assistant-atlanta-united-fc-at-amb-sports-and-entertainment-4338874824",
+      "https://www.linkedin.com/jobs/amb-sports-and-entertainment-jobs-worldwide?f_C=15075064&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/jobs/view/digital-marketing-season-assistant-at-amb-sports-and-entertainment-4359411083",
+      "https://www.linkedin.com/jobs/sports-media-jobs-atlanta-metropolitan-area"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "atlanta_united",
+      "entity_name": "Atlanta United",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/digital-marketing-season-assistant-at-amb-sports-and-entertainment-4359411083",
+        "https://mercedesbenzstadium.com",
+        "https://www.linkedin.com/jobs/sports-media-jobs-atlanta-metropolitan-area",
+        "https://atlantaunitedsoccer.com",
+        "https://www.linkedin.com/jobs/amb-sports-and-entertainment-jobs-worldwide?f_C=15075064&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://www.linkedin.com/jobs/view/communications-assistant-atlanta-united-fc-at-amb-sports-and-entertainment-4338874824",
+        "https://www.linkedin.com/jobs/atlanta-united-fc-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Atlanta United may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:00:26.564278",
+          "domain_explored": "https://atlantaunitedsoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Jobs at Atlanta Fire (Youth Club)"
+            ],
+            "procurement_indicators": [
+              "AFU x Global Soccer Development",
+              "AFU x TOCA Football"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Youth Soccer Structure",
+            "Academy Program Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 224,
+              "elapsed_seconds": 3.9629030227661133
+            }
+          ],
+          "reasoning": "The scraped content is from 'Atlanta Fire United' (AFU), a youth soccer club, not 'Atlanta United' (the MLS professional franchise). While both are soccer organizations in Atlanta, they are distinct entities with different procurement needs and scales. The content focuses on youth programs (ECNL, Recreational), camps, and tryouts, which do not provide relevant procurement signals for the professional club target."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:00:39.684407",
+          "domain_explored": "https://mercedesbenzstadium.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ParkHub (Parking Management Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Parking Operations RFP/Partnership (ParkHub)",
+              "Food & Beverage Vendor Management (Multiple concourse vendors)",
+              "Hospitality & Events Service Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Technology Partnership Announcement",
+            "Operational Infrastructure Upgrade",
+            "Vendor Ecosystem Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 253,
+              "elapsed_seconds": 6.022879123687744
+            }
+          ],
+          "reasoning": "The content reveals a specific procurement signal: the transition of parking management to 'ParkHub' for the 2025 season. This indicates an active procurement cycle for venue operations technology and vendor management. While the site is primarily venue-facing, the explicit mention of new technology partnerships validates the entity's capability to procure SaaS solutions."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:00:48.887644",
+          "domain_explored": "https://www.linkedin.com/jobs/atlanta-united-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Finance Director - Atlanta United FC (AMBSE)",
+              "Integrated Performance Scientist",
+              "Academy Head Coach"
+            ],
+            "procurement_indicators": [
+              "Finance Director Role: Indicates strategic financial oversight and budget management authority.",
+              "Parent Entity Management: Confirms AMBSE as the decision-making body for financial operations."
+            ]
+          },
+          "patterns_found": [
+            "Centralized Governance via AMB Sports & Entertainment",
+            "Strategic Financial Leadership Role",
+            "Operational Hiring (Academy/Performance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 304,
+              "elapsed_seconds": 5.792858839035034
+            }
+          ],
+          "reasoning": "While the listing is dominated by non-procurement roles (coaching, performance science), the presence of a 'Finance Director' role under the AMB Sports & Entertainment (AMBSE) umbrella confirms the centralized governance structure. This validates that financial control and likely procurement authority sit at the AMBSE parent level, not the standalone club level. This is a structural signal rather than a direct activity signal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:00:57.694433",
+          "domain_explored": "https://www.linkedin.com/jobs/view/communications-assistant-atlanta-united-fc-at-amb-sports-and-entertainment-4338874824",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Communications Assistant",
+                "department": "Communications",
+                "entity": "Atlanta United FC / AMBSE",
+                "location": "Marietta, GA"
+              }
+            ],
+            "procurement_indicators": [
+              "Shared Services Model: Academy shares Training Ground with First Team",
+              "Centralized HR: Hiring managed by AMB Sports & Entertainment Group",
+              "Vendor Ecosystem: Mentions 'Mercedes-Benz Stadium' and specific partners (Children's Healthcare of Atlanta)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Governance via AMB Sports & Entertainment",
+            "Operational Hiring (Communications/PR)",
+            "Shared Infrastructure (Training Ground)",
+            "Multi-Entity Ecosystem (Academy, MLS Next Pro, RDS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1552,
+              "output_tokens": 388,
+              "elapsed_seconds": 4.22066593170166
+            }
+          ],
+          "reasoning": "While this is a job posting for a Communications Assistant rather than a procurement role, it reinforces the 'Centralized Governance' pattern identified in Iteration 3. The posting confirms that Atlanta United operates under the AMB Sports & Entertainment umbrella, sharing resources (like the Children's Healthcare of Atlanta Training Ground) and culture with the Atlanta Falcons. This confirms the decision-making structure is centralized, which is critical for procurement intelligence, even if this specific role does not hold purchasing power."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:01:05.891269",
+          "domain_explored": "https://www.linkedin.com/jobs/amb-sports-and-entertainment-jobs-worldwide?f_C=15075064&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Vice President/Senior Vice President, Football Communications",
+              "Senior Director of Content",
+              "Senior Program Officer, Mental Health and Well-Being",
+              "Director, Strategic Communications"
+            ],
+            "procurement_indicators": [
+              "Centralized Vendor Management (AMB SE)",
+              "Program Management (Wellness Initiatives)",
+              "Content Infrastructure Investment"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Governance via AMB Sports & Entertainment",
+            "Strategic Communications Leadership Hiring",
+            "Content Strategy Expansion",
+            "Mental Health & Well-Being Program Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1644,
+              "output_tokens": 328,
+              "elapsed_seconds": 4.4376380443573
+            }
+          ],
+          "reasoning": "The content confirms the centralized hiring structure for Atlanta United under AMB Sports & Entertainment. While the specific roles listed (Communications, Content, Mental Health) are operational rather than direct procurement, the 'Senior Program Officer, Mental Health and Well-Being' role suggests potential future procurement for wellness services, and the 'Senior Director of Content' role indicates investment in content infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:01:15.218399",
+          "domain_explored": "https://www.linkedin.com/jobs/view/digital-marketing-season-assistant-at-amb-sports-and-entertainment-4359411083",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Marketing Automation Platform (Email/SMS)",
+              "Mobile App (Fan Engagement)",
+              "Web CMS (Content Management)",
+              "Analytics Tools (Web, Email, SMS, App reporting)"
+            ],
+            "job_postings": [
+              "Digital Marketing Season Assistant (Seasonal, Jan-Dec 2025)"
+            ],
+            "procurement_indicators": [
+              "Requirement for tools supporting multi-channel deployment (Web, Email, SMS, App)",
+              "Need for analytics aggregation across disparate digital platforms",
+              "Operational dependency on QA/testing tools for digital content delivery"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Operations Expansion",
+            "Multi-Channel Content Management (Web, Email, SMS, App)",
+            "Fan Engagement Analytics & Reporting",
+            "Seasonal Operational Support"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 372,
+              "elapsed_seconds": 5.167673110961914
+            }
+          ],
+          "reasoning": "While this is a seasonal assistant role, the specific responsibilities reveal the underlying technology stack and operational workflows required for procurement. The explicit mention of 'SMS content deployment', 'app metrics', and 'digital wireframes' confirms the use of specific marketing automation and mobile platform vendors. The role supports the 'Marketing Operations Specialist', indicating a tiered operational structure that manages these vendor relationships."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:01:22.289316",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-media-jobs-atlanta-metropolitan-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sports Editor - Diamond Diaspora Media",
+              "CNN Sports Internships - Warner Bros. Discovery"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Unrelated Industry Listings (Media/Broadcast)",
+            "Entity Mismatch (Warner Bros, Diamond Diaspora)",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1801,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.6478588581085205
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn search results page for 'Sports Media' jobs in Atlanta. It lists openings for unrelated entities such as Warner Bros. Discovery and Diamond Diaspora Media. There is no mention of Atlanta United, AMB Sports & Entertainment, or the Atlanta Hawks. The content is primarily composed of UI elements (login forms, alerts) rather than specific procurement or hiring data for the target entity."
+        }
+      ],
+      "total_input_tokens": 10953,
+      "total_output_tokens": 2115,
+      "estimated_cost_usd": 0.064584
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Atlanta United may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:01:22.291359"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.156582",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:39.710375"
+}

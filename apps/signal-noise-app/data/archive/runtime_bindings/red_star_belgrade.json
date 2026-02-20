@@ -1,0 +1,221 @@
+{
+  "entity_id": "red_star_belgrade",
+  "entity_name": "Red Star Belgrade",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "crvenazvezdafk.com",
+    "fcredstarnz.com",
+    "redstarshop.eu.com",
+    "okcrvenazvezda.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7244729884336345088-Fsrm"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "red_star_belgrade",
+      "entity_name": "Red Star Belgrade",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://crvenazvezdafk.com",
+        "https://redstarshop.eu.com",
+        "https://okcrvenazvezda.com",
+        "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7244729884336345088-Fsrm",
+        "https://fcredstarnz.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Red Star Belgrade may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:34:21.677169",
+          "domain_explored": "https://crvenazvezdafk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iticket.rs (Ticketing Platform)",
+              "Online Ticketing System",
+              "Membership CRM (implied by 'members have priority')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active reliance on third-party ticketing vendor (iticket.rs)",
+              "Operational requirement for membership verification systems"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "Membership Management Integration",
+            "E-commerce Linkage (External Domain)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 266,
+              "elapsed_seconds": 6.660295009613037
+            }
+          ],
+          "reasoning": "The content confirms the active use of a digital ticketing platform ('iticket.rs') and a membership management system (prioritized access for members). While this confirms the *existence* of a procurement relationship in this category, it does not explicitly signal a *new* procurement intent (e.g., an RFP for a new vendor). However, it validates the technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:34:25.878993",
+          "domain_explored": "https://fcredstarnz.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:34:32.963655",
+          "domain_explored": "https://redstarshop.eu.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Unknown CMS based on 'Select options' text)",
+              "Payment Gateway: Banka Intesa",
+              "Email Marketing: Newsletter subscription form"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Logistics (Courier services)",
+              "Financial Services Partnership (Banka Intesa)",
+              "Inventory Management (Multiple product variants)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Operations",
+            "Payment Gateway Integration (Banka Intesa)",
+            "Logistics & Courier Services Procurement",
+            "Newsletter Marketing Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.966984987258911
+            }
+          ],
+          "reasoning": "The content confirms active e-commerce operations (Red Star Shop) on a specific domain (redstarshop.eu.com). While it lists products, the footer reveals procurement dependencies: 'renowned courier services' for logistics and 'Banka Intesa' for secure payment processing. This indicates an active supply chain for retail operations, though no direct RFPs or tech stack details are visible in this snippet."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:34:40.186782",
+          "domain_explored": "https://okcrvenazvezda.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (Admin user path detected)",
+              "HTML5 Video Embedding"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Sponsor: Banaka Po\u0161tanska \u0161tedionica (Banking/Financial Services)",
+              "Official Sponsor: Sport Equipment Supplier (Name truncated in text, implies kit procurement)",
+              "League Sponsorship: 'Banaka Po\u0161tanska \u0161tedionica Superliga' (Title Sponsor)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Operations (Volleyball)",
+            "Sponsorship Ecosystem (Bank & Equipment)",
+            "League Title Sponsorship Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 296,
+              "elapsed_seconds": 3.2911221981048584
+            }
+          ],
+          "reasoning": "The content confirms this domain belongs to the OK Crvena Zvezda (Volleyball) section of the Red Star Belgrade sports society. While it does not contain direct procurement signals like RFPs, it identifies a distinct sub-entity with its own sponsorship ecosystem (Banaka Po\u0161tanska \u0161tedionica) and equipment suppliers, which implies separate operational procurement needs compared to the football club."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:34:45.918628",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_empleo-job-travail-activity-7244729884336345088-Fsrm",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "Al Jazira Football Academy",
+                "role": "Academy Director",
+                "location": "United Arab Emirates",
+                "relevance_to_target": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Target (Al Jazira vs Red Star)",
+            "Generic Job Board Content",
+            "Geographic Mismatch (UAE vs Serbia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.3819000720977783
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn post from Futboljobs.com advertising a Director role for Al Jazira Football Academy in the UAE. This entity is unrelated to Red Star Belgrade (Crvena Zvezda), and the content provides no intelligence regarding Red Star Belgrade's procurement, operations, or technology stack."
+        }
+      ],
+      "total_input_tokens": 5880,
+      "total_output_tokens": 1099,
+      "estimated_cost_usd": 0.034125
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Red Star Belgrade may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:34:45.919327"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.171382",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:25:32.301663"
+}

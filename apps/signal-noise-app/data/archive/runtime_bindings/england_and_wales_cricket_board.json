@@ -1,0 +1,211 @@
+{
+  "entity_id": "england_and_wales_cricket_board",
+  "entity_name": "England and Wales Cricket Board",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "icc-cricket.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/england-&-wales-cricket-board-ecb-/jobs",
+      "https://uk.linkedin.com/jobs/view/media-operations-manager-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4367477884",
+      "https://uk.linkedin.com/jobs/view/accreditation-manager-fixed-term-until-september-2026-at-england-wales-cricket-board-ecb-4367470835",
+      "https://uk.linkedin.com/jobs/view/professional-umpire-3-positions-available-at-england-wales-cricket-board-ecb-4362381747",
+      "https://uk.linkedin.com/jobs/view/edi-manager-3-months-ftc-immediate-start-at-england-wales-cricket-board-ecb-4354170205",
+      "https://uk.linkedin.com/jobs/view/regulation-executive-at-england-wales-cricket-board-ecb-4355363698",
+      "https://uk.linkedin.com/jobs/view/media-operations-executive-icc-women-s-t20-world-cup-2026-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4367471959",
+      "https://uk.linkedin.com/jobs/view/performance-platform-consultant-consultants-and-secondments-considered-at-england-wales-cricket-board-ecb-4361682889",
+      "https://uk.linkedin.com/jobs/view/travel-and-logistics-executive-icc-women-s-t20-world-cup-2026-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4354200181",
+      "https://uk.linkedin.com/jobs/view/england-men%E2%80%99s-physiotherapist-at-england-wales-cricket-board-ecb-4356162048"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "england_and_wales_cricket_board",
+      "entity_name": "England and Wales Cricket Board",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://uk.linkedin.com/jobs/view/media-operations-manager-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4367477884",
+        "https://uk.linkedin.com/jobs/view/accreditation-manager-fixed-term-until-september-2026-at-england-wales-cricket-board-ecb-4367470835",
+        "https://uk.linkedin.com/jobs/view/professional-umpire-3-positions-available-at-england-wales-cricket-board-ecb-4362381747",
+        "https://icc-cricket.com",
+        "https://uk.linkedin.com/jobs/view/edi-manager-3-months-ftc-immediate-start-at-england-wales-cricket-board-ecb-4354170205",
+        "https://uk.linkedin.com/company/england-&-wales-cricket-board-ecb-/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "England and Wales Cricket Board may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:43:46.825658",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "sports_news_coverage",
+            "tournament_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.8718698024749756
+            }
+          ],
+          "reasoning": "The content provided is scraped from the ICC (International Cricket Council) website and focuses exclusively on sports news, match highlights, and tournament updates (e.g., U19 CWC, T20 World Cup). It contains no information regarding the England and Wales Cricket Board (ECB) and lacks any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:43:58.977963",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "consumer_mobile_apps",
+            "gaming_content",
+            "app_store_listing",
+            "irrelevant_content_source"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.724437952041626
+            }
+          ],
+          "reasoning": "The scraped content consists of mobile application listings from the Google Play Store. While one game ('Cricket League') is thematically related to the sports domain, this is a consumer-facing product, not a procurement signal or vendor technology stack indicator for the England and Wales Cricket Board. The content provides no insight into B2B relationships, enterprise software, or organizational spending."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:44:03.561411",
+          "domain_explored": "https://uk.linkedin.com/company/england-&-wales-cricket-board-ecb-/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "access_restriction",
+            "authentication_required",
+            "scraping_blocked"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 474,
+              "output_tokens": 150,
+              "elapsed_seconds": 2.1304659843444824
+            }
+          ],
+          "reasoning": "The content indicates a 'Forbidden' error and explicitly states 'Use only company name in the URL', suggesting the scraper encountered an access restriction or a malformed URL that failed to retrieve the actual jobs page data. No procurement signals could be extracted."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:47:40.837530",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/media-operations-manager-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4367477884",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:47:43.137076",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/accreditation-manager-fixed-term-until-september-2026-at-england-wales-cricket-board-ecb-4367470835",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:47:45.185954",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/professional-umpire-3-positions-available-at-england-wales-cricket-board-ecb-4362381747",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:47:47.245215",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/edi-manager-3-months-ftc-immediate-start-at-england-wales-cricket-board-ecb-4354170205",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3249,
+      "total_output_tokens": 523,
+      "estimated_cost_usd": 0.017592
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "England and Wales Cricket Board may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:47:47.247620"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298497",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:39.790549"
+}

@@ -1,0 +1,281 @@
+{
+  "entity_id": "atlanta_braves",
+  "entity_name": "Atlanta Braves",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "bravesholdings.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/atlanta-braves-jobs",
+      "https://do.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/atlanta-braves-security-jobs",
+      "https://www.linkedin.com/jobs/view/2026-guest-services-gameday-staff-at-atlanta-braves-4328260863",
+      "https://www.linkedin.com/jobs/view/ballpark-management-team-at-atlanta-braves-4357683464",
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/view/retail-operations-admin-at-atlanta-braves-4363490824",
+      "https://www.linkedin.com/jobs/view/2026-gameday-event-security-at-atlanta-braves-4367000795"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "atlanta_braves",
+      "entity_name": "Atlanta Braves",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://do.linkedin.com/company/major-league-baseball/jobs",
+        "https://www.linkedin.com/jobs/atlanta-braves-jobs",
+        "https://bravesholdings.com",
+        "https://www.linkedin.com/jobs/view/2026-guest-services-gameday-staff-at-atlanta-braves-4328260863",
+        "https://www.linkedin.com/jobs/view/ballpark-management-team-at-atlanta-braves-4357683464",
+        "https://www.linkedin.com/jobs/atlanta-braves-security-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Hiring Cycle (119 Open Roles)",
+        "Finance & Accounting Expansion",
+        "R&D / Analytics Investment",
+        "Operational Logistics Staffing",
+        "Real Estate Development Activity (Braves Development Company)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Atlanta Braves may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:46:55.666613",
+          "domain_explored": "https://bravesholdings.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Alert System (Vendor unknown)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Quarterly Financial Reporting Cycle (Q3 2025, Q4 2025)",
+              "Stock Information Management (Outstanding Shares tracking)",
+              "Corporate Governance: Atlanta Braves Holdings, Inc."
+            ]
+          },
+          "patterns_found": [
+            "Investor Relations Structure",
+            "Quarterly Earnings Cycle",
+            "Ticker Symbol Identification (BATRA, BATRK)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.437451124191284
+            }
+          ],
+          "reasoning": "The content is the Investor Relations homepage for Atlanta Braves Holdings. While it contains no direct procurement signals (RFPs, tech stack details), it confirms the corporate entity structure and governance cadence (Quarterly Earnings Calls). The 'Sign Up for Email Alerts' functionality indicates a potential vendor for IR/Email marketing services, though the specific technology is not named. The dates (2025-2026) suggest the page content is simulated or future-dated."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:47:07.287093",
+          "domain_explored": "https://www.linkedin.com/jobs/atlanta-braves-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Financial Software (ERP/Accounting)",
+              "Research & Development Tools (Baseball Operations Analytics)",
+              "Project Management (Real Estate Dev)"
+            ],
+            "job_postings": [
+              "Analyst, Research & Development (Atlanta, GA)",
+              "Staff Accountant II (Atlanta, GA)",
+              "Staff Accountant I - Braves Development Company (Atlanta, GA)",
+              "Event Operations Logistics Team (Atlanta, GA)",
+              "Ballpark Management Team (Atlanta, GA)"
+            ],
+            "procurement_indicators": [
+              "Scalable Infrastructure Needs: Hiring 5+ finance and operations staff suggests immediate need for licensing additional software seats and potentially upgrading financial systems.",
+              "New Business Unit Support: 'Braves Development Company' hiring indicates a new entity requiring distinct vendor contracts and procurement setup.",
+              "Analytics Investment: 'Analyst, R&D' role suggests investment in data infrastructure and visualization tools."
+            ]
+          },
+          "patterns_found": [
+            "Active Hiring Cycle (119 Open Roles)",
+            "Finance & Accounting Expansion",
+            "R&D / Analytics Investment",
+            "Operational Logistics Staffing",
+            "Real Estate Development Activity (Braves Development Company)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 463,
+              "elapsed_seconds": 5.670979976654053
+            }
+          ],
+          "reasoning": "The discovery of 119 open roles, specifically targeting Finance (Staff Accountants), R&D (Analyst), and Development (Braves Development Company), indicates active internal expansion and budget allocation. These roles require software support (ERP, Analytics) and operational vendor scaling, signaling a high probability of procurement activity to support new headcount and business units."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:47:12.307836",
+          "domain_explored": "https://do.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "URL Structure Error (do.linkedin.com)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 489,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.6304259300231934
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error and an instruction to use only the company name in the URL. The content is inaccessible, preventing the extraction of any procurement signals, job postings, or technology stack information. No progress can be made on the hypothesis without valid content."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:47:24.914555",
+          "domain_explored": "https://www.linkedin.com/jobs/atlanta-braves-security-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 28 column 9 (char 1870)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:47:31.738523",
+          "domain_explored": "https://www.linkedin.com/jobs/view/2026-guest-services-gameday-staff-at-atlanta-braves-4328260863",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MLB Ballpark App",
+              "Ticketmaster"
+            ],
+            "job_postings": [
+              "2026 Guest Services Gameday Staff",
+              "A-List Membership Team",
+              "Accessible Services Ambassador",
+              "Booth Ambassador"
+            ],
+            "procurement_indicators": [
+              "Dependence on League-wide Ticketing/Digital Infrastructure",
+              "Investment in Premium Member Experience (A-List)",
+              "Requirement for Accessibility Support Services/Equipment"
+            ]
+          },
+          "patterns_found": [
+            "Fan Experience Technology Stack (MLB Ballpark App, Ticketmaster)",
+            "Tiered Service Model (A-List Membership)",
+            "Operational Logistics (Gameday Staffing, Accessibility Services)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 313,
+              "elapsed_seconds": 2.966933012008667
+            }
+          ],
+          "reasoning": "While this is a high-volume frontline staffing posting, it confirms specific technology dependencies (MLB Ballpark App, Ticketmaster) and reveals the operational structure of their premium membership services. This indicates a procurement need for licensing these platforms and potential vendors for staffing management or accessibility equipment."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:47:39.165045",
+          "domain_explored": "https://www.linkedin.com/jobs/view/ballpark-management-team-at-atlanta-braves-4357683464",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Physical Asset Tracking (Implied)",
+              "Facilities Management Systems"
+            ],
+            "job_postings": [
+              "Ballpark Management Team (Part-time, Entry Level)"
+            ],
+            "procurement_indicators": [
+              "High-volume procurement of physical assets (Stanchions, signage, furniture)",
+              "Vendor requirements for Premium Space upkeep",
+              "Logistics support for Corporate Events and Sponsorship Activations",
+              "Maintenance of ADA compliance equipment"
+            ]
+          },
+          "patterns_found": [
+            "Facilities Management & Logistics",
+            "Event Operations Infrastructure",
+            "Premium Space Maintenance",
+            "Physical Asset Inventory (Stanchions, Furniture, ADA Equipment)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1669,
+              "output_tokens": 331,
+              "elapsed_seconds": 2.8024840354919434
+            }
+          ],
+          "reasoning": "While this is an entry-level role, it reveals the operational backbone of the 'Event Operations Logistics Team' (EOLT). It highlights the procurement requirements for maintaining physical infrastructure (furniture, stanchions, ADA equipment) and the logistical complexity of managing Truist Park and The Battery Atlanta. It confirms a need for vendors supplying physical maintenance and event setup materials."
+        }
+      ],
+      "total_input_tokens": 6515,
+      "total_output_tokens": 1547,
+      "estimated_cost_usd": 0.042749999999999996
+    },
+    "procurement_signals": [
+      "Active Hiring Cycle (119 Open Roles)",
+      "Finance & Accounting Expansion",
+      "R&D / Analytics Investment",
+      "Operational Logistics Staffing",
+      "Real Estate Development Activity (Braves Development Company)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Atlanta Braves may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:47:39.166729"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307974",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:33.761590"
+}

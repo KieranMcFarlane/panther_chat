@@ -1,0 +1,269 @@
+{
+  "entity_id": "stewart-haas_racing",
+  "entity_name": "Stewart-Haas Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "haasfactoryteam.com",
+    "haasf1team.com",
+    "tonystewart.com",
+    "latino.nascar.com",
+    "autoweek.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/stewart-haas-racing-jobs",
+      "https://www.linkedin.com/jobs/view/sales-account-manager-at-hfo-trident-176538266"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "stewart-haas_racing",
+      "entity_name": "Stewart-Haas Racing",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/stewart-haas-racing-jobs",
+        "https://www.linkedin.com/jobs/view/sales-account-manager-at-hfo-trident-176538266",
+        "https://haasf1team.com",
+        "https://latino.nascar.com",
+        "https://haasfactoryteam.com",
+        "https://tonystewart.com",
+        "https://autoweek.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Stewart-Haas Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:21:57.179462",
+          "domain_explored": "https://haasfactoryteam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Disambiguation: Confirmed 'Haas Factory Team' is separate from 'Stewart-Haas Racing'."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "Marketing/PR Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 218,
+              "elapsed_seconds": 3.7924790382385254
+            }
+          ],
+          "reasoning": "The scraped content is from 'Haas Factory Team' (HFT), a distinct NASCAR Xfinity Series entity, not Stewart-Haas Racing (SHR) which is a NASCAR Cup Series organization. While Gene Haas owns both, HFT operates as a separate marketing arm for Haas Automation and focuses on driver rosters and consumer news. The content contains no procurement signals, technology stacks, or corporate governance data relevant to SHR's operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:22:09.252340",
+          "domain_explored": "https://haasf1team.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "RUCKUS Networks (Networking Infrastructure)",
+              "Haas+ (Fan Engagement Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Multi-Year Partnership with Fix Network",
+              "Official Networking Partner Expansion (RUCKUS)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "Sponsorship Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 238,
+              "elapsed_seconds": 4.56698203086853
+            }
+          ],
+          "reasoning": "The content is sourced from 'haasf1team.com', which pertains to the Haas Formula 1 team (a separate entity from Stewart-Haas Racing, which competes in NASCAR). While the content mentions technology partnerships (RUCKUS Networks), these are sponsorship agreements rather than direct procurement signals relevant to the target entity. The content is primarily sports news and marketing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:22:42.485329",
+          "domain_explored": "https://tonystewart.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:22:51.319736",
+          "domain_explored": "https://latino.nascar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "Marketing/PR Focus",
+            "League-Level Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.9379780292510986
+            }
+          ],
+          "reasoning": "The content is from NASCAR's official Spanish-language portal (latino.nascar.com). It focuses on league-wide news, race schedules, and driver spotlights (e.g., Kurt Busch, Hall of Fame). It contains no information specific to Stewart-Haas Racing's internal operations, technology stack, or procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:23:00.684747",
+          "domain_explored": "https://autoweek.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer-Facing Content",
+            "General Industry News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 157,
+              "elapsed_seconds": 3.3638288974761963
+            }
+          ],
+          "reasoning": "The scraped content represents a general automotive news outlet (Autoweek) covering industry-wide topics (EVs, tariffs, F1, NASCAR). There is no specific mention of Stewart-Haas Racing, nor are there any procurement-specific signals (RFPs, vendor lists, tech stacks) relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:23:09.407045",
+          "domain_explored": "https://www.linkedin.com/jobs/stewart-haas-racing-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "QC Supv (46428)",
+                "entity": "Haas Automation, Inc.",
+                "location": "Oxnard, CA",
+                "relevance": "False Positive - Parent Company"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Walled Garden / Authentication Gate",
+            "Irrelevant Search Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.9590089321136475
+            }
+          ],
+          "reasoning": "The search results returned 'Haas Automation, Inc.' roles (Oxnard, CA) rather than 'Stewart-Haas Racing' (Kannapolis, NC). While Haas Automation is the parent company, the operational procurement for the racing team is distinct. Furthermore, the content is largely an authentication wall ('Sign in to set job alerts') with no visible job descriptions or technology stack details for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:23:17.077032",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sales-account-manager-at-hfo-trident-176538266",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Broken Link / 404 Error",
+            "Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 151,
+              "elapsed_seconds": 2.439255714416504
+            }
+          ],
+          "reasoning": "The content provided is a generic 'Page Not Found' error page from LinkedIn, repeated in multiple languages. The URL slug references 'hfo-trident', which is a separate entity (a marine dealer) and not Stewart-Haas Racing. There is no content to analyze for procurement signals."
+        }
+      ],
+      "total_input_tokens": 8871,
+      "total_output_tokens": 1178,
+      "estimated_cost_usd": 0.044283
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Stewart-Haas Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:23:17.078959"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.365304",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:18.419537"
+}

@@ -1,0 +1,340 @@
+{
+  "entity_id": "minas_t\u00eanis_clube",
+  "entity_name": "Minas T\u00eanis Clube",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "minastenisclube.com.br",
+    "socio.minastc.com.br",
+    "minasbrasilia.com.br",
+    "minasstore.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/est%C3%A1gio-no-acompanhamento-escolar-at-minas-t%C3%AAnis-clube-4295895315?position=35&pageNum=0&refId=kMoYFCm6Qj1hzYGbPJQUqQ%3D%3D&trackingId=wW8aKHagtq1KD7cOt8f%2B1A%3D%3D",
+      "https://www.linkedin.com/jobs/professor-de-pilates-vagas-belo-horizonte-e-regi%C3%A3o-brasil?src_gapi=6087",
+      "https://www.linkedin.com/jobs/dance-jobs-worldwide",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3368822825&geoId=106057199&keywords=Est%C3%A1gio%20de%20dados&location=Brasil&refresh=true",
+      "https://www.linkedin.com/jobs/cultural-care-au-pair-jobs-worldwide",
+      "https://www.linkedin.com/posts/gminingventures_brazil-careers-gminingventures-activity-7036341485973250048-IaJl",
+      "https://br.linkedin.com/jobs/job-in-c-vagas"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "minas_t\u00eanis_clube",
+      "entity_name": "Minas T\u00eanis Clube",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://minasstore.com.br",
+        "https://www.linkedin.com/jobs/view/est%C3%A1gio-no-acompanhamento-escolar-at-minas-t%C3%AAnis-clube-4295895315?position=35&pageNum=0&refId=kMoYFCm6Qj1hzYGbPJQUqQ%3D%3D&trackingId=wW8aKHagtq1KD7cOt8f%2B1A%3D%3D",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3368822825&geoId=106057199&keywords=Est%C3%A1gio%20de%20dados&location=Brasil&refresh=true",
+        "https://www.linkedin.com/jobs/cultural-care-au-pair-jobs-worldwide",
+        "https://www.linkedin.com/jobs/professor-de-pilates-vagas-belo-horizonte-e-regi%C3%A3o-brasil?src_gapi=6087",
+        "https://socio.minastc.com.br",
+        "https://minasbrasilia.com.br",
+        "https://www.linkedin.com/jobs/dance-jobs-worldwide",
+        "https://minastenisclube.com.br"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Minas T\u00eanis Clube may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:51:28.672596",
+          "domain_explored": "https://minastenisclube.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Aplicativo)",
+              "Member Portal (\u00c1rea do associado)",
+              "Digital Governance Tools (implied by 'Elei\u00e7\u00f5es no Minas' and 'Formul\u00e1rios')"
+            ],
+            "job_postings": [
+              "Link detected: 'Trabalhe Conosco' (Work with Us) - Indicates active recruitment channel"
+            ],
+            "procurement_indicators": [
+              "Venue Management: 'Aluguel de espa\u00e7os' (Space Rental) implies need for booking/management systems.",
+              "Education Partnership: 'Acompanhamento escolar UniBH' suggests B2B EdTech or service agreements.",
+              "Strategic Planning: 'Plano Diretor do Minas II' indicates capital projects or infrastructure planning.",
+              "Compliance: 'Certifica\u00e7\u00f5es' and 'Pol\u00edtica de privacidade' suggest need for legal/consulting services."
+            ]
+          },
+          "patterns_found": [
+            "Governance & Transparency Indicators",
+            "Digital Member Experience (App)",
+            "Academic Partnerships (UniBH)",
+            "Venue Rental & Event Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 441,
+              "elapsed_seconds": 4.784274101257324
+            }
+          ],
+          "reasoning": "The scraped content is primarily site navigation (sitemap) rather than substantive news or job postings. However, the navigation structure reveals key organizational capabilities and potential procurement needs. The presence of 'Governan\u00e7a', 'Gest\u00e3o Estrat\u00e9gica', and 'Certifica\u00e7\u00f5es' suggests a structured environment requiring compliance tools. The 'Aplicativo' (App) link confirms mobile investment. 'Aluguel de espa\u00e7os' and 'Conv\u00eanios externos' indicate B2B operations. While no direct RFP is visible, these areas represent functional units likely to require services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:51:32.774062",
+          "domain_explored": "https://socio.minastc.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:51:41.182990",
+          "domain_explored": "https://minasbrasilia.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Structure: Evidence of 'Diretoria Executiva', 'Conselho Deliberativo', and 'Comiss\u00e3o de Disciplina'.",
+              "Transparency Portal: Indication of 'Transpar\u00eancia Financeira' and 'Transpar\u00eancia Institucional' sections.",
+              "Event Infrastructure: Multiple event spaces (Sal\u00e3o JK, Cafiero) suggesting vendor needs for catering/AV, though for the wrong entity."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Minas Bras\u00edlia vs Minas T\u00eanis Clube)",
+            "General Club Navigation Structure",
+            "Governance Links (Ouvidoria, Transpar\u00eancia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.5312981605529785
+            }
+          ],
+          "reasoning": "The scraped content confirms the domain 'minasbrasilia.com.br' belongs to 'Minas Bras\u00edlia', a distinct entity from the target 'Minas T\u00eanis Clube' (based in Minas Gerais). While the site structure reveals standard club management features (events, sports, governance), it is irrelevant to the specific procurement intelligence of the target entity. This represents a false positive in the discovery chain."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:51:45.106591",
+          "domain_explored": "https://minasstore.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:51:51.789899",
+          "domain_explored": "https://www.linkedin.com/jobs/view/est%C3%A1gio-no-acompanhamento-escolar-at-minas-t%C3%AAnis-clube-4295895315?position=35&pageNum=0&refId=kMoYFCm6Qj1hzYGbPJQUqQ%3D%3D&trackingId=wW8aKHagtq1KD7cOt8f%2B1A%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Est\u00e1gio no Acompanhamento Escolar",
+                "type": "Internship",
+                "focus": "Educational Support / Monitoring",
+                "requirements": "Enrollment at UniBH or UNA",
+                "location": "Minas I (Lourdes) or Minas II (Serra)"
+              }
+            ],
+            "procurement_indicators": [
+              "Partnership reliance on UniBH/UNA for talent pipeline",
+              "Requirement for data recording tools (implied by 'Registro de dados' and 'relat\u00f3rios de frequ\u00eancia')"
+            ]
+          },
+          "patterns_found": [
+            "Academic Partnerships (UniBH/UNA)",
+            "Operational HR Processes",
+            "Educational Service Delivery",
+            "Data Recording Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1582,
+              "output_tokens": 330,
+              "elapsed_seconds": 3.162703037261963
+            }
+          ],
+          "reasoning": "While this is an operational internship posting rather than a direct procurement role, it confirms active service delivery in the educational sector and reinforces the partnership with local academic institutions (UniBH/UNA). The requirement for 'Registro de dados' and 'relat\u00f3rios' suggests a need for administrative or educational management software, though no specific tech stack is revealed."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:51:57.855943",
+          "domain_explored": "https://www.linkedin.com/jobs/professor-de-pilates-vagas-belo-horizonte-e-regi%C3%A3o-brasil?src_gapi=6087",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Instrutor De Pilates",
+                "entity": "LIV - FISIOTERAPIA PILATES E MASSOTERAPIA",
+                "location": "Belo Horizonte, Minas Gerais, Brazil",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Job Search Interface",
+            "Unrelated Sector (Physiotherapy Clinic)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 264,
+              "elapsed_seconds": 2.6899068355560303
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Professor De Pilates' in Belo Horizonte. The specific job listing identified is for 'LIV - FISIOTERAPIA PILATES E MASSOTERAPIA', a local physiotherapy clinic, which is a distinct entity from Minas T\u00eanis Clube. There is no content, link, or mention of Minas T\u00eanis Clube on this page, providing zero procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:52:04.148006",
+          "domain_explored": "https://www.linkedin.com/jobs/dance-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Generic Job Board)",
+            "Geographic Irrelevance (India, NZ, NY, CA)",
+            "Sector Misalignment (General Education/Arts vs Target Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1709,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.4637837409973145
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Dance' jobs worldwide. There is no mention of Minas T\u00eanis Clube, Minas Gerais, or Brazil. The listings are for unrelated entities (Openhouse, DANZ, Hartley House) in irrelevant geographic locations. This provides zero procurement intelligence for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:52:13.847609",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3368822825&geoId=106057199&keywords=Est%C3%A1gio%20de%20dados&location=Brasil&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Banco de Talentos - Est\u00e1gio Corporativo Ita\u00fa (Ita\u00fa Unibanco)",
+              "Est\u00e1gio em An\u00e1lise de Dados (Solv\u00ed Solu\u00e7\u00f5es para a Vida)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Generic Search Results)",
+            "Authentication Barrier (Sign-in Wall)",
+            "Competitor Data (Ita\u00fa Unibanco, Solv\u00ed)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1802,
+              "output_tokens": 242,
+              "elapsed_seconds": 6.059162139892578
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Est\u00e1gio De Dados' (Data Internships) in Brazil, not specific content from Minas T\u00eanis Clube. The visible listings are for unrelated entities (Ita\u00fa Unibanco, Solv\u00ed). Furthermore, the page is obstructed by a 'Sign in' modal, preventing deeper analysis. There is no direct link or evidence connecting Minas T\u00eanis Clube to these specific listings."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:52:22.368339",
+          "domain_explored": "https://www.linkedin.com/jobs/cultural-care-au-pair-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Cultural Care Au Pair vs Minas T\u00eanis Clube)",
+            "Geographic Irrelevance (Peru, USA, Italy)",
+            "Sector Misalignment (Hospitality, Film, Healthcare)",
+            "Generic Job Search Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1870,
+              "output_tokens": 209,
+              "elapsed_seconds": 4.958745956420898
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Cultural Care Au Pair' and unrelated administrative roles. There is no mention of Minas T\u00eanis Clube, nor any procurement signals relevant to the target entity. The entities listed (Asociaci\u00f3n Peruano Japonesa, Cuv\u00e9e, HARTBEAT, Hospital Mater Dei) are distinct and unrelated to Minas T\u00eanis Clube's operations."
+        }
+      ],
+      "total_input_tokens": 11421,
+      "total_output_tokens": 1976,
+      "estimated_cost_usd": 0.063903
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Minas T\u00eanis Clube may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:52:22.368940"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.320474",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:10.928269"
+}

@@ -1,0 +1,628 @@
+{
+  "entity_id": "samara",
+  "entity_name": "Samara",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "samaraonline.com.mx",
+    "samara.com",
+    "samarabags.com",
+    "samadm.ru",
+    "samaraaerospace.com",
+    "samaragroup.id",
+    "samarajoy.com",
+    "samara-ag.com",
+    "camaraturismosamara.com",
+    "samararesorts.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/samara-jobs",
+      "https://www.linkedin.com/jobs/view/mep-systems-engineer-at-samara-4300748179",
+      "https://www.linkedin.com/jobs/management-jobs-russia?trk=amworks_jserp_redirect",
+      "https://et.linkedin.com/jobs/view/university-lecturer-at-samara-university-4350839183",
+      "https://www.linkedin.com/posts/hotel-careers3_samara-lombok-hotel-jobs-we-are-looking-activity-7312096474824163328-CrZe",
+      "https://www.linkedin.com/jobs/jobs-in-russian-federation"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "samara",
+      "entity_name": "Samara",
+      "total_iterations": 15,
+      "completed_iterations": 15,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.12,
+        0.12,
+        0.12,
+        0.12
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/management-jobs-russia?trk=amworks_jserp_redirect",
+        "https://samaraonline.com.mx",
+        "https://samaragroup.id",
+        "https://www.linkedin.com/jobs/view/mep-systems-engineer-at-samara-4300748179",
+        "https://samarabags.com",
+        "https://samadm.ru",
+        "https://samara.com",
+        "https://samararesorts.com",
+        "https://et.linkedin.com/jobs/view/university-lecturer-at-samara-university-4350839183",
+        "https://www.linkedin.com/posts/hotel-careers3_samara-lombok-hotel-jobs-we-are-looking-activity-7312096474824163328-CrZe",
+        "https://samaraaerospace.com",
+        "https://samara-ag.com",
+        "https://camaraturismosamara.com",
+        "https://www.linkedin.com/jobs/samara-jobs",
+        "https://samarajoy.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct-to-Consumer (DTC) Construction Model",
+        "Integrated Financing & Insurance Services",
+        "Supply Chain & Logistics Management",
+        "Regulatory Compliance Handling (Permitting)",
+        "Customer Experience (CX) & Project Management Tech",
+        "Direct-to-Consumer (DTC) Construction Model",
+        "Integrated Financing & Insurance Services",
+        "Supply Chain & Logistics Management",
+        "Technical Engineering & R&D (MEP Focus)",
+        "Regulatory Compliance & Code Standards",
+        "Renewable Energy Integration (PV/ESS)",
+        "BIM & CAD Software Utilization"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Samara may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:23:42.301310",
+          "domain_explored": "https://samaraonline.com.mx",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Payment Gateway (Creditea integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Distributor relationship model ('Somos distribuidores oficiales')",
+              "Retail inventory management (Laptops, Audio, Gaming, Tablets)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Model",
+            "Consumer Electronics Retail",
+            "Third-party Financing Integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.017348766326904
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Samara' (samaraonline.com.mx) is a Mexican B2C e-commerce retailer specializing in laptops and electronics, not a B2B entity or a potential client for enterprise procurement services. The presence of consumer financing (Creditea) and retail branding ('Sello de Confianza') indicates a focus on individual consumers rather than corporate procurement or internal infrastructure expansion."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:23:49.535222",
+          "domain_explored": "https://samara.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM Platforms (Salesforce/Hubspot) - implied by 'updated weekly' and 'communication'",
+              "Project Management Software (Procore/Buildertrend) - implied by 'timely/organized project management'",
+              "FinTech/Loan Origination Systems - implied by 'financing options' and 'interest rate' discussion",
+              "Design/CAD Software - implied by 'customizable' product offerings"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Construction Materials Procurement (Lumber, Solar, Appliances)",
+              "Third-party Financing Partnerships (Mortgage/Lending providers)",
+              "Logistics & Transportation (Shipping/Delivery of units)",
+              "General Contractor/Subcontractor Management",
+              "Municipal Permitting & Compliance Services"
+            ]
+          },
+          "patterns_found": [
+            "Direct-to-Consumer (DTC) Construction Model",
+            "Integrated Financing & Insurance Services",
+            "Supply Chain & Logistics Management",
+            "Regulatory Compliance Handling (Permitting)",
+            "Customer Experience (CX) & Project Management Tech"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 417,
+              "elapsed_seconds": 4.088518142700195
+            }
+          ],
+          "reasoning": "The content confirms Samara is a vertically integrated construction/tech company (ADU manufacturer) rather than a generic retailer. The explicit mention of handling 'installation to financing', 'permitting', and 'project management' indicates a complex operational stack requiring procurement of construction materials, logistics services, CRM software, and financial technology partners."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:23:56.826110",
+          "domain_explored": "https://samarabags.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections/all and standard e-commerce layout)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Inventory Management",
+              "Consumer Product Sourcing (Raw materials for bags)"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Model",
+            "Fashion & Apparel Retail",
+            "Consumer Goods Inventory Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 260,
+              "elapsed_seconds": 3.8245890140533447
+            }
+          ],
+          "reasoning": "The scraped content from samarabags.com reveals a direct-to-consumer (DTC) retailer specializing in bags and fashion accessories (e.g., 'The Ocean Backpack', 'Apple Leather Tote'). The presence of 'Sold Out' tags and color variants indicates a focus on consumer inventory management rather than corporate procurement or B2B services. This entity is unrelated to the construction/tech entity 'Samara' identified in Iteration 2."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:24:29.478180",
+          "domain_explored": "https://samadm.ru",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:24:37.056336",
+          "domain_explored": "https://samaraaerospace.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "MSAC (Morphing Solar Array Control)",
+              "JWST pointing precision systems",
+              "LEO satellite technology"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Product-Led Growth (PLG)",
+            "Hardware Manufacturing & R&D",
+            "Patented Technology Development",
+            "B2B Commercial Space Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.9552173614501953
+            }
+          ],
+          "reasoning": "The content describes Samara Aerospace as a hardware manufacturer and R&D entity focused on spacecraft buses (Hummingbird) and proprietary control technology (MSAC). The business model is centered on product development and sales rather than the procurement of third-party services or goods for internal operations. While they likely have a supply chain, the site is purely product-outbound, offering no signals of procurement intent or vendor acquisition needs relevant to the target profile."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:24:43.912845",
+          "domain_explored": "https://samaragroup.id",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Large-scale event logistics (Synchronize Fest)",
+              "Creative festival production (IdeaFest)",
+              "Influencer network management"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Production",
+            "Media & Content Creation",
+            "B2C Brand Marketing",
+            "Intellectual Property (IP) Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.8198740482330322
+            }
+          ],
+          "reasoning": "The entity is a media and entertainment holding group focused on events (Synchronize Fest, IdeaFest) and content creation. While large-scale events require procurement (logistics, staging), the corporate structure is a holding company for creative agencies rather than a centralized procurement target for general business operations or construction. It does not match the 'Samara' construction/tech profile established in Iteration 2."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:24:51.490744",
+          "domain_explored": "https://samarajoy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from 'Shop all' and product SKU structure)",
+              "Streaming Platforms Integration (Spotify/Apple Music links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Physical Inventory Management (Vinyl, CDs)",
+              "Tour Logistics & Venue Management",
+              "Merchandising Supply Chain"
+            ]
+          },
+          "patterns_found": [
+            "B2C E-commerce Model",
+            "Entertainment & Media Production",
+            "Digital Music Distribution",
+            "Merchandise Retail Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1631,
+              "output_tokens": 297,
+              "elapsed_seconds": 3.502692222595215
+            }
+          ],
+          "reasoning": "The scraped content confirms the entity is Samara Joy, a Grammy-winning jazz musician. The site functions as a promotional hub and direct-to-consumer storefront for music (CDs, Vinyl) and tour tickets. This aligns with the 'B2C E-commerce' and 'Consumer Goods' rejection patterns seen in previous iterations (Samara Bags, Samara Online). There is no evidence of corporate procurement, enterprise software usage, or B2B supply chain operations relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:25:04.518122",
+          "domain_explored": "https://samara-ag.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webflow (hosting via website-files.com)",
+              "PDF Document Management (Corporate Presentation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Financial Calendar (Budget cycles)",
+              "Corporate Presentation (Vendor overview)"
+            ]
+          },
+          "patterns_found": [
+            "Financial Services & Asset Management",
+            "Investor Relations (IR) Focus",
+            "Public Company Governance Structure",
+            "Market Analysis & Data Publishing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 314,
+              "elapsed_seconds": 9.704767942428589
+            }
+          ],
+          "reasoning": "The scraped content from samara-ag.com reveals a financial services entity focused on Bitcoin, funds, and venture portfolios. The site structure is dominated by Investor Relations (IR) links such as 'Financial Statements', 'General Meetings', and 'Press Releases'. This indicates a public holding company or investment firm structure rather than an operating business engaging in traditional procurement of goods or services. The primary activity is asset management and financial reporting, which contradicts the hypothesis of direct procurement operations relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:25:14.957419",
+          "domain_explored": "https://camaraturismosamara.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Member hotel discount coordination",
+              "Event sponsorship opportunities"
+            ]
+          },
+          "patterns_found": [
+            "Destination Marketing & Tourism Promotion",
+            "Non-Profit Association Structure (Chamber of Tourism)",
+            "Local Business Directory & Event Listings",
+            "Regional Economic Development Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1734,
+              "output_tokens": 249,
+              "elapsed_seconds": 5.893630027770996
+            }
+          ],
+          "reasoning": "The entity is the 'Playa Samara Tourism Chamber' (C\u00e1mara de Turismo), a non-profit organization dedicated to promoting tourism in the Guanacaste region of Costa Rica. The content focuses on visitor resources, event listings (festivals, volleyball), and local business directories. There is no evidence of corporate procurement, supply chain management, or enterprise technology acquisition relevant to the target 'Samara' entity profile."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T14:25:39.316259",
+          "domain_explored": "https://samararesorts.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Hotel Management Software (Generic/Template reference)",
+              "Booking Engine (Implied by UI)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Facilities Management (Maintenance for pool, restaurant, rooms)",
+              "Food & Beverage Supply (Restaurant operations)"
+            ]
+          },
+          "patterns_found": [
+            "B2C Hospitality & Leisure Model",
+            "Facility Management & Operations",
+            "Local Tourism Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1797,
+              "output_tokens": 257,
+              "elapsed_seconds": 20.967167854309082
+            }
+          ],
+          "reasoning": "The entity is a hotel and resort in Batu, Indonesia. The content focuses on consumer booking, room amenities, and event venues. While there is a mention of 'Hotel management software' in the footer text, this appears to be a generic template tag or a basic operational tool rather than a signal of enterprise procurement activity or complex supply chain management relevant to the target profile."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T14:25:47.623820",
+          "domain_explored": "https://www.linkedin.com/jobs/samara-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Energy and Environmental Science and Engineering (University of Miami Health System)",
+              "Space Sciences and Engineering (University of Miami Health System)",
+              "Executive and Artistic Director (California State University, Northridge)",
+              "Business Administration and Compliance Manager (Princeton Hydro)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Academic & Non-Profit Hiring",
+            "Geographic Noise (United States)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 313,
+              "elapsed_seconds": 4.738118886947632
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn represents a generic search result page for the keyword 'Samara' within the United States. None of the job listings (University of Miami, Cal State Northridge, Princeton Hydro) are associated with the target entity 'Samara' (the DTC construction/backyard ADU firm identified in Iteration 2). The results are dominated by academic institutions and unrelated companies, indicating that the search query is too broad or the target entity is not hiring under this specific keyword filter on LinkedIn."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T14:25:58.581199",
+          "domain_explored": "https://www.linkedin.com/jobs/view/mep-systems-engineer-at-samara-4300748179",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CAD Software",
+              "BIM (Building Information Modeling)",
+              "PV (Photovoltaic) Systems",
+              "ESS (Energy Storage Systems)"
+            ],
+            "job_postings": [
+              "MEP Systems Engineer (Redwood City, CA) - $120k-$160k"
+            ],
+            "procurement_indicators": [
+              "Component material selection responsibility",
+              "Factory build optimization for repeatability",
+              "Integration of third-party renewable energy technologies",
+              "Cross-functional collaboration with installation teams",
+              "System testing and validation of vendor components"
+            ]
+          },
+          "patterns_found": [
+            "Direct-to-Consumer (DTC) Construction Model",
+            "Integrated Financing & Insurance Services",
+            "Supply Chain & Logistics Management",
+            "Technical Engineering & R&D (MEP Focus)",
+            "Regulatory Compliance & Code Standards",
+            "Renewable Energy Integration (PV/ESS)",
+            "BIM & CAD Software Utilization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1916,
+              "output_tokens": 430,
+              "elapsed_seconds": 7.398394823074341
+            }
+          ],
+          "reasoning": "The job posting confirms the entity is Samara (backed by Airbnb/Thrive) operating in the modular construction space (ADUs/Backyard). The hiring of an MEP (Mechanical, Electrical, Plumbing) Systems Engineer with a focus on 'component material selections', 'factory repeatability', and 'solar energy systems' provides direct evidence of technical procurement activities. The role requires selecting materials and managing the integration of complex systems, which are core procurement functions involving vendor selection and supply chain coordination."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T14:26:08.335380",
+          "domain_explored": "https://www.linkedin.com/jobs/management-jobs-russia?trk=amworks_jserp_redirect",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head of School at The Progress Group (Location: Progress, Samara, Russia)",
+              "Brand Manager at realme",
+              "Retail Director at Confidential"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Noise (Samara, Russia vs. Samara Entity)",
+            "False Positive Entity Matching",
+            "Generic Job Board Aggregation",
+            "Unrelated Industry Sectors (Education, Logistics, Consumer Electronics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1988,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.890281915664673
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Management jobs in Russia'. While one listing contains the location string 'Progress, Samara, Russia', this refers to the geographic city of Samara, not the target entity 'Samara' (the DTC construction company identified in Iteration 2). The other listings (realme, UGREEN, United Imaging) are unrelated to the target entity. This is a geographic false positive."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T14:26:16.662851",
+          "domain_explored": "https://et.linkedin.com/jobs/view/university-lecturer-at-samara-university-4350839183",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "University Lecturer"
+            ],
+            "procurement_indicators": [
+              "Academic Hiring",
+              "Public Sector Operations"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Geographic Noise (Samara, Ethiopia vs. Target Entity)",
+            "Academic & Non-Profit Hiring",
+            "Public Sector Governance Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2060,
+              "output_tokens": 217,
+              "elapsed_seconds": 5.0495359897613525
+            }
+          ],
+          "reasoning": "The content refers to 'Samara University' located in Semera, Afar Region, Ethiopia. This is a false positive match for the target entity 'Samara' (the DTC construction/backyard ADU company). The hiring patterns are academic and public sector-focused, which contradicts the procurement signals of the target entity."
+        },
+        {
+          "iteration_number": 15,
+          "timestamp": "2026-02-02T14:26:24.856562",
+          "domain_explored": "https://www.linkedin.com/posts/hotel-careers3_samara-lombok-hotel-jobs-we-are-looking-activity-7312096474824163328-CrZe",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chef de Partie",
+              "Commis",
+              "Housekeeping Supervisor",
+              "Front Office Supervisor",
+              "Bartender"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Geographic Noise (Lombok, Indonesia vs. Target Entity)",
+            "B2C Hospitality & Leisure Model",
+            "Operational Hiring (Non-Procurement Roles)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 15,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2140,
+              "output_tokens": 240,
+              "elapsed_seconds": 4.9454028606414795
+            }
+          ],
+          "reasoning": "The content refers to 'Samara Lombok Hotel,' a hospitality entity in Indonesia. This is a false positive match for the target entity 'Samara' (the DTC construction/tech company). The job postings are for operational roles (Chef, Housekeeping, Front Office) typical of a hotel, not corporate procurement or engineering roles relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 24028,
+      "total_output_tokens": 4047,
+      "estimated_cost_usd": 0.132789
+    },
+    "procurement_signals": [
+      "Direct-to-Consumer (DTC) Construction Model",
+      "Integrated Financing & Insurance Services",
+      "Supply Chain & Logistics Management",
+      "Regulatory Compliance Handling (Permitting)",
+      "Customer Experience (CX) & Project Management Tech",
+      "Direct-to-Consumer (DTC) Construction Model",
+      "Integrated Financing & Insurance Services",
+      "Supply Chain & Logistics Management",
+      "Technical Engineering & R&D (MEP Focus)",
+      "Regulatory Compliance & Code Standards",
+      "Renewable Energy Integration (PV/ESS)",
+      "BIM & CAD Software Utilization"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Samara may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:26:24.860682"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.229300",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:03.298089"
+}

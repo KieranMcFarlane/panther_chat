@@ -1,0 +1,219 @@
+{
+  "entity_id": "guyana_volleyball_federation",
+  "entity_name": "Guyana Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "sportsguyana.com",
+    "republicguyana.com",
+    "guyanatimesgy.com",
+    "kaieteurnewsonline.com",
+    "newsroom.gy"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guyana_volleyball_federation",
+      "entity_name": "Guyana Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://newsroom.gy",
+        "https://kaieteurnewsonline.com",
+        "https://guyanatimesgy.com",
+        "https://republicguyana.com",
+        "https://sportsguyana.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guyana Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:24:12.417953",
+          "domain_explored": "https://sportsguyana.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content truncation/token limit",
+            "Generic event placeholder text"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 366,
+              "output_tokens": 136,
+              "elapsed_seconds": 3.8110880851745605
+            }
+          ],
+          "reasoning": "The provided text 'No Events # First 4000 chars (token limit)' indicates a scraping error or content truncation. There is no actual content to analyze for procurement signals, technology stacks, or governance patterns."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:24:20.283965",
+          "domain_explored": "https://republicguyana.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Scripts",
+              "Internet Banking (RepublicOnline)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic cookie consent text",
+            "Banking product navigation",
+            "Irrelevant entity (Republic Bank)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.35892915725708
+            }
+          ],
+          "reasoning": "The scraped content is from Republic Bank (republicguyana.com), a financial institution, and contains only repetitive cookie consent banners and standard banking product navigation (Savings, Chequing, POS). There is absolutely no content, relationship, or signal related to the Guyana Volleyball Federation (GVF) or sports procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:24:25.689110",
+          "domain_explored": "https://guyanatimesgy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic news site navigation structure",
+            "Standard content management system (CMS) layout",
+            "Repeated header/footer blocks (scraping artifact)",
+            "Irrelevant editorial categories (Satiricus, Lomarsh Luminary)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 217,
+              "elapsed_seconds": 2.3614308834075928
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of the Guyana Times homepage navigation menu and header elements. There is no mention of the Guyana Volleyball Federation, nor are there any procurement signals, job postings, or technology stack indicators relevant to the target entity. The content represents a general media outlet, not the specific federation or its procurement activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:24:32.875596",
+          "domain_explored": "https://kaieteurnewsonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'Budget 2026' (National context only)",
+              "Mention of 'Exxon contract' (Oil sector context only)"
+            ]
+          },
+          "patterns_found": [
+            "Generic news aggregator layout",
+            "Macroeconomic reporting (Oil revenue, Budget 2026)",
+            "Standard content management system (CMS) structure",
+            "Irrelevant keyword matches (e.g., 'Contract' in Exxon context, 'Banks' in DIH context)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 281,
+              "elapsed_seconds": 4.318569898605347
+            }
+          ],
+          "reasoning": "The scraped content represents a standard national news outlet (Kaieteur News) focusing on macroeconomic issues (oil revenue, national budget) and general crime/politics. While 'Budget 2026' and 'contracts' are mentioned, they refer to national sovereign matters or large-scale oil sector agreements, not the operational procurement, technology stack, or vendor needs of the Guyana Volleyball Federation. The entity is not mentioned, and no relevant B2B signals were detected."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:25:02.366942",
+          "domain_explored": "https://newsroom.gy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Budget Allocation",
+                "description": "Government of Guyana allocated $6 Billion for sports development in Budget 2026.",
+                "source_url": "https://newsroom.gy/2026/02/02/guyana-squash-association-welcomes-6b-budgetary-allocation-for-sport/",
+                "relevance": "High - Indicates available capital for sports federations like GVF."
+              }
+            ]
+          },
+          "patterns_found": [
+            "National Budget 2026 allocation ($6B for sports)",
+            "Sports Federation budgetary commentary",
+            "News aggregation of government spending"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 331,
+              "elapsed_seconds": 11.576783895492554
+            }
+          ],
+          "reasoning": "While the content does not mention the Guyana Volleyball Federation (GVF) directly, it confirms a massive $6B government allocation for sports in Budget 2026. This establishes a high-probability procurement environment where GVF is a likely stakeholder. The 'Guyana Squash Association' serves as a proxy for the ecosystem, indicating that sports federations are actively receiving and commenting on government funds, which implies upcoming tenders for equipment, events, and infrastructure."
+        }
+      ],
+      "total_input_tokens": 6346,
+      "total_output_tokens": 1162,
+      "estimated_cost_usd": 0.036468
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guyana Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:25:02.367897"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.343210",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:24.340870"
+}

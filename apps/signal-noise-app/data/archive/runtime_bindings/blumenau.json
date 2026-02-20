@@ -1,0 +1,475 @@
+{
+  "entity_id": "blumenau",
+  "entity_name": "Blumenau",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "blumenau.sc.gov.br",
+    "turismoblumenau.com.br",
+    "oktoberfestblumenau.com.br",
+    "blumenauhoa.com",
+    "plazahoteis.com.br",
+    "visitblumenau.com",
+    "judsonlmoore.com",
+    "tripadvisor.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/search/?currentJobId=3809579696&f_TPR=r604800&geoId=106250311&location=Blumenau%2C+Santa+Catarina%2C+Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&start=0",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3813339904&f_TPR=r86400&geoId=106250311&location=Blumenau%2C%20Santa%20Catarina%2C%20Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3735370941&distance=25&geoId=106057199&keywords=remote&origin=JOBS_HOME_SEARCH_CARDS",
+      "https://do.linkedin.com/jobs/job-manager-jobs-rep%C3%BAblica-dominicana?countryRedirected=1&start=0&count=25&trk=jobs_jserp_pagination_1",
+      "https://br.linkedin.com/jobs/job-center-vagas-blumenau",
+      "https://ar.linkedin.com/jobs/view/senior-recruiter-at-agent-careers-4283311093",
+      "https://www.linkedin.com/jobs/gartner-jobs-brazil?trk=old_jserp_redirect",
+      "https://www.linkedin.com/company/ab-inbev/jobs",
+      "https://www.linkedin.com/jobs/zimmermann-jobs-worldwide",
+      "https://www.linkedin.com/jobs/vivara-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "blumenau",
+      "entity_name": "Blumenau",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.039999999999999994,
+        0.019999999999999993,
+        0.019999999999999993,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://blumenau.sc.gov.br",
+        "https://judsonlmoore.com",
+        "https://oktoberfestblumenau.com.br",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3809579696&f_TPR=r604800&geoId=106250311&location=Blumenau%2C+Santa+Catarina%2C+Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&start=0",
+        "https://plazahoteis.com.br",
+        "https://visitblumenau.com",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3813339904&f_TPR=r86400&geoId=106250311&location=Blumenau%2C%20Santa%20Catarina%2C%20Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true",
+        "https://blumenauhoa.com",
+        "https://do.linkedin.com/jobs/job-manager-jobs-rep%C3%BAblica-dominicana?countryRedirected=1&start=0&count=25&trk=jobs_jserp_pagination_1",
+        "https://br.linkedin.com/jobs/job-center-vagas-blumenau",
+        "https://tripadvisor.com",
+        "https://turismoblumenau.com.br",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3735370941&distance=25&geoId=106057199&keywords=remote&origin=JOBS_HOME_SEARCH_CARDS"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Governance & Compliance Enhancement",
+        "Infrastructure & Urban Development",
+        "Public-Private Partnerships",
+        "Social Procurement"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Blumenau may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:53:22.881980",
+          "domain_explored": "https://blumenau.sc.gov.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Agentes de Endemias (Endemic Agents) - Indicated by gallery presence and health context"
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Governance/Consulting",
+                "description": "Special Commission for contract control and transparency (Comiss\u00e3o especial amplia controle e transpar\u00eancia nos contratos de compras).",
+                "source": "Blumenau inclui nova cirurgia e amplia atendimento no combate ao c\u00e2ncer de colo de \u00fatero (Note: Title mismatch in source list, content refers to contracts)"
+              },
+              {
+                "type": "Infrastructure/Construction",
+                "description": "Initiation of new works for the 'Corredor Norte' package (urban reurbanization).",
+                "source": "Prefeitura inicia na pr\u00f3xima semana novas obras que integram o pacote do Corredor Norte"
+              },
+              {
+                "type": "Social Partnership",
+                "description": "Partnership for 'Pet +Seguro' program involving inmate labor for manufacturing.",
+                "source": "Prefeitura fecha parceria e apenados constroem casinhas comunit\u00e1rias para c\u00e3es de Blumenau"
+              },
+              {
+                "type": "Facility Management",
+                "description": "Maintenance services for Samae (Autarquia) utilizing inmate labor.",
+                "source": "Apenados v\u00e3o trabalhar em servi\u00e7os de manuten\u00e7\u00e3o do Samae de Blumenau"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Governance & Compliance Enhancement",
+            "Infrastructure & Urban Development",
+            "Public-Private Partnerships",
+            "Social Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 565,
+              "elapsed_seconds": 7.054342269897461
+            }
+          ],
+          "reasoning": "The content reveals a strong governance signal through the creation of a 'Comiss\u00e3o especial' (Special Commission) specifically for contract control and transparency. Additionally, the 'Corredor Norte' infrastructure project indicates active capital expenditure and procurement for urban works. The 'Pet +Seguro' and inmate labor programs suggest a vendor ecosystem involving social organizations and partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:53:29.741129",
+          "domain_explored": "https://turismoblumenau.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:53:39.585262",
+          "domain_explored": "https://oktoberfestblumenau.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Logistics & Operations",
+              "Public Security Services (Implied)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management",
+            "Public Safety & Security",
+            "Tourism Promotion"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 192,
+              "elapsed_seconds": 5.405790090560913
+            }
+          ],
+          "reasoning": "The content is purely promotional and informational for the Oktoberfest event. While it mentions 'Transporte & Mobilidade' and 'Seguran\u00e7a' (Safety), there are no explicit procurement signals, RFPs, or technology stack details. It confirms the entity's operational scope but does not advance the procurement intelligence hypothesis."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:53:47.672200",
+          "domain_explored": "https://blumenauhoa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 768,
+              "output_tokens": 151,
+              "elapsed_seconds": 2.769012928009033
+            }
+          ],
+          "reasoning": "The content is explicitly for 'Blumenau 1 and 2', a Homeowners Association (HOA) located in Custer County, Colorado, USA. This is a false positive match for the target entity 'Blumenau' (the municipality in Santa Catarina, Brazil). The content contains no relevant procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:54:01.075691",
+          "domain_explored": "https://plazahoteis.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event-Based Tourism",
+              "Hospitality Services"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Commercial Sector",
+            "Event-Based Tourism"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.4224929809570312
+            }
+          ],
+          "reasoning": "The content is from 'Plaza Hot\u00e9is', a private hotel chain, not the municipal entity of Blumenau. While the content lists local events (Festival Brasileiro da Cerveja) which confirms the geographic context, it is purely commercial (B2C) pricing information with no B2G procurement signals, technology stack details, or governance data."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:54:04.528244",
+          "domain_explored": "https://visitblumenau.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:54:10.289579",
+          "domain_explored": "https://judsonlmoore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Personal Blog",
+            "Lifestyle Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 143,
+              "elapsed_seconds": 2.669463872909546
+            }
+          ],
+          "reasoning": "The content is a personal blog belonging to an individual named Judson L. Moore. It focuses on lifestyle, happiness, and personal advice, with no connection to the municipality of Blumenau or public procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:54:13.248356",
+          "domain_explored": "https://tripadvisor.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:54:35.313892",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3809579696&f_TPR=r604800&geoId=106250311&location=Blumenau%2C+Santa+Catarina%2C+Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&start=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Auxiliar de Produ\u00e7\u00e3o - THABRULAI",
+              "Atendente de Loja - Viveo",
+              "Recepcionista - Oliveira & Antunes Advogados",
+              "Subgerente Adidas - Grupo Nomura"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Retail Sector Expansion",
+            "Industrial Manufacturing Hiring",
+            "General Labor Demand"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1704,
+              "output_tokens": 258,
+              "elapsed_seconds": 18.404102325439453
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for Blumenau, listing roles such as 'Auxiliar de Produ\u00e7\u00e3o' (Production Assistant) and 'Atendente de Loja' (Store Clerk). These are operational, hourly roles in the private sector (retail/manufacturing) rather than strategic procurement, government contracting, or technology investment signals. There is no evidence of RFPs, governance changes, or tech stack modernization relevant to the target entity profile."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:54:43.246474",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3813339904&f_TPR=r86400&geoId=106250311&location=Blumenau%2C%20Santa%20Catarina%2C%20Brasil&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Comprador (a) - Vale Automa\u00e7\u00e3o Industrial",
+              "Auxiliar de Almoxarife - RNI",
+              "Almoxarife - RNI",
+              "ALMOXARIFADO - JR TRUCK CENTER"
+            ],
+            "procurement_indicators": [
+              "Private sector procurement hiring (Comprador)",
+              "Inventory control staffing (Almoxarife)",
+              "Logistics and expedition supervision"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain & Logistics Hiring",
+            "Industrial Procurement Roles",
+            "Inventory Management Demand"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1793,
+              "output_tokens": 303,
+              "elapsed_seconds": 4.269162178039551
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for supply chain and procurement roles within Blumenau's industrial sector. While these are private sector hires (RNI, Vale Automa\u00e7\u00e3o Industrial), they indicate a healthy local manufacturing and logistics environment. The presence of 'Comprador' (Buyer) and 'Almoxarife' (Storekeeper) roles suggests active supply chain management, which correlates with potential procurement technology needs, though direct public procurement signals are absent."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T16:54:50.947879",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3735370941&distance=25&geoId=106057199&keywords=remote&origin=JOBS_HOME_SEARCH_CARDS",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Personal Assistant - Whole Heart Publishing",
+              "Analista de Suporte Pleno - EPTV",
+              "Analista de Sucesso do Cliente Pleno (Remoto) - ZENVIA"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch",
+            "Entity Mismatch",
+            "General Labor Market Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1873,
+              "output_tokens": 217,
+              "elapsed_seconds": 4.051043272018433
+            }
+          ],
+          "reasoning": "The content provided is a generic list of remote jobs in Brazil (Niter\u00f3i, S\u00e3o Carlos, S\u00e3o Paulo, etc.) and does not contain any specific references to the entity 'Blumenau'. The search parameters were for 'Remote' jobs in 'Brazil' rather than specific to the target entity, resulting in noise that contradicts the procurement hypothesis for Blumenau."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T16:55:01.287669",
+          "domain_explored": "https://do.linkedin.com/jobs/job-manager-jobs-rep%C3%BAblica-dominicana?countryRedirected=1&start=0&count=25&trk=jobs_jserp_pagination_1",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Strategy and Operations Manager - Creative Product (TikTok, Nueva York, Estados Unidos)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch",
+            "Entity Mismatch",
+            "Generic Job Aggregation",
+            "Authentication Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1945,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.784011125564575
+            }
+          ],
+          "reasoning": "The scraped content is from the Dominican Republic LinkedIn domain ('do.linkedin.com') and targets 'Job Manager' roles in the United States (specifically New York). This represents a complete geographic and entity mismatch with the target entity (Blumenau, Brazil). The content consists primarily of login prompts and generic job aggregation headers, providing no actionable procurement intelligence for Blumenau."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T16:55:08.325490",
+          "domain_explored": "https://br.linkedin.com/jobs/job-center-vagas-blumenau",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Consultor de Vendas | Grupo Mais Valor"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Labor Market Data",
+            "Authentication Gate",
+            "Retail Sector Hiring"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1995,
+              "output_tokens": 222,
+              "elapsed_seconds": 3.3988232612609863
+            }
+          ],
+          "reasoning": "The content is primarily a login/registration gate for LinkedIn with a very limited preview of job listings. The only visible role is a 'Consultor de Vendas' (Sales Consultant) for 'Grupo Mais Valor', which is a standard retail/commercial role with no direct relevance to public sector procurement, governance, or technology infrastructure for the city of Blumenau. The content does not provide enough depth to extract meaningful procurement signals or technology stack information."
+        }
+      ],
+      "total_input_tokens": 15987,
+      "total_output_tokens": 2458,
+      "estimated_cost_usd": 0.08483099999999999
+    },
+    "procurement_signals": [
+      "Governance & Compliance Enhancement",
+      "Infrastructure & Urban Development",
+      "Public-Private Partnerships",
+      "Social Procurement"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Blumenau may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:55:08.326296"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321196",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:09:46.509864"
+}

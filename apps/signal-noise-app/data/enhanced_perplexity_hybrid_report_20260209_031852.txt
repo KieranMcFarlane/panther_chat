@@ -1,0 +1,11 @@
+ENHANCED PERPLEXITY-FIRST HYBRID RFP DETECTION REPORT
+================================================================================
+
+Generated: 2026-02-09T03:18:52.886815+00:00
+Entities Checked: 2
+Total RFPs Detected: 0
+Verified RFPs: 0
+Rejected RFPs: 0
+
+HIGHLIGHTS:
+--------------------------------------------------------------------------------

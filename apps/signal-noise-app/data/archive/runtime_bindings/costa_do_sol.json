@@ -1,0 +1,378 @@
+{
+  "entity_id": "costa_do_sol",
+  "entity_name": "Costa do Sol",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "costasol.com.au",
+    "costa-do-sol.com",
+    "costadosolbb.pt-portugal.com",
+    "restaurantecostadosol.com",
+    "costadosol.rio.br",
+    "costadoresidencial.hotelsporto.net",
+    "estanciacostadosol.com.br",
+    "pousadacostadelsol.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/unimed-costa-do-sol-jobs-worldwide?f_C=64541462&trk=top-card_top-card-primary-button-top-card-primary-cta",
+      "https://www.linkedin.com/company/chc-helicopter/jobs",
+      "https://www.linkedin.com/jobs/sol-%E2%98%80-jobs-worldwide",
+      "https://www.linkedin.com/posts/virtual-human-resources_aviationjobs-mechanics-jobsearch-activity-6813012760650166273-5cqf?trk=public_profile_like_view",
+      "https://www.linkedin.com/company/bristow-group-inc/jobs",
+      "https://www.linkedin.com/posts/sergio-da-costa-6bb0198_careers-at-costa-do-sol-insurance-agency-activity-6767482312897699840-JhqI?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "costa_do_sol",
+      "entity_name": "Costa do Sol",
+      "total_iterations": 15,
+      "completed_iterations": 13,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://pousadacostadelsol.com.br",
+        "https://costadoresidencial.hotelsporto.net",
+        "https://www.linkedin.com/company/chc-helicopter/jobs",
+        "https://costadosol.rio.br",
+        "https://costadosolbb.pt-portugal.com",
+        "https://estanciacostadosol.com.br",
+        "https://www.linkedin.com/jobs/unimed-costa-do-sol-jobs-worldwide?f_C=64541462&trk=top-card_top-card-primary-button-top-card-primary-cta",
+        "https://costa-do-sol.com",
+        "https://www.linkedin.com/posts/virtual-human-resources_aviationjobs-mechanics-jobsearch-activity-6813012760650166273-5cqf?trk=public_profile_like_view",
+        "https://www.linkedin.com/company/bristow-group-inc/jobs",
+        "https://costasol.com.au",
+        "https://restaurantecostadosol.com",
+        "https://www.linkedin.com/jobs/sol-%E2%98%80-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Costa do Sol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:11:29.717314",
+          "domain_explored": "https://costasol.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 6 column 39 (char 160)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:11:35.699804",
+          "domain_explored": "https://costa-do-sol.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure/blog layout)",
+              "Google Analytics (implied)",
+              "Affiliate Tracking Scripts"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Presence of 'Contact Us' and 'Advertise' pages (vendor solicitation for ads, not procurement)",
+              "Dynamic pricing widgets ($89.99) indicating API integration with travel providers (Expedia/Booking.com API), but usage is for resale, not internal operations."
+            ]
+          },
+          "patterns_found": [
+            "Affiliate Marketing Model",
+            "Generic Content Aggregation",
+            "B2C Consumer Focus",
+            "No Corporate Governance Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 309,
+              "elapsed_seconds": 2.9692747592926025
+            }
+          ],
+          "reasoning": "The scraped content from costasol.com (or costasol-do-sol.com) reveals a generic B2C travel affiliate blog. The site offers travel packages, car rentals, and hotel bookings to consumers. There is absolutely no presence of a corporate entity structure, job postings, or technology infrastructure indicative of a procurement-ready organization. This contradicts the hypothesis of a procurement opportunity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:11:38.596511",
+          "domain_explored": "https://costadosolbb.pt-portugal.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:11:45.697904",
+          "domain_explored": "https://restaurantecostadosol.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 6 column 50 (char 161)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:11:50.001972",
+          "domain_explored": "https://costadosol.rio.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:12:01.691668",
+          "domain_explored": "https://costadoresidencial.hotelsporto.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 5 column 30 (char 111)"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:12:06.798129",
+          "domain_explored": "https://estanciacostadosol.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:12:10.273572",
+          "domain_explored": "https://pousadacostadelsol.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T20:12:16.940226",
+          "domain_explored": "https://www.linkedin.com/jobs/unimed-costa-do-sol-jobs-worldwide?f_C=64541462&trk=top-card_top-card-primary-button-top-card-primary-cta",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Copeiro(a) (Kitchen Assistant)",
+              "Auxiliar de Laborat\u00f3rio (Lab Assistant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Unimed vs Costa do Sol)",
+            "Operational/Support Roles (Copeiro, Lab Assistant)",
+            "Geographic Mismatch (Maca\u00e9, RJ vs Target Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1647,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.342466115951538
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Unimed Costa do Sol', a distinct medical cooperative entity based in Maca\u00e9, Rio de Janeiro. It does not relate to the target 'Costa do Sol' entity (likely Australian or Portuguese based on previous iterations). The job postings identified (Copeiro, Auxiliar de Laborat\u00f3rio) are operational support roles with no procurement relevance."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T20:12:23.176790",
+          "domain_explored": "https://www.linkedin.com/company/chc-helicopter/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Continuing Airworthiness Manager",
+              "Aviation Maintenance Support Specialist",
+              "Flight Operation Member",
+              "Commercial Operations Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (CHC Helicopter vs Costa do Sol)",
+            "Industry Mismatch (Aviation/MRO vs Target Entity)",
+            "Geographic Mismatch (Irving, TX/Global vs Target Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1718,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.940357208251953
+            }
+          ],
+          "reasoning": "The scraped content is for 'CHC Helicopter', a global aviation services provider. This is a complete entity mismatch with the target 'Costa do Sol'. The job listings (Airworthiness Manager, Flight Operations) and industry context (Airlines and Aviation) are irrelevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T20:12:43.654872",
+          "domain_explored": "https://www.linkedin.com/jobs/sol-%E2%98%80-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Copeiro(a) at Unimed Costa do Sol",
+              "Separador de Mercadoria at Sol Vinil Distribuidora",
+              "Auxiliar de Creche at Rede Vale do Sol",
+              "Recepcionista at BLUESEA Hotels",
+              "Administrator: Student Recruitment at Sol Plaatje University"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Unimed, Sol Vinil, Rede Vale do Sol, BLUESEA, Sol Plaatje)",
+            "Keyword Collision (Generic 'Sol' matches)",
+            "Geographic Dispersion (Brazil, Spain, South Africa)",
+            "Operational Roles (Copeiro, Recepcionista, Auxiliar)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1793,
+              "output_tokens": 307,
+              "elapsed_seconds": 16.638622999191284
+            }
+          ],
+          "reasoning": "The search query 'Sol \u2600' yields generic results for entities containing 'Sol' (Sun) but none match the specific target entity 'Costa do Sol'. The results include Unimed Costa do Sol (already rejected in Iteration 9), Sol Vinil Distribuidora, Rede Vale do Sol, and international entities like BLUESEA Hotels and Sol Plaatje University. These represent distinct legal entities with no procurement relationship to the target."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T20:12:50.350414",
+          "domain_explored": "https://www.linkedin.com/posts/virtual-human-resources_aviationjobs-mechanics-jobsearch-activity-6813012760650166273-5cqf?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Aircraft Mechanics",
+              "Recruitment Specialist"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (VHR Global Technical Recruitment vs Costa do Sol)",
+            "Industry Mismatch (Aviation Recruitment vs Target Entity)",
+            "Geographic Mismatch (Germany vs Target Entity)",
+            "Keyword Collision (Generic 'Sol' matches)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1896,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.3538618087768555
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post from VHR Global Technical Recruitment advertising Aircraft Mechanic jobs in Germany. There is no semantic connection to the entity 'Costa do Sol'. The term 'Sol' appears only in the URL structure or generic hashtags, not as a reference to the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T20:12:59.622974",
+          "domain_explored": "https://www.linkedin.com/company/bristow-group-inc/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Pilot (S76 PIC) - Houma, LA",
+              "Avionics Technician - Houma, LA",
+              "Mechanic V - Rio de Janeiro, Brazil",
+              "Safety & Compliance Officer - Netherlands",
+              "Licensed Engineer - Aberdeen, UK"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Bristow Group vs Costa do Sol)",
+            "Industry Mismatch (Aviation/Vertical Flight vs Target Entity)",
+            "Geographic Dispersion (Houston, LA, Aberdeen, Rio de Janeiro)",
+            "Operational Roles (Pilots, Technicians, Mechanics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1975,
+              "output_tokens": 306,
+              "elapsed_seconds": 5.988126993179321
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn page of Bristow Group, a global provider of vertical flight (helicopter) services. This is a distinct entity from 'Costa do Sol'. While there is a job listing in Rio de Janeiro (Mechanic V), the core identity is an American aviation company (Houston, TX) servicing the energy sector, not a Portuguese/Brazilian entity named Costa do Sol. The roles listed are operational/technical (Pilots, Mechanics), not procurement-related."
+        }
+      ],
+      "total_input_tokens": 10414,
+      "total_output_tokens": 1592,
+      "estimated_cost_usd": 0.055122
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Costa do Sol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:12:59.624608"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230520",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:37.575270"
+}

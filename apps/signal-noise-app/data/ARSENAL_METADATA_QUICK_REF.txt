@@ -1,0 +1,157 @@
+================================================================================
+ARSENAL FC - METADATA QUICK REFERENCE
+================================================================================
+
+📊 WHAT IS METADATA?
+Metadata is a JSON field inside each Hypothesis node in FalkorDB that stores
+the complete discovery trail: URLs, evidence, reasoning, costs, and timestamps.
+
+================================================================================
+📍 WHERE TO FIND IT
+================================================================================
+
+Database:  FalkorDB (graph database)
+Node:      (:Hypothesis {hypothesis_id, entity_id, metadata})
+Field:     metadata (JSON string)
+
+Access:
+  Python: hypothesis.metadata
+  Cypher: MATCH (h:Hypothesis {entity_id: "arsenal-fc"}) RETURN h.metadata
+
+File:     data/arsenal_fc_metadata_example.json (saved example)
+
+================================================================================
+📦 WHAT'S INSIDE (7 main sections)
+================================================================================
+
+1. discovered_urls (JSON array)
+   └─ All URLs explored during discovery
+   └─ Example: ["https://arsenal.com/careers", "https://linkedin.com/company/arsenal"]
+
+2. evidence_excerpts (JSON array)
+   └─ Relevant text/content discovered from each URL
+   └─ Example: ["Arsenal is seeking a CRM Manager...", "Tech stack: Salesforce..."]
+
+3. hop_history (JSON array)
+   └─ Step-by-step AI reasoning trail with timestamps
+   └─ Each hop contains:
+      ├─ hop_type: "official_site" | "linkedin" | "job_boards"
+      ├─ url: The exact page visited
+      ├─ decision: "ACCEPT" | "WEAK_ACCEPT" | "REJECT" | "NO_PROGRESS"
+      ├─ confidence_delta: How much confidence changed (+0.06, +0.02, 0.0)
+      ├─ justification: Why this decision was made
+      ├─ evidence_found: Key text snippet discovered
+      ├─ reasoning: Detailed AI reasoning process
+      ├─ timestamp: When this hop executed
+      ├─ cost_usd: Cost of this hop
+      └─ tokens_used: Claude tokens consumed
+
+4. cost_breakdown (JSON object)
+   └─ Total cost, API calls, token counts, averages
+
+5. discovery_summary (JSON object)
+   └─ Total hops, decision counts, confidence trajectory, status
+
+6. reasoning_summary (text)
+   └─ Human-readable summary of the entire discovery process
+
+7. discovery_timestamp (string)
+   └─ When discovery was executed
+
+================================================================================
+🔍 KEY INSIGHTS FROM ARSENAL'S METADATA
+================================================================================
+
+Confidence Growth: 0.50 → 0.76 (+0.26 over 5 hops)
+
+Strongest Evidence:
+1. CRM Manager job posting (+0.06) - Active procurement signal
+2. Technology stack confirmation (+0.06) - Salesforce listed as primary
+3. Official Salesforce partnership (+0.06) - Stadium page confirmation
+4. Digital transformation initiative (+0.06) - Broader modernization
+5. LinkedIn corroboration (+0.02) - Public Salesforce usage
+
+Decision Distribution:
+  ACCEPT: 4 hops (strong evidence found)
+  WEAK_ACCEPT: 1 hop (supporting evidence)
+  REJECT: 0 hops (no contradictory evidence)
+  NO_PROGRESS: 0 hops (all sources relevant)
+
+Total Cost: $0.15 (5 hops × ~$0.03 per hop)
+
+Status: ACTIVE (confidence 0.76, below 0.70 actionable threshold)
+
+================================================================================
+💾 HOW TO ACCESS
+================================================================================
+
+1. From Python:
+   from backend.hypothesis_persistence_native import HypothesisRepository
+   
+   repo = HypothesisRepository()
+   await repo.initialize()
+   
+   h = await repo.get_hypothesis("digital_transformation_procurement", "arsenal-fc")
+   metadata = h.metadata
+   urls = metadata['discovered_urls']
+   reasoning = metadata['hop_history']
+
+2. From File (saved example):
+   import json
+   
+   with open('data/arsenal_fc_metadata_example.json') as f:
+       metadata = json.load(f)
+
+3. Query FalkorDB directly:
+   MATCH (h:Hypothesis {entity_id: "arsenal-fc"})
+   RETURN h.metadata
+
+================================================================================
+📊 METADATA STRUCTURE DIAGRAM
+================================================================================
+
+Hypothesis Node in FalkorDB:
+┌─────────────────────────────────────────────────────────────────┐
+│ (:Hypothesis {                                                       │
+│   hypothesis_id: "digital_transformation_procurement",        │
+│   entity_id: "arsenal-fc",                                   │
+│   confidence: 0.76,                                            │
+│   status: "ACTIVE",                                             │
+│   iterations_attempted: 5,                                     │
+│   metadata: "{                                                   │
+│     \"discovered_urls\": [...],                                │
+│     \"evidence_excerpts\": [...],                              │
+│     \"hop_history\": [...],                                     │
+│     \"cost_breakdown\": {...},                                  │
+│     \"discovery_summary\": {...}                                │
+│   }"                                                           │
+│ })                                                               │
+└─────────────────────────────────────────────────────────────────┘
+
+Each hop in hop_history:
+┌─────────────────────────────────────────────────────────────────┐
+│ {                                                              │
+│   "hop_type": "official_site",                                │
+│   "url": "https://arsenal.com/careers",                      │
+│   "decision": "ACCEPT",                                       │
+│   "confidence_delta": 0.06,                                    │
+│   "justification": "Strong procurement signal...",              │
+│   "evidence_found": "Arsenal is seeking a CRM Manager...",      │
+│   "reasoning": "Job posting explicitly mentions...",            │
+│   "timestamp": "2026-02-03T06:12:00Z",                        │
+│   "cost_usd": 0.03                                            │
+│ }                                                              │
+└─────────────────────────────────────────────────────────────────┘
+
+================================================================================
+🎯 USE CASES
+================================================================================
+
+1. AUDIT TRAIL: See exactly what URLs were visited and why
+2. REPRODUCIBILITY: Re-run discovery with same inputs to verify results
+3. ANALYSIS: Extract all evidence for sales outreach
+4. DEBUGGING: Understand why a hypothesis reached its confidence level
+5. COMPLIANCE: Maintain record of how decisions were made
+6. OPTIMIZATION: Analyze which hop types provide strongest signals
+
+================================================================================

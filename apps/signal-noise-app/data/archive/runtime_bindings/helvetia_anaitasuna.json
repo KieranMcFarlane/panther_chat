@@ -1,0 +1,214 @@
+{
+  "entity_id": "helvetia_anaitasuna",
+  "entity_name": "Helvetia Anaitasuna",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "anaitasuna.com",
+    "eurohandball.com",
+    "barcaacademy.fcbarcelona.com",
+    "playmakerstats.com",
+    "fcbarcelona.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "helvetia_anaitasuna",
+      "entity_name": "Helvetia Anaitasuna",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://playmakerstats.com",
+        "https://eurohandball.com",
+        "https://barcaacademy.fcbarcelona.com",
+        "https://grokipedia.com",
+        "https://fcbarcelona.com",
+        "https://anaitasuna.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Helvetia Anaitasuna may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:22:51.926288",
+          "domain_explored": "https://anaitasuna.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Gmail (anaitasunamendi@gmail.com - indicates potential lack of corporate email standardization)",
+              "WhatsApp (Canal de WhatsApp Anaitasuna)",
+              "CMS (Website with news/blog functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Spa-Balneario regulation update (implies maintenance/safety vendor contracts)",
+              "Cultural event organization (Wine tasting, Book club - implies vendor/speaker procurement)",
+              "Newsletter generation (Content management or marketing tool usage)"
+            ]
+          },
+          "patterns_found": [
+            "Governance: Board of Directors (Junta Directiva) approval for policy changes",
+            "Operational: Facility management (Spa-Balneario) and safety regulations",
+            "Community: Member-driven demand influencing procurement/service decisions",
+            "Digital: Newsletter distribution (Boletines) and WhatsApp channel usage",
+            "Cultural: Paid events and clubs (Book club, Wine tasting) requiring payment processing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 403,
+              "elapsed_seconds": 4.405977010726929
+            }
+          ],
+          "reasoning": "The content confirms the entity is an active sports and social club (S.C.D.R. Anaitasuna) with a structured governance model. While there are no explicit RFPs, the approval of Spa modifications and the organization of cultural events indicate ongoing operational expenditure. The use of generic emails (Gmail) for the mountain section suggests a potential need for digital standardization or collaboration tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:22:57.663264",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "Generic Sports News",
+            "Cookie Wall/Privacy Restrictions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 220,
+              "elapsed_seconds": 2.3871657848358154
+            }
+          ],
+          "reasoning": "The content provided is from the European Handball Federation (EHF) website, specifically covering the Men's EHF EURO 2026. While Helvetia Anaitasuna is a handball club, this page contains general tournament news, results, and schedules for other national teams (Denmark, Croatia). There are no specific mentions of Helvetia Anaitasuna, nor are there procurement signals, technology stacks, or governance details relevant to the specific entity being analyzed. The content is blocked by cookie preferences, further limiting utility."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:23:04.224636",
+          "domain_explored": "https://barcaacademy.fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Consumer-Facing Content",
+            "Marketing/Program Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.087890863418579
+            }
+          ],
+          "reasoning": "The content is from FC Barcelona's official academy website, which is a completely different entity than Helvetia Anaitasuna. The content focuses on consumer-facing programs (summer camps, clinics) and general sports news. There is no overlap with the target entity's operations, governance, or procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:23:07.041729",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:23:13.020104",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Consumer-Facing Content",
+            "Marketing/Program Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.887968063354492
+            }
+          ],
+          "reasoning": "The content is exclusively focused on FC Barcelona's consumer-facing operations (tickets, shop, news, fan club 'Culers'). There is no mention of Helvetia Anaitasuna, nor are there any procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:23:16.100307",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5870,
+      "total_output_tokens": 944,
+      "estimated_cost_usd": 0.03177
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Helvetia Anaitasuna may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:23:16.100760"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359359",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:28.143491"
+}

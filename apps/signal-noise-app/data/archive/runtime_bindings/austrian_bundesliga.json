@@ -1,0 +1,172 @@
+{
+  "entity_id": "austrian_bundesliga",
+  "entity_name": "Austrian Bundesliga",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "otherbundesliga.com",
+    "sportmonks.com",
+    "onefootball.com",
+    "livesoccertv.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "austrian_bundesliga",
+      "entity_name": "Austrian Bundesliga",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://onefootball.com",
+        "https://sportmonks.com",
+        "https://otherbundesliga.com",
+        "https://livesoccertv.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Austrian Bundesliga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:19:20.151173",
+          "domain_explored": "https://otherbundesliga.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spotify (Embed)",
+              "Twitter/X (Embed)",
+              "Cookie Consent Management (Standard)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "External media services vendor (TOB Sports Media OG)"
+            ]
+          },
+          "patterns_found": [
+            "Third-party media entity",
+            "Content aggregation",
+            "Cookie consent management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 271,
+              "elapsed_seconds": 2.7366528511047363
+            }
+          ],
+          "reasoning": "The scraped content identifies 'The Other Bundesliga' as an external media entity (TOB Sports Media OG) that provides services *to* clubs, rather than the official Austrian Bundesliga organization. While they mention providing 'professional media services' to clubs, this is a B2B service offering from a third-party vendor, not a procurement signal originating from the league itself. The site also relies on embedded third-party content (Spotify, Twitter) with standard cookie consent banners, indicating no proprietary tech stack to analyze."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:19:31.291223",
+          "domain_explored": "https://sportmonks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "REST APIs",
+              "Football Widgets",
+              "Real-time Data Feeds"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor catalog for data licensing",
+              "Potential supplier for digital match centers"
+            ]
+          },
+          "patterns_found": [
+            "B2B SaaS Vendor",
+            "API Product Marketing",
+            "Outbound Sales Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 228,
+              "elapsed_seconds": 4.3334290981292725
+            }
+          ],
+          "reasoning": "The content is from Sportmonks, a commercial sports data provider. It is a vendor site marketing APIs and widgets to potential clients (like the Austrian Bundesliga). It does not contain information about the Austrian Bundesliga's internal procurement, technology stack, or governance. It represents a potential supplier, not the target entity's procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:19:37.568357",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:20:01.618989",
+          "domain_explored": "https://livesoccertv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Broadcast Schedule Aggregation",
+            "Third-Party Rights Management",
+            "Consumer-Facing TV Listings",
+            "Streaming Service Distribution (e.g., DAZN, fuboTV)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 204,
+              "elapsed_seconds": 17.32177186012268
+            }
+          ],
+          "reasoning": "The scraped content is a TV schedule grid for various global football leagues. It lists broadcasters (NBCSN, Peacock, DAZN, etc.) and match times. This is a media guide for consumers, not an entity or document related to the Austrian Bundesliga's internal operations, procurement needs, or technology stack. It does not contain signals regarding the Austrian Bundesliga's purchasing decisions."
+        }
+      ],
+      "total_input_tokens": 4243,
+      "total_output_tokens": 703,
+      "estimated_cost_usd": 0.023274000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Austrian Bundesliga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:20:01.621436"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.446373",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:40.813629"
+}

@@ -1,0 +1,298 @@
+{
+  "entity_id": "shl",
+  "entity_name": "SHL",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "online.shl.com",
+    "support.shl.com",
+    "shl-tech.com",
+    "shl-medical.com",
+    "shl-telemedicine.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/shl-jobs",
+      "https://www.linkedin.com/company/shlmedical/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "shl",
+      "entity_name": "SHL",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://shl-tech.com",
+        "https://support.shl.com",
+        "https://www.linkedin.com/company/shlmedical/jobs",
+        "https://www.linkedin.com/jobs/shl-jobs",
+        "https://online.shl.com",
+        "https://shl-telemedicine.com",
+        "https://shl-medical.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "SHL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:43:43.102645",
+          "domain_explored": "https://online.shl.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:43:49.431965",
+          "domain_explored": "https://support.shl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Customer Support Navigation",
+            "Candidate/Client Self-Service Resources"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 826,
+              "output_tokens": 154,
+              "elapsed_seconds": 3.3844351768493652
+            }
+          ],
+          "reasoning": "The content is a navigation menu for SHL's customer support portal. It provides links to FAQs, practice sites, and browser checks for end-users (candidates/clients). There are no signals regarding internal procurement activities, technology vendor selection, or business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:43:55.973748",
+          "domain_explored": "https://shl-tech.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Vertically integrated engineering systems",
+              "Design-to-build optimization frameworks"
+            ],
+            "job_postings": [
+              "Careers section mentioned (General manufacturing/engineering roles)"
+            ],
+            "procurement_indicators": [
+              "Supplier Award received from Sartorius (Indicates B2B partnership capability, but for manufacturing, not HR services)"
+            ]
+          },
+          "patterns_found": [
+            "Contract Manufacturing Services",
+            "Medtech Product Focus",
+            "OEM (Original Equipment Manufacturer) Identity",
+            "Project Lifecycle Management (Early/Middle/Mature)",
+            "Supplier Award Recognition"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 344,
+              "elapsed_seconds": 2.4552440643310547
+            }
+          ],
+          "reasoning": "The content analyzed from 'shl-tech.com' identifies the entity as 'SHL Technologies', an OEM and contract manufacturing firm specializing in industrial and medtech products. This is a distinct entity from 'SHL', the talent assessment and psychometric testing company (the target of the procurement intelligence task). The content describes manufacturing capabilities (design-to-build, prototyping, high-volume production) rather than HR technology or assessment solutions. Therefore, this data is irrelevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:44:02.954041",
+          "domain_explored": "https://shl-medical.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Generic Career Page Link (Go to our career page)"
+            ],
+            "procurement_indicators": [
+              "End-to-end solutions (Device development, Final assembly, Labeling, Packaging)",
+              "Alliance partnerships (Pharma/Biotech collaboration)"
+            ]
+          },
+          "patterns_found": [
+            "Medtech/Device Manufacturing Identity",
+            "B2B Pharmaceutical Partnerships",
+            "End-to-End Product Lifecycle Services",
+            "Career Page Link (Generic HR)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.403208017349243
+            }
+          ],
+          "reasoning": "The content confirms that 'SHL Medical' is a distinct entity specializing in medical device manufacturing (autoinjectors) and contract services for pharma companies. While it mentions 'end-to-end solutions' and 'services', these refer to physical device manufacturing and supply chain support, not the corporate procurement or HR assessment services associated with the target entity 'SHL'. This confirms the misalignment identified in Iteration 3."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:44:11.175637",
+          "domain_explored": "https://shl-telemedicine.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cloud-based patented technology",
+              "A.I. (Artificial Intelligence)",
+              "Big Data databases",
+              "Central database for health records"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Capital increase and rights offering (Financial procurement)",
+              "Collaboration with Mayo Clinic (Strategic Partnership)",
+              "Collaboration with Retail chains and distributors (Supply Chain)"
+            ]
+          },
+          "patterns_found": [
+            "Medtech/Device Manufacturing Identity",
+            "Direct-to-Consumer (DTC) Product Sales",
+            "Healthcare Service Provider Operations",
+            "Capital Markets/Investor Relations Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 289,
+              "elapsed_seconds": 4.323515892028809
+            }
+          ],
+          "reasoning": "The content confirms this entity (SHL Telemedicine) is a distinct medical device manufacturer and telehealth service provider, unrelated to the SHL talent assessment entity. The focus is on ECG devices, blood pressure monitors, and capital raises rather than corporate procurement or HR technology."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:44:19.867880",
+          "domain_explored": "https://www.linkedin.com/jobs/shl-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Key Account Manager - Wholesale N America (Sephora) at AKT London",
+              "Chief Technology Officer at Mach7 Technologies",
+              "Operations Manager at Senior Helpers"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results",
+            "False Positive Entity Matching",
+            "Unrelated Industry Sectors (Cosmetics, HVAC, Healthcare)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 244,
+              "elapsed_seconds": 4.896263360977173
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the query 'shl'. The listings returned are for entities such as 'AKT London' (Cosmetics), 'Senior Helpers' (Healthcare), and 'Comfort Systems' (HVAC). None of these postings are associated with the target entity SHL (the talent measurement company), nor do they contain procurement signals relevant to the target."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:44:55.866253",
+          "domain_explored": "https://www.linkedin.com/company/shlmedical/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Automation Technology",
+              "ITSM (Information Technology Service Management)"
+            ],
+            "job_postings": [
+              "Senior Manufacturing Engineer - Automation Technology",
+              "PDMP TS - Manufacturing Operator",
+              "EHS - Nurse (Contractor)",
+              "QA Specialist",
+              "QC Inspector",
+              "Legal Counsel",
+              "Facilities Engineer",
+              "IT - ITSM Analyst"
+            ],
+            "procurement_indicators": [
+              "Contractor Hiring (EHS - Nurse)",
+              "Legal Counsel Expansion",
+              "ITSM Role (IT Service Management)"
+            ]
+          },
+          "patterns_found": [
+            "Medtech/Device Manufacturing Identity",
+            "Operational/Engineering Job Postings",
+            "Global Manufacturing Footprint (Switzerland, Taiwan, USA)",
+            "False Positive Entity Match (SHL Medical vs SHL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1656,
+              "output_tokens": 367,
+              "elapsed_seconds": 32.67835092544556
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn company page for 'SHL Medical', a distinct entity from 'SHL' (the talent measurement company). The job listings (Senior Manufacturing Engineer, QA Specialist, Facilities Engineer) and company description focus on autoinjectors and medical device manufacturing. This confirms the entity mismatch established in Iterations 3 and 4, providing no procurement intelligence for the target SHL entity."
+        }
+      ],
+      "total_input_tokens": 8513,
+      "total_output_tokens": 1675,
+      "estimated_cost_usd": 0.050664
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "SHL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:44:55.869010"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.448274",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:20.605002"
+}

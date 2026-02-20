@@ -1,0 +1,255 @@
+{
+  "entity_id": "ac_milan",
+  "entity_name": "AC Milan",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "acmilan.com",
+    "newsnow.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/ac-milan-jobs-worldwide",
+      "https://it.linkedin.com/jobs/ac-milan-offerte-di-lavoro",
+      "https://ae.linkedin.com/jobs/view/executive-assistant-dubai-office-at-ac-milan-4214228473"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ac_milan",
+      "entity_name": "AC Milan",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/ac-milan-jobs-worldwide",
+        "https://it.linkedin.com/jobs/ac-milan-offerte-di-lavoro",
+        "https://ae.linkedin.com/jobs/view/executive-assistant-dubai-office-at-ac-milan-4214228473",
+        "https://acmilan.com",
+        "https://newsnow.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "salesforce_crm",
+        "regional_expansion",
+        "commercial_operations",
+        "vendor_ecosystem"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AC Milan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:48:29.338116",
+          "domain_explored": "https://acmilan.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:48:38.800921",
+          "domain_explored": "https://newsnow.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "us_politics",
+            "infrastructure_construction"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 513,
+              "output_tokens": 152,
+              "elapsed_seconds": 1.9404540061950684
+            }
+          ],
+          "reasoning": "The provided content from NewsNow.com concerns the Kennedy Center (Washington D.C.) and US Politics (Donald Trump). This is completely unrelated to AC Milan's procurement activities, technology stack, or operational governance. There is no signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:48:47.419532",
+          "domain_explored": "https://www.linkedin.com/jobs/ac-milan-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Motion Graphics",
+              "Security Solutions"
+            ],
+            "job_postings": [
+              {
+                "role": "Sales Assistant",
+                "department": "Retail / Merchandise",
+                "vendor": "Fanatics",
+                "location": "San Siro Store, Milan"
+              },
+              {
+                "role": "Junior Motion Graphics Designer",
+                "department": "Digital Marketing / Content",
+                "vendor": "Two Circles",
+                "location": "London (Remote/Global support)"
+              },
+              {
+                "role": "Key Account / Channel Sales Manager",
+                "department": "Security Services",
+                "vendor": "Axitea SPA",
+                "location": "Veneto / Milan"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Retail Operations: Fanatics manages the San Siro Store, indicating a B2B partnership for merchandise.",
+              "Digital Agency Partnership: Two Circles is hiring for design roles, suggesting they handle AC Milan's digital creative.",
+              "Security Vendor: Axitea is hiring for security sales, likely related to stadium or corporate security contracts."
+            ]
+          },
+          "patterns_found": [
+            "vendor_ecosystem",
+            "outsourced_operations",
+            "retail_management",
+            "digital_marketing_agency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 469,
+              "elapsed_seconds": 4.2462239265441895
+            }
+          ],
+          "reasoning": "While AC Milan is not the direct hirer (limiting direct procurement signals), the job listings reveal critical vendors in their supply chain (Fanatics for retail, Two Circles for digital). This indicates procurement decisions have already been made to outsource these functions, providing insight into their operational partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:48:57.780450",
+          "domain_explored": "https://it.linkedin.com/jobs/ac-milan-offerte-di-lavoro",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "role": "Sales Assistant",
+                "company": "Fanatics",
+                "location": "San Siro Store",
+                "insight": "Confirms outsourcing of retail merchandising operations to Fanatics."
+              },
+              {
+                "role": "Key Account / Channel Sales Manager",
+                "company": "Axitea SPA",
+                "location": "Milan/Venezia",
+                "insight": "Suggests Axitea manages security solutions or facility services for the club/stadium."
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Retail Management (Fanatics)",
+              "Outsourced Security/Facility Services (Axitea)"
+            ]
+          },
+          "patterns_found": [
+            "vendor_ecosystem",
+            "retail_operations",
+            "security_services",
+            "aggregator_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 361,
+              "elapsed_seconds": 4.172674655914307
+            }
+          ],
+          "reasoning": "The search results for 'AC Milan' on LinkedIn are dominated by roles from partner/vendor companies (Fanatics, Axitea) rather than AC Milan itself. While this confirms the existence of a vendor ecosystem (outsourced retail and security), it provides no direct insight into AC Milan's internal procurement activities, technology stack, or decision-making structure. The signal is diluted by third-party recruitment."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:49:09.110341",
+          "domain_explored": "https://ae.linkedin.com/jobs/view/executive-assistant-dubai-office-at-ac-milan-4214228473",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Executive Assistant - Dubai Office"
+            ],
+            "procurement_indicators": [
+              "CRM Usage (Salesforce)",
+              "Regional Commercial Hub (Dubai)",
+              "Sponsorship & Partnership Management"
+            ]
+          },
+          "patterns_found": [
+            "salesforce_crm",
+            "regional_expansion",
+            "commercial_operations",
+            "vendor_ecosystem"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.1678080558776855
+            }
+          ],
+          "reasoning": "The job posting explicitly confirms the use of Salesforce for customer database management within the Dubai office. This is a direct procurement signal identifying a specific technology vendor (CRM) and indicates active commercial operations in the GCC region requiring administrative support for sales and marketing functions."
+        }
+      ],
+      "total_input_tokens": 4965,
+      "total_output_tokens": 1220,
+      "estimated_cost_usd": 0.033195
+    },
+    "procurement_signals": [
+      "salesforce_crm",
+      "regional_expansion",
+      "commercial_operations",
+      "vendor_ecosystem"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AC Milan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:49:09.111427"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.128074",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:18.997613"
+}

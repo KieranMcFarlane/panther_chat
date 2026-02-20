@@ -1,0 +1,198 @@
+{
+  "entity_id": "us_ivry_handball",
+  "entity_name": "US Ivry Handball",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "hand-ivry.org",
+    "eurohandball.com",
+    "grokipedia.com",
+    "ffhandball.fr",
+    "2050analytics.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "us_ivry_handball",
+      "entity_name": "US Ivry Handball",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://eurohandball.com",
+        "https://hand-ivry.org",
+        "https://grokipedia.com",
+        "https://2050analytics.com",
+        "https://ffhandball.fr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "US Ivry Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:04:09.457112",
+          "domain_explored": "https://hand-ivry.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Boutique)",
+              "Ticketing System (Billetterie)",
+              "CMS (Implied by site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Link to 'La Boutique' indicates active retail operations requiring POS or e-commerce procurement.",
+              "Link to 'La Billetterie' indicates reliance on third-party ticketing providers.",
+              "Link to 'Les Partenaires' suggests active management of commercial partnerships, potentially requiring CRM tools."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure (Boutique)",
+            "Ticketing Platform (Billetterie)",
+            "Partner Management Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 510,
+              "output_tokens": 303,
+              "elapsed_seconds": 6.004026174545288
+            }
+          ],
+          "reasoning": "The navigation menu reveals three distinct functional areas requiring external software solutions: an online store (E-commerce), a ticketing system, and a partner directory. While no specific vendors are named in this snippet, the existence of these links confirms the operational need for retail, ticketing, and CRM/Sponsorship management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:04:15.490143",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Content",
+            "Cookie Consent Management",
+            "Event Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.8521769046783447
+            }
+          ],
+          "reasoning": "The content is from the European Handball Federation's general news portal (eurohandball.com). It covers high-level international tournaments (Denmark, Croatia, EHF EURO) and contains no specific information regarding US Ivry Handball's operations, procurement needs, or technology stack. The domain is unrelated to the target entity's local procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:04:18.537047",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:04:24.502224",
+          "domain_explored": "https://ffhandball.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Federation-Level Governance",
+            "Grassroots Sport Directory",
+            "Generic Content Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 503,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.3558878898620605
+            }
+          ],
+          "reasoning": "The content analyzed is from the French Handball Federation (FFHB), the governing body for the sport, rather than the specific entity US Ivry Handball. While federations set standards, this content focuses on 'Find your club' and general practices, lacking specific procurement signals, technology stacks, or vendor partnerships relevant to US Ivry's immediate operational needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:04:31.877132",
+          "domain_explored": "https://2050analytics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SaaS Marketing Content",
+            "CSR/RSE Analytics Platform",
+            "B2B Lead Generation (Demo Scheduling)",
+            "Generic Value Propositions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 204,
+              "elapsed_seconds": 4.145136833190918
+            }
+          ],
+          "reasoning": "The content is the homepage of 2050analytics, a B2B SaaS provider offering CSR (RSE) benchmarking tools. It is a vendor site targeting potential clients (federations, associations, public actors) rather than a reflection of US Ivry Handball's specific procurement activity. There is no mention of US Ivry Handball, no specific partnership announcement, and no signal that US Ivry is procuring this specific technology."
+        }
+      ],
+      "total_input_tokens": 3958,
+      "total_output_tokens": 867,
+      "estimated_cost_usd": 0.024879
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "US Ivry Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:04:31.878477"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350240",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:51.412321"
+}

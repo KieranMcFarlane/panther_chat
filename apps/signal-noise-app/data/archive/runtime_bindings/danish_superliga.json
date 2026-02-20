@@ -1,0 +1,182 @@
+{
+  "entity_id": "danish_superliga",
+  "entity_name": "Danish Superliga",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "divisionsforeningen.dk",
+    "behance.net",
+    "nextlevelsoccer.us",
+    "pscsocceracademy.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "danish_superliga",
+      "entity_name": "Danish Superliga",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nextlevelsoccer.us",
+        "https://behance.net",
+        "https://pscsocceracademy.com",
+        "https://divisionsforeningen.dk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Danish Superliga may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:05:40.497381",
+          "domain_explored": "https://divisionsforeningen.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized procurement authority for 48 clubs",
+              "Strategic focus on operational efficiency and digital development",
+              "Governance oversight requiring compliance and reporting tools"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Governance Structure",
+            "Strategic Focus on Efficiency",
+            "Stakeholder Representation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 987,
+              "output_tokens": 278,
+              "elapsed_seconds": 6.53016996383667
+            }
+          ],
+          "reasoning": "The content establishes Divisionsforeningen as the central governing body for the top 48 football clubs (including the Danish Superliga). While no direct procurement signals (like RFPs) are present, the explicit mandate to create an 'effective framework for development and operation' and maintain 'international competitiveness' strongly implies a reliance on centralized technology, legal, and administrative vendors. This confirms the entity's capability to influence or direct procurement decisions for the league."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:05:47.615566",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Creative Portfolio Platform",
+            "Irrelevant Content Context",
+            "No Entity-Specific Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.038961172103882
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Behance, a creative portfolio platform. It contains no references to 'Danish Superliga', 'Divisionsforeningen', or associated football entities. The content lists random creative projects (branding, visual identity, art) which are irrelevant to the procurement intelligence of the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:05:53.351267",
+          "domain_explored": "https://nextlevelsoccer.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Randers FC (Denmark)",
+              "Focus on youth training and coaching staff"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Affiliate Marketing",
+            "Youth Academy Partnership Model",
+            "Geographic Mismatch (Maryland vs Denmark)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.561361312866211
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Next Level Soccer,' a Maryland-based youth organization acting as an international partner to Randers FC. While Randers FC is a relevant Danish Superliga entity, this specific page represents a downstream affiliate or consumer-facing marketing site (youth clinics, camps) rather than the central procurement or governance body of the Danish Superliga. There are no signals of B2B procurement, enterprise technology adoption, or league-level decision making."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:05:59.696958",
+          "domain_explored": "https://pscsocceracademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Player Agency Model",
+            "B2C Event Monetization",
+            "Geographic Irrelevance (US-based operations)",
+            "No Governance or Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.722748041152954
+            }
+          ],
+          "reasoning": "The content confirms PSC Soccer is a private, US-based player agency focused on organizing tryouts and securing placements for individuals. It operates as a vendor/service provider to players rather than a governing body or league entity like the Danish Superliga. There are no signals of centralized procurement, technology stack management, or governance relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5375,
+      "total_output_tokens": 907,
+      "estimated_cost_usd": 0.02973
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Danish Superliga may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:05:59.698368"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.446619",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:11.692357"
+}

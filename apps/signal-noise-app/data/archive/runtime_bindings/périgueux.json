@@ -1,0 +1,411 @@
+{
+  "entity_id": "p\u00e9rigueux",
+  "entity_name": "P\u00e9rigueux",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "perigueux.fr",
+    "tourisme-grandperigueux.fr",
+    "destination-perigueux.fr",
+    "perigord.com",
+    "grandperigueux.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/fareva-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/executive-chef-at-kerten-hospitality-4316013330?refId=jhz1Jc7cRHYYpVOutptDOA%3D%3D&trackingId=H%2Bycsin36j3wUK9UL7U3Ag%3D%3D&position=7&pageNum=0",
+      "https://fr.linkedin.com/jobs/job-manager-emplois-p%C3%A9rigueux",
+      "https://www.linkedin.com/jobs/view/chef-de-partie-at-kerten-hospitality-4332088043?refId=kJjDeL0YkooGpABCj9mSVQ%3D%3D&trackingId=hUY4tI0TLvMpdN1Wpk97bg%3D%3D&position=15&pageNum=0",
+      "https://www.linkedin.com/jobs/bioserenity-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/private-dining-chef-at-rsrvs-4308027568",
+      "https://www.linkedin.com/jobs/wellspect-healthcare-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/career-consultant-german-speaking-at-masterschool-4074713860",
+      "https://www.linkedin.com/jobs/view/sous-chef-cruise-at-navis-consulting-4090982696",
+      "https://fr.linkedin.com/jobs/job-corps-emplois-p%C3%A9rigueux"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "p\u00e9rigueux",
+      "entity_name": "P\u00e9rigueux",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://destination-perigueux.fr",
+        "https://tourisme-grandperigueux.fr",
+        "https://www.linkedin.com/jobs/bioserenity-jobs-worldwide",
+        "https://www.linkedin.com/jobs/fareva-jobs-worldwide",
+        "https://fr.linkedin.com/jobs/job-manager-emplois-p%C3%A9rigueux",
+        "https://www.linkedin.com/jobs/view/executive-chef-at-kerten-hospitality-4316013330?refId=jhz1Jc7cRHYYpVOutptDOA%3D%3D&trackingId=H%2Bycsin36j3wUK9UL7U3Ag%3D%3D&position=7&pageNum=0",
+        "https://perigueux.fr",
+        "https://perigord.com",
+        "https://grandperigueux.fr",
+        "https://www.linkedin.com/jobs/view/chef-de-partie-at-kerten-hospitality-4332088043?refId=kJjDeL0YkooGpABCj9mSVQ%3D%3D&trackingId=hUY4tI0TLvMpdN1Wpk97bg%3D%3D&position=15&pageNum=0"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation (E-Government Portal)",
+        "Citizen Self-Service Platform",
+        "Public Service Modernization",
+        "Subsidized Vocational Training (BAFA)",
+        "Sustainable Mobility Incentives"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "P\u00e9rigueux may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:12:15.987548",
+          "domain_explored": "https://perigueux.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF distribution (Event programs)",
+              "Parking Regulation Systems (Resident vignettes)"
+            ],
+            "job_postings": [
+              "Assesseurs (Vote assessors/scrutineers) for Municipal Elections (March 2026)"
+            ],
+            "procurement_indicators": [
+              "Construction works for 'Cimeti\u00e8re animalier' (Animal Cemetery) - Phase: Execution (Started 2026)",
+              "Management of 'L'Ostalet' (Third-place / Senior Info Point)",
+              "Parking management system (Vignette-based)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Project Execution (Cemetery)",
+            "Civic Resource Mobilization (Election Staffing)",
+            "Public Service Management (Resident Parking)",
+            "Cultural Venue Management (Third-place L'Ostalet)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 328,
+              "elapsed_seconds": 6.438159227371216
+            }
+          ],
+          "reasoning": "The content reveals active project execution (animal cemetery construction) and operational needs (recruiting vote assessors). While direct IT procurement is absent, the management of 'L'Ostalet' (a third-place/senior hub) and the parking system suggest ongoing operational contracts. The recruitment for elections indicates a temporary workforce procurement need."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:12:31.014400",
+          "domain_explored": "https://tourisme-grandperigueux.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 19 column 81 (char 1154)"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:12:42.118871",
+          "domain_explored": "https://destination-perigueux.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Platforms",
+              "Ticketing Systems",
+              "Digital Workshop Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tour de France 2026 Logistics & Infrastructure",
+              "Event Security & Crowd Control Services",
+              "Vendor Management for Gastronomy Markets",
+              "Digital Youth Program Equipment/Services"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Logistics (Tour de France 2026)",
+            "Cultural Event Management (Festivals, Gastronomy Markets)",
+            "Digital Youth Services (Atelier num\u00e9rique)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 303,
+              "elapsed_seconds": 5.513101816177368
+            }
+          ],
+          "reasoning": "The content reveals P\u00e9rigueux as a host city for the Tour de France 2026 and organizer of recurring high-capacity cultural events (gastronomy markets, festivals). While the page is promotional, the 'Tour de France' and 'Ch\u00e2teau en f\u00eate' events imply significant upcoming procurement needs for infrastructure, security, logistics, and vendor management. The 'Atelier num\u00e9rique' indicates ongoing investment in digital youth services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:12:55.554255",
+          "domain_explored": "https://perigord.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event listings (Inaugurations, Shows) indicate regional activity but no direct municipal procurement for P\u00e9rigueux."
+            ]
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Event Aggregation",
+            "Digital Engagement (Quiz/Gamification)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.5224907398223877
+            }
+          ],
+          "reasoning": "The content is a general tourism portal for the broader Dordogne/P\u00e9rigord region. It lists events and accommodations but lacks specific procurement signals, technology stack details, or governance information relevant to the P\u00e9rigueux municipal entity. The 'Permanence num\u00e9rique' event is a public service for residents, not a vendor procurement signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:13:16.705636",
+          "domain_explored": "https://grandperigueux.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-Government Portal (mesdemarches.grandperigueux.fr)",
+              "Self-Service Administrative Platform"
+            ],
+            "job_postings": [
+              "Summer Job Recruitment (via 'Job d\u2019\u00e9t\u00e9' news item)"
+            ],
+            "procurement_indicators": [
+              "Launch of new online services platform (RFP/Contract likely active or recent)",
+              "Call for applications for BAFA training (Vocational training procurement)",
+              "Bike subsidy program management (Vendor administration)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation (E-Government Portal)",
+            "Citizen Self-Service Platform",
+            "Public Service Modernization",
+            "Subsidized Vocational Training (BAFA)",
+            "Sustainable Mobility Incentives"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 340,
+              "elapsed_seconds": 14.166306972503662
+            }
+          ],
+          "reasoning": "The content reveals a major digital transformation initiative with the launch of a dedicated 'Mes D\u00e9marches' portal for 24/7 administrative services. This indicates active procurement or recent investment in e-government software (likely SaaS). Additionally, the site highlights active social programs (BAFA training, bike subsidies) which often require third-party vendor partnerships for execution and management."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:13:54.903123",
+          "domain_explored": "https://www.linkedin.com/jobs/fareva-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Junior Buyer - Internship (Chromavis Fareva, Italy)",
+              "Ing\u00e9nieur vision (FAREVA, Riom)",
+              "Responsable Industrialisation (FARMEA, Angers)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "Industrial Manufacturing (Pharma/Cosmetics)",
+            "Global Operations (Italy, Poland, France)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 226,
+              "elapsed_seconds": 33.598875761032104
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job listing page for Fareva, a private multinational pharmaceutical and cosmetics group. While procurement roles exist (Junior Buyer), this is B2C recruitment for private sector employment, not public sector procurement signals or municipal governance for P\u00e9rigueux. There is no relevance to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:14:07.887122",
+          "domain_explored": "https://www.linkedin.com/jobs/view/executive-chef-at-kerten-hospitality-4316013330?refId=jhz1Jc7cRHYYpVOutptDOA%3D%3D&trackingId=H%2Bycsin36j3wUK9UL7U3Ag%3D%3D&position=7&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Executive Chef at Kerten Hospitality (Italy)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "International Hospitality Management",
+            "Regional Relocation (Italy)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1722,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.1871721744537354
+            }
+          ],
+          "reasoning": "The content is a job posting for an Executive Chef at Kerten Hospitality for a property in Italy. This is private sector recruitment with no geographical, operational, or governance connection to the public entity P\u00e9rigueux. It does not contain procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:14:17.420694",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-manager-emplois-p%C3%A9rigueux",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "MANAGER RESTAURATION RAPIDE - Bertrand Franchise (Annesse-et-Beaulieu)",
+              "Directeur des op\u00e9rations - Giudicelli International (Nouvelle-Aquitaine)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "Generic Job Aggregation",
+            "Hospitality & Retail Management",
+            "Regional Commuter Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1782,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.5564868450164795
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Job Manager' roles filtered for P\u00e9rigueux. The visible listings (Bertrand Franchise, Giudicelli International) are private sector roles in fast food, hospitality, and logistics. There is no content indicating public sector procurement, municipal hiring, or government technology projects specific to the P\u00e9rigueux entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:14:25.421413",
+          "domain_explored": "https://www.linkedin.com/jobs/view/chef-de-partie-at-kerten-hospitality-4332088043?refId=kJjDeL0YkooGpABCj9mSVQ%3D%3D&trackingId=hUY4tI0TLvMpdN1Wpk97bg%3D%3D&position=15&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Chef De Partie at Kerten Hospitality (Italy)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "International Hospitality Management",
+            "Regional Relocation (Italy)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1870,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.442828893661499
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Chef de Partie' role at Kerten Hospitality, specifically for a property in Italy (Colere 1660). This is private sector recruitment with no connection to the public procurement or governance activities of P\u00e9rigueux. It contradicts the hypothesis of finding procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T09:14:32.777335",
+          "domain_explored": "https://www.linkedin.com/jobs/bioserenity-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Op\u00e9rateur.rice de Production (Rosi\u00e8res-pr\u00e8s-Troyes)",
+              "Stage - Contr\u00f4leur(se) de Gestion (Paris)",
+              "M\u00e9decin g\u00e9n\u00e9raliste / M\u00e9decin du sommeil (Paris)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "Medical Device Manufacturing",
+            "Geographic Irrelevance (Paris/Troyes vs P\u00e9rigueux)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1929,
+              "output_tokens": 227,
+              "elapsed_seconds": 2.4144749641418457
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page for BIOSerenity, a private medical technology company. The positions listed (Production Operators, Management Controllers, Sleep Doctors) are corporate roles located in Paris and Rosi\u00e8res-pr\u00e8s-Troyes. There is no connection to the P\u00e9rigueux municipality or its public procurement needs."
+        }
+      ],
+      "total_input_tokens": 14815,
+      "total_output_tokens": 2252,
+      "estimated_cost_usd": 0.07822499999999999
+    },
+    "procurement_signals": [
+      "Digital Transformation (E-Government Portal)",
+      "Citizen Self-Service Platform",
+      "Public Service Modernization",
+      "Subsidized Vocational Training (BAFA)",
+      "Sustainable Mobility Incentives"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "P\u00e9rigueux may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:14:32.779006"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277786",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:16.099585"
+}

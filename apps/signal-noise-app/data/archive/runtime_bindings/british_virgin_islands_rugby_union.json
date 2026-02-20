@@ -1,0 +1,206 @@
+{
+  "entity_id": "british_virgin_islands_rugby_union",
+  "entity_name": "British Virgin Islands Rugby Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "grokipedia.com",
+    "resources.worldrugby-rims.pulselive.com",
+    "lyndhurstfuneralhome.com",
+    "japan-olympicmuseum.jp",
+    "rocketreach.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/corporate-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-only-8%25-tax-at-the-lawyer-events-4352303589",
+      "https://uk.linkedin.com/jobs/view/commercial-litigation-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-8%25-tax-at-the-lawyer-events-4351900224"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "british_virgin_islands_rugby_union",
+      "entity_name": "British Virgin Islands Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/corporate-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-only-8%25-tax-at-the-lawyer-events-4352303589",
+        "https://resources.worldrugby-rims.pulselive.com",
+        "https://japan-olympicmuseum.jp",
+        "https://lyndhurstfuneralhome.com",
+        "https://grokipedia.com",
+        "https://uk.linkedin.com/jobs/view/commercial-litigation-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-8%25-tax-at-the-lawyer-events-4351900224",
+        "https://rocketreach.co"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "British Virgin Islands Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:52:55.980043",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:53:15.404458",
+          "domain_explored": "https://resources.worldrugby-rims.pulselive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:53:24.891555",
+          "domain_explored": "https://lyndhurstfuneralhome.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Industry (Funeral Services)",
+            "Geographic Mismatch (Barbados vs BVI)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.4411027431488037
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Lyndhurst Funeral Home', a business based in Barbados (area code 246, mentions of Coral Ridge Memorial Gardens). This entity is completely unrelated to the 'British Virgin Islands Rugby Union'. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:53:32.121716",
+          "domain_explored": "https://japan-olympicmuseum.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:53:38.095470",
+          "domain_explored": "https://rocketreach.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:53:51.120470",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/corporate-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-only-8%25-tax-at-the-lawyer-events-4352303589",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Generic Platform Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 167,
+              "elapsed_seconds": 3.039909839630127
+            }
+          ],
+          "reasoning": "The scraped content is a generic login wall and a list of unrelated job postings (e.g., New York State Homes & Community Renewal, Fred Finch Youth & Family Services) located in the United States. There is no mention of the British Virgin Islands Rugby Union, sports governance, or relevant procurement activities within the BVI context."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:54:06.225941",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/commercial-litigation-3-6-pqe-british-virgin-islands-us%24140k-us%24170k-8%25-tax-at-the-lawyer-events-4351900224",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Generic Platform Content",
+            "Paywall/Authentication Barrier"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.135695695877075
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Commercial Agent' roles in the United States, triggered by a URL intended for a specific legal job in the British Virgin Islands. There is no content related to the British Virgin Islands Rugby Union, nor any procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4650,
+      "total_output_tokens": 515,
+      "estimated_cost_usd": 0.021675
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "British Virgin Islands Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:54:06.229186"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.287553",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:09.723549"
+}

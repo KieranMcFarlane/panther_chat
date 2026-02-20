@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Canoe Federation - Intelligence Dossier</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px 40px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .metadata-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .metadata-label {
+            font-size: 0.85em;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .metadata-value {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+        }
+
+        .subsection {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .subsection-title {
+            font-size: 1.3em;
+            color: #334155;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .score-low { background: #ef4444; }
+        .score-medium { background: #f59e0b; }
+        .score-high { background: #10b981; }
+
+        .insight-box {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #6366f1;
+        }
+
+        .insight-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #6366f1;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .action-list {
+            list-style: none;
+        }
+
+        .action-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #10b981;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .priority-HIGH { background: #fee2e2; color: #991b1b; }
+        .priority-MEDIUM { background: #fef3c7; color: #92400e; }
+        .priority-LOW { background: #d1fae5; color: #065f46; }
+
+        .conversation-tree {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .message-bubble {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .response-branch {
+            margin-left: 20px;
+            padding: 10px;
+            background: #fef3c7;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚣 International Canoe Federation</h1>
+            <div class="subtitle">Intelligence Dossier - Generated February 10, 2026</div>
+        </div>
+
+        <div class="metadata">
+            <div class="metadata-item">
+                <div class="metadata-label">Entity ID</div>
+                <div class="metadata-value">ICF</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Confidence</div>
+                <div class="metadata-value">45%</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Tier</div>
+                <div class="metadata-value">PREMIUM</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Priority Score</div>
+                <div class="metadata-value">70/100</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Signals Detected</div>
+                <div class="metadata-value">8</div>
+            </div>
+            <div class="metadata-item">
+                <div class="metadata-label">Hypotheses</div>
+                <div class="metadata-value">6</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Executive Summary -->
+            <div class="section">
+                <h2 class="section-title">📊 Executive Summary</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Digital Maturity Assessment</h3>
+                    <div class="score-display">
+                        <div class="score-circle score-medium">35</div>
+                        <div>
+                            <strong>Digital Maturity Score: 35/100 (STABLE)</strong><br>
+                            <small>The ICF has basic digital infrastructure with limited integration and innovation capabilities.</small>
+                        </div>
+                    </div>
+                    <p><strong>💡 What This Means:</strong> Traditional sports federation with moderate digital maturity. Basic systems in place but room for modernization.</p>
+                    <p><strong>📈 Benchmark:</strong> Below average for global sports federations</p>
+                    <p><strong>⚡ Action:</strong> Conduct a digital infrastructure assessment to identify gaps and opportunities</p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Procurement Readiness</h3>
+                    <p><strong>💰 Budget Availability:</strong> Unknown</p>
+                    <p><strong>⏰ Decision Horizon:</strong> 6-12 months</p>
+                    <p><strong>🎯 Strategic Fit:</strong> 60/100</p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Quick Actions</h3>
+                    <ul class="action-list">
+                        <li class="action-item">
+                            <strong>Research current digital platforms</strong>
+                            <span class="priority-badge priority-HIGH">HIGH</span>
+                            <br><small>Timeline: 2 weeks • Owner: Research Team</small>
+                        </li>
+                        <li class="action-item">
+                            <strong>Map federation's strategic priorities for 2024</strong>
+                            <span class="priority-badge priority-MEDIUM">MEDIUM</span>
+                            <br><small>Timeline: 3 weeks • Owner: Analyst Team</small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">💡 Key Insights</h3>
+                    <div class="insight-box">
+                        <span class="insight-type">[TIMING]</span>
+                        <p>Sports federations often undergo digital transformation cycles following major events or strategic planning periods.</p>
+                        <small><strong>Confidence:</strong> 65% • <strong>Impact:</strong> MEDIUM</small>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-type">[CAPABILITY]</span>
+                        <p>Club-type entities in sports typically have fragmented technology ecosystems with integration challenges.</p>
+                        <small><strong>Confidence:</strong> 70% • <strong>Impact:</strong> HIGH</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Infrastructure -->
+            <div class="section">
+                <h2 class="section-title">💻 Digital Infrastructure</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Current Tech Stack</h3>
+                    <p><strong>Website Platform:</strong> Unknown</p>
+                    <p><strong>CRM System:</strong> Unknown</p>
+                    <p><strong>Analytics Platform:</strong> Unknown</p>
+                    <p><strong>Mobile Apps:</strong> Unknown</p>
+                    <p><strong>Data Infrastructure:</strong> Unknown</p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Capability Gaps</h3>
+                    <div class="insight-box">
+                        <strong>Integrated member management platform</strong><br>
+                        <small>Urgency: Near-term • Procurement Likelihood: 65%</small>
+                    </div>
+                    <div class="insight-box">
+                        <strong>Data analytics and reporting capabilities</strong><br>
+                        <small>Urgency: Long-term • Procurement Likelihood: 45%</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Procurement Signals -->
+            <div class="section">
+                <h2 class="section-title">🎯 Procurement Signals</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Upcoming Opportunities</h3>
+                    <div class="insight-box">
+                        <strong>Digital platform modernization (Replacement)</strong><br>
+                        <p>Timeline: 6-12 months • Budget: Medium</p>
+                        <p><strong>Decision Makers:</strong> IT leadership, Sports operations</p>
+                        <p><strong>RFP Probability:</strong> 60%</p>
+                        <p><strong>Yellow Panther Fit:</strong></p>
+                        <ul>
+                            <li>Platform integration</li>
+                            <li>Member management</li>
+                            <li>Data analytics</li>
+                        </ul>
+                        <p><strong>Win Probability:</strong> 50%</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Strategic Initiatives</h3>
+                    <div class="insight-box">
+                        <strong>Global member engagement platform</strong><br>
+                        <p>Centralized system for managing international canoe federation members</p>
+                        <p><strong>Technology Needs:</strong> CRM, Mobile platform, Payment processing</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leadership Analysis -->
+            <div class="section">
+                <h2 class="section-title">👥 Leadership Analysis</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Decision Makers</h3>
+                    <div class="insight-box">
+                        <strong>{FEDERATION PRESIDENT} - President</strong><br>
+                        <p><strong>Influence:</strong> HIGH • <strong>Tech Savviness:</strong> Medium</p>
+                        <p><strong>Responsibility:</strong> Strategic direction, budget approval</p>
+                        <p><strong>Decision Criteria:</strong> ROI, Member benefits, Operational efficiency</p>
+                        <p><strong>Communication:</strong> Email/LinkedIn • Analytical style</p>
+                    </div>
+                    <div class="insight-box">
+                        <strong>{TECHNOLOGY DIRECTOR} - Technology Director</strong><br>
+                        <p><strong>Influence:</strong> MEDIUM • <strong>Tech Savviness:</strong> High</p>
+                        <p><strong>Responsibility:</strong> IT infrastructure, digital platforms</p>
+                        <p><strong>Decision Criteria:</strong> System integration, Vendor reliability, Total cost of ownership</p>
+                        <p><strong>Communication:</strong> Email/LinkedIn • Direct style</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Influence Network</h3>
+                    <p><strong>Internal Champions:</strong> Sports operations team, Member relations</p>
+                    <p><strong>Blockers:</strong> Finance department (risk-averse)</p>
+                    <p><strong>Decision Process:</strong> Hierarchical with cross-functional input</p>
+                    <p><strong>Approval Chain:</strong> Technology Director → President → Board of Directors</p>
+                </div>
+            </div>
+
+            <!-- Outreach Strategy -->
+            <div class="section">
+                <h2 class="section-title">🎯 Outreach Strategy</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Connection Intelligence</h3>
+                    <p><strong>Approach Type:</strong> LUKEWARM</p>
+                    <p><strong>Primary Channel:</strong> LinkedIn</p>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Conversation Trees</h3>
+
+                    <div class="conversation-tree">
+                        <h4>Scenario: Digital Transformation Discovery</h4>
+
+                        <div class="message-bubble">
+                            <strong>Subject:</strong> Digital modernization in international sports federations
+                            <hr style="margin: 10px 0; border: none; border-top: 1px solid #cbd5e1;">
+                            I've been researching how international sports federations are modernizing their digital platforms to improve member engagement and operational efficiency. The International Canoe Federation's work in global sports coordination presents unique opportunities for digital innovation. Would you be open to sharing your current technology priorities?
+                            <br><br><small><strong>Expected Response Rate:</strong> 25%</small>
+                        </div>
+
+                        <div class="response-branch">
+                            <strong>✅ INTERESTED (30% likely)</strong><br>
+                            <em>"I'd be happy to share some insights from similar federations and explore how modern platforms address common challenges."</em><br>
+                            <small>Follow-up: 2 days later via email → Goal: Schedule discovery call</small>
+                        </div>
+
+                        <div class="response-branch">
+                            <strong>😐 NEUTRAL (50% likely)</strong><br>
+                            <em>"No problem at all. If your federation is considering any technology initiatives in the near future..."</em><br>
+                            <small>Follow-up: 1 week later via LinkedIn → Goal: Stay top of mind</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Recommended Approach</h3>
+                    <p><strong>Channel:</strong> LinkedIn</p>
+                    <p><strong>Messaging Angle:</strong> Focus on digital modernization trends in sports federations and member engagement improvements</p>
+                    <p><strong>Timing:</strong> Q1 2024, aligning with typical planning cycles</p>
+                    <p><strong>Confidence:</strong> 55/100</p>
+                    <p><em>Moderate confidence due to lack of specific information about current technology setup and decision-making processes</em></p>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="section">
+                <h2 class="section-title">📋 Next Steps</h2>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Monitoring Triggers</h3>
+                    <ul class="action-list">
+                        <li class="action-item">
+                            <strong>Technology-related job postings</strong><br>
+                            <small>Source: Federation website and job boards • Frequency: Weekly</small>
+                        </li>
+                        <li class="action-item">
+                            <strong>Website platform changes</strong><br>
+                            <small>Source: Website analysis tools • Frequency: Monthly</small>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Data Gaps</h3>
+                    <div class="insight-box">
+                        <strong>Current technology stack and vendors</strong><br>
+                        <small>Importance: Critical • Collection: Website analysis, job postings, technology directories</small>
+                    </div>
+                    <div class="insight-box">
+                        <strong>Strategic priorities and planning cycles</strong><br>
+                        <small>Importance: High • Collection: Annual reports, press releases, leadership interviews</small>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Engagement Sequence</h3>
+                    <ol>
+                        <li><strong>Immediate:</strong> Research current technology infrastructure</li>
+                        <li><strong>Week 2:</strong> Connect with technology leadership on LinkedIn</li>
+                        <li><strong>Week 3:</strong> Share relevant sports federation case studies</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Generated by Signal Noise App - Hypothesis-Driven Discovery System</p>
+            <p><small>Generation Time: ~56 seconds • Model: Claude Sonnet with multi-source intelligence</small></p>
+        </div>
+    </div>
+</body>
+</html>

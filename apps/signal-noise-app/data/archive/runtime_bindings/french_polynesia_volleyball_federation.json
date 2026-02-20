@@ -1,0 +1,247 @@
+{
+  "entity_id": "french_polynesia_volleyball_federation",
+  "entity_name": "French Polynesia Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "tahitivolleyball.com",
+    "copf-tahiti.com",
+    "oceaniavolleyball.com",
+    "shop.volleyballworld.com",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_polynesia_volleyball_federation",
+      "entity_name": "French Polynesia Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://shop.volleyballworld.com",
+        "https://copf-tahiti.com",
+        "https://tahitivolleyball.com",
+        "https://oceaniavolleyball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Polynesia Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:09:08.042153",
+          "domain_explored": "https://tahitivolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Event Management Software (implied by match listings)",
+              "Volunteer Management Platforms (implied need for 2027)"
+            ],
+            "job_postings": [
+              "Call for Volunteers: Jeux du Pacifique 2027",
+              "Call for Coaches/Technical Officials (Formation FTVB)"
+            ],
+            "procurement_indicators": [
+              "Upcoming Major Event: Pacific Games 2027 (High procurement potential)",
+              "Hosting International Event: World Beach Pro Tour",
+              "Educational Programs: Coach and Official Training"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Needs",
+            "Volunteer Coordination",
+            "Training/HR Development",
+            "Digital Content Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 374,
+              "elapsed_seconds": 3.2889699935913086
+            }
+          ],
+          "reasoning": "The content reveals active operational needs that often precede procurement, specifically around the 'Jeux du Pacifique 2027' (Pacific Games 2027). The call for volunteers and the organization of international events (World Beach Pro Tour) indicate a need for workforce management tools, event registration platforms, or volunteer management software. The 'Formation FTVB' (Training) section suggests ongoing HR/educational procurement. While no explicit RFP is visible, the scale of upcoming events (2027) implies future infrastructure and service contracts."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:09:15.719501",
+          "domain_explored": "https://copf-tahiti.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure)",
+              "Weezevent (Ticketing/Registration for Anti-doping event)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Logistique et Secr\u00e9tariat (Logistics & Secretariat) page",
+              "Mat\u00e9riel (Equipment) page",
+              "R\u00e9servation de salle (Room Reservation) system",
+              "Service Civique (Civic Service) program management"
+            ]
+          },
+          "patterns_found": [
+            "Facility Management",
+            "Event Logistics",
+            "Anti-Doping Compliance",
+            "Equipment Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1417,
+              "output_tokens": 295,
+              "elapsed_seconds": 3.5339407920837402
+            }
+          ],
+          "reasoning": "The content reveals the 'Comit\u00e9 Olympique et Sportif' (COPF) site, distinct from but related to the Volleyball Federation. While no direct RFPs are visible, the presence of 'Mat\u00e9riel' (Equipment), 'R\u00e9servation de salle' (Room booking), and 'Logistique et Secr\u00e9tariat' indicates operational procurement needs. The 'Ambition 2027' and 'Projet COPF' sections suggest strategic planning cycles where vendor partnerships may be established."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:09:24.539354",
+          "domain_explored": "https://oceaniavolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google reCAPTCHA",
+              "Google Analytics (implied by cookie notice)",
+              "Calendar (Conglomerate)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Dedicated Event Coordination Email (OZVA.Events@gmail.com)",
+              "Zonal Qualifier Planning (implies travel/logistics vendors)",
+              "Cookie Consent/Privacy Compliance (GDPR/Privacy Policy)"
+            ]
+          },
+          "patterns_found": [
+            "Regional Governance Structure",
+            "Event Coordination Infrastructure",
+            "Digital Engagement Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 317,
+              "elapsed_seconds": 2.752955913543701
+            }
+          ],
+          "reasoning": "The content confirms the Oceania Volleyball (OZVA) as the governing body for the region, explicitly listing Tahiti/French Polynesia as a member territory. While no direct procurement requests are visible, the presence of specific event emails (OZVA.Events@gmail.com), a 'Zonal VB Qualifier' section, and the use of third-party tools (Google reCAPTCHA, Calendar Conglomerate) indicates an active operational environment with potential needs for event management software, qualification tracking systems, and digital infrastructure services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:09:33.223466",
+          "domain_explored": "https://shop.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify or similar inferred from structure)",
+              "Global Payment Gateway"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global Retail Operations",
+              "Inventory Management"
+            ]
+          },
+          "patterns_found": [
+            "Global E-commerce Retail",
+            "Merchandise Agnosticism",
+            "International Federation (FIVB) Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1515,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.24495792388916
+            }
+          ],
+          "reasoning": "The scraped content is from 'volleyballworld.com', the global merchandise platform for the FIVB (International Volleyball Federation). It lists generic international team jerseys (Netherlands, Italy, China, Poland) and is entirely unrelated to the French Polynesia Volleyball Federation (FTV). There is no local procurement intent, technology stack, or governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:09:39.613692",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy Web Architecture (www-old subdomain)",
+              "Event Management Systems (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Hosting Requirements (Europe-centric)",
+              "Continental Cup Logistics"
+            ]
+          },
+          "patterns_found": [
+            "European Confederation Scope (CEV)",
+            "Global Event Calendar Agnosticism",
+            "Historical/Archival Web Content",
+            "Multi-National Federation Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 294,
+              "elapsed_seconds": 2.692504644393921
+            }
+          ],
+          "reasoning": "The content is clearly from the Confederation Europ\u00e9enne de Volleyball (CEV), the European governing body. While French Polynesia is geographically distant, the primary reason for rejection is the nature of the content: it is a navigational sitemap for European-wide competitions (Champions League, EuroVolley) and a list of European national federations. There is no specific relevance to the French Polynesia Volleyball Federation's local procurement needs, nor does it indicate technology transfer opportunities to the Pacific region."
+        }
+      ],
+      "total_input_tokens": 7329,
+      "total_output_tokens": 1522,
+      "estimated_cost_usd": 0.044816999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Polynesia Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:09:39.615207"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341034",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:56.289483"
+}

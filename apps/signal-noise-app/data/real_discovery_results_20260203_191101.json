@@ -1,0 +1,102 @@
+{
+  "report": {
+    "timestamp": "2026-02-03T19:11:01.642318+00:00",
+    "entities_tested": 3,
+    "total_cost_usd": 0.0,
+    "total_iterations": 0,
+    "entity_results": {
+      "liverpool-fc": {
+        "entity_name": "Liverpool FC",
+        "final_confidence": 0.0,
+        "confidence_band": "EXPLORATORY",
+        "is_actionable": false,
+        "iterations_completed": 0,
+        "total_cost_usd": 0.0,
+        "signals_count": 0,
+        "hypotheses_count": 0
+      },
+      "bayern-munich": {
+        "entity_name": "Bayern Munich",
+        "final_confidence": 0.0,
+        "confidence_band": "EXPLORATORY",
+        "is_actionable": false,
+        "iterations_completed": 0,
+        "total_cost_usd": 0.0,
+        "signals_count": 0,
+        "hypotheses_count": 0
+      },
+      "psg": {
+        "entity_name": "Paris Saint-Germain",
+        "final_confidence": 0.0,
+        "confidence_band": "EXPLORATORY",
+        "is_actionable": false,
+        "iterations_completed": 0,
+        "total_cost_usd": 0.0,
+        "signals_count": 0,
+        "hypotheses_count": 0
+      }
+    },
+    "comparison": {
+      "best_confidence": {
+        "entity_id": null,
+        "confidence": 0.0
+      },
+      "lowest_cost": {
+        "entity_id": "liverpool-fc",
+        "cost": 0.0
+      },
+      "most_iterations": {
+        "entity_id": null,
+        "iterations": 0
+      },
+      "actionable_count": 0
+    },
+    "analysis": {},
+    "averages": {
+      "confidence": 0.0,
+      "cost_usd": 0.0,
+      "iterations": 0.0
+    }
+  },
+  "detailed_results": {
+    "liverpool-fc": {
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "final_confidence": 0.0,
+      "confidence_band": "EXPLORATORY",
+      "is_actionable": false,
+      "iterations_completed": 0,
+      "total_cost_usd": 0.0,
+      "hypotheses": [],
+      "depth_stats": {},
+      "signals_discovered": [],
+      "timestamp": "2026-02-03T19:11:01.641653+00:00"
+    },
+    "bayern-munich": {
+      "entity_id": "bayern-munich",
+      "entity_name": "Bayern Munich",
+      "final_confidence": 0.0,
+      "confidence_band": "EXPLORATORY",
+      "is_actionable": false,
+      "iterations_completed": 0,
+      "total_cost_usd": 0.0,
+      "hypotheses": [],
+      "depth_stats": {},
+      "signals_discovered": [],
+      "timestamp": "2026-02-03T19:11:01.641976+00:00"
+    },
+    "psg": {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "final_confidence": 0.0,
+      "confidence_band": "EXPLORATORY",
+      "is_actionable": false,
+      "iterations_completed": 0,
+      "total_cost_usd": 0.0,
+      "hypotheses": [],
+      "depth_stats": {},
+      "signals_discovered": [],
+      "timestamp": "2026-02-03T19:11:01.642253+00:00"
+    }
+  }
+}

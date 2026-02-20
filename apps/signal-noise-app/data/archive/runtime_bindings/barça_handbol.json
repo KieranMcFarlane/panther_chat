@@ -1,0 +1,211 @@
+{
+  "entity_id": "bar\u00e7a_handbol",
+  "entity_name": "Bar\u00e7a Handbol",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "fcbarcelona.com",
+    "fcbarcelona.fr",
+    "ehfcl.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bar\u00e7a_handbol",
+      "entity_name": "Bar\u00e7a Handbol",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fcbarcelona.fr",
+        "https://ehfcl.eurohandball.com",
+        "https://fcbarcelona.com",
+        "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bar\u00e7a Handbol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:59:59.653715",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic Web CMS (indicated by dynamic content labels like 'label.aria.barcelonabadge')",
+              "E-commerce Platform (implied by 'Official Store', 'Tickets')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Operations (Store links for Kits, Memorabilia)",
+              "Ticketing Operations (Calendar, Match Centre)"
+            ]
+          },
+          "patterns_found": [
+            "Standard E-commerce Navigation",
+            "Generic Content Management",
+            "Fan Engagement Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.601034164428711
+            }
+          ],
+          "reasoning": "The scraped content represents the public-facing homepage navigation and standard news feed of FC Barcelona. While it confirms the entity exists and operates a digital storefront (Shop, Tickets, Culers membership), it contains zero specific procurement signals, technical infrastructure details, or strategic business operations relevant to Bar\u00e7a Handbol specifically. It is generic marketing noise."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:00:07.642018",
+          "domain_explored": "https://fcbarcelona.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic CMS (indicated by label.aria patterns)",
+              "Marketing Automation (Newsletter signup forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Bar\u00e7a Business (Navigation link only - no content)",
+              "1xbet-multi (Sponsorship display)"
+            ]
+          },
+          "patterns_found": [
+            "Standard E-commerce Navigation",
+            "Generic Content Management",
+            "Fan Engagement Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 258,
+              "elapsed_seconds": 4.0121870040893555
+            }
+          ],
+          "reasoning": "The scraped content from fcbarcelona.fr is a localized (French) marketing and ticketing hub. It focuses on consumer-facing activities: ticket sales (Billets), merchandise (Store), and fan engagement (Culers newsletter). While 'Bar\u00e7a Business' is listed in the navigation, the specific content provided does not expose B2B procurement signals, vendor lists, or technology stack details relevant to Bar\u00e7a Handbol specifically."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:00:14.000917",
+          "domain_explored": "https://ehfcl.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Generic 'BECOME A PARTNER' link detected (League-level sponsorship, not specific procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Federation Navigation",
+            "Generic E-commerce Links",
+            "Sponsorship/Partner CTAs",
+            "Editorial Content Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.009477138519287
+            }
+          ],
+          "reasoning": "The content is from the European Handball Federation (EHF) domain, not the specific Bar\u00e7a Handbol entity. While Bar\u00e7a Handbol participates in this league, the page contains only general league results, navigation to other EHF subdomains, and generic 'Become a Partner' CTAs. There are no specific procurement signals, technology stacks, or vendor opportunities related to FC Barcelona's internal operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:00:27.050157",
+          "domain_explored": "https://at.linkedin.com/jobs/view/digital-marketing-crm-data-at-european-handball-federation-4236080977",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Customer.io",
+              "Segment",
+              "Typeform",
+              "CRM Platforms",
+              "Marketing Automation Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Digital Marketing | CRM/Data",
+                "entity": "European Handball Federation",
+                "focus": "CRM strategy, Data segmentation, Paid media, GDPR compliance"
+              }
+            ],
+            "procurement_indicators": [
+              "Expansion of Business Development & Marketing department",
+              "Implementation of CRM/Data strategy",
+              "Management of digital marketing platforms",
+              "Collaboration with external partners (Infront, Eventim)",
+              "Focus on monetisation and partner/sponsor activation"
+            ]
+          },
+          "patterns_found": [
+            "CRM & Data Strategy Implementation",
+            "MarTech Stack Integration (Customer.io, Segment, Typeform)",
+            "Paid Media & Performance Marketing",
+            "GDPR & Compliance Management",
+            "Vendor Ecosystem (Infront, Eventim)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 445,
+              "elapsed_seconds": 9.16384482383728
+            }
+          ],
+          "reasoning": "While this specific job posting is for the European Handball Federation (EHF) and not Bar\u00e7a Handbol directly, it provides high-value intelligence on the governing body's digital transformation and vendor ecosystem. Since Bar\u00e7a Handbol operates within the EHF's ecosystem (Machineseek EHF Champions League), this reveals the technological standards and potential data-sharing or marketing platforms (like Customer.io and Segment) that may be relevant or adopted by top-tier clubs. It signals a broader industry shift towards data-driven fan engagement and CRM procurement."
+        }
+      ],
+      "total_input_tokens": 5740,
+      "total_output_tokens": 1202,
+      "estimated_cost_usd": 0.035250000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bar\u00e7a Handbol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:00:27.051836"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.347681",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:43.995728"
+}

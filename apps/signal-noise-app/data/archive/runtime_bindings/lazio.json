@@ -1,0 +1,446 @@
+{
+  "entity_id": "lazio",
+  "entity_name": "Lazio",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_league_clubs",
+  "discovered_domains": [
+    "sslazio.it",
+    "laziostylestore.com",
+    "thelaziali.com",
+    "visitlazio.com",
+    "regione.lazio.it",
+    "en.legaseriea.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/laziosearchgroup_jobs-board-lazio-search-group-activity-7302475745317044225-gfTG",
+      "https://www.linkedin.com/jobs/english-speaking-customer-service-jobs-roma-lazio?originalSubdomain=it",
+      "https://no.linkedin.com/jobs/job-jobs-hosle-02?locationId=PLACES.no.2-7-23&keywords=Job&trk=jobs_jserp_pagination_5&applyLogin=false&distance=25.0&countryRedirected=1&start=100&count=25",
+      "https://ng.linkedin.com/jobs/view/account-manager-lazio-m-f-x-at-avantor-4223468357",
+      "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lazio",
+      "entity_name": "Lazio",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://thelaziali.com",
+        "https://ng.linkedin.com/jobs/view/account-manager-lazio-m-f-x-at-avantor-4223468357",
+        "https://en.legaseriea.it",
+        "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy",
+        "https://sslazio.it",
+        "https://laziostylestore.com",
+        "https://visitlazio.com",
+        "https://regione.lazio.it",
+        "https://www.linkedin.com/posts/laziosearchgroup_jobs-board-lazio-search-group-activity-7302475745317044225-gfTG",
+        "https://www.linkedin.com/jobs/english-speaking-customer-service-jobs-roma-lazio?originalSubdomain=it",
+        "https://no.linkedin.com/jobs/job-jobs-hosle-02?locationId=PLACES.no.2-7-23&keywords=Job&trk=jobs_jserp_pagination_5&applyLogin=false&distance=25.0&countryRedirected=1&start=100&count=25"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public Sector Procurement Portals",
+        "Infrastructure and Healthcare Capital Investments",
+        "Administrative Governance (Bandi e Avvisi)",
+        "Regional Economic Development Initiatives"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lazio may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:20:30.754663",
+          "domain_explored": "https://sslazio.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Player Transfer Activity (Adrian Przyborek, Blaz Kovac)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Team Management",
+            "Player Transfers"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1351,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.923276901245117
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news (match highlights, player transfers like Blaz Kovac and Adrian Przyborek). There are no mentions of technology procurement, enterprise software, or administrative job postings. The content is highly repetitive and lacks business intelligence signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:20:37.217185",
+          "domain_explored": "https://laziostylestore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Payment Gateway (Secure Payment Processing)",
+              "Localization Support (Multi-language: /gb/, /it/)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Inventory Management (Player jerseys, 25-26 Kits)",
+              "Supply Chain (Physical merchandise logistics)",
+              "Digital Service Requirements (Hosting, Security for payments)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Operations",
+            "Merchandising and Inventory Management",
+            "Customer Experience Features (Personalization)",
+            "Secure Payment Processing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1205,
+              "output_tokens": 338,
+              "elapsed_seconds": 2.813228130340576
+            }
+          ],
+          "reasoning": "The content represents the e-commerce arm of Lazio (Lazio Style Store). While it does not show direct procurement intent (like RFPs), it confirms the entity's active commercial operations and reliance on digital infrastructure. The presence of 'Personalized Products' and 'Secure Payment' features indicates a functional supply chain for physical goods and a need for e-commerce maintenance services. This provides context on the entity's commercial activities but lacks specific procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:20:42.812516",
+          "domain_explored": "https://thelaziali.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer Activity",
+            "Player Injury Reports",
+            "Match Reports",
+            "Fan Engagement Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.7739481925964355
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports journalism regarding player transfers, match results, and team management. There are no signals related to corporate procurement, vendor selection, or technology infrastructure."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:20:52.434089",
+          "domain_explored": "https://visitlazio.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Event Calendar Management",
+            "Cultural Heritage Marketing",
+            "B2C Content Strategy"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.0581440925598145
+            }
+          ],
+          "reasoning": "The content is from the official tourism board for the Lazio region (Visit Lazio). It focuses exclusively on promoting travel itineraries, cultural events (Carnivals), and destinations to consumers. There is no presence of corporate procurement activities, B2B vendor solicitations, or enterprise technology infrastructure signals."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:21:05.610107",
+          "domain_explored": "https://regione.lazio.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Public Administration Portals",
+              "External Link Tracking Tools"
+            ],
+            "job_postings": [
+              "AGRISTART (Internship program for youth)"
+            ],
+            "procurement_indicators": [
+              "Section: Bandi e avvisi (Tenders and Notices)",
+              "Section: Bandi di concorso (Public Competitions)",
+              "Section: Modulistica (Forms/Documentation)",
+              "Investment: ~5M EUR for San Giovanni ER and Orthopedics",
+              "Investment: 1.7M EUR for Community Healthcare Centers",
+              "Project: Safety works at Grotte di Collepardo",
+              "Administrative Process: Conferenza dei servizi (Service Conference) for Novo Nordisk"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Procurement Portals",
+            "Infrastructure and Healthcare Capital Investments",
+            "Administrative Governance (Bandi e Avvisi)",
+            "Regional Economic Development Initiatives"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 412,
+              "elapsed_seconds": 10.033016920089722
+            }
+          ],
+          "reasoning": "The content represents the official regional government portal (Regione Lazio). It contains explicit sections for 'Bandi e avvisi' (Tenders and Notices) and 'Bandi di concorso' (Competitions), which are primary vehicles for public procurement. The news snippets detail significant capital expenditures in healthcare infrastructure (San Giovanni, IFO) and public works (Grotte di Collepardo), indicating active budget cycles and vendor engagement for construction, medical technology, and services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:21:12.979393",
+          "domain_explored": "https://en.legaseriea.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:21:20.798825",
+          "domain_explored": "https://www.linkedin.com/posts/laziosearchgroup_jobs-board-lazio-search-group-activity-7302475745317044225-gfTG",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)"
+            ],
+            "job_postings": [
+              "General roles (unspecified in text, but implied by 'Now Hiring')"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Recruiting Operations",
+            "General Staffing Services",
+            "Geographic Name Collision (Lazio Search Group vs. Lazio Region/Club)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 219,
+              "elapsed_seconds": 3.60154390335083
+            }
+          ],
+          "reasoning": "The content is from 'Lazio Search Group', a US-based executive search and staffing firm, unrelated to the Italian region (Regione Lazio) or the football club (S.S. Lazio). The entity provides recruitment services rather than procuring goods or services for the target entity, resulting in a false positive match based on the name 'Lazio'."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:21:29.134466",
+          "domain_explored": "https://www.linkedin.com/jobs/english-speaking-customer-service-jobs-roma-lazio?originalSubdomain=it",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              "Rome Cabin Crew Opportunities (Emirates)",
+              "Make-Up Artist Milano (MAKE UP FOR EVER)",
+              "English/Italian Customer Support Agent (FlowDesk CX)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Job Aggregation",
+            "Geographic Name Collision (Lazio Region vs. Job Search Filters)",
+            "B2C Service Roles (Cabin Crew, Retail, Support)",
+            "Third-Party Recruiting (FlowDesk, Emirates)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1736,
+              "output_tokens": 294,
+              "elapsed_seconds": 4.3979761600494385
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page filtered by the geographic region 'Lazio' (specifically Rome). The listings are for low-level consumer-facing roles (Cabin Crew, Make-Up Artist) with external multinational entities (Emirates, Make Up For Ever) or staffing agencies (FlowDesk). There is no specific connection to the procurement operations of S.S. Lazio (the club) or the Lazio Regional Government procurement systems. It is a geographic coincidence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:21:35.868575",
+          "domain_explored": "https://no.linkedin.com/jobs/job-jobs-hosle-02?locationId=PLACES.no.2-7-23&keywords=Job&trk=jobs_jserp_pagination_5&applyLogin=false&distance=25.0&countryRedirected=1&start=100&count=25",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Area Manager, FC Operations (Amazon)",
+              "Store Manager (Lidl Italia)",
+              "Senior Sales Admin Executive (Masan Consumer Holdings)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Name Collision (Lazio Region vs. Job Search Filters)",
+            "General Job Aggregation",
+            "B2C Service Roles (Retail, Logistics, Consumer Goods)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1838,
+              "output_tokens": 249,
+              "elapsed_seconds": 2.5362749099731445
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page filtered by the geographic region 'Lazio'. The listings (Amazon FC Operations, Lidl Store Manager, Masan Consumer Holdings) are for private sector employment and do not reflect procurement activities, vendor selection, or technology investments by the target entity 'Lazio' (Region or Club). This is a geographic collision, not a relevant signal."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T18:21:42.328511",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/account-manager-lazio-m-f-x-at-avantor-4223468357",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM tools"
+            ],
+            "job_postings": [
+              "Account Manager (Lazio) - Avantor"
+            ],
+            "procurement_indicators": [
+              "Public sector client management requirements",
+              "B2B solution-based sales in scientific environments",
+              "Territory coverage for Lazio region"
+            ]
+          },
+          "patterns_found": [
+            "B2B Sales Operations (Life Sciences)",
+            "Public Sector Client Management",
+            "CRM Tool Utilization",
+            "Territory-Based Account Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1916,
+              "output_tokens": 295,
+              "elapsed_seconds": 3.3721258640289307
+            }
+          ],
+          "reasoning": "While this is a job posting for a sales role (Avantor) rather than a direct procurement document, it confirms the existence of a sophisticated B2B market in the Lazio region, specifically within the Life Sciences and Public sectors. The mention of 'Public sector' experience and 'CRM tools' indicates a structured purchasing environment and potential technology adoption for sales/procurement tracking. It validates the region's commercial activity but offers weak direct procurement signals."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T18:21:50.788618",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?f_C=143648%2C3667893%2C3118347%2C2868300%2C1611103%2C141419%2C574466%2C54507%2C2880773%2C3029983%2C2632634%2C9748%2C544765%2C18974839%2C9506953%2C1209962&f_TPR=r2592000&geoId=103350119&keywords=gi%20group&location=Italy",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Commerciale Estero (Wholesale Manager)",
+              "Regional Sales Manager",
+              "Export Area Manager",
+              "Key Account Manager",
+              "Manufacturing Team Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Staffing Agency Operations (Gi Group / Wyser)",
+            "General B2B Sales Recruitment",
+            "Geographic Name Collision (Italy vs. Lazio Region)",
+            "High-Volume Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2027,
+              "output_tokens": 287,
+              "elapsed_seconds": 4.794080018997192
+            }
+          ],
+          "reasoning": "The content represents a job search results page for Gi Group (a large global staffing agency) and its subsidiary Wyser. While the search is geographically scoped to Italy, the listings are for external commercial roles (Sales Managers, KAMs) across various Italian regions (Lombardy, Veneto, etc.), not specific to the Lazio entity or its procurement function. There is no direct signal of procurement activity, technology investment, or vendor partnerships specific to the target entity."
+        }
+      ],
+      "total_input_tokens": 16228,
+      "total_output_tokens": 2601,
+      "estimated_cost_usd": 0.087699
+    },
+    "procurement_signals": [
+      "Public Sector Procurement Portals",
+      "Infrastructure and Healthcare Capital Investments",
+      "Administrative Governance (Bandi e Avvisi)",
+      "Regional Economic Development Initiatives"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lazio may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:21:50.791027"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.129480",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:19.078341"
+}

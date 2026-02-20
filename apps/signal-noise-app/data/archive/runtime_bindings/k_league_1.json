@@ -1,0 +1,245 @@
+{
+  "entity_id": "k_league_1",
+  "entity_name": "K League 1",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "kleague.com",
+    "kleagueunited.com",
+    "play.google.com",
+    "soccer24.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/company/futboljobs.com?trk=public_profile_experience-item_profile-section-card_subtitle-click",
+      "https://www.linkedin.com/posts/jobs-in-football_the-english-football-pyramid-a-guide-to-activity-7276622528033255425-M3SB"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "k_league_1",
+      "entity_name": "K League 1",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://kleague.com",
+        "https://soccer24.com",
+        "https://be.linkedin.com/company/futboljobs.com?trk=public_profile_experience-item_profile-section-card_subtitle-click",
+        "https://www.linkedin.com/posts/jobs-in-football_the-english-football-pyramid-a-guide-to-activity-7276622528033255425-M3SB",
+        "https://kleagueunited.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "K League 1 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:42:36.269126",
+          "domain_explored": "https://kleague.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:42:42.777509",
+          "domain_explored": "https://kleagueunited.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OneFootball Highlights (Widget/Integration)",
+              "Blogger Platform (Atom feed detected)",
+              "Twitter/Facebook/Instagram/YouTube (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Media Outlet Structure",
+            "Content Aggregation",
+            "Social Media Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.080564022064209
+            }
+          ],
+          "reasoning": "The analyzed content is from 'K League United', a third-party media entity providing English-language news and opinions, rather than the official K League governing body or a specific club procurement portal. The content consists of navigation tags, blog post titles (trophies, fixtures, tickets), and social media counts. There are no signals of internal procurement activities, RFPs, or enterprise technology adoption by the K League organization itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:42:49.250780",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Application Storefront",
+            "Consumer Gaming Content",
+            "Automated Content Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.044840097427368
+            }
+          ],
+          "reasoning": "The content provided is a raw HTML dump of the Google Play Store homepage. It lists consumer mobile games (e.g., Candy Crush, PUBG MOBILE), app categories, and promotional banners for unrelated software. There is no content related to 'K League 1', professional sports management, or enterprise procurement activities. The entity context is completely absent from this source."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:42:55.525151",
+          "domain_explored": "https://soccer24.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Automated Content Loading",
+            "Consumer-Facing Media Interface",
+            "High Ad-to-Content Ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 507,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.2856669425964355
+            }
+          ],
+          "reasoning": "The scraped content from Soccer24.com represents a generic consumer sports media outlet focused on live scores and results aggregation. The repetitive 'Loading...' text and 'AD' markers indicate an automated, high-volume content delivery system rather than a corporate governance or procurement portal. There is no connection to the K League 1 entity's internal operations, technology stack, or vendor acquisition processes."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:43:05.859145",
+          "domain_explored": "https://be.linkedin.com/company/futboljobs.com?trk=public_profile_experience-item_profile-section-card_subtitle-click",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform (Custom Job Board)",
+              "Social Media Integration (LinkedIn API)"
+            ],
+            "job_postings": [
+              "Saudi Pro League Player Recruitment (Vendor: Futboljobs)",
+              "Japanese J6 League & Futsal Team Recruitment (Vendor: Futboljobs)"
+            ],
+            "procurement_indicators": [
+              "Third-Party Staffing Services",
+              "Global Football Talent Acquisition",
+              "Contract-based Recruitment Services"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Recruitment Platform",
+            "Global Sports Staffing Aggregation",
+            "Vendor-Side Talent Pipeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1552,
+              "output_tokens": 359,
+              "elapsed_seconds": 5.999842882156372
+            }
+          ],
+          "reasoning": "The content represents a third-party staffing aggregator (Futboljobs.com) rather than a direct procurement channel for K League 1. However, the platform explicitly lists job openings for 'football entities' and aggregates global sports recruitment signals. While not a direct K League procurement page, it acts as a vendor marketplace where K League clubs or partners might list requirements. The presence of specific job postings (Saudi Pro League, Japan) indicates the platform is active in the market, making it a valid (though weak) signal source for potential indirect procurement activity related to staffing and player acquisition."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:43:12.385787",
+          "domain_explored": "https://www.linkedin.com/posts/jobs-in-football_the-english-football-pyramid-a-guide-to-activity-7276622528033255425-M3SB",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "GBE Expert Hub (Talent Scouting Platform)",
+              "LinkedIn (Professional Networking/Recruitment)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Utilization of 'GBE Expert Hub' for player market intelligence",
+              "Reference to specific K League 1 players being shortlisted for EFL Championship clubs",
+              "Operational reliance on ESC (Exempt Certificate of Sponsorship) regulations for international procurement"
+            ]
+          },
+          "patterns_found": [
+            "International Recruitment Pathways",
+            "Regulatory Framework Analysis (GBE/ESC)",
+            "Third-Party Scouting Networks",
+            "Cross-Border Player Transfer Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.016522169113159
+            }
+          ],
+          "reasoning": "The content reveals a specific operational mechanism (GBE/ESC) that facilitates the procurement of talent from K League 1 to the UK market. While not a direct technology tender, it highlights the 'procurement of players' supply chain and the reliance on external intelligence platforms (GBE Expert Hub) to inform these purchasing decisions. This signals a vendor ecosystem surrounding K League 1 talent acquisition."
+        }
+      ],
+      "total_input_tokens": 6500,
+      "total_output_tokens": 1314,
+      "estimated_cost_usd": 0.039209999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "K League 1 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:43:12.387587"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419394",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:24.001342"
+}

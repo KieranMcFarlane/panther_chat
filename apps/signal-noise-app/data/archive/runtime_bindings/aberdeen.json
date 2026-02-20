@@ -1,0 +1,506 @@
+{
+  "entity_id": "aberdeen",
+  "entity_name": "Aberdeen",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "aberdeen.sd.us",
+    "aberdeenmd.gov",
+    "aberdeennj.org",
+    "aberdeenwa.gov",
+    "townofaberdeen.net",
+    "aberdeen.band",
+    "aberdeencity.gov.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/career-jobs-aberdeen",
+      "https://uk.linkedin.com/jobs/unique-jobs-greater-aberdeen-area",
+      "https://uk.linkedin.com/jobs/free-jobs-aberdeen",
+      "https://uk.linkedin.com/jobs/top-jobs-aberdeen",
+      "https://uk.linkedin.com/jobs/the-best-jobs-aberdeen",
+      "https://www.linkedin.com/jobs/aberdeen-full-time-jobs-aberdeen-md",
+      "https://uk.linkedin.com/jobs/looking-for-work-jobs-aberdeen",
+      "https://uk.linkedin.com/jobs/team-member-aberdeen-jobs-aberdeen?trk=public_jobs_search-for-more-jobs-link",
+      "https://uk.linkedin.com/jobs/graduate-jobs-greater-aberdeen-area",
+      "https://uk.linkedin.com/jobs/administration-jobs-aberdeen"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aberdeen",
+      "entity_name": "Aberdeen",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.21999999999999995,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.12,
+        0.13999999999999999,
+        0.15999999999999998,
+        0.17999999999999997,
+        0.19999999999999996,
+        0.21999999999999995
+      ],
+      "explored_domains": [
+        "https://aberdeennj.org",
+        "https://aberdeenwa.gov",
+        "https://aberdeenmd.gov",
+        "https://uk.linkedin.com/jobs/free-jobs-aberdeen",
+        "https://aberdeencity.gov.uk",
+        "https://aberdeen.sd.us",
+        "https://uk.linkedin.com/jobs/career-jobs-aberdeen",
+        "https://uk.linkedin.com/jobs/the-best-jobs-aberdeen",
+        "https://aberdeen.band",
+        "https://uk.linkedin.com/jobs/unique-jobs-greater-aberdeen-area",
+        "https://townofaberdeen.net",
+        "https://uk.linkedin.com/jobs/top-jobs-aberdeen"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public Sector Procurement Portal (SCCAP)",
+        "Open Contracting Data Standard (OCDS)",
+        "Supplier Registration & Contract Management Systems",
+        "Digital Transformation Initiatives (Digital Place Strategy)",
+        "Municipal Governance Structure (Council/Committees)",
+        "Socio-Economic Procurement Policies (Social Value)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aberdeen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:18:25.195026",
+          "domain_explored": "https://aberdeen.sd.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CivicPlus\u00ae (Government Websites by CivicPlus)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Ride Line (Transportation Services)",
+              "Winter/Spring Program Brochure (Potential recreation vendor needs)"
+            ]
+          },
+          "patterns_found": [
+            "CivicPlus Platform Usage",
+            "Community Service Partnerships",
+            "Municipal Infrastructure Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 268,
+              "elapsed_seconds": 12.05027985572815
+            }
+          ],
+          "reasoning": "The content confirms the use of CivicPlus\u00ae as the underlying government website platform, which is a key technology stack finding. While there are no direct RFPs or job postings in this specific snippet, the partnership with 'Ride Line' for transportation indicates a willingness to procure third-party services for community programs. The presence of 'Create a Website Account' functionality suggests active digital governance, but no immediate procurement signals are present."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:18:47.602712",
+          "domain_explored": "https://aberdeenmd.gov",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:19:00.580685",
+          "domain_explored": "https://aberdeennj.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CivicPlus (CMS/Gov Web Platform)",
+              "Nixle (Emergency/Mass Notification)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mayor & Council Meetings (Potential venue for contract approvals)",
+              "Planning/Zoning Board Meetings (Potential for infrastructure/development procurement)"
+            ]
+          },
+          "patterns_found": [
+            "CivicPlus Platform Usage",
+            "Nixle Notification Service",
+            "Municipal Governance Structure (Mayor & Council, Planning/Zoning Boards)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 269,
+              "elapsed_seconds": 5.780355930328369
+            }
+          ],
+          "reasoning": "The content confirms the entity is Aberdeen Township (NJ) and utilizes the CivicPlus platform for citizen engagement and digital services. The presence of 'Nixle' indicates an investment in mass notification systems. While no direct RFPs are visible on this specific homepage snippet, the established digital infrastructure and governance meetings indicate procurement capability."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:19:26.513476",
+          "domain_explored": "https://aberdeenwa.gov",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:19:36.133053",
+          "domain_explored": "https://townofaberdeen.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CivicPlus (CMS)",
+              "My Water Advisor (Utility CRM)",
+              "Electronic Payments (Payment Processing)",
+              "Citizen Connect (Public Safety CRM)"
+            ],
+            "job_postings": [
+              "Human Resources Department (General Hiring Portal)",
+              "Police Department (Employment Opportunities)"
+            ],
+            "procurement_indicators": [
+              "Finance Department (Budgeting/Invoicing)",
+              "Planning & Inspections (Document Center)",
+              "Public Works (Sanitation/Water Service Contracts)"
+            ]
+          },
+          "patterns_found": [
+            "CivicPlus Platform Usage",
+            "Municipal Governance Structure (Mayor & Board of Commissioners)",
+            "Digital Service Delivery (My Water Advisor, Electronic Payments)",
+            "Public Safety Technology (Citizen Connect, Police Tip Line)",
+            "Human Resources Portal (Job Openings)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 377,
+              "elapsed_seconds": 3.613651990890503
+            }
+          ],
+          "reasoning": "The content reveals a structured municipal government (Town of Aberdeen, NC) utilizing the CivicPlus content management system. While no direct RFPs are visible in the navigation, the presence of specific digital tools like 'My Water Advisor' and 'Citizen Connect' indicates active procurement and management of SaaS solutions for utility and public safety purposes. The 'Job Openings' and 'Finance' sections represent key procurement signal hubs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:19:47.903099",
+          "domain_explored": "https://aberdeen.band",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "Digital Content Sales (PDF Scores)",
+            "Music/Arts Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.668426036834717
+            }
+          ],
+          "reasoning": "The content is exclusively related to a Brooklyn-based horn band selling musical arrangements and scores. This entity is a commercial arts organization and not a municipal government body. There are no procurement signals, governance structures, or relevant technology stacks for municipal procurement analysis."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:20:00.674394",
+          "domain_explored": "https://aberdeencity.gov.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SCCAP (Supply Chain Corporate Access Portal)",
+              "DueDil (Supplier Verification)",
+              "The Marketplace (Tendering Platform)",
+              "Open Contracting Data Standard (OCDS)",
+              "YouTube (Video Hosting)",
+              "Google Translate",
+              "Recite Me (Accessibility)"
+            ],
+            "job_postings": [
+              "Various Council and Teaching roles via myjobscotland.gov.uk"
+            ],
+            "procurement_indicators": [
+              "Find a Tender (FTS) / Public Contracts Scotland usage",
+              "Supplier Registration Requirements",
+              "Contract Award Registers (OCDS)",
+              "Social Value Policy in Procurement",
+              "Construction Pipeline Consultation",
+              "Digital Place Strategy (Tech Investment)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Procurement Portal (SCCAP)",
+            "Open Contracting Data Standard (OCDS)",
+            "Supplier Registration & Contract Management Systems",
+            "Digital Transformation Initiatives (Digital Place Strategy)",
+            "Municipal Governance Structure (Council/Committees)",
+            "Socio-Economic Procurement Policies (Social Value)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 649,
+              "output_tokens": 440,
+              "elapsed_seconds": 9.894572973251343
+            }
+          ],
+          "reasoning": "The entity is Aberdeen City Council, a large UK local authority. The site contains direct links to a dedicated procurement portal (SCCAP), supplier registration systems, and open contract data. This represents a high-confidence procurement signal compared to previous small-town US entities. The presence of a 'Digital Place' strategy and specific supplier platforms indicates active technology and service procurement."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:20:14.426249",
+          "domain_explored": "https://uk.linkedin.com/jobs/career-jobs-aberdeen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Project Manager - James Fisher and Sons plc",
+              "Graduate Management Trainee - Enterprise",
+              "Assistant Manager - Mecca"
+            ],
+            "procurement_indicators": [
+              "Regional Labor Market Activity",
+              "Private Sector Project Management Demand"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Recruitment Activity",
+            "Project Management Roles (James Fisher and Sons)",
+            "Graduate Training Programs (Enterprise, TargetJobs)",
+            "Hospitality Sector Hiring (Mecca)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1706,
+              "output_tokens": 314,
+              "elapsed_seconds": 9.853470087051392
+            }
+          ],
+          "reasoning": "The content represents a generic job board aggregation for Aberdeen, UK. While it confirms active hiring in the region, the specific listings (Mecca Bingo, Enterprise Rent-a-Car) are private sector retail/services roles with low relevance to municipal procurement or public sector technology stacks. However, the presence of 'Assistant Project Manager' roles at James Fisher and Sons indicates local industrial activity, warranting a weak signal for regional economic health, though not direct procurement intent."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:20:28.470572",
+          "domain_explored": "https://uk.linkedin.com/jobs/unique-jobs-greater-aberdeen-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "Applicant Tracking Systems (implied by 'Apply via company site')"
+            ],
+            "job_postings": [
+              "Receptionist / Bartender - MOXY Aberdeen Airport (Hospitality)",
+              "Tax Associate ATT/CTA (Graduate Scheme) - Aberdeen 2026 (Finance/Professional Services)"
+            ],
+            "procurement_indicators": [
+              "Workforce Expansion (Indicates potential future vendor needs)",
+              "Graduate Training Programs (Indicates investment in human capital)"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Recruitment Activity",
+            "Hospitality Sector Hiring (Hotel Co 51)",
+            "Professional Services Graduate Schemes (Tax/Finance)",
+            "Labor Market Demand Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1779,
+              "output_tokens": 343,
+              "elapsed_seconds": 8.142482042312622
+            }
+          ],
+          "reasoning": "The scraped content confirms active recruitment in the Greater Aberdeen area across distinct sectors (Hospitality and Professional Services). While these are job postings and not direct procurement tenders, high-volume recruitment (215 'Unique' jobs) indicates economic activity and potential future procurement needs for HR services, training, or operational support. The presence of graduate schemes suggests organizational investment and growth."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T13:20:39.488202",
+          "domain_explored": "https://uk.linkedin.com/jobs/free-jobs-aberdeen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "ATS (Applicant Tracking System) - implied"
+            ],
+            "job_postings": [
+              "Receptionist / Bartender (Crew Member) - MOXY Aberdeen Airport",
+              "Night Auditor (Night Crew Member) - MOXY Aberdeen Airport"
+            ],
+            "procurement_indicators": [
+              "Operational scaling in hospitality sector",
+              "Staffing supply chain activity"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality Sector Recruitment",
+            "High Volume Entry-Level Hiring",
+            "Private Sector Service Delivery"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1847,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.827332019805908
+            }
+          ],
+          "reasoning": "The content confirms active recruitment in the Aberdeen area (specifically hospitality), indicating economic activity and labor demand. While not direct procurement intent, high hiring volumes often correlate with operational scaling and subsequent procurement needs (e.g., uniforms, cleaning supplies, HR software). The 'Free' tag likely refers to 'Easy Apply' or entry-level roles."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T13:20:53.546389",
+          "domain_explored": "https://uk.linkedin.com/jobs/top-jobs-aberdeen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform",
+              "CRM (implied by Enterprise Holdings)"
+            ],
+            "job_postings": [
+              "Receptionist (Portico)",
+              "Real Estate Agent (betterhomes)",
+              "Kitchen staff (J D Wetherspoon)",
+              "Red Bull Student Marketeer",
+              "Graduate Management Trainee (Enterprise)"
+            ],
+            "procurement_indicators": [
+              "Volume Hiring in Hospitality",
+              "Graduate Program Intake",
+              "Marketing Campaign Execution"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Recruitment Activity",
+            "Hospitality & Retail Service Delivery",
+            "Corporate Graduate Training Programs",
+            "Brand Marketing Activation (Red Bull)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1905,
+              "output_tokens": 360,
+              "elapsed_seconds": 6.333994150161743
+            }
+          ],
+          "reasoning": "The content represents a standard LinkedIn job aggregation page for Aberdeen, UK. While it confirms active hiring in the region, the roles listed (Receptionist, Kitchen Staff, Real Estate Agent, Student Marketeer) are operational or entry-level positions within the private sector. These do not indicate high-level procurement intent or technology investment decisions. However, the presence of major brands (Enterprise, Red Bull, J D Wetherspoon) confirms economic activity and potential future vendor needs, warranting a weak signal."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T13:21:08.904660",
+          "domain_explored": "https://uk.linkedin.com/jobs/the-best-jobs-aberdeen",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "EG235576 - Assistant Support Manager (NHS Scotland)",
+              "KM233250 - Clinic Coordinator (NHS Scotland)",
+              "Assistant Manager (Mecca)",
+              "Bar & Floor Crew (BrewDog)"
+            ],
+            "procurement_indicators": [
+              "Public Sector Administrative Expansion",
+              "Service Industry Staffing Supply Chain"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Healthcare Hiring (NHS Grampian)",
+            "Hospitality & Leisure Recruitment (Mecca, BrewDog)",
+            "High Volume Service Delivery Roles",
+            "Standardized Public Sector Job Coding (EG/KM prefixes)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1969,
+              "output_tokens": 337,
+              "elapsed_seconds": 4.96966814994812
+            }
+          ],
+          "reasoning": "The content confirms active recruitment in Aberdeen, specifically highlighting the dominance of NHS Grampian (public sector) alongside private hospitality entities (BrewDog, Mecca). While this indicates organizational capacity and hiring needs, the specific roles listed (Assistant Support Manager, Clinic Coordinator, Bar Crew) are operational rather than strategic procurement or technology-focused. It reinforces the 'Aberdeen, Scotland' context established in previous iterations but offers weak signals for direct procurement intent."
+        }
+      ],
+      "total_input_tokens": 15756,
+      "total_output_tokens": 3155,
+      "estimated_cost_usd": 0.094593
+    },
+    "procurement_signals": [
+      "Public Sector Procurement Portal (SCCAP)",
+      "Open Contracting Data Standard (OCDS)",
+      "Supplier Registration & Contract Management Systems",
+      "Digital Transformation Initiatives (Digital Place Strategy)",
+      "Municipal Governance Structure (Council/Committees)",
+      "Socio-Economic Procurement Policies (Social Value)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aberdeen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:21:08.907710"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.139631",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:40.263702"
+}

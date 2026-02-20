@@ -1,0 +1,116 @@
+No FalkorDB client available
+WARNING:root:⚠️ falkordb not installed. Run: pip install falkordb
+WARNING:hypothesis_persistence_native:Phase 5 batch query components not available
+WARNING:root:⚠️ neo4j not installed - FalkorDB persistence disabled
+WARNING:hypothesis_manager:⚠️ HypothesisRepository not available, persistence disabled
+ERROR:dossier_data_collector:Error getting hypothesis results: 'HypothesisManager' object has no attribute 'get_entity_hypotheses'
+ERROR:dossier_generator:Error generating section contact_information with haiku: Extra data: line 8 column 1 (char 121)
+ERROR:dossier_generator:Failed to generate section contact_information: Extra data: line 8 column 1 (char 121)
+WARNING:dossier_data_collector:No FalkorDB client available
+WARNING:hypothesis_manager:⚠️ HypothesisRepository not available, persistence disabled
+ERROR:dossier_data_collector:Error getting hypothesis results: 'HypothesisManager' object has no attribute 'get_entity_hypotheses'
+WARNING:dossier_data_collector:No FalkorDB client available
+WARNING:hypothesis_manager:⚠️ HypothesisRepository not available, persistence disabled
+ERROR:dossier_data_collector:Error getting hypothesis results: 'HypothesisManager' object has no attribute 'get_entity_hypotheses'
+WARNING:dossier_data_collector:No FalkorDB client available
+WARNING:hypothesis_manager:⚠️ HypothesisRepository not available, persistence disabled
+ERROR:dossier_data_collector:Error getting hypothesis results: 'HypothesisManager' object has no attribute 'get_entity_hypotheses'
+WARNING:dossier_data_collector:No FalkorDB client available
+WARNING:hypothesis_manager:⚠️ HypothesisRepository not available, persistence disabled
+ERROR:dossier_data_collector:Error getting hypothesis results: 'HypothesisManager' object has no attribute 'get_entity_hypotheses'
+============================================================
+BATCH DOSSIER GENERATION TEST
+============================================================
+
+Batch Size: 5 entities
+Total Expected Sections: 55
+Estimated Total Time: ~300s (~5 minutes)
+
+[1/2] Initializing...
+✅ ClaudeClient ready
+✅ EntityDossierGenerator ready
+
+[2/2] Generating dossiers sequentially...
+   (Processing one at a time for API stability)
+
+[1/5] Processing Arsenal FC...
+
+============================================================
+Generating: Arsenal FC
+Priority: 99/100
+============================================================
+✅ SUCCESS - 11 sections in 63.29s
+   Saved: data/dossiers/arsenal-fc_dossier_20260204_114646.md
+
+[2/5] Processing FC Barcelona...
+
+============================================================
+Generating: FC Barcelona
+Priority: 98/100
+============================================================
+✅ SUCCESS - 11 sections in 69.57s
+   Saved: data/dossiers/fc-barcelona_dossier_20260204_114756.md
+
+[3/5] Processing Real Madrid...
+
+============================================================
+Generating: Real Madrid
+Priority: 97/100
+============================================================
+✅ SUCCESS - 11 sections in 63.35s
+   Saved: data/dossiers/real-madrid_dossier_20260204_114859.md
+
+[4/5] Processing Manchester United...
+
+============================================================
+Generating: Manchester United
+Priority: 96/100
+============================================================
+✅ SUCCESS - 11 sections in 65.49s
+   Saved: data/dossiers/manchester-united_dossier_20260204_115005.md
+
+[5/5] Processing Liverpool FC...
+
+============================================================
+Generating: Liverpool FC
+Priority: 95/100
+============================================================
+✅ SUCCESS - 11 sections in 41.43s
+   Saved: data/dossiers/liverpool-fc_dossier_20260204_115046.md
+
+============================================================
+BATCH GENERATION SUMMARY
+============================================================
+
+Total Entities: 5
+Total Time: 303.17s (5.05 minutes)
+Average Time: 60.63s per entity
+
+------------------------------------------------------------
+RESULTS
+------------------------------------------------------------
+
+✅ Successful: 5/5
+   Total Sections: 55
+   Average Time: 60.63s
+
+Generated Files:
+   - data/dossiers/arsenal-fc_dossier_20260204_114646.md
+   - data/dossiers/fc-barcelona_dossier_20260204_114756.md
+   - data/dossiers/real-madrid_dossier_20260204_114859.md
+   - data/dossiers/manchester-united_dossier_20260204_115005.md
+   - data/dossiers/liverpool-fc_dossier_20260204_115046.md
+
+============================================================
+
+============================================================
+📊 FINAL STATISTICS
+============================================================
+
+✅ Batch Processing Complete!
+   Entities Processed: 5
+   Success Rate: 100%
+   Markdown Files: 5
+   Output Directory: data/dossiers/
+
+🎉 All dossiers saved as markdown for review!

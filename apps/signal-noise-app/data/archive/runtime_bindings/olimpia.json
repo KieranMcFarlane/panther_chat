@@ -1,0 +1,473 @@
+{
+  "entity_id": "olimpia",
+  "entity_name": "Olimpia",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "clubolimpia.com.py",
+    "olimpiamilano.com",
+    "clubolimpia.com",
+    "olimpia.uy",
+    "olimpiasplendid.com",
+    "olimpia80.com",
+    "zafferanoitalia.com",
+    "hotel-olimpia.com",
+    "olimpia.hotelinfirenze.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lv.linkedin.com/jobs/view/shop-assistant-riga-olimpia-full-time-at-adidas-4232209576",
+      "https://lv.linkedin.com/jobs/view/assistant-store-manager-fo-riga-olimpia-at-adidas-3653194537"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "olimpia",
+      "entity_name": "Olimpia",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://hotel-olimpia.com",
+        "https://olimpia80.com",
+        "https://clubolimpia.com",
+        "https://olimpia.uy",
+        "https://zafferanoitalia.com",
+        "https://olimpia.hotelinfirenze.com",
+        "https://lv.linkedin.com/jobs/view/shop-assistant-riga-olimpia-full-time-at-adidas-4232209576",
+        "https://olimpiasplendid.com",
+        "https://olimpiamilano.com",
+        "https://lv.linkedin.com/jobs/view/assistant-store-manager-fo-riga-olimpia-at-adidas-3653194537",
+        "https://clubolimpia.com.py"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Digital Transformation & App-Based Operations",
+        "Infrastructure & Energy Retrofit Projects",
+        "Facility Expansion & Capital Investment",
+        "Governance & Financial Transparency"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Olimpia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:36:06.646900",
+          "domain_explored": "https://clubolimpia.com.py",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Financial Reporting Systems (likely ERP or Accounting suite)",
+              "Content Management Systems (CMS)",
+              "Video Streaming/Hosting Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Publication of financial/revenue reports (implies accounting software usage)",
+              "Management of digital media assets ('Solo Olimpia' program)",
+              "Matchday operations management (Attendance tracking)"
+            ]
+          },
+          "patterns_found": [
+            "Financial Governance & Transparency",
+            "Fan Engagement Operations",
+            "Digital Content Production"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 323,
+              "elapsed_seconds": 3.559223175048828
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the explicit mention of a 'Reporte Oficial de Asistencia y Recaudaci\u00f3n' (Official Attendance and Revenue Report) indicates a structured financial governance process. This suggests the use of financial reporting tools or ERP modules to track matchday income. Additionally, the 'Multimedia' section and 'Solo Olimpia' content indicate ongoing investment in digital content production and streaming infrastructure, which requires software and hardware procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:36:16.676970",
+          "domain_explored": "https://olimpiamilano.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Aggregation",
+            "Content Duplication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.2577738761901855
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match recaps, and coach interviews related to Olimpia Milano (EA7 Emporio Armani Milan). There is zero presence of corporate governance, procurement documentation, job postings, or technology infrastructure signals. The content is purely operational (sports performance) rather than administrative (business operations)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:36:35.457022",
+          "domain_explored": "https://clubolimpia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "E-commerce Platform (Merch Store)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Procurement: Launch of new 2025-26 indumentaria collection",
+              "Vendor Partnership: Caps Authority listed as exclusive distributor for caps",
+              "Sponsorship Management: 'Nuestros patrocinadores' section active",
+              "Service Procurement: Player contracting (Santiago Ram\u00edrez, Onan Rodr\u00edguez)"
+            ]
+          },
+          "patterns_found": [
+            "Merchandising & E-commerce Operations",
+            "Sponsorship & Vendor Partnerships",
+            "Digital Content Production (YouTube)",
+            "Sports Operations & Event Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 312,
+              "elapsed_seconds": 10.907993078231812
+            }
+          ],
+          "reasoning": "The content confirms active commercial operations (merchandise sales for 2025-26 season) and explicit vendor partnerships (e.g., Caps Authority). While direct procurement signals (RFPs) are absent, the management of sponsorships, merchandise distribution, and digital content creation indicates a functional procurement ecosystem for marketing and retail services."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:36:54.059820",
+          "domain_explored": "https://olimpia.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Member management/class booking)",
+              "Heat Pump Technology (Infrastructure replacement)"
+            ],
+            "job_postings": [
+              "New Member Experience Unit ('M\u00e1s Olimpia') - implies hiring for operations/service design"
+            ],
+            "procurement_indicators": [
+              "Energy Matrix Transformation Project (Joint venture with UTE/Eficener)",
+              "Construction of High-Performance Gymnastics Center (Capital Project)",
+              "Creation of 'M\u00e1s Olimpia' unit (Process transformation consulting potential)",
+              "XXIV International Gymnastics Event (Vendor requirements for large events)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation & App-Based Operations",
+            "Infrastructure & Energy Retrofit Projects",
+            "Facility Expansion & Capital Investment",
+            "Governance & Financial Transparency"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1499,
+              "output_tokens": 357,
+              "elapsed_seconds": 6.278976917266846
+            }
+          ],
+          "reasoning": "The content reveals a highly active entity undergoing significant digital and physical transformation. The explicit mention of a mobile app for member management, a major energy infrastructure project (Eficener/UTE), and the construction of a new specialized gymnastics center indicates strong procurement intent for technology, construction, and engineering services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:37:05.421585",
+          "domain_explored": "https://olimpiasplendid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Smart control (Wi-Fi technology)",
+              "Heat pump technology"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Design collaboration with Pininfarina",
+              "Energy retrofit solutions"
+            ]
+          },
+          "patterns_found": [
+            "HVAC Manufacturing & Product Catalog",
+            "B2C/B2B E-commerce Operations",
+            "Sustainability & Design Partnerships (Pininfarina)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1560,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.343195915222168
+            }
+          ],
+          "reasoning": "The entity 'Olimpia Splendid' is an Italian manufacturing company specializing in climate control systems (AC, heat pumps). The content focuses on product design, sustainability, and consumer sales. This is a false positive for the target entity 'Olimpia' (sports clubs), as it represents a completely different industry sector with no relevance to sports procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:37:18.443610",
+          "domain_explored": "https://olimpia80.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Industrial Manufacturing Equipment",
+            "B2B Product Catalog",
+            "Content Protection Mechanisms"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1042,
+              "output_tokens": 183,
+              "elapsed_seconds": 3.3237340450286865
+            }
+          ],
+          "reasoning": "The entity 'Olimpia 80' is an industrial manufacturer of tube mills (ERW Carbon Steel, Stainless Steel, Titanium). The content is purely product-focused (machinery specifications) and lacks any context related to sports, corporate services, or the procurement of business support technologies. It is a false positive for the target entity 'Olimpia' (presumably the sports club)."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:37:30.648661",
+          "domain_explored": "https://zafferanoitalia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C E-commerce Operations",
+            "Product Catalog Management",
+            "Brand Marketing & Collections"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 158,
+              "elapsed_seconds": 4.952448129653931
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer product sales (rechargeable lamps, 'Poldina' collection) and brand marketing. There is no evidence of corporate procurement activities, vendor management, or enterprise technology stacks relevant to the 'Olimpia' entity hypothesis."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:39:23.351597",
+          "domain_explored": "https://hotel-olimpia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Nozio (Hotel Marketing & Booking Engine)",
+              "WhatsApp (Business Communication)",
+              "Google Reviews (Reputation Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Digital Marketing (Nozio partnership)",
+              "Facility Services (WiFi, Elevator maintenance, Eco-services)",
+              "Operational Supplies (Housekeeping, Breakfast buffet supplies)"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Facility Management",
+            "Digital Marketing & Booking Engine Optimization",
+            "Third-Party Vendor Partnerships (Nozio)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 284,
+              "elapsed_seconds": 104.4063458442688
+            }
+          ],
+          "reasoning": "The entity is a 3-star hotel in Venice. While primarily B2C, the site reveals procurement signals through its reliance on specific technology vendors (Nozio for marketing/booking) and facility management needs (WiFi, certifications, maintenance). It represents a small-to-medium business (SMB) procurement profile rather than an enterprise one."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:39:40.574894",
+          "domain_explored": "https://olimpia.hotelinfirenze.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (HotelInFirenze Platform)",
+              "Booking Engine",
+              "Cookie Consent Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Web Management (Platform dependency)",
+              "Facility Operations (24h reception, Wi-Fi maintenance)",
+              "Guest Amenities Procurement (24 rooms)"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Facility Management",
+            "Digital Booking Engine Integration",
+            "Third-Party Platform Dependency (HotelInFirenze)",
+            "Compliance & Privacy Policy Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 300,
+              "elapsed_seconds": 7.603346109390259
+            }
+          ],
+          "reasoning": "The content confirms a small-scale hospitality operation (Hotel Olimpia Florence) managed via a third-party platform (hotelinfirenze.com). While this indicates a need for facility management supplies and booking services, the reliance on a pre-built template platform suggests limited direct procurement autonomy or complex technology investments compared to larger entities. It is a weak signal due to the generic nature of the platform."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:39:51.403738",
+          "domain_explored": "https://lv.linkedin.com/jobs/view/shop-assistant-riga-olimpia-full-time-at-adidas-4232209576",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs",
+              "Cash Registers (POS)"
+            ],
+            "job_postings": [
+              "Shop Assistant Riga Olimpia (full-time) - adidas"
+            ],
+            "procurement_indicators": [
+              "Store Operations Execution",
+              "Visual Merchandising Standards",
+              "Stockroom Management"
+            ]
+          },
+          "patterns_found": [
+            "Retail Operations (Store Level)",
+            "Third-Party Brand Affiliation (adidas)",
+            "Standardized Retail Training & SOPs"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1854,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.2697668075561523
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Shop Assistant' at a retail store named 'Riga Olimpia' operated by adidas. While 'Olimpia' appears in the location/store name, the entity responsible for hiring and procurement is adidas, a global manufacturing corporation. The role focuses on floor sales and customer service, not procurement or governance. This represents a false positive match for the keyword 'Olimpia' in the context of corporate procurement analysis."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:40:06.969760",
+          "domain_explored": "https://lv.linkedin.com/jobs/view/assistant-store-manager-fo-riga-olimpia-at-adidas-3653194537",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Retail POS Systems",
+              "Omnichannel Sales Tools (Brand specific)",
+              "Inventory Management Software"
+            ],
+            "job_postings": [
+              "Assistant Store Manager (FO Riga Olimpia) - adidas"
+            ],
+            "procurement_indicators": [
+              "Store KPI Analysis (Sales/Loss Prevention)",
+              "Visual Merchandising Execution",
+              "HR Policy Adherence"
+            ]
+          },
+          "patterns_found": [
+            "Standardized Retail Operations (SOPs)",
+            "Third-Party Brand Affiliation (adidas)",
+            "Omnichannel Tool Usage (Consumer Facing)",
+            "Store-Level KPI Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1926,
+              "output_tokens": 319,
+              "elapsed_seconds": 6.277971982955933
+            }
+          ],
+          "reasoning": "The content is a job posting for an Assistant Store Manager at an 'adidas' store located within a shopping center called 'Olimpia' in Riga. This confirms 'Olimpia' is a real estate/mall entity, not the procurer. The role involves executing adidas's corporate policies, using proprietary adidas tools, and managing a standardized retail environment. There is no evidence of procurement decision-making authority or technology investment by 'Olimpia' itself; they are merely the landlord."
+        }
+      ],
+      "total_input_tokens": 16861,
+      "total_output_tokens": 2924,
+      "estimated_cost_usd": 0.094443
+    },
+    "procurement_signals": [
+      "Digital Transformation & App-Based Operations",
+      "Infrastructure & Energy Retrofit Projects",
+      "Facility Expansion & Capital Investment",
+      "Governance & Financial Transparency"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Olimpia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:40:06.974519"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.190688",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:37:08.282685"
+}

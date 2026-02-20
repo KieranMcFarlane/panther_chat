@@ -1,0 +1,146 @@
+{
+  "entity_id": "itzulia_basque_country",
+  "entity_name": "Itzulia Basque Country",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "itzulia.eus",
+    "itzulia-women.eus",
+    "itzuliabasquechallenge.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "itzulia_basque_country",
+      "entity_name": "Itzulia Basque Country",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://itzuliabasquechallenge.com",
+        "https://itzulia.eus",
+        "https://itzulia-women.eus"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Itzulia Basque Country may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:06:29.608553",
+          "domain_explored": "https://itzulia.eus",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Twitter/X, Facebook, Instagram, YouTube)",
+              "E-commerce Platforms (Hospitality packages, Merchandise sales)",
+              "Content Management (Website updates for 2026 routes)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Change: OCETA replaces Banco Sabadell (Financial Services/Partnership procurement)",
+              "Event Expansion: New host towns for 2026 (Logistics, Security, Infrastructure procurement)",
+              "Hospitality Sales: B2B and B2C service procurement potential"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Transition (Banking/Finance)",
+            "Event Expansion (2026 Planning)",
+            "Hospitality & Merchandising Sales",
+            "Social Media Integration (Twitter/X, Facebook, Instagram, YouTube)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 369,
+              "elapsed_seconds": 17.221116065979004
+            }
+          ],
+          "reasoning": "The content reveals a major organizational shift with OCETA replacing Banco Sabadell after 14 years, indicating a restructuring of financial partnerships and likely a review of associated service providers. The planning for the 2026 edition (new stages in Basauri, Galdakao, Bergara) suggests active operational procurement for logistics and infrastructure. The presence of 'Hospitality' and 'Challenge' merchandise sales indicates active e-commerce and event management operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:06:32.482165",
+          "domain_explored": "https://itzulia-women.eus",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:06:43.745633",
+          "domain_explored": "https://itzuliabasquechallenge.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Marketing Platform (Newsletter capture)",
+              "Photo Management System (Download portal)",
+              "Registration/Ticketing Platform (Inscribete functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Service Requirements: Timing (Cronolimits), Medical, Mechanical, Security, Sweep cars",
+              "Merchandising Supplier: Official jerseys by Gobik",
+              "Catering/Logistics: Cafes Baque, Finisher products",
+              "Infrastructure: Road control, parking, showers, expo zone setup"
+            ]
+          },
+          "patterns_found": [
+            "Cyclosportive Event Management",
+            "Merchandising Procurement (Gobik Partnership)",
+            "Service Vendor Ecosystem (Timing, Medical, Mechanical)",
+            "Participant Data Acquisition (CRM Lead Gen)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 357,
+              "elapsed_seconds": 5.344237804412842
+            }
+          ],
+          "reasoning": "The content reveals the 'Itzulia Basque Challenge', a cyclosportive event linked to the main tour. While primarily a consumer-facing page, it explicitly lists 'included services' (timing, medical, mechanical, photos) and brand partnerships (Gobik, Cafes Baque, Finisher, Cronolimits), indicating an active vendor ecosystem for event management services. The 'Save the Date' for 2026 suggests an upcoming procurement cycle for these services."
+        }
+      ],
+      "total_input_tokens": 2808,
+      "total_output_tokens": 726,
+      "estimated_cost_usd": 0.019313999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Itzulia Basque Country may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:06:43.746401"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.400457",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:44.976884"
+}

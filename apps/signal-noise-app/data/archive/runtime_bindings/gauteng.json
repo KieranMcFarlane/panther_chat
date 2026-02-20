@@ -1,0 +1,353 @@
+{
+  "entity_id": "gauteng",
+  "entity_name": "Gauteng",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "gauteng.gov.za",
+    "gautenggov.com",
+    "provincialgovernment.co.za",
+    "professionaljobcentre.gpg.gov.za",
+    "dagauteng.org.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://za.linkedin.com/jobs/gauteng-jobs",
+      "https://za.linkedin.com/jobs/jobs-in-gauteng",
+      "https://za.linkedin.com/jobs/career-jobs-gauteng",
+      "https://za.linkedin.com/jobs/full-time-jobs-gauteng",
+      "https://za.linkedin.com/jobs/latest-jobs-gauteng",
+      "https://za.linkedin.com/jobs/jobs-no-experience-jobs-johannesburg-metropolitan-area",
+      "https://za.linkedin.com/jobs/online-application-jobs-gauteng",
+      "https://za.linkedin.com/jobs/daily-jobs-gauteng",
+      "https://za.linkedin.com/jobs/jobs-in-johannesburg-metropolitan-area",
+      "https://za.linkedin.com/jobs/unique-jobs-gauteng"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gauteng",
+      "entity_name": "Gauteng",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://gautenggov.com",
+        "https://za.linkedin.com/jobs/gauteng-jobs",
+        "https://za.linkedin.com/jobs/career-jobs-gauteng",
+        "https://za.linkedin.com/jobs/latest-jobs-gauteng",
+        "https://za.linkedin.com/jobs/jobs-in-gauteng",
+        "https://professionaljobcentre.gpg.gov.za",
+        "https://gauteng.gov.za",
+        "https://dagauteng.org.za",
+        "https://za.linkedin.com/jobs/full-time-jobs-gauteng",
+        "https://provincialgovernment.co.za"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gauteng may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:06:06.879907",
+          "domain_explored": "https://gauteng.gov.za",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:06:18.382352",
+          "domain_explored": "https://gautenggov.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cybersecurity Forensics Tools",
+              "Data Loss Prevention (DLP) Systems",
+              "Secure Result Verification Platforms"
+            ],
+            "job_postings": [
+              "General Vacancies (Link present: /Pages/Vacancies)"
+            ],
+            "procurement_indicators": [
+              "Tender Section Active (/Pages/Tenders)",
+              "Gazette Section Active (/Pages/Gazette)",
+              "Incident Response Procurement Trigger: Investigation into matric results leak implies upcoming contracts for forensic auditing and security hardening."
+            ]
+          },
+          "patterns_found": [
+            "Tender Portal Availability",
+            "Vacancy Portal Availability",
+            "Gazette Publications",
+            "Cybersecurity Incident Response (Edumarks breach)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1382,
+              "output_tokens": 366,
+              "elapsed_seconds": 3.851858139038086
+            }
+          ],
+          "reasoning": "The content confirms the existence of dedicated 'Tenders' and 'Vacancies' sections on the platform, which are primary channels for procurement signals. Additionally, a news article regarding the 'Edumarks' breach indicates an urgent need for cybersecurity solutions, system auditing, and secure data management within the Department of Basic Education (Gauteng context). While the specific tender documents are not listed in this snippet, the structural intent to procure and the immediate operational need for security upgrades are clear."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:06:22.252147",
+          "domain_explored": "https://provincialgovernment.co.za",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:06:40.951449",
+          "domain_explored": "https://professionaljobcentre.gpg.gov.za",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:07:01.958827",
+          "domain_explored": "https://dagauteng.org.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Advocacy and Petition Content",
+            "Public Service Delivery Issues (Water Outages)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 668,
+              "output_tokens": 170,
+              "elapsed_seconds": 15.801908016204834
+            }
+          ],
+          "reasoning": "The content is from a civil society organization (DA Gauteng) and focuses on a petition regarding water service delivery and infrastructure issues. It does not contain government procurement signals, technology stack information, or official RFPs. It is a demand for government action rather than a signal of government purchasing activity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:07:11.457088",
+          "domain_explored": "https://za.linkedin.com/jobs/gauteng-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Permanent Part-timer - adidas",
+              "Retail Sales Associate - adidas",
+              "Product Manager - Meril",
+              "Relationship Banker - Capitec"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "Generic Job Aggregation",
+            "Retail Recruitment Volume"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 244,
+              "elapsed_seconds": 5.346369028091431
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search feed for the Gauteng region, populated almost exclusively by private sector entities (adidas, Capitec, Meril). There are no direct signals from the Gauteng Provincial Government, its departments, or associated public entities. While this confirms economic activity in the region, it provides zero intelligence regarding public sector procurement, tenders, or government technology stacks."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:07:18.961548",
+          "domain_explored": "https://za.linkedin.com/jobs/jobs-in-gauteng",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Handyman x2 at Bidvest Facilities Management",
+              "Permanent Part-timer at adidas",
+              "Club-V Attendant at Virgin Active South Africa",
+              "Cabin Crew Opportunities at Emirates"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "Generic Job Aggregation",
+            "Retail Recruitment Volume"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1600,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.5912609100341797
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn represents a generic job feed for the Gauteng region, dominated by private sector entities (Emirates, Adidas, Virgin Active, Bidvest). There are no direct signals of Gauteng Provincial Government procurement activities, RFPs, or government-specific technology investments in this dataset."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:07:27.547907",
+          "domain_explored": "https://za.linkedin.com/jobs/career-jobs-gauteng",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Short-Term Insurance Adviser - Momentum",
+              "Administration Manager - TFG (The Foschini Group)",
+              "Service Consultant (Banking) - Capitec"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "Generic Job Aggregation",
+            "Retail Recruitment Volume"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1654,
+              "output_tokens": 242,
+              "elapsed_seconds": 4.853224039077759
+            }
+          ],
+          "reasoning": "The scraped content from LinkedIn is a generic job listing page for 'Career' roles in Gauteng. The visible postings are exclusively from private sector entities (Momentum, TFG, Capitec) and do not contain any government, provincial, or public sector procurement opportunities. The content is gated behind a login wall and does not reveal specific technology stacks or procurement signals relevant to the Gauteng provincial government."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T20:07:37.360338",
+          "domain_explored": "https://za.linkedin.com/jobs/full-time-jobs-gauteng",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Geospatial Technology (Woolpert)",
+              "Digital Marketing Tools (Oxymed SA)"
+            ],
+            "job_postings": [
+              "Geospatial Trainee Editor (Woolpert)",
+              "Digital Marketing Specialist (Oxymed SA)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "Generic Job Aggregation",
+            "Authentication Wall (Sign-in Required)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1709,
+              "output_tokens": 268,
+              "elapsed_seconds": 6.23366904258728
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Full Time' roles in Gauteng. The specific listings identified (Woolpert, Oxymed SA) are private sector entities. While there is a high volume of 'Full Time' jobs (375), the content is gated behind a login wall ('Sign in to set job alerts'), preventing deep analysis of potential government or public sector procurement signals without further interaction. This mirrors the findings of Iterations 6, 7, and 8."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T20:07:46.897570",
+          "domain_explored": "https://za.linkedin.com/jobs/latest-jobs-gauteng",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Associate - @home Living Space",
+              "Administration Supervisor - Sportscene",
+              "Administration Manager - Totalsports"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Dominance",
+            "Generic Job Aggregation",
+            "Authentication Wall (Sign-in Required)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 206,
+              "elapsed_seconds": 5.687901973724365
+            }
+          ],
+          "reasoning": "The content is exclusively focused on retail vacancies for a single private entity (TFG/The Foschini Group). There are no government, provincial, or public sector procurement signals. The page also requires authentication to view full details, acting as a barrier to deep intelligence gathering."
+        }
+      ],
+      "total_input_tokens": 10326,
+      "total_output_tokens": 1721,
+      "estimated_cost_usd": 0.056792999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gauteng may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:07:46.898773"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.294317",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:44:50.993652"
+}

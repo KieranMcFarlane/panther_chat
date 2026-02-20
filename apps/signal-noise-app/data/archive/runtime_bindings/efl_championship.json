@@ -1,0 +1,281 @@
+{
+  "entity_id": "efl_championship",
+  "entity_name": "EFL Championship",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "efl.com",
+    "newsnow.co.uk",
+    "play.google.com",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/first-team-performance-analyst-at-coventry-city-football-club-4344965216",
+      "https://ee.linkedin.com/jobs/view/performance-data-insights-analyst-at-the-association-of-professional-football-analysis-4344963196",
+      "https://uk.linkedin.com/company/sportingjobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "efl_championship",
+      "entity_name": "EFL Championship",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://onefootball.com",
+        "https://uk.linkedin.com/company/sportingjobs",
+        "https://efl.com",
+        "https://newsnow.co.uk",
+        "https://ee.linkedin.com/jobs/view/performance-data-insights-analyst-at-the-association-of-professional-football-analysis-4344963196",
+        "https://uk.linkedin.com/jobs/view/first-team-performance-analyst-at-coventry-city-football-club-4344965216"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "EFL Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:06:47.240636",
+          "domain_explored": "https://efl.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Scope: EFL administers Championship, League One, League Two, Carabao Cup, and Vertu Trophy."
+            ]
+          },
+          "patterns_found": [
+            "Standard League Navigation",
+            "Historical Governance Context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 770,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.6938302516937256
+            }
+          ],
+          "reasoning": "The content provided is a navigation dump and a generic 'About Us' text describing the EFL's history and structure (founded in 1888, administering leagues). While it confirms the entity exists and regulates competitions, it contains zero technical signals, no job postings, and no specific procurement intent or vendor partnerships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:06:59.102597",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Political News",
+            "General News Aggregator Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 539,
+              "output_tokens": 143,
+              "elapsed_seconds": 7.970079183578491
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow concerns UK political figures (Peter Mandelson, Keir Starmer) and unrelated international topics (Jeffrey Epstein). There is absolutely no content related to the EFL Championship, sports management, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:07:08.351363",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Storefront",
+            "Consumer App Listings",
+            "Device Navigation Elements",
+            "In-App Purchase Indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 162,
+              "elapsed_seconds": 5.245239019393921
+            }
+          ],
+          "reasoning": "The scraped content is from the Google Play Store homepage, listing consumer mobile games (e.g., Arknights, Clash of Clans) and device categories. There is no content related to the EFL Championship, corporate procurement, enterprise software, or business operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:07:12.318469",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:07:22.342337",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/first-team-performance-analyst-at-coventry-city-football-club-4344965216",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Job Aggregation",
+            "Financial Sector Noise",
+            "US-Centric Listings",
+            "Login/Gating Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 202,
+              "elapsed_seconds": 4.256280899047852
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job search results page for 'Investment Performance Analyst' roles in the United States. It contains listings for financial entities (BIP Ventures, First Trust, Lazard) and is completely unrelated to the EFL Championship or Coventry City FC. The URL suggests a specific job posting, but the scraped content is the surrounding aggregator noise. This provides zero value regarding EFL procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:07:56.751494",
+          "domain_explored": "https://ee.linkedin.com/jobs/view/performance-data-insights-analyst-at-the-association-of-professional-football-analysis-4344963196",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Visualization Tools (implied by 'visualisation and reports')",
+              "Event Data Tracking Software",
+              "Player Tracking Systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Performance Data & Insights Analyst",
+                "entity": "Coventry City Football Club",
+                "location": "Coventry City Training Centre",
+                "department": "Performance Analysis / First Team"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in data analytics infrastructure",
+              "Likely reliance on external data providers (Opta, Wyscout, etc.)",
+              "Cross-departmental data integration projects"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Performance Data & Insights Analyst",
+            "Entity: Coventry City Football Club (EFL Championship)",
+            "Department: Performance Analysis / First Team",
+            "Data Stack Mention: Event data, tracking feeds, internal metrics",
+            "Cross-functional Collaboration: Recruitment, Sport Science, Medical"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 442,
+              "elapsed_seconds": 26.298343181610107
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Performance Data & Insights Analyst' at Coventry City FC, a confirmed EFL Championship entity. While this is a personnel signal rather than a direct RFP, it indicates active investment in data infrastructure and analytics capabilities. The role requires handling 'event data' and 'tracking feeds', implying the use of 3rd party vendors (e.g., Opta, Second Spectrum, StatBomb) and visualization tools (e.g., Tableau, PowerBI). This validates the 'Technology Investments' focus area."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:08:17.564309",
+          "domain_explored": "https://uk.linkedin.com/company/sportingjobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Corporate & Talent Acquisition)",
+              "ATS (Applicant Tracking System - implied)"
+            ],
+            "job_postings": [
+              "General Recruitment Services (implied via 'See jobs' link)"
+            ],
+            "procurement_indicators": [
+              "Vendor Relationship: Sporting Jobs lists EFL Championship clubs as clients",
+              "Service Category: Staffing and Recruiting",
+              "Geographic Scope: UK (Birmingham/Cheltenham)"
+            ]
+          },
+          "patterns_found": [
+            "Recruitment Agency Profile",
+            "EFL Championship Client Mention",
+            "Sports Sector Staffing Services"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1680,
+              "output_tokens": 309,
+              "elapsed_seconds": 15.938002824783325
+            }
+          ],
+          "reasoning": "While this specific page is a company profile for a recruitment agency rather than a direct procurement document, it explicitly lists 'EFL Championship' clubs as clients. This confirms the existence of a vendor channel used by Championship clubs for talent acquisition (a form of human capital procurement). It validates the ecosystem but requires deeper digging into specific job listings to find concrete technology or service procurement signals."
+        }
+      ],
+      "total_input_tokens": 7573,
+      "total_output_tokens": 1452,
+      "estimated_cost_usd": 0.044499
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "EFL Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:08:17.566421"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418190",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:09:18.605830"
+}

@@ -1,0 +1,182 @@
+{
+  "entity_id": "titanes_de_barranquilla",
+  "entity_name": "Titanes de Barranquilla",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "dpbcolombia.com",
+    "fibalivestats.com",
+    "basquetplus.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://co.linkedin.com/jobs/view/associate-social-media-listener-at-servicetitan-4363701476"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "titanes_de_barranquilla",
+      "entity_name": "Titanes de Barranquilla",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://co.linkedin.com/jobs/view/associate-social-media-listener-at-servicetitan-4363701476",
+        "https://fibalivestats.com",
+        "https://dpbcolombia.com",
+        "https://basquetplus.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Titanes de Barranquilla may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:22:18.726067",
+          "domain_explored": "https://dpbcolombia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Platforms",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Vision 2025 (Innovation & Governance focus)",
+              "Digital Media Operations (News & Streaming sections)",
+              "League-wide vendor dependencies (DPB governance)"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Structure",
+            "Digital Content Strategy (Streaming)",
+            "Franchise Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.365617990493774
+            }
+          ],
+          "reasoning": "The content confirms Titanes de Barranquilla operates within the 'Divisi\u00f3n Profesional de Baloncesto (DPB)' ecosystem. While the page is primarily informational, the explicit mention of 'Videos Streaming' and a 'Communications DPB' news section indicates a digital infrastructure requirement. The DPB's Vision 2025 emphasizes 'innovation' and 'governance,' suggesting centralized procurement or standardization of technology (stats, streaming) that Titanes would adhere to. This confirms the organizational context but lacks direct purchasing intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:22:21.458059",
+          "domain_explored": "https://fibalivestats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:22:28.700803",
+          "domain_explored": "https://basquetplus.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Scope",
+            "General Sports News Aggregation",
+            "NBA/International League Coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.53204607963562
+            }
+          ],
+          "reasoning": "The scraped content from basquetplus.com is a general sports news feed covering the NBA, the Argentine League (LNA), and Liga Femenina. There is absolutely no mention of Titanes de Barranquilla, the Colombian league (DPB), or any procurement-related activities specific to the target entity. The content is purely journalistic game recaps and trade rumors unrelated to the target's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:22:39.964290",
+          "domain_explored": "https://co.linkedin.com/jobs/view/associate-social-media-listener-at-servicetitan-4363701476",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Monitoring Tools",
+              "CRM (implied by customer support context)",
+              "Facebook Groups",
+              "Paid Ad Management Platforms"
+            ],
+            "job_postings": [
+              {
+                "title": "Associate Social Media Listener",
+                "entity": "ServiceTitan",
+                "location": "Colombia",
+                "relevance": "Irrelevant to Target Entity"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in Customer Experience (CX) Technology",
+              "Social Listening Tools Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Match",
+            "False Positive on 'Titan' Keyword",
+            "B2B Software Sector (SaaS)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1509,
+              "output_tokens": 319,
+              "elapsed_seconds": 7.6732337474823
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'ServiceTitan', a B2B software company for trades, not 'Titanes de Barranquilla' (the basketball franchise). Although the job title 'Associate Social Media Listener' is relevant to digital transformation analysis, the entity is incorrect. The 'Titan' keyword in the text ('Ready to be a Titan?') caused the false positive retrieval."
+        }
+      ],
+      "total_input_tokens": 4311,
+      "total_output_tokens": 812,
+      "estimated_cost_usd": 0.025113
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Titanes de Barranquilla may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:22:39.965040"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.236579",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:45.809891"
+}

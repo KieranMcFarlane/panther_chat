@@ -1,0 +1,191 @@
+{
+  "entity_id": "queensland_bulls",
+  "entity_name": "Queensland Bulls",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "aus_state_teams",
+  "discovered_domains": [
+    "qldcricket.com.au",
+    "bulls.com.au",
+    "bullsmasters.com.au",
+    "cricket.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "queensland_bulls",
+      "entity_name": "Queensland Bulls",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cricket.com.au",
+        "https://qldcricket.com.au",
+        "https://bulls.com.au",
+        "https://bullsmasters.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Queensland Bulls may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:35:55.238422",
+          "domain_explored": "https://qldcricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System) - inferred from dynamic news publishing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Community engagement activities (Junior Clinics) - potential future vendor need for equipment/venues, but currently low signal"
+            ]
+          },
+          "patterns_found": [
+            "High-frequency content publishing (CMS usage)",
+            "Regional event coordination (Mackay & Whitsundays)",
+            "Standardized sports reporting templates"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 256,
+              "elapsed_seconds": 7.115972280502319
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines, match reports, and community event recaps. While this confirms the entity is active and utilizing a Content Management System (CMS), it contains zero explicit signals regarding procurement intent, technology stack upgrades, or RFPs. The content is operational rather than administrative or commercial."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:36:10.915464",
+          "domain_explored": "https://bulls.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic SEO Content Spinning",
+            "Irrelevant Contextual Advertising",
+            "Content Duplication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 190,
+              "elapsed_seconds": 3.6988790035247803
+            }
+          ],
+          "reasoning": "The scraped content from bulls.com.au is entirely composed of generic, low-quality SEO articles regarding fitness equipment and custom t-shirt printing. There is zero mention of the Queensland Bulls, cricket, procurement activities, or organizational operations. The content appears to be filler text or a parked domain state, providing no actionable intelligence regarding the entity's procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:36:29.467377",
+          "domain_explored": "https://bullsmasters.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting Platform (Vimeo/YouTube embeds)",
+              "CMS (WordPress or similar custom CMS)",
+              "Email Marketing / CRM (Mailing list functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Procurement (BMD Group named sponsor)",
+              "Event Logistics Procurement (Regional travel, accommodation, equipment kits)",
+              "Digital Services (Video production, photography, website management)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Partnership Structure (BMD Group)",
+            "Regional Event Logistics (Mackay, Cairns, Rockhampton)",
+            "High-Volume Media Asset Management (Video/Photo Galleries)",
+            "Mailing List / CRM Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 312,
+              "elapsed_seconds": 9.123447179794312
+            }
+          ],
+          "reasoning": "While the site is primarily informational, it reveals a 'Corporate Partner' model (e.g., BMD Group) and significant logistical requirements for regional tours (accommodation, transport, kits). The presence of video hosting, photo galleries, and mailing list signups indicates a need for marketing technology and digital asset management tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:36:41.438707",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Media Asset Management (Video/Audio)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "National Sports Journalism (Content Aggregation)",
+            "High-Frequency CMS Publishing",
+            "Generic Editorial Content",
+            "Irrelevant Geographic Scope (National/International)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 221,
+              "elapsed_seconds": 4.141987085342407
+            }
+          ],
+          "reasoning": "The scraped content represents the national homepage for Cricket Australia, focusing on international match reports (e.g., Australia vs Pakistan) and general sports news. There is zero intersection with the Queensland Bulls entity, state-level procurement, or operational decision-making. This is purely consumer-facing editorial content."
+        }
+      ],
+      "total_input_tokens": 5788,
+      "total_output_tokens": 979,
+      "estimated_cost_usd": 0.032049
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Queensland Bulls may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:36:41.439420"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302207",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:10.867365"
+}

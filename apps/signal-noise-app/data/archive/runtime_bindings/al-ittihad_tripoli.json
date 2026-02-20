@@ -1,0 +1,159 @@
+{
+  "entity_id": "al-ittihad_tripoli",
+  "entity_name": "Al-Ittihad Tripoli",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "wikidata.org",
+    "rougememoire.com",
+    "transfermarkt.us",
+    "playmakerstats.com",
+    "footystats.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-ittihad_tripoli",
+      "entity_name": "Al-Ittihad Tripoli",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://transfermarkt.us",
+        "https://playmakerstats.com",
+        "https://footystats.org",
+        "https://rougememoire.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Ittihad Tripoli may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:50:57.000145",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:51:00.821670",
+          "domain_explored": "https://rougememoire.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:51:09.548718",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Market value indicators",
+            "Player transfer listings",
+            "Sports journalism content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 170,
+              "elapsed_seconds": 4.15561318397522
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt is exclusively related to football (soccer) player transfers, market values, and sports news. It contains no information regarding Al-Ittihad Tripoli's corporate operations, technology stack, or procurement activities. This domain is irrelevant to the objective of finding B2B procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:51:12.341638",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:51:20.579825",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics aggregation",
+            "Global league coverage (1500+ leagues)",
+            "Betting odds display",
+            "Match prediction algorithms",
+            "No entity-specific content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1492,
+              "output_tokens": 203,
+              "elapsed_seconds": 4.172765016555786
+            }
+          ],
+          "reasoning": "The scraped content is from a generic football statistics and prediction website (FootyStats). It displays match listings, odds, and statistics for various global leagues but contains no specific information regarding 'Al-Ittihad Tripoli', its internal operations, procurement needs, or technology stack. This is irrelevant noise for the specific entity investigation."
+        }
+      ],
+      "total_input_tokens": 2908,
+      "total_output_tokens": 373,
+      "estimated_cost_usd": 0.014319000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Ittihad Tripoli may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:51:20.580533"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.232633",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:22.199456"
+}

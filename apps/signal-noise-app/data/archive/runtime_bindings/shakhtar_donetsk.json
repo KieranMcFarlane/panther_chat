@@ -1,0 +1,91 @@
+{
+  "entity_id": "shakhtar_donetsk",
+  "entity_name": "Shakhtar Donetsk",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "shakhtar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "shakhtar_donetsk",
+      "entity_name": "Shakhtar Donetsk",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://shakhtar.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Shakhtar Donetsk may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:18:52.269196",
+          "domain_explored": "https://shakhtar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Basket/Cart functionality)",
+              "Ticketing System (News re: tickets, Ticket rules)",
+              "Customer Account Management ('My Profile' / Log in)",
+              "Content Management System (CMS) for multi-language support (English/\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Link to '\u0420\u043e\u0431\u043e\u0442\u0430 \u0432 \u043a\u043b\u0443\u0431\u0456' (Work at the club) - potential source for hiring intent",
+              "Link to '\u041f\u0430\u0440\u0442\u043d\u0435\u0440\u0438' (Partners) - potential source for vendor partnerships",
+              "Link to '\u0420\u0456\u0447\u043d\u0438\u0439 \u0437\u0432\u0456\u0442' (Annual Report) - potential source for financial/budget data"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Digital Ticketing System",
+            "Fan Engagement Platform",
+            "VIP Hospitality Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 376,
+              "elapsed_seconds": 3.5039172172546387
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation structure of the Shakhtar Donetsk website. While it does not contain explicit procurement signals like RFPs or job postings, it reveals significant functional capabilities that indicate underlying technology stacks requiring procurement and maintenance. Specifically, the presence of a 'Basket' (e-commerce), 'Tickets' (ticketing system), and 'VIP/Sky Box' management (hospitality software) suggests active use of SaaS platforms or custom software solutions in these domains."
+        }
+      ],
+      "total_input_tokens": 1357,
+      "total_output_tokens": 376,
+      "estimated_cost_usd": 0.009711000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Shakhtar Donetsk may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:18:52.270880"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.179389",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:31:36.739762"
+}

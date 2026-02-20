@@ -1,0 +1,210 @@
+{
+  "entity_id": "caribbean_storm",
+  "entity_name": "Caribbean Storm",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "whitedoggames.com",
+    "betsapi.com",
+    "dutchspiritsclub.com",
+    "news.un.org",
+    "playmakerstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "caribbean_storm",
+      "entity_name": "Caribbean Storm",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://whitedoggames.com",
+        "https://playmakerstats.com",
+        "https://betsapi.com",
+        "https://news.un.org",
+        "https://dutchspiritsclub.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Caribbean Storm may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:09:53.706954",
+          "domain_explored": "https://whitedoggames.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Logistics/Shipping",
+                "detail": "Mentions high import duties and shipping restrictions for UK/EU, relying on third-party online stores (Second Chance Games, Agorajeux, Hexasim)."
+              },
+              {
+                "type": "Product",
+                "detail": "Lists 'Caribbean Storm' as a solitaire board game title."
+              }
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Board Game Product Catalog",
+            "B2C Retail Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 297,
+              "elapsed_seconds": 5.158177137374878
+            }
+          ],
+          "reasoning": "The scraped content is from 'White Dog Games', a board game publisher. While the search term 'Caribbean Storm' appears as a product title in their catalog, this refers to a physical board game about 'Modern Era Conflict/War in the Pacific' and not the target corporate entity 'Caribbean Storm'. The content describes B2C retail logistics (shipping to EU/UK) and game rules, which are irrelevant to the corporate procurement objectives."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:10:02.292613",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "API Services (Betting Data)",
+              "Real-time Web Sockets (implied by 'Live updates without Refresh')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Pricing Page for Data API"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "B2C Product Catalog",
+            "Sports Betting Data Feed",
+            "Unrelated to Apparel/Manufacturing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 217,
+              "elapsed_seconds": 5.363110065460205
+            }
+          ],
+          "reasoning": "The scraped content from BetsAPI.com is a live sports data feed (soccer, basketball, esports scores) and a pricing page for API access. This is completely unrelated to 'Caribbean Storm', which is an apparel company. There is no procurement signal, technology stack overlap, or governance relevance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:10:09.667917",
+          "domain_explored": "https://dutchspiritsclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Request your free trial package",
+              "Refillable 70cl bottles",
+              "10-liter bag-in-boxes"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "B2C Product Catalog",
+            "Sustainable Spirits Packaging",
+            "Hospitality Industry Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.144218921661377
+            }
+          ],
+          "reasoning": "The scraped content from 'dutchspiritsclub.com' identifies the entity as a vendor of sustainable spirits and liqueurs using bag-in-box packaging. This is a False Positive Entity Match for 'Caribbean Storm', which implies a corporate or technology entity rather than a beverage brand. The content focuses on product sales (B2C/B2B retail) and sustainability marketing, with no signals of corporate procurement, technology infrastructure, or governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:10:15.810508",
+          "domain_explored": "https://news.un.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "General News Aggregator",
+            "Global Humanitarian Content",
+            "No Commercial Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 206,
+              "elapsed_seconds": 3.0645511150360107
+            }
+          ],
+          "reasoning": "The scraped content from 'news.un.org' is the general news portal for the United Nations. It focuses on global humanitarian crises (Gaza, Sudan, Ukraine), climate change, and geopolitical events. There is no mention of the target entity 'Caribbean Storm', nor are there any procurement signals, RFPs, or technology stack details relevant to the specific commercial entity being investigated. This is a domain-level false positive."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:10:18.622538",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5710,
+      "total_output_tokens": 970,
+      "estimated_cost_usd": 0.03168
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Caribbean Storm may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:10:18.622898"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.236782",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:25.155947"
+}

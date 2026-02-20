@@ -1,0 +1,141 @@
+{
+  "entity_id": "m-sport_ford_world_rally_team",
+  "entity_name": "M-Sport Ford World Rally Team",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "m-sport.co.uk",
+    "media.ford.com",
+    "castrol.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "m-sport_ford_world_rally_team",
+      "entity_name": "M-Sport Ford World Rally Team",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://m-sport.co.uk",
+        "https://media.ford.com",
+        "https://castrol.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "M-Sport Ford World Rally Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:33:04.135403",
+          "domain_explored": "https://m-sport.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shop)",
+              "Engineering Simulation Software (implied by MS-EC)"
+            ],
+            "job_postings": [
+              "Careers Page (General)"
+            ],
+            "procurement_indicators": [
+              "MS-EC: New state-of-the-art evaluation centre (Facility/Equipment procurement)",
+              "M-Sport Poland: Central European operations hub (Regional procurement)",
+              "Shop: Merchandising and retail operations"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Expansion",
+            "Geographic Operational Hubs",
+            "Direct-to-Consumer (DTC) E-commerce"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 280,
+              "elapsed_seconds": 3.5027730464935303
+            }
+          ],
+          "reasoning": "The content reveals significant infrastructure investments (MS-EC evaluation centre) and multi-regional operations (Poland HQ for 2WD), indicating a need for specialized engineering procurement and facility management. The explicit 'Shop' link confirms an e-commerce channel, suggesting a need for payment processing and inventory management systems."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:33:10.374197",
+          "domain_explored": "https://media.ford.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic Web CMS (indicated by 'Media Kits', 'Multimedia' structures)",
+              "Email Alert System (indicated by 'newsletters and email alerts')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Licensing Workflow (Standard corporate process, not specific procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Generic Media Portal",
+            "Content Management System (CMS)",
+            "Standardized Licensing Workflow"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 248,
+              "elapsed_seconds": 2.7433841228485107
+            }
+          ],
+          "reasoning": "The scraped content is from the generic Ford Media Center (media.ford.com), not the M-Sport Ford World Rally Team entity. It contains standard UI text for login, password reset, and multimedia licensing. There are no specific signals related to M-Sport's procurement, operations, or technology stack. This represents a drift away from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:33:13.201783",
+          "domain_explored": "https://castrol.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2779,
+      "total_output_tokens": 528,
+      "estimated_cost_usd": 0.016257
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "M-Sport Ford World Rally Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:33:13.204078"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.370106",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:57.731841"
+}

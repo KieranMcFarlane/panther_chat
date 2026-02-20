@@ -1,0 +1,96 @@
+{
+  "entity_id": "aek_athens",
+  "entity_name": "AEK Athens",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "brightonandhovealbion.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aek_athens",
+      "entity_name": "AEK Athens",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://brightonandhovealbion.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AEK Athens may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:07:43.603024",
+          "domain_explored": "https://brightonandhovealbion.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant domain content",
+            "Sports news aggregation",
+            "Generic e-commerce links (Tickets/Shop)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.5661559104919434
+            }
+          ],
+          "reasoning": "The provided content is from the official website of Brighton & Hove Albion FC, a competitor entity, not AEK Athens. The text consists solely of match reports, team news, and standard navigation links. There is zero information regarding AEK Athens's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:08:16.811614",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1357,
+      "total_output_tokens": 164,
+      "estimated_cost_usd": 0.006531
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AEK Athens may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:08:16.813320"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.213793",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:04.943114"
+}

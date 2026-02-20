@@ -1,0 +1,135 @@
+{
+  "entity_id": "alanyaspor",
+  "entity_name": "Alanyaspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "alanyaspor.org.tr",
+    "football.fandom.com",
+    "histoiredufcn.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "alanyaspor",
+      "entity_name": "Alanyaspor",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://alanyaspor.org.tr",
+        "https://histoiredufcn.fr",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Alanyaspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:42:12.984521",
+          "domain_explored": "https://alanyaspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET MVC (inferred from URL structure /Home/Fixture, /A-Takim/)",
+              "JavaScript (Client-side interactivity)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance: 'Y\u00f6netim Kurulu' (Board of Directors) page exists",
+              "Partnership: 'Sponsorlar\u0131m\u0131z' (Sponsors) page exists",
+              "Financial: 'Mali Tablolar' (Financial Statements) page exists",
+              "Facilities: 'Tesislerimiz' (Facilities) page exists"
+            ]
+          },
+          "patterns_found": [
+            "Governance Structure Indicators",
+            "Sponsorship Ecosystem",
+            "Financial Transparency Reporting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 371,
+              "elapsed_seconds": 7.690353870391846
+            }
+          ],
+          "reasoning": "The content represents the main navigation structure of Alanyaspor's official website. While it does not contain explicit procurement signals (like RFPs or job postings), it reveals critical organizational infrastructure that dictates procurement pathways. Specifically, the presence of 'Mali Tablolar' (Financial Statements) indicates a level of corporate governance and transparency often required for vendor partnerships. The 'Sponsorlar\u0131m\u0131z' (Sponsors) and 'Y\u00f6netim Kurulu' (Board of Directors) sections identify key decision-makers and partnership models. This structural knowledge allows for targeted engagement strategies, warranting a weak signal for procurement capability."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:42:22.683985",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Content",
+            "Irrelevant Football Data",
+            "Platform Navigation Elements"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 173,
+              "elapsed_seconds": 6.681071758270264
+            }
+          ],
+          "reasoning": "The scraped content is from the generic Football Wiki homepage (football.fandom.com). It contains no specific information regarding Alanyaspor, its procurement activities, technology stack, or governance. The text is a boilerplate description of the wiki platform and general football links, making it irrelevant to the specific entity analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:42:26.062175",
+          "domain_explored": "https://histoiredufcn.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2762,
+      "total_output_tokens": 544,
+      "estimated_cost_usd": 0.016446000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Alanyaspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:42:26.062578"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.148372",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:06.112420"
+}

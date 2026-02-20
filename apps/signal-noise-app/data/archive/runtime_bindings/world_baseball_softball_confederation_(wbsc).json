@@ -1,0 +1,223 @@
+{
+  "entity_id": "world_baseball_softball_confederation_(wbsc)",
+  "entity_name": "World Baseball Softball Confederation (WBSC)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "wbscasia.org",
+    "wbwc2024.ca",
+    "sportanddev.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/designer-wbc-seasonal-at-major-league-baseball-mlb-4309284967",
+      "https://www.linkedin.com/jobs/view/intern-retail-supply-chain-management-at-usa-baseball-4341620034",
+      "https://at.linkedin.com/company/baseball-jobs-overseas"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_baseball_softball_confederation_(wbsc)",
+      "entity_name": "World Baseball Softball Confederation (WBSC)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://at.linkedin.com/company/baseball-jobs-overseas",
+        "https://www.linkedin.com/jobs/view/intern-retail-supply-chain-management-at-usa-baseball-4341620034",
+        "https://wbwc2024.ca",
+        "https://sportanddev.org",
+        "https://wbscasia.org",
+        "https://www.linkedin.com/jobs/view/designer-wbc-seasonal-at-major-league-baseball-mlb-4309284967"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Baseball Softball Confederation (WBSC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:18:26.420316",
+          "domain_explored": "https://wbscasia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:18:37.231007",
+          "domain_explored": "https://wbwc2024.ca",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Local Event Hosting: The domain wbwc2024.ca indicates a dedicated local organizing committee for the Women's Baseball World Cup, which typically operates as a separate procurement entity for event services, though no specific tenders are visible here."
+            ]
+          },
+          "patterns_found": [
+            "Event schedule data",
+            "External link redirection (wbsc.org)",
+            "Local organizing committee presence (wbwc2024.ca)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1399,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.797453165054321
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive game schedule data (times, match-ups) and links to the main WBSC domain. There are no explicit procurement signals, technology stacks, or governance indicators visible in this text. While the existence of a local event website implies some operational infrastructure, this specific content does not reveal procurement intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:18:46.552402",
+          "domain_explored": "https://sportanddev.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sector-wide job listings (unspecified roles)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sector-specific news aggregation",
+            "Educational resource hub (MOOCs, guides)",
+            "Third-party event listings",
+            "General 'Sport for Development' thematic content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 256,
+              "elapsed_seconds": 6.014233112335205
+            }
+          ],
+          "reasoning": "The scraped content from sportanddev.org represents a third-sector news platform and community hub rather than the official procurement channel of the World Baseball Softball Confederation (WBSC). While the site lists 'Jobs and Opportunities', these are sector-wide listings (funding, volunteering, internships) for the Sport for Development field, not specific tenders or technology investments for WBSC. There is no direct mention of WBSC, RFPs, or specific technology procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:18:56.581577",
+          "domain_explored": "https://www.linkedin.com/jobs/view/designer-wbc-seasonal-at-major-league-baseball-mlb-4309284967",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1555)"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:19:05.869322",
+          "domain_explored": "https://www.linkedin.com/jobs/view/intern-retail-supply-chain-management-at-usa-baseball-4341620034",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Excel (Inventory/Forecasting)",
+              "E-commerce CMS (USABaseballShop.com)",
+              "Point of Sale (POS) Systems (Implied for physical stores)"
+            ],
+            "job_postings": [
+              "Intern, Retail & Supply Chain Management (USA Baseball)"
+            ],
+            "procurement_indicators": [
+              "Inventory forecasting and procurement planning",
+              "Supply chain logistics for licensed merchandise",
+              "Event-based retail infrastructure setup",
+              "Website content management and product listing maintenance"
+            ]
+          },
+          "patterns_found": [
+            "Supply Chain & Logistics Operations",
+            "E-commerce Platform Management (USABaseballShop.com)",
+            "Inventory Management Systems",
+            "Event-based Retail Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1575,
+              "output_tokens": 356,
+              "elapsed_seconds": 5.646641969680786
+            }
+          ],
+          "reasoning": "While this is a job posting for an intern role at USA Baseball (a WBSC member federation) rather than the WBSC itself, it explicitly details the operational stack for retail and supply chain management. It confirms the use of e-commerce platforms, inventory forecasting tools, and event-based retail logistics, which are key components of the sports procurement ecosystem. This provides a 'capability' signal for the broader WBSC network's retail operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:19:15.112058",
+          "domain_explored": "https://at.linkedin.com/company/baseball-jobs-overseas",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-party recruitment agency",
+            "B2C service model (Player-to-Club)",
+            "Global sports networking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 188,
+              "elapsed_seconds": 4.715818166732788
+            }
+          ],
+          "reasoning": "The entity 'Baseball Jobs Overseas' is a third-party recruitment agency focused on player and coach placement, not the governing body (WBSC) itself. While they interact with clubs globally, they do not exhibit procurement signals for the WBSC's corporate infrastructure, technology stack, or event management needs. This is a market intermediary, not a source of WBSC procurement data."
+        }
+      ],
+      "total_input_tokens": 6070,
+      "total_output_tokens": 1059,
+      "estimated_cost_usd": 0.034095
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Baseball Softball Confederation (WBSC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:19:15.113181"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.452135",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:30.606753"
+}

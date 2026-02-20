@@ -1,0 +1,185 @@
+{
+  "entity_id": "brunei_rugby_football_union",
+  "entity_name": "Brunei Rugby Football Union",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "asiarugby.com",
+    "bruneirugby.wordpress.com",
+    "web.worldrugby-rims.pulselive.com",
+    "bruneirugby.files.wordpress.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brunei_rugby_football_union",
+      "entity_name": "Brunei Rugby Football Union",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://bruneirugby.wordpress.com",
+        "https://asiarugby.com",
+        "https://bruneirugby.files.wordpress.com",
+        "https://web.worldrugby-rims.pulselive.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brunei Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:40:04.792322",
+          "domain_explored": "https://asiarugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Regional tournament coverage (Asia Rugby)",
+            "Sponsorship visibility (HSBC, Emirates)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.5719361305236816
+            }
+          ],
+          "reasoning": "The content provided is a list of general rugby news headlines and results from the Asia Rugby website. There is no specific mention of 'Brunei Rugby Football Union', nor are there any specific procurement signals, job postings, or technology investment details related to the target entity. The content is purely informational regarding regional and international rugby competitions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:40:13.100441",
+          "domain_explored": "https://bruneirugby.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "IRB Level 1 Match Officials (Training/Capacity Building)",
+              "IRB Rugby Educator (Contracted/Consultant)"
+            ],
+            "procurement_indicators": [
+              "Requirement for a 'dedicated venue' (Infrastructure/Construction)",
+              "Need for 'government support' to host international games (Public Funding/Partnerships)",
+              "IRB Associate Membership Audit (Compliance/Consulting services)",
+              "Match Official Course procurement (Educational Services)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure procurement signals (dedicated venues)",
+            "Educational service procurement (training courses)",
+            "Strategic governance dependence (Ministry of Culture, Youth and Sports)",
+            "Compliance requirements driving investment (IRB associate membership criteria)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 363,
+              "elapsed_seconds": 3.320794105529785
+            }
+          ],
+          "reasoning": "The content reveals a critical dependency on government support (MCYS) and specific infrastructure gaps ('dedicated venue needed'). While no direct RFP is listed, the explicit statement regarding the need for a dedicated venue and the requirement to meet IRB standards (governance, education programs) indicates a strong future intent for procurement services related to facility management, construction, and sports education."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:40:23.137726",
+          "domain_explored": "https://web.worldrugby-rims.pulselive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pulselive (World Rugby content delivery platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "International tournament coverage (HSBC SVNS)",
+            "Content delivery via 'Pulselive' technology platform"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 639,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.771013021469116
+            }
+          ],
+          "reasoning": "The content is purely sports journalism regarding international match results (Fiji vs France, New Zealand vs Australia) in the HSBC SVNS series. It contains no information regarding the Brunei Rugby Football Union, its local operations, governance, or procurement activities. The presence of the 'Pulselive' platform indicates World Rugby's technology stack, not Brunei's."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:40:33.682202",
+          "domain_explored": "https://bruneirugby.files.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "404 Error / Dead Link",
+            "Broken URL structure",
+            "Content migration or deletion"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 605,
+              "output_tokens": 146,
+              "elapsed_seconds": 3.3475799560546875
+            }
+          ],
+          "reasoning": "The target URL returned a '404 Not Found' error. The content is inaccessible, providing no data on procurement activities, technology stacks, or governance. This indicates a broken link within the previously identified domain structure."
+        }
+      ],
+      "total_input_tokens": 4030,
+      "total_output_tokens": 915,
+      "estimated_cost_usd": 0.025814999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brunei Rugby Football Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:40:33.684550"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.287636",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:01.118871"
+}

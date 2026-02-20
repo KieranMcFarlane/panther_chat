@@ -1,0 +1,221 @@
+{
+  "entity_id": "club_brugge_basket",
+  "entity_name": "Club Brugge Basket",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "clubbrugge.be",
+    "avantibrugge.be",
+    "arsenal.com",
+    "racingbrugge.be",
+    "fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "club_brugge_basket",
+      "entity_name": "Club Brugge Basket",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://arsenal.com",
+        "https://clubbrugge.be",
+        "https://racingbrugge.be",
+        "https://fcbarcelona.com",
+        "https://avantibrugge.be"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Club Brugge Basket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:34:41.443677",
+          "domain_explored": "https://clubbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "E-commerce activity: Mentions of 'Naar de shop' and 'HOME SHIRT 2025-2026' indicate active merchandise sales, but no specific vendor or platform technology is disclosed in this text."
+            ]
+          },
+          "patterns_found": [
+            "High content repetition (scraping artifact)",
+            "Sports news focus (match reports, player transfers)",
+            "E-commerce presence (Shop links for kits)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 229,
+              "elapsed_seconds": 7.659151077270508
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive sports news headlines, match results, and generic shop links. There is no mention of technology infrastructure, job vacancies, or organizational governance. The content is consumer-facing (fans) rather than business-facing (procurement)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:34:53.767727",
+          "domain_explored": "https://avantibrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Venue Rental (ICO Terminal)",
+              "Transport Services (Supporters bus charter)",
+              "Catering Services (Business event reception)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Avanti Brugge vs Club Brugge Basket)",
+            "Sports News Content (Player transfers, match reports)",
+            "Event Logistics (Bus charters, venue bookings)",
+            "Business Club Networking (B2B social events)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.9625699520111084
+            }
+          ],
+          "reasoning": "The scraped content is from 'Avanti Brugge', a distinct basketball club from 'Club Brugge Basket' (also known as Filou Oostende). While both are basketball entities, they are separate organizations. The content focuses on sports operations (transfers, youth academy labels) and fan engagement (bus trips, business club events), which are operational expenses rather than strategic procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:35:04.474568",
+          "domain_explored": "https://arsenal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Arsenal FC vs Club Brugge Basket)",
+            "Sports News Content (Match reports, player transfers, injury updates)",
+            "E-commerce Integration (Shop now links)",
+            "Fan Engagement (Quizzes, Galleries, Documentaries)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.3648829460144043
+            }
+          ],
+          "reasoning": "The scraped content is exclusively from Arsenal FC (arsenal.com), a different entity than the target, Club Brugge Basket. The content focuses on sports news, match results, and fan engagement rather than procurement or business operations relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:35:18.030005",
+          "domain_explored": "https://racingbrugge.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Jes-Sports Webshop (External E-commerce Platform)",
+              "Generic CMS (index.php structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Procurement (Official club gear via webshop)",
+              "Group Insurance Policy (Ethias via VBL membership)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (KBBC Racing Brugge vs Club Brugge Basket)",
+            "Sports News Content (Season updates, President's letter)",
+            "E-commerce Integration (Webshop links for gear)",
+            "Insurance Partnerships (Ethias via VBL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 298,
+              "elapsed_seconds": 6.358613014221191
+            }
+          ],
+          "reasoning": "The scraped content is from 'KBBC Racing Brugge', a different basketball club in Bruges than the target entity 'Club Brugge Basket'. While the content reveals operational patterns such as merchandise procurement (webshop) and insurance partnerships (Ethias), these are not attributable to the target entity. The content is focused on member engagement and season preparation rather than corporate procurement signals relevant to the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:35:29.854013",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FC Barcelona vs Club Brugge Basket)",
+            "Sports News Content (Match reports, player transfers, injury updates)",
+            "E-commerce Integration (Shop now links, Official Store)",
+            "Fan Engagement (Culers membership, Newsletter registration)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 205,
+              "elapsed_seconds": 5.361969947814941
+            }
+          ],
+          "reasoning": "The scraped content is exclusively from FC Barcelona (fcbarcelona.com), a completely different entity from the target, Club Brugge Basket. The content focuses on consumer-facing operations (ticketing, merchandise, news) rather than B2B procurement or governance signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7446,
+      "total_output_tokens": 1195,
+      "estimated_cost_usd": 0.040263
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Club Brugge Basket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:35:29.864895"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227983",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:54.709996"
+}

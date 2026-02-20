@@ -1,0 +1,145 @@
+{
+  "entity_id": "toulouse_union_hb",
+  "entity_name": "Toulouse Union HB",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "handball-planet.com",
+    "archiv.thw-handball.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toulouse_union_hb",
+      "entity_name": "Toulouse Union HB",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball-planet.com",
+        "https://eurohandball.com",
+        "https://archiv.thw-handball.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toulouse Union HB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:50:21.837124",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls blocking content",
+            "Irrelevant tournament schedules"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 189,
+              "elapsed_seconds": 1.9473180770874023
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) general news portal, not the specific entity 'Toulouse Union HB'. The content focuses on tournament results (Denmark, Croatia) and general EHF event schedules. There is no mention of Toulouse Union HB, their specific procurement needs, technology stack, or governance. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:50:31.212749",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports journalism",
+            "Tournament results (EHF EURO 2026)",
+            "Player transfer news",
+            "Awards and editorial content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.4911670684814453
+            }
+          ],
+          "reasoning": "The content is entirely focused on handball sports news, specifically the EHF EURO 2026 tournament results, player transfers, and awards. There are no corporate governance signals, technology infrastructure details, or procurement opportunities relevant to Toulouse Union HB."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:50:48.059096",
+          "domain_explored": "https://archiv.thw-handball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (THW Kiel vs Toulouse Union HB)",
+            "Legacy Web Archive Structure",
+            "Historical Sports Statistics",
+            "Fan Shop Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 203,
+              "elapsed_seconds": 11.604583978652954
+            }
+          ],
+          "reasoning": "The scraped content is from 'archiv.thw-handball.de', which is the official archive for THW Kiel (a German handball club), not Toulouse Union HB (the target French entity). The content consists of historical match statistics, navigation menus for a legacy website, and references to a 2017 site renewal. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4236,
+      "total_output_tokens": 560,
+      "estimated_cost_usd": 0.021108000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toulouse Union HB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:50:48.061862"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350325",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:13.933144"
+}

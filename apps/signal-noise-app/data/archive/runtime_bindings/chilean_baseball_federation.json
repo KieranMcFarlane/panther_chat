@@ -1,0 +1,113 @@
+{
+  "entity_id": "chilean_baseball_federation",
+  "entity_name": "Chilean Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "researchgate.net",
+    "baseball-reference.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/%E7%99%BE%E8%83%9C%E9%9B%86%E5%9B%A2%E9%91%AB%E7%99%BE%E5%88%A9%E5%A8%B1%E4%B9%9024%E5%B0%8F%E6%97%B6%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E2%92%899%D0%A7%D0%97%D0%917%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E5%BC%80%E6%88%B7%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%E2%92%8B227%E3%80%9128%E5%8A%A0%E6%8B%BF%E5%A4%A7%E5%87%A4%E5%87%B0%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chilean_baseball_federation",
+      "entity_name": "Chilean Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://researchgate.net",
+        "https://baseball-reference.com",
+        "https://www.linkedin.com/jobs/%E7%99%BE%E8%83%9C%E9%9B%86%E5%9B%A2%E9%91%AB%E7%99%BE%E5%88%A9%E5%A8%B1%E4%B9%9024%E5%B0%8F%E6%97%B6%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E2%92%899%D0%A7%D0%97%D0%917%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E5%BC%80%E6%88%B7%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%E2%92%8B227%E3%80%9128%E5%8A%A0%E6%8B%BF%E5%A4%A7%E5%87%A4%E5%87%B0%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chilean Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:28:01.758149",
+          "domain_explored": "https://researchgate.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:28:04.539728",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:28:12.170954",
+          "domain_explored": "https://www.linkedin.com/jobs/%E7%99%BE%E8%83%9C%E9%9B%86%E5%9B%A2%E9%91%AB%E7%99%BE%E5%88%A9%E5%A8%B1%E4%B9%9024%E5%B0%8F%E6%97%B6%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+%E5%BE%AE:%E2%92%899%D0%A7%D0%97%D0%917%E2%92%909%E3%80%91%E6%96%B0%E9%94%A6%E6%B1%9F%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E5%BC%80%E6%88%B7%E5%BE%AE%E4%BF%A1%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%E2%92%8B227%E3%80%9128%E5%8A%A0%E6%8B%BF%E5%A4%A7%E5%87%A4%E5%87%B0%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90%E3%80%90%E9%9C%B8%E5%B1%8Fgoogle%E6%8A%80%E6%9C%AF+QQ:7%D0%97%E2%92%985%D0%A722%E2%92%8E%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "unrelated_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.301438808441162
+            }
+          ],
+          "reasoning": "The scraped content is heavily polluted with spam text (gambling keywords, Chinese characters, and 'Google technology' marketing tags) injected into the HTML. The visible job listings (CTW Cayman, CLEAR, Saab) are generic US-based roles with no relevance to the Chilean Baseball Federation. This indicates a poisoned data source or a scraping error, providing zero intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 1572,
+      "total_output_tokens": 182,
+      "estimated_cost_usd": 0.0074459999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chilean Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:28:12.172726"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312480",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:36:54.098509"
+}

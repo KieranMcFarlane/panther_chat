@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-01-22T15:56:03.453877+00:00",
+  "dry_run": false,
+  "statistics": {
+    "episodes_processed": 0,
+    "entities_created": 5,
+    "signals_created": 7,
+    "evidence_created": 0,
+    "errors": [
+      "Episode 718d4dbd-f4ea-42b2-baa6-9a1fda98eb28: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_arsenal-fc_rfp_detected_20260118220830_0) already exists.'}",
+      "Episode 1030b07d-a125-4a5a-8b03-4d4d278e2556: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_arsenal-fc_rfp_detected_20260118221451_0) already exists.'}",
+      "Episode b52551aa-8bea-4fb5-a2a8-5456528e49ef: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_manchester-united_rfp_detected_20260118221504_0) already exists.'}",
+      "Episode 9db7a47a-1184-40a0-946e-152cf5fece32: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_chelsea-fc_rfp_detected_20260118221843_0) already exists.'}",
+      "Episode 783a20c1-93bd-47b4-9161-9bee9af976f4: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_liverpool-fc_rfp_detected_20260118221843_0) already exists.'}",
+      "Episode f11ae23b-657d-4f0a-8d93-0955dd8dad0d: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_barcelona-fc_rfp_detected_20260118221858_0) already exists.'}",
+      "Episode 63de4459-2087-4f2a-af10-f10e2a562db0: {'message': 'duplicate key value violates unique constraint \"evidence_pkey\"', 'code': '23505', 'hint': None, 'details': 'Key (id)=(evidence_signal_barcelona-fc_rfp_detected_20260118221858_0) already exists.'}"
+    ]
+  },
+  "summary": "\nMigration Summary:\n- Episodes processed: 0\n- Entities created: 5\n- Signals created: 7\n- Evidence created: 0\n- Errors: 7\n\n\u26a0\ufe0f Migration completed with errors\n"
+}

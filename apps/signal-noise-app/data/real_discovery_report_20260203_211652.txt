@@ -1,0 +1,24 @@
+================================================================================
+REAL DISCOVERY COMPARISON REPORT
+================================================================================
+Timestamp: 2026-02-03T21:16:52.431533+00:00
+Entities Tested: 3
+
+SUMMARY
+--------------------------------------------------------------------------------
+Total Cost: $0.0000
+Total Iterations: 0
+Average Confidence: 0.00
+Average Cost: $0.0000
+Average Iterations: 0.0
+Actionable Count: 0/3
+
+BEST PERFORMERS
+--------------------------------------------------------------------------------
+
+ENTITY RESULTS
+--------------------------------------------------------------------------------
+liverpool-fc: ❌ FAILED - unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)
+bayern-munich: ❌ FAILED - unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)
+psg: ❌ FAILED - unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)
+================================================================================

@@ -1,0 +1,352 @@
+{
+  "entity_id": "durham_bulls",
+  "entity_name": "Durham Bulls",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "north_american_minor_league",
+  "discovered_domains": [
+    "durhambulls.milbstore.com",
+    "gameday.durhambulls.com",
+    "durhamncsports.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/durham-bulls-jobs",
+      "https://www.linkedin.com/jobs/durham-bulls-jobs-durham-nc",
+      "https://www.linkedin.com/jobs/view/baseball-mascot-coordinator-at-capitol-broadcasting-company-4341596659",
+      "https://www.linkedin.com/jobs/sports-jobs-raleigh-durham-chapel-hill-area",
+      "https://www.linkedin.com/jobs/view/baseball-graphic-designer-at-capitol-broadcasting-company-4344388728",
+      "https://www.linkedin.com/jobs/view/baseball-director-field-operations-at-capitol-broadcasting-company-4361235861",
+      "https://www.linkedin.com/jobs/view/manager-social-media-digital-content-at-capitol-broadcasting-company-4342004082"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "durham_bulls",
+      "entity_name": "Durham Bulls",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.02,
+        0.04,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/durham-bulls-jobs-durham-nc",
+        "https://durhambulls.milbstore.com",
+        "https://www.linkedin.com/jobs/sports-jobs-raleigh-durham-chapel-hill-area",
+        "https://gameday.durhambulls.com",
+        "https://www.linkedin.com/jobs/view/baseball-graphic-designer-at-capitol-broadcasting-company-4344388728",
+        "https://www.linkedin.com/jobs/durham-bulls-jobs",
+        "https://durhamncsports.com",
+        "https://www.linkedin.com/jobs/view/baseball-mascot-coordinator-at-capitol-broadcasting-company-4341596659"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Creative Software Procurement",
+        "Fan Data Analytics Investment",
+        "Digital Asset Management Workflows",
+        "Cross-Platform Content Strategy"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Durham Bulls may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:58:46.983738",
+          "domain_explored": "https://durhambulls.milbstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (MiLB Store / likely Shopify or custom league solution)",
+              "Inventory Management System",
+              "Payment Gateway"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of online product collections (Mens, Womens, Kids, Caps, Jerseys)",
+              "Reliance on third-party hosted e-commerce infrastructure (milbstore.com domain)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Inventory Management",
+            "Digital Sales Channel Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 531,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.949960947036743
+            }
+          ],
+          "reasoning": "The content confirms the operation of a digital storefront (milbstore.com) which implies an active relationship with an e-commerce platform provider (likely MiLB centralized or a vendor like Fanatics/MLB). While this confirms the *capability* and *infrastructure* for procurement, it does not show active *intent* for new procurement in this specific snapshot, resulting in a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:58:50.383685",
+          "domain_explored": "https://gameday.durhambulls.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:58:53.358497",
+          "domain_explored": "https://durhamncsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:59:04.000309",
+          "domain_explored": "https://www.linkedin.com/jobs/durham-bulls-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter",
+              "POS Systems (implied by Retail Salesperson role)",
+              "Payroll/HRIS (implied by high volume of hiring)"
+            ],
+            "job_postings": [
+              "Game Production",
+              "Entertainment & Promotions Assistant",
+              "Baseball Fan Ambassador",
+              "Baseball Bat Person",
+              "Baseball Retail Salesperson"
+            ],
+            "procurement_indicators": [
+              "Operational Expansion (55 active jobs)",
+              "Retail Supply Chain Activity",
+              "Third-Party Staffing Potential"
+            ]
+          },
+          "patterns_found": [
+            "Game Day Operations Staffing",
+            "Retail Sales Operations",
+            "Fan Experience Management",
+            "High-Volume Recruitment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 323,
+              "elapsed_seconds": 6.990299224853516
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for operational roles (Game Production, Retail Sales, Fan Ambassadors). While these are not direct procurement hires, the volume of hiring indicates organizational growth and active vendor usage for staffing, payroll, and retail technology. The 'Retail Salesperson' posting confirms active inventory management requiring POS systems."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:59:11.873357",
+          "domain_explored": "https://www.linkedin.com/jobs/durham-bulls-jobs-durham-nc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Activity Director",
+                "employer": "Calyx Living",
+                "relevance": "None - Unrelated Entity"
+              },
+              {
+                "title": "Senior Sales Development Representative",
+                "employer": "Lucid Dream",
+                "relevance": "None - Unrelated Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Third-Party Employer Listings",
+            "Authentication Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 281,
+              "elapsed_seconds": 4.315333127975464
+            }
+          ],
+          "reasoning": "The scraped content reveals a generic LinkedIn job search results page for 'Durham, NC' rather than specific listings for the Durham Bulls. The actual job entries (e.g., Calyx Living, Lucid Dream) are unrelated third-party employers. The page is dominated by login prompts and UI elements, offering no direct insight into Durham Bulls' internal operations, hiring needs, or procurement activities."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:59:18.436210",
+          "domain_explored": "https://www.linkedin.com/jobs/view/baseball-mascot-coordinator-at-capitol-broadcasting-company-4341596659",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Instagram",
+              "Twitter",
+              "TikTok"
+            ],
+            "job_postings": [
+              "Baseball Mascot Coordinator"
+            ],
+            "procurement_indicators": [
+              "Coordinate vendors and logistics for community events",
+              "Partner with sponsorship activation team",
+              "Maintain mascot costumes",
+              "Oversee vehicle maintenance for mascot-related vehicles"
+            ]
+          },
+          "patterns_found": [
+            "Community Event Logistics Management",
+            "Sponsorship Activation Integration",
+            "Vendor Coordination for External Events",
+            "Social Media Content Management",
+            "Costume and Equipment Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 307,
+              "elapsed_seconds": 3.212455987930298
+            }
+          ],
+          "reasoning": "While this is a role-based posting (Mascot Coordinator) rather than a direct procurement job, the responsibilities explicitly include coordinating vendors for community events, managing logistics for Education Day, and integrating with corporate sponsorship activations. This indicates a need for event services, transportation (go-karts, ATVs), and costume maintenance vendors."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:59:28.527168",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-jobs-raleigh-durham-chapel-hill-area",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Entertainment & Promotions Assistant",
+              "Game Production",
+              "Baseball Fan Ambassador",
+              "Baseball Bat Person"
+            ],
+            "procurement_indicators": [
+              "Seasonal Workforce Management",
+              "Event Production Logistics",
+              "Fan Engagement Services"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Seasonal Recruitment",
+            "Game Day Operations Staffing",
+            "Fan Experience Management",
+            "In-House Production Capabilities"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1671,
+              "output_tokens": 291,
+              "elapsed_seconds": 5.419585943222046
+            }
+          ],
+          "reasoning": "The content reveals multiple active job postings directly from Durham Bulls Baseball Club, specifically for 'Entertainment & Promotions Assistant', 'Game Production', and 'Baseball Fan Ambassador'. This confirms active operational hiring and implies the procurement of related HR services, uniforms, and production equipment. However, the content is limited to job titles and does not expose underlying technology stacks or direct vendor procurement signals."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:59:36.452465",
+          "domain_explored": "https://www.linkedin.com/jobs/view/baseball-graphic-designer-at-capitol-broadcasting-company-4344388728",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Photoshop, Illustrator, InDesign)",
+              "Video Editing Software (Premiere, DaVinci, Final Cut)",
+              "StellarAlgo (Fan Data Platform)",
+              "Fan Compass (Fan Engagement Platform)",
+              "Web CMS",
+              "Email Marketing Platforms",
+              "Paid Digital Media Tools"
+            ],
+            "job_postings": [
+              "Baseball Graphic Designer"
+            ],
+            "procurement_indicators": [
+              "Licensing for professional creative software suites",
+              "Subscription costs for fan data/analytics platforms (StellarAlgo/Fan Compass)",
+              "Potential procurement of Digital Asset Management (DAM) systems to handle 'workflows'",
+              "Hardware procurement for high-performance video editing and rendering"
+            ]
+          },
+          "patterns_found": [
+            "Creative Software Procurement",
+            "Fan Data Analytics Investment",
+            "Digital Asset Management Workflows",
+            "Cross-Platform Content Strategy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1742,
+              "output_tokens": 412,
+              "elapsed_seconds": 4.2248921394348145
+            }
+          ],
+          "reasoning": "This job posting provides explicit evidence of the technology stack used for marketing and fan engagement. The mention of specific platforms like StellarAlgo and Fan Compass confirms investment in data analytics and CRM tools. The requirement for Adobe Creative Suite and video editing software indicates ongoing software procurement or licensing needs. The focus on 'workflows' and 'content strategies' suggests a need for project management tools and digital asset management systems."
+        }
+      ],
+      "total_input_tokens": 8557,
+      "total_output_tokens": 1897,
+      "estimated_cost_usd": 0.054126
+    },
+    "procurement_signals": [
+      "Creative Software Procurement",
+      "Fan Data Analytics Investment",
+      "Digital Asset Management Workflows",
+      "Cross-Platform Content Strategy"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Durham Bulls may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:59:36.453291"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309020",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:10:20.182019"
+}

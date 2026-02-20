@@ -1,0 +1,211 @@
+{
+  "entity_id": "south_african_football_association",
+  "entity_name": "South African Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "pefmo.co.za",
+    "cafonline.com",
+    "inside.fifa.com",
+    "safootball.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "south_african_football_association",
+      "entity_name": "South African Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.12,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.12
+      ],
+      "explored_domains": [
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://pefmo.co.za",
+        "https://safootball.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Official Fan Engagement Partnership",
+        "OTT/Streaming Platform Model",
+        "Premium Subscription Content Management",
+        "Digital Content Production & Distribution",
+        "Governance Reform Advocacy",
+        "Constitutional Review Requirements",
+        "Parliamentary Oversight Interventions",
+        "Asset Acquisition Irregularities (Fun Valley)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "South African Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:54:10.282490",
+          "domain_explored": "https://pefmo.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming/Hosting (OTT)",
+              "Subscription Management Systems",
+              "Gamification Platforms ('Spin & Win')",
+              "Content Delivery Networks (CDN)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Fan Engagement Platform (PEFMO)",
+              "Premium Content Subscription Model",
+              "High-frequency video content production",
+              "Partnership/Gamification mechanics"
+            ]
+          },
+          "patterns_found": [
+            "Official Fan Engagement Partnership",
+            "OTT/Streaming Platform Model",
+            "Premium Subscription Content Management",
+            "Digital Content Production & Distribution"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 332,
+              "elapsed_seconds": 6.264877080917358
+            }
+          ],
+          "reasoning": "The content reveals PEFMO as the 'Official Fan Engagement Partner' of SAFA, operating a sophisticated Over-The-Top (OTT) platform. The presence of 'Subscription required' tags, premium video content (AFCON diaries, interviews), and 'Spin & Win' gamification indicates a mature digital ecosystem. This implies existing or imminent procurement for Content Management Systems (CMS), Video Hosting/Streaming solutions, CRM for fan data, and payment gateway integration for subscriptions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:54:16.540683",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Navigation",
+            "Sports Federation Standard Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 976,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.3254141807556152
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive navigation menus and UI elements (e.g., 'Show more', 'See All', 'Featured Matches') from the CAF (Confederation of African Football) portal. It lacks specific procurement signals, technical details, or organizational context relevant to the South African Football Association (SAFA). This appears to be a parent organization's general media page, offering no actionable intelligence for SAFA-specific procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:54:28.809657",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward funding program (Global context)",
+              "Infrastructure refurbishment projects (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Federation News Aggregation",
+            "FIFA Forward Funding Program",
+            "Women's Football Development Initiatives"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 240,
+              "elapsed_seconds": 9.300465822219849
+            }
+          ],
+          "reasoning": "The content is from FIFA's global news portal and focuses on high-level international governance, the FIFA Women's Champions Cup, and stadium refurbishment in Burundi. While it mentions funding (FIFA Forward), there are no specific procurement signals, technology stacks, or RFPs relevant to the South African Football Association (SAFA). The content is too generic and globally focused to provide actionable local procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:54:38.356413",
+          "domain_explored": "https://safootball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Forensic Audit Requirement (referenced: Fun Valley purchase)",
+              "Legal Advisory Services (referenced: Constitutional reform)",
+              "Governance Consulting (referenced: SAFA NEC complaints)",
+              "Stakeholder Management (referenced: Parliamentary relations)"
+            ]
+          },
+          "patterns_found": [
+            "Governance Reform Advocacy",
+            "Constitutional Review Requirements",
+            "Parliamentary Oversight Interventions",
+            "Asset Acquisition Irregularities (Fun Valley)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 321,
+              "elapsed_seconds": 5.561728000640869
+            }
+          ],
+          "reasoning": "The content reveals a critical governance crisis within SAFA, specifically mentioning a 'structurally engineered' constitution and a 'Fact Check' claiming SAFA misled Parliament in June 2025. Governance crises are primary drivers for procurement of external consultancy services (legal, forensic auditing, strategic management). The specific mention of 'Fun Valley' asset acquisition issues indicates a need for forensic audit services. The push for constitutional reform signals a future requirement for change management and legal advisory vendors."
+        }
+      ],
+      "total_input_tokens": 5325,
+      "total_output_tokens": 1089,
+      "estimated_cost_usd": 0.03231
+    },
+    "procurement_signals": [
+      "Official Fan Engagement Partnership",
+      "OTT/Streaming Platform Model",
+      "Premium Subscription Content Management",
+      "Digital Content Production & Distribution",
+      "Governance Reform Advocacy",
+      "Constitutional Review Requirements",
+      "Parliamentary Oversight Interventions",
+      "Asset Acquisition Irregularities (Fun Valley)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "South African Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:54:38.357846"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.197393",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:42:43.635611"
+}

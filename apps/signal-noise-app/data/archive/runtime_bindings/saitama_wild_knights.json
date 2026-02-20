@@ -1,0 +1,161 @@
+{
+  "entity_id": "saitama_wild_knights",
+  "entity_name": "Saitama Wild Knights",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "panasonic.co.jp",
+    "league-one.jp",
+    "ultimaterugby.com",
+    "rugbypass.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "saitama_wild_knights",
+      "entity_name": "Saitama Wild Knights",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://panasonic.co.jp",
+        "https://ultimaterugby.com",
+        "https://league-one.jp",
+        "https://rugbypass.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Saitama Wild Knights may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:24:51.832754",
+          "domain_explored": "https://panasonic.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:24:59.217418",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "TicketRugby (External Ticketing Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League schedule data",
+            "Ticketing platform integration (ticketrugby.jp)",
+            "Opponent identification (Shizuoka Blue Revs)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.4472131729125977
+            }
+          ],
+          "reasoning": "The scraped content from league-one.jp consists solely of match schedules, scores, and ticketing links. While it confirms the entity's participation in the league and identifies the ticketing vendor (TicketRugby), it contains no information regarding internal procurement, technology investments, or governance structures."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:25:09.785968",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_entity_content",
+            "Player_contract_news",
+            "Northampton_Saints"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 571,
+              "output_tokens": 153,
+              "elapsed_seconds": 6.9115588665008545
+            }
+          ],
+          "reasoning": "The content provided is a news article about George Hendy and Northampton Saints (a UK-based rugby club). This is completely unrelated to the target entity, Saitama Wild Knights (Japan), and contains no procurement, technology, or governance signals relevant to the objective."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:25:18.188627",
+          "domain_explored": "https://rugbypass.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_entity_content",
+            "Global_rugby_scores",
+            "Generic_news_aggregation",
+            "No_Saitama_Wild_Knights_mentions"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1490,
+              "output_tokens": 182,
+              "elapsed_seconds": 5.23412013053894
+            }
+          ],
+          "reasoning": "The scraped content consists of generic rugby scores (HSBC SVNS, URC, Premiership) and news headlines about other teams (Bulls, Sale Sharks, British & Irish Lions). There is no mention of Saitama Wild Knights, their parent company, or any procurement-related activities (jobs, RFPs, tech stack). The content is irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3449,
+      "total_output_tokens": 529,
+      "estimated_cost_usd": 0.018282
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Saitama Wild Knights may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:25:18.191667"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.273140",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:33:10.198949"
+}

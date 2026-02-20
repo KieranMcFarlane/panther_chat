@@ -1,0 +1,280 @@
+{
+  "entity_id": "chicago_cubs",
+  "entity_name": "Chicago Cubs",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "bleedcubbieblue.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/chicago-cubs-jobs-chicago-il",
+      "https://www.linkedin.com/jobs/chicago-cubs-jobs",
+      "https://www.linkedin.com/jobs/chicago-cubs-jobs-worldwide",
+      "https://www.linkedin.com/jobs/wrigley-field-jobs-chicago-il",
+      "https://www.linkedin.com/jobs/view/director-programming-impact-cubs-charities-at-chicago-cubs-4360055815",
+      "https://www.linkedin.com/jobs/view/director-programming-impact-cubs-charities-at-chicago-cubs-4363553337",
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/wrigley-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chicago_cubs",
+      "entity_name": "Chicago Cubs",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/chicago-cubs-jobs-chicago-il",
+        "https://www.linkedin.com/jobs/view/director-programming-impact-cubs-charities-at-chicago-cubs-4360055815",
+        "https://www.linkedin.com/jobs/chicago-cubs-jobs",
+        "https://www.linkedin.com/jobs/chicago-cubs-jobs-worldwide",
+        "https://bleedcubbieblue.com",
+        "https://www.linkedin.com/jobs/wrigley-field-jobs-chicago-il"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chicago Cubs may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:18:40.351145",
+          "domain_explored": "https://bleedcubbieblue.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Native Advertising: Presence of 'Advertiser Content' suggests a budget for content marketing or sponsored placements, though this is likely revenue for the publisher rather than a spend signal for the Cubs."
+            ]
+          },
+          "patterns_found": [
+            "Fan engagement content (Trivia, History)",
+            "Editorial operations (Community posts, 'Cub Tracks')",
+            "Native advertising placement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 231,
+              "elapsed_seconds": 5.027087688446045
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports journalism, fan community discussions, and historical analysis from a blog aggregator (SB Nation). There are no mentions of corporate strategy, technology infrastructure, job openings, or business operations that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:18:47.416384",
+          "domain_explored": "https://www.linkedin.com/jobs/chicago-cubs-jobs-chicago-il",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Dispatcher, Operations (Part-Time)",
+              "Warehouse Associate (Part-Time)"
+            ],
+            "procurement_indicators": [
+              "Logistics Staffing",
+              "Inventory Management Operations"
+            ]
+          },
+          "patterns_found": [
+            "Operational Logistics Hiring",
+            "Part-Time Labor Procurement",
+            "Supply Chain/Warehouse Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.546213150024414
+            }
+          ],
+          "reasoning": "The content reveals active hiring for operational roles, specifically 'Dispatcher, Operations' and 'Warehouse Associate'. While these are not direct procurement job postings, they indicate active labor procurement and supply chain management activities. The presence of a Warehouse Associate suggests ongoing inventory management and logistics operations, which are downstream consumers of procurement services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:18:55.196484",
+          "domain_explored": "https://www.linkedin.com/jobs/chicago-cubs-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Associate, Talent & Training - Youth Camps & Events (Headfirst Summer Camps - Washington, DC)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate / Login Wall",
+            "Third-Party Affiliate Listings (Headfirst Camps)",
+            "Geographic Irrelevance (Washington DC vs Chicago HQ)",
+            "Duplicate Content Blocks"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.138542175292969
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication interface ('Sign in to set job alerts') and repeated boilerplate text. The only visible job listings are for 'Headfirst Summer Camps' in Washington, DC, which is a separate entity/partner rather than the Chicago Cubs corporate headquarters in Chicago. There is zero visibility into the Cubs' direct procurement, technology stack, or operational hiring due to the login restriction."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:19:05.733117",
+          "domain_explored": "https://www.linkedin.com/jobs/chicago-cubs-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Associate, Talent & Training - Youth Camps & Events (Headfirst Summer Camps - Washington, DC)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate / Login Wall",
+            "Third-Party Affiliate Listings (Headfirst Camps)",
+            "Geographic Irrelevance (Washington DC vs Chicago HQ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1553,
+              "output_tokens": 221,
+              "elapsed_seconds": 6.906402111053467
+            }
+          ],
+          "reasoning": "The content is primarily blocked by a LinkedIn authentication wall, preventing access to actual procurement data. The visible job listings are for 'Headfirst Summer Camps' located in Washington, DC, which is a third-party affiliate or partner, not the core Chicago Cubs operations in Chicago. This indicates low relevance to direct Cubs procurement intelligence."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:19:15.175240",
+          "domain_explored": "https://www.linkedin.com/jobs/wrigley-field-jobs-chicago-il",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director Development, Cubs Charities",
+              "Wrigley Field Grounds Crew (Seasonal)",
+              "Bar Back, W Club - Wrigley Field (Levy Restaurants)",
+              "Supervisor, Catalina - Wrigley Field (Levy Restaurants)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Food & Beverage Services (Levy Restaurants)",
+              "Outsourced Camp Operations (Headfirst Professional Sports Camps)",
+              "Seasonal Labor Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations Hiring (Grounds Crew)",
+            "Non-Profit/Fundraising Operations (Cubs Charities)",
+            "Third-Party Vendor Labor Procurement (Levy Restaurants)",
+            "Affiliate Program Management (Headfirst Camps)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 347,
+              "elapsed_seconds": 5.896642208099365
+            }
+          ],
+          "reasoning": "While the search query targeted 'Wrigley Field', the results are a mix of direct hiring (Chicago Cubs, Cubs Charities) and third-party vendors (Levy Restaurants, Headfirst). This confirms the procurement ecosystem around the venue but lacks direct corporate procurement signals (RFPs, Tech Stack). The 'Director Development' role indicates active fundraising operations, which often require CRM/Donation management software, but this is an indirect signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:19:22.332995",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-programming-impact-cubs-charities-at-chicago-cubs-4360055815",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Impact Measurement Tools",
+              "Grant Management Software",
+              "CRM (Donor/Community)"
+            ],
+            "job_postings": [
+              {
+                "title": "Director, Programming & Impact",
+                "department": "Cubs Charities",
+                "salary": "$115,000 - $150,000",
+                "focus": "Grants, Youth Development, Analytics"
+              }
+            ],
+            "procurement_indicators": [
+              "Discretionary budget control for grants",
+              "Potential need for impact analytics vendors",
+              "RFP authority for community programs"
+            ]
+          },
+          "patterns_found": [
+            "Grant Management & Community Investment",
+            "Impact Measurement & Analytics",
+            "Non-Profit Operations Strategy",
+            "Vendor/Partner Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1709,
+              "output_tokens": 365,
+              "elapsed_seconds": 3.712800979614258
+            }
+          ],
+          "reasoning": "While this is a direct hiring role rather than a third-party RFP, the 'Director, Programming & Impact' position holds significant influence over procurement decisions for Cubs Charities. The role explicitly mentions managing a 'grants portfolio' and 'community investments,' indicating control over discretionary funds. Additionally, the requirement for 'impact measurement' and 'data-driven strategy' suggests future procurement of analytics, CRM, or survey tools for the non-profit arm."
+        }
+      ],
+      "total_input_tokens": 9151,
+      "total_output_tokens": 1658,
+      "estimated_cost_usd": 0.052323
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chicago Cubs may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:19:22.334692"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307311",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:39.460867"
+}

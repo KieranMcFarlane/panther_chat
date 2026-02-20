@@ -1,0 +1,238 @@
+{
+  "entity_id": "al_bataeh_club",
+  "entity_name": "Al Bataeh Club",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "albataehfc.ae",
+    "grokipedia.com",
+    "en.soccerwiki.org",
+    "footballdatabase.com",
+    "wikidata.org",
+    "ticombo.com",
+    "footystats.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_bataeh_club",
+      "entity_name": "Al Bataeh Club",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://footballdatabase.com",
+        "https://en.soccerwiki.org",
+        "https://grokipedia.com",
+        "https://albataehfc.ae",
+        "https://footystats.org",
+        "https://wikidata.org",
+        "https://ticombo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Bataeh Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:57:07.857505",
+          "domain_explored": "https://albataehfc.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news content",
+            "Repetitive text blocks (scraping artifact)",
+            "Lack of corporate/technical data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 474,
+              "output_tokens": 177,
+              "elapsed_seconds": 3.949953079223633
+            }
+          ],
+          "reasoning": "The provided content consists solely of repetitive sports news headlines ('Considering our team\u2019s situation...') and generic 'Read More' link text. There is absolutely no information regarding technology infrastructure, job vacancies, tenders, or organizational governance. This content does not contain any procurement signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:57:10.690343",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:57:16.972216",
+          "domain_explored": "https://en.soccerwiki.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics database",
+            "Historical match data",
+            "No corporate or governance information"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 454,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.518493890762329
+            }
+          ],
+          "reasoning": "The scraped content from SoccerWiki is a statistical database for historical sports data (match results, player rosters). It contains no information regarding the club's internal operations, technology stack, or procurement activities. This is an external data source, not a corporate channel for the entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:57:23.321068",
+          "domain_explored": "https://footballdatabase.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Standardized ranking tables (UEFA, AFC, CAF)",
+            "Generic match center data",
+            "No entity-specific governance or commercial content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 187,
+              "elapsed_seconds": 3.537104845046997
+            }
+          ],
+          "reasoning": "The scraped content from footballdatabase.com consists of global football rankings and generic match results. While it lists clubs from various regions (Asia, Africa, Europe), there is no mention of 'Al Bataeh Club' nor any procurement, technology, or governance signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:57:26.775064",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:57:34.699566",
+          "domain_explored": "https://ticombo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Secondary ticket marketplace",
+            "Global event aggregation",
+            "Dynamic pricing models",
+            "Repetitive disclaimer text (scraping artifact)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1578,
+              "output_tokens": 191,
+              "elapsed_seconds": 4.432579040527344
+            }
+          ],
+          "reasoning": "The scraped content from 'ticombo.com' is a secondary ticketing marketplace listing global sports and entertainment events. While it lists 'UAE Pro League' tickets, this is consumer-facing inventory, not a procurement signal for Al Bataeh Club. There is no information regarding the club's internal governance, technology stack, or vendor partnerships."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:57:43.995435",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Standardized match center data (Odds, Form, Stats)",
+            "Generic league listings (Premier League, Serie A, etc.)",
+            "No entity-specific governance or corporate data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 191,
+              "elapsed_seconds": 5.623729944229126
+            }
+          ],
+          "reasoning": "The scraped content from footystats.org is a generic sports statistics dashboard displaying global match data (odds, form, league tables). There is no mention of 'Al Bataeh Club', nor are there any corporate signals, job postings, or procurement indicators relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5627,
+      "total_output_tokens": 916,
+      "estimated_cost_usd": 0.030621000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Bataeh Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:57:43.996921"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:10:10.984381"
+}

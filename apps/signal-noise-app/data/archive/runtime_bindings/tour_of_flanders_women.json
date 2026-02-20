@@ -1,0 +1,164 @@
+{
+  "entity_id": "tour_of_flanders_women",
+  "entity_name": "Tour of Flanders Women",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "flandersclassics.be",
+    "sportivebreaks.com",
+    "cyclingnews.com",
+    "cyclingfans.com",
+    "olympics.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_of_flanders_women",
+      "entity_name": "Tour of Flanders Women",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://flandersclassics.be",
+        "https://sportivebreaks.com",
+        "https://cyclingfans.com",
+        "https://olympics.com",
+        "https://cyclingnews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour of Flanders Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:58:18.548394",
+          "domain_explored": "https://flandersclassics.be",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 22 column 9 (char 1604)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:58:27.125277",
+          "domain_explored": "https://sportivebreaks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Feefo (Review Platform)",
+              "Interest-Free Payment Plan Provider"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Travel Partner relationship (Sportive Breaks)",
+              "Official Premium Tour Operator status (Giro d'Italia context)",
+              "VIP Experience partnerships (Team Visma | Lease a Bike)"
+            ]
+          },
+          "patterns_found": [
+            "Third-party travel partner ecosystem",
+            "Hospitality and experience packaging",
+            "Consumer-facing booking engine"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.703718185424805
+            }
+          ],
+          "reasoning": "The content is from a commercial travel partner (Sportive Breaks) offering packages for the Tour of Flanders. While this confirms the event's commercial ecosystem, it does not provide direct intelligence on the event organizer's internal procurement needs, technology stack, or governance patterns."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:58:34.298523",
+          "domain_explored": "https://cyclingnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Athlete performance focus",
+            "Race results reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1447,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.19619607925415
+            }
+          ],
+          "reasoning": "The provided content is a list of general cycling news headlines and articles from Cyclingnews.com. It focuses on athlete interviews (Tom Pidcock, Mathieu van der Poel), race results (Cyclo-cross World Championships), and team announcements. There is no mention of the 'Tour of Flanders Women' event organization, nor are there any signals regarding procurement, job postings, or technology investments related to the event's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:58:37.565408",
+          "domain_explored": "https://cyclingfans.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:59:10.390112",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2838,
+      "total_output_tokens": 449,
+      "estimated_cost_usd": 0.015249
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour of Flanders Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:59:10.391295"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.410104",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:19.238594"
+}

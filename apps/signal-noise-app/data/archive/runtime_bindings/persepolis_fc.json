@@ -1,0 +1,168 @@
+{
+  "entity_id": "persepolis_fc",
+  "entity_name": "Persepolis FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "persepolisfc.com",
+    "the-afc.com",
+    "wikidata.org",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/dubai-vacancy_are-you-looking-for-100-free-jobsin-dubai-activity-6808975259363024896-Eiug"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "persepolis_fc",
+      "entity_name": "Persepolis FC",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://www.linkedin.com/posts/dubai-vacancy_are-you-looking-for-100-free-jobsin-dubai-activity-6808975259363024896-Eiug",
+        "https://the-afc.com",
+        "https://persepolisfc.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Persepolis FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:14:12.893194",
+          "domain_explored": "https://persepolisfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PHP (Server-side scripting inferred from .php extensions)",
+              "Legacy HTML/CSS (Inferred from structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Content Management: Need for automated sports data integration (APIs) for League/ACL standings.",
+              "Streaming Infrastructure: 'TV Stream Share' section suggests potential procurement of OTT or broadcasting platforms.",
+              "Expansion Projects: 'Women Team (Soon)' indicates upcoming operational and marketing procurement.",
+              "Web Development: Legacy .php structure suggests potential future need for CMS migration or modernization."
+            ]
+          },
+          "patterns_found": [
+            "Legacy Web Architecture (PHP)",
+            "Content Management Needs (Sports Data)",
+            "Digital Asset Management (Streaming)",
+            "Fan Engagement Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 371,
+              "elapsed_seconds": 11.1511390209198
+            }
+          ],
+          "reasoning": "The scraped content reveals a legacy technology stack (PHP-based structure) and manual data management requirements for league tables and Asian competitions. The presence of a 'TV Stream Share' link and 'Women Team (Soon)' placeholder indicates ongoing digital expansion and content distribution needs. While no explicit RFPs are visible, the infrastructure suggests a need for modernization (CMS, Data APIs) and streaming services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:14:15.792245",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:14:18.580772",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:14:21.369183",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:14:27.876005",
+          "domain_explored": "https://www.linkedin.com/posts/dubai-vacancy_are-you-looking-for-100-free-jobsin-dubai-activity-6808975259363024896-Eiug",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Social Media Noise",
+            "Irrelevant Comment Spam",
+            "Personal Networking (Non-Commercial)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 190,
+              "elapsed_seconds": 3.0292582511901855
+            }
+          ],
+          "reasoning": "The scraped content is a generic 'Dubai Jobs' LinkedIn post with thousands of comments. The only mention of the target entity is a personal comment by 'Arash Najafi' (likely a random individual or unrelated person) attempting to contact a classmate about 'sports law' and 'gossip'. This is not a procurement signal, a job posting by the club, or a technology investment indicator. It is social media noise."
+        }
+      ],
+      "total_input_tokens": 2879,
+      "total_output_tokens": 561,
+      "estimated_cost_usd": 0.017052
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Persepolis FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:14:27.876717"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.185665",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:46.814959"
+}

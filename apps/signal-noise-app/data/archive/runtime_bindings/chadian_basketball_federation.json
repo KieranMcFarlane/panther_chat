@@ -1,0 +1,123 @@
+{
+  "entity_id": "chadian_basketball_federation",
+  "entity_name": "Chadian Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "hotmart.com",
+    "weareiowa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "chadian_basketball_federation",
+      "entity_name": "Chadian Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://weareiowa.com",
+        "https://hotmart.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Chadian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:11:51.832870",
+          "domain_explored": "https://hotmart.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Hotmart (Platform)",
+              "Canva PRO",
+              "Manychat PRO"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Promotion of 'Acesso Antecipado' (Early Access) program",
+              "B2C checkout and payment processing features"
+            ]
+          },
+          "patterns_found": [
+            "Generic Digital Marketing Content",
+            "Unrelated Geolocation (Brazil/Portuguese)",
+            "B2C Product Offerings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.897052049636841
+            }
+          ],
+          "reasoning": "The content is scraped from Hotmart, a Brazilian digital products platform, and is written entirely in Portuguese. It promotes B2C tools for selling courses and ebooks, which is irrelevant to the Chadian Basketball Federation's B2B procurement needs (governance, infrastructure, sports equipment). There is no connection to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:12:06.674141",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google reCAPTCHA",
+              "YouTube"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Local News Content",
+            "Irrelevant Geolocation (Des Moines, Iowa vs. Chad)",
+            "Consumer Advertising (Tech Deals, Subscriptions)",
+            "Sports Reporting (College Basketball)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 212,
+              "elapsed_seconds": 10.257464170455933
+            }
+          ],
+          "reasoning": "The content is from a local news station in Des Moines, Iowa (WeAreIowa). While there is a mention of college basketball ('Germany\u2019s Cyclone: Pleta growing...'), it is sports reporting, not governance or procurement activity for the Chadian Basketball Federation. The geolocation and entity context are completely unrelated to the target."
+        }
+      ],
+      "total_input_tokens": 2778,
+      "total_output_tokens": 448,
+      "estimated_cost_usd": 0.015054
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Chadian Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:12:06.675583"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.262931",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:10:10.650169"
+}

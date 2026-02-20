@@ -1,0 +1,192 @@
+{
+  "entity_id": "toray_arrows",
+  "entity_name": "Toray Arrows",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "toray-arrows.jp",
+    "toray.com",
+    "toray-arrows.stores.jp",
+    "svleague.jp",
+    "sportstextiles.toray"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "toray_arrows",
+      "entity_name": "Toray Arrows",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://toray.com",
+        "https://sportstextiles.toray",
+        "https://toray-arrows.jp",
+        "https://svleague.jp",
+        "https://toray-arrows.stores.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Toray Arrows may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:40:16.256382",
+          "domain_explored": "https://toray-arrows.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports club management structure",
+            "Regional team segmentation (Shizuoka/Shiga)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 509,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.2480409145355225
+            }
+          ],
+          "reasoning": "The content provided is strictly navigational text and headers for the Toray Arrows volleyball teams (Men's/Shizuoka and Women's/Shiga). It contains no corporate governance information, technology stacks, or procurement signals. It is a menu structure, not substantive content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:40:22.407474",
+          "domain_explored": "https://toray.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate-Brand misalignment",
+              "Entity confusion (Parent vs Subsidiary)"
+            ]
+          },
+          "patterns_found": [
+            "Global corporate brand site (Toray Industries, not Toray Arrows)",
+            "B2C marketing focus (Innovation stories, sustainability)",
+            "No procurement or operational signals for the rugby team"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 251,
+              "elapsed_seconds": 2.9832510948181152
+            }
+          ],
+          "reasoning": "The content analyzed is from the global corporate website of Toray Industries (the parent company), not the specific entity 'Toray Arrows' (the rugby club). The content focuses on brand marketing, materials innovation, and corporate sustainability (e.g., UNIQLO partnerships, Hydrogen society). There are no signals regarding the rugby team's operations, technology stack, or procurement needs. This indicates a drift away from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:40:25.893165",
+          "domain_explored": "https://toray-arrows.stores.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:40:33.356153",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level navigation structure",
+            "Generic sports taxonomy (Men/Women)",
+            "No organizational entity signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 538,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.0925378799438477
+            }
+          ],
+          "reasoning": "The provided content represents the navigation menu and taxonomy of the S.V.League (Japan's professional volleyball league) website. While Toray Arrows participates in this league, the content is purely structural (links to Men/Women divisions) and contains no specific information regarding Toray Arrows' internal operations, procurement needs, or technology stack. It is a governing body site, not a corporate or team-specific operational site."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:40:40.390373",
+          "domain_explored": "https://sportstextiles.toray",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Product Marketing (Textiles/Fibers)",
+            "Brand Portfolio Management (ecodear, FIELDSENSOR, &+)",
+            "Event Promotion (Summer Shield 2025, 2027 SS/FW Exhibitions)",
+            "Sustainability Messaging (Recycling, Bio-materials)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.619263172149658
+            }
+          ],
+          "reasoning": "The content is from 'Toray Sports Textiles', a B2B division of Toray Industries focused on material science and fabric manufacturing. It promotes textile products (fibers, yarns) and industry trade shows. This is a supplier-side entity, not the operational entity of the 'Toray Arrows' rugby team. There are no signals regarding the team's procurement, operations, or technology stack."
+        }
+      ],
+      "total_input_tokens": 4003,
+      "total_output_tokens": 829,
+      "estimated_cost_usd": 0.024444
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Toray Arrows may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:40:40.391910"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.323559",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:03.245465"
+}

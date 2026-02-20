@@ -1,0 +1,160 @@
+{
+  "entity_id": "ferrovi\u00e1rio_de_maputo",
+  "entity_name": "Ferrovi\u00e1rio de Maputo",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "bal.nba.com",
+    "wikidata.org",
+    "footystats.org",
+    "playmakerstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ferrovi\u00e1rio_de_maputo",
+      "entity_name": "Ferrovi\u00e1rio de Maputo",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bal.nba.com",
+        "https://footystats.org",
+        "https://playmakerstats.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ferrovi\u00e1rio de Maputo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:40:27.442902",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "sports_marketing_content",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.0149569511413574
+            }
+          ],
+          "reasoning": "The provided content is from the Basketball Africa League (BAL) website, a sports entertainment entity. There is absolutely no connection to 'Ferrovi\u00e1rio de Maputo', a railway operator. The content discusses basketball games, fan surveys, and banking partnerships in North/East Africa (Morocco, Rwanda, Libya), which are irrelevant to the procurement signals or operational context of a Mozambican railway company."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:40:38.826210",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_landing_page",
+            "irrelevant_content_source",
+            "geographic_mismatch",
+            "no_procurement_relevance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.449933767318726
+            }
+          ],
+          "reasoning": "The analyzed content is the generic homepage for Wikidata, a global open-data repository. It contains no specific information regarding 'Ferrovi\u00e1rio de Maputo', its procurement activities, technology stack, or governance. The content is entirely unrelated to the target entity's operational needs or purchasing signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:40:48.905013",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "sports_marketing_content",
+            "geographic_mismatch",
+            "generic_platform_landing_page"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.8511228561401367
+            }
+          ],
+          "reasoning": "The scraped content is from FootyStats.org, a football statistics and prediction platform. It contains sports betting data, match odds, and league tables (e.g., Premier League, Liga MX). There is absolutely no connection to 'Ferrovi\u00e1rio de Maputo', a railway company, nor any procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:41:21.869662",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4214,
+      "total_output_tokens": 552,
+      "estimated_cost_usd": 0.020922
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ferrovi\u00e1rio de Maputo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:41:21.871234"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230429",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:25:24.525283"
+}

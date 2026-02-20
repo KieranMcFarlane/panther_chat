@@ -1,0 +1,308 @@
+{
+  "entity_id": "canadian_volleyball_federation",
+  "entity_name": "Canadian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "norceca.net",
+    "godeacs.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/volleyball-jobs",
+      "https://ca.linkedin.com/jobs/volleyball-coach-jobs",
+      "https://ca.linkedin.com/jobs/sports-administration-jobs",
+      "https://ca.linkedin.com/jobs/view/regional-training-centre-coach-at-maverick-volleyball-4242870213",
+      "https://ca.linkedin.com/jobs/sports-coordinator-jobs",
+      "https://ca.linkedin.com/jobs/view/varsity-volleyball-coach-at-michigan-association-of-secondary-school-principals-massp-4326430883"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "canadian_volleyball_federation",
+      "entity_name": "Canadian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ca.linkedin.com/jobs/sports-administration-jobs",
+        "https://norceca.net",
+        "https://godeacs.com",
+        "https://ca.linkedin.com/jobs/volleyball-jobs",
+        "https://ca.linkedin.com/jobs/volleyball-coach-jobs",
+        "https://ca.linkedin.com/jobs/sports-coordinator-jobs",
+        "https://ca.linkedin.com/jobs/view/regional-training-centre-coach-at-maverick-volleyball-4242870213"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Canadian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:31:16.408513",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Documentation (Governance/Reporting)",
+              "Static Web Hosting (Legacy HTML structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Oversight: Presence of VP Mushtaque Mohammed indicates active governance monitoring.",
+              "Event Planning: Long-term hosting schedules (2002-2030) indicate predictable infrastructure procurement cycles.",
+              "Brand Management: Existence of a 'Branding Kit' suggests potential requirements for marketing or design vendors.",
+              "Organizational Structure: Links to Commissions and Executive Committees reveal the decision-making hierarchy."
+            ]
+          },
+          "patterns_found": [
+            "Governance Oversight",
+            "Event Hosting Cycles",
+            "Federation Affiliation Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 342,
+              "elapsed_seconds": 3.991840124130249
+            }
+          ],
+          "reasoning": "The content provides context on the organizational ecosystem (NORCECA) and governance cycles (elections, hosting schedules) that influence the Canadian Volleyball Federation. While no direct procurement signals (RFPs) are present, the 'Branding Kit' link and 'Commissions' documents suggest a structured approach to vendor requirements and centralized governance that drives procurement decisions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:31:26.143295",
+          "domain_explored": "https://godeacs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Content Noise",
+            "Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.1884570121765137
+            }
+          ],
+          "reasoning": "The content provided is from 'Wake Forest Athletics' (godeacs.com), a US-based NCAA university athletics department. This is completely unrelated to the target entity, 'Canadian Volleyball Federation'. The content consists of sports news, scores, and generic website navigation elements. There are no procurement signals, technology stacks, or governance patterns relevant to the Canadian Volleyball Federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:31:55.210813",
+          "domain_explored": "https://ca.linkedin.com/jobs/volleyball-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Varsity Volleyball Coach (MASSP)",
+              "SaskPolytech - Volleyball Coach (Sask Sport)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High Noise-to-Signal Ratio",
+            "Generic Job Aggregation",
+            "Entity Displacement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 190,
+              "elapsed_seconds": 20.144593954086304
+            }
+          ],
+          "reasoning": "The scraped content is a generic login wall and a list of low-level coaching roles (Varsity Coach, SaskPolytech) that are unrelated to the Canadian Volleyball Federation's core operations or procurement cycles. The content represents general labor market noise rather than strategic procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:32:08.431698",
+          "domain_explored": "https://ca.linkedin.com/jobs/volleyball-coach-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Varsity Volleyball Coach (Michigan Association of Secondary School Principals)",
+              "Soccer Coach (TeachMe.To)",
+              "Basketball Coaches (Volunteer Success)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Displacement",
+            "Semantic Drift",
+            "Aggregation Noise",
+            "Irrelevant Sports Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1510,
+              "output_tokens": 224,
+              "elapsed_seconds": 4.275822162628174
+            }
+          ],
+          "reasoning": "The scraped content from 'volleyball-coach-jobs' demonstrates a high volume of irrelevant results (Basketball, Soccer) and low-value coaching positions (volunteer, private lessons). The primary target, Canadian Volleyball Federation, is not present. The content represents market noise rather than centralized federation procurement activity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:32:18.514318",
+          "domain_explored": "https://ca.linkedin.com/jobs/sports-administration-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Basketball Development Officer (AGS Youth Soccer Club) - Irrelevant"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Entity Displacement",
+            "Semantic Drift",
+            "Aggregation Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.7197446823120117
+            }
+          ],
+          "reasoning": "The content is blocked by an authentication gate (Sign in to view), preventing access to actual procurement data. The visible text lists irrelevant roles (Basketball Development Officer at a Soccer Club) which demonstrates semantic drift and entity displacement from the target (Canadian Volleyball Federation). This is a generic aggregation page with no accessible signals specific to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:32:29.266709",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/regional-training-centre-coach-at-maverick-volleyball-4242870213",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Regional Training Centre Coach",
+                "entity": "Maverick Volleyball",
+                "location": "Ottawa, Ontario",
+                "type": "Operational / Coaching",
+                "salary_range": "CA$16.00 - CA$34.00 / hr"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "indicator": "Administrative Tasks",
+                "relevance": "Low",
+                "details": "Mentioned as a duty for coaches, likely data entry rather than vendor selection."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Entity Displacement",
+            "Local Club Scope",
+            "Operational Role Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1619,
+              "output_tokens": 335,
+              "elapsed_seconds": 3.73787522315979
+            }
+          ],
+          "reasoning": "The content describes a coaching role for Maverick Volleyball, a local club in Ottawa. While it mentions administrative tasks and 'support staff', the context is strictly operational (coaching curriculum execution) rather than strategic procurement or technology acquisition. The entity 'Maverick Volleyball' is distinct from the 'Canadian Volleyball Federation', and the pay scale ($16-$34/hr) indicates a front-line, non-managerial position with no purchasing authority."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:33:02.319041",
+          "domain_explored": "https://ca.linkedin.com/jobs/sports-coordinator-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Professional - PGA of Canada",
+              "Intern, Game Production & Events - Hamilton Tiger-Cats",
+              "Club Attendant - GoodLife Fitness"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Displacement",
+            "Semantic Drift",
+            "Aggregation Noise",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1669,
+              "output_tokens": 225,
+              "elapsed_seconds": 26.018229961395264
+            }
+          ],
+          "reasoning": "The search results for 'Sports Coordinator' demonstrate a high volume of irrelevant entities (GoodLife, PGA of Canada, Hamilton Tiger-Cats) with no direct connection to the Canadian Volleyball Federation. The content is generic job aggregation that requires authentication to view details, offering zero procurement-specific intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 10590,
+      "total_output_tokens": 1712,
+      "estimated_cost_usd": 0.05745
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Canadian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:33:02.320230"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335570",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:27.770677"
+}

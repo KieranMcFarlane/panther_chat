@@ -1,0 +1,165 @@
+{
+  "entity_id": "rk_gorenje_velenje",
+  "entity_name": "RK Gorenje Velenje",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rk-gorenje.com",
+    "eurohandball.com",
+    "grokipedia.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_gorenje_velenje",
+      "entity_name": "RK Gorenje Velenje",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://eurohandball.com",
+        "https://commons.wikimedia.org",
+        "https://rk-gorenje.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Gorenje Velenje may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:02:14.479855",
+          "domain_explored": "https://rk-gorenje.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Forms",
+              "Google Workspace"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Brand renewal for 2025/26 season (potential marketing/creative services procurement)",
+              "Membership drive infrastructure (digital forms)"
+            ]
+          },
+          "patterns_found": [
+            "Google Workspace Usage (Google Forms)",
+            "Digital Fan Engagement",
+            "Brand Reinvestment (Season 2025/26)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.433953046798706
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the discovery of a Google Forms link for membership ('PRIDRU\u017dI SE') confirms the use of Google Workspace. The mention of a 'renewed image' for the 2025/26 season suggests potential upcoming procurement for marketing or branding services, though no direct RFP is visible."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:02:24.650440",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Content",
+            "Cookie Consent Walls",
+            "Tournament Results (MVP, Champions)",
+            "Generic Event Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.1694390773773193
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com), not the specific domain of RK Gorenje Velenje. The content focuses on tournament results (Denmark champions, Gidsel MVP) and generic EHF event schedules. There is no mention of RK Gorenje Velenje, their specific procurement activities, or their technology stack. This represents a drift away from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:02:30.492761",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:02:39.858796",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository Content",
+            "Irrelevant Navigation Elements",
+            "Lack of Commercial Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1491,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.743769884109497
+            }
+          ],
+          "reasoning": "The content provided is the standard HTML structure for the Wikimedia Commons homepage. It contains generic navigation links, language selectors, and copyright information. There is absolutely no mention of RK Gorenje Velenje, handball, procurement, or specific business operations. It is a generic utility page with zero signal value for the target entity."
+        }
+      ],
+      "total_input_tokens": 4262,
+      "total_output_tokens": 614,
+      "estimated_cost_usd": 0.021996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Gorenje Velenje may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:02:39.860338"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.351494",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:48:02.862001"
+}

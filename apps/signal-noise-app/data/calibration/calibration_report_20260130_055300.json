@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-01-30T05:53:00.504565",
+  "entities": {
+    "International Canoe Federation (ICF)": {
+      "total_iterations": 17,
+      "final_confidence": 0.3600000000000001,
+      "total_cost_usd": 0.6970000000000001,
+      "saturation_iteration": 17,
+      "category_accepts": {},
+      "cost_per_confidence": 4.356249999999998
+    },
+    "Arsenal FC": {
+      "total_iterations": 17,
+      "final_confidence": 0.3600000000000001,
+      "total_cost_usd": 0.6970000000000001,
+      "saturation_iteration": 17,
+      "category_accepts": {},
+      "cost_per_confidence": 4.356249999999998
+    }
+  }
+}

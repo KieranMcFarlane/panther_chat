@@ -1,0 +1,179 @@
+{
+  "entity_id": "english_football_association",
+  "entity_name": "English Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "sporting.pt",
+    "specialolympicsgb.org.uk",
+    "sportbusiness.com",
+    "wembleystadium.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "english_football_association",
+      "entity_name": "English Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wembleystadium.com",
+        "https://sporting.pt",
+        "https://sportbusiness.com",
+        "https://specialolympicsgb.org.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "English Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:58:43.587643",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Language Mismatch (Portuguese)",
+            "Consumer-Facing Content (Ticketing, News, Schedules)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.6312429904937744
+            }
+          ],
+          "reasoning": "The content provided is from the official website of Sporting Clube de Portugal (Sporting CP), a Portuguese sports club, not the English Football Association (The FA). The content is in Portuguese and focuses on consumer-facing activities such as match schedules, ticket sales, and news updates. There are no signals relevant to the procurement activities of the English FA."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:58:49.909748",
+          "domain_explored": "https://specialolympicsgb.org.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Special Olympics GB vs English FA)",
+            "Consumer-Facing Navigation (Donate, Volunteer, Find a club)",
+            "Fundraising/Partnership Content (Non-Procurement)",
+            "News/PR Content (Event updates)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 928,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.73336124420166
+            }
+          ],
+          "reasoning": "The scraped content belongs to Special Olympics Great Britain, a distinct charity entity separate from the English Football Association (The FA). The content is exclusively consumer-facing, focusing on athlete recruitment, volunteering, donations, and general news. There are no signals of corporate procurement, technology infrastructure, or governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:59:02.016637",
+          "domain_explored": "https://sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Industry News Publisher vs. Target Entity)",
+            "General Industry Content (Media Rights, Sponsorship, Executive Moves)",
+            "No Procurement Specificity (RFPs, Tenders, or Vendor Selections for FA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 221,
+              "elapsed_seconds": 8.502827167510986
+            }
+          ],
+          "reasoning": "The content is from SportBusiness.com, a B2B industry news outlet. While it covers the sports industry, the specific content provided focuses on global media rights, sponsorships (e.g., PepsiCo, Ford), and executive appointments (e.g., EuroLeague CEO). There is no mention of the English Football Association (The FA), nor are there specific procurement signals (tenders, RFPs) relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:59:11.624463",
+          "domain_explored": "https://wembleystadium.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Tracking Links (ngx.me)",
+              "UTM Parameter Usage (Campaign tracking)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer-Facing Event Listings",
+            "Ticketing & Hospitality Promotions",
+            "Marketing Campaigns (Beat the January Blues)",
+            "External Link Aggregation (ngx.me)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 222,
+              "elapsed_seconds": 6.2177019119262695
+            }
+          ],
+          "reasoning": "The content is exclusively focused on event promotion, ticket sales, and hospitality packages for Wembley Stadium. While Wembley is an FA asset, this specific page acts as a B2C consumer portal rather than a corporate procurement or governance channel. There are no signals regarding technology stacks, vendor selection, or organizational spending."
+        }
+      ],
+      "total_input_tokens": 5346,
+      "total_output_tokens": 845,
+      "estimated_cost_usd": 0.028713000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "English Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:59:11.627541"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.204955",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:30.885403"
+}

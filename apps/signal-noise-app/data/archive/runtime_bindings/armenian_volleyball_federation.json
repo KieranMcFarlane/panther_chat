@@ -1,0 +1,354 @@
+{
+  "entity_id": "armenian_volleyball_federation",
+  "entity_name": "Armenian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "sportaran.com",
+    "mustangrescue.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://cy.linkedin.com/jobs/view/engineering-manager-at-nexters-%24gdev-4367465833",
+      "https://am.linkedin.com/jobs/view/monitoring-%D6%85perator-at-feedconstruct-4338133878",
+      "https://cy.linkedin.com/jobs/view/lead-marketing-analyst-at-nexters-%24gdev-4347565583",
+      "https://cy.linkedin.com/jobs/view/lead-product-analyst-at-nexters-%24gdev-4345910224",
+      "https://cy.linkedin.com/jobs/view/technical-lead-at-nexters-%24gdev-4354144242",
+      "https://cy.linkedin.com/jobs/view/lead-ua-manager-at-nexters-%24gdev-4302377951",
+      "https://cy.linkedin.com/jobs/view/2d-artist-creative-team-at-nexters-%24gdev-4351195957",
+      "https://cy.linkedin.com/jobs/view/office-manager-at-nexters-%24gdev-4349861331",
+      "https://cy.linkedin.com/jobs/view/lead-product-manager-at-nexters-%24gdev-4333342837"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "armenian_volleyball_federation",
+      "entity_name": "Armenian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cy.linkedin.com/jobs/view/technical-lead-at-nexters-%24gdev-4354144242",
+        "https://mustangrescue.org",
+        "https://sportaran.com",
+        "https://cy.linkedin.com/jobs/view/engineering-manager-at-nexters-%24gdev-4367465833",
+        "https://am.linkedin.com/jobs/view/monitoring-%D6%85perator-at-feedconstruct-4338133878",
+        "https://cy.linkedin.com/jobs/view/lead-product-analyst-at-nexters-%24gdev-4345910224",
+        "https://cy.linkedin.com/jobs/view/lead-marketing-analyst-at-nexters-%24gdev-4347565583",
+        "https://inside.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Armenian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:26:16.138927",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General European Volleyball Confederation (CEV) news feed",
+            "Regional federation updates (Montenegro, Azerbaijan, Slovenia)",
+            "Generic development activities (scouting, S&C teams)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 218,
+              "elapsed_seconds": 2.4507651329040527
+            }
+          ],
+          "reasoning": "The scraped content represents the general news feed of the European Volleyball Confederation (CEV). While it provides context on the activities of neighboring federations (like Montenegro and Azerbaijan), it contains zero specific mentions of the 'Armenian Volleyball Federation', nor does it reveal any specific procurement signals, technology stacks, or governance structures applicable to the target entity in Armenia."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:26:25.132964",
+          "domain_explored": "https://sportaran.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Focus on popular sports (Football, MMA, Wrestling)",
+            "Event results and athlete rankings",
+            "Historical sports reviews"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.457958936691284
+            }
+          ],
+          "reasoning": "The scraped content from Sportaran is a general sports news feed covering Football, MMA, Wrestling, and the Olympics. While it mentions the 'Armenia national futsal team', this is a distinct entity from the 'Armenian Volleyball Federation'. There are no articles, job postings, or technical documents related to volleyball governance, procurement tenders, or federation technology stacks."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:26:34.162878",
+          "domain_explored": "https://mustangrescue.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Construction project (New Barn Phase 1)",
+              "Fundraising campaign (Barn Fund)"
+            ]
+          },
+          "patterns_found": [
+            "Subject mismatch (Equine rescue vs. Volleyball Federation)",
+            "Fundraising/Donation requests",
+            "Non-profit organizational structure",
+            "Spam/Hacked link indicators (betting site links)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.7762577533721924
+            }
+          ],
+          "reasoning": "The scraped content is entirely unrelated to the target entity (Armenian Volleyball Federation). It describes 'Ever After Mustang Rescue,' a horse rehabilitation center in Maine, USA. The content focuses on animal welfare, barn construction fundraising, and educational clinics. Furthermore, the presence of unexpected gambling links ('winbet.co.ke', '1win bet') suggests the site may be compromised or a parking page, rendering it irrelevant for procurement intelligence regarding Armenian volleyball."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:26:43.387340",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/engineering-manager-at-nexters-%24gdev-4367465833",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Gitlab CI",
+              "Argo CD",
+              "C#",
+              "Unity",
+              "PostgreSQL",
+              "Kafka",
+              "AWS"
+            ],
+            "job_postings": [
+              "Engineering Manager at Nexters ($GDEV)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Subject mismatch (Game Development vs. Volleyball Federation)",
+            "Private Sector Hiring (Nexters/GDEV)",
+            "Irrelevant Technology Stack (Unity, Game Dev)",
+            "Geographic Irrelevance (Cyprus-based role)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 277,
+              "elapsed_seconds": 2.851090908050537
+            }
+          ],
+          "reasoning": "The content is a job posting for an Engineering Manager at Nexters ($GDEV), a mobile game development company. While Nexters has offices in Armenia, this is a private sector commercial role unrelated to the operations, governance, or procurement activities of the Armenian Volleyball Federation. The technologies (Unity, C#, Game Dev) and the hiring entity do not align with the target's sports federation context."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:26:58.642165",
+          "domain_explored": "https://am.linkedin.com/jobs/view/monitoring-%D6%85perator-at-feedconstruct-4338133878",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Excel, Word)",
+              "Data collection tools and software"
+            ],
+            "job_postings": [
+              {
+                "role": "Monitoring Operator",
+                "company": "FeedConstruct",
+                "location": "Yerevan, Armenia",
+                "relevance": "Volleyball data monitoring"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced data operations",
+              "Vendor partnership potential"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data Operations",
+            "Vendor Ecosystem (FeedConstruct)",
+            "Real-time Monitoring Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1649,
+              "output_tokens": 307,
+              "elapsed_seconds": 10.77235722541809
+            }
+          ],
+          "reasoning": "While this is a job posting for a private company (FeedConstruct) and not the Federation itself, it identifies a key local vendor active in the volleyball data ecosystem. The Federation likely relies on such vendors for data collection and streaming services. The requirement for 'Good knowledge of sport rules (soccer, basketball, futsal, handball, volleyball, hockey)' confirms the vendor's relevance to the target sector."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:27:10.137337",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/lead-marketing-analyst-at-nexters-%24gdev-4347565583",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Python",
+              "SQL (ClickHouse, Airflow)",
+              "Tableau"
+            ],
+            "job_postings": [
+              "Lead Marketing Analyst at Nexters ($GDEV)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Subject mismatch (Game Development vs. Volleyball Federation)",
+            "Private Sector Hiring (Nexters/GDEV)",
+            "Irrelevant Technology Stack (Tableau, Python, ClickHouse)",
+            "Geographic mismatch (Limassol, Cyprus vs. Yerevan, Armenia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1716,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.4470739364624023
+            }
+          ],
+          "reasoning": "The content is a job posting for a Lead Marketing Analyst at Nexters ($GDEV), a NASDAQ-listed game development company. While Nexters has offices in Armenia, this specific role is based in Limassol, Cyprus, and focuses on User Acquisition (UA) for video games (Hero Wars). The technology stack (Python, SQL, Tableau) and business domain (Gaming) are distinct from the sports federation procurement signals required for the Armenian Volleyball Federation."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:27:19.823115",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/lead-product-analyst-at-nexters-%24gdev-4345910224",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SQL",
+              "Python",
+              "Tableau",
+              "Airflow"
+            ],
+            "job_postings": [
+              "Lead Product Analyst at Nexters ($GDEV)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Subject mismatch (Game Development vs. Volleyball Federation)",
+            "Private Sector Hiring (Nexters/GDEV)",
+            "Irrelevant Technology Stack (SQL, Python, Tableau, Airflow)",
+            "Geographic Mismatch (Limassol, Cyprus vs. Yerevan, Armenia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1799,
+              "output_tokens": 268,
+              "elapsed_seconds": 3.940268039703369
+            }
+          ],
+          "reasoning": "The content is a job posting for a Lead Product Analyst at Nexters ($GDEV), a NASDAQ-listed game development company. While Nexters has offices in Armenia, this specific role is based in Limassol, Cyprus. The role focuses on game analytics (dashboards, monetization, user retention) rather than sports federation management or procurement operations. There is no connection to the Armenian Volleyball Federation."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:27:33.347500",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/technical-lead-at-nexters-%24gdev-4354144242",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Unity",
+              "C#",
+              "NASDAG: GDEV"
+            ],
+            "job_postings": [
+              "Technical Lead at Nexters"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Subject mismatch (Game Development vs. Volleyball Federation)",
+            "Private Sector Hiring (Nexters/GDEV)",
+            "Irrelevant Technology Stack (Unity, C#, Game Dev)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1880,
+              "output_tokens": 210,
+              "elapsed_seconds": 8.727450847625732
+            }
+          ],
+          "reasoning": "The content describes a Technical Lead position for 'Hero Wars: Alliance' at Nexters ($GDEV), a game development company. While Nexters has offices in Armenia, this is a private sector role focused on game architecture (Unity, C#), not a procurement signal for the Armenian Volleyball Federation."
+        }
+      ],
+      "total_input_tokens": 12908,
+      "total_output_tokens": 2030,
+      "estimated_cost_usd": 0.069174
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Armenian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:27:33.348979"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331951",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:50.707058"
+}

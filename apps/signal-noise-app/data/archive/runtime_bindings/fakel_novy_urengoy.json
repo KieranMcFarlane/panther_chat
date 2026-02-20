@@ -1,0 +1,227 @@
+{
+  "entity_id": "fakel_novy_urengoy",
+  "entity_name": "Fakel Novy Urengoy",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "globalsportsarchive.com",
+    "wikidata.org",
+    "volleybox.net",
+    "annabet.com",
+    "volleytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fakel_novy_urengoy",
+      "entity_name": "Fakel Novy Urengoy",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://globalsportsarchive.com",
+        "https://volleytimes.com",
+        "https://annabet.com",
+        "https://wikidata.org",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fakel Novy Urengoy may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:02:04.507006",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Domain Content",
+            "Sports Federation Navigation",
+            "Generic Event Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.9237959384918213
+            }
+          ],
+          "reasoning": "The content provided is exclusively from the Confederation Europ\u00e9enne de Volleyball (CEV) website (cev.eu). It contains navigation menus, event schedules (Champions League, EuroVolley), and generic footer links. There is absolutely no mention of 'Fakel Novy Urengoy', nor any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:02:16.321175",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Navigation",
+            "Global Competition Listings",
+            "Unrelated Domain Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.9532690048217773
+            }
+          ],
+          "reasoning": "The content is a generic index of soccer leagues and tournaments (UEFA, CONCACAF, etc.) from a sports archive site. There is no connection to 'Fakel Novy Urengoy', a Russian volleyball club, nor any signals regarding business operations, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:02:26.384485",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "Pretalx"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Landing Page",
+            "Open Source Community Content",
+            "Global User Base (Unrelated to Entity)",
+            "Standard Data Export Formats"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 238,
+              "elapsed_seconds": 2.757664918899536
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page for Wikidata, a global open-source knowledge base. It contains generic community news, event listings (WikidataCon), and documentation links (SPARQL, tutorials). There is no specific mention of 'Fakel Novy Urengoy', nor any localized procurement signals, job postings, or vendor partnerships relevant to the target entity. The content is purely informational and infrastructure-related to the Wikimedia ecosystem."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:02:38.065910",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer Market Navigation",
+            "Player Profile Aggregation",
+            "Generic Community Forum Structure",
+            "Unrelated Domain Content (Volleyball)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 176,
+              "elapsed_seconds": 5.51033616065979
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is exclusively focused on volleyball player transfers, agency management, and community statistics. There is no content related to corporate procurement, technology infrastructure, or the specific entity 'Fakel Novy Urengoy' beyond general sports data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:02:45.324341",
+          "domain_explored": "https://annabet.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:02:54.347144",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports News Aggregation",
+            "Global Competition Results (Italy, France, Poland)",
+            "Player Transfer Market Coverage",
+            "Unrelated Geographic Focus (No Russia/Novy Urengoy content)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1586,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.21870493888855
+            }
+          ],
+          "reasoning": "The content is entirely focused on international volleyball news, match results, and player transfers across Europe (Italy, France, Poland, Turkey). There is no mention of Fakel Novy Urengoy, the Russian league, or any procurement/business activities. The domain is a sports news outlet."
+        }
+      ],
+      "total_input_tokens": 7313,
+      "total_output_tokens": 937,
+      "estimated_cost_usd": 0.035994
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fakel Novy Urengoy may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:02:54.348474"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319844",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:45.790665"
+}

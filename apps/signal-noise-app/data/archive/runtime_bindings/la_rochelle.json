@@ -1,0 +1,477 @@
+{
+  "entity_id": "la_rochelle",
+  "entity_name": "La Rochelle",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "tier1_professional_clubs",
+  "discovered_domains": [
+    "larochelle.fr",
+    "nous-larochelle.fr",
+    "tours-la-rochelle.fr",
+    "larochelleskincare.com",
+    "larochelle-port.eu",
+    "univ-larochelle.fr",
+    "aquarium-larochelle.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/emil-frey-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/fab-group-jobs-worldwide",
+      "https://www.linkedin.com/posts/european-society-for-biomaterials_jobs-careers-activity-7305654445428596736-6k1K",
+      "https://www.linkedin.com/jobs/efficio-jobs-worldwide",
+      "https://www.linkedin.com/jobs/dalkia-jobs-worldwide",
+      "https://www.linkedin.com/posts/european-society-for-biomaterials_jobs-careers-activity-7305653945102729219-rrAN"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "la_rochelle",
+      "entity_name": "La Rochelle",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://aquarium-larochelle.com",
+        "https://www.linkedin.com/jobs/emil-frey-france-jobs-worldwide",
+        "https://www.linkedin.com/jobs/fab-group-jobs-worldwide",
+        "https://www.linkedin.com/jobs/dalkia-jobs-worldwide",
+        "https://larochelle-port.eu",
+        "https://larochelleskincare.com",
+        "https://tours-la-rochelle.fr",
+        "https://nous-larochelle.fr",
+        "https://univ-larochelle.fr",
+        "https://larochelle.fr",
+        "https://www.linkedin.com/posts/european-society-for-biomaterials_jobs-careers-activity-7305654445428596736-6k1K",
+        "https://www.linkedin.com/jobs/efficio-jobs-worldwide"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public Procurement Portal Link",
+        "Citizen Portal (Digital Service)",
+        "Eco-responsibility Communication",
+        "Air Quality Monitoring Service",
+        "Association Portal (B2B/Community Management)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "La Rochelle may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:48:11.825998",
+          "domain_explored": "https://larochelle.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Citizen Portal (Portail citoyen)",
+              "Air Quality Monitoring System",
+              "Association Portal",
+              "Webcam Infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Direct link to 'March\u00e9s publics' (Public Tenders/Procurement)",
+              "Professional services section for associations",
+              "Eco-responsibility initiatives (potential for green tech consulting)"
+            ]
+          },
+          "patterns_found": [
+            "Public Procurement Portal Link",
+            "Citizen Portal (Digital Service)",
+            "Eco-responsibility Communication",
+            "Air Quality Monitoring Service",
+            "Association Portal (B2B/Community Management)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 313,
+              "elapsed_seconds": 43.48378109931946
+            }
+          ],
+          "reasoning": "The homepage provides direct navigation to critical procurement and governance infrastructure. The explicit link to 'March\u00e9s publics' (Public Markets) confirms the entity's active procurement status. The presence of 'Portail citoyen', 'Qualit\u00e9 de l'air', and 'Portail des associations' indicates a mature digital stack requiring ongoing maintenance and potential vendor engagement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:48:22.475624",
+          "domain_explored": "https://nous-larochelle.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Promotion Content",
+            "Local Gastronomy Marketing",
+            "Cultural Event Listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 142,
+              "elapsed_seconds": 2.390773057937622
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing tourism marketing (gastronomy, events, heritage) managed by the 'Office de Tourisme'. It contains no corporate governance, administrative, or technical procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:48:55.536623",
+          "domain_explored": "https://tours-la-rochelle.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:49:15.769255",
+          "domain_explored": "https://larochelleskincare.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify/Magento inferred structure)",
+              "Mailing List / Email Marketing Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "E-commerce Product Listings",
+            "B2C Retail Operations",
+            "Brand Name Collision"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 200,
+              "elapsed_seconds": 13.164042949676514
+            }
+          ],
+          "reasoning": "The content analyzed is strictly commercial (B2C), focusing on the sale of beauty products like eyelashes and balms. The domain 'larochelleskincare.com' is a private retailer and shares no governance or procurement relationship with the municipal entity 'La Rochelle'. This represents a false positive in the search string."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:49:26.155524",
+          "domain_explored": "https://larochelle-port.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Navigation Menu Repetition",
+            "Port Authority Structure",
+            "Commercial Traffic Categories"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 690,
+              "output_tokens": 176,
+              "elapsed_seconds": 3.7240166664123535
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repeated navigation menu items (Traffic & sectors, Practical, Companies) and offers no substantive text regarding procurement, technology stacks, or governance. While the entity is the Port of La Rochelle (a potential public entity), this specific content snippet does not reveal procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:49:41.883146",
+          "domain_explored": "https://univ-larochelle.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "B2B Partnership Portal ('Entreprises, partenaires')",
+              "Research & Development Coordination (EU-CONEXUS)"
+            ]
+          },
+          "patterns_found": [
+            "Enterprise Partnership Portal",
+            "EU-CONEXUS Coordination (Smart City/Research)",
+            "Institutional Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 239,
+              "elapsed_seconds": 9.263706922531128
+            }
+          ],
+          "reasoning": "While this is the University entity (distinct from the City Hall), the explicit 'Entreprises, partenaires' (Enterprises, partners) navigation item indicates a dedicated channel for B2B collaboration and procurement. The coordination of the EU-CONEXUS project (Smart Urban Littoral) suggests potential for technology and infrastructure RFPs related to smart city initiatives, aligning with the broader regional procurement ecosystem."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:49:54.746911",
+          "domain_explored": "https://aquarium-larochelle.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "B2C Ticketing System (billetterie.aquarium-larochelle.com)",
+              "Content Management (CMS) for 'Actualit\u00e9s' and events"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Ticketing Operations",
+            "Visitor Information Management",
+            "Educational Content Distribution",
+            "Private/Commercial Entity Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1643,
+              "output_tokens": 199,
+              "elapsed_seconds": 4.535064220428467
+            }
+          ],
+          "reasoning": "The content is exclusively focused on visitor management, ticket sales, and educational exhibits for a tourist attraction. There are no signals related to public procurement, government administration, or enterprise B2B vendor acquisition."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:50:04.817271",
+          "domain_explored": "https://www.linkedin.com/jobs/emil-frey-france-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Customer Relationship Management)"
+            ],
+            "job_postings": [
+              "Charg\u00e9 de campagne CRM H/F (Chasseneuil-du-Poitou)",
+              "Responsable animation r\u00e9seau APV H/F (La Rochelle)"
+            ],
+            "procurement_indicators": [
+              "Private Sector Digital Investment",
+              "Regional Employment Growth"
+            ]
+          },
+          "patterns_found": [
+            "CRM Role Recruitment",
+            "Regional Network Management",
+            "Private Sector Entity (Emil Frey France)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1702,
+              "output_tokens": 279,
+              "elapsed_seconds": 6.385448217391968
+            }
+          ],
+          "reasoning": "While the content is from a private automotive group (Emil Frey) rather than the municipality, the listing for a 'Charg\u00e9 de campagne CRM' (CRM Campaign Manager) in Chasseneuil-du-Poitou (near La Rochelle) and a Network Manager in La Rochelle indicates active digital transformation and CRM tool usage within major regional employers. This provides secondary intelligence on the local technology ecosystem, though it is not direct public procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:50:12.854107",
+          "domain_explored": "https://www.linkedin.com/jobs/fab-group-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Labourer (Brandon, Manitoba)",
+              "Component Technician (Winnipeg, Manitoba)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Canada/Manitoba)",
+            "Sector Mismatch (Industrial/Manufacturing)",
+            "Entity Name Collision (All-Fab Group vs La Rochelle)",
+            "Generic Job Listings (Labourer/Technician)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1762,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.05613899230957
+            }
+          ],
+          "reasoning": "The scraped content refers to 'All-Fab Group', a private entity operating in Brandon and Winnipeg, Manitoba, Canada. This represents a complete entity mismatch with the target 'La Rochelle' (France). The roles listed (Labourer, Component Technician) are manual/industrial and do not reflect procurement or technology decision-making patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T09:50:29.416798",
+          "domain_explored": "https://www.linkedin.com/posts/european-society-for-biomaterials_jobs-careers-activity-7305654445428596736-6k1K",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Deep Learning",
+              "Graph Neural Networks (GNN)",
+              "Bioengineering Simulation Tools"
+            ],
+            "job_postings": [
+              "PhD Candidate: Artificial intelligence-driven design and development of antimicrobial materials (La Rochelle Universit\u00e9 / Catholic University of Valencia)"
+            ],
+            "procurement_indicators": [
+              "EU COFUND Funding Program",
+              "Research Infrastructure Investment",
+              "Cotutelle (Joint Supervision) Agreement Structure"
+            ]
+          },
+          "patterns_found": [
+            "Advanced Research Recruitment (PhD Level)",
+            "EU COFUND Grant Management",
+            "Artificial Intelligence & Deep Learning Focus",
+            "International Academic Partnership (Spain/France)",
+            "Biomedical Engineering Domain"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1846,
+              "output_tokens": 363,
+              "elapsed_seconds": 11.564230918884277
+            }
+          ],
+          "reasoning": "While this is a recruitment post for a PhD student (not direct procurement), it confirms La Rochelle Universit\u00e9's active involvement in high-tech research sectors (AI, Deep Learning, Graph Neural Networks) funded by EU COFUND. This signals a sophisticated technology stack and potential future needs for HPC hardware, specialized AI software, or laboratory equipment procurement associated with the 'Biomaterials and Bioengineering' research group."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T09:50:38.649024",
+          "domain_explored": "https://www.linkedin.com/jobs/efficio-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Management Consultant - London",
+              "Management Consultant - Lisbon",
+              "Management Consultant - Mexico City",
+              "Management Consultant - Shanghai"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Management Consultancy Operations",
+            "Geographic Irrelevance (London, Lisbon, Mexico City, Shanghai)",
+            "Private Sector Recruitment (Efficio Consulting)",
+            "Entity Name Collision (Efficio vs La Rochelle)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1911,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.288606882095337
+            }
+          ],
+          "reasoning": "The content is a job listing page for Efficio, a global management consulting firm. While consulting firms often influence procurement decisions, the specific entity 'Efficio' is unrelated to 'La Rochelle' (the target entity). The geographic focus (London, Lisbon, Mexico City, Shanghai) does not intersect with La Rochelle, France. This represents a keyword collision or irrelevant search result."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T09:50:48.281962",
+          "domain_explored": "https://www.linkedin.com/jobs/dalkia-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Charg\u00e9 d'affaires travaux Thermiques et \u00e9nerg\u00e9tiques (Centre) - Blois",
+              "Charg\u00e9 d'affaires travaux thermiques et \u00e9nerg\u00e9tiques (Rennes)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Entity (Dalkia/EDF Group)",
+            "Geographic Irrelevance (Blois, Rennes, etc. - not La Rochelle)",
+            "Operational Recruitment (Engineering/Construction)",
+            "Generic Login/Authentication Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1984,
+              "output_tokens": 242,
+              "elapsed_seconds": 4.621022939682007
+            }
+          ],
+          "reasoning": "The scraped content confirms Dalkia is a private energy services company (part of EDF Group). The job listings are operational roles (e.g., 'Charg\u00e9 d'affaires') located in regions like Blois and Brittany, with no direct connection to La Rochelle municipal governance or specific procurement opportunities for the target entity."
+        }
+      ],
+      "total_input_tokens": 17373,
+      "total_output_tokens": 2658,
+      "estimated_cost_usd": 0.091989
+    },
+    "procurement_signals": [
+      "Public Procurement Portal Link",
+      "Citizen Portal (Digital Service)",
+      "Eco-responsibility Communication",
+      "Air Quality Monitoring Service",
+      "Association Portal (B2B/Community Management)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "La Rochelle may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:50:48.284190"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.271270",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:21.415257"
+}

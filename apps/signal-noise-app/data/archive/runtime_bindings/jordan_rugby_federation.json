@@ -1,0 +1,98 @@
+{
+  "entity_id": "jordan_rugby_federation",
+  "entity_name": "Jordan Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "researchgate.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/sales-ledger-assistant-at-england-rugby-4345870082"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jordan_rugby_federation",
+      "entity_name": "Jordan Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://researchgate.net",
+        "https://uk.linkedin.com/jobs/view/sales-ledger-assistant-at-england-rugby-4345870082"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jordan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:07:37.104750",
+          "domain_explored": "https://researchgate.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:07:49.685902",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/sales-ledger-assistant-at-england-rugby-4345870082",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_scraping",
+            "geographic_mismatch",
+            "entity_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 168,
+              "elapsed_seconds": 8.191033124923706
+            }
+          ],
+          "reasoning": "The provided content is a generic list of 'Area Sales Manager' job postings in the United States (Toll Brothers, COREcruitment, etc.). It contains absolutely no information regarding the Jordan Rugby Federation, its procurement activities, or its technology stack. The content appears to be scraped noise unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 1406,
+      "total_output_tokens": 168,
+      "estimated_cost_usd": 0.006738000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jordan Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:07:49.687523"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290986",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:55.795325"
+}

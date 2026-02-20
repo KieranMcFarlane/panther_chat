@@ -1,0 +1,232 @@
+{
+  "entity_id": "panama_football_federation",
+  "entity_name": "Panama Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "football.fandom.com",
+    "oreateai.com",
+    "news.jamaica-gleaner.com",
+    "nytimes.com",
+    "inside.fifa.com",
+    "panama.coachesvoice.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "panama_football_federation",
+      "entity_name": "Panama Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nytimes.com",
+        "https://panama.coachesvoice.com",
+        "https://inside.fifa.com",
+        "https://oreateai.com",
+        "https://news.jamaica-gleaner.com",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Panama Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:33:09.137823",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mozilla Firefox",
+              "Google Chrome",
+              "Internet Explorer"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Wiki Platform",
+            "Fan-generated Content",
+            "Irrelevant League Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.7753398418426514
+            }
+          ],
+          "reasoning": "The scraped content is from 'Football Fandom' (formerly Wikia), a user-generated encyclopedia for global football. It focuses on general European leagues (Premier League, La Liga) and technical wiki maintenance (Discord links, browser optimization). There is absolutely no mention of the Panama Football Federation (FEPAFUT), its procurement activities, or specific technology stacks relevant to the entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:33:18.802104",
+          "domain_explored": "https://oreateai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Cheating Service",
+            "SEO Spam Content",
+            "Consumer B2C Marketing",
+            "Irrelevant Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 513,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.612236976623535
+            }
+          ],
+          "reasoning": "The scraped content is from 'oreateai.com', an AI essay writing service targeting students. This is a consumer-facing B2C tool with zero relevance to the Panama Football Federation's enterprise procurement needs (ERP, CRM, infrastructure). The domain and content are entirely unrelated to sports governance or federation operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:33:27.264301",
+          "domain_explored": "https://news.jamaica-gleaner.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Jamaica vs Panama)",
+            "General News Content",
+            "Sports Reporting (Jamaica Premier League)",
+            "Public Sector News (Jamaica Customs Agency)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.1521260738372803
+            }
+          ],
+          "reasoning": "The content is from a Jamaican news outlet (Jamaica Gleaner) and focuses on local Jamaican affairs, crime, education, and the Jamaica Premier League. There is no mention of the Panama Football Federation, Panamanian procurement, or regional technology spending relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:33:37.055397",
+          "domain_explored": "https://nytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General International News",
+            "US-Centric Political Coverage",
+            "Entertainment Industry News (Grammys)",
+            "Geographic Irrelevance (USA vs Panama)",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.9893338680267334
+            }
+          ],
+          "reasoning": "The content provided is a list of general news headlines from the New York Times, focusing on US politics, entertainment (Grammys), and international affairs. There is absolutely no content related to the Panama Football Federation, Panamanian procurement, or federation-specific governance. The entity is irrelevant to the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:33:46.683283",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Program (Funding Source)",
+              "Infrastructure Projects (Stadium Refurbishment)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (FIFA vs Panama Football Federation)",
+            "Global Sports News Content",
+            "Generic Navigation Links",
+            "FIFA Forward Program (Global Funding)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 256,
+              "elapsed_seconds": 3.5614736080169678
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's internal news portal (inside.fifa.com), not the Panama Football Federation (FEPAFUT). While it mentions the 'FIFA Forward' program\u2014a key funding mechanism for member associations like Panama\u2014the content itself focuses on global news, the Women's Champions Cup, and stadium refurbishment in Burundi. There are no specific procurement signals, job postings, or technology stack details related to the Panama Football Federation in this text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:33:52.834392",
+          "domain_explored": "https://panama.coachesvoice.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6398,
+      "total_output_tokens": 1020,
+      "estimated_cost_usd": 0.034494
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Panama Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:33:52.835360"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.209867",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:50:31.505167"
+}

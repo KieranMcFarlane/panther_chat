@@ -1,0 +1,183 @@
+{
+  "entity_id": "french_basketball_federation",
+  "entity_name": "French Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "corporate.airfrance.com",
+    "sponsorship.sportbusiness.com",
+    "dazngroup.com",
+    "basketnews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_basketball_federation",
+      "entity_name": "French Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://corporate.airfrance.com",
+        "https://dazngroup.com",
+        "https://basketnews.com",
+        "https://sponsorship.sportbusiness.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:16:54.474353",
+          "domain_explored": "https://corporate.airfrance.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Brand Marketing Content",
+            "Sustainability Reporting",
+            "General Corporate News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.146411895751953
+            }
+          ],
+          "reasoning": "The analyzed content is from the Air France corporate news portal and focuses on brand marketing (podcasts, documentaries), route expansions, and sustainability goals. There is absolutely no mention of the French Basketball Federation (FFBB), sports governance, or related procurement activities. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:17:03.583209",
+          "domain_explored": "https://sponsorship.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Industry News",
+            "Sponsorship Aggregators",
+            "Market Trend Analysis",
+            "Irrelevant Geographic Scope (Global/US/UK focus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.270739793777466
+            }
+          ],
+          "reasoning": "The content is a general industry news feed covering global sports sponsorship (NBA, Formula 1, Premier League). While it mentions 'Basketball' generally, there is no specific mention of the French Basketball Federation (FFBB), French entities, or specific procurement activities related to the target entity. The content serves as market noise rather than a signal for FFBB procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:17:35.479009",
+          "domain_explored": "https://dazngroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "OTT Streaming Platform",
+              "Integrated Betting/Gaming Tech",
+              "E-commerce Wallet"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Polymarket",
+              "Sponsorship with Betfred"
+            ]
+          },
+          "patterns_found": [
+            "Global OTT/Broadcast Platform",
+            "Consumer Marketing Content",
+            "Rights Aggregation (FIFA, etc.)",
+            "B2C Product Features (Betting, Merch)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 297,
+              "elapsed_seconds": 24.953367948532104
+            }
+          ],
+          "reasoning": "The content is scraped from DAZN's corporate homepage, which serves as a global consumer-facing marketing site for their OTT platform. While DAZN is a major player in sports broadcasting, this specific page contains only high-level brand messaging, product features (Watch, Play, Buy), and press releases about media rights they have acquired. There is no information regarding the French Basketball Federation's procurement activities, vendor selection processes, or internal technology stack. This represents a distraction from the core entity of interest (FFBB)."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:17:44.755383",
+          "domain_explored": "https://basketnews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Scores & Schedules",
+            "Team Matchups (NBA, EuroLeague)",
+            "Game Time Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 142,
+              "elapsed_seconds": 2.3121302127838135
+            }
+          ],
+          "reasoning": "The content consists entirely of basketball game results, scores, and upcoming schedules. It lacks any corporate, governance, or technological information relevant to the French Basketball Federation's procurement activities."
+        }
+      ],
+      "total_input_tokens": 5753,
+      "total_output_tokens": 809,
+      "estimated_cost_usd": 0.029394
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:17:44.757637"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269267",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:16.171767"
+}

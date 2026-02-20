@@ -1,0 +1,253 @@
+{
+  "entity_id": "finnish_baseball_federation",
+  "entity_name": "Finnish Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "pesapalloindia.org",
+    "suomipesis.fi",
+    "superpesisroundup.wordpress.com",
+    "tanhuvaara.fi",
+    "topendsports.com",
+    "mister-baseball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "finnish_baseball_federation",
+      "entity_name": "Finnish Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://mister-baseball.com",
+        "https://pesapalloindia.org",
+        "https://superpesisroundup.wordpress.com",
+        "https://suomipesis.fi",
+        "https://tanhuvaara.fi",
+        "https://topendsports.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Finnish Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:36:29.324845",
+          "domain_explored": "https://pesapalloindia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "token_limit_truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 392,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.6615259647369385
+            }
+          ],
+          "reasoning": "The source domain (pesapalloindia.org) refers to the development of Pes\u00e4pallo in India, which is a separate entity from the Finnish Baseball Federation (Superpesis). The content provided is truncated ('Made with Emergent' badge text) and contains no actionable procurement data, technology stack details, or governance information relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:36:36.497622",
+          "domain_explored": "https://suomipesis.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify suspected)",
+              "WhatsApp (Business Communication)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Supplier: Suomipesis Oy (Equipment manufacturing/import)",
+              "R&D Partnership: Jyv\u00e4skyl\u00e4n Yliopisto (KIHU) for product development",
+              "Product Categories: Balls, Bats, Gloves, Training Equipment"
+            ]
+          },
+          "patterns_found": [
+            "vendor_partnership",
+            "official_supplier",
+            "ecommerce_platform"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1401,
+              "output_tokens": 292,
+              "elapsed_seconds": 3.9639899730682373
+            }
+          ],
+          "reasoning": "The content confirms 'Suomipesis Oy' as the official manufacturer and supplier for the Pes\u00e4palloliitto (Finnish Baseball Federation). This identifies a key vendor partnership. The site uses an e-commerce structure (likely Shopify based on URL structure /collections/ and /products/), indicating a digital sales channel managed by or for the federation. While not a direct procurement *request*, it establishes the commercial ecosystem and supply chain the federation relies on."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:36:42.748297",
+          "domain_explored": "https://superpesisroundup.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Polttolinja website (Media/Content)",
+              "Partnership with Haminan Palloilijat (Content provision)"
+            ]
+          },
+          "patterns_found": [
+            "unofficial_source",
+            "editorial_content",
+            "media_outlet",
+            "fan_coverage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.3785319328308105
+            }
+          ],
+          "reasoning": "The source is an independent English-language blog and podcast dedicated to Superpesis news, game reviews, and opinion pieces. While it mentions partnerships (e.g., with Polttolinja and Haminan Palloilijat), these are media/content partnerships rather than procurement or vendor supply relationships involving the Finnish Baseball Federation. There is no presence of RFPs, technology stack analysis, or governance decision-making data relevant to the target entity's procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:36:50.961864",
+          "domain_explored": "https://tanhuvaara.fi",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue for training camps",
+              "Event hosting services"
+            ]
+          },
+          "patterns_found": [
+            "venue_rental",
+            "hospitality_services",
+            "consumer_marketing",
+            "third_party_entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 194,
+              "elapsed_seconds": 4.831265926361084
+            }
+          ],
+          "reasoning": "The scraped content identifies Tanhuvaara as a sports resort and educational institute (venue) offering camps and events, not the governing body (Finnish Baseball Federation). While they host events, they are a consumer-facing hospitality business, not a source for federation-level procurement intelligence or technology stack analysis."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:36:59.435843",
+          "domain_explored": "https://topendsports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "editorial_content",
+            "affiliate_marketing",
+            "global_scope",
+            "token_limit_truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.4493422508239746
+            }
+          ],
+          "reasoning": "The content is from a global sports science and news publisher (Topend Sports) focused on general fitness, NFL, NBA, and betting guides. It contains affiliate disclosures and editorial content. There is no connection to the Finnish Baseball Federation (Pes\u00e4pallo), Finnish jurisdiction, or specific procurement activities for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:37:10.501233",
+          "domain_explored": "https://mister-baseball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "editorial_content",
+            "irrelevant_entity",
+            "media_outlet",
+            "athlete_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 320,
+              "elapsed_seconds": 7.437735080718994
+            }
+          ],
+          "reasoning": "The source is a third-party media outlet (Mister Baseball) covering general baseball news. The mention of a Finnish individual (Konsta Kurikka) is editorial content about an athlete, not a procurement signal from the Finnish Baseball Federation. The other content references the British Baseball Federation and WBSC, which are irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7830,
+      "total_output_tokens": 1396,
+      "estimated_cost_usd": 0.04443
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Finnish Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:37:10.502920"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314737",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:06.597343"
+}

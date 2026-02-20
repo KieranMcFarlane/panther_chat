@@ -1,0 +1,332 @@
+{
+  "entity_id": "caf",
+  "entity_name": "CAF",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "cafonline.com",
+    "cafmobility.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://in.linkedin.com/jobs/caf-jobs",
+      "https://in.linkedin.com/company/caf-mobility/jobs",
+      "https://au.linkedin.com/jobs/caf-jobs",
+      "https://uk.linkedin.com/jobs/caf-jobs",
+      "https://www.linkedin.com/jobs/caf-usa-jobs",
+      "https://za.linkedin.com/jobs/caf-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "caf",
+      "entity_name": "CAF",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.12,
+        0.12,
+        0.18
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/caf-usa-jobs",
+        "https://uk.linkedin.com/jobs/caf-jobs",
+        "https://in.linkedin.com/jobs/caf-jobs",
+        "https://cafmobility.com",
+        "https://cafonline.com",
+        "https://au.linkedin.com/jobs/caf-jobs",
+        "https://in.linkedin.com/company/caf-mobility/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Explicit supplier diversity outreach (MWSDBE)",
+        "Direct listing of manufacturing component requirements",
+        "Dedicated procurement email address (dbe@cafusa.com)",
+        "Mention of 'Purchasing' department in Elmira facility",
+        "Specific technical material requests (propulsion, traction, welding)",
+        "Direct procurement role title",
+        "Regional entity confirmation (CAF Rail Australia)",
+        "Active hiring status (5 days ago)",
+        "Explicit entity matching (CAF Construcciones y Auxiliar de Ferrocarriles)",
+        "Direct operational hiring (Logistics, Assembly, Engineering)",
+        "US facility expansion (Elmira, NY)",
+        "Entity disambiguation (CAF America vs CAF Mobility)",
+        "Active recruitment lifecycle (1-6 days ago)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CAF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:05:35.082492",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High-volume content repetition",
+            "Navigation menu structure",
+            "Fan-facing content focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 908,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.216642141342163
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive navigation menu items (e.g., 'Show more', 'See all') and links to sports categories (Women's Football, AFCON 2025, CAF Champions League). There is no text related to corporate strategy, technology infrastructure, job openings, or vendor acquisition. This is a 'noise' capture of the website's UI structure rather than substantive content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:05:46.699632",
+          "domain_explored": "https://cafmobility.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "URBOS 100 streetcars",
+              "Signalling systems",
+              "Propulsion equipment",
+              "Traction motors",
+              "Auxiliary converters"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "MWSDBE Partnership Program",
+              "Supplier requirements list (steel plates, insulation, electrical panels)",
+              "Contact point for vendors: dbe@cafusa.com",
+              "SBA size standards compliance requirement"
+            ]
+          },
+          "patterns_found": [
+            "Explicit supplier diversity outreach (MWSDBE)",
+            "Direct listing of manufacturing component requirements",
+            "Dedicated procurement email address (dbe@cafusa.com)",
+            "Mention of 'Purchasing' department in Elmira facility",
+            "Specific technical material requests (propulsion, traction, welding)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 321,
+              "elapsed_seconds": 3.4258151054382324
+            }
+          ],
+          "reasoning": "The content provides explicit evidence of procurement activity, specifically targeting suppliers for manufacturing components. It lists specific material needs (sheet metal, propulsion equipment, cabling) and invites MWSDBE firms to partner, indicating active supply chain expansion."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:05:56.426562",
+          "domain_explored": "https://in.linkedin.com/jobs/caf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Store Manager - Reliance Retail (Multiple Locations)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Search result contamination",
+            "False positive entity matching",
+            "Retail sector noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.3018569946289062
+            }
+          ],
+          "reasoning": "The scraped content from 'in.linkedin.com/jobs/caf-jobs' returns job listings for 'Reliance Retail' (Store Managers), not the entity CAF (Development Bank of Latin America or CAF USA). The search query 'caf' is likely matching generic keywords like 'Cafeteria', 'Cafe', or 'Coffee' within unrelated retail job descriptions. There is no signal relevant to the target entity's procurement or technology stack."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:06:00.421163",
+          "domain_explored": "https://in.linkedin.com/company/caf-mobility/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access restriction (403 Forbidden)",
+            "URL parameter enforcement error"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 535,
+              "output_tokens": 157,
+              "elapsed_seconds": 1.6295480728149414
+            }
+          ],
+          "reasoning": "The scraper encountered a 403 Forbidden error with a specific instruction to use only the company name in the URL. This indicates a technical access restriction or malformed request rather than actual content to analyze. No procurement signals, job data, or technology stacks could be extracted."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:06:11.175802",
+          "domain_explored": "https://au.linkedin.com/jobs/caf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Procurement Officer - CAF Rail Australia - Dubbo"
+            ],
+            "procurement_indicators": [
+              "Active recruitment for procurement personnel",
+              "Regional operational hub identified (Dubbo, NSW)"
+            ]
+          },
+          "patterns_found": [
+            "Direct procurement role title",
+            "Regional entity confirmation (CAF Rail Australia)",
+            "Active hiring status (5 days ago)",
+            "Explicit entity matching (CAF Construcciones y Auxiliar de Ferrocarriles)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1573,
+              "output_tokens": 238,
+              "elapsed_seconds": 2.4224040508270264
+            }
+          ],
+          "reasoning": "The content successfully identifies a specific, active procurement role ('Procurement Officer') within the target entity (CAF Rail Australia). This confirms active procurement operations and hiring intent in the Australia region, directly validating the procurement hypothesis."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T05:06:23.770766",
+          "domain_explored": "https://uk.linkedin.com/jobs/caf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Project Engineer at Deeside Cereals (False Positive)",
+              "Cyber Security Engineer at NHS (Noise)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High volume of false positive entity matches (183 jobs)",
+            "Dominance of food sector entities (Deeside Cereals)",
+            "Public sector noise (NHS)",
+            "Absence of CAF (Construcciones y Auxiliar de Ferrocarriles) entities"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 232,
+              "elapsed_seconds": 4.133001089096069
+            }
+          ],
+          "reasoning": "The search results for 'caf' in the UK are heavily contaminated by non-relevant entities, primarily 'Deeside Cereals' (CAF) and the NHS. There is no immediate evidence of the target entity (CAF Mobility/Rail) in the provided text segment. This indicates a high signal-to-noise ratio requiring specific filtering."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T05:06:31.250186",
+          "domain_explored": "https://www.linkedin.com/jobs/caf-usa-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Logistics Coordinator",
+              "Rail Services Technician",
+              "Mechanical Assembly - Supervisor",
+              "Test Engineer"
+            ],
+            "procurement_indicators": [
+              "Logistics Coordination (Supply Chain)",
+              "Manufacturing Supervision (Production Materials)",
+              "Facility Operations (Elmira, NY)"
+            ]
+          },
+          "patterns_found": [
+            "Direct operational hiring (Logistics, Assembly, Engineering)",
+            "US facility expansion (Elmira, NY)",
+            "Entity disambiguation (CAF America vs CAF Mobility)",
+            "Active recruitment lifecycle (1-6 days ago)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1699,
+              "output_tokens": 305,
+              "elapsed_seconds": 3.6289868354797363
+            }
+          ],
+          "reasoning": "The search results successfully filtered out the non-profit entity (CAF America) and identified high-value operational roles for CAF (Construcciones y Auxiliar de Ferrocarriles). The presence of Logistics Coordinators, Mechanical Assembly Supervisors, and Test Engineers in Elmira, NY, confirms active manufacturing operations and implies ongoing supply chain and procurement activities to support these roles."
+        }
+      ],
+      "total_input_tokens": 9218,
+      "total_output_tokens": 1650,
+      "estimated_cost_usd": 0.052404000000000006
+    },
+    "procurement_signals": [
+      "Explicit supplier diversity outreach (MWSDBE)",
+      "Direct listing of manufacturing component requirements",
+      "Dedicated procurement email address (dbe@cafusa.com)",
+      "Mention of 'Purchasing' department in Elmira facility",
+      "Specific technical material requests (propulsion, traction, welding)",
+      "Direct procurement role title",
+      "Regional entity confirmation (CAF Rail Australia)",
+      "Active hiring status (5 days ago)",
+      "Explicit entity matching (CAF Construcciones y Auxiliar de Ferrocarriles)",
+      "Direct operational hiring (Logistics, Assembly, Engineering)",
+      "US facility expansion (Elmira, NY)",
+      "Entity disambiguation (CAF America vs CAF Mobility)",
+      "Active recruitment lifecycle (1-6 days ago)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CAF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:06:31.251531"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458175",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:41:44.607049"
+}

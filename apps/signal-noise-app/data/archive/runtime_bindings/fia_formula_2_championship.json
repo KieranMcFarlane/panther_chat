@@ -1,0 +1,138 @@
+{
+  "entity_id": "fia_formula_2_championship",
+  "entity_name": "FIA Formula 2 Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "fiaformula2.com",
+    "api.fia.com",
+    "formulae.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_formula_2_championship",
+      "entity_name": "FIA Formula 2 Championship",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://api.fia.com",
+        "https://formulae.fandom.com",
+        "https://fiaformula2.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Formula 2 Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:40:38.944417",
+          "domain_explored": "https://fiaformula2.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:40:51.531678",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Governance",
+                "description": "FIA Organization page lists 'Partners and suppliers' and 'Invitation to Tender' as primary menu items, indicating a formalized procurement workflow."
+              },
+              {
+                "type": "Compliance",
+                "description": "Presence of 'Data Privacy Notice' and 'Ethics and Compliance Hotline' suggests strict vendor compliance requirements."
+              }
+            ]
+          },
+          "patterns_found": [
+            "Centralized Procurement Governance",
+            "Standardized Tender Process",
+            "Regulatory Compliance Framework"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 290,
+              "elapsed_seconds": 3.9714341163635254
+            }
+          ],
+          "reasoning": "The content confirms that the FIA (Formula 2's governing body) operates a centralized procurement function with a standardized 'Invitation to Tender' process. While this page does not list specific FIA2 opportunities, it validates the existence of a formal vendor acquisition channel that governs the championship."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:41:08.140300",
+          "domain_explored": "https://formulae.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Reference to 'Formula 2 Wiki' as a developing encyclopedia (indicates external documentation exists, but is non-commercial)"
+            ]
+          },
+          "patterns_found": [
+            "Unaffiliated Third-Party Content",
+            "Fan-Based Knowledge Base",
+            "Historical/Archival Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 238,
+              "elapsed_seconds": 13.474897861480713
+            }
+          ],
+          "reasoning": "The content is explicitly from a Fandom Wiki (fan-maintained encyclopedia) and contains a disclaimer stating it is unofficial and not associated with the Formula E group of companies or the FIA. While it mentions 'Formula 2 Wiki' as an affiliated site, this is a community-driven project, not an official procurement channel. The content focuses on driver transfers and historical season data rather than business operations or technology acquisition."
+        }
+      ],
+      "total_input_tokens": 2835,
+      "total_output_tokens": 528,
+      "estimated_cost_usd": 0.016425000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Formula 2 Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:41:08.142730"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372524",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:57.839161"
+}

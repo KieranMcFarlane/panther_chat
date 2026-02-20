@@ -1,0 +1,218 @@
+{
+  "entity_id": "pick_szeged",
+  "entity_name": "Pick Szeged",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "pickhandball.hu",
+    "ehfcl.eurohandball.com",
+    "webshop.pickhandball.hu",
+    "fcbarcelona.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pick_szeged",
+      "entity_name": "Pick Szeged",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://ehfcl.eurohandball.com",
+        "https://webshop.pickhandball.hu",
+        "https://pickhandball.hu",
+        "https://fcbarcelona.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pick Szeged may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:30:09.983887",
+          "domain_explored": "https://pickhandball.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team content (Handball)",
+            "Generic content management",
+            "Ticketing operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 165,
+              "elapsed_seconds": 5.259897232055664
+            }
+          ],
+          "reasoning": "The scraped content is exclusively related to the handball team (OTP Bank-PICK Szeged), including match results, academy news, and podcast links. There are no corporate governance signals, technology infrastructure details, or procurement opportunities relevant to the Pick Szeged food manufacturing entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:30:16.153917",
+          "domain_explored": "https://ehfcl.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports league content",
+            "Navigation menu repetition",
+            "Third-party sponsorship links (Machineseeker)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.5599300861358643
+            }
+          ],
+          "reasoning": "The content is entirely focused on the European Handball Federation (EHF) Champions League general news, navigation, and league-wide sponsors. There is no mention of Pick Szeged, specific team operations, or organizational procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:30:44.193094",
+          "domain_explored": "https://webshop.pickhandball.hu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on structure)",
+              "Payment Gateway (implied by 'el\u0151re kifizetett' / pre-paid)",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise procurement (Sportswear, Fan gear)",
+              "Logistics/Shipping services",
+              "Textile manufacturing (Hummel partnership)",
+              "Retail infrastructure (POS systems)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce operations",
+            "Inventory management (SKU tracking)",
+            "Vendor partnership (Hummel)",
+            "Seasonal product cycles (25/26 kits)",
+            "Physical logistics (Click & Collect)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 282,
+              "elapsed_seconds": 21.212123155593872
+            }
+          ],
+          "reasoning": "While the page is consumer-facing, the operation of a webshop implies backend procurement for inventory management (ERP/WMS), logistics, and payment processing. The presence of 'Hummel' products confirms an active vendor relationship for merchandise."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:30:51.671502",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (FC Barcelona vs Pick Szeged)",
+            "Generic Sports Team Content",
+            "E-commerce Merchandising (Kits/Store)",
+            "Fan Engagement (Culers, Newsletter)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.8077290058135986
+            }
+          ],
+          "reasoning": "The scraped content is from fcbarcelona.com, which is completely unrelated to the target entity Pick Szeged. While both are sports organizations, the content focuses on FC Barcelona's specific match schedules, player news, and merchandise store. There are no procurement signals relevant to Pick Szeged."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:31:22.202292",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Platform Content",
+            "Consumer Gaming Applications",
+            "Irrelevant Entity (Google Play Store)",
+            "Language Mismatch (Arabic content vs Hungarian entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 182,
+              "elapsed_seconds": 23.26354217529297
+            }
+          ],
+          "reasoning": "The content provided is a direct scrape of the Google Play Store homepage (in Arabic), listing consumer video games (Arknights, Clash of Clans, etc.) and device categories. There is absolutely no connection to Pick Szeged, the handball club, or its procurement activities. The entity is irrelevant."
+        }
+      ],
+      "total_input_tokens": 7306,
+      "total_output_tokens": 969,
+      "estimated_cost_usd": 0.036453
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pick Szeged may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:31:22.204273"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.354895",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:46.368577"
+}

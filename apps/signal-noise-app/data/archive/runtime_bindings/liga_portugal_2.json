@@ -1,0 +1,247 @@
+{
+  "entity_id": "liga_portugal_2",
+  "entity_name": "Liga Portugal 2",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "ligaportugal.pt",
+    "flashscore.com",
+    "sporting.pt",
+    "football.fandom.com",
+    "kickalgor.com",
+    "globalsportsarchive.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liga_portugal_2",
+      "entity_name": "Liga Portugal 2",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://flashscore.com",
+        "https://globalsportsarchive.com",
+        "https://kickalgor.com",
+        "https://ligaportugal.pt",
+        "https://sporting.pt",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liga Portugal 2 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:09:14.003207",
+          "domain_explored": "https://ligaportugal.pt",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:09:20.664017",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gambling/Gaming content (irrelevant)",
+            "Generic sports navigation",
+            "Loading indicators (scraped data artifact)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 571,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.6616530418395996
+            }
+          ],
+          "reasoning": "The content provided is from Flashscore, a live sports score aggregator. It contains gambling warnings, generic navigation links, and loading placeholders. There is absolutely no information regarding Liga Portugal 2's internal operations, technology stack, or procurement activities. This source is irrelevant for B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:09:28.290830",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ticket.sporting.pt (Sub-domain/Dedicated ticketing platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Pilot phase for new ticketing website (ticket.sporting.pt) - Indicates digital investment but by the wrong entity"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Navigation",
+            "Ticketing Operations",
+            "Sports Schedule Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 273,
+              "elapsed_seconds": 4.496799945831299
+            }
+          ],
+          "reasoning": "The scraped content belongs to Sporting Clube de Portugal (SCP), a first-tier club, not 'Liga Portugal 2' (the league organizer). While the site mentions a 'Novo site de bilhetes' (New ticketing site) in pilot phase, this indicates a consumer-facing operational change rather than a B2B procurement signal for the league entity. The content is focused on game schedules, results, and fan engagement (tickets, memberships), which are irrelevant to the governance or procurement analysis of Liga Portugal 2."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:09:36.652542",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wiki/Fandom Platform Structure",
+            "Generic Sports Content",
+            "User-Generated Content Indicators",
+            "Irrelevant League References (Premier League, La Liga)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 208,
+              "elapsed_seconds": 5.329396963119507
+            }
+          ],
+          "reasoning": "The scraped content is from 'football.fandom.com', a user-generated wiki platform. It contains generic navigation elements, editing guidelines, and references to major leagues (Premier League, La Liga) rather than specific information regarding 'Liga Portugal 2'. There is no presence of corporate governance, procurement documentation, or vendor technology stacks associated with the official league entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:09:46.010138",
+          "domain_explored": "https://kickalgor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ELO Rating Algorithm",
+              "Global Rating Database"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Aggregation",
+            "ELO Rating Systems",
+            "Third-Party Analytics Platform",
+            "Generic League Listings",
+            "Multi-Confederation Data (AFC, CAF, CONCACAF, CONMEBOL)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.5623726844787598
+            }
+          ],
+          "reasoning": "The content is from 'kickalgor.com', a third-party analytics platform providing global football ratings and ELO rankings. While 'Liga Portugal' appears in the broader context of global leagues (implied by the presence of ENG, ESP, ITA, GER, FRA), the scraped text focuses on top-tier global rankings and specific non-European confederations (AFC, CAF, etc.) in this snippet. It does not contain specific information regarding 'Liga Portugal 2' operations, governance, or procurement activities. This is a data consumption source, not a source for organizational procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:09:54.422968",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Aggregation",
+            "Generic League Navigation",
+            "Statistical Archive Structure",
+            "Third-Party Data Provider"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.463016986846924
+            }
+          ],
+          "reasoning": "The content represents a generic sports statistics archive (Global Sports Archive). It lists 'Liga Portugal' merely as one of hundreds of leagues in a global index. There is no specific information regarding Liga Portugal 2's internal operations, technology stack, or procurement activities. This is a consumer-facing data aggregation site, not a source for organizational procurement intelligence."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:09:57.415703",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6608,
+      "total_output_tokens": 1137,
+      "estimated_cost_usd": 0.036879
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liga Portugal 2 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:09:57.416039"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.446832",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:04:07.957682"
+}

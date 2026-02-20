@@ -1,0 +1,448 @@
+{
+  "entity_id": "hearts",
+  "entity_name": "Hearts",
+  "template_id": "tpl_mid_market_league_clubs_v1",
+  "cluster_id": "domestic_league_pros",
+  "discovered_domains": [
+    "heartsfc.co.uk",
+    "heartsdirect.co.uk",
+    "heartsofficial.com",
+    "keltyhearts.co.uk",
+    "eticketing.co.uk",
+    "heartsofoaksc.com",
+    "heartsofpine.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/hearts-%26-science-jobs",
+      "https://www.linkedin.com/jobs/hearts-%26-science-jobs",
+      "https://www.linkedin.com/jobs/hearts-%26-science-jobs-new-york-ny",
+      "https://www.linkedin.com/jobs/great-hearts-academies-jobs-worldwide",
+      "https://www.linkedin.com/jobs/hearts-on-fire-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/view/insights-and-research-director-at-hearts-science-4271345663",
+      "https://www.linkedin.com/jobs/great-hearts-academies-jobs",
+      "https://www.linkedin.com/jobs/chrome-hearts-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hearts",
+      "entity_name": "Hearts",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/hearts-%26-science-jobs",
+        "https://www.linkedin.com/jobs/hearts-%26-science-jobs-new-york-ny",
+        "https://heartsdirect.co.uk",
+        "https://heartsofpine.com",
+        "https://www.linkedin.com/jobs/hearts-%26-science-jobs",
+        "https://eticketing.co.uk",
+        "https://keltyhearts.co.uk",
+        "https://heartsfc.co.uk",
+        "https://www.linkedin.com/jobs/hearts-on-fire-jobs-worldwide",
+        "https://www.linkedin.com/jobs/great-hearts-academies-jobs-worldwide",
+        "https://heartsofoaksc.com",
+        "https://heartsofficial.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hearts may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:35:48.182647",
+          "domain_explored": "https://heartsfc.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (heartsfootballclub.myshopify.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Match Sponsorship Packages (Corporate Sales)",
+              "Player of the Year Event Tickets (Hospitality Procurement)",
+              "Merchandise E-commerce Platform (Shopify)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Shopify)",
+            "Hospitality & Event Management",
+            "Sponsorship Packages"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 255,
+              "elapsed_seconds": 11.294548988342285
+            }
+          ],
+          "reasoning": "The content reveals the use of Shopify for the news/blog section and merchandise operations, indicating a specific technology choice for e-commerce. The presence of structured 'Match Sponsorship' packages and 'Hospitality & events' (POTY 2026) indicates active procurement of services for event management and corporate hospitality, although no specific new RFPs are visible in this snapshot."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:35:56.840251",
+          "domain_explored": "https://heartsdirect.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (E-commerce Platform)",
+              "Shopify Payments / Payment Gateway",
+              "Product Management System (Collections/Products structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Supplier: Hummel (Apparel & Training Wear)",
+              "Supplier: Titleist (Golf Merchandise)",
+              "Supplier: Burns Crystal (Luxury Gifts/Decanters)",
+              "Category: Retail Inventory Management",
+              "Category: Kit Manufacturing & Supply"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage (Shopify)",
+            "Merchandise Procurement (Sporting Goods)",
+            "Vendor Partnerships (Hummel, Titleist, Burns Crystal)",
+            "Licensing & Brand Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 316,
+              "elapsed_seconds": 5.27219820022583
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the 'Hearts Direct' e-commerce storefront. While it does not show active RFPs, it confirms the procurement of retail inventory and the use of a specific technology stack (Shopify). The presence of specific brand partnerships (Hummel for kits, Titleist for golf balls) indicates established supply chain relationships."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:36:00.648438",
+          "domain_explored": "https://heartsofficial.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:36:07.399523",
+          "domain_explored": "https://keltyhearts.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fanbase (Ticketing)",
+              "YouTube (Video Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Ticketing Platform Usage (Fanbase)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.7494029998779297
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kelty Hearts FC' (keltyhearts.co.uk), a distinct entity from the target 'Heart of Midlothian' (Hearts). While the site structure is similar to a typical football club (using Fanbase for tickets, YouTube for TV), the data is irrelevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:36:10.500722",
+          "domain_explored": "https://eticketing.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:36:23.898852",
+          "domain_explored": "https://heartsofoaksc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Play",
+              "Apple App Store"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mobile App Development (Fan Engagement)",
+              "Kit Manufacturing (2025/26 Season)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Mobile Application Procurement (Fan Engagement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 935,
+              "output_tokens": 215,
+              "elapsed_seconds": 7.281672239303589
+            }
+          ],
+          "reasoning": "The scraped content confirms the target entity is 'Hearts of Oak' (Accra Hearts of Oak Sporting Club), a Ghanaian football club, rather than 'Heart of Midlothian' (Hearts FC), the Scottish entity defined in the context. While the site shows evidence of digital procurement (mobile apps), it applies to the wrong organization."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:36:30.055167",
+          "domain_explored": "https://heartsofpine.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (inferred from shop.heartsofpine.com subdomain)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Sales (Jerseys, Hats, Accessories)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "E-commerce Platform Usage (Shopify)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1615,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.705631971359253
+            }
+          ],
+          "reasoning": "The content confirms the entity is 'Hearts of Pine', a professional soccer club based in Portland, Maine (USA). This is a distinct entity from the target 'Hearts' (Heart of Midlothian FC, Edinburgh, Scotland). While the site utilizes Shopify for merchandise, this does not constitute a procurement signal for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:36:36.772529",
+          "domain_explored": "https://uk.linkedin.com/jobs/hearts-%26-science-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Insights and Research Director",
+              "Client Executive",
+              "Programmatic Manager"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Advertising Agency Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.218818187713623
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Hearts & Science', an Omnicom-owned advertising agency based in London, not the football entity 'Hearts' (Heart of Midlothian FC). The job listings (Client Executive, Programmatic Manager) are for media and advertising roles, unrelated to sports club procurement or operations."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:36:44.451913",
+          "domain_explored": "https://www.linkedin.com/jobs/hearts-%26-science-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Analyst, Data Science",
+              "Senior Director, Marketing Science",
+              "Director, Data Science",
+              "Senior Director, Digital Activation",
+              "Senior Analyst, Business Analytics"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Advertising Agency Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1719,
+              "output_tokens": 239,
+              "elapsed_seconds": 4.229146957397461
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Hearts & Science', an advertising agency based in New York, United States. This is a distinct entity from 'Hearts' (Heart of Midlothian FC), the Scottish football club based in Edinburgh. The content lists job openings for data science and marketing roles within the agency, which are irrelevant to the procurement intelligence of the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:36:55.513232",
+          "domain_explored": "https://www.linkedin.com/jobs/hearts-%26-science-jobs-new-york-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Manager, SEO",
+              "Director, Business Analytics"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Advertising Agency Sector"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1772,
+              "output_tokens": 204,
+              "elapsed_seconds": 7.287782907485962
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Hearts & Science', an advertising agency based in New York, NY. This is a distinct entity from the target 'Hearts' (Heart of Midlothian FC), which is a football club based in Edinburgh, UK. The job listings (Manager, SEO; Director, Business Analytics) are relevant to the advertising agency sector and do not provide procurement intelligence for the Scottish football club."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T16:37:01.961284",
+          "domain_explored": "https://www.linkedin.com/jobs/great-hearts-academies-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Special Education Coordinator",
+              "Headmaster",
+              "Elementary Music Teacher",
+              "Head of School"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Education Sector Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1827,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.315685987472534
+            }
+          ],
+          "reasoning": "The content pertains to 'Great Hearts Academies', a network of charter schools based in Arizona, USA. This is a distinct entity from 'Hearts' (Heart of Midlothian FC), the Scottish football club. The job listings (Special Education Coordinator, Headmaster) are relevant to education administration, not sports club procurement."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T16:37:08.823639",
+          "domain_explored": "https://www.linkedin.com/jobs/hearts-on-fire-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "PR & Communications Executive",
+              "Retail Manager",
+              "Assistant Manager, CRM & Client Marketing",
+              "Assistant Manager, Visual Merchandising"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Mismatch",
+            "Jewelry & Luxury Retail Sector",
+            "CRM & Client Marketing Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1880,
+              "output_tokens": 233,
+              "elapsed_seconds": 3.425977945327759
+            }
+          ],
+          "reasoning": "The scraped content refers to 'Hearts On Fire', a luxury jewelry brand (owned by Chow Tai Fook Jewellery Group), which is unrelated to the target entity 'Hearts' (Heart of Midlothian FC). The job listings are based in Hong Kong and Shanghai, further confirming the entity and geographic mismatch. While a CRM role was identified, it belongs to the wrong entity."
+        }
+      ],
+      "total_input_tokens": 15478,
+      "total_output_tokens": 2236,
+      "estimated_cost_usd": 0.079974
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hearts may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:37:08.824310"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.139348",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:51.504627"
+}

@@ -1,0 +1,149 @@
+{
+  "entity_id": "hc_odessa",
+  "entity_name": "HC Odessa",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "playmakerstats.com",
+    "icehockey.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hc_odessa",
+      "entity_name": "HC Odessa",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://eurohandball.com",
+        "https://icehockey.fandom.com",
+        "https://playmakerstats.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HC Odessa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:35:36.840721",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls",
+            "Tournament results (Denmark, Croatia)",
+            "Event calendar listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.092884063720703
+            }
+          ],
+          "reasoning": "The provided content is from the European Handball Federation (EHF) general news portal and focuses on tournament results (Men's EHF EURO 2026), MVP awards, and event calendars. There is no mention of 'HC Odessa', nor are there any procurement signals, job postings, or technology stack details relevant to the specific entity HC Odessa. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:35:48.048898",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports results aggregation",
+            "Gambling affiliation (GambleAware)",
+            "Multi-domain footer network (ZeroZero, CeroACero, etc.)",
+            "Generic league tables (Premier League, La Liga, etc.)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.947066068649292
+            }
+          ],
+          "reasoning": "The content is a generic sports statistics portal (PlaymakerStats/ZeroZero network) displaying global football results and gambling awareness links. There is no mention of 'HC Odessa', handball, Ukraine, or corporate procurement activities. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:35:56.436488",
+          "domain_explored": "https://icehockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom (Wiki platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Wiki/Fandom platform structure",
+            "General sports encyclopedia content",
+            "Global scope (IIHF, NHL, KHL)",
+            "User-generated content model",
+            "Historical statistics focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.225149393081665
+            }
+          ],
+          "reasoning": "The content is from a general ice hockey wiki (Fandom) covering global leagues, history, and encyclopedic data. It lacks specific organizational details regarding 'HC Odessa' (Ukraine), operational governance, or commercial procurement activities. It is a reference site, not a corporate or team entity source."
+        }
+      ],
+      "total_input_tokens": 4225,
+      "total_output_tokens": 580,
+      "estimated_cost_usd": 0.021374999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HC Odessa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:35:56.437801"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.357486",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:37:03.623693"
+}

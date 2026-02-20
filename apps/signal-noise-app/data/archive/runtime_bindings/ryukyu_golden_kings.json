@@ -1,0 +1,201 @@
+{
+  "entity_id": "ryukyu_golden_kings",
+  "entity_name": "Ryukyu Golden Kings",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "goldenkings.jp",
+    "bleague-shop.jp",
+    "play.google.com",
+    "okinawa-arena.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ryukyu_golden_kings",
+      "entity_name": "Ryukyu Golden Kings",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://goldenkings.jp",
+        "https://okinawa-arena.jp",
+        "https://bleague-shop.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ryukyu Golden Kings may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:54:08.344014",
+          "domain_explored": "https://goldenkings.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Basketball LIVE (Streaming Platform)",
+              "3D Seat Map (Ticketing/Tech)",
+              "E-commerce system (Online Shop)",
+              "CRM/Fan Club Management System"
+            ],
+            "job_postings": [
+              "Recruit (\u30ea\u30af\u30eb\u30fc\u30c8) section present (link detected, content not analyzed)"
+            ],
+            "procurement_indicators": [
+              "Partnership Structure (Official Partners / Support Companies)",
+              "Digital Asset Management (News, Game Info, Schedules)",
+              "Community Management (CSR, Youth Academy)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform Usage",
+            "E-commerce Infrastructure",
+            "Digital Content Management",
+            "CRM Capabilities (Fan Club)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 344,
+              "elapsed_seconds": 10.100736856460571
+            }
+          ],
+          "reasoning": "The content reveals the Ryukyu Golden Kings' active use of specific third-party platforms for fan engagement and operations. The explicit mention of 'Basketball LIVE' (a league-wide streaming service) and the detailed 'Fan Club' section with 'My Page' functionality indicates a reliance on external digital service providers. While no direct RFP is found, the presence of these platforms confirms the entity operates in a space requiring ongoing IT procurement and maintenance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:54:22.417136",
+          "domain_explored": "https://bleague-shop.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Centralized E-commerce Platform (B.LEAGUE)",
+              "Digital Content Management (for 'Monthly Basketball' features)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-managed digital storefront",
+              "Standardized product categorization (Apparel, Towels, Accessories)",
+              "Third-party logistics/shipping integration (Yamato Transport references in news)"
+            ]
+          },
+          "patterns_found": [
+            "League-Level E-commerce Consolidation",
+            "Merchandise Taxonomy Management",
+            "Digital Content Distribution"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 315,
+              "elapsed_seconds": 6.399525880813599
+            }
+          ],
+          "reasoning": "The content confirms the Ryukyu Golden Kings utilizes the centralized B.LEAGUE Official Online Shop (bleague-shop.jp) for merchandise distribution. This indicates a reliance on league-level infrastructure rather than independent procurement for e-commerce platforms. The presence of specific product categories (Apparel, Accessories) and digital content (magazines) suggests downstream procurement needs for inventory management and physical goods, but weak signals for independent technology acquisition."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:54:28.658819",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Scraping",
+            "Platform Aggregation Noise",
+            "Irrelevance to Entity Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.1835010051727295
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic list of popular mobile games (e.g., Free Fire, Clash of Clans, Genshin Impact) from the Google Play Store homepage. There is no mention of Ryukyu Golden Kings, B.League, basketball, or any specific procurement activity. This represents a complete failure of the search query to return relevant domain-specific intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:54:45.573775",
+          "domain_explored": "https://okinawa-arena.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "3DVR Mapping Platform",
+              "Event Management System (implied by booking structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Adoption of 3D/VR technology for facility navigation",
+              "Venue diversification programs (Yoga classes) requiring scheduling software",
+              "Integration with national league (B.League) and international (FIBA) digital standards"
+            ]
+          },
+          "patterns_found": [
+            "Venue Management Technology",
+            "3D/VR Visualization Tools",
+            "Multi-tenant Facility Usage",
+            "Cross-Domain Traffic Routing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1512,
+              "output_tokens": 325,
+              "elapsed_seconds": 9.669740915298462
+            }
+          ],
+          "reasoning": "The content confirms the entity operates within a sophisticated venue ecosystem (Okinawa Arena) that utilizes advanced visualization technologies (3DVR Maps). While the content is primarily event-driven (Yoga, FIBA, B.League), the presence of '3DVR\u30de\u30c3\u30d7\u3092\u5c0e\u5165' (Introduction of 3DVR Map) indicates a procurement decision for venue experience technology. The repeated linking to `goldenkings.jp` sub-pages for specific games suggests a shared digital infrastructure or traffic routing strategy between the venue and the team."
+        }
+      ],
+      "total_input_tokens": 5743,
+      "total_output_tokens": 1164,
+      "estimated_cost_usd": 0.034689
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ryukyu Golden Kings may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:54:45.576056"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216729",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:41.005761"
+}

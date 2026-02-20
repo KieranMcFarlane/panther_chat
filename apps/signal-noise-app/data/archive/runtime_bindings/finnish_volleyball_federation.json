@@ -1,0 +1,240 @@
+{
+  "entity_id": "finnish_volleyball_federation",
+  "entity_name": "Finnish Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "torneopal.com",
+    "www-old.cev.eu",
+    "worldparavolley.org",
+    "inside.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "finnish_volleyball_federation",
+      "entity_name": "Finnish Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://www-old.cev.eu",
+        "https://torneopal.com",
+        "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0",
+        "https://inside.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Finnish Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:33:14.006674",
+          "domain_explored": "https://torneopal.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:33:20.612096",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Navigation structure for European competitions",
+            "Historical event listings (2011-2022)",
+            "Federation directory links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1392,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.674813985824585
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event index for the Confederation Europ\u00e9enne de Volleyball (CEV), the European governing body. While the Finnish Volleyball Federation is a member nation, this page contains no specific information regarding Finnish operations, technology stack, or procurement activities. It is purely structural/functional content for the continental site."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:33:31.067739",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Educational Courses: WPV Level I Sports Classification Course",
+              "Events: 2025 World ParaVolley Sitting Volleyball World Cup",
+              "Events: Los Angeles 2028 Paralympic Games"
+            ]
+          },
+          "patterns_found": [
+            "International sports federation governance",
+            "Event results reporting (ASEAN Para Games)",
+            "Personnel appointments (Dr. Janko Ple\u0161nik)",
+            "Educational program delivery (Classification Courses)",
+            "Future event hosting (Los Angeles 2028, Asian Para Games)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 284,
+              "elapsed_seconds": 6.070786237716675
+            }
+          ],
+          "reasoning": "The content is from World ParaVolley, the international governing body. While it lists future events and educational activities, there are no direct signals regarding the Finnish Volleyball Federation's specific procurement needs, technology stack, or vendor partnerships. The content focuses on global results and governance rather than national federation operational procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:33:38.341126",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEV Solidarity Fund applications (Funding source for projects)",
+              "EuroVolley 2028 bid activities (Event management infrastructure)",
+              "Strength and Conditioning team setup (Sports science procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Funding opportunities (CEV Solidarity Fund)",
+            "Talent scouting initiatives",
+            "Major event bidding (EuroVolley 2028)",
+            "Team establishment (Strength and Conditioning)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.113937139511108
+            }
+          ],
+          "reasoning": "While the content is from the European Confederation (CEV) rather than the Finnish Federation directly, it reveals the ecosystem in which the Finnish entity operates. The 'CEV Solidarity Fund' represents a direct procurement/funding channel that the Finnish Volleyball Federation likely utilizes for development projects. The mention of 'Strength and Conditioning Team' establishment and 'Scouting processes' indicates operational activities that often require vendor procurement (software, equipment, consulting). However, direct intent from the Finnish entity is not explicit here."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:33:46.934799",
+          "domain_explored": "https://www.linkedin.com/jobs/league-one-volleyball-%28lovb%29-jobs-worldwide?f_C=66716524",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Accountant (LOVB, US)",
+              "Business Development Lead - Club Recruiting (LOVB, US)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job postings for US-based entity (League One Volleyball)",
+            "Authentication gating (Sign-in wall)",
+            "Irrelevant geographic scope (United States vs Finland)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 242,
+              "elapsed_seconds": 5.276853084564209
+            }
+          ],
+          "reasoning": "The scraped content refers to 'League One Volleyball (LOVB)', a private entity based in the United States, not the Finnish Volleyball Federation (Suomen Lentopalloliitto). While the content shows active hiring (Business Development, Senior Accountant), it is irrelevant to the target entity. Furthermore, the content is largely hidden behind a login wall, providing no actionable procurement intelligence for the Finnish market."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:33:55.840685",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3440670958&f_I=33%2C20&geoId=106693272&keywords=sport&location=Suisse&refresh=true&start=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Social & Environmental Sustainability Intern at UEFA (Vaud, Switzerland)",
+              "Fachspezialist/in Sport-Aussenanlagen at Swiss Federal Institute (Magglingen, Switzerland)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic irrelevance (Switzerland vs Finland)",
+            "Entity irrelevance (UEFA, Swiss Federal Institute)",
+            "Authentication gating (Sign-in wall)",
+            "General job board noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1679,
+              "output_tokens": 288,
+              "elapsed_seconds": 5.189836025238037
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page filtered for 'Sport' in Switzerland. While it contains legitimate sports industry job postings (e.g., UEFA, Swiss Federal Institute), these entities are irrelevant to the Finnish Volleyball Federation. The content is blocked by an authentication wall, preventing deep analysis, and the geographic scope (Switzerland) contradicts the target entity's location (Finland). No procurement signals specific to the target entity were found."
+        }
+      ],
+      "total_input_tokens": 7616,
+      "total_output_tokens": 1323,
+      "estimated_cost_usd": 0.042693
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Finnish Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:33:55.841397"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.340838",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:25:08.745853"
+}

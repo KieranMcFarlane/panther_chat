@@ -1,0 +1,161 @@
+{
+  "entity_id": "altekma",
+  "entity_name": "Altekma",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "altekma.com.tr",
+    "altekmagroup.com",
+    "altekmaspor.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "altekma",
+      "entity_name": "Altekma",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://altekmagroup.com",
+        "https://zoominfo.com",
+        "https://altekmaspor.com",
+        "https://altekma.com.tr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Altekma may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:15:51.680765",
+          "domain_explored": "https://altekma.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-Newsletter / Email Marketing Tools (implied by 'E-B\u00fclten')",
+              "Content Management System (CMS) (implied by multi-language site structure)",
+              "E-Commerce / Digital Catalog Systems (implied by 'E-Kataloglar')"
+            ],
+            "job_postings": [
+              "General HR Policy Structure",
+              "Open Positions Portal (A\u00e7\u0131k Pozisyonlar)",
+              "General Application Form (Genel Ba\u015fvuru)"
+            ],
+            "procurement_indicators": [
+              "Solution Partner Program (\u00c7\u00f6z\u00fcm Ortaklari) - Channel for vendor partnerships",
+              "Service Policy (Hizmet Politikamiz) - Indicates B2B service procurement",
+              "Quality & Certificates (Kalite Belgeleri) - Compliance procurement"
+            ]
+          },
+          "patterns_found": [
+            "Solution Partner Architecture",
+            "E-Newsletter Marketing",
+            "Multi-language Localization",
+            "Structured HR/Career Funnel"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 427,
+              "elapsed_seconds": 5.524604797363281
+            }
+          ],
+          "reasoning": "The content confirms Altekma is a mid-to-large scale industrial entity with a structured 'Solution Partner' (\u00c7\u00f6z\u00fcm Ortaklar\u0131) ecosystem, indicating a procurement channel for technology and services. The presence of 'E-B\u00fclten' (Newsletter) and 'E-Kataloglar' (E-Catalogs) confirms active digital marketing and content management needs. The 'Kariyer' (Career) section with specific sub-pages for 'Open Positions' and 'HR Policy' indicates active recruitment, likely driving HR software procurement. However, the content is primarily navigation structure; specific technology names or active RFPs are not visible in this snippet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:16:00.544496",
+          "domain_explored": "https://altekmagroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "R&D and Innovation focus (Arge \u00e7al\u0131\u015fmalar\u0131na \u00f6nem vererek)",
+              "Export activities to Europe, Middle East, and North Africa (requires logistics/standards compliance)",
+              "High production capacity claims (Sekt\u00f6r\u00fcnde g\u00fcnl\u00fck en fazla \u00fcretim kapasitesine sahip)",
+              "25 years of market presence"
+            ]
+          },
+          "patterns_found": [
+            "R&D and Technology Investment",
+            "Export/International Expansion",
+            "High-Volume Manufacturing Capacity",
+            "Subsidiary Structure (Signatekma, Boytekma, Yoltekma)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 302,
+              "elapsed_seconds": 5.3861188888549805
+            }
+          ],
+          "reasoning": "The content confirms Altekma is a manufacturing conglomerate with significant R&D and export activities. While direct procurement signals (like job postings or software stacks) are absent, the emphasis on 'technology and R&D studies' and 'developing technology' suggests a potential need for technical tools, engineering software, or raw material procurement. The multi-subsidiary structure implies complex organizational needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:16:03.284225",
+          "domain_explored": "https://altekmaspor.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:16:06.266604",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2756,
+      "total_output_tokens": 729,
+      "estimated_cost_usd": 0.019202999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Altekma may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:16:06.267340"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319413",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:14:35.490450"
+}

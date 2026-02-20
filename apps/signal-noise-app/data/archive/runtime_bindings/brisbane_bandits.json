@@ -1,0 +1,144 @@
+{
+  "entity_id": "brisbane_bandits",
+  "entity_name": "Brisbane Bandits",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "north_american_minor_league",
+  "discovered_domains": [
+    "brisbanebandits.com.au",
+    "theabl.com.au",
+    "brisbane.mofa.go.kr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brisbane_bandits",
+      "entity_name": "Brisbane Bandits",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://theabl.com.au",
+        "https://brisbane.mofa.go.kr",
+        "https://brisbanebandits.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brisbane Bandits may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:16:23.891895",
+          "domain_explored": "https://brisbanebandits.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thirst Creative (Web Design Agency)",
+              "Ticket Hub (Ticketing Platform)",
+              "Bandits Shop (E-commerce Platform)",
+              "Bandits+ Membership System"
+            ],
+            "job_postings": [
+              "Careers Section (Link present, no specific roles listed in snippet)"
+            ],
+            "procurement_indicators": [
+              "Website design and maintenance outsourced to Thirst Creative",
+              "Ticketing operations managed via 'Ticket Hub'",
+              "Merchandise operations managed via 'Bandits Shop'"
+            ]
+          },
+          "patterns_found": [
+            "Web Design Vendor Attribution",
+            "E-commerce Infrastructure (Ticketing/Shop)",
+            "Membership Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 328,
+              "elapsed_seconds": 6.219967842102051
+            }
+          ],
+          "reasoning": "The content reveals the specific web design agency (Thirst Creative) and confirms the use of dedicated 'Ticket Hub' and 'Bandits Shop' infrastructure. While this confirms existing vendor partnerships (procurement history), it does not explicitly signal active new RFPs. However, the presence of a 'Careers' section and specific membership software indicates organizational maturity and potential for future HR or CRM tech procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:16:31.917316",
+          "domain_explored": "https://theabl.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Thirst Creative (Web Design Agency)",
+              "Centralized Ticketing Platform (Generic 'Buy Tickets' link)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide vendor contract (Thirst Creative)",
+              "Centralized digital rights management (Copyright 2026 ABL)"
+            ]
+          },
+          "patterns_found": [
+            "Shared Vendor Attribution (Thirst Creative)",
+            "League-Level Infrastructure (Ticketing/Shop)",
+            "Centralized Governance (Copyright 2026 ABL)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.640162706375122
+            }
+          ],
+          "reasoning": "The content is from the Australian Baseball League (ABL) central office, not the Brisbane Bandits specifically. However, it confirms a shared technology ecosystem. The reuse of 'Thirst Creative' (found in Iteration 1) suggests a league-wide partnership, reducing the likelihood of independent procurement by the Bandits for web design. The 'Buy Tickets' and 'ABL Shop' links indicate centralized e-commerce infrastructure managed by the ABL, meaning the Bandits likely consume these services rather than procure them independently."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:16:38.498338",
+          "domain_explored": "https://brisbane.mofa.go.kr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2774,
+      "total_output_tokens": 632,
+      "estimated_cost_usd": 0.017802
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brisbane Bandits may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:16:38.499421"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309926",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:23.141607"
+}

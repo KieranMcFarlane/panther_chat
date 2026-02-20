@@ -1,0 +1,366 @@
+{
+  "entity_id": "nascar_cup_series",
+  "entity_name": "NASCAR Cup Series",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "nascar.com",
+    "teampenske.com",
+    "nashvillesuperspeedway.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/technical-inspector-nascar-cup-series-at-nascar-4361135146",
+      "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp",
+      "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-nascar-4344116395",
+      "https://www.linkedin.com/jobs/view/credential-office-event-staff-at-nascar-3790088480",
+      "https://www.linkedin.com/jobs/view/engineer-at-legacy-motor-club-4326650713?refId=R8zD6DDeF9bKs7ZFXc8y3Q%3D%3D&trackingId=AUBfvOcE8YdXf2zQsN86kg%3D%3D&position=24&pageNum=0",
+      "https://www.linkedin.com/jobs/view/security-event-staff-kansas-speedway-at-nascar-4149226207",
+      "https://www.linkedin.com/jobs/view/firefighter-event-staff-phoenix-raceway-at-nascar-4283404911"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nascar_cup_series",
+      "entity_name": "NASCAR Cup Series",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-nascar-4344116395",
+        "https://nashvillesuperspeedway.com",
+        "https://nascar.com",
+        "https://teampenske.com",
+        "https://www.linkedin.com/jobs/view/credential-office-event-staff-at-nascar-3790088480",
+        "https://www.linkedin.com/jobs/view/technical-inspector-nascar-cup-series-at-nascar-4361135146",
+        "https://www.linkedin.com/jobs/view/engineer-at-legacy-motor-club-4326650713?refId=R8zD6DDeF9bKs7ZFXc8y3Q%3D%3D&trackingId=AUBfvOcE8YdXf2zQsN86kg%3D%3D&position=24&pageNum=0",
+        "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NASCAR Cup Series may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:16:39.119565",
+          "domain_explored": "https://nascar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement: Spire Motorsports securing IKEA and Best Buy for Hocevar's ride",
+              "Partnership expansion: JR Motorsports welcoming Arby's",
+              "Supply chain procurement: Distributor Wire & Cable partnering with RCR",
+              "Logistics management: NASCAR weighing safety and logistics for Clash operations"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Supply Chain Partnerships",
+            "Event Operations Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 261,
+              "elapsed_seconds": 11.91744089126587
+            }
+          ],
+          "reasoning": "While the content is primarily editorial and race-focused, it explicitly lists active commercial partnerships and sponsorship deals (e.g., IKEA, Best Buy, Arby's, Distributor Wire & Cable). These indicate active vendor relationship management and sponsorship procurement, though no direct RFPs or tech hiring signals are present."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:17:02.238164",
+          "domain_explored": "https://teampenske.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership Renewal: Discount Tire extended as anchor partner (Procurement Signal: Contract Renewal)",
+              "Event Planning: 60th Anniversary curation (exhibits, events, storytelling) implies upcoming vendor needs",
+              "Sponsorship Assets: 'Special paint schemes' and 'storytelling' indicate marketing procurement activities"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Partnership Renewals",
+            "Marketing Operations",
+            "Event Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 286,
+              "elapsed_seconds": 18.501945734024048
+            }
+          ],
+          "reasoning": "The content is primarily focused on race results, driver announcements, and organizational milestones (60th Anniversary). However, the explicit mention of 'Discount Tire Extending Partnership' confirms active vendor management and partnership procurement cycles. The '60th Anniversary' planning indicates a need for event management, creative services, and marketing agencies, though no specific RFPs are listed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:17:38.026004",
+          "domain_explored": "https://nashvillesuperspeedway.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Tier Point (Dedicated Server Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Entitlement Partnerships (Flote, Cracker Barrel, O'Reilly Auto Parts, Borchetta Bourbon)",
+              "Corporate Hospitality & Travel Packages (Third-party vendor management)",
+              "Speedway Children's Charities Grant Distribution ($240,000)",
+              "Infrastructure Vendor: Tier Point"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Event Operations Logistics",
+            "Corporate Hospitality Sales",
+            "Infrastructure Hosting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 324,
+              "elapsed_seconds": 30.328622102737427
+            }
+          ],
+          "reasoning": "The content is primarily consumer-facing (ticket sales, event info), but reveals the underlying procurement structure of a major Speedway Motorsports venue. The presence of named entitlement partners (Flote, Cracker Barrel, O'Reilly Auto Parts) indicates active sponsorship procurement cycles. The footer link to 'Dedicated Server Provided by Tier Point' confirms an IT infrastructure vendor relationship. The 'Employment' section suggests HR procurement needs, though specific roles are not listed in this snippet."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:17:46.167593",
+          "domain_explored": "https://www.linkedin.com/jobs/view/technical-inspector-nascar-cup-series-at-nascar-4361135146",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Mobile Inspection Application (Proprietary)",
+              "Roamer Arm (CMM/Measurement Hardware)",
+              "Windows-based applications"
+            ],
+            "job_postings": [
+              "Technical Inspector, NASCAR Cup Series"
+            ],
+            "procurement_indicators": [
+              "Maintenance and storage of inspection hardware",
+              "Assistance with R&D equipment evaluation",
+              "Use of mobile software for compliance tracking"
+            ]
+          },
+          "patterns_found": [
+            "Mobile Inspection Application",
+            "R&D Equipment Procurement",
+            "Race Operations Technology"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 277,
+              "elapsed_seconds": 2.856473207473755
+            }
+          ],
+          "reasoning": "The job posting confirms the use of a proprietary 'Mobile Inspection Application' and references specific hardware (Roamer arm) and software usage. While this is a hiring event rather than a direct RFP, it validates the existence of a specific technology stack and procurement supply chain for technical inspection tools and R&D equipment."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:17:54.563057",
+          "domain_explored": "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "Video Editing Software",
+              "Broadcast Production Equipment",
+              "Technical Inspection Tools"
+            ],
+            "job_postings": [
+              "Social Content Producer",
+              "Senior Coordinator, Track Content",
+              "Coordinator, Broadcasting",
+              "Track Services Coordinator",
+              "Part Time Technical Inspector"
+            ],
+            "procurement_indicators": [
+              "Expansion of digital content capabilities",
+              "Vendor coordination for track services",
+              "Broadcast operations management",
+              "R&D and technical operations staffing"
+            ]
+          },
+          "patterns_found": [
+            "Digital Media Procurement",
+            "Event Operations Logistics",
+            "Broadcasting Technology Coordination",
+            "Technical Inspection Equipment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1593,
+              "output_tokens": 416,
+              "elapsed_seconds": 3.687954902648926
+            }
+          ],
+          "reasoning": "The content reveals active hiring for roles that necessitate procurement of specific tools and services. 'Social Content Producer' and 'Senior Coordinator, Track Content' imply needs for content creation software, editing tools, and distribution platforms. 'Coordinator, Broadcasting' suggests vendor management for broadcast equipment and transmission services. 'Track Services Coordinator' and 'Technical Inspector' roles indicate ongoing procurement for operational logistics and R&D/inspection technology. While these are job postings, they serve as strong leading indicators for future vendor selection and software procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:18:06.867560",
+          "domain_explored": "https://www.linkedin.com/jobs/view/account-executive-group-sales-at-nascar-4344116395",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Word, Excel, Outlook, Teams, PowerPoint)",
+              "CRM System (Specific vendor unnamed)",
+              "Ticketing Platform (Specific vendor unnamed)"
+            ],
+            "job_postings": [
+              "Account Executive, Group Sales (Phoenix Raceway)"
+            ],
+            "procurement_indicators": [
+              "CRM system maintenance and data integrity requirements",
+              "Group sales logistics execution",
+              "Corporate hospitality and event delivery",
+              "Microsoft Office proficiency requirement"
+            ]
+          },
+          "patterns_found": [
+            "CRM System Usage",
+            "Ticketing Platform Operations",
+            "Corporate Hospitality Procurement",
+            "Venue Operations Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1660,
+              "output_tokens": 332,
+              "elapsed_seconds": 6.784156084060669
+            }
+          ],
+          "reasoning": "The job description for an Account Executive at Phoenix Raceway confirms the active use of CRM systems and ticketing platforms for sales and revenue tracking. While the role is sales-focused, the requirement to maintain records in a CRM and execute group sales logistics indicates an existing technology stack for customer management and potential procurement needs for ticketing software upgrades or hospitality vendor management."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:18:14.760456",
+          "domain_explored": "https://www.linkedin.com/jobs/view/credential-office-event-staff-at-nascar-3790088480",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Credentialing Management Systems",
+              "Access Control Software",
+              "HR/Staffing Platforms"
+            ],
+            "job_postings": [
+              "Credential Office Event Staff (Daytona International Speedway)"
+            ],
+            "procurement_indicators": [
+              "Procurement of physical credentialing materials (badges, printers)",
+              "Vendor management for temporary staffing agencies",
+              "Software licensing for access control databases"
+            ]
+          },
+          "patterns_found": [
+            "Access Control & Security Operations",
+            "Event Credentialing Systems",
+            "Temporary Labor Procurement",
+            "Venue Operations Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1725,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.559475898742676
+            }
+          ],
+          "reasoning": "The job posting for 'Credential Office Event Staff' reveals operational needs for access control and security management at Daytona International Speedway. While this is primarily a staffing/operational role, it indicates the procurement of credentialing software/systems, physical security assets (badges, lanyards, printers), and temporary labor management for event peaks."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T08:18:18.717125",
+          "domain_explored": "https://www.linkedin.com/jobs/view/engineer-at-legacy-motor-club-4326650713?refId=R8zD6DDeF9bKs7ZFXc8y3Q%3D%3D&trackingId=AUBfvOcE8YdXf2zQsN86kg%3D%3D&position=24&pageNum=0",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 847,
+              "output_tokens": 125,
+              "elapsed_seconds": 1.511986255645752
+            }
+          ],
+          "reasoning": "The scraped content indicates a rate-limiting error (HTTP 429) from LinkedIn and does not contain the actual job description or entity data for Legacy Motor Club. Without the content of the posting, no procurement signals or technical patterns can be extracted."
+        }
+      ],
+      "total_input_tokens": 11560,
+      "total_output_tokens": 2325,
+      "estimated_cost_usd": 0.069555
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NASCAR Cup Series may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:18:18.719745"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373265",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:12.432427"
+}

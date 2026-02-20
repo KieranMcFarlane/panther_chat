@@ -1,0 +1,126 @@
+{
+  "entity_id": "suntory_sunbirds",
+  "entity_name": "Suntory Sunbirds",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "suntory.co.jp",
+    "svleague.jp",
+    "suntory.com",
+    "sunbirds.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "suntory_sunbirds",
+      "entity_name": "Suntory Sunbirds",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://svleague.jp",
+        "https://sunbirds.jp",
+        "https://suntory.com",
+        "https://suntory.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Suntory Sunbirds may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:34:22.643906",
+          "domain_explored": "https://suntory.co.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:34:29.104428",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Navigation Menu Structure",
+            "Sports Team Rosters (Men/Women)",
+            "League Standings Display"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 419,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.3424909114837646
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of UI navigation elements for a sports league website (svleague.jp), specifically links to Men's and Women's team rosters and standings. There is no corporate information, technology infrastructure details, or business operations data relevant to Suntory Sunbirds' procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:34:32.101551",
+          "domain_explored": "https://suntory.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:34:37.502650",
+          "domain_explored": "https://sunbirds.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 419,
+      "total_output_tokens": 169,
+      "estimated_cost_usd": 0.0037920000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Suntory Sunbirds may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:34:37.503627"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.322422",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:46.047542"
+}

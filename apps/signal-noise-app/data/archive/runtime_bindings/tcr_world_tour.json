@@ -1,0 +1,168 @@
+{
+  "entity_id": "tcr_world_tour",
+  "entity_name": "TCR World Tour",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "fiatcrworldtour.com",
+    "kumhotire.com",
+    "tcr-worldranking.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tcr_world_tour",
+      "entity_name": "TCR World Tour",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://kumhotire.com",
+        "https://tcr-worldranking.com",
+        "https://fiatcrworldtour.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "TCR World Tour may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:07:58.112236",
+          "domain_explored": "https://fiatcrworldtour.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Channel hosting)",
+              "PDF Documentation (Media Accreditation forms, FIA documents)",
+              "Joomla or similar CMS (inferred from URL structure /component/content/article)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship/Supplier Change: Geely replacing Lynk & Co (Vehicle Supply)",
+              "Service Provider: Rebster Ltd (Web Development/Credits)",
+              "Service Provider: WSC World Sporting Consulting Limited (Operations/Management)",
+              "Infrastructure: Kumho FIA TCR World Tour (Title Sponsorship)",
+              "Infrastructure: CUPRA Leon (Model of the Year/Technical Partner)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement",
+            "Media Rights Management",
+            "Event Logistics & Coordination",
+            "FIA Compliance & Governance"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 379,
+              "elapsed_seconds": 3.760302782058716
+            }
+          ],
+          "reasoning": "The content reveals the organizational structure (WSC World Sporting Consulting Limited) and key commercial partnerships (Kumho, CUPRA, Geely). While no explicit RFPs are present, the 'Media Accreditation' link and the reliance on third-party platforms (YouTube) indicate procurement needs for media management services. The transition from Lynk & Co to Geely signals a vendor/partner change cycle. The presence of 'Rebster Ltd.' in credits suggests a web development vendor relationship."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:08:10.177560",
+          "domain_explored": "https://kumhotire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (UI Interaction)",
+              "Social Media Integration (YouTube, Instagram, Twitter, Facebook)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "B2C Dealer Locator functionality",
+              "Consumer Product Marketing"
+            ]
+          },
+          "patterns_found": [
+            "Consumer B2C Interface",
+            "Product Catalog Navigation",
+            "Dealer Locator Logic"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1345,
+              "output_tokens": 254,
+              "elapsed_seconds": 3.24747371673584
+            }
+          ],
+          "reasoning": "The scraped content is from the Kumho Tire consumer website (kumhotire.com), which is a tire manufacturer and likely a sponsor/partner rather than the organizing entity of the TCR World Tour. The content consists of UI elements for a tire dealer locator, product specifications (Ecsta-Sport), and social media links. There are no procurement signals, RFPs, or event management technologies relevant to the operations of the TCR World Tour itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:08:21.370451",
+          "domain_explored": "https://tcr-worldranking.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Jumi (PHP Custom Content System / Plugin)",
+              "JavaScript"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Maintenance of 'Jumi' system (Legacy Tech Stack)",
+              "Data aggregation services for driver rankings",
+              "Digital media hosting for photo galleries"
+            ]
+          },
+          "patterns_found": [
+            "Data Aggregation & Scoring Logic",
+            "Digital Asset Management (Photos)",
+            "Content Management System (Jumi)",
+            "Search Functionality (Driver/Team Database)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 294,
+              "elapsed_seconds": 3.8654139041900635
+            }
+          ],
+          "reasoning": "The content represents a specialized data portal for the TCR World Tour ecosystem. While primarily informational, it indicates a need for data integrity services, database management, and web maintenance (specifically the 'Jumi' CMS reference). It confirms the entity's reliance on digital platforms for rankings and news distribution, suggesting potential procurement for web hosting, data analytics, or CMS support, though no direct commercial intent is visible."
+        }
+      ],
+      "total_input_tokens": 4156,
+      "total_output_tokens": 927,
+      "estimated_cost_usd": 0.026373
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "TCR World Tour may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:08:21.372903"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376661",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:54:00.255874"
+}

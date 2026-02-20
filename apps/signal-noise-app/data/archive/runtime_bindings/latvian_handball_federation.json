@@ -1,0 +1,235 @@
+{
+  "entity_id": "latvian_handball_federation",
+  "entity_name": "Latvian Handball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "eurohandball.com",
+    "handball.lv",
+    "handbolavesture.lv",
+    "gamblinginsider.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://lv.linkedin.com/jobs/view/press-secretary-at-latvian-handball-federation-2507726757"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "latvian_handball_federation",
+      "entity_name": "Latvian Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://eurohandball.com",
+        "https://handbolavesture.lv",
+        "https://lv.linkedin.com/jobs/view/press-secretary-at-latvian-handball-federation-2507726757",
+        "https://handball.lv",
+        "https://gamblinginsider.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Latvian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:22:21.738781",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls blocking data extraction",
+            "Irrelevant event listings (Denmark, Croatia focus)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.223893880844116
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com), not the specific Latvian Handball Federation (LHF) domain. The content focuses on match results (Denmark, Croatia) and general EHF event schedules. There is no mention of Latvia, Latvian procurement processes, or specific technology investments relevant to the LHF entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:22:32.071145",
+          "domain_explored": "https://handball.lv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship naming rights: 'SynotTip' kauss (Potential vendor relationship, but low procurement signal)"
+            ]
+          },
+          "patterns_found": [
+            "Repetitive sports news headlines",
+            "Match results and league standings",
+            "Event scheduling calendar",
+            "Sponsorship branding (SynotTip)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.9110569953918457
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news, match results (SK Latgols vs Tenax, BHL standings), and a calendar of upcoming games. There are no sections, links, or text indicating administrative operations, job vacancies, or technology acquisition. The site appears to be purely informational for fans and athletes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:22:38.329687",
+          "domain_explored": "https://handbolavesture.lv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive sports news headlines",
+            "Historical match results (2019-2020)",
+            "League standings and scheduling data",
+            "Standardized navigation menu structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 203,
+              "elapsed_seconds": 2.7693209648132324
+            }
+          ],
+          "reasoning": "The scraped content from handbolavesture.lv is identical in nature to the previous iteration (handball.lv). It consists entirely of historical match results, league standings, and general sports news. There are no corporate governance documents, career sections, or technology infrastructure details visible in this text dump. The content is strictly operational sports reporting."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:22:44.146229",
+          "domain_explored": "https://gamblinginsider.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global gambling industry news aggregation",
+            "Affiliate marketing content (Casino/Sports Betting)",
+            "US regulatory focus (Nevada/Polymarket)",
+            "No mention of Latvian entities or handball federation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.5812160968780518
+            }
+          ],
+          "reasoning": "The scraped content is from a global gambling industry news site (Gambling Insider) focused on betting regulations, casino affiliate links, and international sports betting. There is absolutely no connection to the Latvian Handball Federation, Latvian governance, or relevant non-profit procurement activities. This domain is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:22:52.163450",
+          "domain_explored": "https://lv.linkedin.com/jobs/view/press-secretary-at-latvian-handball-federation-2507726757",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - implied by 'update LHF homepage'",
+              "Social Media Platforms",
+              "Google Ads & Analytics (mentioned in recruiter profile)"
+            ],
+            "job_postings": [
+              {
+                "role": "Press Secretary",
+                "status": "Closed / Historical (May 2021)",
+                "salary_range": "820-1050 EUR (before taxes)",
+                "requirements": [
+                  "Journalism education",
+                  "IT skills for duty execution",
+                  "Media relations",
+                  "Crisis communication"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Internal hiring for Marketing/PR capabilities",
+              "Budget allocation for communications staff (~12k EUR/year)",
+              "Operational email: info@handball.lv"
+            ]
+          },
+          "patterns_found": [
+            "Job posting for Press Secretary (4 years old)",
+            "Explicit requirement for 'Information technology skills' for job duties",
+            "Responsibility for website content management (CMS)",
+            "Responsibility for social media channel management",
+            "Budget range disclosure (820-1050 EUR)",
+            "Direct contact info for procurement/bids (info@handball.lv)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1611,
+              "output_tokens": 479,
+              "elapsed_seconds": 3.728236198425293
+            }
+          ],
+          "reasoning": "While the job posting is historical (2021) and the position is closed, it provides concrete evidence of the Latvian Handball Federation's internal structure and operational needs. The specific requirement for IT skills to manage web and social channels confirms the organization utilizes digital tools that require human capital investment. The contact email 'info@handball.lv' is verified as a channel for official applications and potentially vendor inquiries."
+        }
+      ],
+      "total_input_tokens": 7407,
+      "total_output_tokens": 1299,
+      "estimated_cost_usd": 0.041706
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Latvian Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:22:52.164572"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362035",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:34:00.841627"
+}

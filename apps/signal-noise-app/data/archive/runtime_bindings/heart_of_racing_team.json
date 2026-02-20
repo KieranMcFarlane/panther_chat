@@ -1,0 +1,245 @@
+{
+  "entity_id": "heart_of_racing_team",
+  "entity_name": "Heart of Racing Team",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "theheartofracing.com",
+    "gt-world-challenge-america.com",
+    "gtamerica.us",
+    "astonmartin.com",
+    "gt4-america.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "heart_of_racing_team",
+      "entity_name": "Heart of Racing Team",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.039999999999999994,
+        0.06
+      ],
+      "explored_domains": [
+        "https://gt-world-challenge-america.com",
+        "https://theheartofracing.com",
+        "https://astonmartin.com",
+        "https://gt4-america.com",
+        "https://gtamerica.us"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Heart of Racing Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:41:53.957671",
+          "domain_explored": "https://theheartofracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Automation / Email Service Provider (ESP)",
+              "Static Web Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active data collection (First/Last Name, Email)",
+              "Preference management (Unsubscribe language)",
+              "Lead generation capability"
+            ]
+          },
+          "patterns_found": [
+            "Newsletter Capture Form",
+            "Static Navigation Structure",
+            "Marketing Automation Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 843,
+              "output_tokens": 275,
+              "elapsed_seconds": 3.8852908611297607
+            }
+          ],
+          "reasoning": "The content reveals a standard newsletter signup mechanism ('First Name', 'Last Name', 'Email Address') and a 'Thank you' confirmation message. This indicates the use of a basic marketing automation or email service provider (ESP) tool. While this confirms a technology stack component, it is a low-barrier entry signal; it does not explicitly show complex procurement intent (like RFPs) but confirms active digital engagement operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:42:04.685565",
+          "domain_explored": "https://gt-world-challenge-america.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AWS (Amazon Web Services) - Series Title Sponsor",
+              "Mobile App (iOS/Android) - Official Series App",
+              "Email Marketing Platform - Newsletter capture forms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospitality & Ticketing Procurement (VIP Packages)",
+              "Media & Broadcasting Services (FS1 Partnership)",
+              "Event Management Software (Event Timetables/Calendars)",
+              "Sponsorship Activation (AWS branding)"
+            ]
+          },
+          "patterns_found": [
+            "Series Sponsorship (AWS)",
+            "Official Mobile App Deployment",
+            "Newsletter/Email Marketing Capture",
+            "Event Ticketing & VIP Packages",
+            "Media Rights Partnership (FS1)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 366,
+              "elapsed_seconds": 5.047434091567993
+            }
+          ],
+          "reasoning": "While this page is for the series (GT World Challenge America) rather than the specific team (Heart of Racing), it provides critical context on the ecosystem's technology stack and commercial requirements. The presence of AWS as the series 'powered by' partner and the availability of an official mobile app suggest a standardized technology environment that participating teams like Heart of Racing likely integrate with. The 'VIP Packages' and 'Ticketing' sections indicate a commercial structure that teams may leverage for hospitality procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:42:16.682406",
+          "domain_explored": "https://gtamerica.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AWS (Cloud Infrastructure Sponsor)",
+              "Mobile App (iOS/Android)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Platform Usage",
+              "Email Marketing Automation (Sign up forms)"
+            ]
+          },
+          "patterns_found": [
+            "Series Sponsorship (AWS)",
+            "Official Mobile App Deployment",
+            "Newsletter/Email Marketing Capture",
+            "Event Ticketing Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 284,
+              "elapsed_seconds": 5.215936183929443
+            }
+          ],
+          "reasoning": "The content confirms the series 'GT America powered by AWS', indicating a reliance on cloud infrastructure and potential data analytics procurement. The presence of a dedicated Official Mobile App (#GTWorld APP) signifies investment in mobile development and maintenance. While these are series-level technologies rather than team-specific procurement, they establish the technological ecosystem the Heart of Racing Team operates within and suggests potential needs for compatible data analysis or mobile engagement tools."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:42:25.994447",
+          "domain_explored": "https://astonmartin.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "Custom Configurator Subdomain (configurator.astonmartin.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with BERO (Business Collaboration)",
+              "Integration of Apple CarPlay Ultra (Product Supply Chain)"
+            ]
+          },
+          "patterns_found": [
+            "OEM Marketing Site",
+            "Product Configuration Tools",
+            "Consumer Lead Generation",
+            "Brand Partnership Content (BERO, Apple)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1516,
+              "output_tokens": 291,
+              "elapsed_seconds": 4.459694147109985
+            }
+          ],
+          "reasoning": "The content analyzed is from Aston Martin's global corporate website (astonmartin.com), which focuses on consumer vehicle sales (Vantage, DB12, Vanquish), brand marketing, and product configuration. While Heart of Racing races Aston Martin cars, this URL represents the manufacturer/OEM, not the racing team's procurement entity. The signals found relate to automotive retail technology (configurators) and brand partnerships, not the operational procurement or supply chain of the Heart of Racing Team."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:42:31.808274",
+          "domain_explored": "https://gt4-america.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Official Mobile App (iOS/Android)",
+              "Email Marketing / Newsletter Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Series-wide Mobile App requirement",
+              "Ticketing Platform usage",
+              "Series Title Sponsorship (Pirelli)"
+            ]
+          },
+          "patterns_found": [
+            "Official Mobile App Deployment",
+            "Newsletter/Email Marketing Capture",
+            "Series Sponsorship (Pirelli)",
+            "Broadcast Partnership (FS1)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 268,
+              "elapsed_seconds": 2.2647669315338135
+            }
+          ],
+          "reasoning": "The content represents the series website (Pirelli GT4 America) in which Heart of Racing competes. While it does not show direct procurement by the team, it confirms the ecosystem's reliance on digital tools (Official App, Email Marketing) and major sponsorships (Pirelli, FS1). The 'Download the official #GTWorld APP' pattern reinforces the series-level technology stack that the team integrates with."
+        }
+      ],
+      "total_input_tokens": 6800,
+      "total_output_tokens": 1484,
+      "estimated_cost_usd": 0.042660000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Heart of Racing Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:42:31.811354"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.370586",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:19.222083"
+}

@@ -1,0 +1,113 @@
+{
+  "entity_id": "vbc_mondov\u00ec",
+  "entity_name": "VBC Mondov\u00ec",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "legavolley.it",
+    "volley2001garlasco.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vbc_mondov\u00ec",
+      "entity_name": "VBC Mondov\u00ec",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://volley2001garlasco.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VBC Mondov\u00ec may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:41:28.517899",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports league navigation structure",
+            "Standard league roster listings",
+            "Public-facing content aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.5422940254211426
+            }
+          ],
+          "reasoning": "The provided content is a raw text dump of the navigation menu and team listings from the Italian Volleyball League (Lega Pallavolo Serie A) website. It contains no specific information regarding 'VBC Mondov\u00ec', nor does it contain procurement signals, job postings, or technology stack details relevant to the target entity. The content is purely informational sports data."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:41:48.090240",
+          "domain_explored": "https://volley2001garlasco.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Match schedule announcements",
+            "Ticketing and sponsorship CTAs",
+            "Repetitive content blocks (scraping artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 169,
+              "elapsed_seconds": 9.582510232925415
+            }
+          ],
+          "reasoning": "The content is exclusively focused on match results, schedules, and team news for Volley 2001 Garlasco. There is no mention of VBC Mondov\u00ec, nor are there any procurement signals, technology investments, or governance details relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2768,
+      "total_output_tokens": 358,
+      "estimated_cost_usd": 0.013674
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VBC Mondov\u00ec may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:41:48.091124"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.329154",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:13.622887"
+}

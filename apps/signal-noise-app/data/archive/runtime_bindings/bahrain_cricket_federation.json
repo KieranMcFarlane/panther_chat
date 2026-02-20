@@ -1,0 +1,128 @@
+{
+  "entity_id": "bahrain_cricket_federation",
+  "entity_name": "Bahrain Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "icc-cricket.com",
+    "rocketreach.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/sadaf-abdul-07a45815_ksajobs-saudiarabia-gcccareers-activity-7400832765807542272-5bzI"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bahrain_cricket_federation",
+      "entity_name": "Bahrain Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://icc-cricket.com",
+        "https://www.linkedin.com/posts/sadaf-abdul-07a45815_ksajobs-saudiarabia-gcccareers-activity-7400832765807542272-5bzI",
+        "https://rocketreach.co"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bahrain Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:18:58.376092",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports content consumption",
+            "Tournament marketing structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.1484878063201904
+            }
+          ],
+          "reasoning": "The content provided is from the ICC's global news portal and focuses on international tournaments (T20 World Cup, Women's World Cup) and general match highlights. There is no mention of the Bahrain Cricket Federation, its local operations, or any specific procurement activities, technology stacks, or governance decisions relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:19:04.426712",
+          "domain_explored": "https://rocketreach.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:19:12.155830",
+          "domain_explored": "https://www.linkedin.com/posts/sadaf-abdul-07a45815_ksajobs-saudiarabia-gcccareers-activity-7400832765807542272-5bzI",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General GCC recruitment market noise",
+            "Fraud awareness/scam alerts",
+            "Individual job seeker activity (unrelated to target)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 194,
+              "elapsed_seconds": 3.8448569774627686
+            }
+          ],
+          "reasoning": "The content is a generic warning about recruitment scams in the KSA/GCC job market. It contains no specific information, direct mentions, or actionable intelligence regarding the Bahrain Cricket Federation's procurement activities, technology stack, or vendor partnerships. The comments section consists of individual job seekers and unrelated services, further diluting relevance."
+        }
+      ],
+      "total_input_tokens": 2823,
+      "total_output_tokens": 365,
+      "estimated_cost_usd": 0.013944000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bahrain Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:19:12.157214"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300066",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:36.009239"
+}

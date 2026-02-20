@@ -1,0 +1,144 @@
+{
+  "entity_id": "niger_football_federation",
+  "entity_name": "Niger Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "cafonline.com",
+    "ghanafa.org",
+    "panafricafootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "niger_football_federation",
+      "entity_name": "Niger Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ghanafa.org",
+        "https://cafonline.com",
+        "https://panafricafootball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Niger Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:38:10.420770",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "High repetition of UI elements (scraping artifact)",
+            "Focus on Confederation-wide events (AFCON, Champions League)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 919,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.7479071617126465
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive navigation menu items and links to general Confederation of African Football (CAF) properties (AFCON, Champions League, etc.). There is no specific text, news, or data related to the Niger Football Federation (FENIFOOT), nor are there any specific procurement signals, job postings, or technology investments mentioned. This content is irrelevant to the specific entity target."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:38:20.649340",
+          "domain_explored": "https://ghanafa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Ghana vs Niger)",
+            "High Repetition of Sports Headlines",
+            "Generic Navigation Artifacts"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.267595052719116
+            }
+          ],
+          "reasoning": "The scraped content is from the Ghana Football Association (ghanafa.org), not the Niger Football Federation. The content consists entirely of repetitive sports match results and headlines with no procurement, governance, or technology signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:38:48.469143",
+          "domain_explored": "https://panafricafootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports News Aggregation",
+            "High Repetition of Headlines (Scraping Artifact)",
+            "Focus on Confederation-wide Events (CAFCL, CAFCC)",
+            "Absence of Local Governance Keywords"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 201,
+              "elapsed_seconds": 16.570132970809937
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of pan-African football match reports, standings, and transfer news. There is no mention of the Niger Football Federation, national team administration, or governance activities. The site acts as a general news aggregator (CAF Champions League, etc.) rather than a source for entity-specific procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 3827,
+      "total_output_tokens": 576,
+      "estimated_cost_usd": 0.020121
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Niger Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:38:48.469727"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.207503",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:37.777018"
+}

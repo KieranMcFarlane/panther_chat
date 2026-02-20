@@ -1,0 +1,180 @@
+{
+  "entity_id": "fiba_africa",
+  "entity_name": "FIBA Africa",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "global_governance_bodies",
+  "discovered_domains": [
+    "about.fiba.basketball",
+    "fiba.basketball",
+    "fibaafrica.com",
+    "basketball.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiba_africa",
+      "entity_name": "FIBA Africa",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://about.fiba.basketball",
+        "https://basketball.fandom.com",
+        "https://fibaafrica.com",
+        "https://fiba.basketball"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIBA Africa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:52:23.431934",
+          "domain_explored": "https://about.fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic corporate boilerplate",
+            "Repetitive content structure",
+            "Global governance focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 177,
+              "elapsed_seconds": 3.130286931991577
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive, high-level marketing copy ('What we do', 'Strategy') and generic descriptions of basketball. There are no specific mentions of technology, procurement needs, job openings, or vendor partnerships relevant to FIBA Africa specifically. The content is too generic to derive actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:52:49.668938",
+          "domain_explored": "https://fiba.basketball",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports media aggregation",
+            "Fan engagement content",
+            "Editorial 'Top 5' lists",
+            "Video highlight sharing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 196,
+              "elapsed_seconds": 22.80998420715332
+            }
+          ],
+          "reasoning": "The content provided is from the global FIBA media hub (fiba.basketball), which focuses on editorial news, player rankings, and game highlights. While 'African Qualifiers' are mentioned, this is editorial coverage of the sport, not the operational or governance hub of FIBA Africa. There are no signals regarding vendor selection, technology infrastructure, or organizational procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:52:57.780539",
+          "domain_explored": "https://fibaafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports media aggregation",
+            "NBA salary reporting",
+            "Player transfer rumors",
+            "Editorial content focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.66717791557312
+            }
+          ],
+          "reasoning": "The scraped content from fibaafrica.com is entirely focused on NBA news, player salaries (Jonathan Kuminga, Andre Iguodala), and transfer rumors regarding African players (Embiid, Giannis). There is no mention of FIBA Africa organizational operations, governance, tenders, or technology infrastructure. This appears to be a media site rather than the official organizational procurement portal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:53:03.390022",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fandom Wiki Platform",
+              "CC-BY-SA Licensing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "User-generated content structure",
+            "Wiki/Fandom platform hosting",
+            "General sports encyclopedia focus",
+            "Irrelevant domain authority (Fandom vs. Official Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.732206106185913
+            }
+          ],
+          "reasoning": "The scraped content is from a Fandom-hosted wiki (basketball.fandom.com), a user-generated encyclopedia platform. It contains no governance, operational, or commercial data related to FIBA Africa. It focuses on the NBA, WNBA, and general basketball history. This is entirely irrelevant to procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 5664,
+      "total_output_tokens": 778,
+      "estimated_cost_usd": 0.028662
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIBA Africa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:53:03.391133"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.242725",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:33.357362"
+}

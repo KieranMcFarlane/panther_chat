@@ -1,0 +1,411 @@
+{
+  "entity_id": "tours_vb",
+  "entity_name": "Tours VB",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "globalsportsarchive.com",
+    "the-sports.org",
+    "trentinovolley.it",
+    "commons.wikimedia.org",
+    "eurovolley.tv"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/travel-consultant-at-true-adventure-travel-4330070977",
+      "https://www.linkedin.com/jobs/travel-consultant-jobs-hampton-roads",
+      "https://www.linkedin.com/jobs/view/family-travel-planner-at-affinity-travels-4323618328",
+      "https://www.linkedin.com/jobs/view/homebased-travel-advisor-at-affinity-travels-4354463298",
+      "https://www.linkedin.com/jobs/view/travel-manager-at-jobs-via-dice-4331921532",
+      "https://www.linkedin.com/jobs/view/tour-guide-haunted-pub-crawl-at-us-ghost-adventures-4296408334",
+      "https://mx.linkedin.com/jobs/consultor-de-viajes-empleos-monterrey",
+      "https://www.linkedin.com/jobs/view/travel-ct-tech-job-%242-487-%243-592-per-week-2-years-experience-needed-at-lifetime-women-s-health-fitness-centers-p-c-4352284567",
+      "https://www.linkedin.com/jobs/view/travel-consultant-at-aaa-auto-club-enterprises-4349536102",
+      "https://www.linkedin.com/jobs/view/travel-x-ray-tech-weekly-pay-at-aura-health-4329869646"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tours_vb",
+      "entity_name": "Tours VB",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://commons.wikimedia.org",
+        "https://www.linkedin.com/jobs/view/homebased-travel-advisor-at-affinity-travels-4354463298",
+        "https://www.linkedin.com/jobs/travel-consultant-jobs-hampton-roads",
+        "https://www.linkedin.com/jobs/view/travel-manager-at-jobs-via-dice-4331921532",
+        "https://globalsportsarchive.com",
+        "https://www.linkedin.com/jobs/view/family-travel-planner-at-affinity-travels-4323618328",
+        "https://trentinovolley.it",
+        "https://www.linkedin.com/jobs/view/travel-consultant-at-true-adventure-travel-4330070977",
+        "https://eurovolley.tv",
+        "https://the-sports.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tours VB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:39:14.221335",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (EuroVolley, CEV Cups)",
+            "Standard footer links (FIVB, National Federations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 208,
+              "elapsed_seconds": 3.0184319019317627
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu and event listing dump from the CEV (Confederation Europeenne de Volleyball) website. While 'Tours VB' appears as a competitor name in a match list ('CLVM 35-TRENTINO Itas vs TOURS VB'), this provides no insight into Tours VB's internal procurement, technology stack, or governance. The data is purely contextual/sports-related and lacks corporate intelligence signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:39:21.279167",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation structure",
+            "Aggregated event listings (Soccer, UEFA, CONCACAF)",
+            "No entity-specific content (Tours VB not mentioned)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 196,
+              "elapsed_seconds": 2.791431188583374
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic navigation links and competition listings for global soccer (UEFA, AFC, CAF) from globalsportsarchive.com. There is no mention of 'Tours VB', volleyball, or any procurement-related activities such as tenders, job postings, or technology investments. This page is an aggregation hub with no relevance to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:39:26.942314",
+          "domain_explored": "https://the-sports.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Clickbait-style content titles",
+            "Multi-language support structure",
+            "Betting and calendar navigation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.0659217834472656
+            }
+          ],
+          "reasoning": "The content is from a general sports news and results aggregator (the-sports.org). The text provided focuses on general fitness news, betting, and calendars. There is absolutely no mention of the specific entity 'Tours VB', nor are there any signals related to B2B procurement, job postings, or technology stack investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:39:34.695367",
+          "domain_explored": "https://trentinovolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VivaTicket (Ticketing)",
+              "Custom E-commerce Platform (store.trentinovolley.it)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Dedicated Online Store Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Trentino Volley vs Tours VB)",
+            "Ticketing Platform Integration (VivaTicket)",
+            "E-commerce Integration (Store subdomain)",
+            "Standard Sports News Content Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 258,
+              "elapsed_seconds": 2.626753091812134
+            }
+          ],
+          "reasoning": "The scraped content is from 'trentinovolley.it' (Trentino Volley), which is a different entity than the target 'Tours VB'. While the content reveals technology usage (VivaTicket for ticketing, a dedicated store subdomain) that would be relevant procurement signals if found on the target entity's site, it is irrelevant here as it does not pertain to Tours VB."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:39:37.470665",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:39:40.943544",
+          "domain_explored": "https://eurovolley.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:40:00.476082",
+          "domain_explored": "https://www.linkedin.com/jobs/view/travel-consultant-at-true-adventure-travel-4330070977",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Travel Consultant",
+                "company": "True Adventure Travel",
+                "location": "Virginia Beach, VA",
+                "relevance": "None - Wrong Entity"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (True Adventure Travel vs Tours VB)",
+            "Geographic Mismatch (Virginia Beach, VA vs Tours, France)",
+            "Sector Mismatch (Leisure Travel vs Professional Sports)",
+            "Generic Job Board Structure (LinkedIn)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1674,
+              "output_tokens": 262,
+              "elapsed_seconds": 15.98796796798706
+            }
+          ],
+          "reasoning": "The content is a job posting for 'True Adventure Travel', a leisure travel agency in Virginia Beach, VA. This is completely unrelated to 'Tours VB', a professional volleyball club based in Tours, France. The entity name similarity (Tours vs True) is coincidental and irrelevant to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:40:07.064410",
+          "domain_explored": "https://www.linkedin.com/jobs/travel-consultant-jobs-hampton-roads",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Travel Coordinator at Operation Smile",
+              "Corporate Travel Agent at M.C. Dean",
+              "Remote Travel Advisor at True Adventure Travel"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Mismatch (Hampton Roads, VA vs Tours, France)",
+            "Sector Mismatch (Leisure/Corporate Travel vs Professional Volleyball)",
+            "Keyword Ambiguity (Travel Consultant vs Team Logistics)",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.665208101272583
+            }
+          ],
+          "reasoning": "The content is a generic job listing page for the Hampton Roads, Virginia area. While 'Tours VB' contains the substring 'Tours', the entity is a French volleyball club based in Tours, France. The listings here are for travel agents and coordinators in Virginia (True Adventure Travel, Operation Smile, M.C. Dean). There is no semantic relationship between these job postings and the procurement needs of the volleyball club."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:40:14.013014",
+          "domain_explored": "https://www.linkedin.com/jobs/view/family-travel-planner-at-affinity-travels-4323618328",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Family Travel Planner - Affinity Travels (Unrelated)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Affinity Travels vs Tours VB)",
+            "Sector Mismatch (Leisure Travel vs Professional Sports)",
+            "Generic Job Aggregation (Social Coordinator roles)",
+            "Login Wall / Dynamic Content Loading"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1843,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.4951999187469482
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Social Coordinator' roles and a specific posting for 'Family Travel Planner' at Affinity Travels. This is completely unrelated to Tours VB (a professional French volleyball club). The entity, sector, and geography do not match the target."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T18:40:21.447421",
+          "domain_explored": "https://www.linkedin.com/jobs/view/homebased-travel-advisor-at-affinity-travels-4354463298",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Homebased Travel Advisor (Affinity Travels)",
+              "Senior Manager, Influencer Marketing (Tarte Cosmetics)",
+              "Sports Marketing Manager (Speedo)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Affinity Travels vs Tours VB)",
+            "Sector Mismatch (Leisure Travel vs Professional Sports)",
+            "Generic Job Aggregation",
+            "Keyword Ambiguity ('Advisor' vs 'Logistics Manager')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1926,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.009065866470337
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job listing page for 'Affinity Travels' (a travel agency) and other unrelated companies (Tarte Cosmetics, Speedo, Canva). It does not contain any information regarding 'Tours VB' (the French volleyball club). The entity, sector, and geographic context are entirely incorrect for the target subject."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T18:40:29.612636",
+          "domain_explored": "https://www.linkedin.com/jobs/view/travel-manager-at-jobs-via-dice-4331921532",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Outlook",
+              "Travel Management Software (Generic)"
+            ],
+            "job_postings": [
+              {
+                "title": "Travel Manager",
+                "entity": "ISite Technologies Inc",
+                "location": "United States",
+                "recruiter": "Jobs via Dice"
+              }
+            ],
+            "procurement_indicators": [
+              "Accommodation procurement",
+              "Cost-effective travel arrangements",
+              "Vendor negotiation"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (ISite Technologies Inc vs Tours VB)",
+            "Geographic Mismatch (United States vs Tours, France)",
+            "Sector Mismatch (Software Development vs Professional Sports)",
+            "Generic Job Aggregation (Jobs via Dice)",
+            "Keyword Ambiguity (Travel Manager vs Team Logistics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1999,
+              "output_tokens": 350,
+              "elapsed_seconds": 3.775918960571289
+            }
+          ],
+          "reasoning": "The job posting is for a 'Travel Manager' role at 'ISite Technologies Inc', a software development company in the United States, recruited via 'Jobs via Dice'. This represents a complete entity, geographic, and sector mismatch with the target entity 'Tours VB' (a professional volleyball club in Tours, France). The content describes corporate travel management for a tech firm, not sports team logistics."
+        }
+      ],
+      "total_input_tokens": 14994,
+      "total_output_tokens": 2197,
+      "estimated_cost_usd": 0.077937
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tours VB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:40:29.619644"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321890",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:26:19.411224"
+}

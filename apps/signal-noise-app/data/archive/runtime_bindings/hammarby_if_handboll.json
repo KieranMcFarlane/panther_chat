@@ -1,0 +1,143 @@
+{
+  "entity_id": "hammarby_if_handboll",
+  "entity_name": "Hammarby IF Handboll",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "kids.kiddle.co",
+    "commons.wikimedia.org",
+    "pfca.dcathletic.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hammarby_if_handboll",
+      "entity_name": "Hammarby IF Handboll",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://pfca.dcathletic.de",
+        "https://commons.wikimedia.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hammarby IF Handboll may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:58:43.776397",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content source",
+            "General encyclopedia structure",
+            "Lack of corporate entity data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 172,
+              "elapsed_seconds": 18.258795976638794
+            }
+          ],
+          "reasoning": "The provided content is a sitemap or navigation menu from 'Kiddle' (a children's encyclopedia). It contains generic educational categories (Science, History, Biology) and no information regarding Hammarby IF Handboll, their procurement activities, technology stack, or governance. There is zero signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:58:52.475878",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic media repository interface",
+            "User-generated content structure",
+            "Non-operational context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 150,
+              "elapsed_seconds": 2.4592578411102295
+            }
+          ],
+          "reasoning": "The content is the generic landing page for Wikimedia Commons, a media repository. It contains no specific information regarding Hammarby IF Handboll, its operations, or its procurement activities. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:59:02.409586",
+          "domain_explored": "https://pfca.dcathletic.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated domain (US High School sports vs Swedish Handball)",
+            "Streaming/Video content structure",
+            "URL parameters indicating dynamic content delivery"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 518,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.86801815032959
+            }
+          ],
+          "reasoning": "The content provided is completely irrelevant to Hammarby IF Handboll. The URL and text refer to a US High School Lacrosse game (Greenbrier vs Mauldin) hosted on a streaming platform (nfhsnetwork.com). There are no corporate signals, Swedish entities, or handball-related procurement data present."
+        }
+      ],
+      "total_input_tokens": 3289,
+      "total_output_tokens": 500,
+      "estimated_cost_usd": 0.017367
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hammarby IF Handboll may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:59:02.411187"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.356966",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:45.130058"
+}

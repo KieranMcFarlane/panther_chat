@@ -1,0 +1,185 @@
+{
+  "entity_id": "paris_saint-germain_handball",
+  "entity_name": "Paris Saint-Germain Handball",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "billetterie.psg.fr",
+    "eurohandball.com",
+    "handball-store.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/bastien-el-ghouzzi-39bb0284_psgfamily-jobs-psg-activity-6532845123624017920-ALHF"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "paris_saint-germain_handball",
+      "entity_name": "Paris Saint-Germain Handball",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://handball-store.com",
+        "https://eurohandball.com",
+        "https://www.linkedin.com/posts/bastien-el-ghouzzi-39bb0284_psgfamily-jobs-psg-activity-6532845123624017920-ALHF",
+        "https://billetterie.psg.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "job_posting",
+        "commercial_expansion",
+        "revenue_generation_focus",
+        "sponsorship_acquisition"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Paris Saint-Germain Handball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:21:19.709901",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:21:26.551285",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "cookie_consent_gating",
+            "general_sports_news",
+            "tournament_schedules"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.1212480068206787
+            }
+          ],
+          "reasoning": "The content is from the European Handball Federation (EHF) general news portal, not the specific entity 'Paris Saint-Germain Handball'. The text consists of generic tournament results (Denmark, Croatia) and event schedules. There is no mention of PSG, their specific vendors, technology stack, or procurement activities. The site also utilizes cookie gating which limits deep scraping of potential partner lists."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:21:34.528457",
+          "domain_explored": "https://handball-store.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_catalog",
+            "retail_navigation",
+            "brand_listing",
+            "product_categories"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 687,
+              "output_tokens": 188,
+              "elapsed_seconds": 5.142054080963135
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from a retail e-commerce platform (handball-store.com). It displays product categories (shoes, handballs) and brand listings (adidas, Puma, Hummel). There is no content related to Paris Saint-Germain Handball's internal operations, procurement needs, or corporate governance. This represents a vendor/consumer endpoint rather than a buying signal from the club itself."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:21:41.188500",
+          "domain_explored": "https://www.linkedin.com/posts/bastien-el-ghouzzi-39bb0284_psgfamily-jobs-psg-activity-6532845123624017920-ALHF",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment/Social)"
+            ],
+            "job_postings": [
+              {
+                "title": "Sponsorship Business Developer Handball (H/F)",
+                "department": "Commercial / Partnerships",
+                "focus": "Sponsorship Acquisition",
+                "source": "LinkedIn"
+              }
+            ],
+            "procurement_indicators": [
+              "Headcount expansion in commercial division",
+              "Active pursuit of new sponsorship contracts",
+              "Dedicated business development resources for Handball sector"
+            ]
+          },
+          "patterns_found": [
+            "job_posting",
+            "commercial_expansion",
+            "revenue_generation_focus",
+            "sponsorship_acquisition"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.3616812229156494
+            }
+          ],
+          "reasoning": "The content is a direct job posting for a 'Sponsorship Business Developer' specifically for the Handball division. This is a strong procurement signal indicating active investment in commercial infrastructure and revenue generation capabilities. It confirms the entity has a dedicated commercial structure and budget for acquiring partners/sponsors."
+        }
+      ],
+      "total_input_tokens": 3581,
+      "total_output_tokens": 680,
+      "estimated_cost_usd": 0.020943000000000003
+    },
+    "procurement_signals": [
+      "job_posting",
+      "commercial_expansion",
+      "revenue_generation_focus",
+      "sponsorship_acquisition"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Paris Saint-Germain Handball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:21:41.189188"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.346972",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:32:35.618555"
+}

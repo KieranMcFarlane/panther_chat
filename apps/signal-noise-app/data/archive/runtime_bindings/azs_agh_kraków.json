@@ -1,0 +1,160 @@
+{
+  "entity_id": "azs_agh_krak\u00f3w",
+  "entity_name": "AZS AGH Krak\u00f3w",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "azs.agh.edu.pl",
+    "zoominfo.com",
+    "azs.krakow.pl",
+    "architekturaibiznes.pl",
+    "2ligamezczyzn.volleystation.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "azs_agh_krak\u00f3w",
+      "entity_name": "AZS AGH Krak\u00f3w",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://azs.agh.edu.pl",
+        "https://zoominfo.com",
+        "https://azs.krakow.pl",
+        "https://2ligamezczyzn.volleystation.com",
+        "https://architekturaibiznes.pl"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "AZS AGH Krak\u00f3w may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:04:24.743117",
+          "domain_explored": "https://azs.agh.edu.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "active_multi_section_organization_structure",
+              "regular_event_management_indicating_potential_ops_software_need"
+            ]
+          },
+          "patterns_found": [
+            "standard_organizational_overview",
+            "sports_section_navigation",
+            "news_and_announcement_blocks"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 372,
+              "output_tokens": 229,
+              "elapsed_seconds": 12.343756914138794
+            }
+          ],
+          "reasoning": "The provided content represents the homepage ('Strona g\u0142\u00f3wna') of AZS AGH Krak\u00f3w. While it confirms the entity is active and structured into various sports sections, the text is primarily navigational, informational, and promotional (news, events, general 'About Us' info). There are no explicit mentions of technology procurement, job vacancies, or strategic investment plans within this specific excerpt."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:04:27.742857",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:04:34.777995",
+          "domain_explored": "https://azs.krakow.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "repetitive_content_scraping",
+            "news_article_title",
+            "sports_club_news"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 167,
+              "elapsed_seconds": 2.714599847793579
+            }
+          ],
+          "reasoning": "The provided content consists of a repetitive news article title regarding 'Sport akademicki bez barier' (Academic sport without barriers) featuring a specific individual. There is no information regarding technology stacks, job vacancies, or procurement needs. The content is purely informational/PR related to sports activities."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:04:37.812561",
+          "domain_explored": "https://architekturaibiznes.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:04:40.646082",
+          "domain_explored": "https://2ligamezczyzn.volleystation.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 927,
+      "total_output_tokens": 396,
+      "estimated_cost_usd": 0.008721
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "AZS AGH Krak\u00f3w may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:04:40.650170"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328451",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:44:09.911271"
+}

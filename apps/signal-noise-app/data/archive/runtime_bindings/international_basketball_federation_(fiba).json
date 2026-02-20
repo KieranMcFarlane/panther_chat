@@ -1,0 +1,295 @@
+{
+  "entity_id": "international_basketball_federation_(fiba)",
+  "entity_name": "International Basketball Federation (FIBA)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "business-humanrights.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sn.linkedin.com/jobs/view/new-business-sales-analyst-basketball-africa-league-at-national-basketball-association-nba-2900532491?refId=k4BE6WVoS1%2FrNjKwQDoi9Q%3D%3D&trackingId=nXQihK7OmInzGWTjitP1vg%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://sn.linkedin.com/jobs/view/office-assistant-basketball-africa-league-at-national-basketball-association-nba-2901207279?refId=Uilx7mMu%2Fe%2BPMB1fbg6o3Q%3D%3D&trackingId=vme45pnwnzsGLW1Njd2fMw%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://sn.linkedin.com/jobs/view/basketball-operations-assistant-basketball-africa-league-at-national-basketball-association-nba-2896915959",
+      "https://sn.linkedin.com/jobs/view/project-management-%E2%80%93-bal-production-at-national-basketball-association-nba-4319914791",
+      "https://sn.linkedin.com/jobs/view/event-game-services-lead-at-national-basketball-association-nba-4316919591"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_basketball_federation_(fiba)",
+      "entity_name": "International Basketball Federation (FIBA)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://sn.linkedin.com/jobs/view/office-assistant-basketball-africa-league-at-national-basketball-association-nba-2901207279?refId=Uilx7mMu%2Fe%2BPMB1fbg6o3Q%3D%3D&trackingId=vme45pnwnzsGLW1Njd2fMw%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://sn.linkedin.com/jobs/view/project-management-%E2%80%93-bal-production-at-national-basketball-association-nba-4319914791",
+        "https://business-humanrights.org",
+        "https://sn.linkedin.com/jobs/view/basketball-operations-assistant-basketball-africa-league-at-national-basketball-association-nba-2896915959",
+        "https://sn.linkedin.com/jobs/view/event-game-services-lead-at-national-basketball-association-nba-4316919591",
+        "https://sn.linkedin.com/jobs/view/new-business-sales-analyst-basketball-africa-league-at-national-basketball-association-nba-2900532491?refId=k4BE6WVoS1%2FrNjKwQDoi9Q%3D%3D&trackingId=nXQihK7OmInzGWTjitP1vg%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Basketball Federation (FIBA) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:31:21.104866",
+          "domain_explored": "https://business-humanrights.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "human_rights_advocacy",
+            "corporate_accountability_monitoring"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1373,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.072162628173828
+            }
+          ],
+          "reasoning": "The content is scraped from the Business & Human Rights Resource Centre (business-humanrights.org), an organization dedicated to human rights advocacy. It contains no information regarding FIBA's operations, technology stack, or procurement activities. The text focuses on corporate abuse monitoring and climate justice, which are unrelated to FIBA's purchasing signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:31:35.787536",
+          "domain_explored": "https://sn.linkedin.com/jobs/view/new-business-sales-analyst-basketball-africa-league-at-national-basketball-association-nba-2900532491?refId=k4BE6WVoS1%2FrNjKwQDoi9Q%3D%3D&trackingId=nXQihK7OmInzGWTjitP1vg%3D%3D&position=4&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Excel, PowerPoint, Word)",
+              "LinkedIn (for lead generation)",
+              "Email Marketing Platforms"
+            ],
+            "job_postings": [
+              "New Business Sales Analyst - Basketball Africa League (Dakar Region)"
+            ],
+            "procurement_indicators": [
+              "Sales process streamlining initiatives",
+              "CRM implementation or optimization needs",
+              "Market research and competitive analysis tools procurement",
+              "Collaboration software for cross-departmental coordination"
+            ]
+          },
+          "patterns_found": [
+            "joint_venture_structure",
+            "commercial_operations_expansion",
+            "sales_process_optimization",
+            "lead_generation_tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 314,
+              "elapsed_seconds": 6.07357120513916
+            }
+          ],
+          "reasoning": "While the job posting is technically under the NBA entity, it explicitly defines the Basketball Africa League (BAL) as a partnership between FIBA and the NBA. The role focuses on 'streamlining sales business processes' and 'lead generation,' indicating a need for CRM and sales automation tools to support this joint venture's commercial operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:31:49.812097",
+          "domain_explored": "https://sn.linkedin.com/jobs/view/office-assistant-basketball-africa-league-at-national-basketball-association-nba-2901207279?refId=Uilx7mMu%2Fe%2BPMB1fbg6o3Q%3D%3D&trackingId=vme45pnwnzsGLW1Njd2fMw%3D%3D&position=1&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Concur Travel & Expense"
+            ],
+            "job_postings": [
+              "Office Assistant - Basketball Africa League (Dakar, Senegal)"
+            ],
+            "procurement_indicators": [
+              "Usage of corporate expense management software (Concur)",
+              "Procurement of office equipment and supplies",
+              "Vendor relationships for travel, couriers, and facilities management (cleaning, building maintenance)",
+              "Event ticketing and invitation processes"
+            ]
+          },
+          "patterns_found": [
+            "joint_venture_structure",
+            "regional_operational_expansion",
+            "corporate_infrastructure_procurement",
+            "executive_support_structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.5382018089294434
+            }
+          ],
+          "reasoning": "While this is an administrative role, it confirms the operational scale of the FIBA-NBA partnership (BAL) in Senegal. It reveals specific procurement-relevant technologies (Concur) and infrastructure needs (office equipment, travel services, facilities management) required to support the league's operations. It confirms the physical presence and administrative complexity of the entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:32:04.610475",
+          "domain_explored": "https://sn.linkedin.com/jobs/view/basketball-operations-assistant-basketball-africa-league-at-national-basketball-association-nba-2896915959",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Outlook",
+              "Microsoft Word",
+              "Microsoft Excel",
+              "Microsoft PowerPoint"
+            ],
+            "job_postings": [
+              "Basketball Operations Assistant - Basketball Africa League (NBA/FIBA JV)"
+            ],
+            "procurement_indicators": [
+              "Coordination with external travel agency for transportation/lodging",
+              "Procurement of practice facilities and venue preparation",
+              "Management of team visa matters and logistics",
+              "Support for medical team health & safety protocols (procurement of medical supplies/protocols implied)"
+            ]
+          },
+          "patterns_found": [
+            "joint_venture_structure",
+            "operational_logistics_procurement",
+            "vendor_management_travel",
+            "regional_expansion_infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1676,
+              "output_tokens": 331,
+              "elapsed_seconds": 4.904464960098267
+            }
+          ],
+          "reasoning": "While this is an operational role rather than a direct procurement position, the responsibilities explicitly include managing vendor relationships for travel, lodging, and agency coordination. This confirms the BAL's active procurement of logistical services and infrastructure across Africa, supporting the hypothesis of operational expansion."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:32:21.864745",
+          "domain_explored": "https://sn.linkedin.com/jobs/view/project-management-%E2%80%93-bal-production-at-national-basketball-association-nba-4319914791",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smartsheet",
+              "Asana",
+              "Monday.com"
+            ],
+            "job_postings": [
+              "Project Management \u2013 BAL Production"
+            ],
+            "procurement_indicators": [
+              "Coordination with Finance and Procurement teams",
+              "Management of external vendors",
+              "Budget tracking and resource allocation",
+              "Contract and payment processing oversight"
+            ]
+          },
+          "patterns_found": [
+            "joint_venture_structure",
+            "production_procurement_coordination",
+            "project_management_software_usage",
+            "vendor_contract_management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1752,
+              "output_tokens": 322,
+              "elapsed_seconds": 7.980773210525513
+            }
+          ],
+          "reasoning": "This posting confirms the BAL (Basketball Africa League) is a complex operational entity requiring significant procurement coordination. The role explicitly mentions coordinating with 'Procurement teams' for contracts/payments and managing external vendors. It also identifies specific project management technologies (Smartsheet, Asana, Monday.com) in use. While this is an NBA posting, the BAL is a joint venture with FIBA, indicating the technology stack and operational processes are shared or standardized."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:32:34.493885",
+          "domain_explored": "https://sn.linkedin.com/jobs/view/event-game-services-lead-at-national-basketball-association-nba-4316919591",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Event Game Services Lead - National Basketball Association (NBA) - Senegal"
+            ],
+            "procurement_indicators": [
+              "Travel and Accommodation Procurement",
+              "Hotel Contract Negotiation",
+              "Vendor Management (Airlines, Hotels, Transportation)",
+              "Budget Authority for Logistics",
+              "Compliance and Risk Management"
+            ]
+          },
+          "patterns_found": [
+            "joint_venture_structure",
+            "hospitality_procurement_management",
+            "vendor_contract_negotiation",
+            "logistics_budget_authority",
+            "regional_expansion_logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1826,
+              "output_tokens": 323,
+              "elapsed_seconds": 4.017786026000977
+            }
+          ],
+          "reasoning": "The job posting confirms the operational scale of the Basketball Africa League (BAL), a joint venture between FIBA and the NBA. The 'Event Game Services Lead' role is a procurement-centric position responsible for sourcing travel, accommodation, and event services. The explicit mention of 'negotiation and management of hotel contracts,' 'cost-effective travel planning,' and 'budget management' indicates direct procurement activity and vendor management authority within the FIBA ecosystem."
+        }
+      ],
+      "total_input_tokens": 9707,
+      "total_output_tokens": 1780,
+      "estimated_cost_usd": 0.055821
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Basketball Federation (FIBA) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:32:34.498408"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.456762",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:30:48.831586"
+}

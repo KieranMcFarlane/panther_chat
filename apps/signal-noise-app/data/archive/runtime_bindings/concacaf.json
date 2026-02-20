@@ -1,0 +1,350 @@
+{
+  "entity_id": "concacaf",
+  "entity_name": "CONCACAF",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "concacaf.com",
+    "ussoccer.com",
+    "mlssoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/concacaf/jobs",
+      "https://www.linkedin.com/jobs/concacaf-jobs",
+      "https://jm.linkedin.com/jobs/view/football-development-administrator-at-concacaf-3996550413",
+      "https://www.linkedin.com/posts/michellesavani_competitions-administrator-concacaf-careers-activity-7168303767988162561-kIqD",
+      "https://jm.linkedin.com/jobs/view/refereeing-development-coordinator-at-concacaf-4034238249",
+      "https://www.linkedin.com/jobs/major-league-soccer-jobs",
+      "https://www.linkedin.com/jobs/u.s.-soccer-federation-jobs",
+      "https://mq.linkedin.com/jobs/view/football-scout-data-collector-at-img-arena-4019980798",
+      "https://www.linkedin.com/jobs/fifa-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "concacaf",
+      "entity_name": "CONCACAF",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://mlssoccer.com",
+        "https://jm.linkedin.com/jobs/view/football-development-administrator-at-concacaf-3996550413",
+        "https://jm.linkedin.com/jobs/view/refereeing-development-coordinator-at-concacaf-4034238249",
+        "https://www.linkedin.com/company/concacaf/jobs",
+        "https://concacaf.com",
+        "https://ussoccer.com",
+        "https://www.linkedin.com/posts/michellesavani_competitions-administrator-concacaf-careers-activity-7168303767988162561-kIqD",
+        "https://www.linkedin.com/jobs/concacaf-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Procurement Process Adherence",
+        "Vendor Quote Management",
+        "Invoice Processing Workflow",
+        "Logistics & Supply Chain Operations",
+        "Inventory Management",
+        "Event Logistics Management",
+        "Database Management Proficiency",
+        "Stakeholder Reporting Requirements",
+        "Vendor/Service Coordination",
+        "Regional Training Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "CONCACAF may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:09:52.838794",
+          "domain_explored": "https://concacaf.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "UI Navigation Repetition",
+            "Sports Data Display"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 470,
+              "output_tokens": 149,
+              "elapsed_seconds": 3.4679908752441406
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of repetitive UI navigation labels (e.g., 'Scores & Stats', 'Live Matches', 'Schedule') with no substantive text, descriptions, or structured data. There is no information regarding technology vendors, job openings, or organizational strategy."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:09:56.552023",
+          "domain_explored": "https://ussoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:10:02.975797",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer News",
+            "Player Acquisition",
+            "League Competition Updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.235323190689087
+            }
+          ],
+          "reasoning": "The content provided is exclusively focused on player transfers (Timo Werner, Alex Freeman, Mateusz Bogusz), designated player rules, and team roster updates. This falls under 'Sports Operations' rather than 'Procurement' or 'Business Operations'. There are no signals related to vendor sourcing, technology purchasing, or corporate governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:10:08.348571",
+          "domain_explored": "https://www.linkedin.com/company/concacaf/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Access Restriction (403 Forbidden)",
+            "Social Media Platform Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 482,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.5891010761260986
+            }
+          ],
+          "reasoning": "The target URL returned a '403 Forbidden' error, indicating that the content is blocked from scraping or requires authentication that is not available in this context. Consequently, no procurement signals, job postings, or technology stack details could be extracted from this specific page."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:10:21.194883",
+          "domain_explored": "https://www.linkedin.com/jobs/concacaf-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director, Events at Major League Soccer (Irrelevant)",
+              "Coordinator, Special Events at Nashville Soccer Club (Irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Search Result Noise",
+            "Entity Mismatch (MLS vs. CONCACAF)",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 256,
+              "elapsed_seconds": 4.661888122558594
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the keyword 'Concacaf'. The listings returned are for third-party entities (e.g., Major League Soccer, Nashville SC) rather than CONCACAF itself. The content is blocked behind an authentication gate, preventing access to actual job descriptions or procurement signals. This indicates that the search query is too broad or the platform is restricting data access, rendering it useless for specific procurement intelligence on the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:10:33.879674",
+          "domain_explored": "https://jm.linkedin.com/jobs/view/football-development-administrator-at-concacaf-3996550413",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Excel, Word, PowerPoint)"
+            ],
+            "job_postings": [
+              {
+                "title": "Football Development Administrator",
+                "location": "Kingston, Jamaica",
+                "department": "Football Development",
+                "status": "No longer accepting applications",
+                "procurement_relevance": "Direct responsibility for processing quotes and invoices."
+              }
+            ],
+            "procurement_indicators": [
+              "Explicit requirement to process quotes for goods and services",
+              "Invoice processing and approval workflow",
+              "Management of material shipments and logistics",
+              "Inventory tracking and management",
+              "Cost reduction analysis"
+            ]
+          },
+          "patterns_found": [
+            "Procurement Process Adherence",
+            "Vendor Quote Management",
+            "Invoice Processing Workflow",
+            "Logistics & Supply Chain Operations",
+            "Inventory Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1585,
+              "output_tokens": 389,
+              "elapsed_seconds": 5.48502516746521
+            }
+          ],
+          "reasoning": "The job description for 'Football Development Administrator' explicitly outlines procurement responsibilities, including 'receiving, organizing and processing quotes for goods and services in line with the proper procurement process' and 'processing invoices'. This confirms the existence of formalized procurement workflows and vendor management activities within the Football Development department."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:10:46.188000",
+          "domain_explored": "https://www.linkedin.com/posts/michellesavani_competitions-administrator-concacaf-careers-activity-7168303767988162561-kIqD",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform",
+              "Potential ATS (implied by 'Careers Portal')"
+            ],
+            "job_postings": [
+              "Competitions Administrator (implied context)"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment Cycle",
+              "Inbound Application Volume (High volume of comments/interest)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Hiring Outreach",
+            "Email-based Application Workflow",
+            "Organizational Growth Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 290,
+              "elapsed_seconds": 5.225533962249756
+            }
+          ],
+          "reasoning": "The content confirms active hiring and expansion within CONCACAF's Competitions department. While it does not explicitly mention procurement vendors or technology stacks, the volume of applicants and the use of a direct email channel (Jobs@Concacaf.org) alongside a portal indicates an active HR/Recruitment function that may utilize ATS (Applicant Tracking Systems) or vendor support. This supports the general hypothesis of organizational activity but lacks specific procurement intent."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:10:57.036229",
+          "domain_explored": "https://jm.linkedin.com/jobs/view/refereeing-development-coordinator-at-concacaf-4034238249",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite",
+              "Adobe",
+              "Database Management Systems"
+            ],
+            "job_postings": [
+              "Refereeing Development Coordinator"
+            ],
+            "procurement_indicators": [
+              "Logistics planning for development programs",
+              "Vendor coordination for seminars and courses",
+              "Tracking and assessment of initiative impact",
+              "Preparation of event summary reports"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics Management",
+            "Database Management Proficiency",
+            "Stakeholder Reporting Requirements",
+            "Vendor/Service Coordination",
+            "Regional Training Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.981260061264038
+            }
+          ],
+          "reasoning": "This job posting confirms operational procurement activities, specifically the coordination of logistics for seminars and courses. It explicitly requires 'database management' skills and involves organizing events, which implies vendor engagement for venues, travel, and materials. The requirement to prepare 'event summary reports' suggests a governance structure that tracks spending and operational efficiency."
+        }
+      ],
+      "total_input_tokens": 8863,
+      "total_output_tokens": 1726,
+      "estimated_cost_usd": 0.052479
+    },
+    "procurement_signals": [
+      "Procurement Process Adherence",
+      "Vendor Quote Management",
+      "Invoice Processing Workflow",
+      "Logistics & Supply Chain Operations",
+      "Inventory Management",
+      "Event Logistics Management",
+      "Database Management Proficiency",
+      "Stakeholder Reporting Requirements",
+      "Vendor/Service Coordination",
+      "Regional Training Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "CONCACAF may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:10:57.039091"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458092",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:37:13.238497"
+}

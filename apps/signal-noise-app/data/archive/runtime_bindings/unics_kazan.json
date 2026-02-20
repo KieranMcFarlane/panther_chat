@@ -1,0 +1,208 @@
+{
+  "entity_id": "unics_kazan",
+  "entity_name": "Unics Kazan",
+  "template_id": "tpl_c1_professional_league_clubs_v1",
+  "cluster_id": "bb_regional_russia",
+  "discovered_domains": [
+    "unics.ru",
+    "vtb-league.com",
+    "euroleaguebasketball.net",
+    "cskabasket.ru",
+    "minskbasket.by"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "unics_kazan",
+      "entity_name": "Unics Kazan",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://unics.ru",
+        "https://minskbasket.by",
+        "https://cskabasket.ru",
+        "https://euroleaguebasketball.net",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Unics Kazan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:21:24.744117",
+          "domain_explored": "https://unics.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Fan Engagement)",
+              "E-Ticketing Systems",
+              "Digital Program Distribution"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsor and Partner management section (implies ad-tech/media buying needs)",
+              "VIP Lodge management (implies hospitality CRM needs)",
+              "Advertising section (implies marketing stack)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Engagement Channels",
+            "Ticketing Operations",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.379546880722046
+            }
+          ],
+          "reasoning": "The content confirms the existence of digital infrastructure (Mobile App, E-ticketing) and a commercial structure (Sponsors, VIP services). While no direct procurement requests are visible, the operation of these channels implies ongoing vendor relationships for software maintenance, payment processing, and advertising technology."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:21:34.445508",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide sponsorship standardization (e.g., 'WINLINE Basket Cup', 'BETSITI PARMA')",
+              "Centralized media and statistics infrastructure ('Stats', 'Media', 'Video')"
+            ]
+          },
+          "patterns_found": [
+            "League Membership",
+            "Sponsorship Ecosystem",
+            "Standardized League Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1400,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.6964569091796875
+            }
+          ],
+          "reasoning": "The content is a navigation dump of the VTB United League website. While it confirms UNICS Kazan's membership in the league and exposes the broader sponsorship ecosystem (e.g., WINLINE, 1xBet implied via 'BETSITI'), it contains no specific procurement signals, job postings, or technology stack details relevant to UNICS' internal operations. The league structure suggests centralized digital services, but no intent is visible here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:21:44.979165",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "EuroLeague TV streaming rights expansion (League-level vendor activity)"
+            ]
+          },
+          "patterns_found": [
+            "League Governance Updates",
+            "Media Rights Expansion",
+            "Standardized League Infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.3980090618133545
+            }
+          ],
+          "reasoning": "The content is focused on league-wide governance (CEO appointment) and media rights (EuroLeague TV). While Unics Kazan participates in this ecosystem, the content does not reveal specific procurement signals, technology stacks, or operational investments for the Unics Kazan entity specifically. It confirms the regulatory environment but provides no actionable intelligence for Unics procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:21:55.967960",
+          "domain_explored": "https://cskabasket.ru",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VK Sport (Streaming Platform)",
+              "WBC.VTB-League.com (League Management System)",
+              "MatchTV.ru (Broadcasting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Shared League Services (Unics likely uses the same VTB infrastructure as CSKA)"
+            ]
+          },
+          "patterns_found": [
+            "Competitor Content Analysis",
+            "League Infrastructure (VTB/WBC)",
+            "Standardized Media Distribution"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.8005800247192383
+            }
+          ],
+          "reasoning": "The scraped content is from CSKA Moscow's website (cskabasket.ru), not Unics Kazan. While it mentions 'Unics' in the context of game previews ('cska-unics-news-preview'), this is competitive intelligence, not a direct procurement signal from the target entity. The content reveals the shared league infrastructure (VTB-League, WBC) but offers no specific insights into Unics' internal procurement or technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:22:20.077833",
+          "domain_explored": "https://minskbasket.by",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5704,
+      "total_output_tokens": 979,
+      "estimated_cost_usd": 0.031797
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Unics Kazan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:22:20.080420"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.214268",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:22:47.499733"
+}

@@ -1,0 +1,573 @@
+{
+  "entity_id": "agen",
+  "entity_name": "Agen",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "emerging_professional_league_clubs",
+  "discovered_domains": [
+    "agen.iafor.org",
+    "agen-rugby.com",
+    "agen.fr",
+    "agentz.org",
+    "agen.co.nz",
+    "causes.benevity.org",
+    "agen.cy",
+    "aeroport-agen.com",
+    "brumbaer.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ph.linkedin.com/jobs/view/call-center-representative-voice-nonvoice-agen-newbie-account-at-caldwell-communications-4259596152",
+      "https://www.linkedin.com/posts/gulf-careers-hunt_hiring-real-estate-agen-job-in-uae-position-activity-7392434333027962880-6wNR",
+      "https://www.linkedin.com/jobs/nurse-jobs-agen?trk=public_jobs_related_jserp_link",
+      "https://sg.linkedin.com/jobs/view/ndt-engineer-%E2%80%93-level-3-at-the-sanad-group-4173758530",
+      "https://sg.linkedin.com/jobs/view/turnaround-planner-at-oil-and-gas-job-search-ltd-4017849401",
+      "https://sg.linkedin.com/jobs/view/staff-design-engineer-at-confidential-3792920775",
+      "https://sg.linkedin.com/jobs/view/project-engineer-cum-qa-ac-at-burckhardt-compression-3681877560",
+      "https://sg.linkedin.com/jobs/concept-development-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "agen",
+      "entity_name": "Agen",
+      "total_iterations": 15,
+      "completed_iterations": 14,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://agen.iafor.org",
+        "https://agen.cy",
+        "https://agen-rugby.com",
+        "https://agentz.org",
+        "https://ph.linkedin.com/jobs/view/call-center-representative-voice-nonvoice-agen-newbie-account-at-caldwell-communications-4259596152",
+        "https://www.linkedin.com/jobs/nurse-jobs-agen?trk=public_jobs_related_jserp_link",
+        "https://brumbaer.de",
+        "https://sg.linkedin.com/jobs/view/ndt-engineer-%E2%80%93-level-3-at-the-sanad-group-4173758530",
+        "https://sg.linkedin.com/jobs/view/turnaround-planner-at-oil-and-gas-job-search-ltd-4017849401",
+        "https://aeroport-agen.com",
+        "https://www.linkedin.com/posts/gulf-careers-hunt_hiring-real-estate-agen-job-in-uae-position-activity-7392434333027962880-6wNR",
+        "https://causes.benevity.org",
+        "https://agen.co.nz",
+        "https://agen.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Agen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:59:54.957680",
+          "domain_explored": "https://agen.iafor.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Virtual Event Platforms (implied by 'and Online' delivery)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Conference Registration Services",
+              "Venue Management (Tokyo International Forum)"
+            ]
+          },
+          "patterns_found": [
+            "Academic Conference Context",
+            "Non-Profit/Research Association Structure",
+            "Event Management Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 230,
+              "elapsed_seconds": 2.844831943511963
+            }
+          ],
+          "reasoning": "The content confirms that 'Agen' refers to 'AGen' (The Asian Conference on Aging & Gerontology), an academic event organized by IAFOR. This is a research conference, not a corporate entity or government body with procurement needs for software or enterprise services. The focus is on abstract submissions and registration, indicating a non-commercial nature."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:00:07.379199",
+          "domain_explored": "https://agen-rugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing Platform (billetterie.agen-rugby.com)",
+              "eShop / CMS (implied by 'Boutique' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Season 2025/2026 Subscription Sales (B2C)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Club Entity",
+            "B2C Ticketing Operations",
+            "Fan Engagement Focus",
+            "Merchandising (eShop)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 231,
+              "elapsed_seconds": 4.826472997665405
+            }
+          ],
+          "reasoning": "The scraped content confirms the entity is SUA Agen (L'Union Sportive Agenaise Lot-et-Garonne), a professional rugby club. The content is entirely consumer-focused (ticketing, 'abonnements', match news, merchandise) and lacks any B2B procurement signals, corporate governance structures, or technology stack indicators relevant to Agen's target profile."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:00:40.373002",
+          "domain_explored": "https://agen.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Voice Search (Utiliser la recherche vocale)",
+              "Online Appointment Booking System (Prise de rendez-vous)",
+              "CMS (implied by site structure)"
+            ],
+            "job_postings": [
+              "General Recruitment Portal (Nous recrutons -> agglo-agen.net)"
+            ],
+            "procurement_indicators": [
+              "Public Sector Hiring (Potential for HR software/services)",
+              "Digital Administration Services (Vendor support for demarches en ligne)",
+              "School Catering Management (Restauration scolaire)",
+              "ID/Passport Processing Services"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Government Entity (Mairie)",
+            "Public Sector Recruitment (Nous recrutons)",
+            "Digital Service Delivery (D\u00e9marches en ligne)",
+            "Inter-municipal Cooperation (Agglo-agen.net)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 363,
+              "elapsed_seconds": 25.341485023498535
+            }
+          ],
+          "reasoning": "The content confirms Agen.fr is the official portal for the City of Agen (Mairie d'Agen), a municipal government entity. While the homepage itself is citizen-facing, the presence of 'Nous recrutons' (We are hiring) and 'D\u00e9marches en ligne' (Online procedures) indicates organizational activity and digital transformation. The link to 'agglo-agen.net' suggests a larger inter-communal structure, increasing the potential scope of procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:00:53.570273",
+          "domain_explored": "https://agentz.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Collaboration with International NGOs (CARE International)",
+              "Partnership with Academic Institutions (Sokoine University)",
+              "Event Management and Logistics"
+            ]
+          },
+          "patterns_found": [
+            "NGO/Non-Profit Entity",
+            "Social Advocacy Focus",
+            "Event Organization",
+            "Community Development",
+            "Swahili/Local Context (Tanzania)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.955994129180908
+            }
+          ],
+          "reasoning": "The content describes a Tanzanian non-governmental organization (AGEN) focused on social advocacy, specifically organizing 'Men's Day' in collaboration with entities like CARE International and Sokoine University. The focus is on social change, violence reporting, and civic education rather than commercial procurement, enterprise technology adoption, or government purchasing."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:01:04.099539",
+          "domain_explored": "https://agen.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "IIoT Smart Sensors",
+              "Web-based Platform",
+              "Vibration and Temperature Sensing",
+              "Wireless Monitoring"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Product Vendor",
+            "IIoT Hardware Sales",
+            "SaaS Platform Provider",
+            "Commercial 'About Us' Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 215,
+              "elapsed_seconds": 2.9814188480377197
+            }
+          ],
+          "reasoning": "The entity 'Agen' (agen.co.nz) is a private technology company selling IIoT hardware and software solutions for predictive maintenance. This is a vendor/seller profile, not a buyer/procurement profile. The content focuses on sales, product features, and customer acquisition rather than internal purchasing needs or governance."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:01:13.982849",
+          "domain_explored": "https://causes.benevity.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Benevity Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Giving Programs",
+              "Grant Distribution"
+            ]
+          },
+          "patterns_found": [
+            "Non-Profit/Charity Platform",
+            "Donation and Volunteerism Management",
+            "B2C/Recipient Focus",
+            "Grants and Fundraising Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 216,
+              "elapsed_seconds": 2.7086751461029053
+            }
+          ],
+          "reasoning": "The content describes Benevity, a platform for non-profits to access corporate giving and volunteering programs. This is a platform for receiving funds or volunteers, not a commercial or government entity ('Agen') engaging in procurement or vendor management. It contradicts the hypothesis of finding a procurement decision-maker named 'Agen'."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:01:26.812208",
+          "domain_explored": "https://agen.cy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AgentOps (Observability Platform)",
+              "AI Agents",
+              "Marketplace Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Service Provider (Consulting)",
+            "Product Sales (SaaS/Marketplace)",
+            "Venture Capital Backed Entity ($2.6M raised)",
+            "Outbound Marketing Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 237,
+              "elapsed_seconds": 3.291964292526245
+            }
+          ],
+          "reasoning": "The entity 'Agency' (agen.cy) is a private sector consulting firm and software vendor specializing in AI agents. The content describes their service offerings (consulting, custom development) and products (AgentOps, Marketplace) for sale. This represents the supply side of the market rather than a procurement target. There are no signals of internal purchasing needs, RFPs, or government procurement processes."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:01:39.631644",
+          "domain_explored": "https://aeroport-agen.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Photovoltaic Infrastructure (Solar Panels)",
+              "Aeronautical Data Mapping (AERO-DATA)",
+              "Space Propulsion Testing (ALPHA-IMPULSION)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Appel \u00e0 Manifestation d\u2019Int\u00e9r\u00eat (AMI) - Installation of solar panels",
+              "Hosting of commercial partners (AERO-DATA, ALPHA-IMPULSION)",
+              "Industrial subcontracting and aeronautical works"
+            ]
+          },
+          "patterns_found": [
+            "Public Infrastructure Governance (Syndicat Mixte)",
+            "Active Procurement Cycle (AMI/RFP)",
+            "Industrial & Commercial Attraction Strategy",
+            "Public-Private Partnership (Startup Incubation)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1693,
+              "output_tokens": 323,
+              "elapsed_seconds": 5.884794235229492
+            }
+          ],
+          "reasoning": "The entity is a public airport managed by a 'Syndicat Mixte' (intermunicipal union), which is a public procurement body. While the primary focus is aviation operations, the explicit 'Appel \u00e0 Manifestation d\u2019Int\u00e9r\u00eat' (AMI) for photovoltaic panels indicates active vendor solicitation. Additionally, the hosting of startups (ALPHA-IMPULSION, AERO-DATA) suggests a procurement role in facility management and subcontracting."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:01:50.291116",
+          "domain_explored": "https://brumbaer.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "3D Printing (B9 Creator)",
+              "Personal Coding (AGen app)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Personal Hobby Blog",
+            "Tabletop Gaming (Warhammer/Epic 40k)",
+            "DIY 3D Printing Projects",
+            "Personal Software Development (AGen Army Generator)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.938291072845459
+            }
+          ],
+          "reasoning": "The content is clearly a personal hobby blog focused on tabletop wargaming (Warhammer 40k, Epic Armageddon) and DIY 3D printing. While 'AGen' appears as the name of a personal software project (an army list generator), the entity 'Brumbaer' is an individual hobbyist, not a commercial or government entity with procurement potential. The context is B2C/Personal, not B2B."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:02:06.591676",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/call-center-representative-voice-nonvoice-agen-newbie-account-at-caldwell-communications-4259596152",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Error Page Content",
+            "Job Board Platform Noise",
+            "Broken Link / 404 Not Found"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1829,
+              "output_tokens": 178,
+              "elapsed_seconds": 7.318979978561401
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic 'Page Not Found' error messages in multiple languages from a job board platform (LinkedIn). The URL suggests a specific job posting ('Call Center Representative...'), but the content itself provides no verifiable data about the entity 'Agen' or its procurement activities. It is classified as noise/a broken link."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:02:14.890897",
+          "domain_explored": "https://www.linkedin.com/posts/gulf-careers-hunt_hiring-real-estate-agen-job-in-uae-position-activity-7392434333027962880-6wNR",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Real Estate Agent - Modern Standards Real Estate LLC (Dubai)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Recruitment Agency Content (Gulf Career Hunt)",
+            "B2C Job Board Noise",
+            "Real Estate Sector (Private)",
+            "Geographic Mismatch (Dubai, UAE vs Agen, France)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1903,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.6476891040802
+            }
+          ],
+          "reasoning": "The content is a job posting for a Real Estate Agent in Dubai, UAE, posted by a recruitment aggregator. It is completely unrelated to the target entity 'Agen' (a commune in France) or any public procurement function. It represents search engine noise triggered by the keyword 'Agen' within 'Real Estate Agent'."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T04:02:22.255711",
+          "domain_explored": "https://www.linkedin.com/jobs/nurse-jobs-agen?trk=public_jobs_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Infirmier DE (H/F) at MyConnectt.fr",
+              "Infirmier(e) r\u00e9f\u00e9rent(e) H/F at Korian"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Board Platform Noise",
+            "B2C Recruitment Focus",
+            "Private Sector Hiring (Korian, MyConnectt)",
+            "Generic Authentication Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1969,
+              "output_tokens": 242,
+              "elapsed_seconds": 3.338451385498047
+            }
+          ],
+          "reasoning": "The content represents a LinkedIn job search results page for nursing roles in the Agen area. The listings are for individual employment (B2C) with private healthcare entities (Korian, MyConnectt) rather than B2B procurement opportunities. The presence of repeated 'Sign in' prompts indicates a generic platform interface with no specific procurement signals, technology stack details, or government contracting information relevant to the target entity."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T04:02:35.833732",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/ndt-engineer-%E2%80%93-level-3-at-the-sanad-group-4173758530",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "NDT Equipment (FPI, MPI, Eddy Current, Ultrasonic)",
+              "Aviation Regulatory Systems (GCAA, FAA, EASA)"
+            ],
+            "job_postings": [
+              "NDT Engineer \u2013 Level 3"
+            ],
+            "procurement_indicators": [
+              "Acquisition of materials and equipment (mentioned as responsibility)"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Entity (The Sanad Group)",
+            "Aviation MRO Focus (Maintenance, Repair, Overhaul)",
+            "Technical Recruitment (NDT Engineer Level 3)",
+            "Geographic Mismatch (Singapore/UAE vs Agen, France)",
+            "B2C Job Board Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2037,
+              "output_tokens": 321,
+              "elapsed_seconds": 4.118545293807983
+            }
+          ],
+          "reasoning": "The content is a job posting for 'The Sanad Group' (an aerospace/aviation company in the UAE/Singapore). While it mentions 'acquisitions of materials and equipment' as a responsibility, the entity is a private sector industrial firm unrelated to the target entity 'Agen' (a municipality in France). The keyword 'Agen' in the URL is likely a fragment of 'Agent', 'Agenda', or 'Singapore', or simply coincidental noise in the URL structure. There is no relevance to the procurement intelligence of Agen, France."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T04:02:49.762438",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/turnaround-planner-at-oil-and-gas-job-search-ltd-4017849401",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Primavera (Scheduling Tool)"
+            ],
+            "job_postings": [
+              "Turnaround Planner (Shell / Oil and Gas Job Search Ltd)"
+            ],
+            "procurement_indicators": [
+              "Coordination with procurement and cost engineering (Operational context)",
+              "Asset Sale (Shell Energy and Chemicals Park to CAPGC)"
+            ]
+          },
+          "patterns_found": [
+            "Job Board Platform Noise (LinkedIn/3rd Party)",
+            "Private Sector Entity (Shell)",
+            "M&A Activity (Asset Sale to CAPGC)",
+            "Technical Recruitment (Turnaround Planning)",
+            "Singapore Location Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2117,
+              "output_tokens": 350,
+              "elapsed_seconds": 3.0194008350372314
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Turnaround Planner' at Shell, hosted on a job board (Oil and Gas Job Search Ltd via LinkedIn). While the role involves coordination with 'procurement and cost engineering,' it is an operational role within a private sector entity (Shell) located in Singapore. Critically, the text confirms the sale of Shell's Energy and Chemicals Park to CAPGC, indicating a divestment strategy rather than active procurement expansion for the entity 'Agen'. The mention of 'Agen' in the URL is likely a fragment of 'Agent' or 'Agency' within the job board's URL structure, not a reference to the target entity."
+        }
+      ],
+      "total_input_tokens": 23500,
+      "total_output_tokens": 3578,
+      "estimated_cost_usd": 0.12417
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Agen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:02:49.764908"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.272115",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:53.044628"
+}

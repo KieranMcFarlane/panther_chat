@@ -1,0 +1,182 @@
+{
+  "entity_id": "ironi_nes_ziona",
+  "entity_name": "Ironi Nes Ziona",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "maccabi.co.il",
+    "wikidata.org",
+    "globalsportsarchive.com",
+    "basketball-reference.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ironi_nes_ziona",
+      "entity_name": "Ironi Nes Ziona",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://basketball-reference.com",
+        "https://globalsportsarchive.com",
+        "https://wikidata.org",
+        "https://maccabi.co.il"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ironi Nes Ziona may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:47:43.064720",
+          "domain_explored": "https://maccabi.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing platform usage (Purchase Ticket links)",
+              "Sponsorship structure (Main Partner, Leading Partners)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Sports Club Content",
+            "Ticketing Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.8648269176483154
+            }
+          ],
+          "reasoning": "The scraped content is from the official website of Maccabi Tel Aviv Basketball Club (maccabi.co.il), not Ironi Nes Ziona. The content focuses on player rosters, game schedules, Euroleague standings, and ticket sales. There is absolutely no information regarding Ironi Nes Ziona's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:47:45.820973",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:47:52.313723",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Global League Navigation",
+            "No Localized Entity Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1429,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.025407314300537
+            }
+          ],
+          "reasoning": "The scraped content is a generic navigation menu for global soccer leagues (UEFA, CONCACAF, etc.) found on globalsportsarchive.com. There is no mention of 'Ironi Nes Ziona', Israel, or specific club operations. The page is a high-level sports directory, not a source for organizational procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:48:00.430921",
+          "domain_explored": "https://basketball-reference.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Stathead (Proprietary Search Engine)",
+              "Immaculate Grid"
+            ],
+            "job_postings": [
+              "Marketing Manager, Content & Creative (Sports Reference)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Statistical Aggregation",
+            "US-Centric Sports Data",
+            "No Localized Entity Content",
+            "Consumer-Facing Product (Stathead)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 239,
+              "elapsed_seconds": 4.7788779735565186
+            }
+          ],
+          "reasoning": "The content is from Basketball-Reference.com, a US-based statistical database for NBA and global basketball leagues. It contains no information regarding 'Ironi Nes Ziona', Israeli basketball operations, or local procurement activities. The only 'hiring' signal detected is an internal job posting for the website publisher (Sports Reference), which is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:48:03.269601",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4265,
+      "total_output_tokens": 603,
+      "estimated_cost_usd": 0.02184
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ironi Nes Ziona may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:48:03.270393"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.218465",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:55.312088"
+}

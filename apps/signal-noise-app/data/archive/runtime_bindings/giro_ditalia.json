@@ -1,0 +1,130 @@
+{
+  "entity_id": "giro_d\u0092italia",
+  "entity_name": "Giro d\u0092Italia",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "growthmarketreports.com",
+    "teakdoor.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "giro_d\u0092italia",
+      "entity_name": "Giro d\u0092Italia",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://growthmarketreports.com",
+        "https://teakdoor.com",
+        "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Giro d\u0092Italia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:04:00.881051",
+          "domain_explored": "https://growthmarketreports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Marketing Content",
+            "Third-Party Research Firm",
+            "Repetitive/Scraped Boilerplate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.088324785232544
+            }
+          ],
+          "reasoning": "The content is entirely promotional material for 'Growth Market Reports', a third-party market research firm. It contains no specific information regarding Giro d'Italia's internal operations, technology stack, or procurement activities. The text is repetitive boilerplate copy unrelated to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:04:03.745618",
+          "domain_explored": "https://teakdoor.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:04:10.108954",
+          "domain_explored": "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content",
+            "Personal Blog/Opinion",
+            "Metaphorical Usage",
+            "Third-Party Perspective"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.9212770462036133
+            }
+          ],
+          "reasoning": "The content is a LinkedIn article by an individual (Taylor Witkin) using the Giro d'Italia and Tour de France as metaphors for job searching and career trajectories. It contains no proprietary information, official announcements, or operational details regarding the Giro d'Italia organization. It is purely observational and editorial in nature."
+        }
+      ],
+      "total_input_tokens": 2813,
+      "total_output_tokens": 343,
+      "estimated_cost_usd": 0.013584
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Giro d\u0092Italia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:04:10.111026"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.401822",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:44:05.535976"
+}

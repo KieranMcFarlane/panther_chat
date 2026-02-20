@@ -1,0 +1,161 @@
+{
+  "entity_id": "jeonbuk_hyundai_motors",
+  "entity_name": "Jeonbuk Hyundai Motors",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "hyundai-motorsfc.com",
+    "kumhotire.com",
+    "the-afc.com",
+    "gustavopoyet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jeonbuk_hyundai_motors",
+      "entity_name": "Jeonbuk Hyundai Motors",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kumhotire.com",
+        "https://the-afc.com",
+        "https://gustavopoyet.com",
+        "https://hyundai-motorsfc.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Jeonbuk Hyundai Motors may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:31:53.756203",
+          "domain_explored": "https://hyundai-motorsfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Required)",
+              "Single Page Application (SPA) Architecture"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-side rendering (JavaScript dependency)",
+            "Generic SPA framework placeholder"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 388,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.146653890609741
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a JavaScript loading message ('doesn't work properly without JavaScript enabled'). This indicates the site is a Single Page Application (SPA) where the actual content (job postings, news, vendor info) is rendered dynamically in the browser, not in the initial HTML response. No procurement signals are visible in this raw payload."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:32:03.482075",
+          "domain_explored": "https://kumhotire.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Consumer Navigation Structure",
+            "Marketing Content Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1265,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.424055814743042
+            }
+          ],
+          "reasoning": "The scraped content is from Kumho Tire (kumhotire.com), a tire manufacturer, not Jeonbuk Hyundai Motors. The content consists of consumer-facing navigation (Tyres, Motorsports, Dealer Locator) and marketing materials. There is no overlap with the target entity's procurement or governance signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:32:06.322387",
+          "domain_explored": "https://the-afc.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:32:13.009213",
+          "domain_explored": "https://gustavopoyet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Personal Brand Portfolio",
+            "Historical/Editorial Content",
+            "No Procurement Vocabulary"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 231,
+              "elapsed_seconds": 2.5021510124206543
+            }
+          ],
+          "reasoning": "The scraped content belongs to the personal website of Gustavo Poyet, a former coach of Jeonbuk Hyundai Motors. While it mentions the target entity ('Jeonbuk Hyundai Motors') in the context of past achievements ('Campeones de la K League 1', 'Balance de mis 2 primeros meses'), the site itself is a personal portfolio and news blog. It contains no operational data, vendor information, or technology stack details related to the club's procurement activities. It is a third-party source about the entity, not a source *for* the entity's operations."
+        }
+      ],
+      "total_input_tokens": 3137,
+      "total_output_tokens": 594,
+      "estimated_cost_usd": 0.018320999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Jeonbuk Hyundai Motors may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:32:13.013191"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.141261",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:29.322420"
+}

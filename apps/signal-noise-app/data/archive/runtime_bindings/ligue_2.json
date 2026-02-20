@@ -1,0 +1,229 @@
+{
+  "entity_id": "ligue_2",
+  "entity_name": "Ligue 2",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "ligue1.com",
+    "onefootball.com",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+      "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ligue_2",
+      "entity_name": "Ligue 2",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+        "https://onefootball.com",
+        "https://flashscore.com",
+        "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+        "https://ligue1.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ligue 2 may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:20:12.284374",
+          "domain_explored": "https://ligue1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Adobe Analytics (suspected based on common sports media stacks)",
+              "Video Streaming Infrastructure (dedicated section for Ligue1.com content)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Rights Management (implied by video content structure)",
+              "Digital Content Management (CMS usage for editorial)"
+            ]
+          },
+          "patterns_found": [
+            "Generic Sports Portal Structure",
+            "Editorial Content Focus",
+            "Fan Engagement Architecture"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 354,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.18529200553894
+            }
+          ],
+          "reasoning": "The provided content is truncated to the first 4000 characters and consists primarily of the homepage HTML structure for 'Ligue1.com' (the official site for Ligue 1 and Ligue 2). The content is dominated by navigation menus, video players, match center widgets, and editorial articles. There are no visible procurement signals, job postings, or technology infrastructure details in this specific truncated segment. The site acts as a media property rather than a corporate governance portal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:20:15.750766",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:20:23.001441",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Portal Structure",
+            "Live Score Aggregation",
+            "Betting/Gambling Affiliate Content",
+            "Multi-language Localization"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 616,
+              "output_tokens": 220,
+              "elapsed_seconds": 4.180389165878296
+            }
+          ],
+          "reasoning": "The scraped content from Flashscore.com represents a live sports score aggregation platform. The visible text consists primarily of gambling disclaimers (responsible gaming warnings), generic navigation elements ('Football', 'Loading...'), and standard footer links. There is no content related to Ligue 2 governance, internal operations, job vacancies, or technology procurement. This is a consumer-facing result site, not a source for organizational procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:20:30.497479",
+          "domain_explored": "https://www.linkedin.com/pulse/3-jobs-1-week-welcome-my-career-slasher-shoes-benjamin-clement",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Cybersecurity",
+              "Sustainability Solutions",
+              "Intranet/Internal Communication Platforms",
+              "Digital Media/Social Media Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "M&A Activity: Acquisition of Nomad\u00e9is by Wavestone (Sustainability focus)",
+              "Event Organization: Shareholder club meetings and cocktail receptions",
+              "Strategic Initiatives: Focus on AI and Cybersecurity consulting services"
+            ]
+          },
+          "patterns_found": [
+            "Consultancy Engagement (Wavestone)",
+            "M&A Activity (Nomad\u00e9is Acquisition)",
+            "Strategic Focus Areas (AI, Cybersecurity, Sustainability)",
+            "Event Management (Shareholder Meetings)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 405,
+              "elapsed_seconds": 3.9270589351654053
+            }
+          ],
+          "reasoning": "While the content is a personal blog post (career slasher) and not a direct procurement source, it provides high-value intelligence on the technology and consulting ecosystem surrounding Ligue 2. The author is a Head of Financial Communication at Wavestone, a major consulting firm. The text explicitly details Wavestone's value proposition, including 'Artificial Intelligence', 'Cybersecurity', and 'Sustainability', and confirms active M&A activity. This signals that Wavestone (and by extension, their clients) are investing in these domains. The mention of 'Shareholders club' meetings indicates a structured approach to investor relations and event management."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:20:39.910458",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/account-executive-at-auckland-fc-4163771277",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salesforce",
+              "HubSpot",
+              "Microsoft CRM",
+              "Ticketmaster",
+              "Archtics"
+            ],
+            "job_postings": [
+              {
+                "role": "Account Executive",
+                "department": "Ticketing & Membership",
+                "entity": "Auckland FC",
+                "parent_group": "Foley Entertainment Group",
+                "related_ligue2_entity": "FC Lorient",
+                "focus": "Revenue generation, CRM maintenance"
+              }
+            ],
+            "procurement_indicators": [
+              "Standardized Software Procurement (CRM/Ticketing across group)",
+              "Investment in Commercial Infrastructure (Sales & Ticketing)",
+              "Centralized Governance via Foley Entertainment Group"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Club Ownership (MCO) Governance",
+            "Commercial Operations Infrastructure",
+            "CRM & Ticketing Stack Requirements",
+            "Transnational Resource Sharing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 442,
+              "elapsed_seconds": 5.610951900482178
+            }
+          ],
+          "reasoning": "While this is a job posting for Auckland FC (New Zealand), the content explicitly identifies the entity as part of a global portfolio including 'FC Lorient (French Ligue 2)'. This confirms a Multi-Club Ownership (MCO) model under Bill Foley. The job description reveals the commercial technology stack (CRM: Salesforce/HubSpot; Ticketing: Ticketmaster/Archtics) and operational standards (sales targets, premium hospitality) which are often standardized across MCO groups. This provides indirect but valuable intelligence regarding the operational ecosystem and governance surrounding the Ligue 2 entity (FC Lorient)."
+        }
+      ],
+      "total_input_tokens": 4044,
+      "total_output_tokens": 1362,
+      "estimated_cost_usd": 0.032562
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ligue 2 may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:20:39.912425"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447310",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:40.219211"
+}

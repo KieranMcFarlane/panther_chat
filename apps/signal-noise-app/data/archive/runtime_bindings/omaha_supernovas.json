@@ -1,0 +1,86 @@
+{
+  "entity_id": "omaha_supernovas",
+  "entity_name": "Omaha Supernovas",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "provolleyball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "omaha_supernovas",
+      "entity_name": "Omaha Supernovas",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://provolleyball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Omaha Supernovas may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:36:38.615534",
+          "domain_explored": "https://provolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Franklin Sports (Equipment Partner)",
+              "REN Athletics (Apparel Partner)",
+              "Spalding (Ball Partner)",
+              "USA Volleyball (Governing Body Partner)"
+            ]
+          },
+          "patterns_found": [
+            "League-level vendor standardization",
+            "Equipment and apparel procurement",
+            "Governing body partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 815,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.1486802101135254
+            }
+          ],
+          "reasoning": "The content reveals the league's corporate partners (Franklin Sports, REN Athletics, Spalding, USA Volleyball). As a member franchise, the Omaha Supernovas likely utilize league-wide negotiated contracts or standardized equipment/apparel vendors. This indicates procurement activity is influenced by the central league office rather than occurring solely at the franchise level."
+        }
+      ],
+      "total_input_tokens": 815,
+      "total_output_tokens": 238,
+      "estimated_cost_usd": 0.0060149999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Omaha Supernovas may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:36:38.616395"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324437",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:14.287450"
+}

@@ -1,0 +1,140 @@
+{
+  "entity_id": "french_cricket_federation",
+  "entity_name": "French Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "calvadoscricket.50webs.com",
+    "france24.com",
+    "boardofrevenue.bihar.gov.in",
+    "thepca.co.uk",
+    "telegraphindia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_cricket_federation",
+      "entity_name": "French Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://boardofrevenue.bihar.gov.in",
+        "https://france24.com",
+        "https://thepca.co.uk",
+        "https://calvadoscricket.50webs.com",
+        "https://telegraphindia.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:35:37.515292",
+          "domain_explored": "https://calvadoscricket.50webs.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:35:51.213874",
+          "domain_explored": "https://france24.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "general_news_content",
+            "political_irrelevance"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 158,
+              "elapsed_seconds": 10.496752977371216
+            }
+          ],
+          "reasoning": "The scraped content is from a general news website (France24) and focuses on geopolitical topics (US politics, Iran, EU digital sovereignty) rather than the specific operational activities of the French Cricket Federation. There are no direct signals related to the Federation's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:36:00.672520",
+          "domain_explored": "https://boardofrevenue.bihar.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:36:04.120034",
+          "domain_explored": "https://thepca.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:36:10.304713",
+          "domain_explored": "https://telegraphindia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1393,
+      "total_output_tokens": 158,
+      "estimated_cost_usd": 0.006549000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:36:10.305827"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300647",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:38:30.583387"
+}

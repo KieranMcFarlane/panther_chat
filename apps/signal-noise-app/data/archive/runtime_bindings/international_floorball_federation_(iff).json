@@ -1,0 +1,97 @@
+{
+  "entity_id": "international_floorball_federation_(iff)",
+  "entity_name": "International Floorball Federation (IFF)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "iffequipment.se"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_floorball_federation_(iff)",
+      "entity_name": "International Floorball Federation (IFF)",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://iffequipment.se"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Ongoing outsourced partnership for critical operations",
+        "Regulatory governance requiring technical compliance",
+        "Routine procurement of testing and certification services"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Floorball Federation (IFF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:04:32.020785",
+          "domain_explored": "https://iffequipment.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Database for certified equipment",
+              "Material Regulations SPCR 011 (Standard)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contract: Operation of IFF certification system assigned to SP Technical Research Institute of Sweden",
+              "Requirement: Testing for approval of floorball equipment performed by SP or approved institutes",
+              "Activity: Unannounced sampling and testing of equipment on the open market",
+              "Governance: Updates to Material Regulations (Edition 2022, 2024) requiring compliance verification"
+            ]
+          },
+          "patterns_found": [
+            "Ongoing outsourced partnership for critical operations",
+            "Regulatory governance requiring technical compliance",
+            "Routine procurement of testing and certification services"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 362,
+              "elapsed_seconds": 6.044037103652954
+            }
+          ],
+          "reasoning": "The content confirms a long-standing, active procurement relationship between the IFF and SP Technical Research Institute of Sweden (now RISE or part of RISE group). The IFF has 'assigned' SP to operate and manage the certification system, indicating a B2B service contract. The frequent updates to 'Material Regulations' (2022, 2024) and the continuous flow of new equipment certifications suggest a stable, ongoing requirement for these technical services."
+        }
+      ],
+      "total_input_tokens": 1370,
+      "total_output_tokens": 362,
+      "estimated_cost_usd": 0.00954
+    },
+    "procurement_signals": [
+      "Ongoing outsourced partnership for critical operations",
+      "Regulatory governance requiring technical compliance",
+      "Routine procurement of testing and certification services"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Floorball Federation (IFF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:04:32.022797"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457703",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:48:51.187583"
+}

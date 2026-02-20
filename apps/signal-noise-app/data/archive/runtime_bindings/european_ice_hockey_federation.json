@@ -1,0 +1,384 @@
+{
+  "entity_id": "european_ice_hockey_federation",
+  "entity_name": "European Ice Hockey Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "trendmicro.com",
+    "sportesalute.eu",
+    "nickelcityhockey.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-hockey-ireland-4311392038",
+      "https://uk.linkedin.com/jobs/hockey-jobs",
+      "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4267750797",
+      "https://www.linkedin.com/jobs/view/3098383343/",
+      "https://be.linkedin.com/jobs/view/project-manager-arbitrage-at-hockey-belgium-4333927711",
+      "https://be.linkedin.com/jobs/view/head-of-events-at-hockey-belgium-2963359790"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "european_ice_hockey_federation",
+      "entity_name": "European Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://sportesalute.eu",
+        "https://trendmicro.com",
+        "https://nickelcityhockey.com",
+        "https://uk.linkedin.com/jobs/hockey-jobs",
+        "https://be.linkedin.com/jobs/view/project-manager-arbitrage-at-hockey-belgium-4333927711",
+        "https://www.linkedin.com/jobs/view/3098383343/",
+        "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-hockey-ireland-4311392038",
+        "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4267750797"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "European Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:46:37.717752",
+          "domain_explored": "https://trendmicro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "generic_product_landing_page",
+            "irrelevant_domain_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 180,
+              "elapsed_seconds": 4.034677982330322
+            }
+          ],
+          "reasoning": "The content provided is from Trend Micro's official website (a cybersecurity vendor) and constitutes generic marketing material for their products (Cloud, Identity, Endpoint security). It contains no specific information regarding the European Ice Hockey Federation's procurement activities, technology stack, or governance. There is zero relevance to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:47:12.229394",
+          "domain_explored": "https://sportesalute.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of 'Rapporto Sport 2025' (Report) - indicates industry analysis activity",
+              "Mention of 'Contributi ordinari 2026' (Ordinary contributions 2026) - indicates funding/grants distribution by this entity",
+              "Partnership with 'Istituto per il Credito Sportivo' (Credit Sports Institute)"
+            ]
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "marketing_content",
+            "news_aggregation",
+            "wrong_sector_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 278,
+              "elapsed_seconds": 28.351743936538696
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Sport e Salute S.p.A.', an Italian public company dedicated to the promotion of sport and lifestyles. This entity is distinct from the 'European Ice Hockey Federation' (the target). While there is a mention of a UEFA executive (Michele Uva) in a panel discussion, the page itself is a corporate news portal for a different organization with no direct procurement signals for the Federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:47:37.065088",
+          "domain_explored": "https://nickelcityhockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom Scheduling Software (Proprietary)",
+              "Youth Hockey Rankings (Data Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Apparel Merchandising (Vendor capability)",
+              "Tournament Management Software (Vendor capability)"
+            ]
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "irrelevant_entity",
+            "tournament_operations",
+            "consumer_apparel_sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 260,
+              "elapsed_seconds": 21.616601943969727
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Nickel City Hockey,' a private youth hockey tournament organizer based in New York. This is a vendor/service provider, not the 'European Ice Hockey Federation.' The content focuses on marketing tournaments, selling apparel, and describing custom software for scheduling, which represents a vendor's product offering rather than procurement signals from the target federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:47:45.911153",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/chief-executive-officer-at-hockey-ireland-4311392038",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Digital Engagement Platforms",
+              "CRM Systems",
+              "Event Management Software"
+            ],
+            "job_postings": [
+              {
+                "role": "Chief Executive Officer",
+                "entity": "Hockey Ireland",
+                "focus": "Commercial Growth & Digital Transformation",
+                "strategic_goals": [
+                  "2026 World Cup Qualification",
+                  "2028 Olympics Qualification",
+                  "Hosting International Events"
+                ]
+              }
+            ],
+            "procurement_indicators": [
+              "Planned investment in infrastructure projects",
+              "Strategic focus on sponsorship and business development",
+              "Requirement for enhanced digital engagement tools",
+              "Operational efficiency and financial stewardship mandates"
+            ]
+          },
+          "patterns_found": [
+            "executive_leadership_transition",
+            "commercial_growth_mandate",
+            "digital_transformation_signal",
+            "infrastructure_investment_plans"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 402,
+              "elapsed_seconds": 5.3787758350372314
+            }
+          ],
+          "reasoning": "While this is a job posting for Hockey Ireland (an affiliate of the European Hockey Federation), it reveals strong procurement intent for the upcoming fiscal cycle. The explicit mandate for 'digital engagement', 'infrastructure projects', and 'commercial growth' under new leadership indicates a high likelihood of upcoming RFPs for marketing automation, CRM, and event management services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:47:55.514063",
+          "domain_explored": "https://uk.linkedin.com/jobs/hockey-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sports Sales Assistant - Creative Artists Agency",
+              "Finance Assistant - IMG",
+              "Director of Broadcast Commercial Solutions - TKO",
+              "Technical Project Manager - TKO"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "irrelevant_entity",
+            "generic_job_aggregation",
+            "wrong_geographic_scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1570,
+              "output_tokens": 232,
+              "elapsed_seconds": 6.026543855667114
+            }
+          ],
+          "reasoning": "The content is a generic job aggregation page for 'Hockey' roles within the United Kingdom. The entities listed (Creative Artists Agency, IMG, TKO) are global sports/media conglomerates, not the European Ice Hockey Federation (EIHF) or its member associations. There is no signal of procurement activity relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:48:02.840696",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/head-of-officiating-f-m-d-100%25-at-international-ice-hockey-federation-iihf-4267750797",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software (Potential)",
+              "Learning Management Systems (Potential)"
+            ],
+            "job_postings": [
+              {
+                "title": "Head of Officiating (f/m/d)",
+                "entity": "International Ice Hockey Federation (IIHF)",
+                "location": "Z\u00fcrich, Z\u00fcrich, Schweiz",
+                "status": "Closed (6 months ago)",
+                "strategic_intent": "Integration of NA and European officiating standards"
+              }
+            ],
+            "procurement_indicators": [
+              "Expansion of Officiating Development Programs",
+              "Increased operational scope requiring educational tools",
+              "Cross-continental collaboration requirements"
+            ]
+          },
+          "patterns_found": [
+            "executive_leadership_transition",
+            "strategic_program_expansion",
+            "north_american_market_integration",
+            "sport_department_growth"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 389,
+              "elapsed_seconds": 4.023396253585815
+            }
+          ],
+          "reasoning": "While this is a job posting for a sports operational role rather than a direct procurement or IT role, it indicates a significant strategic expansion of the IIHF's Sport Department. The requirement for NHL/AHL experience and the focus on 'global outreach, education, and mentorship' suggests potential future procurement needs for training platforms, video analysis tools, or collaboration software to support the integration of European and North American officiating styles."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:48:18.903135",
+          "domain_explored": "https://www.linkedin.com/jobs/view/3098383343/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Email Marketing Platforms",
+              "CMS (Website Management)",
+              "Mobile/Social Media Tools",
+              "CRM (for Stakeholder/Partner Management)"
+            ],
+            "job_postings": [
+              {
+                "role": "Marketing and Communications Manager",
+                "entity": "Hockey Ireland",
+                "reporting_to": "Chief Executive",
+                "focus": "Digital strategy, brand activation, stakeholder comms"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget allocation for marketing campaigns",
+              "Investment in digital channels (web, mobile, social)",
+              "Requirement for tools to support commercial partner activation",
+              "Strategic drive to integrate marketing with commercial operations"
+            ]
+          },
+          "patterns_found": [
+            "marketing_strategy_implementation",
+            "digital_channel_expansion",
+            "stakeholder_communications",
+            "commercial_partner_activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 465,
+              "elapsed_seconds": 12.476216077804565
+            }
+          ],
+          "reasoning": "While this is a job posting for Hockey Ireland (a National Governing Body) rather than the European Ice Hockey Federation directly, it reveals significant procurement drivers relevant to the ecosystem. The role requires implementing marketing strategies across 'online and offline channels including email, website, mobile, social media,' indicating a need for marketing technology stacks (MarTech) and digital tools. The explicit mention of 'commercial partner activation' suggests a need for CRM or partnership management tools to leverage sponsors like Softco and Park Developments. This signals potential vendor opportunities in the digital marketing and CRM space within European hockey governance."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:48:27.182222",
+          "domain_explored": "https://be.linkedin.com/jobs/view/project-manager-arbitrage-at-hockey-belgium-4333927711",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Project Management Software (implied for tracking sub-projects)",
+              "Communication Platforms (for campaigns)"
+            ],
+            "job_postings": [
+              "Project Manager Arbitrage at Hockey Belgium"
+            ],
+            "procurement_indicators": [
+              "Implementation of a Strategic Plan (5 pillars)",
+              "Coordination between three distinct entities (RBHA, Hockey Vlaanderen, Hockey Wallonie Bruxelles)",
+              "Need for communication campaigns and promotional actions",
+              "Development of training pathways (potential LMS procurement)"
+            ]
+          },
+          "patterns_found": [
+            "strategic_project_implementation",
+            "stakeholder_coordination",
+            "organizational_transformation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1764,
+              "output_tokens": 351,
+              "elapsed_seconds": 4.637366056442261
+            }
+          ],
+          "reasoning": "While this is a job posting for Hockey Belgium (a National Association) rather than the European Ice Hockey Federation directly, it signals a broader trend in European hockey governance towards professionalization and strategic project management. The role involves implementing a 'Strategic Plan' across multiple entities, which often precedes or requires procurement of management tools, training platforms, and communication services. It confirms the sector is investing in structural improvements."
+        }
+      ],
+      "total_input_tokens": 12416,
+      "total_output_tokens": 2557,
+      "estimated_cost_usd": 0.075603
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "European Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:48:27.182822"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.304852",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:05.855189"
+}

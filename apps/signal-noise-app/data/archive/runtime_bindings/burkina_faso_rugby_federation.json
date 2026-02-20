@@ -1,0 +1,157 @@
+{
+  "entity_id": "burkina_faso_rugby_federation",
+  "entity_name": "Burkina Faso Rugby Federation",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "wikidata.org",
+    "wikiwand.com",
+    "t2rugby.com",
+    "newswings.com.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "burkina_faso_rugby_federation",
+      "entity_name": "Burkina Faso Rugby Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wikiwand.com",
+        "https://newswings.com.ng",
+        "https://t2rugby.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Burkina Faso Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:47:49.399636",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "irrelevant_news_updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 170,
+              "elapsed_seconds": 5.134873867034912
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata (a Wikimedia project). It contains no specific information regarding the Burkina Faso Rugby Federation, its procurement activities, technology stack, or governance. The content describes Wikidata's general features, community events, and system updates, which are unrelated to the target entity's purchasing signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:47:58.469189",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "irrelevant_marketing_copy",
+            "scraped_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.565631866455078
+            }
+          ],
+          "reasoning": "The content provided is entirely marketing copy and interface text from the Wikiwand platform (a Wikipedia wrapper). It discusses features like 'Top Questions' and 'Timelines' using examples like Abraham Lincoln and Usain Bolt. There is absolutely no mention of the Burkina Faso Rugby Federation, procurement activities, or specific technologies used by the federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:48:31.793997",
+          "domain_explored": "https://t2rugby.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:48:43.428068",
+          "domain_explored": "https://newswings.com.ng",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_platform_content",
+            "scraped_navigation_noise",
+            "irrelevant_news_aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.3692238330841064
+            }
+          ],
+          "reasoning": "The content provided is a navigation menu and site map from 'NewsWings', a general news aggregator based in Nigeria. It contains no specific articles, mentions, or data related to the Burkina Faso Rugby Federation. The text consists entirely of category headers (e.g., Agriculture, Fintech, Sports) and social media links, which are irrelevant to the specific procurement intelligence target."
+        }
+      ],
+      "total_input_tokens": 4242,
+      "total_output_tokens": 531,
+      "estimated_cost_usd": 0.020691
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Burkina Faso Rugby Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:48:43.429649"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.288188",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:48.853509"
+}

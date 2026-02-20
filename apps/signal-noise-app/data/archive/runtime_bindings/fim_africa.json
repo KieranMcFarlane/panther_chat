@@ -1,0 +1,129 @@
+{
+  "entity_id": "fim_africa",
+  "entity_name": "FIM Africa",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fim-africa.com",
+    "fim-moto.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fim_africa",
+      "entity_name": "FIM Africa",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://fim-moto.com",
+        "https://fim-africa.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIM Africa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:39:01.187198",
+          "domain_explored": "https://fim-africa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:39:12.260391",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Irrelevant Domain (Sports vs Agriculture/Development)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Type: Public Facing Portal",
+            "Content Type: Sports Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1383,
+              "output_tokens": 219,
+              "elapsed_seconds": 2.5092380046844482
+            }
+          ],
+          "reasoning": "The scraped content is from the F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM), the global governing body for motorcycle racing (MotoGP, Motocross, etc.). This is a distinct entity from 'FIM Africa' (likely the Forum for Agricultural Research in Africa or a similar regional entity). The content focuses on race calendars, sporting regulations, and safety commissions, which are irrelevant to the procurement intelligence of the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:39:33.728455",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Type: Consumer Marketplace",
+            "Content Type: Mobile Gaming"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 175,
+              "elapsed_seconds": 4.529542922973633
+            }
+          ],
+          "reasoning": "The scraped content is from the Google Play Store, a public consumer app marketplace. It lists mobile games (e.g., Roblox, Free Fire) and updates for unrelated apps (e.g., Baby Panda, PK XD). There is no content related to FIM Africa, its governance, procurement needs, or technology stack. This represents a complete divergence from the target entity."
+        }
+      ],
+      "total_input_tokens": 2814,
+      "total_output_tokens": 394,
+      "estimated_cost_usd": 0.014352
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIM Africa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:39:33.730101"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380018",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:51:03.136548"
+}

@@ -1,0 +1,222 @@
+{
+  "entity_id": "cook_islands_baseball_association",
+  "entity_name": "Cook Islands Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball-reference.com",
+    "japan-baseball.jp",
+    "coachad.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/cook-part-time-at-major-league-baseball-mlb-4349440246",
+      "https://www.linkedin.com/jobs/view/prep-cook-part-time-at-major-league-baseball-mlb-4349480261",
+      "https://www.linkedin.com/jobs/view/line-cook-full-time-year-round-at-orchid-island-golf-and-beach-club-4354501891"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cook_islands_baseball_association",
+      "entity_name": "Cook Islands Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://baseball-reference.com",
+        "https://www.linkedin.com/jobs/view/cook-part-time-at-major-league-baseball-mlb-4349440246",
+        "https://japan-baseball.jp",
+        "https://coachad.com",
+        "https://www.linkedin.com/jobs/view/prep-cook-part-time-at-major-league-baseball-mlb-4349480261",
+        "https://www.linkedin.com/jobs/view/line-cook-full-time-year-round-at-orchid-island-golf-and-beach-club-4354501891"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cook Islands Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:53:04.185859",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:53:14.103912",
+          "domain_explored": "https://japan-baseball.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "wrong_geographic_scope",
+            "sports_schedule_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.4807960987091064
+            }
+          ],
+          "reasoning": "The scraped content is from 'japan-baseball.jp', the official site for the Japanese National Baseball Team (Samurai Japan). This is completely unrelated to the 'Cook Islands Baseball Association'. The content focuses on Japanese team schedules, rosters, and events. There are no procurement signals, job postings, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:53:16.942796",
+          "domain_explored": "https://coachad.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:53:31.241971",
+          "domain_explored": "https://www.linkedin.com/jobs/view/cook-part-time-at-major-league-baseball-mlb-4349440246",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Cook (Part-Time)",
+                "entity": "Major League Baseball (MLB)",
+                "location": "Vero Beach, FL",
+                "relevance": "None - Wrong Entity and Scope"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "wrong_geographic_scope",
+            "hospitality_role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 238,
+              "elapsed_seconds": 10.795971155166626
+            }
+          ],
+          "reasoning": "The content describes a 'Cook (Part-Time)' role for Major League Baseball (MLB) located in Vero Beach, Florida. This is a direct mismatch for the target entity, Cook Islands Baseball Association. The role is operational/hospitality (food service) rather than administrative or procurement-related, and the geographic scope (USA) is incorrect for the Cook Islands entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:53:38.713571",
+          "domain_explored": "https://www.linkedin.com/jobs/view/prep-cook-part-time-at-major-league-baseball-mlb-4349480261",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Prep Cook (Part-Time)",
+                "entity": "Major League Baseball (MLB)",
+                "location": "Vero Beach, FL",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "wrong_geographic_scope",
+            "hospitality_role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 233,
+              "elapsed_seconds": 4.042910814285278
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Prep Cook' at the Jackie Robinson Training Complex in Vero Beach, Florida. The employer is Major League Baseball (MLB), not the Cook Islands Baseball Association. The role is operational/hospitality focused (food service), not procurement or technical. The geographic scope (USA) and entity (MLB) are incorrect for the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:53:45.583034",
+          "domain_explored": "https://www.linkedin.com/jobs/view/line-cook-full-time-year-round-at-orchid-island-golf-and-beach-club-4354501891",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Line Cook, Full Time-Year Round at Orchid Island Golf and Beach Club"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_content",
+            "wrong_geographic_scope",
+            "hospitality_role"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1616,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.301924705505371
+            }
+          ],
+          "reasoning": "The content is a job posting for a Line Cook at Orchid Island Golf and Beach Club in Vero Beach, Florida. This is unrelated to the Cook Islands Baseball Association, both in terms of entity (different organization) and geography (Florida vs Cook Islands). It is a hospitality role with no procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6049,
+      "total_output_tokens": 839,
+      "estimated_cost_usd": 0.030732000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cook Islands Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:53:45.589691"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.313148",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:37.359774"
+}

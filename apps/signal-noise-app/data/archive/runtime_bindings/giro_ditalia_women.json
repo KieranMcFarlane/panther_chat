@@ -1,0 +1,129 @@
+{
+  "entity_id": "giro_d\u0092italia_women",
+  "entity_name": "Giro d\u0092Italia Women",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "giroditaliawomen.it",
+    "giroditalia.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "giro_d\u0092italia_women",
+      "entity_name": "Giro d\u0092Italia Women",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://giroditalia.it",
+        "https://giroditaliawomen.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Giro d\u0092Italia Women may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:34:46.389509",
+          "domain_explored": "https://giroditaliawomen.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Calendar Management Tools (implied by 'Sincronizza il calendario')",
+              "Video Streaming Platforms (YouTube/Vimeo integration implied by video section)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Suppliers category (Active vendor requirement)",
+              "Institutional Partners category (Public sector partnerships)",
+              "Event Management Services (implied by multi-race calendar coordination)",
+              "Media Production & Broadcasting (implied by 'Best Foto' and 'Top Video' sections)"
+            ]
+          },
+          "patterns_found": [
+            "Event ecosystem expansion",
+            "Cross-platform promotion",
+            "Sponsorship hierarchy structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 341,
+              "elapsed_seconds": 4.755771160125732
+            }
+          ],
+          "reasoning": "While the content is primarily news and media, it reveals the organizational structure (RCS Sport) and a broader event ecosystem (Giro d'Italia, Tirreno Adriatico, etc.). The presence of 'Official Suppliers' and 'Institutional Partners' indicates a mature procurement funnel. The 'Sincronizza il calendario' (Sync calendar) feature suggests the use of calendar/event management tools, though the specific tech stack is not exposed here."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:34:53.340233",
+          "domain_explored": "https://giroditalia.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM (implied by 'Save dates' and 'Newsletter' functionality)",
+              "Video Streaming Platforms (Hosted video content)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship hierarchy (Top Sponsor, Official Partner, Official Supplier, Official Licensee)",
+              "Event portfolio management (Multiple events requiring logistics/tech support)",
+              "Fan engagement tools ('Scratch & Win', Calendar sync)"
+            ]
+          },
+          "patterns_found": [
+            "Event ecosystem expansion",
+            "Cross-platform promotion",
+            "Sponsorship hierarchy structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 322,
+              "elapsed_seconds": 3.7657790184020996
+            }
+          ],
+          "reasoning": "The content confirms the organizational structure (RCS Sport) and the specific positioning of 'Giro d'Italia Women' within a broader portfolio of events. While no direct procurement signals (RFPs/Tenders) were found in this text, the identification of the 'Official Suppliers' and 'Licensees' categories validates the vendor intake structure. The 'Save the dates' and 'Calendar' features indicate a need for CRM/Marketing automation tools to manage user data."
+        }
+      ],
+      "total_input_tokens": 2770,
+      "total_output_tokens": 663,
+      "estimated_cost_usd": 0.018255
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Giro d\u0092Italia Women may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:34:53.340942"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.411583",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:06:42.923151"
+}

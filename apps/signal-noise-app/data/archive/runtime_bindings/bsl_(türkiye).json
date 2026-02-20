@@ -1,0 +1,170 @@
+{
+  "entity_id": "bsl_(t\u00fcrkiye)",
+  "entity_name": "BSL (T\u00fcrkiye)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "bsl-qatar.qa",
+    "zoominfo.com",
+    "livescore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-at-bsl-4297410736"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bsl_(t\u00fcrkiye)",
+      "entity_name": "BSL (T\u00fcrkiye)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-at-bsl-4297410736",
+        "https://zoominfo.com",
+        "https://bsl-qatar.qa",
+        "https://livescore.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BSL (T\u00fcrkiye) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:44:05.688346",
+          "domain_explored": "https://bsl-qatar.qa",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Entity Incorporation (BSL T\u00fcrkiye - 2025)",
+              "Service Line: Procurement Management & Outsourcing",
+              "Growth Phase: Expanding from 300 to 350 employees globally",
+              "Parent Company: BAE Systems Strategic Aerospace Services (W.L.L)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Validation (BSL T\u00fcrkiye confirmed as subsidiary)",
+            "Service Portfolio (Procurement Outsourcing is a core offering)",
+            "Expansion Phase (New market entry in 2025)",
+            "Strategic Partnership (Joint Venture with BAE Systems)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 311,
+              "elapsed_seconds": 4.3885581493377686
+            }
+          ],
+          "reasoning": "The content confirms that BSL T\u00fcrkiye is a newly incorporated subsidiary (2025) of a larger group (BSL Qatar/BAE Systems JV). While the company offers 'Procurement Outsourcing' as a service (implying they buy for others), their status as a new market entrant suggests a high likelihood of upcoming internal procurement activity to set up local operations (IT, HR, Office). However, no specific active RFPs or tech stack details were found in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:44:08.743281",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:44:15.124057",
+          "domain_explored": "https://livescore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Microsoft Clarity (Analytics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Consumer Sports Media",
+            "No Corporate Governance Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 165,
+              "elapsed_seconds": 3.3613369464874268
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'LiveScore.com', a sports media service providing live scores and betting odds. There is absolutely no connection to 'BSL (T\u00fcrkiye)', procurement services, or corporate operations. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:44:22.704226",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/ma%C4%9Faza-sat%C4%B1%C5%9F-dan%C4%B1%C5%9Fman%C4%B1-at-bsl-4297410736",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ma\u011faza Sat\u0131\u015f Dan\u0131\u015fman\u0131 (Store Sales Consultant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Identity Confirmation (Retail/Fashion)",
+            "Operational Role (Store Sales)",
+            "Irrelevant to Procurement Function"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1520,
+              "output_tokens": 255,
+              "elapsed_seconds": 3.928555965423584
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'BSL' in this context refers to a retail fashion brand (BSL - 'T\u00fcrkiye'nin \u00f6nc\u00fc kad\u0131n giyim markalar\u0131ndan biri'), not the BSL procurement/outsourcing entity identified in Iteration 1. The job posting is for a 'Store Sales Consultant' (Ma\u011faza Sat\u0131\u015f Dan\u0131\u015fman\u0131) for a physical location in Ni\u015fanta\u015f\u0131. This is a direct operational role in the fashion retail sector, containing no signals regarding corporate procurement, supply chain management, or B2B services. This contradicts the hypothesis of tracking a procurement services entity."
+        }
+      ],
+      "total_input_tokens": 4329,
+      "total_output_tokens": 731,
+      "estimated_cost_usd": 0.023952
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BSL (T\u00fcrkiye) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:44:22.705781"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416128",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:01.681594"
+}

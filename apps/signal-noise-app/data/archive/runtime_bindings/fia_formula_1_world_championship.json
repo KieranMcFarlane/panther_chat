@@ -1,0 +1,469 @@
+{
+  "entity_id": "fia_formula_1_world_championship",
+  "entity_name": "FIA Formula 1 World Championship",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "corp.formula1.com",
+    "f1miamigp.com",
+    "formula1.com",
+    "haasf1team.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/stores-operator-at-haas-f1-team-4367576052",
+      "https://uk.linkedin.com/jobs/view/hospitality-and-events-executive-williams-racing-at-jobster-4366837345",
+      "https://uk.linkedin.com/jobs/view/principal-design-engineer-transmission-williams-racing-at-jobster-4367545338",
+      "https://uk.linkedin.com/jobs/view/senior-aerodynamic-ai-engineer-williams-racing-at-jobster-4366827871",
+      "https://uk.linkedin.com/jobs/view/senior-legal-counsel-williams-racing-at-jobster-4366824853",
+      "https://uk.linkedin.com/jobs/view/erp-specialist-operations-williams-racing-at-jobster-4367086450",
+      "https://uk.linkedin.com/jobs/view/dil-development-engineer-williams-racing-at-jobster-4366843433",
+      "https://uk.linkedin.com/jobs/view/hospitality-and-events-manager-williams-racing-at-jobster-4366847157",
+      "https://uk.linkedin.com/jobs/view/paralegal-williams-racing-at-jobster-4367099031",
+      "https://uk.linkedin.com/jobs/view/senior-test-engineer-williams-racing-at-jobster-4366425471"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_formula_1_world_championship",
+      "entity_name": "FIA Formula 1 World Championship",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.34,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.22,
+        0.28,
+        0.34
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/hospitality-and-events-executive-williams-racing-at-jobster-4366837345",
+        "https://uk.linkedin.com/jobs/view/principal-design-engineer-transmission-williams-racing-at-jobster-4367545338",
+        "https://haasf1team.com",
+        "https://f1miamigp.com",
+        "https://corp.formula1.com",
+        "https://uk.linkedin.com/jobs/view/stores-operator-at-haas-f1-team-4367576052",
+        "https://uk.linkedin.com/jobs/view/senior-aerodynamic-ai-engineer-williams-racing-at-jobster-4366827871",
+        "https://uk.linkedin.com/jobs/view/senior-legal-counsel-williams-racing-at-jobster-4366824853",
+        "https://formula1.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "ERP System Utilization",
+        "Inventory & Supply Chain Management",
+        "Logistics & Freight Operations",
+        "Parts Lifecycle Management (Lifing/Serialization)",
+        "Procurement Reconciliation (PO vs. Delivery)",
+        "Hospitality & Event Logistics Procurement",
+        "Supplier & Contractor Management",
+        "Financial Governance (PO/Invoicing)",
+        "Freight & Inventory Management",
+        "Event Technology (Hospitality Apps)",
+        "High-Performance Component Sourcing",
+        "CAD & Simulation Software Procurement",
+        "Hydraulic Systems Integration",
+        "Materials Engineering & Rapid Prototyping",
+        "Cross-Functional Technical Governance",
+        "Advanced AI/ML & Data Science Procurement",
+        "High-Performance Computing (HPC) & Cloud Infrastructure",
+        "CFD & Simulation Software Sourcing",
+        "DevOps & CI/CD Tooling",
+        "Scientific Research & Academic Partnerships",
+        "Commercial Contract Negotiation (SaaS, Manufacturing, Supply)",
+        "Procurement Function Legal Support",
+        "Intellectual Property & Brand Licensing Procurement",
+        "Data Protection & Privacy Compliance (GDPR/DPIAs)",
+        "Facilities & Infrastructure Legal Governance"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Formula 1 World Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:34:38.356485",
+          "domain_explored": "https://corp.formula1.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:34:47.566860",
+          "domain_explored": "https://f1miamigp.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Official App)",
+              "Ticketing Platforms (Presale/Signup forms)",
+              "Access Control Systems (Grandstand/Club scanning)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Development: MSC Yacht Club construction (2026)",
+              "Hospitality Sourcing: Premium catering and lounge services",
+              "Digital Services: App maintenance and event navigation features",
+              "Vendor Partnerships: Art installations and Performer booking"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Venue Infrastructure Sourcing",
+            "Digital Experience & Mobile App Procurement",
+            "Event Management & Vendor Partnerships",
+            "Ticketing & Access Control Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 370,
+              "elapsed_seconds": 5.565171957015991
+            }
+          ],
+          "reasoning": "While this is a promoter site (local event) rather than the global FIA/F1 entity, it reveals significant procurement activities related to event operations. The explicit mention of a 'New for 2026: large-scale, multi-level marina experience' indicates active construction and infrastructure vendor sourcing. The promotion of an 'Official App' suggests digital procurement for mobile development and analytics. High-end hospitality offerings (Suites, Yacht Club) imply ongoing procurement for catering, furniture, and staffing services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:34:53.716640",
+          "domain_explored": "https://formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Streaming Infrastructure (Highlights/Livestreams)",
+              "Digital Experience Platforms (Fantasy, Tickets, Store)",
+              "User Feedback/Survey Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active User Experience Research (Survey: 'Help shape the F1 website')"
+            ]
+          },
+          "patterns_found": [
+            "Consumer-Facing Content Strategy",
+            "Digital Engagement Tools (Fantasy, Store, Tickets)",
+            "User Feedback Solicitation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1455,
+              "output_tokens": 274,
+              "elapsed_seconds": 2.754826068878174
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing (news, race schedules, video highlights, driver standings, and ticketing). While it confirms the use of digital engagement platforms (Fantasy, Store) and active user experience research ('Help shape the F1 website'), it contains no direct procurement signals such as vendor sourcing, RFPs, or enterprise technology stack disclosures relevant to B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:35:00.129914",
+          "domain_explored": "https://haasf1team.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "RUCKUS Networks (Networking/IT Infrastructure)",
+              "Haas+ (Fan Engagement Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Expansion of partnership with RUCKUS Networks (Official Networking Partner)",
+              "Multi-year partnership agreement with Fix Network",
+              "Operation of Haas+ club (Digital membership/loyalty program)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure & Networking Procurement",
+            "Commercial Partnership Expansion",
+            "Fan Engagement & CRM (Haas+)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.0760128498077393
+            }
+          ],
+          "reasoning": "The content reveals specific vendor partnerships (RUCKUS Networks, Fix Network) indicating active procurement in IT infrastructure and commercial services. The mention of 'Haas+' suggests a digital fan engagement platform requiring CRM or membership management technology. However, the content is primarily news/PR focused rather than technical sourcing documentation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:35:09.456993",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/stores-operator-at-haas-f1-team-4367576052",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP System (Specific but unnamed)",
+              "Lifing Systems (Component lifecycle tracking)",
+              "Digital Inventory Management Tools"
+            ],
+            "job_postings": [
+              "Stores Operator (Haas F1 Team, Banbury, UK)"
+            ],
+            "procurement_indicators": [
+              "Goods-in receipting and verification against Purchase Orders (POs)",
+              "Strict adherence to parts policies and serialization standards",
+              "Cross-functional collaboration with Logistics and Procurement departments",
+              "Requirement for technical drawing literacy to verify physical products",
+              "Auditable stock control and accountability procedures"
+            ]
+          },
+          "patterns_found": [
+            "ERP System Utilization",
+            "Inventory & Supply Chain Management",
+            "Logistics & Freight Operations",
+            "Parts Lifecycle Management (Lifing/Serialization)",
+            "Procurement Reconciliation (PO vs. Delivery)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 400,
+              "elapsed_seconds": 5.645048141479492
+            }
+          ],
+          "reasoning": "The job posting for a 'Stores Operator' provides explicit confirmation of specific technology stacks and operational workflows. It directly references the use of an 'ERP system' and 'Lifing systems' for inventory tracking and serialization. It also confirms the existence of a structured procurement workflow involving purchase orders, delivery notes, and goods-in receipting processes. This moves beyond general capability to specific operational intent and infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:35:16.731654",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/hospitality-and-events-executive-williams-racing-at-jobster-4366837345",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Hospitality Events App (Guest Management)",
+              "Budget Tracking Software/Spreadsheets"
+            ],
+            "job_postings": [
+              "Hospitality and Events Executive (Williams Racing)"
+            ],
+            "procurement_indicators": [
+              "Coordinate purchase order and invoice processes",
+              "Management of external suppliers and onsite contractors",
+              "Oversee freight and logistics for gifting",
+              "Inventory management for event gifting",
+              "Ticket administration and distribution"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Event Logistics Procurement",
+            "Supplier & Contractor Management",
+            "Financial Governance (PO/Invoicing)",
+            "Freight & Inventory Management",
+            "Event Technology (Hospitality Apps)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1649,
+              "output_tokens": 375,
+              "elapsed_seconds": 3.113370656967163
+            }
+          ],
+          "reasoning": "The job description for a Hospitality and Events Executive at Williams Racing provides explicit evidence of procurement activities. It details direct responsibility for managing external suppliers and onsite contractors, coordinating freight and logistics for gifting, and handling the full purchase order and invoice lifecycle. The role also involves managing inventory for gifts and utilizing specific event technology (hospitality apps), indicating active vendor management and procurement operations within the events function."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:35:26.150741",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/principal-design-engineer-transmission-williams-racing-at-jobster-4367545338",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CAD (Computer-Aided Design)",
+              "Simulation Software",
+              "Data-driven Analysis Tools",
+              "Hydraulic Actuation Systems"
+            ],
+            "job_postings": [
+              "Principal Design Engineer - Transmission (Williams Racing)"
+            ],
+            "procurement_indicators": [
+              "Sourcing of transmission components (gears, shafts, bearings)",
+              "Procurement of hydraulic and lubrication systems",
+              "Software licensing for engineering and simulation",
+              "Material sourcing for lightweight/high-performance alloys",
+              "Vendor management for manufacturing and fabrication"
+            ]
+          },
+          "patterns_found": [
+            "High-Performance Component Sourcing",
+            "CAD & Simulation Software Procurement",
+            "Hydraulic Systems Integration",
+            "Materials Engineering & Rapid Prototyping",
+            "Cross-Functional Technical Governance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1727,
+              "output_tokens": 442,
+              "elapsed_seconds": 5.835997104644775
+            }
+          ],
+          "reasoning": "The job description for a Principal Design Engineer at Williams Racing reveals critical procurement needs within the Powertrain/Transmission department. It explicitly references the use of 'simulation, CAD, and data-driven tools,' indicating a requirement for high-value engineering software licenses. Furthermore, the focus on 'hydraulic actuation,' 'lubrication,' and 'cooling' systems suggests a supply chain for specialized mechanical components and fluids. The role also involves managing projects from 'concept to delivery,' which implies vendor selection for materials and manufacturing processes (e.g., casting, machining) to achieve 'lightweight, high-performance solutions.'"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:35:33.533660",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-aerodynamic-ai-engineer-williams-racing-at-jobster-4366827871",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Python (PyTorch)",
+              "C++ / Rust / Fortran",
+              "CI/CD Pipelines",
+              "CFD (Computational Fluid Dynamics) Software",
+              "Wind Tunnel Data Systems",
+              "Atlassian (Jira/Confluence)"
+            ],
+            "job_postings": [
+              "Senior Aerodynamic AI Engineer"
+            ],
+            "procurement_indicators": [
+              "HPC & Cloud Infrastructure Sourcing",
+              "Engineering Simulation Software Licensing",
+              "AI/ML Framework Procurement",
+              "DevOps Toolchain Acquisition",
+              "Technical Talent Acquisition (Specialized Skills)"
+            ]
+          },
+          "patterns_found": [
+            "Advanced AI/ML & Data Science Procurement",
+            "High-Performance Computing (HPC) & Cloud Infrastructure",
+            "CFD & Simulation Software Sourcing",
+            "DevOps & CI/CD Tooling",
+            "Scientific Research & Academic Partnerships"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1800,
+              "output_tokens": 396,
+              "elapsed_seconds": 4.091470956802368
+            }
+          ],
+          "reasoning": "The job posting for a Senior Aerodynamic AI Engineer reveals a sophisticated procurement function focused on high-value technical infrastructure. The requirement for Python (PyTorch), low-level languages (C++, Rust), and CI/CD pipelines indicates investment in enterprise-grade software development tools. Furthermore, the reliance on CFD, wind tunnel data, and 'surrogate models' suggests significant procurement spend on HPC hardware, cloud computing resources, and specialized engineering simulation software licenses."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T11:35:40.459407",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-legal-counsel-williams-racing-at-jobster-4366824853",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SaaS (Software as a Service)",
+              "Data Processing Agreements (DPA)",
+              "GDPR Compliance Tools"
+            ],
+            "job_postings": [
+              "Senior Legal Counsel - Williams Racing"
+            ],
+            "procurement_indicators": [
+              "Drafting/negotiating supply and purchase agreements",
+              "Drafting/negotiating manufacturing agreements",
+              "Drafting/negotiating SaaS agreements",
+              "Legal support for IT and Facilities functions",
+              "Merchandise & Licensing supply chain management",
+              "Wind Tunnel & Aero project support"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Contract Negotiation (SaaS, Manufacturing, Supply)",
+            "Procurement Function Legal Support",
+            "Intellectual Property & Brand Licensing Procurement",
+            "Data Protection & Privacy Compliance (GDPR/DPIAs)",
+            "Facilities & Infrastructure Legal Governance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1878,
+              "output_tokens": 375,
+              "elapsed_seconds": 3.1584901809692383
+            }
+          ],
+          "reasoning": "The job description explicitly lists 'Procurement' as a key support function receiving legal advice. It details specific contract types central to procurement: 'supply and purchase agreements', 'manufacturing agreements', and 'SaaS agreements'. This confirms active sourcing activities for software, manufacturing components, and general supplies, alongside a need for legal governance in these areas."
+        }
+      ],
+      "total_input_tokens": 12994,
+      "total_output_tokens": 2908,
+      "estimated_cost_usd": 0.08260200000000001
+    },
+    "procurement_signals": [
+      "ERP System Utilization",
+      "Inventory & Supply Chain Management",
+      "Logistics & Freight Operations",
+      "Parts Lifecycle Management (Lifing/Serialization)",
+      "Procurement Reconciliation (PO vs. Delivery)",
+      "Hospitality & Event Logistics Procurement",
+      "Supplier & Contractor Management",
+      "Financial Governance (PO/Invoicing)",
+      "Freight & Inventory Management",
+      "Event Technology (Hospitality Apps)",
+      "High-Performance Component Sourcing",
+      "CAD & Simulation Software Procurement",
+      "Hydraulic Systems Integration",
+      "Materials Engineering & Rapid Prototyping",
+      "Cross-Functional Technical Governance",
+      "Advanced AI/ML & Data Science Procurement",
+      "High-Performance Computing (HPC) & Cloud Infrastructure",
+      "CFD & Simulation Software Sourcing",
+      "DevOps & CI/CD Tooling",
+      "Scientific Research & Academic Partnerships",
+      "Commercial Contract Negotiation (SaaS, Manufacturing, Supply)",
+      "Procurement Function Legal Support",
+      "Intellectual Property & Brand Licensing Procurement",
+      "Data Protection & Privacy Compliance (GDPR/DPIAs)",
+      "Facilities & Infrastructure Legal Governance"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Formula 1 World Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:35:40.461586"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372130",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:50.583217"
+}

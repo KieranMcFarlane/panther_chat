@@ -1,0 +1,112 @@
+{
+  "entity_id": "gabon_basketball_federation",
+  "entity_name": "Gabon Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "ca.okfn.org",
+    "peekyou.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gabon_basketball_federation",
+      "entity_name": "Gabon Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ca.okfn.org",
+        "https://peekyou.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Gabon Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:15:55.021132",
+          "domain_explored": "https://ca.okfn.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Open Knowledge Canada vs Gabon Basketball Federation)",
+            "Irrelevant Content (Open Data/Web Advocacy)",
+            "Outdated Event Data (2016)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 188,
+              "elapsed_seconds": 9.53901219367981
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Open Knowledge Canada' (ca.okfn.org), a non-profit organization focused on open data and the web ecosystem. It contains blog posts about the 2016 #OKFestMTL event. There is absolutely no relation to the Gabon Basketball Federation, sports management, or relevant procurement activities in the target sector."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:16:04.182517",
+          "domain_explored": "https://peekyou.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Platform Interface",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1425,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.3239662647247314
+            }
+          ],
+          "reasoning": "The content is the generic homepage of PeekYou, a people search engine. It contains no information regarding the Gabon Basketball Federation, its procurement activities, or its technology stack. The text is purely functional UI elements for searching people (names, US states, usernames) and marketing copy for the PeekYou service itself."
+        }
+      ],
+      "total_input_tokens": 2787,
+      "total_output_tokens": 356,
+      "estimated_cost_usd": 0.013701000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Gabon Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:16:04.184680"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.269516",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:58.572955"
+}

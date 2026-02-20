@@ -1,0 +1,167 @@
+{
+  "entity_id": "fia_europe",
+  "entity_name": "FIA Europe",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "zoominfo.com",
+    "bloomberg.com",
+    "esma.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://be.linkedin.com/jobs/view/director-for-european-advocacy-at-fusion-industry-association-4261013348"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_europe",
+      "entity_name": "FIA Europe",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://esma.europa.eu",
+        "https://bloomberg.com",
+        "https://zoominfo.com",
+        "https://be.linkedin.com/jobs/view/director-for-european-advocacy-at-fusion-industry-association-4261013348"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:45:58.886148",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:46:02.339025",
+          "domain_explored": "https://bloomberg.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:46:11.793161",
+          "domain_explored": "https://esma.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Consolidated Tape (Market Data Infrastructure)",
+              "RegTech (for EMIR 3 / AAR reporting)",
+              "ESG Data Platforms",
+              "ICT Third-Party Risk Management Tools (DORA compliance)",
+              "Supervisory Technology (SupTech)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of selection process for Consolidated Tape Provider (Jan 2026)",
+              "Implementation of Digital Strategy 2026-2028 (Tech investment cycle)",
+              "Active Account Requirement (AAR) reporting mandates (Compliance tools needed)",
+              "Workshop on Authorization of ESG Rating Providers (Vendor selection/Regulation)",
+              "Memorandum of Understanding on ICT third-party oversight (Vendor risk management)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Strategy 2026-2028",
+            "DORA Oversight (ICT Third-Party Risk)",
+            "Consolidated Tape Provider Selection",
+            "Active Account Requirement (AAR) Reporting",
+            "ESG Rating Provider Authorization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 447,
+              "elapsed_seconds": 6.357706069946289
+            }
+          ],
+          "reasoning": "While ESMA is a regulatory body and not the direct target 'FIA Europe', the content reveals high-value procurement signals for the financial sector ecosystem. The explicit mention of a 'Digital Strategy 2026-2028' and 'Data strategies' indicates upcoming technology investments. The 'Consolidated Tape Provider' selection is a direct procurement signal. The DORA MoU highlights a regulatory focus on ICT third-party risk, which drives vendor assessment/risk management procurement. The AAR and ESG authorization requirements drive demand for compliance and reporting software."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:46:19.576846",
+          "domain_explored": "https://be.linkedin.com/jobs/view/director-for-european-advocacy-at-fusion-industry-association-4261013348",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director for European Advocacy (Senior Policy Role)"
+            ],
+            "procurement_indicators": [
+              "Strategic intent to access EU funding instruments (Horizon Europe, Euratom, EIC)",
+              "Requirement for public-private partnership frameworks",
+              "Need for regulatory differentiation strategy (Fusion vs. Fission)",
+              "Expansion into Brussels market (implies future office/service procurement)"
+            ]
+          },
+          "patterns_found": [
+            "EU Policy Advocacy Expansion",
+            "Public-Private Partnership (PPP) Structuring",
+            "EU Funding Instrument Access (Horizon Europe, Euratom)",
+            "Regulatory Framework Development (Fusion vs. Fission)",
+            "Stakeholder Management (EU Commission, Parliament, National Ministries)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1486,
+              "output_tokens": 383,
+              "elapsed_seconds": 4.564527273178101
+            }
+          ],
+          "reasoning": "While this is a job posting (Personnel) rather than a direct procurement tender, the role description explicitly outlines the organization's intent to secure public funding, shape regulatory frameworks, and establish public-private partnerships. The responsibilities regarding 'Funding and Partnership Opportunities' and 'Engagement with EU Institutions' indicate a strategic pivot towards formalizing their European presence, which often precedes or requires procurement of local vendors, legal counsel, and policy consulting firms to support these objectives."
+        }
+      ],
+      "total_input_tokens": 2897,
+      "total_output_tokens": 830,
+      "estimated_cost_usd": 0.021141
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:46:19.578253"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.379094",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:41:27.333993"
+}

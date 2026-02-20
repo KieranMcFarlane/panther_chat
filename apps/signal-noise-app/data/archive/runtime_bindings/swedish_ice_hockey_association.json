@@ -1,0 +1,213 @@
+{
+  "entity_id": "swedish_ice_hockey_association",
+  "entity_name": "Swedish Ice Hockey Association",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "stats.swehockey.se",
+    "grokipedia.com",
+    "wikidata.org",
+    "icehockey.fandom.com",
+    "internationalhockeywiki.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "swedish_ice_hockey_association",
+      "entity_name": "Swedish Ice Hockey Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://stats.swehockey.se",
+        "https://grokipedia.com",
+        "https://internationalhockeywiki.com",
+        "https://icehockey.fandom.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Swedish Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:27:11.936699",
+          "domain_explored": "https://stats.swehockey.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Apps (iOS/Android)",
+              "Push Notification Services",
+              "Live Statistics Engine",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "App maintenance and development contracts",
+              "Data analytics for user engagement",
+              "Infrastructure hosting for real-time stats"
+            ]
+          },
+          "patterns_found": [
+            "Mobile Application Ecosystem",
+            "Real-time Data Infrastructure",
+            "Fan Engagement Platform"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 278,
+              "elapsed_seconds": 2.6112239360809326
+            }
+          ],
+          "reasoning": "The content confirms the existence of a proprietary mobile application ('Swehockey') that requires backend support for live statistics, push notifications, and content management. While this is an operational asset rather than a new procurement signal, it establishes a baseline technology stack that likely requires ongoing maintenance, analytics, and potentially modernization or API management vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:27:14.878738",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:27:17.763425",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:27:28.976073",
+          "domain_explored": "https://icehockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Knowledge Reference",
+            "User-Generated Content",
+            "Historical Statistics"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 158,
+              "elapsed_seconds": 7.850995063781738
+            }
+          ],
+          "reasoning": "The scraped content is from 'Ice Hockey Wiki' (Fandom), a user-generated encyclopedia. It contains general information about leagues, teams, and history, but no information regarding the Swedish Ice Hockey Association's internal operations, technology stack, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:27:36.587596",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Knowledge Reference",
+            "Historical Data Aggregation",
+            "User-Generated Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.682689905166626
+            }
+          ],
+          "reasoning": "The content is a historical wiki (International Hockey Wiki) focused on archiving past leagues, players, and tournaments. It contains no information regarding the Swedish Ice Hockey Association's current operations, technology stack, or procurement needs. It is a passive data source rather than an active business signal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:27:42.443886",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Ecosystem",
+            "Consumer App Marketplace",
+            "General Entertainment Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.2907538414001465
+            }
+          ],
+          "reasoning": "The scraped content represents the Google Play Store homepage, a generic consumer marketplace. It lists popular games (Candy Crush, PUBG) and unrelated apps (CBeebies, Bluey). There is no specific content related to the Swedish Ice Hockey Association, their internal operations, or their specific vendor ecosystem. This is irrelevant noise for the target entity."
+        }
+      ],
+      "total_input_tokens": 5934,
+      "total_output_tokens": 784,
+      "estimated_cost_usd": 0.029561999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Swedish Ice Hockey Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:27:42.446018"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.306776",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:00.054819"
+}

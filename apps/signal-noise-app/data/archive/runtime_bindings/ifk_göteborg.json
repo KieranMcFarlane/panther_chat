@@ -1,0 +1,311 @@
+{
+  "entity_id": "ifk_g\u00f6teborg",
+  "entity_name": "IFK G\u00f6teborg",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "ifkgoteborg.se",
+    "blavittshopen.se",
+    "racingdatabase.eu",
+    "besoccer.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://se.linkedin.com/jobs/view/entr%C3%A9v%C3%A4rdar-till-v%C3%A5ra-hemmamatcher-at-ifk-g%C3%B6teborg-futsal-4318011278",
+      "https://se.linkedin.com/jobs/view/kommersiell-chef-till-ifk-g%C3%B6teborg-at-effektiv-se-3875005544?trk=public_post_feed-job-posting-content"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ifk_g\u00f6teborg",
+      "entity_name": "IFK G\u00f6teborg",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ifkgoteborg.se",
+        "https://racingdatabase.eu",
+        "https://blavittshopen.se",
+        "https://se.linkedin.com/jobs/view/entr%C3%A9v%C3%A4rdar-till-v%C3%A5ra-hemmamatcher-at-ifk-g%C3%B6teborg-futsal-4318011278",
+        "https://besoccer.com",
+        "https://se.linkedin.com/jobs/view/kommersiell-chef-till-ifk-g%C3%B6teborg-at-effektiv-se-3875005544?trk=public_post_feed-job-posting-content",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "C-Level_Executive_Hiring",
+        "Commercial_Strategy_Overhaul",
+        "Budget_Authority",
+        "Revenue_Stream_Diversification",
+        "Vendor_Switching"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IFK G\u00f6teborg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:34:13.828749",
+          "domain_explored": "https://ifkgoteborg.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Bl\u00e5vitt Play (Media/OTT Platform)",
+              "Bl\u00e5vittshopen (E-commerce Platform - likely Shopify or custom based on URL structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Valberedningens f\u00f6rslag (Nomination Committee proposal) - Indicates upcoming Annual Meeting, typically a budgeting cycle marker, but no specific procurement mentioned."
+            ]
+          },
+          "patterns_found": [
+            "E-commerce integration (external shop link)",
+            "OTT/Media platform presence (Bl\u00e5vitt Play)",
+            "Standard sports news aggregation (player transfers, training camps)",
+            "Corporate governance activity (Annual Meeting preparation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 320,
+              "elapsed_seconds": 6.542705059051514
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage news feed and navigation elements of IFK G\u00f6teborg. While it confirms the existence of an e-commerce platform ('Bl\u00e5vittshopen') and a media platform ('Bl\u00e5vittplay'), it contains no specific signals regarding *new* procurement activities, technology investments, or hiring. The content is focused on sports operations (transfers, training) and standard member information (annual meeting)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:34:24.617135",
+          "domain_explored": "https://blavittshopen.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Craft (Strategic Partner for Training Gear)",
+              "Sourcing Requirement: Recycled Polyester (Sustainability)",
+              "Planning Horizon: 2026 Product Line",
+              "Category: Technical Sportswear & Fleece"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Vendor Partnership (Craft)",
+            "Supply Chain Sourcing (Recycled Materials)",
+            "Product Lifecycle Management (2026 Collection)",
+            "Direct-to-Consumer (DTC) E-commerce"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 280,
+              "elapsed_seconds": 3.4443469047546387
+            }
+          ],
+          "reasoning": "While the page is consumer-facing, it confirms a strategic procurement partnership with 'Craft' for technical apparel and equipment. The specific mention of 'Tr\u00e4ningskollektion 2026' indicates long-term supply chain planning and vendor lock-in for merchandise. The use of '\u00e5tervunnen polyester' (recycled polyester) signals compliance with sustainability procurement standards. No new tech stack signals were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:34:34.993745",
+          "domain_explored": "https://racingdatabase.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Content",
+            "Historical_Archive_Data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 502,
+              "output_tokens": 133,
+              "elapsed_seconds": 2.3069889545440674
+            }
+          ],
+          "reasoning": "The content provided is a historical archive for RC Strasbourg, a French football club, and contains no information regarding IFK G\u00f6teborg. It is entirely irrelevant to the target entity and offers zero procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:34:48.391434",
+          "domain_explored": "https://besoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_Content",
+            "Generic_Aggregation",
+            "User_Generation_Traffic"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 162,
+              "elapsed_seconds": 6.144646883010864
+            }
+          ],
+          "reasoning": "The content is a generic sports results aggregator (BeSoccer) containing global match scores, login forms, and gambling prompts. There is no specific connection to IFK G\u00f6teborg's internal operations, procurement needs, or technology stack. The content is purely informational noise unrelated to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:34:54.865053",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor_Marketing_Content",
+            "Generic_B2B_Services",
+            "Irrelevant_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.822364091873169
+            }
+          ],
+          "reasoning": "The content is a generic landing page for ZoomInfo, a B2B data intelligence platform. It describes the vendor's service offering (sales intelligence, GTM strategies) and contains customer testimonials unrelated to IFK G\u00f6teborg. There is no specific information regarding IFK G\u00f6teborg's procurement activities, technology stack, or internal governance. This is a tool used *by* sales teams to find prospects, not a source of intelligence about the target entity's internal procurement state."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:35:06.482334",
+          "domain_explored": "https://se.linkedin.com/jobs/view/entr%C3%A9v%C3%A4rdar-till-v%C3%A5ra-hemmamatcher-at-ifk-g%C3%B6teborg-futsal-4318011278",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Entr\u00e9v\u00e4rdar (Entrance Hosts) - Volunteer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Volunteer_Recruitment",
+            "Event_Operations",
+            "Low_Skill_Labor",
+            "Irrelevant_Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1634,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.548118829727173
+            }
+          ],
+          "reasoning": "The content describes a volunteer position for event staff (entrance hosts) for IFK G\u00f6teborg Futsal. While this indicates operational activity, it is a recruitment post for non-technical, voluntary labor rather than a procurement signal, technology investment, or strategic vendor partnership."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:35:18.323428",
+          "domain_explored": "https://se.linkedin.com/jobs/view/kommersiell-chef-till-ifk-g%C3%B6teborg-at-effektiv-se-3875005544?trk=public_post_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Kommersiell Chef",
+                "type": "Executive / Management",
+                "department": "Commercial / Marketing",
+                "recruiter": "Effektiv",
+                "status": "Closed (1 year ago)"
+              }
+            ],
+            "procurement_indicators": [
+              "Budget Responsibility: Full responsibility for department budget.",
+              "Merchandise Oversight: Direct control over merchandise procurement and sales.",
+              "Partnership Management: Oversight of corporate partnerships (B2B procurement).",
+              "Event Management: Procurement needs for events and match days.",
+              "Vendor Switching: Use of external recruitment agency suggests potential openness to new vendors."
+            ]
+          },
+          "patterns_found": [
+            "C-Level_Executive_Hiring",
+            "Commercial_Strategy_Overhaul",
+            "Budget_Authority",
+            "Revenue_Stream_Diversification",
+            "Vendor_Switching"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 421,
+              "elapsed_seconds": 3.6205639839172363
+            }
+          ],
+          "reasoning": "This posting is a high-value procurement signal. Hiring a 'Kommersiell Chef' (Commercial Manager) with full responsibility for budget, personnel, and strategy indicates a restructuring of the commercial department. The explicit listing of 'Merchandise', 'Partners', and 'Ticketing' as direct reports suggests a consolidation of procurement authority under this new role. Furthermore, the use of a recruitment agency (Effektiv) for a direct hire suggests an urgent need for specialized capability to manage these revenue streams."
+        }
+      ],
+      "total_input_tokens": 9708,
+      "total_output_tokens": 1700,
+      "estimated_cost_usd": 0.054624
+    },
+    "procurement_signals": [
+      "C-Level_Executive_Hiring",
+      "Commercial_Strategy_Overhaul",
+      "Budget_Authority",
+      "Revenue_Stream_Diversification",
+      "Vendor_Switching"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IFK G\u00f6teborg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:35:18.324383"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.173083",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:58:16.480297"
+}

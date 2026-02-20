@@ -1,0 +1,114 @@
+{
+  "entity_id": "american_samoa_basketball_association",
+  "entity_name": "American Samoa Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "luckyshow.org",
+    "islandtimes.org",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "american_samoa_basketball_association",
+      "entity_name": "American Samoa Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://luckyshow.org",
+        "https://islandtimes.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "American Samoa Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:20:14.918349",
+          "domain_explored": "https://luckyshow.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:20:25.404157",
+          "domain_explored": "https://islandtimes.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Mention of $5.5M ADB Grant (Palau specific)",
+              "Mention of U.S. Donation of Ambulances (Palau specific)"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Palau vs American Samoa)",
+            "Content Mismatch (General News vs Sports Association)",
+            "Entity Mismatch (Government/Health/Justice vs Basketball)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.914112091064453
+            }
+          ],
+          "reasoning": "The scraped content from 'islandtimes.org' is entirely focused on news events in Palau (e.g., Koror Jail, KASP Project, President Whipps). The target entity is the American Samoa Basketball Association. There is zero topical or geographic overlap, and no procurement signals relevant to the target entity were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:20:31.085550",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1397,
+      "total_output_tokens": 222,
+      "estimated_cost_usd": 0.007521
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "American Samoa Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:20:31.086319"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.246761",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:46.499820"
+}

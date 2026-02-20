@@ -1,0 +1,278 @@
+{
+  "entity_id": "aston_villa",
+  "entity_name": "Aston Villa",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "mid_market_club_uk",
+  "discovered_domains": [
+    "premierleague.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/safeguarding-manager-boys-academy-at-aston-villa-football-club-4362464594",
+      "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7355563932104683520-t9Ez",
+      "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7377640213616947200-fwok",
+      "https://www.linkedin.com/posts/aston-villa-football-club_all-jobs-activity-6919682782633828352-2pJ4?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "aston_villa",
+      "entity_name": "Aston Villa",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7377640213616947200-fwok",
+        "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7355563932104683520-t9Ez",
+        "https://www.linkedin.com/posts/aston-villa-football-club_all-jobs-activity-6919682782633828352-2pJ4?trk=public_profile_like_view",
+        "https://premierleague.com",
+        "https://uk.linkedin.com/jobs/view/safeguarding-manager-boys-academy-at-aston-villa-football-club-4362464594"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Job Posting - Full-Stack Developer",
+        "Job Posting - Lead Performance Analyst",
+        "Job Posting - Retail & Licensing Administrator",
+        "Job Posting - Security Compliance Officer",
+        "Department Structure - Football Research and Strategy",
+        "Department Structure - Hospitality",
+        "Department Structure - Retail",
+        "Department Structure - Security"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Aston Villa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:58:44.679724",
+          "domain_explored": "https://premierleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-level partnership structure",
+            "Generic navigation elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1110,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.2016358375549316
+            }
+          ],
+          "reasoning": "The content provided is a list of Premier League-wide commercial partner categories (e.g., 'Official Cloud & AI Partner') and generic website navigation elements. There is no specific mention of Aston Villa, nor are there specific procurement signals, job postings, or technology investments related to the club. The data represents the league's sponsorship taxonomy rather than Aston Villa's specific procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:58:53.292298",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/safeguarding-manager-boys-academy-at-aston-villa-football-club-4362464594",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Safeguarding Manager (Boys Academy)",
+                "department": "Legal and Safeguarding",
+                "salary": "\u00a330,000-\u00a335,000",
+                "location": "Bodymoor Heath Training Ground",
+                "ref": "011443"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in Academy support structure",
+              "Requirement for third-party vetting of host families (care and accommodation providers)",
+              "Compliance with Premier League safeguarding standards"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting - Safeguarding",
+            "Department Structure - Legal and Safeguarding",
+            "Operational Location - Bodymoor Heath Training Ground",
+            "Compliance Framework - Premier League Rules"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 346,
+              "elapsed_seconds": 4.67733097076416
+            }
+          ],
+          "reasoning": "While this is a direct hiring event rather than a vendor procurement, it confirms organizational investment in the 'Legal and Safeguarding' department. The role requires managing 'host families' and 'care providers,' which implies potential future procurement needs for vetting services or accommodation management platforms. It provides concrete data on departmental structure and salary bands."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:59:02.214820",
+          "domain_explored": "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7355563932104683520-t9Ez",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full-Stack Development (Internal Tooling)",
+              "Performance Analysis Software",
+              "Licensing Management Systems"
+            ],
+            "job_postings": [
+              "Full-Stack Developer (Men's First Team)",
+              "Lead Performance Analyst (Boys Academy)",
+              "Retail & Licensing Administrator",
+              "Security Compliance Officer",
+              "Hospitality Operations Manager"
+            ],
+            "procurement_indicators": [
+              "Internal Software Development (Football Research & Strategy)",
+              "Performance Analysis Tech Stack Expansion",
+              "Licensing Compliance Management",
+              "Security Standards Procurement/Compliance"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting - Full-Stack Developer",
+            "Job Posting - Lead Performance Analyst",
+            "Job Posting - Retail & Licensing Administrator",
+            "Job Posting - Security Compliance Officer",
+            "Department Structure - Football Research and Strategy",
+            "Department Structure - Hospitality",
+            "Department Structure - Retail",
+            "Department Structure - Security"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 486,
+              "elapsed_seconds": 5.460329055786133
+            }
+          ],
+          "reasoning": "The content lists multiple specific job vacancies that directly signal procurement and investment activity. The 'Full-Stack Developer' role within the 'Men's First Team (Football Research and Strategy)' department indicates a build-out of internal proprietary software or data analytics tools, suggesting a move away from purely vendor-supplied solutions or a need to integrate them. The 'Lead Performance Analyst' role suggests investment in sports technology infrastructure. The 'Retail & Licensing Administrator' and 'Security Compliance Officer' roles indicate active management of commercial partnerships and regulatory adherence, respectively."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:59:11.451410",
+          "domain_explored": "https://www.linkedin.com/posts/aston-villa-football-club_jobsinsport-jobsinfootball-activity-7377640213616947200-fwok",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Retail Sales Assistant",
+              "Retail Supervisors",
+              "Driver (Girls Academy)",
+              "Maintenance Technician (Plumbing)",
+              "Professional Development Phase Sport Scientist",
+              "Assistant Foundation / Youth Development Phase Sport Scientist"
+            ],
+            "procurement_indicators": [
+              "Facilities Maintenance Investment",
+              "Retail Expansion (Bullring Store)",
+              "Academy Logistics Support"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting - Retail Operations (Bullring Store)",
+            "Job Posting - Facilities and Estates Development (Plumbing)",
+            "Job Posting - Girls Academy Operations (Driver)",
+            "Job Posting - Sports Science (Boys Academy)",
+            "Organizational Structure - Retail, Facilities, Academies"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 379,
+              "elapsed_seconds": 5.841596841812134
+            }
+          ],
+          "reasoning": "While this content does not reveal direct technology procurement (software/hardware), it confirms active investment in operational infrastructure. The 'Facilities and Estates Development' hiring indicates potential future procurement needs for building maintenance materials or contractors. The 'Retail' expansion at the Bullring store suggests active supply chain management for merchandise. This confirms organizational growth and operational capability, warranting a weak signal for procurement intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:59:23.408143",
+          "domain_explored": "https://www.linkedin.com/posts/aston-villa-football-club_all-jobs-activity-6919682782633828352-2pJ4?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Careers Site / Applicant Tracking System (ATS)",
+              "HR Recruitment Platform"
+            ],
+            "job_postings": [
+              "Aston Villa Foundation Vacancies (Multiple)"
+            ],
+            "procurement_indicators": [
+              "Implementation of new digital platform (Careers site)",
+              "Vendor engagement for HR tech solution"
+            ]
+          },
+          "patterns_found": [
+            "HR Technology Investment",
+            "Digital Transformation - Careers Site",
+            "Organizational Expansion - Foundation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1682,
+              "output_tokens": 256,
+              "elapsed_seconds": 8.438907146453857
+            }
+          ],
+          "reasoning": "The content confirms a specific procurement event: the launch of an 'all-new Careers site.' This indicates a recent investment in HR technology (ATS or recruitment marketing platform) and a vendor selection process has occurred for this solution. It also signals active hiring within the Aston Villa Foundation, suggesting operational growth."
+        }
+      ],
+      "total_input_tokens": 7306,
+      "total_output_tokens": 1655,
+      "estimated_cost_usd": 0.046743
+    },
+    "procurement_signals": [
+      "Job Posting - Full-Stack Developer",
+      "Job Posting - Lead Performance Analyst",
+      "Job Posting - Retail & Licensing Administrator",
+      "Job Posting - Security Compliance Officer",
+      "Department Structure - Football Research and Strategy",
+      "Department Structure - Hospitality",
+      "Department Structure - Retail",
+      "Department Structure - Security"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Aston Villa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:59:23.410012"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.117900",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:43.249597"
+}

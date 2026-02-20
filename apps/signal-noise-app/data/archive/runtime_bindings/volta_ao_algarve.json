@@ -1,0 +1,172 @@
+{
+  "entity_id": "volta_ao_algarve",
+  "entity_name": "Volta ao Algarve",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "event_organizers",
+  "discovered_domains": [
+    "voltaaoalgarve.com",
+    "algarvegranfondo.com",
+    "algarvecycling.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "volta_ao_algarve",
+      "entity_name": "Volta ao Algarve",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06
+      ],
+      "explored_domains": [
+        "https://voltaaoalgarve.com",
+        "https://algarvegranfondo.com",
+        "https://algarvecycling.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Volta ao Algarve may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:45:07.152688",
+          "domain_explored": "https://voltaaoalgarve.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Equipment (10 cameras mentioned)",
+              "Media Distribution Platforms (RTP, Eurosport)",
+              "Analytics Platforms (Cision)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Impact Study Contract (University of Algarve & Cision)",
+              "Media Production Services (Medialuso/Mediapro)",
+              "Venue/Logistics Services (Sede da Regi\u00e3o de Turismo do Algarve)",
+              "International Marketing Representation (FITUR trade fair)"
+            ]
+          },
+          "patterns_found": [
+            "Event Impact Measurement",
+            "Media Production Outsourcing",
+            "Tourism Board Partnership",
+            "Academic Research Collaboration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 374,
+              "elapsed_seconds": 7.284235000610352
+            }
+          ],
+          "reasoning": "The content reveals significant operational scale and partnership structures that drive procurement needs. The explicit mention of a 'Study of Impact' conducted by the University of Algarve and Cision indicates a requirement for analytics and reporting services. The media production details (Medialuso/Mediapro) confirm a reliance on external vendors for broadcast technology. While no direct RFP is present, the scale of operations (\u20ac36.5M impact) and reliance on partners (Tourism Board of the Algarve) for the 2026 presentation suggest ongoing procurement activities for event services, marketing, and digital platforms."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:45:15.869071",
+          "domain_explored": "https://algarvegranfondo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Management Platform (implied by phased pricing/tickets)",
+              "GPS Tracking (implied by 'Ver Track' links)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Event Services: Photography, Medical Assistance, Mechanical Support",
+              "Physical Goods Procurement: Jersey production, Bicycle numbers (frontal), Medals",
+              "Third-party Licensing: Insurance via Portuguese Cycling Federation",
+              "Venue/Logistics: Route management in Lagos"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics Outsourcing",
+            "Merchandising Production",
+            "Professional Photography Services",
+            "Insurance & Licensing Procurement",
+            "Registration Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 410,
+              "elapsed_seconds": 4.81230092048645
+            }
+          ],
+          "reasoning": "The content describes the 'Granfondo da Volta ao Algarve', a mass participation event scheduled for 2026. While it is a consumer-facing page, the 'Inscri\u00e7\u00e3o inclui' (Registration includes) section explicitly lists services that are typically procured by the organization, such as 'Fotos Profissionais' (Professional Photography), 'Frontal da Bicicleta' (Bicycle numbers/plates), 'Brindes' (Merchandise), and insurance licensing. The presence of a structured registration phase with pricing indicates the use of or need for a registration management platform. The contact email (geral@acalgarve.pt) links the event to 'Associa\u00e7\u00e3o de Ciclismo do Algarve', suggesting a decentralized procurement structure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:45:24.123266",
+          "domain_explored": "https://algarvecycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine (Custom/Proprietary based on URL structure)",
+              "Dynamic Pricing System",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Hospitality Procurement (4* Quinta dos Poetas, Spa Hotels)",
+              "Fleet Management (Rent a Bike services)",
+              "Route Planning & Logistics Outsourcing"
+            ]
+          },
+          "patterns_found": [
+            "B2C Booking Engine",
+            "Dynamic Pricing Management",
+            "Multi-day Tour Logistics",
+            "Cross-Regional Tour Coordination"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 305,
+              "elapsed_seconds": 3.097317934036255
+            }
+          ],
+          "reasoning": "The content reveals a commercial tour operator (Algarve Cycling) with a robust booking engine handling complex logistics (multi-day packages, cross-regional tours). While this is a distinct entity from the race organizer, it validates the region's cycling ecosystem and suggests potential for partnership procurement (e.g., accommodation sourcing, bike rental fleets) or technology licensing. The presence of a structured booking platform indicates a mature operational stack."
+        }
+      ],
+      "total_input_tokens": 4228,
+      "total_output_tokens": 1089,
+      "estimated_cost_usd": 0.029019
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Volta ao Algarve may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:45:24.124321"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.412579",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:08:13.529399"
+}

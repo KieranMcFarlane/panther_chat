@@ -1,0 +1,165 @@
+{
+  "entity_id": "gt_world_challenge_europe_sprint_cup",
+  "entity_name": "GT World Challenge Europe Sprint Cup",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "gt-world-challenge-europe.com",
+    "brandshatch.co.uk",
+    "ferrari.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "gt_world_challenge_europe_sprint_cup",
+      "entity_name": "GT World Challenge Europe Sprint Cup",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://gt-world-challenge-europe.com",
+        "https://ferrari.com",
+        "https://grokipedia.com",
+        "https://brandshatch.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "GT World Challenge Europe Sprint Cup may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:23:08.464398",
+          "domain_explored": "https://gt-world-challenge-europe.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (iOS/Android)",
+              "CRM (User Account/Newsletter System)",
+              "Ticketing Platform (eCommerce)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement (CrowdStrike, AWS)",
+              "Digital service procurement (App development/maintenance)",
+              "Ticketing system procurement",
+              "VIP Hospitality management"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing & Fan Engagement",
+            "Mobile Application Maintenance",
+            "Ticketing Platform Usage",
+            "Sponsorship Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1371,
+              "output_tokens": 310,
+              "elapsed_seconds": 11.202038049697876
+            }
+          ],
+          "reasoning": "The content reveals a mature digital ecosystem including a dedicated mobile app ('#GTWorld APP') and a structured 'Create an account' user journey for CRM. While no direct RFPs are visible, the presence of major sponsors like CrowdStrike and AWS, alongside active ticket sales and VIP packages, indicates a reliance on enterprise-level software for data management, content delivery, and financial transactions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:23:14.993604",
+          "domain_explored": "https://brandshatch.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (implied by '2026 Season Passes')",
+              "CMS (implied by dynamic 'What's On' calendar)",
+              "Email Protection (Cloudflare - detected in email link)"
+            ],
+            "job_postings": [
+              "General Motorsport Opportunities (Link: 'Looking for a job in motorsport')"
+            ],
+            "procurement_indicators": [
+              "Venue Management Services (Track operations, marshalling)",
+              "Hospitality & Catering (Vouchers, Experiences)",
+              "Marketing Services (Subscriber offers, American Speedfest promotion)",
+              "Infrastructure Maintenance (Track work schedules)"
+            ]
+          },
+          "patterns_found": [
+            "Venue Operations & Infrastructure",
+            "Event Ticketing & Access Control",
+            "Corporate Hospitality & Experiences",
+            "Digital Marketing & Subscriber Offers"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 343,
+              "elapsed_seconds": 3.563277244567871
+            }
+          ],
+          "reasoning": "The content is from Brands Hatch, a key venue partner for the series. While it does not show direct procurement by the series organizer (SRO), it reveals the venue's operational ecosystem (track days, experiences, ticketing) which relies on vendors. The 'Looking for a job in motorsport' link is a potential signal for recruitment/HR procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:23:17.786205",
+          "domain_explored": "https://ferrari.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:23:20.603332",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2795,
+      "total_output_tokens": 653,
+      "estimated_cost_usd": 0.01818
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "GT World Challenge Europe Sprint Cup may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:23:20.603679"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.375728",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:58:21.548069"
+}

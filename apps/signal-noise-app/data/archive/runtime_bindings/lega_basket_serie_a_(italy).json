@@ -1,0 +1,197 @@
+{
+  "entity_id": "lega_basket_serie_a_(italy)",
+  "entity_name": "Lega Basket Serie A (Italy)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "sportspro.com",
+    "vtb-league.com",
+    "sponsorship.sportbusiness.com",
+    "honeybadgers.ca",
+    "dclottery.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lega_basket_serie_a_(italy)",
+      "entity_name": "Lega Basket Serie A (Italy)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportspro.com",
+        "https://sponsorship.sportbusiness.com",
+        "https://dclottery.com",
+        "https://honeybadgers.ca",
+        "https://vtb-league.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lega Basket Serie A (Italy) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:56:13.044376",
+          "domain_explored": "https://sportspro.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AI-powered premium streaming",
+              "Shared reality (VR/AR)",
+              "Athlete data platforms",
+              "Biometric monitoring"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Industry trend analysis",
+            "Future-state technology forecasting",
+            "Media rights evolution"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 669,
+              "output_tokens": 222,
+              "elapsed_seconds": 6.824612855911255
+            }
+          ],
+          "reasoning": "The content is a generalized industry trend article from SportsPro discussing predictions for 2026 (AI, streaming, data platforms). While relevant to the sports sector, it contains no specific information regarding Lega Basket Serie A's current operations, decision-making, or immediate procurement needs. It is market intelligence, not entity-specific intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:56:20.476125",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsor visibility: 'WINLINE Basket Cup', '\u0411\u0415\u0422\u0421\u0418\u0422\u0418 \u041f\u0410\u0420\u041c\u0410' (Betsiti Parma)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Navigation Structure Analysis",
+            "Sponsorship Naming Rights"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 206,
+              "elapsed_seconds": 4.311409950256348
+            }
+          ],
+          "reasoning": "The scraped content is from the VTB League (vtb-league.com), a professional basketball league based in Russia. This is a distinct entity from Lega Basket Serie A (Italy). The content consists of navigation menus, team listings (e.g., CSKA Moscow, Zenit), and generic site structure. There are no procurement signals, job postings, or technology stacks relevant to the Italian league."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:56:27.847362",
+          "domain_explored": "https://sponsorship.sportbusiness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Sponsorship Trends",
+            "Jersey Patch Revenue Analysis",
+            "Automotive Sector Activation",
+            "Milan Cortina Sponsorship Context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 184,
+              "elapsed_seconds": 4.245883226394653
+            }
+          ],
+          "reasoning": "The content is a general industry news feed covering global sponsorship deals (F1, NBA, Cricket) and trends. While it mentions the Milan Cortina Olympics and general basketball revenue models, it contains no specific procurement signals, technology vendors, or organizational governance data specific to Lega Basket Serie A."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:56:30.804768",
+          "domain_explored": "https://honeybadgers.ca",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:56:36.827521",
+          "domain_explored": "https://dclottery.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity",
+            "Consumer-Facing Content",
+            "Gaming/Gambling Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1542,
+              "output_tokens": 174,
+              "elapsed_seconds": 2.805799961090088
+            }
+          ],
+          "reasoning": "The scraped content is from the DC Lottery (dclottery.com), a government-operated gaming entity. This is completely unrelated to Lega Basket Serie A (Italian Basketball). The content focuses on consumer gaming results (Keno, Powerball), jackpot alerts, and retail locators, offering no procurement signals relevant to professional sports league operations."
+        }
+      ],
+      "total_input_tokens": 5085,
+      "total_output_tokens": 786,
+      "estimated_cost_usd": 0.027045
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lega Basket Serie A (Italy) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:56:36.828186"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416041",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:44.454219"
+}

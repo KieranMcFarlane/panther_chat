@@ -1,0 +1,185 @@
+{
+  "entity_id": "f\u00e9d\u00e9ration_internationale_de_motocyclisme_(fim)",
+  "entity_name": "F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM)",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "fim-moto.com",
+    "fim-northamerica.com",
+    "fim-awards.com",
+    "fim-africa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "f\u00e9d\u00e9ration_internationale_de_motocyclisme_(fim)",
+      "entity_name": "F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://fim-awards.com",
+        "https://fim-moto.com",
+        "https://fim-africa.com",
+        "https://fim-northamerica.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:48:44.430608",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Document Management System (DMS)",
+              "Multi-language Publishing Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Publication of 2026 Regulations (Indicates active legal/compliance operations)",
+              "FIM Quality Product Program (Indicates vendor certification/procurement framework)",
+              "Sustainability & Mobility Commissions (Indicates potential future consulting/tech procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Management",
+            "Regulatory Publishing",
+            "Safety & Technology Commissions",
+            "Sustainability Initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1373,
+              "output_tokens": 323,
+              "elapsed_seconds": 20.27131485939026
+            }
+          ],
+          "reasoning": "The content is primarily informational and promotional, lacking explicit procurement signals like RFPs or job postings. However, the heavy emphasis on 'Latest documents', 'Codes and Regulations', and specific 'Commissions' (Safety, Sustainability, Mobility) indicates an operational need for Document Management Systems (DMS), Regulatory Technology (RegTech), and specialized consulting services for safety and sustainability standards."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:49:01.373537",
+          "domain_explored": "https://fim-northamerica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management Systems",
+              "Event Registration Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Insurance Program Management (Comprehensive coverage for paddock)",
+              "Event Organization Services (AMA Arenacross expansion)",
+              "Administrative Software (Secretary general operations)"
+            ]
+          },
+          "patterns_found": [
+            "Continental Union Governance",
+            "Insurance & Licensing Products",
+            "Event Expansion & Logistics",
+            "Federation Membership Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 355,
+              "elapsed_seconds": 9.992576122283936
+            }
+          ],
+          "reasoning": "The content describes FIM North America, a regional subsidiary (CONU) of the global FIM. While primarily informational, it reveals operational complexity that drives procurement needs: 1) The management of 'Continental Championship events' implies event management software, timing/scoring hardware, and logistics vendors. 2) The mention of a 'FIM Event License with comprehensive insurance coverage' indicates a reliance on insurance brokers and risk management solutions. 3) The coordination between three national federations (AMA, CMA, BMF) suggests a need for membership database systems or collaboration tools. These are indirect signals of capability that require vendor support."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:49:14.043046",
+          "domain_explored": "https://fim-awards.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Aggregation (Social Wall)",
+              "Content Management System (CMS) for multi-year archives",
+              "Multimedia Streaming/Hosting (implied by 'Experience every second')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Annual Event Planning Cycle (FIM Awards 2025, 2024, etc.)",
+              "Custom Manufacturing (Trophies for specific awards like 'Road Safety', 'Women in Motorcycling')",
+              "Venue Sourcing (Prestigious locations change annually or require booking)",
+              "Marketing & PR Services (Hashtag campaigns, social wall management)"
+            ]
+          },
+          "patterns_found": [
+            "Event Production & Logistics",
+            "Trophies & Merchandising Procurement",
+            "Digital Experience & Social Aggregation",
+            "Venue & Hospitality Sourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1474,
+              "output_tokens": 344,
+              "elapsed_seconds": 3.4663469791412354
+            }
+          ],
+          "reasoning": "The content confirms the 'FIM Awards' as a major annual operational event requiring significant supply chain management. While the site is informational, the existence of annual ceremonies in 'prestigious locations' and the management of physical assets (trophies) indicates recurring procurement cycles for event management, audiovisual production, and custom manufacturing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:49:22.444989",
+          "domain_explored": "https://fim-africa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4270,
+      "total_output_tokens": 1022,
+      "estimated_cost_usd": 0.02814
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:49:22.445524"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.459569",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:35:53.234043"
+}

@@ -1,0 +1,181 @@
+{
+  "entity_id": "antigua_and_barbuda_football_association",
+  "entity_name": "Antigua and Barbuda Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "inside.fifa.com",
+    "antiguanice.com",
+    "transfermarkt.co.in",
+    "wikidata.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "antigua_and_barbuda_football_association",
+      "entity_name": "Antigua and Barbuda Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://transfermarkt.co.in",
+        "https://inside.fifa.com",
+        "https://wikidata.org",
+        "https://antiguanice.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Antigua and Barbuda Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:01:14.903042",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Generic FIFA governance topics",
+            "Repetitive navigation elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 188,
+              "elapsed_seconds": 11.637071132659912
+            }
+          ],
+          "reasoning": "The content is a generic news feed from FIFA's global website (inside.fifa.com). It discusses high-level international events (FIFA Women\u2019s Champions Cup) and general FIFA programs (FIFA Forward). There is absolutely no mention of the Antigua and Barbuda Football Association (ABFA), no specific local procurement signals, and no technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:01:33.651400",
+          "domain_explored": "https://antiguanice.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism directory structure",
+            "Generic business listings (Real Estate, Auto, Marine)",
+            "Navigation menu repetition",
+            "Local service provider aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.8154070377349854
+            }
+          ],
+          "reasoning": "The scraped content is from 'antiguanice.com', a general tourism and business directory for the islands. While it lists categories like 'Technology Providers' and 'Marketing Services', these are generic directory headings for local businesses, not specific procurement signals or strategic initiatives from the Antigua and Barbuda Football Association (ABFA). There is no mention of the Football Association, tenders, or RFPs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:01:45.684903",
+          "domain_explored": "https://transfermarkt.co.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports data aggregation (Transfermarkt)",
+            "Indian Super League (ISL) focus",
+            "Player transfer rumors and contract extensions",
+            "Generic sports news feed structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.992840051651001
+            }
+          ],
+          "reasoning": "The scraped content is from Transfermarkt, a global football database and news site. While it mentions 'Indian Super League', it focuses on player transfers, market values, and league fixtures rather than the administrative or procurement activities of the Antigua and Barbuda Football Association (ABFA). There is no mention of ABFA, Caribbean football, or relevant procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:01:55.544098",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase",
+              "MediaWiki (implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic knowledge base structure",
+            "Open data repository (Wikimedia/Wikipedia)",
+            "Community event announcements (WikidataCon 2025)",
+            "Technical documentation (SPARQL, Wikibase)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.8640708923339844
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page of Wikidata, a general-purpose open knowledge base. While it mentions technologies like SPARQL and events like WikidataCon, there is no specific connection to the 'Antigua and Barbuda Football Association'. The content is purely structural and informational regarding the Wikidata platform itself, lacking any procurement signals, vendor solicitations, or specific organizational data relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5810,
+      "total_output_tokens": 864,
+      "estimated_cost_usd": 0.03039
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Antigua and Barbuda Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:01:55.545789"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.201195",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:40.007907"
+}

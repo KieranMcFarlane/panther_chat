@@ -1,0 +1,397 @@
+{
+  "entity_id": "ntt_indycar_series",
+  "entity_name": "NTT IndyCar Series",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "indycar.com",
+    "us.nttdata.com",
+    "indynxt.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/senior-software-engineer-at-indianapolis-motor-speedway-4363754999",
+      "https://www.linkedin.com/jobs/view/college-program-event-staff-2026-season-at-indianapolis-motor-speedway-4360728572",
+      "https://www.linkedin.com/jobs/view/transport-driver-at-chip-ganassi-racing-4360642175",
+      "https://www.linkedin.com/jobs/view/mechanic-at-indianapolis-motor-speedway-4364024993",
+      "https://www.linkedin.com/jobs/view/ticket-operations-coordinator-at-indianapolis-motor-speedway-4354683063",
+      "https://www.linkedin.com/jobs/view/vice-president-of-competition-race-engineering-at-indianapolis-motor-speedway-4312712870"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ntt_indycar_series",
+      "entity_name": "NTT IndyCar Series",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.16,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.02,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.16
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/senior-software-engineer-at-indianapolis-motor-speedway-4363754999",
+        "https://www.linkedin.com/jobs/view/transport-driver-at-chip-ganassi-racing-4360642175",
+        "https://indynxt.com",
+        "https://www.linkedin.com/jobs/view/ticket-operations-coordinator-at-indianapolis-motor-speedway-4354683063",
+        "https://us.nttdata.com",
+        "https://www.linkedin.com/jobs/view/mechanic-at-indianapolis-motor-speedway-4364024993",
+        "https://www.linkedin.com/jobs/view/college-program-event-staff-2026-season-at-indianapolis-motor-speedway-4360728572",
+        "https://indycar.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Custom Software Development (Full Stack)",
+        "High-Performance Data Analytics & Telemetry",
+        "Mission-Critical Race Operations Support",
+        "Internal Tooling for Timing & Scoring",
+        "Cross-Departmental Collaboration (Safety, Engineering, Marketing)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NTT IndyCar Series may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:25:32.394549",
+          "domain_explored": "https://indycar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "iRacing (Simulation Platform)",
+              "YouTube (Content Hosting)",
+              "Spotify (Audio/Podcast Hosting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active production of TV commercials (FOX Sports) requiring agency support",
+              "Management of $50,000 prize pool for iRacing series",
+              "Logistics for new major event in Washington, D.C. (National Mall)",
+              "Content distribution across digital platforms (YouTube, Spotify)"
+            ]
+          },
+          "patterns_found": [
+            "Media Production & Broadcasting",
+            "Digital Marketing & Content Strategy",
+            "Sim Racing & Esports Infrastructure",
+            "Event Operations & Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 362,
+              "elapsed_seconds": 8.722811937332153
+            }
+          ],
+          "reasoning": "While the homepage is primarily consumer-facing, it reveals significant operational investments that drive procurement. The heavy emphasis on 'Behind the Scenes' content for FOX Sports promos indicates active contracts for video production, creative agencies, and location logistics. The 'Thrustmaster iRacing Pro Series' highlights a reliance on simulation software and hardware vendors. The 'Freedom 250 Grand Prix of Washington D.C.' event suggests upcoming procurement for event management, security, and infrastructure vendors for a new high-profile venue."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:25:40.684079",
+          "domain_explored": "https://us.nttdata.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generative AI",
+              "SAP Cloud Migration",
+              "Low-Code Application Development",
+              "Cybersecurity & Resilience"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic Partnership Confirmation (NTT DATA as Title Sponsor)",
+              "Potential Upsell Services (AI, Data Optimization, Cloud Migration)"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Brand Site",
+            "Global IT Services Portfolio",
+            "Generic Marketing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.6661529541015625
+            }
+          ],
+          "reasoning": "The content analyzed is from the corporate homepage of NTT DATA (us.nttdata.com), the parent company and title sponsor of the series. While this establishes the overarching technology capabilities available to the IndyCar Series, the page itself is generic corporate marketing (Digital Transformation, AI, Cybersecurity) and contains no specific procurement signals, RFPs, or job postings related to IndyCar operations. It confirms the vendor relationship but does not provide new actionable procurement intelligence for the Series entity itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:25:48.189712",
+          "domain_explored": "https://indynxt.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting Platform (likely YouTube/Vimeo based on embeds)",
+              "Content Management System (CMS)",
+              "Live Timing/Scoring Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Media Rights Management",
+              "Web Operations & Maintenance",
+              "Broadcast Production Services"
+            ]
+          },
+          "patterns_found": [
+            "Digital Media Infrastructure",
+            "Content Management & Video Hosting",
+            "Series Operations & Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.4902427196502686
+            }
+          ],
+          "reasoning": "The site is the official digital property for the Indy NXT feeder series. While primarily consumer-facing (news, schedules, standings), the existence of a dedicated digital platform with video hosting, live timing, and media management indicates a need for web maintenance, content delivery networks (CDN), and digital media services. It confirms the operational scope of the IndyCar ecosystem but offers limited direct procurement intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:25:58.853001",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-software-engineer-at-indianapolis-motor-speedway-4363754999",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Full Stack Development Frameworks",
+              "Telemetry Processing Systems",
+              "Statistical Modeling Tools",
+              "Web Application Monitoring",
+              "Timing & Scoring Core Platforms"
+            ],
+            "job_postings": [
+              "Senior Full Stack Software Engineer - INDYCAR (Reports to Director, Software & Data Analytics)"
+            ],
+            "procurement_indicators": [
+              "Investment in scalable data solutions for teams and broadcast partners",
+              "Modernization of existing toolsets for Timing & Scoring",
+              "Development of predictive models for Safety and Engineering",
+              "Requirement for travel/on-site event support indicates hardware/software procurement needs for remote operations"
+            ]
+          },
+          "patterns_found": [
+            "Custom Software Development (Full Stack)",
+            "High-Performance Data Analytics & Telemetry",
+            "Mission-Critical Race Operations Support",
+            "Internal Tooling for Timing & Scoring",
+            "Cross-Departmental Collaboration (Safety, Engineering, Marketing)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 442,
+              "elapsed_seconds": 7.130844831466675
+            }
+          ],
+          "reasoning": "This is a direct procurement signal for human capital to build and maintain proprietary technology infrastructure. The job description explicitly outlines the development of 'mission-critical systems' for timing, telemetry, and data distribution. It confirms a strategy of internal development (insourcing) rather than solely relying on external vendors for core race technology. The requirement for onsite support at 50% of races indicates a significant operational investment in software reliability and event-based IT support."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:26:09.353803",
+          "domain_explored": "https://www.linkedin.com/jobs/view/college-program-event-staff-2026-season-at-indianapolis-motor-speedway-4360728572",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticket Scanning Systems",
+              "Credentialing Management Software"
+            ],
+            "job_postings": [
+              {
+                "title": "College Program Event Staff, 2026 Season",
+                "department": "Client Services / Guest Experience / Credentials",
+                "type": "Seasonal / Temporary",
+                "entity": "Indianapolis Motor Speedway (Penske Entertainment)"
+              }
+            ],
+            "procurement_indicators": [
+              "Seasonal Workforce Procurement",
+              "Hospitality & Premium Service Vendor Support",
+              "Event Security & Access Control Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations & Logistics Management",
+            "Guest Experience & Hospitality Services",
+            "Credentialing & Security Infrastructure",
+            "Seasonal Labor Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 342,
+              "elapsed_seconds": 7.02350378036499
+            }
+          ],
+          "reasoning": "While this is a job posting, it is for temporary, entry-level 'College Program' staff rather than strategic procurement or technical roles. However, it confirms the operational scale of Penske Entertainment/IMS and the need for significant seasonal labor procurement and guest services infrastructure to support the IndyCar Series and Indy 500 events."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:26:18.805020",
+          "domain_explored": "https://www.linkedin.com/jobs/view/transport-driver-at-chip-ganassi-racing-4360642175",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Transport Driver \u2013 Hospitality Operations (Chip Ganassi Racing)"
+            ],
+            "procurement_indicators": [
+              "Catering and F&B vendor coordination",
+              "Temporary staffing procurement",
+              "Hospitality asset acquisition and maintenance",
+              "Fleet logistics (Semi-truck & Trailer operations)"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics & Fleet Management",
+            "Hospitality Infrastructure & Operations",
+            "Vendor-Side Procurement (Catering & Temporary Staffing)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1688,
+              "output_tokens": 299,
+              "elapsed_seconds": 5.862607002258301
+            }
+          ],
+          "reasoning": "While this is a job posting for a team (Chip Ganassi Racing) rather than the series itself, it reveals significant procurement activities within the IndyCar ecosystem. The role explicitly mentions managing 'catering coordination' and 'temporary staff oversight,' which are key procurement signals for event services. It also highlights the requirement for transporting and maintaining 'hospitality assets,' indicating investment in physical infrastructure and logistics."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:26:28.169739",
+          "domain_explored": "https://www.linkedin.com/jobs/view/mechanic-at-indianapolis-motor-speedway-4364024993",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Internal Combustion Engine Diagnostics",
+              "Industrial Maintenance Tools",
+              "Fleet Management Systems"
+            ],
+            "job_postings": [
+              "Mechanic (Indianapolis Motor Speedway)"
+            ],
+            "procurement_indicators": [
+              "Ongoing procurement of industrial equipment parts and fluids (oils, fuels)",
+              "Investment in golf course and grounds maintenance infrastructure",
+              "Requirement for safety equipment and workshop organization tools"
+            ]
+          },
+          "patterns_found": [
+            "Facilities & Grounds Maintenance Operations",
+            "Heavy Equipment Fleet Management",
+            "Infrastructure Asset Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 356,
+              "elapsed_seconds": 5.826889991760254
+            }
+          ],
+          "reasoning": "While this is a job posting, it is for a traditional mechanic role focused on groundskeeping equipment rather than the high-tech race car engineering or software development seen in previous iterations. However, it confirms the operational scale of the Indianapolis Motor Speedway (a key entity within the Penske Entertainment/IndyCar ecosystem) and indicates ongoing procurement needs for industrial tools, spare parts, and fleet maintenance services. It supports the 'Operations & Logistics' capability but offers weaker specific procurement signals than technical roles."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:26:35.905420",
+          "domain_explored": "https://www.linkedin.com/jobs/view/ticket-operations-coordinator-at-indianapolis-motor-speedway-4354683063",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SCORE Ticketing System",
+              "Financial Reconciliation Software"
+            ],
+            "job_postings": [
+              "Ticket Operations Coordinator"
+            ],
+            "procurement_indicators": [
+              "Ticketing Software Licensing & Maintenance",
+              "Hardware Procurement (Ticketing/POS hardware)",
+              "Fulfillment & Logistics Partners (Mailing/Shipping)",
+              "Payment Processing Solutions"
+            ]
+          },
+          "patterns_found": [
+            "Enterprise Ticketing Systems (SCORE)",
+            "Customer Relationship Management (CRM) & Data Security",
+            "Financial Transaction Processing & Reconciliation",
+            "Event Fulfillment & Logistics Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1842,
+              "output_tokens": 329,
+              "elapsed_seconds": 4.245767831802368
+            }
+          ],
+          "reasoning": "While this is an operational role rather than a procurement role, it reveals the specific technology stack (SCORE ticketing system) used for revenue generation and customer management. It highlights the need for software that handles high-volume transactions, data security (confidential customer data), and physical fulfillment logistics, indicating potential procurement needs for software licensing, hardware (printers/scanners), and shipping partners."
+        }
+      ],
+      "total_input_tokens": 12669,
+      "total_output_tokens": 2720,
+      "estimated_cost_usd": 0.078807
+    },
+    "procurement_signals": [
+      "Custom Software Development (Full Stack)",
+      "High-Performance Data Analytics & Telemetry",
+      "Mission-Critical Race Operations Support",
+      "Internal Tooling for Timing & Scoring",
+      "Cross-Departmental Collaboration (Safety, Engineering, Marketing)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NTT IndyCar Series may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:26:35.905983"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373180",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:59:05.671520"
+}

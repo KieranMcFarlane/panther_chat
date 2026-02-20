@@ -1,0 +1,434 @@
+{
+  "entity_id": "ofc",
+  "entity_name": "OFC",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "continental_confederations",
+  "discovered_domains": [
+    "oceaniafootball.com",
+    "ofcproleague.com",
+    "ofcconference.org",
+    "ofclearn.com",
+    "plus.fifa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://in.linkedin.com/jobs/ofc-jobs",
+      "https://in.linkedin.com/jobs/ofc-jobs-india?locationId=in:0&keywords=Ofc&orig=FCTD&trk=jobs_jserp_pagination_1&applyLogin=false&start=0&count=25",
+      "https://in.linkedin.com/jobs/ofc-jobs-india?start=50&count=25&trk=jobs_jserp_pagination_3",
+      "https://be.linkedin.com/jobs/view/nato-internship-office-of-financial-control-ofc-at-nato-4228309554",
+      "https://in.linkedin.com/jobs/ofc-manager-jobs-new-delhi-dl?trk=guest_job_details_jd_jserp_more_jobs_link",
+      "https://www.linkedin.com/company/copeland/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ofc",
+      "entity_name": "OFC",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.08,
+        0.08,
+        0.06,
+        0.039999999999999994,
+        0.019999999999999993,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://in.linkedin.com/jobs/ofc-jobs-india?start=50&count=25&trk=jobs_jserp_pagination_3",
+        "https://ofclearn.com",
+        "https://ofcproleague.com",
+        "https://in.linkedin.com/jobs/ofc-jobs",
+        "https://ofcconference.org",
+        "https://oceaniafootball.com",
+        "https://plus.fifa.com",
+        "https://be.linkedin.com/jobs/view/nato-internship-office-of-financial-control-ofc-at-nato-4228309554",
+        "https://in.linkedin.com/jobs/ofc-manager-jobs-new-delhi-dl?trk=guest_job_details_jd_jserp_more_jobs_link",
+        "https://in.linkedin.com/jobs/ofc-jobs-india?locationId=in:0&keywords=Ofc&orig=FCTD&trk=jobs_jserp_pagination_1&applyLogin=false&start=0&count=25"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Learning Management System (LMS) Operations",
+        "Digital Content Creation & Hosting",
+        "Educational Technology Infrastructure",
+        "Strategic Capacity Building"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "OFC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:16:52.313234",
+          "domain_explored": "https://oceaniafootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google Maps (Integration for event locations)",
+              "OFC TV (Proprietary streaming/broadcast platform)",
+              "Booking/Reservation Systems (Implied by Accommodation/Field booking links)",
+              "Content Management System (CMS) for news/features"
+            ],
+            "job_postings": [
+              "Career Opportunities (Link present, specific roles not scraped)"
+            ],
+            "procurement_indicators": [
+              "OFC Professional League (Vendor needs: logistics, equipment, marketing)",
+              "OFC TV (Vendor needs: streaming tech, production, CDN)",
+              "OFC Academy & Ngahue Reserve (Vendor needs: facility management software, maintenance)",
+              "International Qualifiers (Vendor needs: travel agencies, accommodation, security)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Logistics & Travel",
+            "Digital Broadcasting & Streaming",
+            "Event Management Infrastructure",
+            "Accommodation & Facility Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 465,
+              "elapsed_seconds": 7.642390012741089
+            }
+          ],
+          "reasoning": "The content reveals a highly active organization with significant operational complexity. The 'OFC Professional League', 'OFC Men\u2019s Champions League', and 'FIFA World Cup Qualifiers' indicate substantial procurement needs for logistics, travel, and event management. The presence of 'OFC TV' and 'How to Watch' guides suggests investment in digital broadcasting infrastructure and streaming platforms. Additionally, specific links for 'OFC Academy Accommodation Booking' and 'Ngahue Reserve Field Booking' reveal a reliance on facility management systems. While no specific RFP is listed, the scale of operations (2026 tournaments, Pro League) strongly implies ongoing vendor procurement for services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:17:03.359493",
+          "domain_explored": "https://ofcproleague.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (implied by 'tickets on sale')",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active ticket sales operations",
+              "Multi-territorial event coordination (New Zealand, Fiji, Vanuatu, Tahiti)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing & Event Management",
+            "Digital Content Management",
+            "League Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.604442834854126
+            }
+          ],
+          "reasoning": "The content confirms the operational status of the OFC Pro League, specifically highlighting ticket sales ('Round 2 tickets on sale now') and active match reporting. While no direct RFPs are visible, the active management of a professional league implies ongoing procurement needs for ticketing platforms, digital content services, and event logistics."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:17:16.577180",
+          "domain_explored": "https://ofcconference.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Registration Platforms",
+              "Digital Marketing/Sponsorship Portals"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement ('Why Sponsor?')",
+              "Venue/Hotel block procurement",
+              "Registration management services"
+            ]
+          },
+          "patterns_found": [
+            "Event Registration Management",
+            "Travel & Accommodation Logistics",
+            "Conference Sponsorship Sales"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 258,
+              "elapsed_seconds": 7.408836841583252
+            }
+          ],
+          "reasoning": "The content from 'ofcconference.org' identifies the entity as the 'Optical Fiber Communication Conference and Exhibition' (a telecom/tech trade show), not 'Oceania Football Confederation'. While this domain contains procurement signals (registration systems, venue booking, sponsorship), it is irrelevant to the target entity defined in the context. This indicates a false positive in the discovery phase."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:17:33.067794",
+          "domain_explored": "https://ofclearn.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Learning Management System (LMS)",
+              "Webinar Hosting Platforms",
+              "Digital Library / Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic expansion into corporate/admin training modules",
+              "Requirement for ongoing digital course production (Video/Interactive)",
+              "Need for scalable hosting solutions for a global audience",
+              "Partnership with FIFA Consultants indicating project-based vendor relationships"
+            ]
+          },
+          "patterns_found": [
+            "Learning Management System (LMS) Operations",
+            "Digital Content Creation & Hosting",
+            "Educational Technology Infrastructure",
+            "Strategic Capacity Building"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 347,
+              "elapsed_seconds": 10.929089069366455
+            }
+          ],
+          "reasoning": "The content reveals a fully operational, strategic digital platform ('OFC Learn') dedicated to education and capacity building. The explicit mention of expanding educational components into 'corporate and administration resources' and the goal to reach learning communities globally indicates a mature digital infrastructure that requires ongoing content development, platform maintenance, and potentially specialized vendor support for course creation and hosting."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:17:36.098739",
+          "domain_explored": "https://plus.fifa.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:17:49.891962",
+          "domain_explored": "https://in.linkedin.com/jobs/ofc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Optical Fiber Cable (OFC) Infrastructure",
+              "ELV (Extra Low Voltage) Systems",
+              "Telecom Networks"
+            ],
+            "job_postings": [
+              "Incharge - Information Technology (Adani Ports)",
+              "Telecom Engineer (WSP)",
+              "Design Manager-Metro (HFCL)",
+              "ELV Technician (Micron)"
+            ],
+            "procurement_indicators": [
+              "Infrastructure development procurement (Telecom/Ports)",
+              "Industrial technology hiring"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Telecommunications & Infrastructure (Adani, WSP, HFCL)",
+            "Semiconductor Manufacturing (Micron)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 305,
+              "elapsed_seconds": 10.479964971542358
+            }
+          ],
+          "reasoning": "The search results for 'OFC' on LinkedIn India refer to 'Optical Fiber Cable' and 'Operations Finance Center' roles within large Indian conglomerates (Adani, HFCL, Micron, WSP). There is no content related to the Oceania Football Confederation (the target entity). This indicates a keyword collision where the acronym 'OFC' maps to a different industry sector entirely."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:17:57.427387",
+          "domain_explored": "https://in.linkedin.com/jobs/ofc-jobs-india?locationId=in:0&keywords=Ofc&orig=FCTD&trk=jobs_jserp_pagination_1&applyLogin=false&start=0&count=25",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Incharge - Information Technology (Adani Ports and SEZ)",
+              "Telecom Engineer (WSP in India)"
+            ],
+            "procurement_indicators": [
+              "No relevant procurement signals found for OFC (Oceania Football Confederation)."
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Infrastructure & Telecommunications (Adani, WSP)",
+            "Generic 'Office' Keyword Ambiguity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1681,
+              "output_tokens": 269,
+              "elapsed_seconds": 3.723456859588623
+            }
+          ],
+          "reasoning": "The search results for 'Ofc' in India are dominated by major infrastructure conglomerates (Adani Ports, WSP) and generic office roles, completely unrelated to the Oceania Football Confederation. The keyword 'Ofc' is being interpreted as an abbreviation for 'Office' or matched against unrelated entity names. This indicates that the entity does not have a significant hiring or operational footprint in India that is discoverable via this generic keyword search."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:18:06.613545",
+          "domain_explored": "https://in.linkedin.com/jobs/ofc-jobs-india?start=50&count=25&trk=jobs_jserp_pagination_3",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ELV (Extra Low Voltage) Systems",
+              "Telecom Infrastructure",
+              "Metro Rail Systems"
+            ],
+            "job_postings": [
+              "Incharge - Information Technology (Adani Ports)",
+              "Telecom Engineer (WSP)",
+              "Design Manager-Metro (HFCL)",
+              "ELV Technician (Micron)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Infrastructure & Telecommunications (Adani, WSP, HFCL)",
+            "Semiconductor Manufacturing (Micron)",
+            "Generic 'Office' Keyword Ambiguity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 294,
+              "elapsed_seconds": 5.668974876403809
+            }
+          ],
+          "reasoning": "The search results for 'Ofc' continue to return irrelevant job postings from major Indian infrastructure and technology corporations (Adani, WSP, HFCL, Micron). The acronym 'OFC' here refers to 'Optical Fiber Cable' or generic 'Office' roles, not the Oceania Football Confederation. This iteration confirms that this specific search query path is a dead end for gathering procurement intelligence on the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T19:18:17.479756",
+          "domain_explored": "https://be.linkedin.com/jobs/view/nato-internship-office-of-financial-control-ofc-at-nato-4228309554",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP Systems",
+              "Zoom (Webinar)"
+            ],
+            "job_postings": [
+              "NATO Internship - Office of Financial Control (OFC)"
+            ],
+            "procurement_indicators": [
+              "Budget, Planning and Analysis and Procurement",
+              "International Public Sector Accounting Standards (IPSAS) compliance"
+            ]
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "International Public Sector Accounting Standards (IPSAS)",
+            "ERP Competency Centre Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1832,
+              "output_tokens": 244,
+              "elapsed_seconds": 3.9104788303375244
+            }
+          ],
+          "reasoning": "The scraped content refers to the 'Office of Financial Control (OFC)' within NATO (North Atlantic Treaty Organization), not the Oceania Football Confederation. Although the content discusses procurement and ERP systems, the entity is unrelated to the target OFC, constituting a false positive."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T19:18:28.390149",
+          "domain_explored": "https://in.linkedin.com/jobs/ofc-manager-jobs-new-delhi-dl?trk=guest_job_details_jd_jserp_more_jobs_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Office Manager \u2013 SCG India",
+              "Customer Service Specialist \u2013 SCG India",
+              "Executive Assistant \u2013 Aakash Hospital",
+              "Executive Assistant to Founder \u2013 India Next Capital",
+              "Executive Assistant, Virtual Assistant Services \u2013 Kroll"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Matching",
+            "Generic 'Office' Keyword Ambiguity",
+            "Administrative & Support Roles (SCG, Aakash Hospital, Kroll)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1910,
+              "output_tokens": 259,
+              "elapsed_seconds": 5.836266994476318
+            }
+          ],
+          "reasoning": "The search query 'Ofc Manager' is interpreted by LinkedIn as an abbreviation for 'Office Manager'. The results list administrative roles for unrelated entities such as SCG (Cement/Construction), Aakash Hospital (Healthcare), and Kroll (Risk Consulting). There is no connection to the Oceania Football Confederation (OFC) or sports governance."
+        }
+      ],
+      "total_input_tokens": 14485,
+      "total_output_tokens": 2682,
+      "estimated_cost_usd": 0.08368500000000001
+    },
+    "procurement_signals": [
+      "Learning Management System (LMS) Operations",
+      "Digital Content Creation & Hosting",
+      "Educational Technology Infrastructure",
+      "Strategic Capacity Building"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "OFC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:18:28.391223"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458359",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:27.809783"
+}

@@ -1,0 +1,167 @@
+{
+  "entity_id": "angolan_volleyball_federation",
+  "entity_name": "Angolan Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "africa-press.net",
+    "triptap.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/athletic-recruiting-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "angolan_volleyball_federation",
+      "entity_name": "Angolan Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://africa-press.net",
+        "https://www.linkedin.com/jobs/athletic-recruiting-jobs",
+        "https://triptap.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Angolan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:16:49.747057",
+          "domain_explored": "https://africa-press.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Geographic categorization (Angola listed as a region)",
+            "Sports news coverage (Handball, Football, CAF)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 211,
+              "elapsed_seconds": 4.140465021133423
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage navigation and general news feed of 'Africa Press'. While 'Angola' is listed as a geographic category and there is a 'SPORTS' section, the content provided is a high-level site map and does not contain specific articles, tenders, or organizational details regarding the 'Angolan Volleyball Federation'. There is no mention of volleyball, federation governance, or procurement signals in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:16:55.538543",
+          "domain_explored": "https://triptap.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video embedding (Play Video)",
+              "Search/Filter UI Components"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Travel Aggregation",
+            "Generic Destination Marketing",
+            "User Interface Elements (Search Forms)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.82790207862854
+            }
+          ],
+          "reasoning": "The scraped content from triptap.com is exclusively focused on consumer travel services (flights, hotels, vacations) and destination marketing for global cities (Los Angeles, New York, etc.). There is absolutely no content related to the Angolan Volleyball Federation, sports governance, or B2B procurement activities. The entity is irrelevant to the target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:16:58.350935",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:17:04.783803",
+          "domain_explored": "https://www.linkedin.com/jobs/athletic-recruiting-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sr. Business Development Manager, Athletic and Lifestyle Brands (Amazon)",
+              "Athletic Director/ Head Football Coach"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Mismatch (United States vs Angola)",
+            "Corporate Sector Focus (Amazon, etc.)",
+            "Authentication Gate (Sign-in wall)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 245,
+              "elapsed_seconds": 2.6113548278808594
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for 'Athletic Recruiting' roles within the United States, dominated by corporate entities like Amazon. There is no specific mention of the Angolan Volleyball Federation, no relevant local procurement signals, and the content is hidden behind an authentication wall, making it inaccessible for further specific analysis without credentials."
+        }
+      ],
+      "total_input_tokens": 4300,
+      "total_output_tokens": 660,
+      "estimated_cost_usd": 0.0228
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Angolan Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:17:04.793867"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.331623",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:10.409859"
+}

@@ -1,0 +1,206 @@
+{
+  "entity_id": "cricket_canada",
+  "entity_name": "Cricket Canada",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "cricketcanada.org",
+    "icc-cricket.com",
+    "super60.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cricket_canada",
+      "entity_name": "Cricket Canada",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.09999999999999999,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.039999999999999994,
+        0.09999999999999999,
+        0.09999999999999999
+      ],
+      "explored_domains": [
+        "https://icc-cricket.com",
+        "https://apps.apple.com",
+        "https://super60.com",
+        "https://cricketcanada.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Executive Leadership Vacancy (CEO Termination)",
+        "Governance & Compliance Review",
+        "Major Event Hosting (U19 Girls' Americas World Cup Qualifiers)",
+        "New Strategic Partnership (Mina / Maple Leaf Foods)",
+        "Digital Asset Promotion (Official Mobile App)",
+        "Major Event Infrastructure (BC Place Stadium)",
+        "Ticketing Platform Integration (Ticketmaster)",
+        "Global Media Rights Distribution (Star Sports, Willow TV, Fox Sports)",
+        "Merchandising & E-commerce Operations",
+        "High-Profile Brand Ambassadorship (Yuvraj Singh)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cricket Canada may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:41:50.700874",
+          "domain_explored": "https://cricketcanada.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Official Cricket Canada App)",
+              "Social Media Integration (Facebook, Twitter, Instagram)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [
+              "Chief Executive Officer (CEO) - Immediate vacancy due to termination"
+            ],
+            "procurement_indicators": [
+              "Executive Search / Leadership Recruitment",
+              "Legal & Governance Consulting (Internal investigation support)",
+              "Event Management Services (U19 Girls\u2019 Americas World Cup Qualifiers 2026)",
+              "Partnership Management Platforms (New Mina\u00ae partnership activation)",
+              "Marketing & Community Engagement Tools"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Vacancy (CEO Termination)",
+            "Governance & Compliance Review",
+            "Major Event Hosting (U19 Girls' Americas World Cup Qualifiers)",
+            "New Strategic Partnership (Mina / Maple Leaf Foods)",
+            "Digital Asset Promotion (Official Mobile App)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 401,
+              "elapsed_seconds": 4.036535978317261
+            }
+          ],
+          "reasoning": "The content reveals a significant governance crisis with the immediate termination of the CEO, creating a high-probability procurement signal for executive search and interim management services. Additionally, the hosting of a major qualifying event and the launch of a new strategic partnership indicate active operational requirements for event management software, marketing platforms, and partnership management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:42:03.013695",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "Major Event Coverage (ICC Men's T20 World Cup 2026)",
+            "Content Syndication"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.433866024017334
+            }
+          ],
+          "reasoning": "The scraped content is from the global governing body (ICC) and focuses exclusively on international match coverage, team analysis, and broadcast schedules for the 2026 T20 World Cup. There is no mention of Cricket Canada's organizational operations, vendor needs, or domestic procurement activities. This represents a scope drift from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:42:12.480006",
+          "domain_explored": "https://super60.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (Ticketing)",
+              "YouTube (Video Streaming)",
+              "Star Sports / Willow TV / Fox Sports (Broadcasting Infrastructure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Rental & Operations (BC Place Stadium)",
+              "Ticketing Services Contract",
+              "Official Broadcaster Partnerships",
+              "Official Team Merchandising Supplier",
+              "Event Management & Logistics (Oct 8-13, 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Infrastructure (BC Place Stadium)",
+            "Ticketing Platform Integration (Ticketmaster)",
+            "Global Media Rights Distribution (Star Sports, Willow TV, Fox Sports)",
+            "Merchandising & E-commerce Operations",
+            "High-Profile Brand Ambassadorship (Yuvraj Singh)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 354,
+              "elapsed_seconds": 3.5864338874816895
+            }
+          ],
+          "reasoning": "The content reveals 'Super60' as a commercial franchise league explicitly branded as 'Cricket Canada\u2019s premier extravaganza'. This indicates a shift from amateur governance to commercial sports management. The use of major venues (BC Place), established ticketing vendors (Ticketmaster), and international broadcasters confirms significant procurement activity for event services, technology infrastructure, and media production."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:42:15.835206",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4250,
+      "total_output_tokens": 937,
+      "estimated_cost_usd": 0.026805
+    },
+    "procurement_signals": [
+      "Executive Leadership Vacancy (CEO Termination)",
+      "Governance & Compliance Review",
+      "Major Event Hosting (U19 Girls' Americas World Cup Qualifiers)",
+      "New Strategic Partnership (Mina / Maple Leaf Foods)",
+      "Digital Asset Promotion (Official Mobile App)",
+      "Major Event Infrastructure (BC Place Stadium)",
+      "Ticketing Platform Integration (Ticketmaster)",
+      "Global Media Rights Distribution (Star Sports, Willow TV, Fox Sports)",
+      "Merchandising & E-commerce Operations",
+      "High-Profile Brand Ambassadorship (Yuvraj Singh)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cricket Canada may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:42:15.835981"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.300475",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:06.561248"
+}

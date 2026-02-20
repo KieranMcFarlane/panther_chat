@@ -1,0 +1,22 @@
+{
+  "total_entities": 2921,
+  "processed_entities": 0,
+  "successful_bindings": 0,
+  "failed_entities": [
+    {
+      "entity_id": "arsenal",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "chelsea",
+      "reason": "No template match"
+    },
+    {
+      "entity_id": "liverpool",
+      "reason": "No template match"
+    }
+  ],
+  "start_time": "2026-01-30T14:54:33.794571",
+  "last_checkpoint_time": null,
+  "end_time": "2026-01-30T14:54:33.795152"
+}

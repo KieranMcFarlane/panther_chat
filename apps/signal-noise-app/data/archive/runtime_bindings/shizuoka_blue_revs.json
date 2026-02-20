@@ -1,0 +1,199 @@
+{
+  "entity_id": "shizuoka_blue_revs",
+  "entity_name": "Shizuoka Blue Revs",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "shizuoka-bluerevs.com",
+    "boprugby.co.nz",
+    "rolanddg.com",
+    "grokipedia.com",
+    "ultimaterugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "shizuoka_blue_revs",
+      "entity_name": "Shizuoka Blue Revs",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://boprugby.co.nz",
+        "https://rolanddg.com",
+        "https://ultimaterugby.com",
+        "https://grokipedia.com",
+        "https://shizuoka-bluerevs.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Shizuoka Blue Revs may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:16:05.284157",
+          "domain_explored": "https://shizuoka-bluerevs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing System (ticketrugby.jp)",
+              "Fan Portal / CRM (service.shizuoka-bluerevs.com)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Platform Partnership (ticketrugby.jp)",
+              "Merchandising Campaign (Blue Support Message Towel)",
+              "Sponsorship Procurement (Yakult, DAZN, Kubota)"
+            ]
+          },
+          "patterns_found": [
+            "External Ticketing Platform Usage (ticketrugby.jp)",
+            "Digital Fan Engagement (Message Towel Campaign)",
+            "Sponsorship Integration (Yakult, DAZN)",
+            "Subdomain Service Usage (service.shizuoka-bluerevs.com)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 292,
+              "elapsed_seconds": 5.561938047409058
+            }
+          ],
+          "reasoning": "The content reveals specific vendor partnerships and technology usage. The presence of 'ticketrugby.jp' indicates procurement of ticketing services. The 'service' subdomain suggests a CRM or fan platform (likely Salesforce or similar community cloud). The 'Blue Support Message Towel' campaign indicates investment in fan engagement merchandise and logistics."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:16:17.756047",
+          "domain_explored": "https://boprugby.co.nz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Target is Shizuoka Blue Revs (Japan), Source is Bay of Plenty Rugby (NZ)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Bay of Plenty Rugby Union)",
+            "High Performance Centre Operations",
+            "Community/Provincial News Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1424,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.0524420738220215
+            }
+          ],
+          "reasoning": "The scraped content is from the Bay of Plenty Rugby Union (boprugby.co.nz), a New Zealand-based organization, not Shizuoka Blue Revs. While it provides context on rugby union operations (High Performance Centres, community news), it offers zero procurement intelligence for the target entity (Shizuoka Blue Revs). The content is irrelevant to the specific objective."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:16:29.492951",
+          "domain_explored": "https://rolanddg.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Roland DG Corporation)",
+            "Hardware Manufacturing Focus (Printers/Milling Machines)",
+            "Geographic Mismatch (Hamamatsu-based, not Shizuoka Blue Revs)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.684893846511841
+            }
+          ],
+          "reasoning": "The content analyzed belongs to Roland DG Corporation (rolanddg.com), a manufacturer of wide-format printers and milling machines based in Hamamatsu. This entity is entirely unrelated to Shizuoka Blue Revs (a rugby union team). There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:16:35.340467",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:16:45.775001",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "International Rugby Results (HSBC SVNS)",
+            "Irrelevant Geographic Scope (Singapore/Fiji/NZ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 708,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.3405020236968994
+            }
+          ],
+          "reasoning": "The content is a global rugby news feed reporting on the HSBC SVNS (Singapore Sevens) involving international teams (Fiji, New Zealand, France). It contains no information regarding the Shizuoka Blue Revs, their operations, vendors, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 4972,
+      "total_output_tokens": 862,
+      "estimated_cost_usd": 0.027846000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Shizuoka Blue Revs may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:16:45.776836"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.274674",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:43:11.145217"
+}

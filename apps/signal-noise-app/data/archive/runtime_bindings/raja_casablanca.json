@@ -1,0 +1,228 @@
+{
+  "entity_id": "raja_casablanca",
+  "entity_name": "Raja Casablanca",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "raja-casablanca.footeo.com",
+    "soccerassociation.com",
+    "rajaclubathletic.creator-spring.com",
+    "beachsoccer.com",
+    "viperssc.co.ug"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "raja_casablanca",
+      "entity_name": "Raja Casablanca",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://raja-casablanca.footeo.com",
+        "https://viperssc.co.ug",
+        "https://soccerassociation.com",
+        "https://rajaclubathletic.creator-spring.com",
+        "https://beachsoccer.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Raja Casablanca may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:21:15.025105",
+          "domain_explored": "https://raja-casablanca.footeo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Footeo (Website CMS/Club Management Platform)",
+              "Facebook (Integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Subscription to Footeo SaaS platform",
+              "Usage of third-party templated web solution",
+              "Partners/Sponsors section infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Digital Presence Maturity",
+            "Vendor Lock-in (SaaS)",
+            "Fan Engagement Tools"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.977518081665039
+            }
+          ],
+          "reasoning": "The content reveals the club is utilizing the 'Footeo' platform (a SaaS solution for sports clubs) for its web presence and communication. While this indicates a procurement activity (subscribing to a third-party service), the platform is a low-cost, templated solution typically used for basic management rather than enterprise-grade digital transformation. The presence of a 'Partners/Sponsors' section indicates a commercial structure, but the site itself is a basic implementation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:21:24.284755",
+          "domain_explored": "https://soccerassociation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Directory Structure",
+            "Irrelevant Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1262,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.3900821208953857
+            }
+          ],
+          "reasoning": "The scraped content is a generic navigation sitemap for SoccerAssociation.com, a global football directory. It contains links to various countries (including Morocco) and competitions but offers no specific data, procurement signals, or technology stack details regarding Raja Casablanca. It is a structural page with zero actionable intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:21:34.683136",
+          "domain_explored": "https://rajaclubathletic.creator-spring.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Spring (Creator-Spring) Platform",
+              "Print-on-Demand Fulfillment Engine",
+              "Global Payment Processing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Merchandise Strategy",
+              "Vendor Partnership for Global Logistics",
+              "Zero-Inventory Cost Management"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party E-commerce Platform (Spring/Creator-Spring)",
+            "Print-on-Demand (POD) Business Model",
+            "Global Merchandise Fulfillment",
+            "Brand Licensing / IP Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1453,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.463553190231323
+            }
+          ],
+          "reasoning": "The content confirms Raja Casablanca utilizes a third-party 'Print-on-Demand' platform (Spring, formerly Teespring) for merchandise sales. This indicates a procurement strategy focused on outsourcing inventory risk and fulfillment logistics rather than building in-house e-commerce infrastructure. It signals a reliance on SaaS partners for revenue generation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:21:47.894856",
+          "domain_explored": "https://beachsoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (implied by structure /news)",
+              "Video Platform (Beach Soccer TV)",
+              "E-commerce Platform (BSWW Store)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership News (Generic)",
+              "Event Organization (El Salvador)"
+            ]
+          },
+          "patterns_found": [
+            "Governing Body Content",
+            "Global Competition Calendar",
+            "Irrelevant Rankings",
+            "No Entity Specificity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.8344902992248535
+            }
+          ],
+          "reasoning": "The scraped content belongs to Beach Soccer Worldwide (BSWW), the global governing body for the sport. While it mentions 'African Beach Soccer' and 'ABSU' (African Beach Soccer Union), it focuses on international competitions, global rankings, and general news. There is no mention of Raja Casablanca, nor are there specific procurement signals (RFPs, vendor needs) relevant to the specific club entity. This is a governing body site, not a club procurement portal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:22:22.329386",
+          "domain_explored": "https://viperssc.co.ug",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Vipers SC vs. Raja Casablanca)",
+            "Sports News Aggregation",
+            "Generic League Table Display"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 171,
+              "elapsed_seconds": 24.652066946029663
+            }
+          ],
+          "reasoning": "The analyzed content belongs to Vipers SC (Uganda), not Raja Casablanca (Morocco). The page consists of sports news updates, match results, and league standings. There is no content related to Raja Casablanca's operations, procurement, or technology stack. This is a false positive in the search/discovery phase."
+        }
+      ],
+      "total_input_tokens": 7147,
+      "total_output_tokens": 1164,
+      "estimated_cost_usd": 0.038901000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Raja Casablanca may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:22:22.330055"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.183229",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:56:19.177727"
+}

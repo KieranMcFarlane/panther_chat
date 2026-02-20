@@ -1,0 +1,132 @@
+{
+  "entity_id": "orlando_pirates_basketball",
+  "entity_name": "Orlando Pirates Basketball",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+      "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "orlando_pirates_basketball",
+      "entity_name": "Orlando Pirates Basketball",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+        "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialist Role Creation",
+        "Data-Driven Tactical Investment",
+        "Performance Analysis Integration"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Orlando Pirates Basketball may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:48:28.014679",
+          "domain_explored": "https://www.linkedin.com/posts/jobs-in-football_set-piece-coach-first-team-johannesburg-activity-7391398828425371648-h36S",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software",
+              "Statistical Analysis Tools",
+              "Performance Tracking Platforms"
+            ],
+            "job_postings": [
+              "Set Piece Coach - First Team (Johannesburg)"
+            ],
+            "procurement_indicators": [
+              "Investment in specialist coaching roles to enhance performance through data",
+              "Requirement for tactical analysis capabilities",
+              "Adoption of modern football data methodologies"
+            ]
+          },
+          "patterns_found": [
+            "Specialist Role Creation",
+            "Data-Driven Tactical Investment",
+            "Performance Analysis Integration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1387,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.154304027557373
+            }
+          ],
+          "reasoning": "The job posting for a 'Set Piece Coach' explicitly requires 'data-driven tactical innovation' and analysis. This confirms Orlando Pirates is investing in human capital to leverage sports data and analytics for competitive advantage, indicating a procurement need for supporting analysis software and video tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:48:34.143137",
+          "domain_explored": "https://uk.linkedin.com/company/jobs-in-football?trk=ppro_cprof",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Academy Senior Scout - Blackburn Rovers FC (Irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Industry Recruitment",
+            "Historical Marketing Case Studies",
+            "Media Career Pathways"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.6059579849243164
+            }
+          ],
+          "reasoning": "The content provided is the generic LinkedIn company overview and feed for 'Jobs In Football', a third-party recruitment aggregator. While it contains a job posting for Blackburn Rovers and general industry news, there is absolutely no mention, direct link, or relevance to 'Orlando Pirates Basketball'. The entity being monitored is not present in the text."
+        }
+      ],
+      "total_input_tokens": 2835,
+      "total_output_tokens": 473,
+      "estimated_cost_usd": 0.0156
+    },
+    "procurement_signals": [
+      "Specialist Role Creation",
+      "Data-Driven Tactical Investment",
+      "Performance Analysis Integration"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Orlando Pirates Basketball may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:48:34.144332"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.229495",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:27:10.794968"
+}

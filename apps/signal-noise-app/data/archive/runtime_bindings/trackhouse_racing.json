@@ -1,0 +1,149 @@
+{
+  "entity_id": "trackhouse_racing",
+  "entity_name": "Trackhouse Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "trackhouse.com",
+    "latino.nascar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/athletic-trainer-college-pro-at-novant-health-4293639501"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "trackhouse_racing",
+      "entity_name": "Trackhouse Racing",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://latino.nascar.com",
+        "https://www.linkedin.com/jobs/view/athletic-trainer-college-pro-at-novant-health-4293639501",
+        "https://trackhouse.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Trackhouse Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:00:12.884441",
+          "domain_explored": "https://trackhouse.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Expansion of NASCAR operations (New #88 team)",
+              "International operations expansion (MotoGP division)",
+              "Corporate rebranding to Trackhouse Entertainment Group (TEG)"
+            ]
+          },
+          "patterns_found": [
+            "Diversification into MotoGP (Project91 expansion)",
+            "Roster expansion (Connor Zilisch #88)",
+            "Parent Entity: Trackhouse Entertainment Group (TEG)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 774,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.35128116607666
+            }
+          ],
+          "reasoning": "The content confirms Trackhouse is operating as 'Trackhouse Entertainment Group' (TEG), indicating a corporate structure capable of diverse investments. The addition of Connor Zilisch (#88) and the explicit MotoGP section (Raul Fernandez, Ai Ogura) signal operational expansion. While no direct RFPs are visible, expansion into new series (MotoGP) and new teams necessitates procurement of specialized logistics, travel, and engineering equipment."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:00:27.167801",
+          "domain_explored": "https://latino.nascar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General NASCAR news content",
+            "Race schedules and media listings",
+            "Broadcaster distribution (FOX, HBO Max)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.687863826751709
+            }
+          ],
+          "reasoning": "The provided content is a general news feed for NASCAR Latino, featuring race previews, Hall of Fame announcements, and schedules for the 2026 season. There is no mention of Trackhouse Racing, its parent entity (Trackhouse Entertainment Group), or specific procurement activities (job postings, RFPs, vendor tech stacks) related to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:00:32.647390",
+          "domain_explored": "https://www.linkedin.com/jobs/view/athletic-trainer-college-pro-at-novant-health-4293639501",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate limiting error message",
+            "Scraping failure",
+            "Irrelevant target domain (Novant Health vs Trackhouse Racing)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 527,
+              "output_tokens": 181,
+              "elapsed_seconds": 3.025960922241211
+            }
+          ],
+          "reasoning": "The content provided is a system error message ('Requests rate to linkedin.com is too high') and does not contain any data regarding Trackhouse Racing, procurement activities, or job postings. Furthermore, the URL target (Novant Health) is a healthcare entity, distinct from the motorsport target, indicating a misalignment in the scraping scope."
+        }
+      ],
+      "total_input_tokens": 2724,
+      "total_output_tokens": 632,
+      "estimated_cost_usd": 0.017652
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Trackhouse Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:00:32.650400"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.365383",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:07:40.581696"
+}

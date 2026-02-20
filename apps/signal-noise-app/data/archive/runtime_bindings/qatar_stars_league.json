@@ -1,0 +1,81 @@
+{
+  "entity_id": "qatar_stars_league",
+  "entity_name": "Qatar Stars League",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "qatar_stars_league",
+      "entity_name": "Qatar Stars League",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Qatar Stars League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:11:26.297290",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B Marketing Content",
+            "Third-Party Platform Promotion",
+            "Irrelevant Testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 199,
+              "elapsed_seconds": 2.5260417461395264
+            }
+          ],
+          "reasoning": "The provided content is a direct scrape of ZoomInfo's corporate homepage and marketing materials. It contains generic sales pitches, customer testimonials (Abhishek Kumar, Caio Lima, etc.), and product descriptions for ZoomInfo's services. There is absolutely no specific information regarding the Qatar Stars League's internal operations, technology stack, or procurement activities. This content is irrelevant to the entity being analyzed."
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 199,
+      "estimated_cost_usd": 0.007059
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Qatar Stars League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:11:26.298875"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.196180",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:54:18.744322"
+}

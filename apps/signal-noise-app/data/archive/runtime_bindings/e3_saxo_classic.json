@@ -1,0 +1,275 @@
+{
+  "entity_id": "e3_saxo_classic",
+  "entity_name": "E3 Saxo Classic",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "e3saxoclassic.be",
+    "e3saxoclassiccyclo.com",
+    "sportivebreaks.com",
+    "teamvismaleaseabike.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7299707127005147136-PiQ4",
+      "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7308404512044560384-mFu7"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "e3_saxo_classic",
+      "entity_name": "E3 Saxo Classic",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://teamvismaleaseabike.com",
+        "https://e3saxoclassic.be",
+        "https://sportivebreaks.com",
+        "https://e3saxoclassiccyclo.com",
+        "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7299707127005147136-PiQ4",
+        "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7308404512044560384-mFu7"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "E3 Saxo Classic may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:54:29.245849",
+          "domain_explored": "https://e3saxoclassic.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Marketing Software (implied by 'Subscribe' form)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "VIP Experience Packages (Hospitality procurement)",
+              "Media Production requirements",
+              "Partnership/Sponsorship management",
+              "Event organization for World Tour and Cyclo"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Catering Procurement",
+            "Event Management Services",
+            "Marketing & Media Production",
+            "Partnership Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 274,
+              "elapsed_seconds": 3.778588056564331
+            }
+          ],
+          "reasoning": "The content is primarily marketing copy for the 2026 event, focusing on VIP experiences and partnerships. While no explicit RFPs or tech stacks are listed, the emphasis on 'VIP-formules', 'hospitality op wereldniveau', and 'media' indicates active procurement needs for event services, catering, and production. The presence of a 'Subscribe' mechanism suggests usage of email marketing tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:54:48.100124",
+          "domain_explored": "https://e3saxoclassiccyclo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced event organization to 'Flammerouge' (Travel and experience agency)",
+              "Procurement of substantial catering volumes: Coffee, croissants, buffet, boules, eclairs, fries, and beverages for 1100+ participants",
+              "Requirement for safety and logistics services: Motor escort guidance and route signage",
+              "Merchandising/Production: Procurement of 'Goodie bags' for participants",
+              "Registration management: Handling pre-registrations and discounts (implies need for registration software/payment processing)"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics & Catering Procurement",
+            "Third-Party Event Management (Outsourcing)",
+            "Participant Registration Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 357,
+              "elapsed_seconds": 9.415956974029541
+            }
+          ],
+          "reasoning": "The content reveals that the E3 Saxo Classic Cyclo is fully organized by a third-party agency, 'Flammerouge', rather than directly by the E3 Saxo Classic entity. While this indicates procurement activity (Flammerouge procures food, safety, and signage), it shifts the procurement intelligence focus to the vendor. Specific procurement signals include extensive catering requirements (buffets, food trucks, goodie bags) and safety services (motor escort)."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:54:59.051182",
+          "domain_explored": "https://sportivebreaks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Feefo (Review Platform)",
+              "Interest-Free Payment Plan System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Partner Status (Team Visma | Lease a Bike)",
+              "ABTA and ATOL Accreditation (Travel Regulation)",
+              "Multi-currency Payment Processing"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Travel & Tourism Services",
+            "Event Hospitality Packages",
+            "Consumer B2C Sales Model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 306,
+              "elapsed_seconds": 3.168393850326538
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Sportive Breaks', a third-party travel agency specializing in cycling tourism packages. While they offer VIP experiences and hospitality for events like the Tour de France and Paris-Roubaix, they are an external vendor/partner (specifically linked to Team Visma | Lease a Bike), not the procurement entity for the E3 Saxo Classic. The content focuses on selling travel packages to consumers (B2C), which does not provide direct intelligence on the internal procurement, technology stack, or operational governance of the E3 Saxo Classic organization."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:55:10.726878",
+          "domain_explored": "https://teamvismaleaseabike.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsor Renewal: Team extends relationship with Garmin (Team-level procurement, not event procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Professional Sports Team Entity",
+            "Sponsorship Management",
+            "Athletic Performance Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.945079803466797
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Team Visma | Lease a Bike', a professional cycling team, not the 'E3 Saxo Classic' event organizer. While the team participates in the event, the content focuses on race results, rider transfers, and team sponsors (e.g., Garmin). There are no signals of the team procuring event organization services or hosting the race itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:55:19.635367",
+          "domain_explored": "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7299707127005147136-PiQ4",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Infrastructure Rental (Ferris Wheel)",
+              "Venue Management (E3 Saxo Arena, Harelbeke)",
+              "Promotional Merchandise (Branded Gadgets)",
+              "Catering & Beverage Services"
+            ]
+          },
+          "patterns_found": [
+            "Event Infrastructure & Attractions Rental",
+            "Venue Location Management",
+            "Promotional Merchandising Procurement",
+            "Corporate Sponsorship Activation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.662057876586914
+            }
+          ],
+          "reasoning": "The content reveals a specific activation at the 'E3 Saxo Arena' involving a 'Ferris Wheel' (Sollicitatiewiel). This indicates procurement needs for large-scale event infrastructure and rental equipment (attractions). Additionally, the mention of 'exclusive E3 Saxo Classic gadgets' and 'free drinks' confirms ongoing procurement for promotional merchandise and catering supplies. While this confirms the event's operational nature, it is a third-party (Ardo) post, so the signal is indirect."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:55:27.440622",
+          "domain_explored": "https://www.linkedin.com/posts/ardo_e3saxoclassic-ardocareers-freshopportunities-activity-7308404512044560384-mFu7",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Ardo: Participation in 'E3 Saxo Sollicitatiewiel' (Speed date recruiting event)"
+            ],
+            "procurement_indicators": [
+              "Venue Usage: E3 Saxo Arena, Stasegemsesteenweg 23, 8530 Harelbeke",
+              "Event Assets: Ferris Wheel rental (Sollicitatiewiel)",
+              "Merchandise: E3 Saxo Classic gadgets",
+              "Catering: Free drinks provision for attendees"
+            ]
+          },
+          "patterns_found": [
+            "Venue Rental & Facility Management",
+            "Event Infrastructure & Attractions Rental",
+            "Promotional Merchandising Procurement",
+            "Hospitality & Catering Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1673,
+              "output_tokens": 310,
+              "elapsed_seconds": 2.9715399742126465
+            }
+          ],
+          "reasoning": "The content describes a third-party event (Sollicitatiewiel) hosted at the E3 Saxo Arena. While the primary focus is recruitment, the organization of this event implies procurement needs for venue management, specialized infrastructure (Ferris wheel rental), and promotional items (gadgets). It confirms the venue's capability to host diverse corporate events but does not reveal direct technology or enterprise procurement stacks."
+        }
+      ],
+      "total_input_tokens": 9028,
+      "total_output_tokens": 1742,
+      "estimated_cost_usd": 0.053214
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "E3 Saxo Classic may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:55:27.441986"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.397543",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:23.533285"
+}

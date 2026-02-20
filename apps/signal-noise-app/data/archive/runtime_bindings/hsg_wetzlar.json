@@ -1,0 +1,224 @@
+{
+  "entity_id": "hsg_wetzlar",
+  "entity_name": "HSG Wetzlar",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "hsg-wetzlar.de",
+    "daikin-hbl.de",
+    "merchandising-onlineshop.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/operator-m-w-d-at-novonesis-4317474891",
+      "https://de.linkedin.com/jobs/view/anlagenf%C3%BChrer-in-der-endproduktherstellung-m-w-d-at-novonesis-4313064720"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hsg_wetzlar",
+      "entity_name": "HSG Wetzlar",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://daikin-hbl.de",
+        "https://play.google.com",
+        "https://de.linkedin.com/jobs/view/anlagenf%C3%BChrer-in-der-endproduktherstellung-m-w-d-at-novonesis-4313064720",
+        "https://de.linkedin.com/jobs/view/operator-m-w-d-at-novonesis-4317474891",
+        "https://merchandising-onlineshop.com",
+        "https://hsg-wetzlar.de"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HSG Wetzlar may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:15:56.167352",
+          "domain_explored": "https://hsg-wetzlar.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticket Online Shop (ticket-onlineshop.com)",
+              "Merchandising Online Shop (merchandising-onlineshop.com)",
+              "DYN (Streaming/Media Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active contract for ticketing system (SaaS)",
+              "Active contract for merchandising/e-commerce (SaaS)",
+              "Active contract for media streaming (DYN)",
+              "Forward planning for Season 25/26 (Ticket sales active)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Vendor",
+            "Merchandising Platform Vendor",
+            "Streaming/OTT Service Partner",
+            "Season 2025/2026 Planning"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1080,
+              "output_tokens": 299,
+              "elapsed_seconds": 7.196230173110962
+            }
+          ],
+          "reasoning": "The scraped content is the homepage footer and navigation, revealing key vendor partnerships for ticketing, merchandise, and media streaming. While no direct RFP is visible, the reliance on 'ticket-onlineshop.com' and 'merchandising-onlineshop.com' indicates a B2B dependency on SaaS platforms for e-commerce and the 'DYN' platform for content delivery."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:15:58.935528",
+          "domain_explored": "https://daikin-hbl.de",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:16:31.898675",
+          "domain_explored": "https://merchandising-onlineshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:16:39.107635",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile Gaming Content",
+            "Consumer App Store Interface",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 156,
+              "elapsed_seconds": 3.750875949859619
+            }
+          ],
+          "reasoning": "The scraped content from play.google.com lists consumer mobile games (e.g., Roblox, Candy Crush, Madden NFL) and app store metadata. There is absolutely no connection to HSG Wetzlar, professional sports procurement, or enterprise technology stacks. This is entirely irrelevant noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:16:51.580307",
+          "domain_explored": "https://de.linkedin.com/jobs/view/operator-m-w-d-at-novonesis-4317474891",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Operator (m/w/d) - Fermentation and Freeze Drying at Novonesis (Pohlheim)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Novonesis)",
+            "Irrelevant Location (Pohlheim)",
+            "Blue Collar/Operational Role",
+            "Biotechnology/Manufacturing Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 212,
+              "elapsed_seconds": 8.928080081939697
+            }
+          ],
+          "reasoning": "The content is a job posting for an Operator role at Novonesis (formerly Novozymes/Chr. Hansen) located in Pohlheim. This entity is unrelated to HSG Wetzlar (a handball club). The role involves fermentation and freeze-drying manufacturing, which does not align with the sports, entertainment, or digital procurement focus areas for HSG Wetzlar."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:17:01.197198",
+          "domain_explored": "https://de.linkedin.com/jobs/view/anlagenf%C3%BChrer-in-der-endproduktherstellung-m-w-d-at-novonesis-4313064720",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Projekttechniker (w/m/d) - DEOS AG",
+              "Elektroniktechniker - ALTEN Germany",
+              "Elektrokonstrukteur EPLAN - XpertScout GmbH"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Novonesis)",
+            "Irrelevant Location (Multiple, none Wetzlar)",
+            "Blue Collar/Operational Roles",
+            "Generic Job Board Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 245,
+              "elapsed_seconds": 5.4971277713775635
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Energietechniker' (Energy Technician) roles. The specific URL slug references 'Novonesis' (an entity unrelated to HSG Wetzlar), and the visible job listings are for companies like DEOS AG, ALTEN, and XpertScout in locations such as Rheine and Munich. There is no content, technology stack, or procurement signal related to HSG Wetzlar."
+        }
+      ],
+      "total_input_tokens": 5665,
+      "total_output_tokens": 912,
+      "estimated_cost_usd": 0.030675
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HSG Wetzlar may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:17:01.198999"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349405",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:46:00.045186"
+}

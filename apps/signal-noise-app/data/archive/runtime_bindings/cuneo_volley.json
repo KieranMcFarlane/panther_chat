@@ -1,0 +1,169 @@
+{
+  "entity_id": "cuneo_volley",
+  "entity_name": "Cuneo Volley",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "cuneovolley.it",
+    "globalsportsarchive.com",
+    "legavolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cuneo_volley",
+      "entity_name": "Cuneo Volley",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://globalsportsarchive.com",
+        "https://cuneovolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Sponsorship Acquisition Campaign",
+        "Hospitality & Event Management",
+        "Fan Engagement/CRM Call-to-Action",
+        "Corporate Partnership Structuring"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cuneo Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:54:09.244594",
+          "domain_explored": "https://cuneovolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM (Likely requirement for 'Club degli Sponsor' management)",
+              "Ticketing Platform (implied by 'Match Program' links)",
+              "CMS (WordPress/Custom PHP implied by site structure)"
+            ],
+            "job_postings": [
+              "Commercial Director / Sales Manager (implied by 'Contattaci' for sponsorship)",
+              "Hospitality Manager (implied by 'Sala Hospitality Istituzionale' management)"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Packages (RFP for vendors/partners)",
+              "Hospitality Services (Catering/Wine procurement for Enoteca events)",
+              "Marketing Services (Campaign for 'Stagione 2025-26' launch)",
+              "Venue Management Services (Operations for Superlega home games)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Acquisition Campaign",
+            "Hospitality & Event Management",
+            "Fan Engagement/CRM Call-to-Action",
+            "Corporate Partnership Structuring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 390,
+              "elapsed_seconds": 4.762903928756714
+            }
+          ],
+          "reasoning": "The content reveals a major commercial pivot triggered by promotion to the Superliga (2025-26). The explicit 'Diventa Sponsor' (Become a Sponsor) call-to-action, combined with the launch of the 'Club degli Sponsor' and managed hospitality services (Enoteca del Roero), indicates immediate procurement needs for partnership management, event catering, and customer relationship tools to handle the increased commercial load."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:54:16.573472",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Generic Sports Aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 150,
+              "elapsed_seconds": 3.9911201000213623
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic navigation menu for global soccer leagues and competitions. It contains no specific information regarding 'Cuneo Volley', nor does it contain procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:54:24.552928",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League Participation: Confirmed Cuneo Volley competes in SuperLega Credem Banca",
+              "Sponsorship: Confirmed 'MA Acqua S.Bernardo' as Title Sponsor",
+              "League Governance: Operates under Lega Pallavolo Serie A regulations"
+            ]
+          },
+          "patterns_found": [
+            "Generic League Aggregator",
+            "Standardized League Navigation",
+            "Sponsorship Listing (League Level)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 275,
+              "elapsed_seconds": 4.738504886627197
+            }
+          ],
+          "reasoning": "The content is a navigation dump from the Italian Volleyball Federation (Lega Pallavolo Serie A). While it confirms 'MA Acqua S.Bernardo Cuneo' as a participating entity in the top-tier league, the page itself is a generic scoreboard and directory. It contains no specific procurement signals, technology stack details, or organizational decision-making structures unique to Cuneo Volley. It serves only as a confirmation of the entity's existence and competitive context."
+        }
+      ],
+      "total_input_tokens": 4214,
+      "total_output_tokens": 815,
+      "estimated_cost_usd": 0.024867
+    },
+    "procurement_signals": [
+      "Sponsorship Acquisition Campaign",
+      "Hospitality & Event Management",
+      "Fan Engagement/CRM Call-to-Action",
+      "Corporate Partnership Structuring"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cuneo Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:54:24.554090"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328850",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:42:31.381285"
+}

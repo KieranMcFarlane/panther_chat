@@ -1,0 +1,162 @@
+{
+  "entity_id": "kyiv-basket",
+  "entity_name": "Kyiv-Basket",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "kyiv-basket.com.ua",
+    "basketball.eurobasket.com",
+    "basketball.fandom.com",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kyiv-basket",
+      "entity_name": "Kyiv-Basket",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kyiv-basket.com.ua",
+        "https://sofascore.com",
+        "https://basketball.fandom.com",
+        "https://basketball.eurobasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kyiv-Basket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:23:19.027197",
+          "domain_explored": "https://kyiv-basket.com.ua",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations: The site features a '\u041a\u0443\u043f\u0438\u0442\u0438 \u043a\u0432\u0438\u0442\u043e\u043a' (Buy Ticket) button, suggesting the use of a third-party ticketing vendor or platform, though the specific vendor is not named in the text."
+            ]
+          },
+          "patterns_found": [
+            "Content is primarily sports results and scheduling",
+            "Standard sports club website structure (News, Media, Tickets)",
+            "No corporate or technical governance language detected"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.5810980796813965
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of basketball game scores, upcoming match schedules, and sports news articles. There are no mentions of technology infrastructure, job vacancies, or organizational procurement needs. The '\u041a\u0443\u043f\u0438\u0442\u0438 \u043a\u0432\u0438\u0442\u043e\u043a' (Buy Ticket) button indicates a commercial activity, but the backend vendor or technology stack is not exposed in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:23:27.237430",
+          "domain_explored": "https://basketball.eurobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Generic database subscription offers",
+            "Irrelevant geographic scope (Spain, Italy, Germany, UK)",
+            "Player transfer and game result focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 193,
+              "elapsed_seconds": 4.1169538497924805
+            }
+          ],
+          "reasoning": "The scraped content is from a global basketball news aggregator (Eurobasket) and focuses exclusively on international game results, player awards, and transfers. There is absolutely no mention of 'Kyiv-Basket', Ukrainian operations, or corporate governance. The content is entirely unrelated to the entity's procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:23:33.450128",
+          "domain_explored": "https://basketball.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports encyclopedia content",
+            "User-generated content structure (Wiki)",
+            "Broad global scope (NBA, WNBA, College)",
+            "Absence of corporate or local entity governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 199,
+              "elapsed_seconds": 3.0459067821502686
+            }
+          ],
+          "reasoning": "The scraped content represents a generic, global basketball wiki (Fandom) rather than the specific 'Kyiv-Basket' entity. It contains no information regarding the specific club's operations, technology stack, or procurement needs. The content is purely informational/encyclopedic and unrelated to the business intelligence goals for the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:23:36.236975",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4218,
+      "total_output_tokens": 651,
+      "estimated_cost_usd": 0.022419
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kyiv-Basket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:23:36.239328"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.238918",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:58.062774"
+}

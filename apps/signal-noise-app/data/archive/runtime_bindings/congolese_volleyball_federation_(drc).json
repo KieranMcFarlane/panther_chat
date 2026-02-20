@@ -1,0 +1,204 @@
+{
+  "entity_id": "congolese_volleyball_federation_(drc)",
+  "entity_name": "Congolese Volleyball Federation (DRC)",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "worldparavolley.org",
+    "media.un.org",
+    "thenationonlineng.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill",
+      "https://cd.linkedin.com/jobs/view/91763637"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "congolese_volleyball_federation_(drc)",
+      "entity_name": "Congolese Volleyball Federation (DRC)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill",
+        "https://media.un.org",
+        "https://cd.linkedin.com/jobs/view/91763637",
+        "https://thenationonlineng.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Congolese Volleyball Federation (DRC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:50:12.757639",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International sports news coverage",
+            "Event results reporting",
+            "Global federation governance"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.4038619995117188
+            }
+          ],
+          "reasoning": "The content provided is from the World ParaVolley website (worldparavolley.org) and focuses on international match results (ASEAN Para Games), global appointments (Dr. Janko Ple\u0161nik), and general sports events (Asian Para Games, LA 2028). There is no mention of the Congolese Volleyball Federation (DRC), specific procurement activities, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:50:20.543444",
+          "domain_explored": "https://media.un.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "International media broadcasting",
+            "General humanitarian news coverage",
+            "Global event scheduling",
+            "Public domain multimedia repositories"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 205,
+              "elapsed_seconds": 4.739502906799316
+            }
+          ],
+          "reasoning": "The content is from the United Nations Media portal and focuses on global broadcasting, general assembly meetings, and worldwide humanitarian news (e.g., Mozambique floods, Sudan). There is absolutely no mention of the Congolese Volleyball Federation, DRC-specific sports governance, or procurement activities related to the target entity. The content is irrelevant to the specific entity being researched."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:50:23.369502",
+          "domain_explored": "https://thenationonlineng.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:50:30.062506",
+          "domain_explored": "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Advisor - Strategic Maintenance at MMG Limited (Kinsevere operation)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mining sector operations (MMG Limited)",
+            "Volleyball mentioned only as recreational facility amenity",
+            "Job posting for Mechanical/Maintenance Advisor",
+            "Location: Katanga Province (Lubumbashi), not Kinshasa"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.5097029209136963
+            }
+          ],
+          "reasoning": "The content is a job posting for MMG Limited, a mining company, for a Strategic Maintenance Advisor role. While volleyball is mentioned, it is strictly in the context of recreational facilities available to staff (gym, tennis, volleyball, squash). There is no connection to the Congolese Volleyball Federation, nor any procurement signals related to sports governance or federation operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:50:41.955318",
+          "domain_explored": "https://cd.linkedin.com/jobs/view/91763637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP",
+              "CMMS (Computerised Maintenance Management System)",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Superintendent Electrical at MMG Limited"
+            ],
+            "procurement_indicators": [
+              "Budget management responsibility",
+              "Contractor compliance management"
+            ]
+          },
+          "patterns_found": [
+            "Mining sector operations (MMG Limited)",
+            "Heavy industrial maintenance focus",
+            "Location: Katanga Province (DRC)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1583,
+              "output_tokens": 236,
+              "elapsed_seconds": 8.373213768005371
+            }
+          ],
+          "reasoning": "The content is a job posting for a Superintendent Electrical at MMG Limited's Kinsevere copper mine. While it mentions SAP and CMMS, this is for mining operations, not the Congolese Volleyball Federation. There is no relation to sports governance or volleyball procurement."
+        }
+      ],
+      "total_input_tokens": 5886,
+      "total_output_tokens": 871,
+      "estimated_cost_usd": 0.030723
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Congolese Volleyball Federation (DRC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:50:41.956849"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337184",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:21.574923"
+}

@@ -1,0 +1,186 @@
+{
+  "entity_id": "eswatini_volleyball_association",
+  "entity_name": "Eswatini Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "eocga.org.sz",
+    "fliphtml5.com",
+    "heraldonline.co.zw",
+    "localgymsandfitness.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eswatini_volleyball_association",
+      "entity_name": "Eswatini Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://eocga.org.sz",
+        "https://heraldonline.co.zw",
+        "https://fliphtml5.com",
+        "https://localgymsandfitness.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eswatini Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:20:42.079693",
+          "domain_explored": "https://eocga.org.sz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Infrastructure (Yahoo/Corporate domain usage)",
+              "Website CMS (Standard web presence)",
+              "Countdown Timers (Event management widgets)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Facility Booking Request (Email: thoba.mazibuko@eocga.org.sz)",
+              "Olympic Solidarity Funding Programs (Grant management)",
+              "International MoU Implementation (Chinese Taipei, Seychelles)"
+            ]
+          },
+          "patterns_found": [
+            "Facility Management Operations",
+            "Strategic Partnership Expansion",
+            "Funding Dependency (Olympic Solidarity)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 345,
+              "elapsed_seconds": 3.742415189743042
+            }
+          ],
+          "reasoning": "The content is from the Eswatini Olympic and Commonwealth Games Association (EOCGA), the parent organization for the Volleyball Association. While no direct RFPs are visible, the explicit 'booking of facilities' notice confirms operational activity requiring facility management software or services. The mention of 'Olympic Solidarity' funding indicates a budget cycle driven by external grants, often requiring specific procurement reporting. The MoUs with Chinese Taipei and Seychelles suggest potential upcoming needs for translation services, travel management, or event logistics."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:20:51.388494",
+          "domain_explored": "https://fliphtml5.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FlipHTML5 (SaaS Platform)",
+              "ChatGPT (Integration)",
+              "Pexels & Pixabay (Integrations)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic SaaS Marketing Content",
+            "Vendor Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.0786798000335693
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage marketing copy for FlipHTML5, a SaaS platform for creating digital flipbooks. It describes product features (AI integration, templates, file conversion) but contains zero information regarding the Eswatini Volleyball Association (EVA). There is no context linking EVA to this tool, no evidence of usage, and no procurement signals specific to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:21:02.734709",
+          "domain_explored": "https://heraldonline.co.zw",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Zimbabwe vs Eswatini)",
+            "Macroeconomic News Content",
+            "Central Banking Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 593,
+              "output_tokens": 175,
+              "elapsed_seconds": 3.1365530490875244
+            }
+          ],
+          "reasoning": "The content is a news article from Zimbabwe (Herald) regarding the Reserve Bank of Zimbabwe (RBZ) and gold prices. It is completely unrelated to the Eswatini Volleyball Association (EVA), sports governance, or procurement activities within Eswatini. This represents a false positive in keyword matching or scraping scope."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:21:28.341599",
+          "domain_explored": "https://localgymsandfitness.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context (Newark, NJ vs Eswatini)",
+            "Generic Directory Listings",
+            "Consumer Retail Presence (Foot Locker, Snipes)",
+            "Academic/Alumni Groups (Rutgers University)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 227,
+              "elapsed_seconds": 18.9368999004364
+            }
+          ],
+          "reasoning": "The scraped content is a directory of gyms, fitness centers, and sports clubs located in Newark, New Jersey (USA), as evidenced by addresses like 'Park Pl Newark, 07102' and references to 'Rutgers-Newark'. There is no connection to the Eswatini Volleyball Association or procurement activities within Eswatini. The content consists of static business listings and fan pages, which do not contain actionable procurement intelligence for the target entity."
+        }
+      ],
+      "total_input_tokens": 4894,
+      "total_output_tokens": 960,
+      "estimated_cost_usd": 0.029082
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eswatini Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:21:28.342991"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.339752",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:51.863953"
+}

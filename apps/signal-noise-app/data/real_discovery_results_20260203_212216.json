@@ -1,0 +1,422 @@
+{
+  "report": {
+    "timestamp": "2026-02-03T21:22:16.928277+00:00",
+    "entities_tested": 3,
+    "total_cost_usd": 0.013,
+    "total_iterations": 13,
+    "entity_results": {
+      "liverpool-fc": {
+        "entity_name": "Liverpool FC",
+        "final_confidence": 0.48,
+        "confidence_band": "INFORMED",
+        "is_actionable": false,
+        "iterations_completed": 7,
+        "total_cost_usd": 0.007,
+        "signals_count": 1,
+        "hypotheses_count": 3
+      },
+      "bayern-munich": {
+        "entity_name": "Bayern Munich",
+        "final_confidence": 0.52,
+        "confidence_band": "INFORMED",
+        "is_actionable": false,
+        "iterations_completed": 4,
+        "total_cost_usd": 0.004,
+        "signals_count": 2,
+        "hypotheses_count": 3
+      },
+      "psg": {
+        "entity_name": "Paris Saint-Germain",
+        "final_confidence": 0.45999999999999996,
+        "confidence_band": "INFORMED",
+        "is_actionable": false,
+        "iterations_completed": 2,
+        "total_cost_usd": 0.002,
+        "signals_count": 0,
+        "hypotheses_count": 3
+      }
+    },
+    "comparison": {
+      "best_confidence": {
+        "entity_id": "bayern-munich",
+        "confidence": 0.52
+      },
+      "lowest_cost": {
+        "entity_id": "psg",
+        "cost": 0.002
+      },
+      "most_iterations": {
+        "entity_id": "liverpool-fc",
+        "iterations": 7
+      },
+      "actionable_count": 0
+    },
+    "analysis": {},
+    "averages": {
+      "confidence": 0.48666666666666664,
+      "cost_usd": 0.004333333333333333,
+      "iterations": 4.333333333333333
+    }
+  },
+  "detailed_results": {
+    "liverpool-fc": {
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "final_confidence": 0.48,
+      "confidence_band": "INFORMED",
+      "is_actionable": false,
+      "iterations_completed": 7,
+      "total_cost_usd": 0.007,
+      "hypotheses": [
+        {
+          "hypothesis_id": "liverpool-fc_strategic_leadership_hire",
+          "entity_id": "liverpool-fc",
+          "category": "General",
+          "statement": "Liverpool FC is preparing procurement related to Strategic Leadership Hire",
+          "prior_probability": 0.5,
+          "iterations_attempted": 3,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 1,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 2,
+          "last_updated": "2026-02-03T21:20:35.361910+00:00",
+          "confidence": 0.52,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.020000000000000018,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:20:05.296489+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.48,
+          "metadata": {
+            "pattern_name": "Strategic Leadership Hire",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Liverpool FC"
+          }
+        },
+        {
+          "hypothesis_id": "liverpool-fc_vendor_stack_expansion",
+          "entity_id": "liverpool-fc",
+          "category": "General",
+          "statement": "Liverpool FC is preparing procurement related to Vendor Stack Expansion",
+          "prior_probability": 0.5,
+          "iterations_attempted": 4,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 1,
+          "iterations_no_progress": 3,
+          "last_updated": "2026-02-03T21:21:11.493951+00:00",
+          "confidence": 0.48,
+          "reinforced_count": 0,
+          "weakened_count": 1,
+          "last_delta": -0.020000000000000018,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:20:05.296494+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Vendor Stack Expansion",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Liverpool FC"
+          }
+        },
+        {
+          "hypothesis_id": "liverpool-fc_contract_renewal_cycle",
+          "entity_id": "liverpool-fc",
+          "category": "General",
+          "statement": "Liverpool FC is preparing procurement related to Contract Renewal Cycle",
+          "prior_probability": 0.5,
+          "iterations_attempted": 0,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:20:05.296496+00:00",
+          "confidence": 0.5,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.0,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:20:05.296497+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Contract Renewal Cycle",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Liverpool FC"
+          }
+        }
+      ],
+      "depth_stats": {
+        "1": 3,
+        "2": 4
+      },
+      "signals_discovered": [
+        {
+          "entity_id": "liverpool-fc",
+          "entity_name": "Liverpool FC",
+          "hypothesis_id": "liverpool-fc_strategic_leadership_hire",
+          "signal_type": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "evidence_type": null,
+          "evidence_found": "Procurement",
+          "justification": "The careers page shows a vacancy for 'Procurement' under the 'Business Area' category, indicating that Liverpool FC has procurement-related roles, but there is no specific evidence of a strategic leadership hire or procurement intent related to the hypothesis.",
+          "source_url": "https://jobsearch.liverpoolfc.com/",
+          "hop_type": "careers_page",
+          "depth": 2,
+          "iteration": 3,
+          "timestamp": "2026-02-03T21:20:35.366239+00:00"
+        }
+      ],
+      "timestamp": "2026-02-03T21:21:11.494538+00:00"
+    },
+    "bayern-munich": {
+      "entity_id": "bayern-munich",
+      "entity_name": "Bayern Munich",
+      "final_confidence": 0.52,
+      "confidence_band": "INFORMED",
+      "is_actionable": false,
+      "iterations_completed": 4,
+      "total_cost_usd": 0.004,
+      "hypotheses": [
+        {
+          "hypothesis_id": "bayern-munich_strategic_leadership_hire",
+          "entity_id": "bayern-munich",
+          "category": "General",
+          "statement": "Bayern Munich is preparing procurement related to Strategic Leadership Hire",
+          "prior_probability": 0.5,
+          "iterations_attempted": 3,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 1,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 2,
+          "last_updated": "2026-02-03T21:21:44.615636+00:00",
+          "confidence": 0.52,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.020000000000000018,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:11.499554+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.48,
+          "metadata": {
+            "pattern_name": "Strategic Leadership Hire",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Bayern Munich"
+          }
+        },
+        {
+          "hypothesis_id": "bayern-munich_vendor_stack_expansion",
+          "entity_id": "bayern-munich",
+          "category": "General",
+          "statement": "Bayern Munich is preparing procurement related to Vendor Stack Expansion",
+          "prior_probability": 0.5,
+          "iterations_attempted": 1,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 1,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:21:53.887056+00:00",
+          "confidence": 0.52,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.020000000000000018,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:11.499558+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Vendor Stack Expansion",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Bayern Munich"
+          }
+        },
+        {
+          "hypothesis_id": "bayern-munich_contract_renewal_cycle",
+          "entity_id": "bayern-munich",
+          "category": "General",
+          "statement": "Bayern Munich is preparing procurement related to Contract Renewal Cycle",
+          "prior_probability": 0.5,
+          "iterations_attempted": 0,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:21:11.499559+00:00",
+          "confidence": 0.5,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.0,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:11.499560+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Contract Renewal Cycle",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Bayern Munich"
+          }
+        }
+      ],
+      "depth_stats": {
+        "1": 3,
+        "2": 1
+      },
+      "signals_discovered": [
+        {
+          "entity_id": "bayern-munich",
+          "entity_name": "Bayern Munich",
+          "hypothesis_id": "bayern-munich_strategic_leadership_hire",
+          "signal_type": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "evidence_type": null,
+          "evidence_found": "Procurement Manager Apparel (m|w|d)",
+          "justification": "The scraped content contains a job posting for a 'Procurement Manager Apparel', which confirms the existence of procurement roles and functions within the organization. However, this specific role is tactical and related to merchandise, not strategic leadership.",
+          "source_url": "https://careers.fcbayern.com/go/Professionals/8774601/",
+          "hop_type": "careers_page",
+          "depth": 2,
+          "iteration": 3,
+          "timestamp": "2026-02-03T21:21:44.618016+00:00"
+        },
+        {
+          "entity_id": "bayern-munich",
+          "entity_name": "Bayern Munich",
+          "hypothesis_id": "bayern-munich_vendor_stack_expansion",
+          "signal_type": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "evidence_type": null,
+          "evidence_found": "Procurement Manager Apparel (m|w|d)",
+          "justification": "The content shows a procurement role for 'Procurement Manager Apparel' which indicates some procurement activity, but there's no specific evidence related to 'Vendor Stack Expansion' or broader technology procurement.",
+          "source_url": "https://careers.fcbayern.com/go/Professionals/8774601/",
+          "hop_type": "careers_page",
+          "depth": 3,
+          "iteration": 4,
+          "timestamp": "2026-02-03T21:21:53.887298+00:00"
+        }
+      ],
+      "timestamp": "2026-02-03T21:21:53.887401+00:00"
+    },
+    "psg": {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "final_confidence": 0.45999999999999996,
+      "confidence_band": "INFORMED",
+      "is_actionable": false,
+      "iterations_completed": 2,
+      "total_cost_usd": 0.002,
+      "hypotheses": [
+        {
+          "hypothesis_id": "psg_strategic_leadership_hire",
+          "entity_id": "psg",
+          "category": "General",
+          "statement": "Paris Saint-Germain is preparing procurement related to Strategic Leadership Hire",
+          "prior_probability": 0.5,
+          "iterations_attempted": 2,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 2,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:22:16.927780+00:00",
+          "confidence": 0.45999999999999996,
+          "reinforced_count": 0,
+          "weakened_count": 2,
+          "last_delta": -0.020000000000000018,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:53.893213+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.52,
+          "metadata": {
+            "pattern_name": "Strategic Leadership Hire",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Paris Saint-Germain"
+          }
+        },
+        {
+          "hypothesis_id": "psg_vendor_stack_expansion",
+          "entity_id": "psg",
+          "category": "General",
+          "statement": "Paris Saint-Germain is preparing procurement related to Vendor Stack Expansion",
+          "prior_probability": 0.5,
+          "iterations_attempted": 0,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:21:53.893216+00:00",
+          "confidence": 0.5,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.0,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:53.893216+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Vendor Stack Expansion",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Paris Saint-Germain"
+          }
+        },
+        {
+          "hypothesis_id": "psg_contract_renewal_cycle",
+          "entity_id": "psg",
+          "category": "General",
+          "statement": "Paris Saint-Germain is preparing procurement related to Contract Renewal Cycle",
+          "prior_probability": 0.5,
+          "iterations_attempted": 0,
+          "iterations_accepted": 0,
+          "iterations_weak_accept": 0,
+          "iterations_rejected": 0,
+          "iterations_no_progress": 0,
+          "last_updated": "2026-02-03T21:21:53.893217+00:00",
+          "confidence": 0.5,
+          "reinforced_count": 0,
+          "weakened_count": 0,
+          "last_delta": 0.0,
+          "status": "ACTIVE",
+          "created_at": "2026-02-03T21:21:53.893218+00:00",
+          "promoted_at": null,
+          "degraded_at": null,
+          "saturated_at": null,
+          "killed_at": null,
+          "expected_information_gain": 0.5,
+          "metadata": {
+            "pattern_name": "Contract Renewal Cycle",
+            "template_id": "tier_1_club_centralized_procurement",
+            "entity_name": "Paris Saint-Germain"
+          }
+        }
+      ],
+      "depth_stats": {
+        "1": 1,
+        "2": 1
+      },
+      "signals_discovered": [],
+      "timestamp": "2026-02-03T21:22:16.928079+00:00"
+    }
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "entity_id": "tour_of_flanders",
+  "entity_name": "Tour of Flanders",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "rondevanvlaanderen.be",
+    "werideflanders.com",
+    "cyclinginflanders.cc",
+    "flandersclassics.be",
+    "flanders2021.com",
+    "sportive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_of_flanders",
+      "entity_name": "Tour of Flanders",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://cyclinginflanders.cc",
+        "https://flandersclassics.be",
+        "https://werideflanders.com",
+        "https://rondevanvlaanderen.be",
+        "https://sportive.com",
+        "https://flanders2021.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour of Flanders may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:34:30.274712",
+          "domain_explored": "https://rondevanvlaanderen.be",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1396)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:34:37.146340",
+          "domain_explored": "https://werideflanders.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Teamleader (CRM/ERP)",
+              "Sportograf (Digital Photo Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Teamleader (Sponsor/Software Provider)",
+              "Vendor: Sportograf (Official Photo Service)",
+              "Vendor: Gobik (Official Merchandise Partner)",
+              "Vendor: Diabetes Liga (Charity Partner)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Vendor Usage (Teamleader CRM)",
+            "Digital Service Procurement (Sportograf)",
+            "Merchandise Licensing (Gobik)",
+            "Charity Partnership Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1389,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.9354331493377686
+            }
+          ],
+          "reasoning": "While this page is consumer-facing (event registration), it reveals specific vendor partnerships and technology stack choices. The explicit mention of 'Teamleader' (CRM/ERP) and 'Sportograf' (digital photo service) confirms active procurement of SaaS tools. The 'Gobik' partnership indicates procurement cycles for merchandise manufacturing. These are secondary signals (vendor usage) rather than primary signals (active RFPs), justifying a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:34:46.700774",
+          "domain_explored": "https://cyclinginflanders.cc",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Marketing Content",
+            "Affiliate Linking (Strava, VisitFlanders)",
+            "Event Listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 180,
+              "elapsed_seconds": 5.673956871032715
+            }
+          ],
+          "reasoning": "The scraped content from 'cyclinginflanders.cc' is a consumer-facing tourism guide promoting routes, events, and travel planning. It contains no corporate governance data, technology infrastructure details, or procurement intent. It is functionally a marketing arm or affiliate site rather than the operational entity for the Tour of Flanders race organization."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:34:55.518175",
+          "domain_explored": "https://flandersclassics.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active solicitation for business partnerships ('Partner worden')",
+              "Outsourcing of event organization: Flanders Classics organizing 2027 World Champs for Toerisme Oostende",
+              "Hospitality procurement ('Hospitalityaanbod')",
+              "Vendor engagement: BLACKROLL\u00ae partnership for Gravel/Corporate events",
+              "Digital marketing campaigns: 'Digital Goodiebag' implementation"
+            ]
+          },
+          "patterns_found": [
+            "B2B Partnership Solicitation",
+            "Event Organization RFP (2027 World Champs)",
+            "Hospitality & Service Procurement",
+            "Sponsorship/Vendor Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 338,
+              "elapsed_seconds": 5.557530164718628
+            }
+          ],
+          "reasoning": "The content reveals the commercial backbone of the Tour of Flanders (Flanders Classics). While not a direct technical procurement page, the 'FLCS Business' section and the specific announcement of the '2027 UCI Cyclo-cross World Championships' (organized on behalf of Toerisme Oostende) indicate active vendor sourcing and partnership management. The solicitation for 'sustainable partnerships' and 'hospitality' suggests a need for B2B service providers, event suppliers, and marketing partners."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:35:02.430835",
+          "domain_explored": "https://flanders2021.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Event Archive",
+            "Legacy Event Content",
+            "Static Informational Site"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1552,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.6101629734039307
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the 2021 UCI Road World Championships, which concluded in September 2021. The site functions as an archive for past results ('Thank you Flanders', 'Alaphilippe retains his world title') and legacy initiatives ('Innovation Hub', 'Sustainability'). There is no active procurement intent, technology investment signals, or future-oriented vendor solicitations relevant to the current 'Tour of Flanders' entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:35:05.267750",
+          "domain_explored": "https://sportive.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 5883,
+      "total_output_tokens": 1019,
+      "estimated_cost_usd": 0.032934000000000005
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour of Flanders may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:35:05.268791"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.400207",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:16:46.893152"
+}

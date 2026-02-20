@@ -1,0 +1,143 @@
+{
+  "entity_id": "viveros_herol_bm_nava",
+  "entity_name": "Viveros Herol BM Nava",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "balonmanonava.com",
+    "barcaacademy.fcbarcelona.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "viveros_herol_bm_nava",
+      "entity_name": "Viveros Herol BM Nava",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://barcaacademy.fcbarcelona.com",
+        "https://balonmanonava.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Viveros Herol BM Nava may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:59:10.416051",
+          "domain_explored": "https://balonmanonava.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team sponsorship visibility",
+            "Public relations content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 481,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.4471490383148193
+            }
+          ],
+          "reasoning": "The content provided is a sports news update regarding a handball match (Balonmano Nava) sponsored by Viveros Herol. While this confirms the entity's active sponsorship and marketing operations, it contains zero technical, operational, or strategic information regarding procurement, technology acquisition, or business infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:59:18.314284",
+          "domain_explored": "https://barcaacademy.fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant domain content",
+            "Global franchise marketing",
+            "B2C consumer focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.1285500526428223
+            }
+          ],
+          "reasoning": "The content is from the official FC Barcelona website (barcaacademy.fcbarcelona.com), which is a global sports franchise entity. It focuses on B2C camp registrations and academy news. There is no connection to 'Viveros Herol BM Nava' (a Spanish nursery/handball team entity) or procurement signals relevant to that specific target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:59:29.209453",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports aggregation",
+            "Global league listings",
+            "B2C content structure",
+            "No corporate entity relevance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.4066319465637207
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu for a global sports archive site (globalsportsarchive.com). It lists international soccer leagues and tournaments (UEFA, CONCACAF, etc.) but contains zero information regarding 'Viveros Herol BM Nava', procurement activities, or vendor partnerships. It is irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3345,
+      "total_output_tokens": 511,
+      "estimated_cost_usd": 0.0177
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Viveros Herol BM Nava may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:59:29.210535"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359517",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:49.666969"
+}

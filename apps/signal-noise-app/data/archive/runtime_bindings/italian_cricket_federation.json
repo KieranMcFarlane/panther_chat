@@ -1,0 +1,194 @@
+{
+  "entity_id": "italian_cricket_federation",
+  "entity_name": "Italian Cricket Federation",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "matchcentral.cricketitalia.org",
+    "cricketireland.ie",
+    "apps.apple.com",
+    "playcricketitaly.wixsite.com",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "italian_cricket_federation",
+      "entity_name": "Italian Cricket Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://matchcentral.cricketitalia.org",
+        "https://cricketireland.ie",
+        "https://playcricketitaly.wixsite.com",
+        "https://zoominfo.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "SaaS Vendor Attribution",
+        "Digital Platform Outsourcing",
+        "White-Label Solution Usage"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Italian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:58:20.159371",
+          "domain_explored": "https://matchcentral.cricketitalia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Crickslab (Sports Management Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active license or subscription for Crickslab platform",
+              "Outsourced digital infrastructure (SaaS model)",
+              "Platform copyright updated to 2025 (indicating active contract/renewal)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Vendor Attribution",
+            "Digital Platform Outsourcing",
+            "White-Label Solution Usage"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 859,
+              "output_tokens": 219,
+              "elapsed_seconds": 26.13072109222412
+            }
+          ],
+          "reasoning": "The footer explicitly attributes the platform to 'Crickslab' with a 2025 copyright, confirming an active commercial relationship or license for a core digital platform. This is a direct procurement signal for sports management software."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:58:27.474902",
+          "domain_explored": "https://cricketireland.ie",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "Sportsfile (Imagery)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Charity Partnership (Donation CTA)",
+              "Sponsorship (Certa Series)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Content Marketing Assets",
+            "Social Media Integration"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.923827886581421
+            }
+          ],
+          "reasoning": "The scraped content is from Cricket Ireland (cricketireland.ie), a distinct entity from the target Italian Cricket Federation. The content consists of public-facing news, video highlights, and 'Get Involved' calls to action. While it shows standard sports federation operations (media management, charity partnerships), it provides zero procurement intelligence regarding the Italian entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:58:33.804755",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Content Aggregation",
+            "Mobile Application Marketing",
+            "Gaming and Entertainment Trends",
+            "Irrelevant Context (B2C vs B2B)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.0282180309295654
+            }
+          ],
+          "reasoning": "The scraped content from apps.apple.com represents a consumer-facing 'App Store' homepage featuring mobile games (Roblox, Pok\u00e9mon, Sonic), productivity tools, and general entertainment trends. There is no connection to the Italian Cricket Federation, nor does it contain B2B procurement signals, vendor lists, or governance information relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:58:36.494855",
+          "domain_explored": "https://playcricketitaly.wixsite.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:58:39.466412",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 3735,
+      "total_output_tokens": 641,
+      "estimated_cost_usd": 0.020819999999999998
+    },
+    "procurement_signals": [
+      "SaaS Vendor Attribution",
+      "Digital Platform Outsourcing",
+      "White-Label Solution Usage"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Italian Cricket Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:58:39.466916"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301256",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:20:25.899982"
+}

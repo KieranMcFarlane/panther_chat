@@ -1,0 +1,283 @@
+{
+  "entity_id": "mint_vero_volley_monza",
+  "entity_name": "Mint Vero Volley Monza",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "verovolley.com",
+    "veronavolley.it",
+    "www-old.cev.eu",
+    "volleybox.net",
+    "legavolley.it",
+    "worldofvolley.com",
+    "en.volleyballworld.com",
+    "volleytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mint_vero_volley_monza",
+      "entity_name": "Mint Vero Volley Monza",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://worldofvolley.com",
+        "https://veronavolley.it",
+        "https://legavolley.it",
+        "https://verovolley.com",
+        "https://en.volleyballworld.com",
+        "https://volleytimes.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mint Vero Volley Monza may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:20:04.778126",
+          "domain_explored": "https://verovolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing system usage (implied by 'Biglietteria' section)",
+              "Video content hosting (YouTube integration)",
+              "Sponsorship visibility (Allianz Cloud, Numia, Yuasa Battery)"
+            ]
+          },
+          "patterns_found": [
+            "Content is strictly operational (match results, standings, player interviews)",
+            "Fan engagement focus (YouTube, Photo Gallery, Ticketing)",
+            "Community relations (School visits, 'Fiamma Olimpica' events)",
+            "No corporate governance or B2B content visible"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 276,
+              "elapsed_seconds": 5.3760740756988525
+            }
+          ],
+          "reasoning": "The scraped content represents the public-facing news feed of a sports organization. It focuses exclusively on match results, player performance, and fan engagement activities. There are no signals regarding technology acquisition, job vacancies, or strategic vendor partnerships. The page is saturated with sports news but void of procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:20:12.306759",
+          "domain_explored": "https://veronavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Operations (Match Reports, Previews)",
+            "Youth Academy Results (U13, U14, U15, U17)",
+            "Ticketing Operations (Sold Out notices)",
+            "Media Production (Docu-reality on DAZN)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 219,
+              "elapsed_seconds": 3.9895148277282715
+            }
+          ],
+          "reasoning": "The content provided is scraped from 'veronavolley.it' (Rana Verona), which is a different entity than the target 'Mint Vero Volley Monza'. Even if treated as a proxy for industry analysis, the content is strictly operational\u2014focusing on match results, upcoming game previews, and youth academy medals. There are no procurement signals, technology infrastructure details, or corporate governance information present."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:20:17.797125",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Federation Navigation",
+            "Historical Event Schedules (2021, 2022)",
+            "Global Competition Listings (Champions League, EuroVolley)",
+            "Generic Administrative Links (Privacy Policy, Feedback)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 214,
+              "elapsed_seconds": 2.5535848140716553
+            }
+          ],
+          "reasoning": "The content is from the general Confederation Europ\u00e9enne de Volleyball (CEV) website, specifically a navigation sitemap or archive page. It lists broad competition categories and historical events (e.g., Munich 2022, Vienna 2021) but contains no specific references to 'Mint Vero Volley Monza', its local operations, or any procurement activities specific to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:20:20.615201",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:20:27.246256",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Check System (Mentioned as a project/technology)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Raccolta documenti (Document Collection)",
+              "Biblioteca online (Online Library)",
+              "Progetti ed Eventi speciali (Special Projects & Events)"
+            ]
+          },
+          "patterns_found": [
+            "League Governance & Operations",
+            "Sports Statistics & Data Management",
+            "Digital Document Archiving",
+            "Multi-tier League Structure (SuperLega, A2, A3)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1591,
+              "output_tokens": 283,
+              "elapsed_seconds": 3.056489944458008
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation structure of Lega Volley, the governing body for Italian volleyball. While it confirms Vero Volley Monza's participation in the top-tier 'SuperLega Credem Banca', the content is strictly informational (schedules, standings, historical archives). It lacks specific procurement signals, vendor lists, or technology implementation details relevant to the target entity's internal procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:20:33.078563",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "Match Results & Standings Reporting",
+            "Player Transfer Market ('Done Deals')",
+            "Editorial Content Publishing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1644,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.915872097015381
+            }
+          ],
+          "reasoning": "The content is a global volleyball news aggregator (WorldofVolley) focusing on match results, league standings, and player transfer rumors. While it mentions the target entity's league (SuperLega), it contains no operational, financial, or technological data specific to Mint Vero Volley Monza's procurement or governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T19:20:40.557069",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "Match Results Reporting",
+            "World Ranking Data Management",
+            "Video Streaming Services (Volleyball TV)",
+            "Generic Competition Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1701,
+              "output_tokens": 257,
+              "elapsed_seconds": 2.8444981575012207
+            }
+          ],
+          "reasoning": "The scraped content from 'en.volleyballworld.com' is a global news and results portal. While it mentions 'Superlega' (the league Mint Vero Volley Monza plays in), the content is strictly editorial (match reports like 'Nikolov powers Lube...') and informational (rankings, schedules). There are no specific references to 'Mint Vero Volley Monza', no procurement signals, no technology stack details relevant to the target entity, and no job postings. This is a secondary source for general sports data, not a primary source for the target entity's procurement intelligence."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T19:20:45.574945",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 9237,
+      "total_output_tokens": 1435,
+      "estimated_cost_usd": 0.049236
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mint Vero Volley Monza may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:20:45.575912"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.317616",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:42.824044"
+}

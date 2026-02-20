@@ -1,0 +1,142 @@
+{
+  "entity_id": "eswatini_rugby_union",
+  "entity_name": "Eswatini Rugby Union",
+  "template_id": "tpl_rugby_national_federations_v1",
+  "cluster_id": "rugby_federation_emerging_associate",
+  "discovered_domains": [
+    "web.worldrugby-rims.pulselive.com",
+    "wikidata.org",
+    "grokipedia.com",
+    "times.co.sz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "eswatini_rugby_union",
+      "entity_name": "Eswatini Rugby Union",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://times.co.sz",
+        "https://wikidata.org",
+        "https://web.worldrugby-rims.pulselive.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Eswatini Rugby Union may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:04:56.567606",
+          "domain_explored": "https://web.worldrugby-rims.pulselive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is generic sports news aggregation",
+            "Irrelevant to Eswatini Rugby Union operations",
+            "No local entity context"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 503,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.965711832046509
+            }
+          ],
+          "reasoning": "The scraped content is a generic sports news article regarding the HSBC SVNS (Singapore Sevens) results involving Fiji and New Zealand. It contains no information regarding the Eswatini Rugby Union, its procurement activities, technology stack, or governance. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:04:59.488238",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:05:03.088922",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:05:10.015243",
+          "domain_explored": "https://times.co.sz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news aggregation",
+            "Sports headlines (Ingwenyama Cup) but generic",
+            "No specific entity mentions (Eswatini Rugby Union)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1477,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.652070999145508
+            }
+          ],
+          "reasoning": "The scraped content from the Times of Eswatini homepage consists of general news headlines, crime reports, and general sports updates. While there is a sports section mentioning the 'Ingwenyama Cup', there is no specific mention of the Eswatini Rugby Union, nor any procurement signals, job postings, or technology investments related to the entity."
+        }
+      ],
+      "total_input_tokens": 1980,
+      "total_output_tokens": 359,
+      "estimated_cost_usd": 0.011325
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Eswatini Rugby Union may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:05:10.017247"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.290080",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:31:29.113935"
+}

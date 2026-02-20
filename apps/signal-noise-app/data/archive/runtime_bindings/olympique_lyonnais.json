@@ -1,0 +1,236 @@
+{
+  "entity_id": "olympique_lyonnais",
+  "entity_name": "Olympique Lyonnais",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "continental_pro_club",
+  "discovered_domains": [
+    "billetterie.ol.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/olympique-lyonnais-jobs-worldwide",
+      "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+      "https://www.linkedin.com/jobs/search/?currentJobId=4277490787&f_TPR=r86400&geoId=91000007&keywords=partnerships&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true&utm_source=partnershipjobpostings"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "olympique_lyonnais",
+      "entity_name": "Olympique Lyonnais",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/search/?currentJobId=4277490787&f_TPR=r86400&geoId=91000007&keywords=partnerships&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true&utm_source=partnershipjobpostings",
+        "https://www.linkedin.com/jobs/olympique-lyonnais-jobs-worldwide",
+        "https://billetterie.ol.fr",
+        "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+        "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Olympique Lyonnais may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:29:31.041850",
+          "domain_explored": "https://billetterie.ol.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Ticketing Platform",
+              "E-commerce Payment Gateway",
+              "CRM (likely for customer account management)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active management of ticketing inventory",
+              "Corporate hospitality sales operations",
+              "Integration with 'Entreprises' (B2B) sub-domain"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "Dynamic Pricing/Packaging",
+            "Corporate Partnership Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 286,
+              "elapsed_seconds": 7.302589178085327
+            }
+          ],
+          "reasoning": "The content confirms the operation of a digital ticketing platform (billetterie.ol.fr) capable of handling dynamic offers, premium packaging, and event management. While this indicates an active need for ticketing software, CRM, and payment gateway support, it is a 'steady state' operation rather than a new procurement signal. The presence of 'Entreprises' links suggests B2B sales tools are in use."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:29:40.970034",
+          "domain_explored": "https://www.linkedin.com/jobs/olympique-lyonnais-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "General Ledger Software (Implied)",
+              "ERP Systems (Implied)"
+            ],
+            "job_postings": [
+              {
+                "title": "Comptable G\u00e9n\u00e9ral (H/F)",
+                "department": "Finance / Accounting",
+                "entity": "Olympique Lyonnais Groupe",
+                "status": "Actively Hiring",
+                "location": "D\u00e9cines-Charpieu, Auvergne-Rh\u00f4ne-Alpes, France",
+                "posted": "3 days ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Active recruitment in Finance function",
+              "Use of 'Olympique Lyonnais Groupe' branding in hiring"
+            ]
+          },
+          "patterns_found": [
+            "Financial Governance & Compliance",
+            "General Ledger Operations",
+            "Active Recruitment (Finance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 356,
+              "elapsed_seconds": 6.110292911529541
+            }
+          ],
+          "reasoning": "The scraped content reveals a specific, active job posting for a 'Comptable G\u00e9n\u00e9ral' (General Accountant). While this is an operational role rather than a direct procurement signal, it confirms active hiring within the Olympique Lyonnais Groupe finance department. This indicates organizational growth or restructuring, which often precedes or accompanies technology procurement (e.g., ERP upgrades). The presence of a finance team validates the entity's operational capacity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:29:47.411156",
+          "domain_explored": "https://www.linkedin.com/company/sasp-olympique-de-marseille/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant(e) Chef(fe) de Projet Treizi\u00e8me Homme (Olympique de Marseille)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Benchmarking",
+            "Fan Engagement Project Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.138200044631958
+            }
+          ],
+          "reasoning": "The scraped content is from the LinkedIn page of Olympique de Marseille (OM), a direct competitor of Olympique Lyonnais (OL). While this provides industry context regarding 'Treizi\u00e8me Homme' (Fan Engagement) project management structures, it contains zero procurement signals specific to the target entity, Olympique Lyonnais. Analyzing competitor data does not advance the specific procurement intelligence for OL."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:29:54.912955",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=3428661240&geoId=100506914&keywords=football&location=Europe&refresh=true",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Ev\u00e9nementiel H/F - FFF (Federation Francaise de Football)",
+              "Assistant administratif et \u00e9v\u00e9nementiel H/F - FFF"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Results",
+            "Competitor/Association Listings (FFF)",
+            "Authentication Gate"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1550,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.848536968231201
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn search results page for the keyword 'Football' in Europe, not specific to Olympique Lyonnais (OL). The listings are primarily for the French Football Federation (FFF) and other entities. There is no content specific to OL's procurement, technology stack, or governance. The content is largely repetitive login prompts and generic job headers."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:30:04.009126",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=4277490787&f_TPR=r86400&geoId=91000007&keywords=partnerships&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&refresh=true&utm_source=partnershipjobpostings",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication Gate",
+            "Generic Search Results",
+            "Irrelevant Geography (Saudi Arabia/Berlin vs Lyon)",
+            "Data Truncation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1643,
+              "output_tokens": 223,
+              "elapsed_seconds": 5.253465890884399
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn search results page for 'Partnerships' roles within the EMEA region, filtered by recency (r86400). The content is blocked behind an authentication gate ('Sign in to set job alerts'), and the visible job listings (e.g., Confidential Government in Riyadh, Omio in Berlin) are geographically and organizationally irrelevant to Olympique Lyonnais. There are no specific signals, procurement needs, or technology stacks related to OL detected in this noise."
+        }
+      ],
+      "total_input_tokens": 7456,
+      "total_output_tokens": 1297,
+      "estimated_cost_usd": 0.041823
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Olympique Lyonnais may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:30:04.011341"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.122484",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:28.290203"
+}

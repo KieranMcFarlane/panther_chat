@@ -1,0 +1,170 @@
+{
+  "entity_id": "pe\u00f1arol",
+  "entity_name": "Pe\u00f1arol",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "xn--pearol-xwa.org",
+    "tiendapenarol.com.uy",
+    "penarolmdp.com.ar",
+    "futbol.com.uy"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pe\u00f1arol",
+      "entity_name": "Pe\u00f1arol",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://xn--pearol-xwa.org",
+        "https://tiendapenarol.com.uy",
+        "https://futbol.com.uy",
+        "https://penarolmdp.com.ar"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pe\u00f1arol may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:36:50.126606",
+          "domain_explored": "https://xn--pearol-xwa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Web Platform Maintenance"
+            ]
+          },
+          "patterns_found": [
+            "CMS_Detection",
+            "Digital_Property_Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 356,
+              "output_tokens": 166,
+              "elapsed_seconds": 4.719530820846558
+            }
+          ],
+          "reasoning": "The URL structure and content header 'MVD CMS' indicate the use of a Content Management System. While this confirms a digital platform, it does not explicitly reveal procurement intent for new vendors, but it establishes the baseline technology stack."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:37:11.726579",
+          "domain_explored": "https://tiendapenarol.com.uy",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Inventory Management System (inferred from SKU tracking)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active digital retail operations",
+              "Structured product data management (SKUs)",
+              "Logistics and inventory handling requirements"
+            ]
+          },
+          "patterns_found": [
+            "Ecommerce_Platform_Detection",
+            "SKU_Structure",
+            "Inventory_Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 272,
+              "elapsed_seconds": 16.504478931427002
+            }
+          ],
+          "reasoning": "The content represents the product catalog of Pe\u00f1arol's official e-commerce store. While this does not show direct procurement intent (like RFPs), it confirms the existence of a digital sales infrastructure requiring backend support (ERP, PIM, Inventory Management). The presence of specific SKU codes (e.g., '78755405') suggests a structured inventory system, potentially integrated with larger enterprise software."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:37:21.488784",
+          "domain_explored": "https://penarolmdp.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mardelweb (Web Development Vendor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity_Mismatch",
+            "Vendor_Attribution",
+            "Outsourced_Web_Dev"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1236,
+              "output_tokens": 177,
+              "elapsed_seconds": 3.0415537357330322
+            }
+          ],
+          "reasoning": "The target entity 'Club Atl\u00e9tico Pe\u00f1arol Mar del Plata' is a distinct football club in Argentina, unrelated to the primary Uruguayan entity (Club Atl\u00e9tico Pe\u00f1arol). The site is a basic brochure with no procurement signals. The only vendor signal is 'Mardelweb', a local web developer, which is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:37:25.646154",
+          "domain_explored": "https://futbol.com.uy",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2988,
+      "total_output_tokens": 615,
+      "estimated_cost_usd": 0.018189
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pe\u00f1arol may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:37:25.646994"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.189908",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:38:40.593936"
+}

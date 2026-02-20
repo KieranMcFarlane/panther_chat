@@ -1,0 +1,197 @@
+{
+  "entity_id": "milano\u0096sanremo",
+  "entity_name": "Milano\u0096Sanremo",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "milanosanremo.it",
+    "milano-sanremo.org",
+    "milano-sanremo.it",
+    "italybiketours.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "milano\u0096sanremo",
+      "entity_name": "Milano\u0096Sanremo",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://milanosanremo.it",
+        "https://italybiketours.com",
+        "https://milano-sanremo.it",
+        "https://milano-sanremo.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Milano\u0096Sanremo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:00:24.376673",
+          "domain_explored": "https://milanosanremo.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Structure: Identification of 'Top Sponsor', 'Official Partners', and 'Official Suppliers' categories on the website footer, indicating a tiered vendor/partner ecosystem.",
+              "Title Sponsor: Cr\u00e9dit Agricole listed as primary presenter for 2025 events."
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Event Marketing Focus",
+            "Sponsorship Ecosystem"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.86775016784668
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on race results, video highlights, and event marketing for the 2025 and 2026 editions of Milano-Sanremo. While it confirms the existence of 'Official Partners' and 'Suppliers' (Cr\u00e9dit Agricole), it contains no technical infrastructure details, job postings, or explicit procurement signals (RFPs, tenders). The content is a duplicate of the homepage news feed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:00:35.061798",
+          "domain_explored": "https://milano-sanremo.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Instagram feed)",
+              "Video Streaming (YouTube)",
+              "Countdown Timer Widgets",
+              "E-commerce (Registration/Packages)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Tour Operator Partners (Travel/Logistics procurement)",
+              "Official Jersey/Merchandise Production (Apparel procurement)",
+              "Photography Services ('Fotografie ufficiali')",
+              "Registration Platform (Handling 'Diamond' packages and countdowns)"
+            ]
+          },
+          "patterns_found": [
+            "Event Registration Management",
+            "Tour Operator Partnerships",
+            "Merchandising (Official Jersey)",
+            "Digital Marketing (Social Media Integration)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1403,
+              "output_tokens": 340,
+              "elapsed_seconds": 4.02121114730835
+            }
+          ],
+          "reasoning": "The content reveals the operational side of the 'Milano Sanremo Amatori' (Gran Fondo), managed by Unione Ciclistica Sanremo. While the main race site (Iteration 1) showed no procurement signals, this sub-entity demonstrates active procurement needs for event management: registration platforms, travel/tour operator services, and merchandise production. The 'Diamond' package upsell indicates a need for sophisticated CRM/ticketing tools."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:00:41.626949",
+          "domain_explored": "https://milano-sanremo.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Registration Management (Implied via 'Iscrizioni')",
+              "Venue/Stand Procurement (Auto e Moto d\u2019Epoca Bologna, Padiglione 26)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Event Marketing Focus",
+            "Historical Re-enactment Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1454,
+              "output_tokens": 224,
+              "elapsed_seconds": 3.362948179244995
+            }
+          ],
+          "reasoning": "The scraped content is highly repetitive and focused exclusively on marketing the 'Coppa Milano Sanremo' historic car event (120th anniversary). There are no explicit procurement signals, technology stacks, or job postings visible in this text. It confirms the entity is an event organizer but provides no actionable intelligence regarding vendor selection or purchasing processes."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:00:48.544079",
+          "domain_explored": "https://italybiketours.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "HTML5 Search Forms",
+              "E-commerce Booking Engine"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Tour Package Sales",
+              "B2C Service Provision"
+            ]
+          },
+          "patterns_found": [
+            "B2C Tour Operator Interface",
+            "Generic Search Functionality",
+            "Third-Party Vendor"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.903424024581909
+            }
+          ],
+          "reasoning": "The scraped content from 'italybiketours.com' identifies the entity as a third-party tour operator offering travel packages related to cycling events (including Giro d'Italia and Grand Fondo). While they may offer packages *for* Milano-Sanremo, they are not the organizers (RCS Sport) and do not possess decision-making authority regarding the event's procurement, technology stack, or governance. This is a commercial vendor, not the target entity."
+        }
+      ],
+      "total_input_tokens": 5717,
+      "total_output_tokens": 1062,
+      "estimated_cost_usd": 0.033081
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Milano\u0096Sanremo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:00:48.545315"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.395318",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:15.734382"
+}

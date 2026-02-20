@@ -1,0 +1,179 @@
+{
+  "entity_id": "konyaspor",
+  "entity_name": "Konyaspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "konyaspor.org.tr",
+    "behance.net",
+    "zoominfo.com",
+    "football.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "konyaspor",
+      "entity_name": "Konyaspor",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://football.fandom.com",
+        "https://zoominfo.com",
+        "https://behance.net",
+        "https://konyaspor.org.tr"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Konyaspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:43:25.878281",
+          "domain_explored": "https://konyaspor.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom E-commerce Platform (konyastore.com.tr)",
+              "Social Media Integration (Instagram, Facebook, TikTok, YouTube, WhatsApp, X)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management (New Season Kits, Training Gear)",
+              "Sponsorship Management (T\u00fcmosan Konyaspor branding)",
+              "Retail Logistics (Product categorization: Jerseys, Shorts, Training/Camp products)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Sponsorship Branding",
+            "Merchandise Product Lifecycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 296,
+              "elapsed_seconds": 4.399605989456177
+            }
+          ],
+          "reasoning": "The content reveals the use of a dedicated e-commerce platform (konyastore.com.tr) for merchandise management, indicating a procurement category for retail software and logistics. The presence of a title sponsor (T\u00fcmosan) confirms an active sponsorship procurement category. However, the content is primarily consumer-facing (news, scores, shop links) and lacks deep technical infrastructure signals or explicit RFPs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:43:40.804797",
+          "domain_explored": "https://behance.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Creative Platform",
+            "Unrelated Portfolio Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 174,
+              "elapsed_seconds": 7.201544284820557
+            }
+          ],
+          "reasoning": "The provided content is the generic homepage HTML of Behance (Adobe), a creative portfolio platform. It contains no specific information regarding Konyaspor, its internal operations, technology stack, or procurement activities. The content lists random global creative projects (e.g., 'Rokka\u00b4s Trading', 'SKYTOPIA', 'Flags of Nature') which are irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:43:47.665111",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic B2B SaaS Marketing Content",
+            "Third-Party Platform Noise"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.4502859115600586
+            }
+          ],
+          "reasoning": "The content provided is the homepage marketing copy for ZoomInfo, a B2B data platform. It describes ZoomInfo's features and benefits for sales teams (e.g., 'Find the right buyers', 'AI prioritizes accounts'). It contains no specific information, data, or signals regarding Konyaspor's internal operations, technology stack, or procurement activities. This is irrelevant noise in the context of scraping for entity-specific intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:43:56.708521",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Fan Content Aggregation",
+            "User-Generated Content Platform",
+            "Irrelevant Football News Feed"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.1545379161834717
+            }
+          ],
+          "reasoning": "The scraped content represents the main landing page of a generic football wiki (Fandom/Wikia). It contains navigation elements, generic calls to action for editing, and standardized news feeds (Premier League, La Liga) unrelated to Konyaspor. There are no specific pages, technical details, or organizational data regarding Konyaspor's procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 5689,
+      "total_output_tokens": 849,
+      "estimated_cost_usd": 0.029802
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Konyaspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:43:56.710278"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.147553",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:37.261501"
+}

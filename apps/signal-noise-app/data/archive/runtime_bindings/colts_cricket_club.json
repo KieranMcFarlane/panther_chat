@@ -1,0 +1,219 @@
+{
+  "entity_id": "colts_cricket_club",
+  "entity_name": "Colts Cricket Club",
+  "template_id": "tpl_cricket_domestic_club_structure_v1",
+  "cluster_id": "cricket_domestic_club_structure",
+  "discovered_domains": [
+    "colombocolts.lk",
+    "play.cricket.com.au",
+    "tweedbanoracolts.com",
+    "gympie.qld.gov.au",
+    "citycoltscc.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colts_cricket_club",
+      "entity_name": "Colts Cricket Club",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.cricket.com.au",
+        "https://gympie.qld.gov.au",
+        "https://tweedbanoracolts.com",
+        "https://citycoltscc.com.au",
+        "https://colombocolts.lk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colts Cricket Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:38:58.712660",
+          "domain_explored": "https://colombocolts.lk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management Systems (Implied by NextGen launch)",
+              "Event Management Platforms (Implied by AGM/Event logistics)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Adrenaline Rush Gymnasium Launch (Facility procurement/operations)",
+              "NextGen Membership Rollout (Digital system requirements)",
+              "152nd AGM & Special General Meeting (Governance/Compliance services)",
+              "Official Sponsorship with Lanka IOC (Corporate partnership activation)"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Expansion",
+            "Membership Modernization",
+            "Constitutional Governance",
+            "Corporate Sponsorship"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 305,
+              "elapsed_seconds": 3.8180508613586426
+            }
+          ],
+          "reasoning": "The content reveals active organizational development and infrastructure expansion (Adrenaline Rush Gymnasium, NextGen Membership) which implies procurement needs for facility management, membership systems, and event services. While specific technology stacks are not listed, the operational scale indicates a need for CRM and administrative tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:39:05.725690",
+          "domain_explored": "https://play.cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain",
+            "Generic Content",
+            "Wrong Geographic Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 190,
+              "elapsed_seconds": 3.2232038974761963
+            }
+          ],
+          "reasoning": "The scraped content is from 'play.cricket.com.au', which is the official domain for Cricket Australia. This is irrelevant to the target entity, Colts Cricket Club (Sri Lanka). The content consists of generic navigation menus and promotional text for Australian community programs (Woolworths Cricket Blast, Smash Series). There are no procurement signals, technology stacks, or governance patterns applicable to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:39:14.084315",
+          "domain_explored": "https://tweedbanoracolts.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context",
+            "Junior Amateur Sports Club",
+            "Operational/Coaching Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 546,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.9478158950805664
+            }
+          ],
+          "reasoning": "The scraped content belongs to 'Tweed Banora Colts Cricket Club' located in Australia (Tweed Heads, NSW), not the target entity 'Colts Cricket Club' in Sri Lanka. The content focuses on junior coaching clinics and local events, presenting no procurement signals relevant to the target entity's infrastructure or governance modernization."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:39:23.822216",
+          "domain_explored": "https://gympie.qld.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context",
+            "Public Safety Information",
+            "Government Domain"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 685,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.345283031463623
+            }
+          ],
+          "reasoning": "The content is sourced from a local Australian government website (gympie.qld.gov.au) and focuses exclusively on public safety warnings regarding storms, floods, and bushfires. This is completely unrelated to Colts Cricket Club, which is a Sri Lankan sports entity. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:39:31.505529",
+          "domain_explored": "https://citycoltscc.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PlayHQ (Registration Management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Reliance on external platform (PlayHQ) for administrative tasks",
+              "Focus on 'Sponsors' suggests fundraising rather than procurement"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Geographic Context",
+            "Amateur Sports Club Operations",
+            "Third-Party Registration Platform (PlayHQ)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1187,
+              "output_tokens": 264,
+              "elapsed_seconds": 4.015066862106323
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'City Colts Cricket Club' based in Australia (citycoltscc.com.au), which is distinct from the target entity 'Colts Cricket Club' (likely Sri Lankan based on previous iteration context). The site focuses on junior cricket, registration via PlayHQ, and generic club policies. There is no evidence of corporate procurement activity, technology infrastructure investment, or governance structures relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5185,
+      "total_output_tokens": 1111,
+      "estimated_cost_usd": 0.03222
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colts Cricket Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:39:31.506478"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.295554",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:39:38.797381"
+}

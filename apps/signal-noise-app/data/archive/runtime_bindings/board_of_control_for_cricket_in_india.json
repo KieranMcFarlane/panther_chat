@@ -1,0 +1,161 @@
+{
+  "entity_id": "board_of_control_for_cricket_in_india",
+  "entity_name": "Board of Control for Cricket in India",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "bccitv-widget.epicon.in",
+    "icc-cricket.com",
+    "indiancricketersassociation.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "board_of_control_for_cricket_in_india",
+      "entity_name": "Board of Control for Cricket in India",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://bccitv-widget.epicon.in",
+        "https://icc-cricket.com",
+        "https://indiancricketersassociation.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Board of Control for Cricket in India may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:23:00.655330",
+          "domain_explored": "https://bccitv-widget.epicon.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Epicon (OTT Platform Provider)",
+              "BCCI TV (Streaming Service)",
+              "International Content Delivery Network"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Epicon (Widget/Streaming infrastructure)",
+              "Digital Asset Management: Copyright and Policy management portals",
+              "Platform Segmentation: International vs. Domestic content handling"
+            ]
+          },
+          "patterns_found": [
+            "OTT/Streaming Infrastructure",
+            "Digital Rights Management",
+            "Third-party Platform Dependency (Epicon)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 582,
+              "output_tokens": 294,
+              "elapsed_seconds": 27.613564014434814
+            }
+          ],
+          "reasoning": "The content reveals BCCI's utilization of a specific sub-domain (bccitv-widget.epicon.in) for streaming and legal documentation. This signals an active investment in OTT technology and digital content delivery. The presence of 'Epicon' as a platform provider indicates a vendor relationship or technology partnership, though it does not confirm an active new procurement cycle (likely an existing contract)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:23:14.362364",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Governance",
+            "Event Management (ICC T20 World Cup, U19 CWC)",
+            "Content Publishing (Match Highlights, News)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.6128950119018555
+            }
+          ],
+          "reasoning": "The content is sourced from the International Cricket Council (ICC), a distinct governing body from the Board of Control for Cricket in India (BCCI). While the BCCI is a member of the ICC, this content focuses on global tournament results, news, and general event management rather than BCCI-specific procurement activities, vendor selection, or infrastructure investments. There are no signals indicating BCCI purchasing intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:23:39.907366",
+          "domain_explored": "https://indiancricketersassociation.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Social Media/Video Hosting)",
+              "Facebook/Twitter/LinkedIn/Instagram (Social Media Management)",
+              "WordPress (Content Management - inferred from structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "ICA Medical Insurance Scheme Update (FY 2026-27)",
+              "Annual Health Check Up 2026 - Vendor: Spurthi Meditek",
+              "One-Time Benefit for Spouses (Welfare Program Administration)",
+              "Negotiation of commercial terms with BCCI"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Stakeholder Dependency",
+            "Welfare & Benefits Management",
+            "Healthcare Procurement (Medical Insurance/Checkups)",
+            "Membership Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 379,
+              "elapsed_seconds": 4.830674886703491
+            }
+          ],
+          "reasoning": "The content confirms the Indian Cricketers' Association (ICA) is a formally recognized entity by the BCCI, acting as the primary body for former players. While this is not a direct BCCI procurement page, it reveals a high-value procurement channel. The ICA negotiates commercial terms and welfare measures (Medical Insurance, Health Checkups) *with* the BCCI. The specific mention of 'Spurthi Meditek' for health checkups and updates on 'Medical Insurance Scheme FY 2026-27' indicates active procurement cycles in healthcare and benefits administration, funded or facilitated through BCCI relations."
+        }
+      ],
+      "total_input_tokens": 3490,
+      "total_output_tokens": 878,
+      "estimated_cost_usd": 0.02364
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Board of Control for Cricket in India may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:23:39.908674"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298887",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:03:58.875474"
+}

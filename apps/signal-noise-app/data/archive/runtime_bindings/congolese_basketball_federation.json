@@ -1,0 +1,157 @@
+{
+  "entity_id": "congolese_basketball_federation",
+  "entity_name": "Congolese Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ke.linkedin.com/jobs/view/sports-officer-senior-officer-at-equity-bank-limited-4096517159",
+      "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "congolese_basketball_federation",
+      "entity_name": "Congolese Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546",
+        "https://ke.linkedin.com/jobs/view/sports-officer-senior-officer-at-equity-bank-limited-4096517159",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Congolese Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:58:21.954191",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "vendor_marketing_content",
+            "generic_b2b_platform",
+            "irrelevant_testimonials"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 149,
+              "elapsed_seconds": 2.0504331588745117
+            }
+          ],
+          "reasoning": "The provided content is generic marketing copy from ZoomInfo's homepage, not specific information about the Congolese Basketball Federation. It contains no procurement signals, technology stack details, or governance patterns related to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:58:34.496883",
+          "domain_explored": "https://ke.linkedin.com/jobs/view/sports-officer-senior-officer-at-equity-bank-limited-4096517159",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite"
+            ],
+            "job_postings": [
+              {
+                "title": "Sports Officer (Senior Officer)",
+                "entity": "Equity Bank Limited",
+                "location": "Kenya",
+                "focus": "Corporate wellness, staff sports coordination"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_entity_target",
+            "corporate_wellness_role",
+            "hr_job_posting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.839187145233154
+            }
+          ],
+          "reasoning": "The content is a job posting for a 'Sports Officer' at Equity Bank Limited (Kenya), not the Congolese Basketball Federation. While the role involves sports management, it is an internal HR/corporate wellness position focused on staff health and interbank games, not a procurement signal for the Federation itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:59:46.559435",
+          "domain_explored": "https://www.linkedin.com/jobs/view/driver-perm-mission-new-york-at-african-union-4353196546",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Driver, Perm Mission New York at African Union"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "wrong_entity_target",
+            "generic_job_aggregation",
+            "logistics_role",
+            "scraped_ui_noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 202,
+              "elapsed_seconds": 37.27511024475098
+            }
+          ],
+          "reasoning": "The content is a scraped LinkedIn job page for a 'Driver' role at the 'African Union' (likely the Permanent Mission to the UN in NY). This entity is distinct from the 'Congolese Basketball Federation'. Furthermore, the role is a logistical support position (driver), not a procurement or technical role. The content is mostly UI noise (login prompts) and irrelevant job listings."
+        }
+      ],
+      "total_input_tokens": 4281,
+      "total_output_tokens": 587,
+      "estimated_cost_usd": 0.021648
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Congolese Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:59:46.563246"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.265605",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:26:30.407850"
+}

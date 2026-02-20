@@ -1,0 +1,156 @@
+{
+  "entity_id": "mie_honda_heat",
+  "entity_name": "Mie Honda Heat",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "honda-heat.jp",
+    "league-one.jp",
+    "quins.co.uk",
+    "stanley-electric.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mie_honda_heat",
+      "entity_name": "Mie Honda Heat",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://stanley-electric.com",
+        "https://honda-heat.jp",
+        "https://league-one.jp",
+        "https://quins.co.uk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mie Honda Heat may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:37:07.010823",
+          "domain_explored": "https://honda-heat.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Video Hosting)",
+              "DAZN (Streaming Platform)",
+              "J SPORTS (Broadcasting)",
+              "League One Platform (Official Stats)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing System Usage (Online Shop)",
+              "Stadium Operations (Parking/Host Game Info)",
+              "Digital Content Management (Video Highlights)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing & E-commerce",
+            "Content Delivery Network (CDN) usage",
+            "Social Media Integration (YouTube)",
+            "Third-party Sports Analytics (League One)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 273,
+              "elapsed_seconds": 3.568761110305786
+            }
+          ],
+          "reasoning": "The content is primarily consumer-facing (match results, ticket sales) rather than corporate procurement. However, the presence of specific ticketing systems, video hosting (YouTube), and links to external sports platforms indicates active investment in digital fan engagement tools and infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:37:13.658813",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "TicketRugby.jp (Third-party ticketing platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide standardized ticketing operations"
+            ]
+          },
+          "patterns_found": [
+            "League Aggregation",
+            "Third-Party Ticketing (TicketRugby)",
+            "Match Schedule Data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.7692320346832275
+            }
+          ],
+          "reasoning": "The content is a generic match schedule for the 'League One' rugby competition. While it confirms Mie Honda Heat (listed as '\u4e09\u91cd\uff28') participates in this league, the page is a league-wide aggregator with no specific procurement signals, technology stack details, or organizational decision-making patterns unique to Mie Honda Heat. The ticketing link points to a centralized platform (ticketrugby.jp), which is a league-level utility rather than a direct procurement signal from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:37:16.747001",
+          "domain_explored": "https://quins.co.uk",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:37:19.467346",
+          "domain_explored": "https://stanley-electric.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2767,
+      "total_output_tokens": 519,
+      "estimated_cost_usd": 0.016086
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mie Honda Heat may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:37:19.468695"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280804",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:34:06.390432"
+}

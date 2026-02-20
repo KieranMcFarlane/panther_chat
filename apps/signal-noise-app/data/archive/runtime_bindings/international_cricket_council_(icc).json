@@ -1,0 +1,385 @@
+{
+  "entity_id": "international_cricket_council_(icc)",
+  "entity_name": "International Cricket Council (ICC)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "icc-cricket.com",
+    "usacricket.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/4345617559/",
+      "https://www.linkedin.com/jobs/view/4282803901/",
+      "https://www.linkedin.com/jobs/search/?currentJobId=4291780997&f_C=68887&geoId=92000000&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4291780997&trk=d_flagship3_company_posts",
+      "https://www.linkedin.com/jobs/view/4341989315/",
+      "https://www.linkedin.com/jobs/view/4347048954/",
+      "https://uk.linkedin.com/jobs/view/media-operations-executive-icc-women-s-t20-world-cup-2026-ftc-until-july-2026-at-england-wales-cricket-board-ecb-4367471959",
+      "https://ae.linkedin.com/jobs/view/chief-executive-officer-at-international-cricket-council-4147127385",
+      "https://ae.linkedin.com/jobs/view/manager-cricket-operations-at-international-cricket-council-4304634990"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_cricket_council_(icc)",
+      "entity_name": "International Cricket Council (ICC)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.1,
+        0.16,
+        0.18,
+        0.24
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/4347048954/",
+        "https://www.linkedin.com/jobs/search/?currentJobId=4291780997&f_C=68887&geoId=92000000&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4291780997&trk=d_flagship3_company_posts",
+        "https://usacricket.org",
+        "https://icc-cricket.com",
+        "https://www.linkedin.com/jobs/view/4282803901/",
+        "https://www.linkedin.com/jobs/view/4341989315/",
+        "https://www.linkedin.com/jobs/view/4345617559/"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Role (Manager - Licensing)",
+        "E-commerce & Digital Expansion Strategy",
+        "Vendor Management & Contract Negotiation",
+        "Brand Protection & IP Enforcement",
+        "Third-party Sales Agency Management",
+        "Intellectual Property (IP) Commercialization",
+        "Contract Lifecycle Management",
+        "Royalty & Revenue Assurance",
+        "Consumer Goods Supply Chain Engagement",
+        "Anti-Piracy & Brand Protection",
+        "Digital Product Ecosystem Management",
+        "OTT & Streaming Technology Procurement",
+        "AI & Data Analytics Integration",
+        "Vendor & Agency Management",
+        "Fan Engagement Platform Strategy"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Cricket Council (ICC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:09:09.011488",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Video Hosting/Streaming (Implied by 'Latest Videos' and 'Match Highlights')",
+              "Content Management System (CMS) (Implied by frequent news updates)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Production & Distribution (Ongoing operations for highlights)"
+            ]
+          },
+          "patterns_found": [
+            "High volume of content management (daily news, highlights)",
+            "Global event structure (U19, T20 World Cup, Women's CWC)",
+            "Media asset hosting (video streaming/highlights)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 275,
+              "elapsed_seconds": 5.252997875213623
+            }
+          ],
+          "reasoning": "The scraped content consists of consumer-facing news articles, match highlights, and tournament navigation menus. While this confirms the ICC is an active content producer, it contains zero technical infrastructure details, job postings, or explicit procurement signals (RFPs, vendor names). It confirms the 'Content Management' capability but does not advance the procurement hypothesis."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:09:20.594775",
+          "domain_explored": "https://usacricket.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CRM (implied by 2025 Membership Program)",
+              "CMS (WordPress or similar implied by blog structure)",
+              "Video Hosting (YouTube integration)"
+            ],
+            "job_postings": [
+              "Vacancies Page Detected (Link present on site)"
+            ],
+            "procurement_indicators": [
+              "RFP for Membership Management Platform (High Probability)",
+              "Consulting for Governance/Accountability (Medium Probability)",
+              "Digital Media Services for 'Straight Bat' blog and news"
+            ]
+          },
+          "patterns_found": [
+            "Membership Program Overhaul (2025)",
+            "Governance & Accountability Initiatives",
+            "Strategic Planning (Foundational Plan 2020-2023)",
+            "Digital Content Management (Blog, Media Releases)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 368,
+              "elapsed_seconds": 4.253965139389038
+            }
+          ],
+          "reasoning": "While this is USA Cricket (a member/associate of the ICC) and not the ICC headquarters, it reveals procurement-relevant activities within the ICC ecosystem. The explicit mention of a '2025 Membership Program' indicates a need for membership management software (CRM). The 'Transparency & Accountability' series and 'Foundational Plan' suggest organizational restructuring and potential consulting or governance tool requirements. The 'Vacancies' link (though content not scraped) is a direct procurement signal for human capital."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:09:29.698264",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4345617559/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "E-commerce Platforms",
+              "Online Marketplaces",
+              "Direct-to-Consumer (DTC) Infrastructure"
+            ],
+            "job_postings": [
+              "Manager - Licensing (Dubai, UAE)"
+            ],
+            "procurement_indicators": [
+              "Procurement of licensing partners and manufacturers",
+              "Appointment of third-party sales agencies",
+              "Procurement of brand protection/enforcement services",
+              "Procurement of ethical manufacturing and auditing services"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Role (Manager - Licensing)",
+            "E-commerce & Digital Expansion Strategy",
+            "Vendor Management & Contract Negotiation",
+            "Brand Protection & IP Enforcement",
+            "Third-party Sales Agency Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.3463029861450195
+            }
+          ],
+          "reasoning": "The job posting for 'Manager - Licensing' is a direct procurement signal. It explicitly outlines responsibility for the 'sales, procurement, negotiation and contracting process' for licensees. It reveals a strategic shift towards expanding 'e-commerce licensing' and 'direct-to-consumer' channels, indicating a need for digital commerce platforms and vendor partners to support these new revenue streams."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:09:41.163811",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4282803901/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Media Monitoring Tools",
+              "PR/CRM Analytics",
+              "Digital Asset Management (DAM)"
+            ],
+            "job_postings": [
+              "Manager - Media & Corporate Communications"
+            ],
+            "procurement_indicators": [
+              "Vendor management via Local Organizing Committees (LOCs)",
+              "Procurement of launch event services",
+              "Subscription requirements for media monitoring platforms",
+              "Agency support for corporate communications"
+            ]
+          },
+          "patterns_found": [
+            "Media Monitoring & Intelligence Requirements",
+            "Event-Specific Vendor Coordination (LOCs)",
+            "Strategic Stakeholder Management",
+            "Global Growth Strategy Alignment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1568,
+              "output_tokens": 367,
+              "elapsed_seconds": 6.0779688358306885
+            }
+          ],
+          "reasoning": "While this is a communications role rather than a direct procurement function, the description reveals significant indirect procurement signals. The explicit requirement for 'media monitoring' and 'issues briefs' indicates a need for media intelligence SaaS tools (e.g., Meltwater, Cision). Furthermore, the collaboration with 'Local Organizing Committees (LOCs)' and the organization of 'launch events' suggests a reliance on third-party event management and PR agencies. This supports the hypothesis of an active vendor ecosystem, though it lacks direct purchasing authority."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:09:50.377897",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?currentJobId=4291780997&f_C=68887&geoId=92000000&origin=COMPANY_PAGE_JOBS_CLUSTER_EXPANSION&originToLandingJobPostings=4291780997&trk=d_flagship3_company_posts",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IP Management Systems",
+              "Royalty Reporting Software",
+              "Contract Management Tools"
+            ],
+            "job_postings": [
+              "Manager - Brand Licensing (Dubai, UAE)"
+            ],
+            "procurement_indicators": [
+              "Vendor Sourcing (Licensees)",
+              "Contract Negotiation (Licensing Agreements)",
+              "Financial Auditing (Royalty Compliance)",
+              "Market Expansion (Retail/Merchandise)"
+            ]
+          },
+          "patterns_found": [
+            "Intellectual Property (IP) Commercialization",
+            "Contract Lifecycle Management",
+            "Royalty & Revenue Assurance",
+            "Consumer Goods Supply Chain Engagement",
+            "Anti-Piracy & Brand Protection"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 908,
+              "output_tokens": 308,
+              "elapsed_seconds": 4.85932183265686
+            }
+          ],
+          "reasoning": "The 'Manager - Brand Licensing' role is a direct procurement function focused on the commercialization of the ICC's Intellectual Property. It involves sourcing and managing partners (licensees) in the consumer goods sector, negotiating contracts, and ensuring royalty compliance. This confirms active procurement activities within the Brand Licensing category."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:09:57.960780",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4341989315/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Remote Collaboration Tools (Zoom/Teams)",
+              "Performance Management Software",
+              "Video Analysis Platforms"
+            ],
+            "job_postings": [
+              "Umpire Coach (Contract, Remote)"
+            ],
+            "procurement_indicators": [
+              "Decentralized global workforce implies need for unified SaaS communication tools",
+              "Training program development implies procurement of educational content or LMS platforms",
+              "Contract-based employment structure suggests reliance on external consultants/contractors"
+            ]
+          },
+          "patterns_found": [
+            "Global Distributed Workforce Model",
+            "High-Performance Training & Development Procurement",
+            "Contractual Labor Engagement",
+            "Stakeholder Management (Home Boards)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1730,
+              "output_tokens": 375,
+              "elapsed_seconds": 2.848783016204834
+            }
+          ],
+          "reasoning": "While this is a sports operations role rather than a direct procurement function, it reveals the ICC's operational model which drives specific procurement needs. The 'work from home / home country' structure indicates a need for remote collaboration tools, performance management software, and video conferencing solutions. Additionally, the requirement to develop 'high performance programmes' suggests potential procurement of specialized training platforms, analytics tools for umpire performance, and educational content management systems."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T06:10:07.078990",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4347048954/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "OTT Platforms (ICC.tv)",
+              "Mobile App Frameworks",
+              "AI & Machine Learning (Personalization/Analytics)",
+              "Video Streaming Infrastructure",
+              "MarTech (Marketing Technology)"
+            ],
+            "job_postings": [
+              "Senior Manager - Digital Products"
+            ],
+            "procurement_indicators": [
+              "Vendor & Agency Management",
+              "Technology Partnerships",
+              "Digital Transformation Investment",
+              "Data Analytics & AI Tool Acquisition"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Ecosystem Management",
+            "OTT & Streaming Technology Procurement",
+            "AI & Data Analytics Integration",
+            "Vendor & Agency Management",
+            "Fan Engagement Platform Strategy"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1794,
+              "output_tokens": 371,
+              "elapsed_seconds": 5.076645135879517
+            }
+          ],
+          "reasoning": "The job posting for a Senior Manager - Digital Products reveals a strategic initiative to modernize the ICC's digital infrastructure. It explicitly mentions managing 'multi-party delivery structures involving vendors, agencies,' and requires expertise in OTT, streaming, CMS, and AI technologies. This indicates a clear procurement need for advanced tech stacks, content delivery networks, and potentially AI service providers to support the ICC.tv platform and global fan engagement tools."
+        }
+      ],
+      "total_input_tokens": 10307,
+      "total_output_tokens": 2403,
+      "estimated_cost_usd": 0.066966
+    },
+    "procurement_signals": [
+      "Direct Procurement Role (Manager - Licensing)",
+      "E-commerce & Digital Expansion Strategy",
+      "Vendor Management & Contract Negotiation",
+      "Brand Protection & IP Enforcement",
+      "Third-party Sales Agency Management",
+      "Intellectual Property (IP) Commercialization",
+      "Contract Lifecycle Management",
+      "Royalty & Revenue Assurance",
+      "Consumer Goods Supply Chain Engagement",
+      "Anti-Piracy & Brand Protection",
+      "Digital Product Ecosystem Management",
+      "OTT & Streaming Technology Procurement",
+      "AI & Data Analytics Integration",
+      "Vendor & Agency Management",
+      "Fan Engagement Platform Strategy"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Cricket Council (ICC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:10:07.080255"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457148",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:15.687605"
+}

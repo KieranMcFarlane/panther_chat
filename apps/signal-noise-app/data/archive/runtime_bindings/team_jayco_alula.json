@@ -1,0 +1,125 @@
+{
+  "entity_id": "team_jayco_alula",
+  "entity_name": "Team Jayco AlUla",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "uci_protour_women",
+  "discovered_domains": [
+    "greenedgecycling.com",
+    "experiencealula.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "team_jayco_alula",
+      "entity_name": "Team Jayco AlUla",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://experiencealula.com",
+        "https://greenedgecycling.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Team Jayco AlUla may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:17:43.827600",
+          "domain_explored": "https://greenedgecycling.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Official Channel)",
+              "Instagram (Social Media)",
+              "Giant (Bike Supplier - 'Giant Trinity TT bikes')",
+              "Mailchimp/CRM (Inferred from 'Subscribe' form and 'Privacy Policy' link)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Portfolio: Jayco, AlUla, Liv, Giant (Equipment procurement)",
+              "Multi-Team Structure: Implies scalable vendor contracts for 4 distinct teams",
+              "Digital Presence: Active content creation suggests vendor needs for media production/hosting"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Portfolio Expansion",
+            "Multi-tier Team Structure (WorldTour & Continental)",
+            "Digital Content Engagement (YouTube/Instagram)",
+            "Newsletter Marketing Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 359,
+              "elapsed_seconds": 3.9625542163848877
+            }
+          ],
+          "reasoning": "The content confirms the entity's active operational status and complex sponsorship structure (GreenEDGE, Jayco, AlUla, Liv, Giant). While no explicit RFPs are visible, the maintenance of distinct teams (WorldTour and Continental) and active digital channels indicate ongoing procurement needs for performance equipment, team logistics, and digital marketing services. The '2026 New Look' branding suggests recent or upcoming contract renewals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:17:51.485244",
+          "domain_explored": "https://experiencealula.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational vendor: Live Nation (operating Hegra Day Tour)",
+              "Event infrastructure: Desert X AlUla 2026, AlUla Arts Festival"
+            ]
+          },
+          "patterns_found": [
+            "Tourism & Event Management Focus",
+            "Third-Party Operations (Live Nation)",
+            "B2C Content Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.2383177280426025
+            }
+          ],
+          "reasoning": "The content is from the destination marketing site (experiencealula.com) rather than the team's operational entity. It focuses on tourism, events, and ticket sales for the region. While it confirms the 'AlUla' brand context and shows third-party operations (Live Nation), it contains no direct procurement signals, technology stacks, or job postings relevant to the cycling team's operations."
+        }
+      ],
+      "total_input_tokens": 2781,
+      "total_output_tokens": 589,
+      "estimated_cost_usd": 0.017178
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Team Jayco AlUla may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:17:51.488388"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.382112",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:26.405248"
+}

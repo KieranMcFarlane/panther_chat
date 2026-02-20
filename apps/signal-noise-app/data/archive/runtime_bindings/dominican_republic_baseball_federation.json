@@ -1,0 +1,283 @@
+{
+  "entity_id": "dominican_republic_baseball_federation",
+  "entity_name": "Dominican Republic Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "sabaseball.co.za"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+      "https://do.linkedin.com/jobs/view/minor-league-certified-athletic-trainer-dr-seasonal-at-athletics-4361281864",
+      "https://do.linkedin.com/jobs/mlb-empleos",
+      "https://www.linkedin.com/jobs/view/los-angeles-angels-full-time-minor-league-athletic-trainer-dominican-republic-at-los-angeles-angels-4323523852",
+      "https://do.linkedin.com/company/major-league-baseball/jobs",
+      "https://do.linkedin.com/jobs/view/minor-league-sport-performance-coach-dr-at-athletics-4332338182",
+      "https://www.linkedin.com/jobs/view/dominican-republic-technology-assistant-at-houston-astros-4341800881",
+      "https://www.linkedin.com/jobs/view/mlbpa-summer-internship-program-at-major-league-baseball-players-association-4356094610",
+      "https://www.linkedin.com/jobs/search/?currentJobId=3440356395&f_C=30481,33275,20779,28741,20998,22262,20930,23772,26665,22731,19250,23328,27906,23867,24714,2050,19577,165901,503474,19738,21089,20421,163018,162620,165479,22907,19643,18234,164826&f_CR=103644278&f_E=1,2&f_JT=F&geoId=92000000&sortBy=R"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dominican_republic_baseball_federation",
+      "entity_name": "Dominican Republic Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/los-angeles-angels-full-time-minor-league-athletic-trainer-dominican-republic-at-los-angeles-angels-4323523852",
+        "https://do.linkedin.com/company/major-league-baseball/jobs",
+        "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+        "https://do.linkedin.com/jobs/mlb-empleos",
+        "https://do.linkedin.com/jobs/view/minor-league-certified-athletic-trainer-dr-seasonal-at-athletics-4361281864",
+        "https://sabaseball.co.za"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dominican Republic Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:39:42.290935",
+          "domain_explored": "https://sabaseball.co.za",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "content_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 456,
+              "output_tokens": 158,
+              "elapsed_seconds": 2.0535707473754883
+            }
+          ],
+          "reasoning": "The content provided is from the South African Baseball Federation (sabaseball.co.za), which is a completely different entity than the target, the Dominican Republic Baseball Federation. The content describes a U15 Women's team event and contains no procurement signals, technology stacks, or governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:39:48.539828",
+          "domain_explored": "https://www.linkedin.com/jobs/major-league-baseball-%28mlb%29-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Human Resources Coordinator",
+              "Receptionist (Temp to Perm)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "jurisdiction_mismatch",
+            "content_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.1080620288848877
+            }
+          ],
+          "reasoning": "The content is a job listing page for Major League Baseball (MLB), a US-based entity. The target entity is the Dominican Republic Baseball Federation. While both are baseball-related, they are distinct legal entities with different procurement needs and jurisdictions. The content does not contain signals relevant to the Federation's procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:39:55.073015",
+          "domain_explored": "https://do.linkedin.com/jobs/view/minor-league-certified-athletic-trainer-dr-seasonal-at-athletics-4361281864",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Statistical Analysis Software (implied by 'Moneyball' reference)",
+              "Medical/EMR Systems (implied by healthcare management role)"
+            ],
+            "job_postings": [
+              "Minor League Certified Athletic Trainer (DR) - Seasonal"
+            ],
+            "procurement_indicators": [
+              "Facility Operations in La Victoria, DR",
+              "Medical Supply Chain Requirements",
+              "MLB Team Presence in Dominican Republic"
+            ]
+          },
+          "patterns_found": [
+            "vendor_partnership",
+            "jurisdiction_match",
+            "operational_expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 324,
+              "elapsed_seconds": 3.0036709308624268
+            }
+          ],
+          "reasoning": "The content describes a job posting by the Oakland Athletics (MLB) located in La Victoria, Dominican Republic. While this is not a direct procurement action by the Dominican Republic Baseball Federation, it confirms active investment and operational expansion by a major MLB entity within the target geography. This indicates a mature ecosystem requiring vendor support (medical supplies, facility management) and validates the location as a hub for baseball operations, which aligns with the broader procurement intelligence gathering for the region."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:40:01.101851",
+          "domain_explored": "https://do.linkedin.com/jobs/mlb-empleos",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter"
+            ],
+            "job_postings": [
+              "Associate - Minor League Athletic Trainer \u2013 Dominican Republic (Milwaukee Brewers, Santo Domingo)"
+            ],
+            "procurement_indicators": [
+              "Active hiring in Dominican Republic",
+              "Operational presence confirmed",
+              "Infrastructure investment"
+            ]
+          },
+          "patterns_found": [
+            "jurisdiction_match",
+            "vendor_partnership",
+            "operational_expansion",
+            "talent_procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 282,
+              "elapsed_seconds": 2.77193021774292
+            }
+          ],
+          "reasoning": "The content reveals specific job postings ('Associate - Minor League Athletic Trainer') located in Santo Domingo, Dominican Republic, associated with MLB entities (e.g., Milwaukee Brewers). While this is a recruitment signal rather than direct B2B procurement, it confirms active operational investment and infrastructure presence in the target jurisdiction, which often correlates with future needs for local vendors (facilities, equipment, HR services)."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:40:07.871385",
+          "domain_explored": "https://www.linkedin.com/jobs/view/los-angeles-angels-full-time-minor-league-athletic-trainer-dominican-republic-at-los-angeles-angels-4323523852",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MLB electronic medical records system (EMR)"
+            ],
+            "job_postings": [
+              "Minor League Athletic Trainer (Dominican Republic)"
+            ],
+            "procurement_indicators": [
+              "Supply chain for medical equipment and training room supplies",
+              "Software licensing for EMR systems",
+              "Facilities maintenance and operations at Boca Chica academy"
+            ]
+          },
+          "patterns_found": [
+            "jurisdiction_match",
+            "vendor_partnership",
+            "operational_expansion",
+            "digital_transformation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 301,
+              "elapsed_seconds": 3.3806631565093994
+            }
+          ],
+          "reasoning": "The job posting confirms significant operational presence in the Dominican Republic (Boca Chica) for the Los Angeles Angels. While the hiring entity is an MLB team (not the Federation directly), it validates the ecosystem. Key procurement signals include the requirement for 'MLB electronic medical records system' usage and the need to stock/maintain 'necessary supplies and equipment', indicating ongoing vendor relationships for medical tech and inventory procurement within the DR."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:40:15.542928",
+          "domain_explored": "https://do.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Web Platform",
+              "Sales & Marketing Tech Stack"
+            ],
+            "job_postings": [
+              "Senior Coordinator, Sales, Marketing & Brand Experience",
+              "Senior Software Engineer, Web Platform",
+              "Gameday Operations Coordinator",
+              "Brazil Pitching Coach"
+            ],
+            "procurement_indicators": [
+              "Investment in Web Infrastructure (Software Engineering)",
+              "Regional Operational Hiring (Brazil Coach)",
+              "Marketing & Brand Experience Roles"
+            ]
+          },
+          "patterns_found": [
+            "digital_transformation",
+            "vendor_partnership",
+            "operational_expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 353,
+              "elapsed_seconds": 4.172039747238159
+            }
+          ],
+          "reasoning": "While the entity is the MLB (headquartered in NY) and not the Dominican Republic Baseball Federation directly, the 'Senior Software Engineer, Web Platform' role indicates a digital transformation that likely impacts international operations, including the Dominican Republic. The 'Brazil Pitching Coach' role confirms MLB's direct operational expansion in Latin America, suggesting potential future procurement needs for similar operational support in the DR. This confirms the ecosystem is active but provides only weak direct procurement signals for the specific DR entity at this time."
+        }
+      ],
+      "total_input_tokens": 8150,
+      "total_output_tokens": 1613,
+      "estimated_cost_usd": 0.048645
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dominican Republic Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:40:15.544006"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.313904",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:47.171538"
+}

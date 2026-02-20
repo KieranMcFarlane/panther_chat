@@ -1,0 +1,46 @@
+{
+  "template_id": "tier_1_club_centralized_procurement",
+  "template_name": "tier_1_club_centralized_procurement",
+  "cluster_id": "top_tier_club_football",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_domain": "arsenal.com",
+  "expanded_at": "2026-01-28T15:07:01.304152",
+  "signals_collected": 3,
+  "signal_examples": [
+    {
+      "content": "Found 'Digital' on official site: ...Information\nOpening Hours\nThe Armoury Store\nMEN\nWOMEN\nACADEMY\nTicket Info\nTicket Hub\nSeason Tickets\nDigital Ticketing\nTicket Exchange\nHome Ticket Transfer\nAway Ticket Exchange\nWomen's Ticketing\nTicket categories/pricing\nHospitality\nDisabled supporters\nTicket Touting\nMen Ticket Info\n2025/26 Men's Tic...",
+      "confidence": 0.7,
+      "source_url": "https://arsenal.com",
+      "signal_type": "keyword_detection",
+      "keyword": "Digital"
+    },
+    {
+      "content": "Found 'partners' 1 times in news section",
+      "confidence": 0.75,
+      "source_url": "https://arsenal.com/news",
+      "signal_type": "announcement",
+      "keyword": "partners",
+      "count": 1
+    },
+    {
+      "content": "Found 'new' 13 times in news section",
+      "confidence": 0.75,
+      "source_url": "https://arsenal.com/news",
+      "signal_type": "announcement",
+      "keyword": "new",
+      "count": 13
+    }
+  ],
+  "channels_scraped": [
+    "official_site",
+    "news",
+    "careers"
+  ],
+  "confidence_boost": 0.7333333333333334,
+  "metadata": {
+    "original_confidence": 0.7000000000000001,
+    "original_patterns": 3,
+    "original_channels": 4
+  }
+}

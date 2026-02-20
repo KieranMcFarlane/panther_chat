@@ -1,0 +1,203 @@
+{
+  "entity_id": "kaulig_racing",
+  "entity_name": "Kaulig Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "kauligracing.com",
+    "shopkauligracing.com",
+    "ramtrucks.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/racer-jobs_kaulig-racing-is-looking-for-a-team-communication-activity-7151724556074799104-mq9k",
+      "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kaulig_racing",
+      "entity_name": "Kaulig Racing",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp",
+        "https://www.linkedin.com/posts/racer-jobs_kaulig-racing-is-looking-for-a-team-communication-activity-7151724556074799104-mq9k",
+        "https://shopkauligracing.com",
+        "https://kauligracing.com",
+        "https://ramtrucks.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kaulig Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:42:20.619958",
+          "domain_explored": "https://kauligracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Shopify or Custom Stack)",
+              "Email Marketing / Newsletter Automation",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Procurement (implied by Shop)",
+              "Sponsorship Services (Grizzly Nicotine Pouches, Mopar/Ram)",
+              "Marketing Agency Services (implied by 'Race for the Seat' reality series production)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Direct-to-Consumer (DTC) Strategy",
+            "Digital Marketing & Lead Generation",
+            "Sponsorship Procurement (Inbound)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 321,
+              "elapsed_seconds": 4.872588157653809
+            }
+          ],
+          "reasoning": "The content confirms Kaulig Racing utilizes an e-commerce platform (shopkauligracing.com) and employs digital lead capture mechanisms (newsletter sign-ups). While this indicates existing vendor relationships for retail and marketing technology, it does not explicitly signal *new* procurement intent or active RFPs. However, the expansion of sponsorships (Grizzly, Mopar) suggests a growing need for partnership management tools or CRM capabilities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:42:34.779350",
+          "domain_explored": "https://shopkauligracing.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 21 column 9 (char 1306)"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:42:45.564788",
+          "domain_explored": "https://ramtrucks.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 22 column 9 (char 1387)"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:43:01.808320",
+          "domain_explored": "https://www.linkedin.com/posts/racer-jobs_kaulig-racing-is-looking-for-a-team-communication-activity-7151724556074799104-mq9k",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HubSpot (Marketing Automation)"
+            ],
+            "job_postings": [
+              "Team Communication and Marketing Specialist (No. 16 NASCAR Cup Series Team)"
+            ],
+            "procurement_indicators": [
+              "Investment in Sponsorship Management capabilities",
+              "Utilization of HubSpot for recruitment/tracking workflows"
+            ]
+          },
+          "patterns_found": [
+            "Marketing Technology Usage",
+            "Sponsorship Management Operations",
+            "Human Resource Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 247,
+              "elapsed_seconds": 10.738756895065308
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, it confirms organizational investment in 'Sponsorship Initiatives' and 'Team Communication'. The use of a HubSpot tracking link (hubs.ly) in the application process confirms the use of marketing automation technology, which is a key procurement signal for the marketing stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:43:12.501785",
+          "domain_explored": "https://www.linkedin.com/jobs/nascar-event-management-jobs-charlotte-nc?trk=guest_job_details_employer_location_jserp",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "NASCAR",
+                "role": "Social Content Producer",
+                "location": "Charlotte, NC",
+                "relevance": "Competitor/Industry Context"
+              },
+              {
+                "entity": "NASCAR",
+                "role": "Track Services Coordinator",
+                "location": "Concord, NC",
+                "relevance": "Competitor/Industry Context"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Competitor Ecosystem Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 315,
+              "elapsed_seconds": 5.133743762969971
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job search results page for 'NASCAR Event Management' roles in Charlotte, NC. While it lists relevant industry roles (e.g., Social Content Producer, Track Services Coordinator), these are for the sanctioning body (NASCAR) or other entities, not Kaulig Racing. The content is largely repetitive login prompts and UI text. There is no specific procurement signal, technology stack detail, or strategic intent attributable to Kaulig Racing in this text."
+        }
+      ],
+      "total_input_tokens": 4417,
+      "total_output_tokens": 883,
+      "estimated_cost_usd": 0.026496
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kaulig Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:43:12.503979"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.366814",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:59:16.241841"
+}

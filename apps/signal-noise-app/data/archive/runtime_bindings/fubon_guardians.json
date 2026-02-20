@@ -1,0 +1,156 @@
+{
+  "entity_id": "fubon_guardians",
+  "entity_name": "Fubon Guardians",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "tier_1_professional_clubs",
+  "discovered_domains": [
+    "fubonguardians.com",
+    "fubon.com",
+    "en.cpbl.com.tw"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/baseball-connect_astros-mlbjobs-playerdevelopment-activity-7406694625366654976-xG20"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fubon_guardians",
+      "entity_name": "Fubon Guardians",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.cpbl.com.tw",
+        "https://www.linkedin.com/posts/baseball-connect_astros-mlbjobs-playerdevelopment-activity-7406694625366654976-xG20",
+        "https://fubonguardians.com",
+        "https://fubon.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fubon Guardians may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:44:53.480518",
+          "domain_explored": "https://fubonguardians.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:45:56.530798",
+          "domain_explored": "https://fubon.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:46:07.115179",
+          "domain_explored": "https://en.cpbl.com.tw",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "league_statistics_display",
+            "game_results_data",
+            "player_performance_metrics"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.8354239463806152
+            }
+          ],
+          "reasoning": "The scraped content from en.cpbl.com.tw consists entirely of raw game data, statistical standings, and player leaderboards for the CPBL league. While 'Fubon Guardians' is listed as a team entity, the content contains no corporate governance information, technology infrastructure details, or procurement signals. It is purely sports statistics."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:46:18.734480",
+          "domain_explored": "https://www.linkedin.com/posts/baseball-connect_astros-mlbjobs-playerdevelopment-activity-7406694625366654976-xG20",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "entity": "Houston Astros",
+                "role": "Minor League Pitching Coach",
+                "relevance": "Industry Benchmark"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "signal": "Performance Systems & Technologies",
+                "context": "Astros role requires implementation of new tools and methodologies.",
+                "relevance_to_target": "Indirect market trend only"
+              }
+            ]
+          },
+          "patterns_found": [
+            "job_posting_analysis",
+            "competitor_benchmarking",
+            "performance_systems_adoption"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 289,
+              "elapsed_seconds": 6.277875900268555
+            }
+          ],
+          "reasoning": "The content is a LinkedIn post regarding a job opening for the Houston Astros (MLB), not the Fubon Guardians (CPBL). While it highlights industry trends in performance technologies and player development methodologies, it provides zero direct procurement signals, technology stack specifics, or governance patterns for the target entity, Fubon Guardians."
+        }
+      ],
+      "total_input_tokens": 2897,
+      "total_output_tokens": 462,
+      "estimated_cost_usd": 0.015621000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fubon Guardians may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:46:18.735891"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309759",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:46:45.703519"
+}

@@ -1,0 +1,243 @@
+{
+  "entity_id": "meshkov_brest",
+  "entity_name": "Meshkov Brest",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "seha-liga.com",
+    "meshkovbrest.by",
+    "globalsportsarchive.com",
+    "old.eurohandball.com",
+    "handball-planet.com",
+    "billetterie.psg.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "meshkov_brest",
+      "entity_name": "Meshkov Brest",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://old.eurohandball.com",
+        "https://meshkovbrest.by",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://handball-planet.com",
+        "https://billetterie.psg.fr",
+        "https://seha-liga.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Meshkov Brest may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:57:03.105418",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Cookie consent walls blocking content access",
+            "Upcoming EHF tournament schedules (2025-2026)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 218,
+              "elapsed_seconds": 15.407218217849731
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com). It focuses on match results (Denmark, Croatia), player awards (Gidsel), and future EHF tournament schedules. There is no mention of the specific entity 'Meshkov Brest', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity. The content is blocked by cookie walls in several sections, further limiting visibility."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:57:05.945469",
+          "domain_explored": "https://seha-liga.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:57:14.760734",
+          "domain_explored": "https://meshkovbrest.by",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "External Ticketing System (ticket.bgk-meshkova.com)",
+              "Email Marketing / Newsletter Capture"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Sponsorship Agreements (BETERA, Gazprom, Belgazprombank)"
+            ]
+          },
+          "patterns_found": [
+            "External Ticketing Platform Usage",
+            "Newsletter Subscription Form",
+            "Sponsorship Naming Rights (BETERA, Gazprom, Belgazprombank)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 267,
+              "elapsed_seconds": 3.312047243118286
+            }
+          ],
+          "reasoning": "The content reveals the club's operational reliance on a third-party ticketing system (ticket.bgk-meshkova.com) and active use of email marketing. While not a direct procurement signal, the use of an external ticketing vendor indicates a B2B relationship and potential for upselling services or analytics tools. The presence of major sponsors (Gazprom, BETERA) suggests a funded environment capable of procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:57:21.631404",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Sitemap Navigation Structure",
+            "Multi-sport Competition Listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.7162837982177734
+            }
+          ],
+          "reasoning": "The scraped content represents a generic sitemap or navigation menu for 'Global Sports Archive' covering Soccer, UEFA, and various international leagues. There is no mention of Meshkov Brest, handball, or specific procurement activities. The content is purely informational sports data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:57:28.910661",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Calendar Date Navigation Structure",
+            "Legacy/Archived Content Format",
+            "Generic Event Aggregation Links"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1559,
+              "output_tokens": 164,
+              "elapsed_seconds": 4.179898023605347
+            }
+          ],
+          "reasoning": "The content is a raw HTML dump of a calendar navigation interface for the 'old' subdomain of eurohandball.com. It contains no narrative text, no specific references to Meshkov Brest, no vendor information, and no procurement signals. It is purely structural data for date selection."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:57:35.759053",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports News Aggregation",
+            "Tournament Results Reporting (EHF EURO 2026)",
+            "Player Transfer/Roster Movement News",
+            "Sponsored Awards Content (Powered by Nexe Grupa)",
+            "Video Gallery Integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.6347899436950684
+            }
+          ],
+          "reasoning": "The content is exclusively focused on sports journalism, reporting match results, player awards, and coaching changes. There are no references to Meshkov Brest, nor are there any signals regarding business operations, technology procurement, or organizational governance."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:57:38.733999",
+          "domain_explored": "https://billetterie.psg.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 7480,
+      "total_output_tokens": 1001,
+      "estimated_cost_usd": 0.037455
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Meshkov Brest may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:57:38.735139"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.354006",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:10.455399"
+}

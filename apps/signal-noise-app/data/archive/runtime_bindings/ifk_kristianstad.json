@@ -1,0 +1,267 @@
+{
+  "entity_id": "ifk_kristianstad",
+  "entity_name": "IFK Kristianstad",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "ifkkristianstad.se",
+    "kristianstadhandboll.se",
+    "eurohandball.com",
+    "ifk-kristianstad.wheree.com",
+    "kristianstadarena.se",
+    "zoominfo.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ifk_kristianstad",
+      "entity_name": "IFK Kristianstad",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ifk-kristianstad.wheree.com",
+        "https://kristianstadhandboll.se",
+        "https://kristianstadarena.se",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://ifkkristianstad.se",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "IFK Kristianstad may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:40:01.581513",
+          "domain_explored": "https://ifkkristianstad.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Handbollsligan Live (Streaming Platform)",
+              "Affiliate Shopping Platform (Likely 'Enjord' or similar sports fundraising tech)",
+              "Lottery/Gambling Software (for 50/50 draws)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership structure (Huvudpartners/Centrala partners)",
+              "Digital fundraising campaigns (Affiliate links, Lottery)",
+              "Content delivery (Live match streaming)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement",
+            "Streaming Infrastructure",
+            "Affiliate Marketing Partnerships",
+            "Lottery/Gambling Platform Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 337,
+              "elapsed_seconds": 4.5064709186553955
+            }
+          ],
+          "reasoning": "The content reveals specific digital service dependencies rather than direct procurement requests. The promotion of 'Handbollsligan Live' indicates a reliance on streaming services. The '50/50 Lotten' and 'St\u00f6tta IFK med varje k\u00f6p' (affiliate shopping) sections suggest the use of third-party platforms for fundraising and gambling, which are potential vendor touchpoints. While no direct RFP is visible, the active promotion of these digital services confirms operational capability and potential vendor relationships."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:40:10.134534",
+          "domain_explored": "https://kristianstadhandboll.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "handbollsligan.live (Streaming Platform)",
+              "Kristianstad Arena (Venue)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of centralized league streaming platform",
+              "Marketing focus on digital accessibility",
+              "Venue utilization for 'Final4-form'"
+            ]
+          },
+          "patterns_found": [
+            "Digital Streaming Infrastructure",
+            "Fan Engagement Platforms",
+            "League-Level Digital Rights"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 268,
+              "elapsed_seconds": 5.076986074447632
+            }
+          ],
+          "reasoning": "The content confirms the organization utilizes a centralized streaming platform (handbollsligan.live) for broadcasting away matches. This indicates a reliance on third-party digital infrastructure rather than in-house procurement for streaming. However, the active promotion of 'Studio, repriser och highlights' suggests a continued need for content creation tools and potential future upgrades to fan engagement technologies."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:40:25.133721",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Management Tools (Generic)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Machineseeker (Title Sponsor of EHF Champions League) - Indicates league-level sponsorship, not direct club procurement."
+            ]
+          },
+          "patterns_found": [
+            "League-Level Content Aggregation",
+            "Cookie Consent Management",
+            "Event Calendar Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 255,
+              "elapsed_seconds": 11.202041864395142
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) general news portal and event calendar, not the specific entity IFK Kristianstad. The content focuses on macro-level events (Denmark, Croatia, EHF EURO 2026) and generic site functionality (cookie blocking). There are no specific procurement signals, technology stacks, or governance patterns related to IFK Kristianstad's operations. This represents a drift away from the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:40:28.181603",
+          "domain_explored": "https://ifk-kristianstad.wheree.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:40:42.967867",
+          "domain_explored": "https://kristianstadarena.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine (implied by 'L\u00e4s mer och boka')",
+              "CMS (WordPress implied by structure)"
+            ],
+            "job_postings": [
+              "Jobba hos oss (Link detected: /om-arenan/jobba-hos-oss/)"
+            ],
+            "procurement_indicators": [
+              "Catering & Restaurant Operations (Stj\u00e4rnrestaurangen, Arenarestaurangen)",
+              "Conference Technology & AV Equipment",
+              "Facility Maintenance Services",
+              "Event Ticketing Platform"
+            ]
+          },
+          "patterns_found": [
+            "Venue Management & Operations",
+            "Hospitality & Catering Services",
+            "Conference & Event Infrastructure",
+            "Ticketing & Booking Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 317,
+              "elapsed_seconds": 5.318489074707031
+            }
+          ],
+          "reasoning": "The content reveals Kristianstad Arena as the primary venue operator for IFK Kristianstad. While the page focuses on consumer-facing events (Melodifestivalen) and hospitality, the 'Konferens' and 'Om arenan' sections indicate a need for B2B procurement, specifically in facility management, catering services, and booking/ticketing infrastructure. The 'Jobba hos oss' link is a potential lead for internal HR/ERP signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:40:46.043299",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:40:52.573033",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Data Aggregation",
+            "Global League Indexing",
+            "Cookie Consent Management",
+            "Static Content Delivery"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.0702497959136963
+            }
+          ],
+          "reasoning": "The content analyzed is a generic navigation menu for 'Global Sports Archive' covering global soccer leagues (UEFA, CONCACAF, etc.). It is a third-party aggregator site with no specific connection to IFK Kristianstad, handball, or local Swedish procurement signals. It provides no actionable intelligence regarding IFK Kristianstad's operations or technology stack."
+        }
+      ],
+      "total_input_tokens": 7399,
+      "total_output_tokens": 1365,
+      "estimated_cost_usd": 0.042672
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "IFK Kristianstad may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:40:52.574564"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.356087",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:34.417552"
+}

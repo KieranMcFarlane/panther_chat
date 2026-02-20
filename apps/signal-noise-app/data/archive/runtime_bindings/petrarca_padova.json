@@ -1,0 +1,170 @@
+{
+  "entity_id": "petrarca_padova",
+  "entity_name": "Petrarca Padova",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "federugby.it",
+    "wikidata.org",
+    "primoicpadova.it",
+    "www-old.cev.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "petrarca_padova",
+      "entity_name": "Petrarca Padova",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://federugby.it",
+        "https://primoicpadova.it",
+        "https://wikidata.org",
+        "https://www-old.cev.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Petrarca Padova may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:46:49.617538",
+          "domain_explored": "https://federugby.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event organization for 'Birra Peroni Nastro Azzurro Terzo Tempo Village' (Vendor: Birra Peroni)",
+              "Broadcasting services (Vendors: Sky Sport, TV8, NOW)",
+              "Entertainment services (Vendors: Radio Deejay, Radio m2o, Radio Capital)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Event Management",
+            "Media Broadcasting Rights",
+            "Sponsorship Activation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.794938087463379
+            }
+          ],
+          "reasoning": "The content is focused on the Italian National Rugby Team's match preparation, schedule, and event logistics for the Six Nations Tournament. While it mentions media partners (Sky, TV8) and sponsors (Radio Deejay, Birra Peroni), these are established commercial partnerships rather than procurement signals or new vendor solicitations relevant to Petrarca Padova. There is no mention of job postings, RFPs, or technology investments applicable to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:46:52.591326",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:47:01.954288",
+          "domain_explored": "https://primoicpadova.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Piattaforma Unica (National Ministry of Education Enrollment System)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Adoption of 'Piattaforma Unica' for 2026/27 admissions (Mandated Public Digital Service)",
+              "Participation in 'Playmath' and 'Kangourou' (Third-party Educational Service Providers)",
+              "Execution of 'Raccogliamo Miglia Verdi' project (Potential Environmental Service Vendor)",
+              "Open Day event organization (Logistic/Marketing vendor potential)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Platform Usage (Piattaforma Unica)",
+            "Educational Project Procurement (Playmath, Grande Macchina del Mondo)",
+            "Event Management (Open Day)",
+            "Sustainability Projects (Raccogliamo Miglia Verdi)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 381,
+              "elapsed_seconds": 4.71661901473999
+            }
+          ],
+          "reasoning": "The content confirms 'Istituto Comprensivo Petrarca Padova' is an active educational entity (Primary/Middle School). While direct procurement signals (RFPs/Tenders) are absent, the reliance on the national 'Piattaforma Unica' for admissions and participation in external funded projects ('Grande Macchina del Mondo', 'Miglia Verdi') indicates a structure that consumes third-party educational services and digital tools. This shifts the hypothesis from a generic entity search to a specific public school analysis, warranting a small confidence increase."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:47:08.389116",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Event Management",
+            "Multi-language Navigation",
+            "Historical Data Archiving"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.280702829360962
+            }
+          ],
+          "reasoning": "The content is a navigation menu and event index for the European Volleyball Confederation (CEV). While it lists numerous events (EuroVolley, Champions League) and locations, it contains no specific information regarding 'Petrarca Padova', its specific vendors, or its internal procurement activities. It is a general sports governance site with no direct relevance to the target entity."
+        }
+      ],
+      "total_input_tokens": 4285,
+      "total_output_tokens": 838,
+      "estimated_cost_usd": 0.025425
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Petrarca Padova may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:47:08.391327"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.281390",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:52:33.139786"
+}

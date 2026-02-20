@@ -1,0 +1,127 @@
+{
+  "entity_id": "hammarby_basket",
+  "entity_name": "Hammarby Basket",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "hammarbybasket.se",
+    "hammarby-if.se"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hammarby_basket",
+      "entity_name": "Hammarby Basket",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://hammarby-if.se",
+        "https://hammarbybasket.se"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hammarby Basket may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:04:02.346490",
+          "domain_explored": "https://hammarbybasket.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SportAdmin (Platform)",
+              "SportAdmin App (iOS/Android)",
+              "SportAdmin Web Portal (Admin)"
+            ],
+            "job_postings": [
+              "Trainer/Coach (Bli tr\u00e4nare i Hammarby - Ans\u00f6k nu!)"
+            ],
+            "procurement_indicators": [
+              "New Head Sponsor Agreement: ICA Kvantum Farsta Centrum",
+              "Event Procurement: Hammarby Basketball Camp (Venue: Enk\u00f6ping)"
+            ]
+          },
+          "patterns_found": [
+            "Membership Management via Mobile App",
+            "Administrative Role Login via Web Portal",
+            "Sponsorship Acquisition Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 320,
+              "elapsed_seconds": 3.5533499717712402
+            }
+          ],
+          "reasoning": "The content reveals a clear dependency on the 'SportAdmin' platform for both member-facing (mobile app) and administrative (web portal) functions. While this confirms the current technology stack, it does not explicitly show an intent to procure *new* technology. However, the active recruitment of coaches and the announcement of a new head sponsor (ICA Kvantum Farsta Centrum) indicate organizational growth and financial health, which are leading indicators for future procurement needs (e.g., scaling tools, marketing services)."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:04:12.068688",
+          "domain_explored": "https://hammarby-if.se",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Management Systems (Implied)",
+              "Centralized Database (Implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Organizational Scale (31k+ members)",
+              "Shared Services Model (Hammarby IF)"
+            ]
+          },
+          "patterns_found": [
+            "Membership Growth (31,000+ members)",
+            "Centralized Administration (Hammarby IF Alliance)",
+            "Operational Scale Requirement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 769,
+              "output_tokens": 272,
+              "elapsed_seconds": 5.372660875320435
+            }
+          ],
+          "reasoning": "The content reveals that Hammarby Basket operates within the larger Hammarby IF alliance, which has surpassed 31,000 members. This scale of membership administration strongly suggests a reliance on, or potential need for, robust membership management systems (CRM), database solutions, or shared IT services to handle the data and administrative load. While no specific procurement ad is visible, the operational scale implies a capability for centralized software procurement."
+        }
+      ],
+      "total_input_tokens": 2127,
+      "total_output_tokens": 592,
+      "estimated_cost_usd": 0.015261
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hammarby Basket may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:04:12.070252"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.226399",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:21:02.447653"
+}

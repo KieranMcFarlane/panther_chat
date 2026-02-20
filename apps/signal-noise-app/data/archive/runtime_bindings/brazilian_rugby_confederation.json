@@ -1,0 +1,194 @@
+{
+  "entity_id": "brazilian_rugby_confederation",
+  "entity_name": "Brazilian Rugby Confederation",
+  "template_id": "tpl_rugby_global_federation_v1",
+  "cluster_id": "rugby_gov_federations",
+  "discovered_domains": [
+    "brasilrugby.com.br",
+    "oneallsports.com",
+    "olympics.com",
+    "anba.com.br",
+    "americasrugbynews.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brazilian_rugby_confederation",
+      "entity_name": "Brazilian Rugby Confederation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://oneallsports.com",
+        "https://anba.com.br",
+        "https://brasilrugby.com.br",
+        "https://olympics.com",
+        "https://americasrugbynews.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Direct Procurement of Services (Catering, Travel)",
+        "Talent Acquisition for High Performance (Sports Science)",
+        "Event-Based Logistics Planning",
+        "Procurement Cycle Irregularities (Annulment/Re-procurement)",
+        "Operational Support Staffing"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brazilian Rugby Confederation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:33:26.547911",
+          "domain_explored": "https://brasilrugby.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sports Performance Monitoring (implied by Fisiologista role)",
+              "Travel Management Systems (implied by Agency RFP)"
+            ],
+            "job_postings": [
+              "Estagi\u00e1rio(a) \u2013 Preparador F\u00edsico",
+              "Coordenador Esportes \u2013 Alto Rendimento",
+              "Fisioterapeuta \u2013 Alto Rendimento",
+              "Fisiologista \u2013 Alto Rendimento"
+            ],
+            "procurement_indicators": [
+              "[Preg\u00e3o] Servi\u00e7os de Alimenta\u00e7\u00e3o para Evento em S\u00e3o Paulo (SP) (March 2026)",
+              "[Preg\u00e3o] Contrata\u00e7\u00e3o de ag\u00eancia de viagens (National/International tickets, lodging, transport)",
+              "Anula\u00e7\u00e3o do preg\u00e3o eletr\u00f4nico 03/2025 (Communication/Operational support services) - Signal for re-procurement"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement of Services (Catering, Travel)",
+            "Talent Acquisition for High Performance (Sports Science)",
+            "Event-Based Logistics Planning",
+            "Procurement Cycle Irregularities (Annulment/Re-procurement)",
+            "Operational Support Staffing"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 429,
+              "elapsed_seconds": 5.639994859695435
+            }
+          ],
+          "reasoning": "The content reveals active procurement activities and hiring needs. The explicit mention of 'Preg\u00e3o' (RFPs) for catering and travel services confirms immediate procurement intent. The annulment of a previous tender (PR003/2025) regarding communication/operational support signals a re-procurement opportunity. Multiple high-performance job postings (Physiologist, Physiotherapist, Coordinator) indicate investment in sports science infrastructure, often requiring specialized software or equipment vendors."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:33:44.381494",
+          "domain_explored": "https://oneallsports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Could not parse Claude response"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:34:17.520240",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:34:24.444956",
+          "domain_explored": "https://anba.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 551,
+              "output_tokens": 131,
+              "elapsed_seconds": 1.9597890377044678
+            }
+          ],
+          "reasoning": "The content from 'anba.com.br' focuses on the Gulfood food industry trade show and general market heating/expansion. It is unrelated to the Brazilian Rugby Confederation (CBRU) or sports governance. There are no signals relevant to the entity's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:34:33.472890",
+          "domain_explored": "https://americasrugbynews.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Analysis (Argentina Rugby Schedule)",
+            "Regional Event Scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 763,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.7330799102783203
+            }
+          ],
+          "reasoning": "The content focuses exclusively on Argentina's (UAR) 2026 match schedule and logistics. While relevant to the broader rugby ecosystem, it contains no specific information regarding the Brazilian Rugby Confederation's (CBRu) procurement activities, technology stack, or governance. It does not provide actionable signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 2679,
+      "total_output_tokens": 730,
+      "estimated_cost_usd": 0.018987
+    },
+    "procurement_signals": [
+      "Direct Procurement of Services (Catering, Travel)",
+      "Talent Acquisition for High Performance (Sports Science)",
+      "Event-Based Logistics Planning",
+      "Procurement Cycle Irregularities (Annulment/Re-procurement)",
+      "Operational Support Staffing"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brazilian Rugby Confederation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:34:33.474764"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.287464",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:55.446213"
+}

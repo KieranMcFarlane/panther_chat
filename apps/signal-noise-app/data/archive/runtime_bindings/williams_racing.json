@@ -1,0 +1,356 @@
+{
+  "entity_id": "williams_racing",
+  "entity_name": "Williams Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "williamsf1.com",
+    "f1store4.formula1.com",
+    "atlassian.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/company/atlassianwilliamsracing/jobs",
+      "https://www.linkedin.com/jobs/williams-racing-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/williams-racing-jobs-wantage",
+      "https://uk.linkedin.com/jobs/view/assembly-and-test-validation-apprentice-at-williams-racing-4363614151",
+      "https://uk.linkedin.com/jobs/view/finance-business-partner-at-williams-racing-4340762850",
+      "https://uk.linkedin.com/jobs/view/composites-apprentice-at-williams-racing-4363546305",
+      "https://www.linkedin.com/jobs/f1-jobs-worldwide",
+      "https://www.linkedin.com/posts/atlassianwilliamsracing_breaking-news-early-careers-roles-at-williams-activity-7238974883513192448-RCvz"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "williams_racing",
+      "entity_name": "Williams Racing",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/williams-racing-jobs-worldwide",
+        "https://f1store4.formula1.com",
+        "https://uk.linkedin.com/jobs/williams-racing-jobs-wantage",
+        "https://uk.linkedin.com/jobs/view/assembly-and-test-validation-apprentice-at-williams-racing-4363614151",
+        "https://williamsf1.com",
+        "https://uk.linkedin.com/jobs/view/finance-business-partner-at-williams-racing-4340762850",
+        "https://atlassian.com",
+        "https://uk.linkedin.com/company/atlassianwilliamsracing/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Williams Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:42:25.578228",
+          "domain_explored": "https://williamsf1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Google reCAPTCHA",
+              "E-commerce Platform (Shop functionality)",
+              "Fan Engagement Platform (WClub)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "New Partnership: BNY (Official Institutional Banking Partner)",
+              "New Partnership: Wilkinson Sword (Official Men's Grooming Partner)",
+              "Product Launch: 2026 New Era Team Kit (Merchandise procurement)",
+              "Service Launch: WClub (Digital platform procurement)"
+            ]
+          },
+          "patterns_found": [
+            "New Commercial Partnership Acquisition",
+            "Merchandising & E-commerce Expansion",
+            "Digital Fan Engagement (WClub)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.2529499530792236
+            }
+          ],
+          "reasoning": "The content reveals two new official partnerships (BNY and Wilkinson Sword) signed in Jan 2026, indicating active commercial procurement. The 'WClub' launch and 'Selling at Speed' shop updates suggest recent investments in e-commerce and CRM platforms to support digital transformation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:42:36.137450",
+          "domain_explored": "https://f1store4.formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Visa",
+              "MasterCard",
+              "PayPal",
+              "Amex"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Existing Licensing Agreement: Williams Racing utilizes Fanatics/Formula 1 for merchandise distribution."
+            ]
+          },
+          "patterns_found": [
+            "Merchandising & E-commerce (General F1)",
+            "Third-Party Licensing (Fanatics)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 272,
+              "elapsed_seconds": 3.4745280742645264
+            }
+          ],
+          "reasoning": "The content analyzed is from the centralized 'Official Formula 1 Store' (f1store4.formula1.com), which is a multi-team marketplace operated by Fanatics. While 'Williams' is mentioned in the 'Popular Teams' and 'Trending Products' list, this indicates only that Williams merchandise is available for purchase through this third-party distributor. It does not provide specific procurement signals, technology stack details, or business intent specific to Williams Racing's internal operations or new vendor acquisition strategies."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:42:46.264607",
+          "domain_explored": "https://atlassian.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Jira (Project Management)",
+              "Confluence (Knowledge Management)",
+              "Loom (Video Messaging)",
+              "Rovo (Human-AI Collaboration)",
+              "Jira Service Management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General SaaS Marketing Content",
+            "Product Portfolio (Jira, Confluence, Loom, Rovo)",
+            "AI Capabilities (Atlassian Intelligence)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 257,
+              "elapsed_seconds": 3.324429750442505
+            }
+          ],
+          "reasoning": "The content is the homepage of Atlassian.com, a vendor site. It contains generic product marketing for Jira, Confluence, and Rovo. There is no specific mention of Williams Racing, no case studies involving Williams, and no procurement signals indicating Williams is acquiring or evaluating these specific tools. This represents a deviation from the target entity (Williams Racing) to a general vendor landscape."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:42:50.605613",
+          "domain_explored": "https://uk.linkedin.com/company/atlassianwilliamsracing/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "URL Correction Required: https://uk.linkedin.com/company/williams-racing/jobs"
+            ]
+          },
+          "patterns_found": [
+            "URL Structure Analysis",
+            "Data Access Restriction"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 540,
+              "output_tokens": 179,
+              "elapsed_seconds": 1.9061319828033447
+            }
+          ],
+          "reasoning": "The target URL returned a 'Forbidden' error with a specific instruction to use only the company name in the URL. This indicates the previous URL structure was incorrect or the page is protected. No procurement signals, job postings, or technology stack details could be extracted from the error message."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:43:00.032038",
+          "domain_explored": "https://www.linkedin.com/jobs/williams-racing-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter / Jobs Platform"
+            ],
+            "job_postings": [
+              "Communications Executive (London, 1 week ago)",
+              "Hospitality and Events Coordinator (London, 1 week ago)",
+              "Total Count: ~60 Open Roles"
+            ],
+            "procurement_indicators": [
+              "Headcount expansion implies increased SaaS/Opex procurement",
+              "Events coordination role suggests vendor management for event logistics/venues"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment (Communications & Hospitality)",
+            "Operational Expansion (London Hub)",
+            "Gig Economy / Event-Based Staffing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1579,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.564181566238403
+            }
+          ],
+          "reasoning": "The content reveals active hiring for 'Communications Executive' and 'Hospitality and Events Coordinator' roles. While these are operational roles rather than direct procurement positions, they indicate organizational growth and potential downstream needs for supporting software (CRM, Event Management tools) and services. The presence of 60+ open roles suggests a scaling phase."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:43:12.117893",
+          "domain_explored": "https://uk.linkedin.com/jobs/williams-racing-jobs-wantage",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Hospitality and Events Executive",
+              "Paralegal"
+            ],
+            "procurement_indicators": [
+              "Legal Department Expansion (Paralegal)",
+              "Event Management Operations (Hospitality Executive)"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment (Legal & Hospitality)",
+            "Operational Staffing (Grove HQ)",
+            "Data Access Restriction (Authentication Wall)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1647,
+              "output_tokens": 251,
+              "elapsed_seconds": 2.875805139541626
+            }
+          ],
+          "reasoning": "The content confirms active hiring at the Williams Grove HQ (specifically Legal and Hospitality functions), indicating operational health and potential associated procurement needs (e.g., legal services, event suppliers). However, the detailed job descriptions are hidden behind a login wall, preventing deep analysis of specific technology stacks or procurement intent mentioned within the postings."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:43:27.847398",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/assembly-and-test-validation-apprentice-at-williams-racing-4363614151",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assembly and Test Validation Apprentice (Title only, content blocked)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Data Access Restriction (Authentication Wall)",
+            "Generic Job Aggregation (Assembly Engineer roles)",
+            "Platform UI Clutter (Sign-in prompts)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1725,
+              "output_tokens": 240,
+              "elapsed_seconds": 3.841787099838257
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication UI and generic 'Assembly Engineer' job recommendations for other companies (e.g., AQC Industries, Balance Staffing). The specific content for the 'Assembly and Test Validation Apprentice at Williams Racing' was not successfully captured or is hidden behind a login requirement. Therefore, no specific procurement signals regarding Williams Racing's operations or technology stack can be extracted."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:43:39.537390",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/finance-business-partner-at-williams-racing-4340762850",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Dynamics 365 (ERP)",
+              "Medius (Accounts Payable/Automation)",
+              "Microsoft Power BI (Visualization)",
+              "Microsoft Excel",
+              "Microsoft PowerPoint"
+            ],
+            "job_postings": [
+              "Finance Business Partner (Grove, UK)"
+            ],
+            "procurement_indicators": [
+              "Active 'Finance transformation journey' implies potential vendor changes or system upgrades.",
+              "Requirement for 'Microsoft D365 / Medius experience' confirms current reliance on this specific tech stack.",
+              "Responsibility for 'Business case preparation' and 'investment appraisal' identifies this role as a key stakeholder in procurement decisions.",
+              "Cost cap optimisation focus suggests strict budgetary governance influencing vendor selection."
+            ]
+          },
+          "patterns_found": [
+            "ERP & Finance Stack (Microsoft D365, Medius AP, Power BI)",
+            "Cost Cap Governance & Resource Optimization",
+            "Strategic Investment Appraisal (Business Case Preparation)",
+            "Finance Transformation Initiative"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1804,
+              "output_tokens": 405,
+              "elapsed_seconds": 4.472364187240601
+            }
+          ],
+          "reasoning": "The job description explicitly names the core financial technology stack (Microsoft D365, Medius, Power BI) and highlights a 'Finance transformation journey,' indicating active management of financial governance tools. The focus on 'Cost cap optimisation' and 'Business case preparation' signals a structured procurement and investment approval process."
+        }
+      ],
+      "total_input_tokens": 11527,
+      "total_output_tokens": 2183,
+      "estimated_cost_usd": 0.067326
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Williams Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:43:39.540286"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.363859",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:38.224031"
+}

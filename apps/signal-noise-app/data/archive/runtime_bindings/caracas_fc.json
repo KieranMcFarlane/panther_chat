@@ -1,0 +1,149 @@
+{
+  "entity_id": "caracas_fc",
+  "entity_name": "Caracas FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "caracasfutbolclub.com",
+    "fcdiezmedia.com",
+    "playmakerstats.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "caracas_fc",
+      "entity_name": "Caracas FC",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fcdiezmedia.com",
+        "https://caracasfutbolclub.com",
+        "https://playmakerstats.com",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Caracas FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:33:44.761307",
+          "domain_explored": "https://caracasfutbolclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (External/Embedded)",
+              "YouTube (Broadcasting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Media Rights Agreement (HOT 94.1 FM)",
+              "Media Rights Agreement (LA LIGA FUTVE)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Integration",
+            "Media Rights/Broadcasting Partnerships",
+            "Campaign Preparation (2026)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 250,
+              "elapsed_seconds": 4.698869943618774
+            }
+          ],
+          "reasoning": "The content reveals the use of a third-party ticketing provider ('Compra tus Entradas') and active media partnerships (HOT 94.1 FM, La Liga FUTVE YouTube). While this indicates existing vendor relationships and infrastructure, it does not show immediate active procurement for new technology stacks. The 'Campa\u00f1a 2026' reference suggests long-term planning cycles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:33:54.341496",
+          "domain_explored": "https://fcdiezmedia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Anti-Scraping Mechanism",
+            "Cloudflare Verification",
+            "Content Blocking"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 453,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.5160560607910156
+            }
+          ],
+          "reasoning": "The target URL (fcdiezmedia.com) is enforcing a strict anti-bot verification screen (Cloudflare 'Checking your browser before accessing'). The content provided contains no HTML, text, or structured data relevant to procurement, technology stacks, or governance. The request failed to retrieve the actual page content."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:34:27.622258",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:34:30.955180",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1809,
+      "total_output_tokens": 413,
+      "estimated_cost_usd": 0.011622
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Caracas FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:34:30.956076"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.193312",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:03.578475"
+}

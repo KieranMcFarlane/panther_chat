@@ -1,0 +1,409 @@
+{
+  "entity_id": "botola_pro",
+  "entity_name": "Botola Pro",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "commercial_leagues",
+  "discovered_domains": [
+    "m.elbotola.com",
+    "flashscore.com",
+    "play.google.com",
+    "kickalgor.com",
+    "leagueofafrica.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ma.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4272178062",
+      "https://www.linkedin.com/posts/jobs4football_football-coach-at-ellevate-football-academy-activity-7386330494486986752-LE88",
+      "https://www.linkedin.com/posts/football-careers_%3F%3F%3F%3F%3F%3F%3F%3F-%3F%3F%3F-tekkers-academy-activity-7211337493839798272-tJ1Z",
+      "https://www.linkedin.com/posts/jobs4football_jobs4football-footballjobs-communitycoach-activity-7407355251546025984-0jcH",
+      "https://www.linkedin.com/posts/jobs4football_footballjobs-coachingcareers-uaejobs-activity-7371801523506552832-ZqTW",
+      "https://www.linkedin.com/posts/jobs4football_footballjobs-juventusacademy-coachingopportunities-activity-7342899102659035138-GY_B",
+      "https://www.linkedin.com/posts/menzsports_coachingjobs-footballjobs-prolicensecoach-activity-7381538866320568320-OQeH",
+      "https://www.linkedin.com/posts/jobs4football_footballjobs-careeropportunity-maldivesfa-activity-7185956593035878400-qy0O"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "botola_pro",
+      "entity_name": "Botola Pro",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://ma.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4272178062",
+        "https://flashscore.com",
+        "https://leagueofafrica.com",
+        "https://www.linkedin.com/posts/jobs4football_jobs4football-footballjobs-communitycoach-activity-7407355251546025984-0jcH",
+        "https://kickalgor.com",
+        "https://m.elbotola.com",
+        "https://www.linkedin.com/posts/jobs4football_footballjobs-coachingcareers-uaejobs-activity-7371801523506552832-ZqTW",
+        "https://www.linkedin.com/posts/jobs4football_football-coach-at-ellevate-football-academy-activity-7386330494486986752-LE88",
+        "https://www.linkedin.com/posts/football-careers_%3F%3F%3F%3F%3F%3F%3F%3F-%3F%3F%3F-tekkers-academy-activity-7211337493839798272-tJ1Z"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Official Data Partnership",
+        "Specialized Data Collection Software",
+        "Performance-based Contracting",
+        "Event-based Compensation Model"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Botola Pro may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:31:01.687665",
+          "domain_explored": "https://m.elbotola.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Content",
+            "General Editorial Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 468,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.5552961826324463
+            }
+          ],
+          "reasoning": "The scraped content consists of sports news headlines regarding the South African Minister of Sports' comments on the Women's Africa Cup of Nations hosting rights. There is no mention of Botola Pro's internal operations, technology needs, job vacancies, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:31:10.810979",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Content",
+            "Gambling/Gaming Affiliate Warnings",
+            "Loading Indicators"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 580,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.9318268299102783
+            }
+          ],
+          "reasoning": "The provided content consists of generic gambling disclaimers (responsible gaming warnings), repeated 'Loading' placeholders, and generic navigation links. There is no text relating to Botola Pro's internal operations, technology stack, or procurement activities. The source appears to be a live score aggregator (Flashscore) rather than the entity itself."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:31:19.412042",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Application Storefront",
+            "Gaming Content",
+            "Generic Platform Navigation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.9644830226898193
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Google Play Store homepage, listing consumer video games (e.g., Arknights, Genshin Impact) and generic platform categories. There is no connection to 'Botola Pro', nor are there any B2B procurement signals, technology stack disclosures, or corporate governance information relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:31:37.375655",
+          "domain_explored": "https://kickalgor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Sports Rankings Data",
+            "ELO Rating Calculations",
+            "Regional Football Confederations (CAF, AFC, CONCACAF)",
+            "Static Data Presentation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1489,
+              "output_tokens": 207,
+              "elapsed_seconds": 4.122565031051636
+            }
+          ],
+          "reasoning": "The content is purely informational, displaying global football league and club ratings (ELO system). While 'Morocco' and 'Botola Pro' are mentioned within the African rankings context, this is an external analytics site (Kickalgor) displaying data, not the official entity. There are no signals of internal operations, technology stacks, or procurement activities related to the Botola Pro organization itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:31:47.669888",
+          "domain_explored": "https://leagueofafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Editorial Content",
+            "AFCON 2025 Coverage",
+            "Author Attribution",
+            "Comment Section Indicators"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 835,
+              "output_tokens": 154,
+              "elapsed_seconds": 2.898758888244629
+            }
+          ],
+          "reasoning": "The content provided is strictly sports journalism, focusing on the Senegal national team and AFCON 2025. There are no technical infrastructure details, corporate governance signals, or procurement-related activities visible in this text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:31:57.614995",
+          "domain_explored": "https://ma.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4272178062",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smartphone-enabled data collection software",
+              "E-learning training platforms"
+            ],
+            "job_postings": [
+              "Sports Statistician (Data Collection) - Genius Sports (T\u00e9touan, Morocco)"
+            ],
+            "procurement_indicators": [
+              "Official data partnership agreement with Genius Sports",
+              "Investment in live data infrastructure for Botola Pro 1",
+              "Vendor-managed workforce for data collection",
+              "Per-event budget allocation (\u20ac40/game base pay)"
+            ]
+          },
+          "patterns_found": [
+            "Official Data Partnership",
+            "Specialized Data Collection Software",
+            "Performance-based Contracting",
+            "Event-based Compensation Model"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1609,
+              "output_tokens": 354,
+              "elapsed_seconds": 3.1325361728668213
+            }
+          ],
+          "reasoning": "This content confirms a direct commercial partnership between Botola Pro and Genius Sports. Genius Sports is identified as the 'official data... partner' collecting live data from 'Botola Pro 1 Football League' events. This indicates a procurement of data services and technology infrastructure (smartphone-enabled software) for the league. The job listing reveals the operational logistics of this contract, including specific compensation structures (\u20ac40/game + travel) and the requirement for specialized data collection tools."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:32:05.080856",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_football-coach-at-ellevate-football-academy-activity-7386330494486986752-LE88",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: Football Coach",
+              "Entity: Ellevate Football Academy",
+              "Location: United Arab Emirates",
+              "Platform: Jobs4football"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (UAE vs Morocco)",
+            "Operational Role (Coaching vs Procurement)",
+            "Generic Recruitment Platform",
+            "Consumer-facing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1684,
+              "output_tokens": 252,
+              "elapsed_seconds": 3.163506031036377
+            }
+          ],
+          "reasoning": "The content is a job posting for a football coach position at Ellevate Football Academy located in the United Arab Emirates. The target entity is Botola Pro (Morocco). There is no geographic, organizational, or commercial relationship between this vacancy and the target entity. The content represents standard human resources recruitment for an operational role, not a procurement or technology investment signal."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:32:14.909621",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%3F%3F%3F%3F%3F%3F%3F%3F-%3F%3F%3F-tekkers-academy-activity-7211337493839798272-tJ1Z",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Football Coach",
+                "entity": "Tekkers Academy Bahrain",
+                "location": "Bahrain",
+                "relevance": "Low"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Bahrain vs Morocco)",
+            "Operational Role (Coaching vs Procurement)",
+            "Generic Recruitment Content",
+            "Academy Level Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1767,
+              "output_tokens": 236,
+              "elapsed_seconds": 3.951179027557373
+            }
+          ],
+          "reasoning": "The content describes a coaching vacancy for Tekkers Academy in Bahrain. This is operationally focused (hiring personnel for coaching) and geographically distinct from Botola Pro (Morocco). It does not contain signals regarding technology procurement, data partnerships, or governance relevant to the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:32:28.363647",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_jobs4football-footballjobs-communitycoach-activity-7407355251546025984-0jcH",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Community Football Coach - Thailand"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Thailand vs Morocco)",
+            "Operational Role (Community Coaching vs Procurement)",
+            "Generic Recruitment Platform (Jobs4football)",
+            "Grassroots/Social Impact Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1848,
+              "output_tokens": 208,
+              "elapsed_seconds": 9.067698955535889
+            }
+          ],
+          "reasoning": "The content describes a grassroots coaching position in Thailand focused on community engagement and youth development. This is an operational role unrelated to the Moroccan Botola Pro league, its governance, or its technology procurement needs. The entity 'Jobs4football' is a generic job board, not the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T07:32:34.463951",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_footballjobs-coachingcareers-uaejobs-activity-7371801523506552832-ZqTW",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Role: Football Coaches",
+              "Location: United Arab Emirates",
+              "Platform: Jobs4Football"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (UAE vs Morocco)",
+            "Operational Role (Coaching vs Procurement)",
+            "Generic Recruitment Platform (Jobs4football)",
+            "High Volume of Low-Intent Engagement"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1935,
+              "output_tokens": 200,
+              "elapsed_seconds": 2.1510257720947266
+            }
+          ],
+          "reasoning": "The content is a recruitment post for coaching positions in the United Arab Emirates. It lacks any connection to Botola Pro (Morocco) or procurement activities such as RFPs, technology acquisition, or vendor partnerships."
+        }
+      ],
+      "total_input_tokens": 13658,
+      "total_output_tokens": 2108,
+      "estimated_cost_usd": 0.07259399999999999
+    },
+    "procurement_signals": [
+      "Official Data Partnership",
+      "Specialized Data Collection Software",
+      "Performance-based Contracting",
+      "Event-based Compensation Model"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Botola Pro may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:32:34.465620"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.195868",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:58:02.252714"
+}

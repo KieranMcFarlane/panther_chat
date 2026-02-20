@@ -1,0 +1,153 @@
+{
+  "entity_id": "city_oilers",
+  "entity_name": "City Oilers",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "bal.nba.com",
+    "stock-city-oilers.at",
+    "sports.mtn.co.ug"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "city_oilers",
+      "entity_name": "City Oilers",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sports.mtn.co.ug",
+        "https://bal.nba.com",
+        "https://stock-city-oilers.at"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "City Oilers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:29:10.887531",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "BAL and Afreximbank Renew Partnership",
+              "Season 6 Host Cities: Pretoria, Rabat, Kigali"
+            ]
+          },
+          "patterns_found": [
+            "League-level strategic partnerships",
+            "Geographic expansion (South Africa, Morocco, Rwanda)",
+            "Fan engagement initiatives (surveys)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 240,
+              "elapsed_seconds": 16.246451139450073
+            }
+          ],
+          "reasoning": "The scraped content is from the official Basketball Africa League (BAL) website and focuses on macro-level league operations, partnerships (Afreximbank), and multi-country hosting schedules. There is no mention of 'City Oilers' or specific team-level procurement activities, technology stacks, or operational needs. The content is relevant to the industry ecosystem but does not provide direct procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:29:21.420286",
+          "domain_explored": "https://stock-city-oilers.at",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Club Management Platform (CMS with 'Anmeldung'/'Einloggen' functionality)",
+              "Calendar/Scheduling Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship solicitations (Sponsoren section)",
+              "Membership fee collection (Mitgliedsbeitrag 2025/26)",
+              "Local facility rental (Eislaufplatz Stockerau)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Amateur Sports Club Structure",
+            "Local Operational Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 269,
+              "elapsed_seconds": 3.498394250869751
+            }
+          ],
+          "reasoning": "The scraped content confirms the entity is 'Stock City Oilers', an amateur inline/ice hockey club based in Stockerau, Austria. This is fundamentally different from 'City Oilers', the professional basketball team in Uganda (or the NBA context previously explored). The content displays local club management (youth teams, training schedules, membership fees) with no enterprise procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:29:34.004755",
+          "domain_explored": "https://sports.mtn.co.ug",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Content Irrelevance",
+            "General Sports News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1462,
+              "output_tokens": 180,
+              "elapsed_seconds": 3.665440320968628
+            }
+          ],
+          "reasoning": "The scraped content from sports.mtn.co.ug is exclusively focused on football (soccer) results, specifically the FUFA Big League and Uganda Premier League. There is absolutely no mention of 'City Oilers', basketball, or any procurement-related activities. The content represents general sports reporting rather than corporate or operational intelligence regarding the target entity."
+        }
+      ],
+      "total_input_tokens": 4232,
+      "total_output_tokens": 689,
+      "estimated_cost_usd": 0.023031000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "City Oilers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:29:34.006333"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.231343",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:04:42.845700"
+}

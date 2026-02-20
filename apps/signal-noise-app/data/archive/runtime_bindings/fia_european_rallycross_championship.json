@@ -1,0 +1,127 @@
+{
+  "entity_id": "fia_european_rallycross_championship",
+  "entity_name": "FIA European Rallycross Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "api.fia.com",
+    "fiaworldrallycross.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_european_rallycross_championship",
+      "entity_name": "FIA European Rallycross Championship",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://api.fia.com",
+        "https://fiaworldrallycross.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA European Rallycross Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:31:43.337796",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FIA API (api.fia.com)",
+              "Social Media Integration (Facebook, Twitter, Instagram, YouTube, TikTok)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Invitation to Tender (Global FIA Portal)",
+              "Partners and suppliers Program",
+              "Data Privacy Notice (Vendor compliance requirement)",
+              "FIA Activity Reports (Financial transparency)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized Governance Structure",
+            "Standardized Procurement Portal",
+            "Regulatory Compliance Framework"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 310,
+              "elapsed_seconds": 57.62995982170105
+            }
+          ],
+          "reasoning": "The content confirms the FIA European Rallycross Championship operates under the strict governance of the FIA (F\u00e9d\u00e9ration Internationale de l'Automobile). The presence of a dedicated 'Invitation to Tender' section and 'Partners and suppliers' link indicates a formalized, centralized procurement process managed by the parent body rather than the championship series directly. While no specific Rallycross RFP is listed in this navigation data, the structural capability to procure is confirmed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:31:49.865254",
+          "domain_explored": "https://fiaworldrallycross.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - inferred from news structure",
+              "Timing & Scoring Systems (implied by regulations)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue procurement: Latvia (Season Launch) and Mondello Park (Ireland)",
+              "Regulatory consulting: Development of 2028 regulations",
+              "Infrastructure investment: Track upgrades for 'permanent place' status"
+            ]
+          },
+          "patterns_found": [
+            "Seasonal Operational Planning",
+            "Venue Expansion & Infrastructure Development",
+            "Long-term Regulatory Development (2028 Horizon)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 305,
+              "elapsed_seconds": 3.115020990371704
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing news, it reveals significant operational shifts that drive procurement. The explicit mention of a 'landmark season' launch in Latvia and the 'monumental' return of Mondello Park indicate venue contracts and infrastructure upgrades are active. The reference to '2028 regulations' by KMS suggests an upcoming cycle of technical consulting and rule-making software procurement."
+        }
+      ],
+      "total_input_tokens": 2789,
+      "total_output_tokens": 615,
+      "estimated_cost_usd": 0.017592
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA European Rallycross Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:31:49.866947"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372939",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:37:24.853731"
+}

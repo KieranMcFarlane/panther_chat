@@ -1,0 +1,187 @@
+{
+  "entity_id": "piratas_de_la_guaira",
+  "entity_name": "Piratas de La Guaira",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "basketball.latinbasket.com",
+    "grokipedia.com",
+    "flashscore.vn",
+    "365scores.com",
+    "sofascore.com",
+    "livesport.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "piratas_de_la_guaira",
+      "entity_name": "Piratas de La Guaira",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://flashscore.vn",
+        "https://365scores.com",
+        "https://livesport.com",
+        "https://grokipedia.com",
+        "https://sofascore.com",
+        "https://basketball.latinbasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Piratas de La Guaira may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:23:54.108414",
+          "domain_explored": "https://basketball.latinbasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant sports news aggregation",
+            "Generic database subscription offers"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 172,
+              "elapsed_seconds": 3.6058640480041504
+            }
+          ],
+          "reasoning": "The scraped content from Latinbasket.com consists exclusively of basketball game results, player awards, and general sports news for various Latin American leagues (Argentina, Uruguay, Bahamas, etc.). There is no mention of 'Piratas de La Guaira', nor are there any signals regarding business operations, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:23:56.850560",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:24:03.807151",
+          "domain_explored": "https://flashscore.vn",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Generic 'Loading' placeholders",
+            "Irrelevant content (Vietnamese football)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 466,
+              "output_tokens": 164,
+              "elapsed_seconds": 2.791826009750366
+            }
+          ],
+          "reasoning": "The scraped content from flashscore.vn is a sports news portal focused on football (soccer) in Vietnamese. It contains no information regarding 'Piratas de La Guaira', Venezuelan basketball, or corporate procurement activities. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:24:07.073042",
+          "domain_explored": "https://365scores.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:24:10.207704",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:24:15.726376",
+          "domain_explored": "https://livesport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic 'Loading' placeholders",
+            "Advertisement (AD) markers",
+            "Client-side rendering (lack of static content)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 564,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.4936578273773193
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of 'Loading' placeholders and 'AD' markers. This indicates a heavy reliance on client-side JavaScript to render data, which the scraper failed to capture. There is no static text available to analyze for procurement signals, technology stacks, or governance patterns."
+        }
+      ],
+      "total_input_tokens": 2393,
+      "total_output_tokens": 507,
+      "estimated_cost_usd": 0.014783999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Piratas de La Guaira may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:24:15.727117"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.237888",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:23:33.725724"
+}

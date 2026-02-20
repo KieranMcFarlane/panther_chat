@@ -1,0 +1,202 @@
+{
+  "entity_id": "world_minigolf_sport_federation_(wmf)",
+  "entity_name": "World Minigolf Sport Federation (WMF)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "newsarchiv.minigolfsport.com",
+    "minigolf-europe.org",
+    "guinnessworldrecords.com",
+    "sportcal.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_minigolf_sport_federation_(wmf)",
+      "entity_name": "World Minigolf Sport Federation (WMF)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://guinnessworldrecords.com",
+        "https://minigolf-europe.org",
+        "https://newsarchiv.minigolfsport.com",
+        "https://sportcal.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World Minigolf Sport Federation (WMF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:45:36.050729",
+          "domain_explored": "https://newsarchiv.minigolfsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Legacy CMS (implied shutdown)",
+              "Community Forum Software (phpBB style structure implied)",
+              "Polling/Voting Mechanism"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Platform Migration Strategy (Sunset of minigolfnews.com)",
+              "Vendor Partnership Potential (Digital agencies for new landscape)",
+              "Event Management Software (WAGM/WAG Tour coordination)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Platform Sunset/Migration",
+            "Community Engagement Transition",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 307,
+              "elapsed_seconds": 6.930076837539673
+            }
+          ],
+          "reasoning": "The content reveals a significant strategic shift: the shutdown of the primary news portal ('Minigolfnews') in favor of other digital landscapes. This indicates a 'Digital Transformation' procurement signal where the WMF or its affiliates are likely migrating to new platforms (CRM, CMS, or Social Media) to manage community and news. The mention of specific tournament management (World Adventure Golf Tour) suggests ongoing operational needs for event software."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:45:56.734057",
+          "domain_explored": "https://minigolf-europe.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Joomla (CMS)",
+              "minigolf-live.com (Third-party live scoring platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Live Results Infrastructure (Dependency on minigolf-live.com)",
+              "Legacy URL Structure indicating potential CMS migration needs",
+              "Event Hosting Partnerships (Zaton Holiday Resort, Minigolf Appelscha)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Platform Obsolescence",
+            "Vendor Dependency (Live Scoring)",
+            "Event Management Operations",
+            "Federated Governance Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 915,
+              "output_tokens": 314,
+              "elapsed_seconds": 15.447909116744995
+            }
+          ],
+          "reasoning": "The analysis of the European Minigolf Sport Federation (EMF) website reveals a reliance on legacy web infrastructure (Joomla component-based URLs) and third-party solutions for critical operations (live scoring via minigolf-live.com). While no direct procurement requests are visible, the technical debt and reliance on external vendors for event results indicate a potential need for digital transformation or vendor consolidation, which aligns with the broader WMF ecosystem analysis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:46:04.728726",
+          "domain_explored": "https://guinnessworldrecords.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce platform (gwrstore.com)",
+              "Marketing CMS (Business Solutions pages)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandising vendor (GWR Store)",
+              "Marketing campaign services"
+            ]
+          },
+          "patterns_found": [
+            "Unrelated Commercial Entity",
+            "B2C Marketing Focus",
+            "Merchandising Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1276,
+              "output_tokens": 224,
+              "elapsed_seconds": 2.6541900634765625
+            }
+          ],
+          "reasoning": "The scraped content belongs to Guinness World Records (GWR), a commercial entity distinct from the World Minigolf Sport Federation (WMF). The content focuses on B2B marketing solutions, employee engagement, and consumer merchandise sales. There is no relationship or procurement signal relevant to the WMF's technology or governance needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:46:22.095378",
+          "domain_explored": "https://sportcal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Secutix (Ticketing - mentioned in unrelated MLC news)",
+              "Peacock (Streaming - mentioned in unrelated NBA news)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "LPGA content partnership (Golf platform)",
+              "MLC ticketing solution adoption"
+            ]
+          },
+          "patterns_found": [
+            "Unrelated Commercial Entity",
+            "Industry News Aggregator",
+            "High-Value Sports Contracts (Irrelevant Scale)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1524,
+              "output_tokens": 267,
+              "elapsed_seconds": 12.510369062423706
+            }
+          ],
+          "reasoning": "The scraped content from Sportcal.com is a general industry news feed covering high-profile commercial sports (EuroLeague, MotoGP, NBA, LPGA). There is no mention of the World Minigolf Sport Federation (WMF), minigolf, or related niche sports procurement activities. The content focuses on major league executive appointments and media rights deals that operate at a scale and market tier completely disconnected from the WMF's operations."
+        }
+      ],
+      "total_input_tokens": 5087,
+      "total_output_tokens": 1112,
+      "estimated_cost_usd": 0.031941
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World Minigolf Sport Federation (WMF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:46:22.096832"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.459450",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:02.178080"
+}

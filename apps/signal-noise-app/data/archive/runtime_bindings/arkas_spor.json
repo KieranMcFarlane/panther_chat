@@ -1,0 +1,179 @@
+{
+  "entity_id": "arkas_spor",
+  "entity_name": "Arkas Spor",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "arkasspor.com",
+    "zoominfo.com",
+    "globalsportsarchive.com",
+    "arkassporokullari.com",
+    "volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "arkas_spor",
+      "entity_name": "Arkas Spor",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://arkassporokullari.com",
+        "https://globalsportsarchive.com",
+        "https://arkasspor.com",
+        "https://zoominfo.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Arkas Spor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:42:30.498503",
+          "domain_explored": "https://arkasspor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)",
+              "Multi-domain DNS management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operation of distinct sub-domains (arkasmatsailingteam.com, arkassporokullari.com)",
+              "Historical re-branding and entity consolidation (K\u00f6rfez Spor -> Arkas Saint Joseph -> Arkas Spor)"
+            ]
+          },
+          "patterns_found": [
+            "Multi-domain digital presence",
+            "Sub-branding strategy",
+            "Historical entity consolidation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1167,
+              "output_tokens": 298,
+              "elapsed_seconds": 3.5803520679473877
+            }
+          ],
+          "reasoning": "The content reveals a multi-structure organization with distinct digital properties for different divisions (Volleyball, Sailing, Sports Schools). The presence of specific sub-domains (arkasmatsailingteam.com, arkassporokullari.com) indicates a decentralized web infrastructure, suggesting potential for varied technology procurement needs across these entities. While no direct procurement signals (RFPs) are found, the structural complexity implies a need for vendor management and potentially distinct tech stacks."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:42:33.456225",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:42:40.124999",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports aggregation",
+            "Irrelevant content structure",
+            "Navigation menu noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1434,
+              "output_tokens": 162,
+              "elapsed_seconds": 2.6984848976135254
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of generic navigation links for various soccer leagues and tournaments from Global Sports Archive. There is no mention of 'Arkas Spor', nor are there any signals regarding technology stacks, job postings, or procurement activities specific to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:42:46.365629",
+          "domain_explored": "https://arkassporokullari.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational mission focus",
+            "Content repetition",
+            "Lack of operational data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 174,
+              "elapsed_seconds": 3.391045093536377
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of repetitive marketing copy regarding the philosophy of the 'Arkas Spor Okullar\u0131' (Arkas Sports Schools) division. It focuses on physical and mental development slogans ('A\u011fa\u00e7 ya\u015fken e\u011filir') rather than business operations. There are no signals regarding technology stacks, job postings, or procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:42:49.207555",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4084,
+      "total_output_tokens": 634,
+      "estimated_cost_usd": 0.021762
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Arkas Spor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:42:49.209425"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.319073",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:11.837057"
+}

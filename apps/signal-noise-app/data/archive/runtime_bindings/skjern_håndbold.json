@@ -1,0 +1,195 @@
+{
+  "entity_id": "skjern_h\u00e5ndbold",
+  "entity_name": "Skjern H\u00e5ndbold",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "skjernhaandbold.dk",
+    "shop.skjernhaandbold.dk",
+    "eurohandball.com",
+    "tophaandbold.dk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "skjern_h\u00e5ndbold",
+      "entity_name": "Skjern H\u00e5ndbold",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://tophaandbold.dk",
+        "https://shop.skjernhaandbold.dk",
+        "https://eurohandball.com",
+        "https://skjernhaandbold.dk"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Skjern H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:57:06.443686",
+          "domain_explored": "https://skjernhaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Platforms",
+              "CRM (for network/partner management)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Organization of exclusive network trip (Event procurement)",
+              "B2B networking activities"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Partnership Activation",
+            "Event Management",
+            "Sponsorship Retention"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 228,
+              "elapsed_seconds": 4.751969814300537
+            }
+          ],
+          "reasoning": "The content reveals active commercial operations through the 'Eksklusiv netv\u00e6rkstur til Boxen' (Exclusive network trip to Boxen). This indicates a need for event management, travel logistics, and B2B relationship management tools/services. While not a direct IT tender, it confirms active procurement activities in the commercial sector."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:57:13.715901",
+          "domain_explored": "https://shop.skjernhaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "JavaScript (Client-side dependency)",
+              "Payment Gateway (Implied by 'Kurv' and 'K\u00f8b billet')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Ticketing Operations",
+              "POS System Maintenance",
+              "Online Merchandise Sales"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Ticketing Operations",
+            "POS (Point of Sale) Integration",
+            "Event Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 301,
+              "elapsed_seconds": 4.310935020446777
+            }
+          ],
+          "reasoning": "The content reveals the active use of a dedicated e-commerce subdomain (shop.skjernhaandbold.dk) for ticketing, season passes, and merchandise. The presence of 'Point of Sale' links and specific product categories (S\u00e6sonkort, Gavekort, Arrangementer) indicates an established digital sales infrastructure. While this confirms capability and active vendor relationships (hosting/platform), it does not explicitly signal an immediate intent to procure new services, hence a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:57:29.694468",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News",
+            "Cookie Consent Management",
+            "Event Scheduling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1456,
+              "output_tokens": 189,
+              "elapsed_seconds": 12.352092027664185
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation's general news portal (eurohandball.com). It focuses on macro-level tournament results (Denmark national team), EHF event schedules, and cookie consent management. There is zero mention of the specific entity 'Skjern H\u00e5ndbold', their local procurement activities, technology stack, or governance decisions. This is irrelevant noise for the specific target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:57:38.288150",
+          "domain_explored": "https://tophaandbold.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Cookie Consent Management (Generic)",
+              "Newsletter Marketing Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Player Statistics Reporting (Data Provider)"
+            ]
+          },
+          "patterns_found": [
+            "League-wide Statistical Aggregation",
+            "General Sports News Consumption",
+            "Cookie Consent Management",
+            "Newsletter Subscription Forms"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1500,
+              "output_tokens": 273,
+              "elapsed_seconds": 5.586621999740601
+            }
+          ],
+          "reasoning": "The analyzed content from tophaandbold.dk is a league-wide media portal (Danish Handball Federation) rather than a specific entity page for Skjern H\u00e5ndbold. While 'SKH' (Skjern H\u00e5ndbold) appears in statistical lists (e.g., player Joaquim Nazar\u00e9), this indicates data reporting rather than procurement activity. The site focuses on 'Rundens Hold' (Team of the Round), general league news, and cookie management, offering no direct insights into Skjern H\u00e5ndbold's internal procurement, technology stack, or governance."
+        }
+      ],
+      "total_input_tokens": 5721,
+      "total_output_tokens": 991,
+      "estimated_cost_usd": 0.032028
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Skjern H\u00e5ndbold may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:57:38.288809"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.352050",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:26.728292"
+}

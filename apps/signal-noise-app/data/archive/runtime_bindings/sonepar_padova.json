@@ -1,0 +1,284 @@
+{
+  "entity_id": "sonepar_padova",
+  "entity_name": "Sonepar Padova",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "pallavolopadova.com",
+    "sonepar.it",
+    "piuadrenalina.com",
+    "legavolley.it",
+    "en.volleyballworld.com",
+    "pallavolopadova.vivaticket.it",
+    "volleyweek.bg",
+    "cisternavolley.it"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sonepar_padova",
+      "entity_name": "Sonepar Padova",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://pallavolopadova.vivaticket.it",
+        "https://legavolley.it",
+        "https://en.volleyballworld.com",
+        "https://piuadrenalina.com",
+        "https://pallavolopadova.com",
+        "https://volleyweek.bg",
+        "https://cisternavolley.it",
+        "https://sonepar.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sonepar Padova may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:19:44.316215",
+          "domain_explored": "https://pallavolopadova.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Shopify-like)",
+              "Newsletter Marketing Tool"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Sponsorship Contract (Sonepar Padova VS Gas Sales Bluenergy Piacenza)",
+              "Merchandising Operations (Kit Gara, Training gear sales)",
+              "Digital Asset Management (Volleyball World TV, WhatsApp Channel)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Activation",
+            "Brand Visibility",
+            "E-commerce Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 281,
+              "elapsed_seconds": 14.930649995803833
+            }
+          ],
+          "reasoning": "The content confirms 'Sonepar Padova' is a named sponsor of the volleyball team (Pallavolo Padova), appearing in match titles ('Sonepar Padova VS...'). While this is primarily a marketing signal, it validates the entity's active investment and presence in the region. The presence of an online shop and newsletter signup indicates digital infrastructure usage, though specific procurement technologies (ERP/CRM) are not listed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:19:54.465078",
+          "domain_explored": "https://sonepar.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Expecting ',' delimiter: line 25 column 9 (char 1422)"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:20:17.463902",
+          "domain_explored": "https://piuadrenalina.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WooCommerce (inferred from 'Add to wishlist', 'Quick view', and product grid structure)",
+              "WordPress (inferred from standard plugin naming conventions)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: +adrenalina (Apparel Supplier)",
+              "Category: Sports Merchandise & Uniforms",
+              "Relationship: Sponsorship/Vendor Partnership",
+              "Product SKUs: Active (e.g., 1509, 1303, 4600)"
+            ]
+          },
+          "patterns_found": [
+            "Merchandise Procurement",
+            "Sponsorship Activation",
+            "B2B2C Supply Chain",
+            "Brand Licensing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 309,
+              "elapsed_seconds": 8.917466878890991
+            }
+          ],
+          "reasoning": "The content reveals that Sonepar Padova (via the Pallavolo Padova entity) has an established procurement relationship with '+adrenalina' for team sportswear and merchandise. The site features a dedicated B2B-style catalog and specific product lines (e.g., '1509 Terry', '1300 Alpha') used for match kits. This indicates a procurement category for 'Uniforms & Promotional Merchandise' and suggests a vendor partnership model for branded goods."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:20:40.586560",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship of SuperLega team (Sonepar Padova listed alongside other corporate sponsors like Gas Sales Bluenergy, Itas Trentino)",
+              "Association with 'Credem Banca' (Title Sponsor) and 'Del Monte' (Cup Sponsor), indicating B2B networking environment"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Visibility",
+            "League Affiliation",
+            "Brand Association"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 245,
+              "elapsed_seconds": 18.88687229156494
+            }
+          ],
+          "reasoning": "The content confirms Sonepar Padova's active participation in the SuperLega Credem Banca (top-tier professional volleyball). While this confirms the entity's existence and marketing investment, the content is purely informational (league standings, schedules) and does not contain direct procurement signals such as tenders, vendor lists, or technology stacks."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:20:50.004709",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Generic Content Consumption"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 168,
+              "elapsed_seconds": 5.945558071136475
+            }
+          ],
+          "reasoning": "The scraped content is a generic sports news page (VolleyballWorld) covering match results and global rankings. While it confirms the existence of the 'Superlega' league associated with the target entity's sponsorship interests, it contains zero procurement signals, technology stacks, or corporate governance data relevant to Sonepar Padova's operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:20:54.253632",
+          "domain_explored": "https://pallavolopadova.vivaticket.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:21:02.027299",
+          "domain_explored": "https://volleyweek.bg",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Consumption",
+            "Generic Content Aggregation",
+            "Irrelevant Geographic Scope"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.8267409801483154
+            }
+          ],
+          "reasoning": "The analyzed content from 'volleyweek.bg' is a sports news aggregator covering international volleyball leagues (Turkey, Italy) and player statistics. It contains no information regarding Sonepar Padova, its operations, procurement needs, or technology stack. The content is entirely unrelated to the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:21:10.342038",
+          "domain_explored": "https://cisternavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Consumption",
+            "Generic Content Aggregation",
+            "Irrelevant Geographic Scope"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 164,
+              "elapsed_seconds": 3.2557129859924316
+            }
+          ],
+          "reasoning": "The content is a sports news feed for 'Cisterna Volley', a team based in Cisterna di Latina (Lazio). It contains match results, player interviews, and training schedules. There is no connection to Sonepar Padova, nor are there any procurement, technology, or B2B signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 9024,
+      "total_output_tokens": 1335,
+      "estimated_cost_usd": 0.047097
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sonepar Padova may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:21:10.343341"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.317143",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:04.712887"
+}

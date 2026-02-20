@@ -1,0 +1,181 @@
+{
+  "entity_id": "deutscher_motor_sport_bund_(dmsb)",
+  "entity_name": "Deutscher Motor Sport Bund (DMSB)",
+  "template_id": "tpl_global_governing_federations_v1",
+  "cluster_id": "nat_motor_gov_body",
+  "discovered_domains": [
+    "fim-moto.tv",
+    "caranddriver.com",
+    "racecar.com",
+    "fim-moto.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "deutscher_motor_sport_bund_(dmsb)",
+      "entity_name": "Deutscher Motor Sport Bund (DMSB)",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fim-moto.tv",
+        "https://fim-moto.com",
+        "https://racecar.com",
+        "https://caranddriver.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Deutscher Motor Sport Bund (DMSB) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:37:29.851873",
+          "domain_explored": "https://fim-moto.tv",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content is a navigation menu for a streaming platform (FIM-Moto.tv)",
+            "Irrelevant entity (FIM vs DMSB)",
+            "No procurement or technical infrastructure data present"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 195,
+              "elapsed_seconds": 4.031726121902466
+            }
+          ],
+          "reasoning": "The content provided is a list of motorsport championships and live events from the FIM (F\u00e9d\u00e9ration Internationale de Motocyclisme) streaming platform. It contains no information regarding the Deutscher Motor Sport Bund (DMSB), its procurement activities, technology stack, or governance. The entity is incorrect and the data type is purely navigational."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:37:39.262964",
+          "domain_explored": "https://caranddriver.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Automotive journalism content",
+            "Consumer marketplace listings",
+            "Automotive news aggregation",
+            "Irrelevant entity (Car and Driver vs DMSB)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.380187749862671
+            }
+          ],
+          "reasoning": "The content is entirely consumer-focused automotive journalism and vehicle marketplace listings from Car and Driver. There is no relationship to the Deutscher Motor Sport Bund (DMSB), nor are there any signals regarding B2B procurement, governance, or technical infrastructure relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:37:50.043444",
+          "domain_explored": "https://racecar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Agency service portfolio (Web design, SEO, 3D models)",
+            "B2B sales copy ('Let's get started by having a chat')",
+            "Automotive/Marine industry focus",
+            "Client news aggregation (Bonhams, Mouse Motors)",
+            "Classifieds/Marketplace listings ('Client Cars for Sale')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.5784831047058105
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'Racecar', a creative digital agency serving the automotive and marine industries. The content is purely promotional, listing services such as website design, app development, and branding. There is no content related to the Deutscher Motor Sport Bund (DMSB), nor are there any procurement signals, job postings, or technology infrastructure details relevant to the target entity's governance or supply chain."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:38:02.001997",
+          "domain_explored": "https://fim-moto.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Regulatory Documentation (Codes/Regulations)",
+              "Commission Structures (Technical, Safety, Mobility)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Entity (FIM vs DMSB)",
+            "Sports Federation Governance Content",
+            "Public Regulatory Documentation",
+            "Event Calendars and Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1543,
+              "output_tokens": 240,
+              "elapsed_seconds": 2.62538480758667
+            }
+          ],
+          "reasoning": "The scraped content is from the F\u00e9d\u00e9ration Internationale de Motocyclisme (FIM), the international governing body for motorcycle racing. While DMSB is a member of FIM, this page serves as a public-facing portal for global championships, regulations, and news. It does not contain specific procurement signals, technology stacks, or vendor partnership details relevant to the DMSB's domestic procurement activities."
+        }
+      ],
+      "total_input_tokens": 5821,
+      "total_output_tokens": 863,
+      "estimated_cost_usd": 0.030407999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Deutscher Motor Sport Bund (DMSB) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:38:02.003483"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.380935",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:17.194921"
+}

@@ -1,0 +1,247 @@
+{
+  "entity_id": "vfb_friedrichshafen",
+  "entity_name": "VfB Friedrichshafen",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "vfb-volleyball.de",
+    "vfb-friedrichshafen.de",
+    "vfb-fussball.de",
+    "www-old.cev.eu",
+    "volleyball-bundesliga.de"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vfb_friedrichshafen",
+      "entity_name": "VfB Friedrichshafen",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.039999999999999994,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://vfb-volleyball.de",
+        "https://vfb-fussball.de",
+        "https://vfb-friedrichshafen.de",
+        "https://volleyball-bundesliga.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VfB Friedrichshafen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:16:19.474855",
+          "domain_explored": "https://vfb-volleyball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Reservix (Ticketing System)",
+              "SAP Arena (Venue Management)",
+              "Shopify (Likely for .store domain)",
+              "Volleyball-Bundesliga CMS (League Management)"
+            ],
+            "job_postings": [
+              "General 'Jobs' section identified (requires deeper scraping for specific roles)"
+            ],
+            "procurement_indicators": [
+              "Partnership structure (VfB Volleyball GmbH)",
+              "Season planning (Saison 2025/26 indicates budgeting cycle)",
+              "External vendor reliance (Reservix)"
+            ]
+          },
+          "patterns_found": [
+            "Outsourced Ticketing Operations",
+            "Dedicated E-commerce Domain",
+            "External ERP/League Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 318,
+              "elapsed_seconds": 4.355305910110474
+            }
+          ],
+          "reasoning": "The scraped content reveals the core operational infrastructure. While no active RFPs are visible, the reliance on external platforms for ticketing (Reservix, SAP Arena) and shop management (vfb-volleyball.store) indicates a procurement strategy favoring SaaS/outsourced solutions over in-house development. The 'Jobs' link confirms a hiring capability, a necessary channel for future procurement roles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:16:32.618296",
+          "domain_explored": "https://vfb-friedrichshafen.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Restructuring: New Presidium elected (Werner Engl) to lead club out of crisis.",
+              "Operational Scale: Manages 4,116 members and 30 different sports departments.",
+              "Facility Needs: Operates 'VfB-Vereinsgel\u00e4nde' (Club grounds) requiring maintenance/procurement.",
+              "Administrative Burden: 2,525 sports hours per week implies significant scheduling/staffing needs."
+            ]
+          },
+          "patterns_found": [
+            "Multi-Sport Organizational Structure",
+            "Governance Transition (New Leadership)",
+            "Operational Scale (4,000+ Members)",
+            "Facility Management Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 326,
+              "elapsed_seconds": 4.7488179206848145
+            }
+          ],
+          "reasoning": "The content confirms the entity is a large multi-sport club (4,116 members, 30 sports) distinct from the professional volleyball team. The discovery of a governance crisis ('Verein aus der Krise f\u00fchren') and new leadership indicates a period of restructuring. While no direct RFPs are visible, the scale implies a need for member administration software, facility management, and potentially consulting services to address the mentioned crisis."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:16:44.803465",
+          "domain_explored": "https://vfb-fussball.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Infrastructure (Awarded 'Fussball Digital' 1st Place)",
+              "Content Management System (Active News/Photo Galleries)",
+              "Talent Management Platforms (VfB Stuttgart Talentpool integration)"
+            ],
+            "job_postings": [
+              "Youth Trainers (Recruitment call for 'Jugendtrainer')",
+              "Referees (Recruitment call for 'Schiedsrichter')"
+            ],
+            "procurement_indicators": [
+              "Sponsorship Renewal (Stadtwerk am See) - Indicates available budget",
+              "Academy Operations (200+ Talents, 28 Trainers) - High administrative load requiring software tools",
+              "International Partnership (Peoria City Soccer) - Potential need for communication/collaboration tools",
+              "Event Management (mtu-Cup, Sommercamp) - Requires registration/ticketing solutions"
+            ]
+          },
+          "patterns_found": [
+            "Digital Transformation Award (Sepp-Herberger-Preis)",
+            "Strategic Corporate Sponsorship (Stadtwerk am See)",
+            "Elite Talent Development Infrastructure (Fu\u00dfballakademie)",
+            "International Partnerships (Peoria City Soccer)",
+            "Pro-Sport Collaboration (VfB Stuttgart)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1082,
+              "output_tokens": 488,
+              "elapsed_seconds": 4.477740049362183
+            }
+          ],
+          "reasoning": "The content reveals a highly active and professionalized football department that has recently won a national award for 'Fussball Digital'. This indicates a strong propensity for technology adoption and digital infrastructure investment. The existence of a dedicated 'Fu\u00dfballakademie' with 200+ talents and 28 trainers suggests significant operational complexity and a need for management software (CRM, scheduling). While no direct RFP is visible, the combination of new sponsorship income ('Stadtwerk am See') and a digital-first strategy creates a fertile ground for procurement of sports tech solutions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:16:54.125100",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Confederation Portal",
+            "Historical Event Data",
+            "No Vendor/Procurement Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1539,
+              "output_tokens": 186,
+              "elapsed_seconds": 2.7324581146240234
+            }
+          ],
+          "reasoning": "The scraped content from 'www-old.cev.eu' is a navigation archive for the European Volleyball Confederation (CEV). It lists historical events, tournaments, and national federation links. There is no mention of VfB Friedrichshafen, nor are there any procurement signals, job postings, or technology stack indicators relevant to the target entity. This is a false positive in the search results."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:17:04.704682",
+          "domain_explored": "https://volleyball-bundesliga.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VBL-SAMS (League Management System)",
+              "Dyn (Streaming Platform)",
+              "SPORT1 (TV/Broadcasting Partner)"
+            ],
+            "job_postings": [
+              "Jobs (Link present in navigation)"
+            ],
+            "procurement_indicators": [
+              "Partner acquisition (Partner werden)",
+              "Sponsorship management (Sparda BW, SPORT1)",
+              "Centralized IT infrastructure (VBL-Center)"
+            ]
+          },
+          "patterns_found": [
+            "Centralized League Management Platform (VBL-SAMS)",
+            "Digital Rights Management (Streaming via Dyn)",
+            "Corporate Sponsorship Integration (Sparda BW, SPORT1)",
+            "Governance Structure (VBL-Aufsichtsrat)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1589,
+              "output_tokens": 352,
+              "elapsed_seconds": 3.442991018295288
+            }
+          ],
+          "reasoning": "While this is the league's central portal rather than the team's specific site, it reveals the centralized technology stack and governance model that VfB Friedrichshafen operates within. The presence of 'VBL-SAMS' indicates a standardized league-wide data management system, reducing the need for individual team procurement in this area. However, the 'Jobs' section and 'Partner werden' (Become a Partner) links indicate active commercial and administrative operations that could signal procurement needs at the league level that trickle down to teams."
+        }
+      ],
+      "total_input_tokens": 6983,
+      "total_output_tokens": 1670,
+      "estimated_cost_usd": 0.045999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VfB Friedrichshafen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:17:04.706892"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321432",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:20.832536"
+}

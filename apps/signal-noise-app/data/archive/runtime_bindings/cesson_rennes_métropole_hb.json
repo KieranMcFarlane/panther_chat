@@ -1,0 +1,88 @@
+{
+  "entity_id": "cesson_rennes_m\u00e9tropole_hb",
+  "entity_name": "Cesson Rennes M\u00e9tropole HB",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "cesson-handball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cesson_rennes_m\u00e9tropole_hb",
+      "entity_name": "Cesson Rennes M\u00e9tropole HB",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://cesson-handball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cesson Rennes M\u00e9tropole HB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:18:48.055956",
+          "domain_explored": "https://cesson-handball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (SaaS - Subdomain detected: billetterie.cesson-handball.com)",
+              "CMS (Content Management System for cesson-handball.com)",
+              "Venue Management Software (implied for Glaz Arena scheduling)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of specialized ticketing vendor (likely outsourced/SaaS)",
+              "Venue operations requiring facility management vendors"
+            ]
+          },
+          "patterns_found": [
+            "Dedicated Ticketing Subdomain",
+            "Venue Management Operations",
+            "Digital Content Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 307,
+              "elapsed_seconds": 7.128010988235474
+            }
+          ],
+          "reasoning": "The content reveals a dedicated ticketing subdomain (billetterie.cesson-handball.com) and active venue operations at the Glaz Arena. While this confirms the use of specific third-party ticketing software and infrastructure, it does not explicitly show *new* procurement intent or active RFPs. However, the existence of these systems confirms the entity's capability and budget for SaaS tools, warranting a weak signal for future vendor engagement or upgrades."
+        }
+      ],
+      "total_input_tokens": 1364,
+      "total_output_tokens": 307,
+      "estimated_cost_usd": 0.008697
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cesson Rennes M\u00e9tropole HB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:18:48.057218"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.350074",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:31.646653"
+}

@@ -1,0 +1,126 @@
+{
+  "entity_id": "lindaren_volley_luzern",
+  "entity_name": "Lindaren Volley Luzern",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "www-old.cev.eu",
+    "zoominfo.com",
+    "volleytimes.com",
+    "sportsinthebahamas.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lindaren_volley_luzern",
+      "entity_name": "Lindaren Volley Luzern",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://volleytimes.com",
+        "https://zoominfo.com",
+        "https://sportsinthebahamas.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Lindaren Volley Luzern may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:36:43.287745",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports federation navigation structure",
+            "Historical event listings (2011-2022)",
+            "Absence of entity-specific content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.603199005126953
+            }
+          ],
+          "reasoning": "The scraped content is from the generic navigation menu and footer of the CEV (Confederation Europ\u00e9enne de Volleyball) website. It contains no specific information regarding 'Lindaren Volley Luzern', its procurement activities, technology stack, or governance. The content is purely structural and historical (referencing events from 2011-2022), offering zero intelligence on the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:36:46.263403",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:36:49.165969",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:36:52.195768",
+          "domain_explored": "https://sportsinthebahamas.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1361,
+      "total_output_tokens": 197,
+      "estimated_cost_usd": 0.007038
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Lindaren Volley Luzern may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:36:52.196592"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.326845",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:19.048293"
+}

@@ -1,0 +1,166 @@
+{
+  "entity_id": "antigua_and_barbuda_basketball_association",
+  "entity_name": "Antigua and Barbuda Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "antiguabasketball.com",
+    "antiguanice.com",
+    "abba.web.geniussports.com",
+    "antiguaobserver.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "antigua_and_barbuda_basketball_association",
+      "entity_name": "Antigua and Barbuda Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://abba.web.geniussports.com",
+        "https://antiguaobserver.com",
+        "https://antiguabasketball.com",
+        "https://antiguanice.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Antigua and Barbuda Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:13:10.631784",
+          "domain_explored": "https://antiguabasketball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Static Web Content (HTML/PHP)",
+              "PDF Documents (for forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of 'Digicel ABBA League' naming (Sponsorship/Vendor partnership)",
+              "Manual 'Registration Form' distribution (Opportunity for automation SaaS)",
+              "Reference to 'F&G Trading' and 'Cuties Ovals' (Sponsor procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Manual Registration Processes",
+            "Sponsorship Dependency",
+            "Legacy Website Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1372,
+              "output_tokens": 262,
+              "elapsed_seconds": 2.913276195526123
+            }
+          ],
+          "reasoning": "The content reveals a reliance on manual, paper-based workflows (downloadable PDF forms for registration) and a static website structure. While no active RFPs are visible, the operational friction indicates a potential need for digital transformation tools (e.g., electronic registration systems, CRM) to modernize league management."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:13:19.570981",
+          "domain_explored": "https://antiguanice.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Context",
+            "General Tourism Directory Structure",
+            "Absence of Sports Governance Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.253592014312744
+            }
+          ],
+          "reasoning": "The scraped content from 'antiguanice.com' is a general tourism and business directory for Antigua and Barbuda (Hotels, Restaurants, Yachting, Real Estate). It contains no specific information regarding the 'Antigua and Barbuda Basketball Association', its procurement activities, or its governance. The content is irrelevant to the specific entity being analyzed."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:13:26.421209",
+          "domain_explored": "https://abba.web.geniussports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:13:39.425263",
+          "domain_explored": "https://antiguaobserver.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Portal Context",
+            "Sports Reporting (Football/Cricket Focus)",
+            "Political/Economic News Dominance",
+            "Absence of Basketball Association Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 234,
+              "elapsed_seconds": 6.077891111373901
+            }
+          ],
+          "reasoning": "The scraped content from 'antiguaobserver.com' functions as a general news aggregator. While it contains a sports section, the specific articles listed focus on Football (ABFA Premier League), Cricket (West Indies U19), and Athletics. There is no mention of the Antigua and Barbuda Basketball Association (ABBA), nor are there any procurement signals, job postings, or technology investment indicators relevant to the target entity. The domain is a media publisher, not the governing body for basketball."
+        }
+      ],
+      "total_input_tokens": 4300,
+      "total_output_tokens": 680,
+      "estimated_cost_usd": 0.023100000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Antigua and Barbuda Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:13:39.427216"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.247997",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:48.372469"
+}

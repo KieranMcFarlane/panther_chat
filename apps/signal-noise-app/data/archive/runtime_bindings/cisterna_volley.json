@@ -1,0 +1,190 @@
+{
+  "entity_id": "cisterna_volley",
+  "entity_name": "Cisterna Volley",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "cisternavolley.it",
+    "en.volleyballworld.com",
+    "veronavolley.it",
+    "legavolley.it",
+    "zoominfo.com",
+    "fruitnet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cisterna_volley",
+      "entity_name": "Cisterna Volley",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://veronavolley.it",
+        "https://legavolley.it",
+        "https://en.volleyballworld.com",
+        "https://fruitnet.com",
+        "https://cisternavolley.it",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cisterna Volley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:39:53.845151",
+          "domain_explored": "https://cisternavolley.it",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 5 column 68 (char 154)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:40:01.091262",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news content",
+            "Global competition standings",
+            "Video streaming platform links (tv.volleyballworld.com)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 184,
+              "elapsed_seconds": 3.673436164855957
+            }
+          ],
+          "reasoning": "The scraped content is from a global volleyball news and ranking site (en.volleyballworld.com). It contains generic match results (Lube vs Verona), world rankings, and streaming links. There is absolutely no mention of 'Cisterna Volley', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:40:08.467975",
+          "domain_explored": "https://veronavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Generic match results and standings",
+            "Ticketing availability updates",
+            "Streaming platform mentions (DAZN)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.6801788806915283
+            }
+          ],
+          "reasoning": "The scraped content from veronavolley.it is purely sports journalism and fan engagement. It contains match results, previews, and ticketing status. While it mentions 'Cisterna Volley' in a game review, this is historical match data, not a procurement signal. There are no vendors, RFPs, or technology stacks mentioned."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:40:16.336403",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League aggregation portal",
+            "Standardized team roster listings",
+            "Generic navigation structure (Calendars, Standings, Stats)",
+            "Sponsorship naming conventions (Credem Banca, Del Monte)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1497,
+              "output_tokens": 221,
+              "elapsed_seconds": 4.751848220825195
+            }
+          ],
+          "reasoning": "The scraped content represents the main navigation menu of 'Lega Volley', the governing body/league website. While 'Cisterna Volley' is listed as a participating team, the content is purely informational (schedules, standings, and generic links). There are no specific procurement signals, technology stacks, or organizational details specific to Cisterna Volley's operations derived from this high-level navigation data."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:40:19.314789",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T19:40:26.792984",
+          "domain_explored": "https://fruitnet.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Invalid control character at: line 5 column 51 (char 133)"
+        }
+      ],
+      "total_input_tokens": 4331,
+      "total_output_tokens": 588,
+      "estimated_cost_usd": 0.021813
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cisterna Volley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:40:26.794171"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.317221",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:39:48.795855"
+}

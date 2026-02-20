@@ -1,0 +1,165 @@
+{
+  "entity_id": "ach_volley_ljubljana",
+  "entity_name": "ACH Volley Ljubljana",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "ach-volley.si",
+    "zoominfo.com",
+    "volleybox.net",
+    "worldofvolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ach_volley_ljubljana",
+      "entity_name": "ACH Volley Ljubljana",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://worldofvolley.com",
+        "https://zoominfo.com",
+        "https://ach-volley.si",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "ACH Volley Ljubljana may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:07:28.116120",
+          "domain_explored": "https://ach-volley.si",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Integration (Twitter/X, Facebook)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Agreements (Brand visibility: 'I Feel Slovenia', 'Panvita')"
+            ]
+          },
+          "patterns_found": [
+            "Sports team content (Match results, standings, player roster)",
+            "Sponsorship visibility (BY I FEEL SLOVENIA, Panvita Pomgrad)",
+            "Social media integration (Tweets, Facebook widgets)",
+            "Standard CMS structure (Date-based news entries)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 254,
+              "elapsed_seconds": 4.134752035140991
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news updates, match results, and player information. There are no explicit procurement signals, job postings, or technology infrastructure details visible in this text. The presence of social media widgets indicates a standard web setup but does not confirm specific technology procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:08:01.278621",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:08:10.097138",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports transfer market data",
+            "Player roster management",
+            "Fan engagement widgets",
+            "Social media integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 188,
+              "elapsed_seconds": 2.5169668197631836
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is a sports database focused on player transfers, match predictions, and community forums. While it lists 'Done deals' and 'Rumors' regarding player movements, these are athletic transfers, not business procurement or vendor acquisitions. There are no signals regarding technology stacks, ERP systems, or corporate governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:08:33.226212",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Match results and standings",
+            "Transfer market updates ('Done deals')",
+            "Team performance tracking"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 180,
+              "elapsed_seconds": 17.524485111236572
+            }
+          ],
+          "reasoning": "The scraped content from WorldofVolley is exclusively sports journalism, covering match results, league standings, and player transfers for ACH Volley and other international teams. There are no corporate governance documents, technology infrastructure details, or business procurement signals present in this text."
+        }
+      ],
+      "total_input_tokens": 4327,
+      "total_output_tokens": 622,
+      "estimated_cost_usd": 0.022310999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "ACH Volley Ljubljana may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:08:33.228621"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324671",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:21:24.684381"
+}

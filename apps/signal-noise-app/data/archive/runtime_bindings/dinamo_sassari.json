@@ -1,0 +1,142 @@
+{
+  "entity_id": "dinamo_sassari",
+  "entity_name": "Dinamo Sassari",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "dinamobasket.com",
+    "dinamostore.it",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "dinamo_sassari",
+      "entity_name": "Dinamo Sassari",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://zoominfo.com",
+        "https://dinamostore.it",
+        "https://dinamobasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Dinamo Sassari may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:47:27.993207",
+          "domain_explored": "https://dinamobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (DinamoStore)",
+              "Video Streaming Platforms (LBA TV, LBF TV, Youtube TV, DTV2)",
+              "Content Management System (CMS) for news/game reports"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise sales operations (Dinamo Store)",
+              "Ticketing management (PalaSerradimigni)",
+              "Media production and distribution (Highlights, Game Reports)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Digital Content Management",
+            "Ticketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 282,
+              "elapsed_seconds": 3.4048328399658203
+            }
+          ],
+          "reasoning": "The content reveals active use of an e-commerce platform ('DinamoStore') for merchandise and a structured digital media workflow (Game Reports, Highlights, Live TV). While no direct RFP is visible, the operation of these channels implies a reliance on third-party platforms for streaming (LBA TV, Youtube TV) and web hosting/ecommerce, which are potential procurement touchpoints."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:47:34.528717",
+          "domain_explored": "https://dinamostore.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform",
+              "Digital Payments"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active inventory of replica game wear (Shorts, Jerseys)",
+              "Baby/Merchandise product lines",
+              "Direct-to-consumer sales operations"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Infrastructure",
+            "Merchandise Procurement",
+            "Inventory Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 225,
+              "elapsed_seconds": 2.9297728538513184
+            }
+          ],
+          "reasoning": "The content confirms the operation of a dedicated e-commerce platform (dinamostore.it) for merchandise sales. While this confirms the capability for retail operations, it does not explicitly reveal B2B procurement intent or technology stack details. It validates the 'Merchandising' procurement category."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:47:37.504624",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2761,
+      "total_output_tokens": 507,
+      "estimated_cost_usd": 0.015888
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Dinamo Sassari may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:47:37.505561"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.211612",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:50.393831"
+}

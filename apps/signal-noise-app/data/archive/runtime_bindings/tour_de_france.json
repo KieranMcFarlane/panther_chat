@@ -1,0 +1,507 @@
+{
+  "entity_id": "tour_de_france",
+  "entity_name": "Tour de France",
+  "template_id": "tpl_elite_commercial_teams_v1",
+  "cluster_id": "elite_tour_organizers",
+  "discovered_domains": [
+    "letour.com",
+    "letourfemmes.fr",
+    "letapedutourdefrance.com",
+    "letour.barcelona",
+    "tissottiming.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/tour-de-france-jobs",
+      "https://www.linkedin.com/jobs/tour-de-france-jobs",
+      "https://www.linkedin.com/jobs/a.s.o.-amaury-sport-organisation-jobs-worldwide",
+      "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae",
+      "https://uk.linkedin.com/jobs/view/digital-and-social-manager-tdf-grand-depart-2027-at-british-cycling-4350237935",
+      "https://uk.linkedin.com/jobs/view/race-routes-lead-tdf-grand-depart-2027-at-british-cycling-4327125252",
+      "https://www.linkedin.com/posts/caroline-julian-92993a70_british-cycling-careers-activity-7351553781223825411-80MA"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tour_de_france",
+      "entity_name": "Tour de France",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.36,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.22,
+        0.24,
+        0.3,
+        0.3,
+        0.36
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/view/digital-and-social-manager-tdf-grand-depart-2027-at-british-cycling-4350237935",
+        "https://www.linkedin.com/jobs/a.s.o.-amaury-sport-organisation-jobs-worldwide",
+        "https://tissottiming.com",
+        "https://letapedutourdefrance.com",
+        "https://letour.barcelona",
+        "https://www.linkedin.com/jobs/tour-de-france-jobs",
+        "https://uk.linkedin.com/jobs/tour-de-france-jobs",
+        "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae",
+        "https://letour.com",
+        "https://letourfemmes.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Large-Scale Event Infrastructure & Logistics",
+        "Public-Private Partnership Governance",
+        "Urban Mobility & Security Planning",
+        "Tourism & Marketing Campaign Procurement",
+        "Official Timekeeping & Data Scoring Partnership",
+        "High-Precision Sensor & Transponder Hardware Procurement",
+        "Real-Time Data Broadcasting & TV Graphics Integration",
+        "On-Site Technical Infrastructure & Network Setup",
+        "Direct Commercial Partnership Management (A.S.O. UK)",
+        "Event Production & AV Hardware Procurement (adi.tv)",
+        "Data Visualization & Analytics Stack (Grafana Labs)",
+        "International Business Development Support",
+        "VIP & Client Hospitality Management",
+        "Fleet Vehicle Maintenance & Logistics",
+        "High-Volume Media Post-Production Workflows",
+        "Event Security & Crowd Control Operations",
+        "Special Purpose Vehicle (SPV) Governance Structure",
+        "Public-Private Joint Venture Procurement",
+        "Digital Content Creation & Social Media Stack",
+        "Fixed-Term Event-Based Resource Planning"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tour de France may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:11:20.913677",
+          "domain_explored": "https://letour.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:11:32.111955",
+          "domain_explored": "https://letourfemmes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Zwift (Virtual Training/Event Platform)",
+              "Tissot (Timekeeping/Official Sponsor)",
+              "Visma (Software/Bike Leasing - Title Sponsor)",
+              "FDJ-Suez (Betting/Utilities - Title Sponsor)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Grand D\u00e9part Grande-Bretagne 2027 (Signals cross-border logistics, security, and infrastructure procurement)",
+              "\u00c9tape Femmes Registration (Signals event management software/platform usage)",
+              "Sponsorship Ecosystem (Zwift, Tissot, etc. indicate established vendor relationships)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Sponsorship Partnerships",
+            "Event Management & Logistics",
+            "Digital Engagement Platforms",
+            "International Expansion (Grand D\u00e9part 2027)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1384,
+              "output_tokens": 383,
+              "elapsed_seconds": 7.391958951950073
+            }
+          ],
+          "reasoning": "The content reveals a complex ecosystem of vendors and partners (e.g., Zwift, Tissot, Visma, FDJ-Suez) supporting the Tour de France Femmes. The announcement of the 'Grand D\u00e9part Grande-Bretagne 2027' indicates upcoming logistical and procurement requirements for international event planning. The presence of '\u00c9tape Femmes' suggests B2C event management needs. While no direct RFPs are visible, the reliance on technology partners (Zwift) and sponsors (Tissot) provides clear signals of the vendor ecosystem and potential future procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:11:38.445645",
+          "domain_explored": "https://letapedutourdefrance.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Management Systems",
+              "Timing/Scoring Hardware",
+              "Route Mapping & Planning Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Management of multiple event series (L'\u00c9tape Series)",
+              "Digital training plan distribution (content licensing/creation)",
+              "Participant registration services",
+              "Route infrastructure and safety management"
+            ]
+          },
+          "patterns_found": [
+            "Mass Participation Event Logistics",
+            "Digital Registration Platforms",
+            "Training Program Content Management",
+            "Series Event Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 291,
+              "elapsed_seconds": 2.6808931827545166
+            }
+          ],
+          "reasoning": "The content reveals the 'L'\u00c9tape' series, a mass participation cycling event model. This indicates procurement needs for large-scale event logistics (timing, security, medical), digital registration platforms, and content creation for training plans. While no direct RFPs are visible, the operational complexity implies significant vendor reliance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:11:47.790348",
+          "domain_explored": "https://letour.barcelona",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Systems",
+              "Urban Traffic Control Systems",
+              "Security/Surveillance Infrastructure",
+              "Broadcasting & AV Equipment"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Technical visits by ASO delegation (Jan 2026) for venue preparation",
+              "Infrastructure requirements for Palau Sant Jordi and urban stages",
+              "Public security and mobility planning for 190 countries' press corps",
+              "Marketing and promotional campaigns (Fitur, Llum BCN)",
+              "Contracting for 'Festa dels cent dies' and 'Festa de la bicicleta' events"
+            ]
+          },
+          "patterns_found": [
+            "Large-Scale Event Infrastructure & Logistics",
+            "Public-Private Partnership Governance",
+            "Urban Mobility & Security Planning",
+            "Tourism & Marketing Campaign Procurement"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 361,
+              "elapsed_seconds": 5.27057409286499
+            }
+          ],
+          "reasoning": "The content reveals the 'Grand D\u00e9part Barcelona 2026' project, a major collaborative event between the Tour de France (ASO) and Catalan public institutions. This confirms active procurement cycles for infrastructure, security, urban mobility modifications, and large-scale event services. The explicit mention of technical visits and organizational milestones indicates a ramp-up in vendor requirements."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:11:59.546148",
+          "domain_explored": "https://tissottiming.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "High-precision timing systems",
+              "Transponder technology (RFID/UWB)",
+              "TV Graphics generators",
+              "Data broadcasting APIs",
+              "On-site server infrastructure"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Partnership Agreement (Top-tier vendor)",
+              "Requirement for end-to-end event technical support",
+              "Integration with broadcast production partners",
+              "Global logistics for technical equipment deployment"
+            ]
+          },
+          "patterns_found": [
+            "Official Timekeeping & Data Scoring Partnership",
+            "High-Precision Sensor & Transponder Hardware Procurement",
+            "Real-Time Data Broadcasting & TV Graphics Integration",
+            "On-Site Technical Infrastructure & Network Setup"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 555,
+              "output_tokens": 336,
+              "elapsed_seconds": 4.862092018127441
+            }
+          ],
+          "reasoning": "The content confirms Tissot Timing as the Official Timekeeper for the Tour de France. This represents a major procurement category involving specialized hardware (transponders, finish line mats), software (scoring algorithms, TV graphics), and logistical services. The relationship indicates a long-term, high-value vendor partnership critical to race operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:12:08.079076",
+          "domain_explored": "https://uk.linkedin.com/jobs/tour-de-france-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Audio/Visual LED Systems",
+              "Grafana (Data Visualization/Analytics)",
+              "Remote Collaboration Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Partnerships Executive",
+                "entity": "A.S.O. UK",
+                "location": "London Area, United Kingdom",
+                "signal": "Direct vendor/partner management and acquisition"
+              },
+              {
+                "role": "AV Technician (Audio and LED specialists)",
+                "entity": "adi.tv",
+                "location": "Preston, England",
+                "signal": "Event production hardware procurement"
+              },
+              {
+                "role": "Director, Global Sales Strategy & Operations",
+                "entity": "Grafana Labs",
+                "location": "United Kingdom (Remote)",
+                "signal": "Potential analytics or data operations partnership"
+              }
+            ],
+            "procurement_indicators": [
+              "A.S.O. UK hiring for Partnership Executive (Direct procurement of services)",
+              "adi.tv hiring for AV Technicians (Sub-contractor/Service procurement)",
+              "Grafana Labs hiring Sales Ops in UK (Potential software licensing deal)"
+            ]
+          },
+          "patterns_found": [
+            "Direct Commercial Partnership Management (A.S.O. UK)",
+            "Event Production & AV Hardware Procurement (adi.tv)",
+            "Data Visualization & Analytics Stack (Grafana Labs)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1625,
+              "output_tokens": 506,
+              "elapsed_seconds": 4.364822149276733
+            }
+          ],
+          "reasoning": "The discovery of a 'Partnerships Executive' role at A.S.O. UK (the organizer) is a direct procurement signal indicating active management of commercial relationships and vendor selection. Additionally, listings from adi.tv (AV specialists) and Grafana Labs (analytics) reveal the specific technology stack and service providers currently engaged with or targeted by the Tour de France ecosystem."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:12:16.577724",
+          "domain_explored": "https://www.linkedin.com/jobs/tour-de-france-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "eCommerce Platforms (implied by Tissot roles)",
+              "Performance Analytics Software (TrainingPeaks)",
+              "Social Media Management Tools"
+            ],
+            "job_postings": [
+              "Marketing Coordinator (Tissot)",
+              "eCommerce Marketplace Specialist (Tissot)",
+              "Visual Merchandiser & Trainer (Tissot)",
+              "Quality Specialist (Ketone-IQ)",
+              "Content Creator (Ketone-IQ)"
+            ],
+            "procurement_indicators": [
+              "Partner-led HR & Operations",
+              "Retail & Merchandising Logistics",
+              "Digital Content Production Outsourcing"
+            ]
+          },
+          "patterns_found": [
+            "Sponsor Ecosystem Procurement (Tissot)",
+            "Performance Analytics Ecosystem (TrainingPeaks)",
+            "Sports Nutrition Supply Chain (Ketone-IQ)",
+            "eCommerce & Digital Marketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1698,
+              "output_tokens": 367,
+              "elapsed_seconds": 5.191589832305908
+            }
+          ],
+          "reasoning": "While the search query targets 'Tour de France', the results are entirely comprised of roles within the event's commercial partner ecosystem (Tissot, TrainingPeaks, Ketone-IQ) rather than the organizer (A.S.O.). This confirms the decentralized nature of TdF operations where significant procurement (HR, Tech, Marketing) is handled by partners. Tissot's repeated appearance reinforces the 'Official Timekeeper' partnership signal."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:12:24.876028",
+          "domain_explored": "https://www.linkedin.com/jobs/a.s.o.-amaury-sport-organisation-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Editing Suites (Adobe Premiere, Avid, or DaVinci Resolve implied)",
+              "Fleet Management Systems",
+              "CRM / Hospitality Management Software"
+            ],
+            "job_postings": [
+              "STAGE - Assistant D\u00e9veloppement International H/F",
+              "STAGE - Assistant Relations Clients et Invit\u00e9s H/F",
+              "CDD - M\u00e9canicien Automobile H/F",
+              "CDD - Charg\u00e9 de Post-production H/F",
+              "CDD - Charg\u00e9 de S\u00e9curit\u00e9 H/F"
+            ],
+            "procurement_indicators": [
+              "Vehicle Parts Supply Chain (Fleet Maintenance)",
+              "Broadcasting & Post-Production Equipment Leasing/Purchasing",
+              "Security Vendor Management (Stewarding/Crowd Control)",
+              "Hospitality & Catering Logistics (VIP Relations)"
+            ]
+          },
+          "patterns_found": [
+            "International Business Development Support",
+            "VIP & Client Hospitality Management",
+            "Fleet Vehicle Maintenance & Logistics",
+            "High-Volume Media Post-Production Workflows",
+            "Event Security & Crowd Control Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1773,
+              "output_tokens": 412,
+              "elapsed_seconds": 5.226599931716919
+            }
+          ],
+          "reasoning": "The content lists specific job openings within A.S.O. (the parent company of Tour de France) that reveal operational procurement needs. The postings for 'M\u00e9canicien Automobile' indicate a fleet management requirement, 'Charg\u00e9 de Post-production' signals media hardware/software procurement, and 'Charg\u00e9 de S\u00e9curit\u00e9' implies security service contracts. These are direct indicators of operational expenditure."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T11:12:29.731261",
+          "domain_explored": "https://www.linkedin.com/pulse/riding-tour-de-jobs-career-trajectories-job-searching-taylor-witkin-ysjae",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Cultural Metaphor",
+            "Career Trajectory Analogy"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1850,
+              "output_tokens": 156,
+              "elapsed_seconds": 1.929523229598999
+            }
+          ],
+          "reasoning": "The content is a personal LinkedIn essay using the Tour de France as a metaphor for job searching and career development. It discusses race structures, team roles (sprinters, domestiques), and personal anecdotes. There is no mention of the entity's procurement activities, technology stack, or business operations."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T11:12:37.018013",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/digital-and-social-manager-tdf-grand-depart-2027-at-british-cycling-4350237935",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Photoshop)",
+              "Microsoft Office (Word, Excel, PowerPoint)",
+              "Social Media Management Platforms (implied by role)",
+              "Content Planning Tools"
+            ],
+            "job_postings": [
+              "Digital & Social Manager, TdF Grand Depart 2027 (British Cycling/SPV)",
+              "Tour de France Grand D\u00e9part Content Marketing Lead (Referenced)"
+            ],
+            "procurement_indicators": [
+              "Formation of Special Purpose Vehicle (SPV) for public fund management",
+              "Joint Venture between UKEL and British Cycling",
+              "Fixed-term contract recruitment (Event-based lifecycle)",
+              "Procurement of 'Brand and Engagement' services",
+              "Social Impact Programme delivery procurement"
+            ]
+          },
+          "patterns_found": [
+            "Special Purpose Vehicle (SPV) Governance Structure",
+            "Public-Private Joint Venture Procurement",
+            "Digital Content Creation & Social Media Stack",
+            "Fixed-Term Event-Based Resource Planning"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1912,
+              "output_tokens": 384,
+              "elapsed_seconds": 3.1859631538391113
+            }
+          ],
+          "reasoning": "This job posting reveals the specific governance model (SPV 'Grand Depart GB 2027') established to manage the 2027 Tour de France Grand Depart in the UK. It identifies the key stakeholders (DCMS, UK Sport, British Cycling) and signals immediate procurement needs for digital marketing tools and personnel to support the event lifecycle."
+        }
+      ],
+      "total_input_tokens": 13730,
+      "total_output_tokens": 3196,
+      "estimated_cost_usd": 0.08913
+    },
+    "procurement_signals": [
+      "Large-Scale Event Infrastructure & Logistics",
+      "Public-Private Partnership Governance",
+      "Urban Mobility & Security Planning",
+      "Tourism & Marketing Campaign Procurement",
+      "Official Timekeeping & Data Scoring Partnership",
+      "High-Precision Sensor & Transponder Hardware Procurement",
+      "Real-Time Data Broadcasting & TV Graphics Integration",
+      "On-Site Technical Infrastructure & Network Setup",
+      "Direct Commercial Partnership Management (A.S.O. UK)",
+      "Event Production & AV Hardware Procurement (adi.tv)",
+      "Data Visualization & Analytics Stack (Grafana Labs)",
+      "International Business Development Support",
+      "VIP & Client Hospitality Management",
+      "Fleet Vehicle Maintenance & Logistics",
+      "High-Volume Media Post-Production Workflows",
+      "Event Security & Crowd Control Operations",
+      "Special Purpose Vehicle (SPV) Governance Structure",
+      "Public-Private Joint Venture Procurement",
+      "Digital Content Creation & Social Media Stack",
+      "Fixed-Term Event-Based Resource Planning"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tour de France may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:12:37.019099"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.402938",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:22:03.271023"
+}

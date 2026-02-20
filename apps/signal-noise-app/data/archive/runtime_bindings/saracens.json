@@ -1,0 +1,239 @@
+{
+  "entity_id": "saracens",
+  "entity_name": "Saracens",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "tier1_professional_clubs",
+  "discovered_domains": [
+    "saracens.com",
+    "saracensarfc.com",
+    "saracenssportfoundation.org",
+    "saracenshigh.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/vice-principal-at-saracens-multi-academy-trust-4345110012",
+      "https://uk.linkedin.com/company/rugby-football-union/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "saracens",
+      "entity_name": "Saracens",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://saracens.com",
+        "https://uk.linkedin.com/company/rugby-football-union/jobs",
+        "https://saracenssportfoundation.org",
+        "https://saracensarfc.com",
+        "https://saracenshigh.org",
+        "https://uk.linkedin.com/jobs/view/vice-principal-at-saracens-multi-academy-trust-4345110012"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Saracens may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:10:53.584337",
+          "domain_explored": "https://saracens.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Personnel changes (Player departures)",
+            "Standard sports journalism"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 595,
+              "output_tokens": 144,
+              "elapsed_seconds": 2.2427170276641846
+            }
+          ],
+          "reasoning": "The content is a standard sports announcement regarding a player leaving the club. It contains no information regarding technology adoption, vendor selection, job vacancies, or organizational restructuring that would indicate procurement activity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:11:00.298925",
+          "domain_explored": "https://saracensarfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Club Sponsors (General mention, no specific vendors listed)"
+            ]
+          },
+          "patterns_found": [
+            "Community/Amateur Club Structure (Saracens 'Sonics', U16 teams)",
+            "Fundraising Activities (Lotteries, Lunches)",
+            "Event Management (Masterclasses)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.4244370460510254
+            }
+          ],
+          "reasoning": "The content provided is heavily repetitive and focuses on community-level activities (amateur teams like 'Sonics' and 'Infidels'), fundraising lotteries, and youth events. While 'Club Sponsors' is mentioned, there is no specific vendor information, technology stack details, or procurement intent visible in this text. The entity appears to be the amateur or community branch of Saracens (Saracens ARFC), which limits the relevance for high-value commercial procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:11:10.391195",
+          "domain_explored": "https://saracenssportfoundation.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Form interaction)",
+              "Google Calendar (Integration)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Five Year Strategy Launch (Implies upcoming budget allocation)",
+              "Event Venue Procurement (The Underglobe booking for 2026)",
+              "Fundraising Infrastructure (Sweepstakes platforms)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Planning (Five Year Strategy)",
+            "Event Management (Large-scale Charity Dinners)",
+            "Digital Engagement (JavaScript-based forms for sweepstakes)",
+            "Community Program Delivery (Education, Health, Employability)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1466,
+              "output_tokens": 303,
+              "elapsed_seconds": 3.54101300239563
+            }
+          ],
+          "reasoning": "While this is the charitable arm, the explicit mention of a 'Five Year Strategy' indicates a structured planning cycle which often precedes procurement activity. The reliance on JavaScript for forms and the organization of large-scale events (Charity Dinner 2026) suggest a need for event management vendors and digital tool support, though direct procurement intent is not explicitly stated."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:11:13.321722",
+          "domain_explored": "https://saracenshigh.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:11:20.971343",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/vice-principal-at-saracens-multi-academy-trust-4345110012",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Vice Principal (Title only from URL, content missing)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Content",
+            "Geographic Mismatch (US vs UK)",
+            "Irrelevant Job Titles (Library Directors)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1577,
+              "output_tokens": 243,
+              "elapsed_seconds": 3.3682501316070557
+            }
+          ],
+          "reasoning": "The provided content is a generic list of job recommendations for 'Library Director' roles in the United States (Mountain View, CA; Jurupa Valley, CA; Mississippi, etc.). Although the URL indicates the source was a specific posting for a 'Vice-Principal at Saracens Multi-Academy Trust', the actual text content provided does not contain the job description, details, or requirements for that role. It contains no procurement signals, technology stack information, or governance patterns relevant to the Saracens entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:11:40.602721",
+          "domain_explored": "https://uk.linkedin.com/company/rugby-football-union/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Fundraising Executive",
+              "Management Accountant",
+              "Safeguarding Case Officer",
+              "Digital Learning Designer",
+              "Retail and Licensing Lead"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Generic Job Board Content",
+            "Irrelevant Job Titles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1640,
+              "output_tokens": 218,
+              "elapsed_seconds": 16.27769184112549
+            }
+          ],
+          "reasoning": "The content analyzed belongs to the Rugby Football Union (RFU / England Rugby), not Saracens. While both operate in the rugby sector, they are distinct legal entities with separate procurement functions. The job postings (Fundraising, Medical, Retail) are specific to the RFU and do not provide procurement intelligence for Saracens."
+        }
+      ],
+      "total_input_tokens": 6676,
+      "total_output_tokens": 1154,
+      "estimated_cost_usd": 0.037337999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Saracens may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:11:40.604368"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.270449",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:39.128138"
+}

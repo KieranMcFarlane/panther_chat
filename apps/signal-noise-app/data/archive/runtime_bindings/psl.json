@@ -1,0 +1,331 @@
+{
+  "entity_id": "psl",
+  "entity_name": "PSL",
+  "template_id": "tpl_franchise_leagues_v1",
+  "cluster_id": "franchise_leagues",
+  "discovered_domains": [
+    "psl-t20.com",
+    "ams.punjab.gov.in",
+    "riebhopal.ncert.gov.in",
+    "medleapr.mp.gov.in"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/psl-group/jobs",
+      "https://www.linkedin.com/jobs/psl-group-jobs-worldwide",
+      "https://uk.linkedin.com/jobs/professional-support-lawyer-jobs",
+      "https://www.linkedin.com/jobs/universit%C3%A9-psl-jobs-worldwide",
+      "https://ie.linkedin.com/jobs/view/professional-support-lawyer-psl-corporate-at-amicus-search-recruitment-3086750081",
+      "https://ie.linkedin.com/jobs/view/professional-support-lawyer-psl-funds-at-maples-group-4323286479",
+      "https://uk.linkedin.com/jobs/view/professional-support-lawyer-psl-principal-associate-employment-any-regional-office-at-eversheds-sutherland-4354130627",
+      "https://uk.linkedin.com/jobs/view/employment-psl-at-douglas-scott-legal-recruitment-4359126753",
+      "https://ca.linkedin.com/jobs/psl-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "psl",
+      "entity_name": "PSL",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.059999999999999984,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.06,
+        0.12,
+        0.09999999999999999,
+        0.07999999999999999,
+        0.059999999999999984
+      ],
+      "explored_domains": [
+        "https://medleapr.mp.gov.in",
+        "https://www.linkedin.com/jobs/universit%C3%A9-psl-jobs-worldwide",
+        "https://riebhopal.ncert.gov.in",
+        "https://ie.linkedin.com/jobs/view/professional-support-lawyer-psl-corporate-at-amicus-search-recruitment-3086750081",
+        "https://psl-t20.com",
+        "https://ams.punjab.gov.in",
+        "https://www.linkedin.com/jobs/psl-group-jobs-worldwide",
+        "https://uk.linkedin.com/jobs/professional-support-lawyer-jobs",
+        "https://www.linkedin.com/company/psl-group/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Operational Transformation",
+        "Event Management Procurement",
+        "Digital Infrastructure Needs",
+        "Global Expansion Hiring",
+        "Project Management Resource Scaling",
+        "Event Production Capacity Building",
+        "Pharma & Biotech Sector Focus"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "PSL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:28:24.196936",
+          "domain_explored": "https://psl-t20.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Auction Management Software",
+              "Digital Bidding Platforms",
+              "Event Registration Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event organization for 'First-ever HBL PSL Player Auction'",
+              "Venue procurement (Gaddafi Stadium)",
+              "Workshop execution services"
+            ]
+          },
+          "patterns_found": [
+            "Operational Transformation",
+            "Event Management Procurement",
+            "Digital Infrastructure Needs"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 442,
+              "output_tokens": 248,
+              "elapsed_seconds": 4.7959747314453125
+            }
+          ],
+          "reasoning": "The introduction of a 'first-ever Player Auction' represents a significant operational shift for the PSL. This event requires immediate procurement of specialized event management services, auction technology platforms (software/hybrid bidding systems), and venue management services. This is a strong, time-bound procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:28:39.933608",
+          "domain_explored": "https://ams.punjab.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:28:59.378400",
+          "domain_explored": "https://riebhopal.ncert.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:29:30.055359",
+          "domain_explored": "https://medleapr.mp.gov.in",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:29:34.963734",
+          "domain_explored": "https://www.linkedin.com/company/psl-group/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 505,
+              "output_tokens": 126,
+              "elapsed_seconds": 2.5086252689361572
+            }
+          ],
+          "reasoning": "The scraped content indicates an access restriction ('Forbidden') and does not contain any analyzable data regarding job postings, procurement signals, or technology stacks. Without the actual content of the LinkedIn page, no procurement intelligence can be derived."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:29:58.828405",
+          "domain_explored": "https://www.linkedin.com/jobs/psl-group-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Project Management Software",
+              "Event Production Tools",
+              "Collaboration Platforms"
+            ],
+            "job_postings": [
+              "Senior Project Manager (Quer\u00e9taro, Mexico)",
+              "Line Producer (Quer\u00e9taro, Mexico)",
+              "Qual Project Coordinator (Quer\u00e9taro, Mexico)",
+              "Senior Analyst",
+              "Sales Director, RxY (New York, NY)",
+              "Senior VP - Sales & Consulting (Pharma & Biotech)"
+            ],
+            "procurement_indicators": [
+              "Expansion of operational teams suggests upcoming needs for productivity software licenses.",
+              "Hiring of Line Producers and Project Coordinators signals increased event volume, driving demand for venue, catering, and logistics vendors.",
+              "New Sales leadership in Pharma/Biotech vertical indicates potential investment in sector-specific CRM or data tools."
+            ]
+          },
+          "patterns_found": [
+            "Global Expansion Hiring",
+            "Project Management Resource Scaling",
+            "Event Production Capacity Building",
+            "Pharma & Biotech Sector Focus"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 397,
+              "elapsed_seconds": 19.784229278564453
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for key operational roles (Project Manager, Line Producer, Analyst) across multiple regions (Mexico, NY). This indicates organizational growth and a corresponding increase in demand for supporting infrastructure, software tools, and vendor services to manage larger project volumes and events."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:30:10.531273",
+          "domain_explored": "https://uk.linkedin.com/jobs/professional-support-lawyer-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Legal Counsel at Quantexa",
+              "Professional Support Lawyer at Montresor Legal",
+              "Legal Counsel at M&S"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Semantic Mismatch",
+            "Irrelevant Search Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 196,
+              "elapsed_seconds": 4.042551040649414
+            }
+          ],
+          "reasoning": "The search query 'Professional Support Lawyer' (PSL) refers to a specific legal role, not the target entity 'PSL' (Pakistan Super League or PSL Group). The content lists legal jobs for companies like Quantexa, M&S, and Montresor Legal, which are unrelated to the target entity's sports, event management, or procurement operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:30:37.952197",
+          "domain_explored": "https://www.linkedin.com/jobs/universit%C3%A9-psl-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable scolarit\u00e9 de la School of AI (Academic Admin)",
+              "Charg\u00e9.e marketing / communication (Academic)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Semantic Mismatch",
+            "Academic Sector Entity",
+            "Irrelevant Search Results"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1641,
+              "output_tokens": 224,
+              "elapsed_seconds": 21.155078887939453
+            }
+          ],
+          "reasoning": "The scraped content confirms the search result refers to 'Universit\u00e9 PSL' (Paris Sciences & Lettres), a French academic research university. This is a semantic collision with the target entity 'PSL' (identified in Iteration 1 as psl-t20.com, likely related to cricket/events). The job postings (e.g., 'Responsable scolarit\u00e9') are academic administration roles, not relevant to the target entity's procurement profile."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:30:53.259017",
+          "domain_explored": "https://ie.linkedin.com/jobs/view/professional-support-lawyer-psl-corporate-at-amicus-search-recruitment-3086750081",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Professional Support Lawyer (PSL) - Corporate Law"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Semantic Mismatch",
+            "Irrelevant Search Results",
+            "Legal Sector Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 202,
+              "elapsed_seconds": 7.82638692855835
+            }
+          ],
+          "reasoning": "The content describes a 'Professional Support Lawyer' role within the legal sector (Amicus Search & Recruitment). This is a semantic collision where the acronym 'PSL' refers to a job title (Professional Support Lawyer) rather than the target entity 'PSL' (a cricket/event management organization identified in Iteration 1). The content contains no procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7419,
+      "total_output_tokens": 1393,
+      "estimated_cost_usd": 0.043151999999999996
+    },
+    "procurement_signals": [
+      "Operational Transformation",
+      "Event Management Procurement",
+      "Digital Infrastructure Needs",
+      "Global Expansion Hiring",
+      "Project Management Resource Scaling",
+      "Event Production Capacity Building",
+      "Pharma & Biotech Sector Focus"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "PSL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:30:53.261057"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.416931",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:57:57.536103"
+}

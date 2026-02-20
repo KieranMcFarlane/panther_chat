@@ -1,0 +1,159 @@
+{
+  "entity_id": "mexican_handball_federation",
+  "entity_name": "Mexican Handball Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "anocolympic.org",
+    "zoominfo.com",
+    "handball.no",
+    "uipmworld.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mexican_handball_federation",
+      "entity_name": "Mexican Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://uipmworld.org",
+        "https://zoominfo.com",
+        "https://anocolympic.org",
+        "https://handball.no"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mexican Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:39:06.314115",
+          "domain_explored": "https://anocolympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports governance news",
+            "High-level organizational updates",
+            "Event logistics (Milan offices)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 210,
+              "elapsed_seconds": 3.8882696628570557
+            }
+          ],
+          "reasoning": "The scraped content is from the Association of National Olympic Committees (ANOC) website, not the Mexican Handball Federation. The content consists of high-level news regarding Olympic leadership changes and general assembly updates. There is no specific mention of the Mexican Handball Federation, its specific procurement activities, technology stack, or governance patterns. The content is too generic to derive specific procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:39:09.308669",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:39:15.839121",
+          "domain_explored": "https://handball.no",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Norwegian Handball Federation)",
+            "Sports News & Match Results",
+            "Generic Sports Federation Structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.8313541412353516
+            }
+          ],
+          "reasoning": "The scraped content is from the Norwegian Handball Federation (Norges H\u00e5ndballforbund), not the Mexican Handball Federation. While it provides a template for federation operations (e.g., 'Verdil\u00f8ftet', ticketing, streaming), it contains zero specific procurement signals or technology stack information relevant to the target entity in Mexico."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:39:22.912678",
+          "domain_explored": "https://uipmworld.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Union Internationale de Pentathlon Moderne)",
+            "Global Sports Federation Structure",
+            "Event Hosting & Logistics News",
+            "Certification Programs (Coaches/Judges)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1499,
+              "output_tokens": 223,
+              "elapsed_seconds": 3.704719305038452
+            }
+          ],
+          "reasoning": "The scraped content belongs to the Union Internationale de Pentathlon Moderne (UIPM), the international governing body for modern pentathlon. While the Mexican Handball Federation might interact with multi-sport events, UIPM is a distinct, separate international federation. The content focuses on UIPM-specific events, rankings, and governance, which does not provide direct procurement signals for the Mexican Handball Federation (FEMABAL)."
+        }
+      ],
+      "total_input_tokens": 4306,
+      "total_output_tokens": 615,
+      "estimated_cost_usd": 0.022143000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mexican Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:39:22.914878"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.362340",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:25:48.682884"
+}

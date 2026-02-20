@@ -1,0 +1,153 @@
+{
+  "entity_id": "era_motorsport",
+  "entity_name": "Era Motorsport",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "eramotorsport.com",
+    "24hseries.com",
+    "zoominfo.com",
+    "ferrari.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "era_motorsport",
+      "entity_name": "Era Motorsport",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://eramotorsport.com",
+        "https://ferrari.com",
+        "https://zoominfo.com",
+        "https://24hseries.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Era Motorsport may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:37:20.578891",
+          "domain_explored": "https://eramotorsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMP2 Prototypes (High-tech racing hardware)",
+              "IMS A WeatherTech SportsCar Championship (Series affiliation)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Supply Chain for Racing Parts (US & Europe)",
+              "Restoration Materials & Equipment",
+              "Logistics/Shipping for Global Events (Spa, Zandvoort, Daytona)",
+              "IT Infrastructure for trans-Atlantic coordination"
+            ]
+          },
+          "patterns_found": [
+            "Dual-Continent Operations (US/UK)",
+            "Hybrid Business Model (Modern Racing & Historic Restoration)",
+            "Customer Fleet Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 303,
+              "elapsed_seconds": 5.622984886169434
+            }
+          ],
+          "reasoning": "The content confirms Era Motorsport operates a complex, dual-region business model (Indiana, USA and Wiltshire, UK) involving both high-tech modern racing (LMP2, IMSA) and resource-intensive historic restoration. This structure implies a need for robust supply chain logistics, specialized parts procurement, and potentially trans-Atlantic data management tools, though specific technology vendors are not listed."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:37:26.676588",
+          "domain_explored": "https://24hseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Series Sponsorship: RAVENOL lubricants (Series-level, not team-specific)",
+              "Series Schedule: 2026/2027 Calendar (Mugello, Spa, Paul Ricard, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "Series Championship Calendar",
+            "Sponsorship Agreements (RAVENOL)",
+            "Race Entry Management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 234,
+              "elapsed_seconds": 2.904581069946289
+            }
+          ],
+          "reasoning": "The content analyzed is from the official series organizer (Creventic/24H Series), not Era Motorsport directly. While Era Motorsport competes in this series, this page contains only general schedule information, series-wide sponsorship news (RAVENOL), and entry lists. It does not contain specific procurement signals, technology stacks, or business operations data attributable to Era Motorsport."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:37:29.709034",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:37:33.466754",
+          "domain_explored": "https://ferrari.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2773,
+      "total_output_tokens": 537,
+      "estimated_cost_usd": 0.016374
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Era Motorsport may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:37:33.467705"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.371902",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:07.366808"
+}

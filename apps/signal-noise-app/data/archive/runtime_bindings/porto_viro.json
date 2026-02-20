@@ -1,0 +1,464 @@
+{
+  "entity_id": "porto_viro",
+  "entity_name": "Porto Viro",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "parcodeltapo.org",
+    "multilex.it",
+    "italymagazine.com",
+    "marinetraffic.com",
+    "commons.wikimedia.org",
+    "impresainungiorno.gov.it",
+    "eu-cap-network.ec.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/viro-jobs-worldwide",
+      "https://www.linkedin.com/jobs/work-from-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/education-specialist-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/teaching-assistant-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/job-manager-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/healthcare-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/database-jobs-santa-cruz-ca?trk=public_profile_jserp",
+      "https://www.linkedin.com/jobs/physical-therapist-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/lactation-consultant-jobs-santa-cruz-ca",
+      "https://www.linkedin.com/jobs/health-psychologist-jobs-santa-cruz-ca"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "porto_viro",
+      "entity_name": "Porto Viro",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://multilex.it",
+        "https://parcodeltapo.org",
+        "https://impresainungiorno.gov.it",
+        "https://www.linkedin.com/jobs/viro-jobs-worldwide",
+        "https://www.linkedin.com/jobs/work-from-jobs-santa-cruz-ca",
+        "https://www.linkedin.com/jobs/education-specialist-jobs-santa-cruz-ca",
+        "https://www.linkedin.com/jobs/teaching-assistant-jobs-santa-cruz-ca",
+        "https://eu-cap-network.ec.europa.eu",
+        "https://italymagazine.com",
+        "https://www.linkedin.com/jobs/job-manager-jobs-santa-cruz-ca",
+        "https://marinetraffic.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Porto Viro may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:54:51.932187",
+          "domain_explored": "https://parcodeltapo.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Presence (parcodeltapo.org)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public Administration / Government Entity",
+              "Bi-regional Management Structure (Veneto/Emilia-Romagna)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Governance Structure",
+            "Cross-Regional Entity Management",
+            "Digital Presence (Web Presence)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 403,
+              "output_tokens": 258,
+              "elapsed_seconds": 3.167349100112915
+            }
+          ],
+          "reasoning": "The content identifies 'Parco Delta del Po' as a public entity managing a regional park, split between Emilia-Romagna and Veneto. While the specific text provided is limited (navigation/headers), the existence of distinct regional sections and a structured website implies a need for web hosting, content management, and potentially inter-agency collaboration tools. However, specific procurement signals (RFPs, tech stack details) are not present in this snippet."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:54:59.006020",
+          "domain_explored": "https://multilex.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service Provider Identification: Multilex (Translation/Legal Agency)"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Service Provider",
+            "B2C Service Model",
+            "Translation & Legalization Services"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 223,
+              "elapsed_seconds": 4.050256013870239
+            }
+          ],
+          "reasoning": "The scraped content from multilex.it identifies the entity as a private commercial agency ('Agenzia') offering translation, legalization, and bureaucratic services ('Disbrigo Pratiche') to individuals and businesses. There is no relationship or governance link between this private vendor and the public entity 'Porto Viro'. It represents a service provider in the market, not a signal of Porto Viro's internal procurement or governance structure."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:55:09.242848",
+          "domain_explored": "https://italymagazine.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Content Model",
+            "Tourism & Lifestyle Focus",
+            "General Interest Publishing",
+            "Commercial Real Estate Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 184,
+              "elapsed_seconds": 5.8021979331970215
+            }
+          ],
+          "reasoning": "The source 'italymagazine.com' is a consumer-facing lifestyle and travel publication. The content focuses entirely on tourism, cultural articles, recipes, and real estate listings for private individuals. There is no governance structure, public administration, or procurement activity related to the entity 'Porto Viro' or public sector contracting."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:55:12.289683",
+          "domain_explored": "https://marinetraffic.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:55:15.077861",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:55:31.619073",
+          "domain_explored": "https://impresainungiorno.gov.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Sistema Informatico degli Sportelli Unici (SSU)",
+              "DGUE (Single Procurement Document)",
+              "ZES (Zona Economica Speciale) Systems",
+              "ZLS (Zone Logistiche Semplificate)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Links to Unioncamere (Chamber of Commerce) procurement tools",
+              "References to ZES and ZLS (Economic/Logistic Zones) often tied to specific infrastructure tenders",
+              "Integration with ANCI (National Association of Municipalities)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Governance Structure",
+            "Digital Service Delivery (SUAP)",
+            "Inter-agency Integration",
+            "Port Authority System Links"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 349,
+              "elapsed_seconds": 12.429961919784546
+            }
+          ],
+          "reasoning": "The content represents the national digital ecosystem for business-Public Administration interactions in Italy (Impresa in un Giorno). While it is a platform rather than a direct procurement page, it confirms the digital governance context for Porto Viro (a municipality). The presence of 'Autorit\u00e0 di Sistema Portuale' links in the footer is a relevant signal given Porto Viro's location in the Po Delta, suggesting potential integration with port authority procurement or logistics systems."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:55:38.379180",
+          "domain_explored": "https://eu-cap-network.ec.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Agriculture Tools",
+              "Innovation Platforms",
+              "Webinar/Online Event Platforms"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Call for participation for large-scale conferences (implies venue/catering/AV procurement)",
+              "Thematic Groups and Workshops (implies facilitation and expert consulting procurement)",
+              "Capacity-building events (implies training service procurement)"
+            ]
+          },
+          "patterns_found": [
+            "EU-Level Governance & Funding",
+            "Agricultural Policy Implementation",
+            "Digital Transformation in Agriculture",
+            "Conference & Workshop Organization (Event Procurement)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1619,
+              "output_tokens": 350,
+              "elapsed_seconds": 3.825779914855957
+            }
+          ],
+          "reasoning": "The EU CAP Network is a primary entity for implementing the Common Agricultural Policy. While not a direct procurement portal for 'Porto Viro', it outlines the funding mechanisms, strategic goals (digitalization, water resilience), and support networks that govern how local entities like Porto Viro receive and manage EU funds. The site indicates a reliance on external service providers for events (conferences, workshops) and digital tools, which represents indirect procurement signals relevant to the public sector ecosystem."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:55:44.666466",
+          "domain_explored": "https://www.linkedin.com/jobs/viro-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Industrial Automation Software",
+              "Technical Product Design"
+            ],
+            "job_postings": [
+              "Junior Industrial Automation Engineer \u2013 Software (VIRO, Netherlands)",
+              "Ausbildung zum Technischen Produktdesigner (VIRO Deutschland, Germany)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Collision",
+            "Private Sector Engineering Firm",
+            "Geographic Mismatch (Netherlands/Germany vs Italy)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1681,
+              "output_tokens": 260,
+              "elapsed_seconds": 2.7465109825134277
+            }
+          ],
+          "reasoning": "The search results for 'Viro' on LinkedIn return listings for 'VIRO', a private engineering and staffing firm headquartered in the Netherlands with operations in Germany (Osnabr\u00fcck). The job postings (e.g., Junior Industrial Automation Engineer) are for this private entity, not the public municipality of Porto Viro, Italy. There is no geographic or semantic overlap with the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:55:50.995809",
+          "domain_explored": "https://www.linkedin.com/jobs/work-from-jobs-santa-cruz-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "EDUCATORE/EDUCATRICE NIDI D'INFANZIA | PORTO VIRO (COOPSELIOS)",
+              "INFERMIERE/A CSA PORTO VIRO (COOPSELIOS)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Social Service Delivery (Education & Health)",
+              "Vendor: COOPSELIOS (Cooperative operating in Porto Viro)",
+              "Regional Vendor: JUWI Group (Renewable Energy O&M in Veneto)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Service Delivery",
+            "Social Care & Education Staffing",
+            "Vendor-Specific Hiring (COOPSELIOS)",
+            "Regional Energy Infrastructure (JUWI)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1743,
+              "output_tokens": 312,
+              "elapsed_seconds": 3.015486240386963
+            }
+          ],
+          "reasoning": "The content confirms active hiring in Porto Viro, specifically within the public sector domains of education (nidi d'infanzia) and healthcare (CSA). While the hiring is done by a cooperative vendor (COOPSELIOS) rather than the municipality directly, this indicates procurement of social services. The presence of JUWI (renewable energy) in nearby towns (Chioggia, Loreo, Adria) suggests regional infrastructure activity relevant to Porto Viro's geography."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T14:55:59.022032",
+          "domain_explored": "https://www.linkedin.com/jobs/education-specialist-jobs-santa-cruz-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "EDUCATORE/EDUCATRICE NIDI D'INFANZIA | PORTO VIRO(RO) at COOPSELIOS (1 week ago)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Social Services Management",
+              "Vendor: COOPSELIOS (Cooperative for Social Services)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Service Delivery",
+            "Social Care & Education Staffing",
+            "Vendor-Specific Hiring (COOPSELIOS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1809,
+              "output_tokens": 293,
+              "elapsed_seconds": 4.5647618770599365
+            }
+          ],
+          "reasoning": "The content reveals a direct procurement signal for Porto Viro: a job posting for 'EDUCATORE/EDUCATRICE NIDI D'INFANZIA | PORTO VIRO(RO)' posted by COOPSELIOS. This confirms that the Municipality of Porto Viro outsources early childhood education services to this cooperative. While this is a staffing signal rather than a direct technology procurement, it validates the vendor relationship model. The other results are for 'Ca' Zuliani' (a hamlet of Porto Viro) but are for private tutoring (Letuelezioni), which are B2C and less relevant to public procurement."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T14:56:06.691641",
+          "domain_explored": "https://www.linkedin.com/jobs/teaching-assistant-jobs-santa-cruz-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              "EDUCATORE/EDUCATRICE NIDI D'INFANZIA | PORTO VIRO(RO) at COOPSELIOS"
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership: COOPSELIOS (Social Cooperative)",
+              "Service Sector: Early Childhood Education (Nidi d'Infanzia)",
+              "Hiring Velocity: Active (1 week ago)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Service Delivery",
+            "Social Care & Education Staffing",
+            "Vendor-Specific Hiring (COOPSELIOS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1874,
+              "output_tokens": 283,
+              "elapsed_seconds": 4.252743244171143
+            }
+          ],
+          "reasoning": "The content confirms active hiring for educational services within Porto Viro, specifically via the cooperative COOPSELIOS. While this is a direct hiring signal rather than a procurement tender, it validates the vendor relationship and the municipality's reliance on external providers for public service delivery (Early Childhood Education). This reinforces the governance pattern of outsourcing social services."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T14:56:13.940439",
+          "domain_explored": "https://www.linkedin.com/jobs/job-manager-jobs-santa-cruz-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Renewable Energy Management Systems (implied by JUWI O&M roles)",
+              "Pharmacy Management Systems (implied by Lafarmaciapunto)"
+            ],
+            "job_postings": [
+              "Plant Manager (Adecco - Rovigo)",
+              "O&M Site Manager (JUWI Group - Chioggia, Loreo, Adria)",
+              "Direttore Tecnico (Lafarmaciapunto - Cavarzere)"
+            ],
+            "procurement_indicators": [
+              "Use of large staffing agencies (Adecco) for local manufacturing",
+              "Expansion of renewable energy infrastructure maintenance in the province",
+              "Private sector B2B services in the immediate geographic vicinity"
+            ]
+          },
+          "patterns_found": [
+            "Regional Labor Market Analysis",
+            "Renewable Energy Operations (JUWI Group)",
+            "Pharmaceutical Sector Management",
+            "Industrial Manufacturing (Adecco)",
+            "Geographic Proximity (Veneto Region)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1938,
+              "output_tokens": 414,
+              "elapsed_seconds": 3.811208963394165
+            }
+          ],
+          "reasoning": "While the URL targets 'Santa Cruz CA', the scraped content reveals job listings specifically for 'Ca' Zuliani' and the Veneto region of Italy (Rovigo, Chioggia, Loreo, Adria). This confirms the entity operates in a region with active industrial and renewable energy sectors. Although these are private sector roles (JUWI, Lafarmaciapunto), they indicate the economic ecosystem and potential vendor landscape (Adecco) surrounding Porto Viro. This provides context on local service providers and industrial activity, warranting a weak acceptance for regional intelligence gathering."
+        }
+      ],
+      "total_input_tokens": 15496,
+      "total_output_tokens": 2926,
+      "estimated_cost_usd": 0.090378
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Porto Viro may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:56:13.943098"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328674",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:53:53.606800"
+}

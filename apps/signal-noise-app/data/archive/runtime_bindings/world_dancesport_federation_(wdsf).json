@@ -1,0 +1,90 @@
+{
+  "entity_id": "world_dancesport_federation_(wdsf)",
+  "entity_name": "World DanceSport Federation (WDSF)",
+  "template_id": "tpl_specialized_international_federations_v1",
+  "cluster_id": "niche_international_federations",
+  "discovered_domains": [
+    "worlddancesport.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "world_dancesport_federation_(wdsf)",
+      "entity_name": "World DanceSport Federation (WDSF)",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://worlddancesport.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "World DanceSport Federation (WDSF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:42:05.598420",
+          "domain_explored": "https://worlddancesport.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Instagram, Facebook, TikTok, YouTube)",
+              "Content Management System (CMS) - implied by /News and /Events structure",
+              "Digital Asset Management (DAM) - implied by media licensing and gallery"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official WDSF Media License for 2026 Festival (Vendor/Media Partner procurement)",
+              "Event organization in Belgium, France, and Austria (Logistics/Local Vendor needs)",
+              "Multimedia gallery management (Hosting/Storage needs)"
+            ]
+          },
+          "patterns_found": [
+            "Media Rights Management",
+            "Event Licensing",
+            "Social Media Ecosystem",
+            "High-Frequency Event Calendar"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1203,
+              "output_tokens": 338,
+              "elapsed_seconds": 5.644126892089844
+            }
+          ],
+          "reasoning": "The content reveals a structured approach to media rights and licensing (specifically for the Blackpool festival), indicating a need for media management or rights management tools. The extensive list of social media channels and upcoming events suggests a requirement for content management systems (CMS), digital asset management (DAM), and social media management platforms to handle the volume of multimedia content and event coordination."
+        }
+      ],
+      "total_input_tokens": 1203,
+      "total_output_tokens": 338,
+      "estimated_cost_usd": 0.008679
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "World DanceSport Federation (WDSF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:42:05.602975"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457427",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:41:02.876618"
+}

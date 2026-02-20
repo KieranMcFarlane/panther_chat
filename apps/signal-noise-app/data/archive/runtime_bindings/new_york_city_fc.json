@@ -1,0 +1,271 @@
+{
+  "entity_id": "new_york_city_fc",
+  "entity_name": "New York City FC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "mlsstore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/new-york-city-football-club-llc/jobs",
+      "https://www.linkedin.com/jobs/new-york-city-fc-jobs",
+      "https://www.linkedin.com/jobs/new-york-city-football-club-jobs?trk=pprof-jserp",
+      "https://www.linkedin.com/jobs/city-football-group-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/community-relations-intern-at-new-york-city-fc-4344101656",
+      "https://www.linkedin.com/jobs/view/director-ticket-operations-at-new-york-city-fc-4358194529",
+      "https://www.linkedin.com/jobs/view/premium-operations-associate-new-york-city-fc-at-legends-global-4333728470",
+      "https://www.linkedin.com/jobs/view/street-team-live-events-at-new-york-city-fc-4352450994",
+      "https://www.linkedin.com/jobs/city-football-group-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_york_city_fc",
+      "entity_name": "New York City FC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/new-york-city-fc-jobs",
+        "https://www.linkedin.com/jobs/city-football-group-jobs-worldwide",
+        "https://www.linkedin.com/jobs/new-york-city-football-club-jobs?trk=pprof-jserp",
+        "https://www.linkedin.com/jobs/view/community-relations-intern-at-new-york-city-fc-4344101656",
+        "https://mlsstore.com",
+        "https://www.linkedin.com/company/new-york-city-football-club-llc/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New York City FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:48:29.637872",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:48:37.940541",
+          "domain_explored": "https://www.linkedin.com/company/new-york-city-football-club-llc/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Street Team, Live Events (New York, NY, Posted 3 weeks ago)"
+            ],
+            "procurement_indicators": [
+              "Parent Entity: City Football Group (Manchester, Lancashire)",
+              "Local Competitors: Red Bull New York, Gotham FC",
+              "Headcount: 426 employees"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing (Event Operations)",
+            "Corporate Affiliation (City Football Group)",
+            "Competitor Benchmarking (Local Rivals)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 268,
+              "elapsed_seconds": 5.074862003326416
+            }
+          ],
+          "reasoning": "While the page did not reveal direct technical procurement signals (RFPs/Software), it confirms active operational hiring (Street Team) which correlates with event management vendor needs. The link to City Football Group (CFG) is a strong signal that enterprise-level procurement decisions may be centralized or influenced at the group level, suggesting a shift in focus from local to group-level strategy."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:48:47.969681",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-city-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Street Team, Live Events (New York, NY) - Posted 3 weeks ago"
+            ],
+            "procurement_indicators": [
+              "Active hiring for event execution",
+              "Investment in live event personnel"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations Staffing",
+            "Gameday Logistics",
+            "Vendor/Staff Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 225,
+              "elapsed_seconds": 6.543622016906738
+            }
+          ],
+          "reasoning": "The content reveals an active opening for a 'Street Team, Live Events' role. While this is an operational staffing signal rather than a direct technology procurement RFP, it indicates active investment in gameday infrastructure and event management resources. It confirms the entity is operational and hiring, providing a weak signal for general business activity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:48:53.914514",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-city-football-club-jobs?trk=pprof-jserp",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Street Team, Live Events",
+              "Premium Sales Rep - NYCFC"
+            ],
+            "procurement_indicators": [
+              "Outsourced Sales Partnership (Legends Global)",
+              "Gameday Staffing Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Event Operations Staffing",
+            "Gameday Logistics",
+            "Vendor/Staff Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1141,
+              "output_tokens": 250,
+              "elapsed_seconds": 2.6486012935638428
+            }
+          ],
+          "reasoning": "The content confirms active hiring for 'Street Team, Live Events' roles, indicating ongoing procurement needs for event staffing and logistics management. Additionally, the listing for 'Premium Sales Rep - NYCFC' posted by 'Legends Global' (a third-party entity) confirms the use of outsourced partnerships for premium sales, a key procurement signal. However, the data is limited to staffing and does not reveal technology or infrastructure procurement."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:49:02.513366",
+          "domain_explored": "https://www.linkedin.com/jobs/city-football-group-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Creation Suites (Adobe Creative, etc.)",
+              "CRM (Salesforce - industry standard for CFG clubs)",
+              "Partner Management Platforms"
+            ],
+            "job_postings": [
+              "Street Team, Live Events (New York City FC)",
+              "Venue Sales Executive (Manchester City - CFG benchmark)",
+              "Assistant Branded Content Creator (Manchester City - CFG benchmark)",
+              "Partner Programs Manager (Manchester City - CFG benchmark)"
+            ],
+            "procurement_indicators": [
+              "Centralized Decision Making: Strategic roles (Partnerships, Content) are concentrated at the group/Manchester level, implying centralized procurement.",
+              "Operational Outsourcing: High volume of 'Street Team' hiring suggests reliance on temporary staffing agencies or gig-economy platforms for event execution.",
+              "Vendor Standardization: Technology stack likely dictated by CFG headquarters."
+            ]
+          },
+          "patterns_found": [
+            "Global Shared Services (CFG)",
+            "Event Operations Staffing",
+            "Content Creation Tools",
+            "Partnership Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1580,
+              "output_tokens": 449,
+              "elapsed_seconds": 5.346480131149292
+            }
+          ],
+          "reasoning": "The content confirms NYCFC operates within the City Football Group (CFG) ecosystem. While the specific NYCFC listing is for 'Street Team' (operational labor), the broader context reveals CFG's centralized structure for high-value functions like 'Partner Programs' and 'Content Creation' (likely handled by Manchester City). This suggests NYCFC likely leverages shared enterprise vendors or follows group-wide procurement standards for software and services, rather than procuring independently."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:49:15.210269",
+          "domain_explored": "https://www.linkedin.com/jobs/view/community-relations-intern-at-new-york-city-fc-4344101656",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Auction Platforms (implied 3rd party)",
+              "Donor Management Systems (DMS)",
+              "Survey/Analytics Tools (for M&E)"
+            ],
+            "job_postings": [
+              "Community Relations Intern (Community Development Intern)"
+            ],
+            "procurement_indicators": [
+              "Management of donation requests and auction platform",
+              "Development of donor database for City in the Community Foundation",
+              "Monitoring and evaluation of programs (pre/post surveys, data analysis)",
+              "Research on grant sources and strategic partners"
+            ]
+          },
+          "patterns_found": [
+            "Community Engagement Software",
+            "Donor Database Management",
+            "Auction Platform Management",
+            "Event Logistics & Planning",
+            "CSR/Social Responsibility Analytics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1646,
+              "output_tokens": 374,
+              "elapsed_seconds": 9.056575059890747
+            }
+          ],
+          "reasoning": "The job description for a Community Relations Intern reveals specific operational needs that drive procurement, particularly in the 'Community' department. Explicit mentions of managing an 'auction platform' and developing a 'donor database' indicate direct usage or acquisition of third-party software tools. Additionally, the requirement for 'monitoring and evaluation' and 'analysis of data' suggests a need for survey tools and analytics platforms to measure CSR impact."
+        }
+      ],
+      "total_input_tokens": 7125,
+      "total_output_tokens": 1566,
+      "estimated_cost_usd": 0.044865
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New York City FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:49:15.210848"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.156922",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:28:12.255464"
+}

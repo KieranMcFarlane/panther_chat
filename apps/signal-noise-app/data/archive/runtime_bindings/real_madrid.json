@@ -1,0 +1,220 @@
+{
+  "entity_id": "real_madrid",
+  "entity_name": "Real Madrid",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "top_5_league_clubs",
+  "discovered_domains": [
+    "realmadrid.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/real-madrid-jobs",
+      "https://uk.linkedin.com/jobs/real-madrid-jobs",
+      "https://www.linkedin.com/company/uefa/jobs/",
+      "https://ch.linkedin.com/company/uefa/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "real_madrid",
+      "entity_name": "Real Madrid",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/uefa/jobs/",
+        "https://realmadrid.com",
+        "https://www.linkedin.com/jobs/real-madrid-jobs",
+        "https://uk.linkedin.com/jobs/real-madrid-jobs",
+        "https://ch.linkedin.com/company/uefa/jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Real Madrid may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:52:42.911626",
+          "domain_explored": "https://realmadrid.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CSR Activity: 'Brazaletes verdes contra el c\u00e1ncer' (Green bracelets for cancer) indicates ongoing procurement of promotional/charity merchandise, though this is likely a recurring low-value operational expense rather than a strategic procurement signal."
+            ]
+          },
+          "patterns_found": [
+            "Sports journalism content",
+            "Match reports and player updates",
+            "Corporate social responsibility (CSR) activity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1018,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.230370998382568
+            }
+          ],
+          "reasoning": "The provided content consists entirely of sports match reports (football and basketball), player medical updates, and press conference transcripts. There are no signals related to technology acquisition, job vacancies, or organizational restructuring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:52:51.461103",
+          "domain_explored": "https://www.linkedin.com/jobs/real-madrid-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Retail Associate (Fanatics/Atlanta United)",
+              "Sr. eMarketing Specialist (Fanatics)",
+              "Retail Associate (Fanatics/LAFC)",
+              "Retail Associate (Fanatics/SF Giants)"
+            ],
+            "procurement_indicators": [
+              "Vendor relationship: Fanatics appears to manage retail operations for various sports entities, suggesting a potential vendor model for Real Madrid merchandise, but this is not confirmed in this specific text."
+            ]
+          },
+          "patterns_found": [
+            "False positive entity matching",
+            "Third-party retail operations (Fanatics)",
+            "US-based retail roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 289,
+              "elapsed_seconds": 2.8914589881896973
+            }
+          ],
+          "reasoning": "The search query 'Real Madrid' returned results for 'Fanatics' (a sports merchandise retailer) and unrelated US teams (Atlanta United, LAFC, SF Giants). These are not direct procurement signals for the entity Real Madrid (Spain). The content indicates retail licensing partnerships rather than direct corporate hiring or procurement activity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:53:03.889210",
+          "domain_explored": "https://uk.linkedin.com/jobs/real-madrid-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Manager \u2013 Replacement Sales UK (Linglong Germany GmbH)",
+              "Product Manager- Sporty Games UK (Sporty Group)",
+              "Sales Business Development Executive (KELME)",
+              "Senior Backend Engineer (Grabyo)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False positive entity matching",
+            "Keyword noise in search results",
+            "Irrelevant third-party companies (Linglong, Sporty Group, Kelme, Grabyo)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 296,
+              "elapsed_seconds": 4.499011754989624
+            }
+          ],
+          "reasoning": "The search query 'Real Madrid jobs' within the UK region returns false positives. The listed jobs are for entities like Linglong Germany GmbH (tires), Sporty Group (betting/gaming), Kelme (sportswear), and Grabyo (video streaming), none of which are the primary entity Real Madrid C.F. This indicates that the entity does not have a significant direct hiring presence in the UK or the search algorithm is matching on the keyword 'Real Madrid' loosely. This contradicts the procurement hypothesis for this specific channel."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:53:09.294729",
+          "domain_explored": "https://www.linkedin.com/company/uefa/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity mismatch (UEFA vs Real Madrid)",
+            "Target entity not found in source"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 551,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.9229660034179688
+            }
+          ],
+          "reasoning": "The content analyzed belongs to UEFA (Union of European Football Associations), not Real Madrid. While UEFA is a governing body that Real Madrid interacts with, this source does not contain direct procurement signals, technology stacks, or hiring data specific to the target entity (Real Madrid). It represents a false positive in the search path."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:53:14.912744",
+          "domain_explored": "https://ch.linkedin.com/company/uefa/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity mismatch (UEFA vs Real Madrid)",
+            "Access restriction (403 Forbidden)",
+            "Target entity not found in source"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 601,
+              "output_tokens": 148,
+              "elapsed_seconds": 3.140453815460205
+            }
+          ],
+          "reasoning": "The URL explicitly targets UEFA, not Real Madrid, constituting an entity mismatch. Furthermore, the content is inaccessible (403 Forbidden), providing zero data regarding procurement signals for the target entity."
+        }
+      ],
+      "total_input_tokens": 5059,
+      "total_output_tokens": 1130,
+      "estimated_cost_usd": 0.032127
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Real Madrid may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:53:14.914558"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.142533",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:18.948766"
+}

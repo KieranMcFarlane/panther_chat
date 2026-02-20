@@ -1,0 +1,211 @@
+{
+  "entity_id": "hapoel_tel_aviv",
+  "entity_name": "Hapoel Tel Aviv",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "htafc.co.il",
+    "euroleaguebasketball.net",
+    "apps.apple.com",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://il.linkedin.com/jobs/view/operations-specialist-at-issta-sport-4292227566"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hapoel_tel_aviv",
+      "entity_name": "Hapoel Tel Aviv",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://htafc.co.il",
+        "https://il.linkedin.com/jobs/view/operations-specialist-at-issta-sport-4292227566",
+        "https://euroleaguebasketball.net",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hapoel Tel Aviv may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:49:41.311537",
+          "domain_explored": "https://htafc.co.il",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Player Transfer Activity: Mention of 'Emmanuel Boateng signed for a season and a half' indicates active contract management, though this is sports operations, not corporate procurement."
+            ]
+          },
+          "patterns_found": [
+            "Content is primarily sports statistics (match results, standings, schedule)",
+            "Historical timeline of club achievements (trophies, titles)",
+            "Standard sports club website navigation elements (Tickets, Shop, Team)",
+            "No corporate governance, career, or technology sections visible in the snippet"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 297,
+              "elapsed_seconds": 4.074980020523071
+            }
+          ],
+          "reasoning": "The scraped content consists almost entirely of raw sports data: a historical timeline of victories, a list of upcoming matches, recent match results, and a brief news update about a player signing (Emmanuel Boateng). There are no mentions of business operations, technology infrastructure, job openings, or procurement tenders. This page is the public-facing sports portal, not the business operations side."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:49:51.839769",
+          "domain_explored": "https://euroleaguebasketball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "EuroLeague TV streaming rights acquisition (League level)",
+              "Sponsorship inventory (Motorola, BKT, AKTOR, etc.)"
+            ]
+          },
+          "patterns_found": [
+            "League-level governance (CEO appointment)",
+            "Media rights agreements (Serie A Unipol)",
+            "Sponsorship visibility (Motorola, BKT, etc.)",
+            "Game scheduling operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1439,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.453711986541748
+            }
+          ],
+          "reasoning": "The content is from the Euroleague Basketball governing body site, not the specific Hapoel Tel Aviv entity. While it mentions Hapoel in game highlights and scheduling, it provides no insight into Hapoel's internal procurement, technology stack, or operational decision-making. The signals are related to league operations and media rights, not club-level purchasing."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:49:55.217718",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:50:03.328522",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic digital storefront content",
+            "Consumer mobile gaming listings",
+            "Platform navigation elements (Windows, Android, TV)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 195,
+              "elapsed_seconds": 3.6115527153015137
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of the Google Play Store, featuring consumer-facing mobile games (e.g., Clash of Clans, Arknights) and app categories. There is no specific content related to 'Hapoel Tel Aviv', no official club applications, and no enterprise or procurement-related signals (such as vendor listings, B2B apps, or job postings) visible in this text."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:50:18.090261",
+          "domain_explored": "https://il.linkedin.com/jobs/view/operations-specialist-at-issta-sport-4292227566",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Operations Specialist",
+                "company": "Issta Sport",
+                "entity_reference": "Hapoel Tel Aviv Basketball",
+                "context": "Logistics and operations partner"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Partnership",
+                "description": "Issta Sport manages operations and logistics for Hapoel Tel Aviv Basketball",
+                "source": "LinkedIn Job Description"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Identification",
+            "Sports Event Operations",
+            "Tourism & Logistics Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 320,
+              "elapsed_seconds": 7.096583843231201
+            }
+          ],
+          "reasoning": "While this is a job posting for Issta Sport and not a direct procurement document from Hapoel Tel Aviv, it explicitly identifies Issta Sport as a service provider/partner handling logistics and operations for Hapoel Tel Aviv Basketball (alongside Maccabi Tel Aviv). This confirms a vendor relationship and indicates that Hapoel Tel Aviv outsources operational logistics (travel, event management) to this entity."
+        }
+      ],
+      "total_input_tokens": 5926,
+      "total_output_tokens": 1051,
+      "estimated_cost_usd": 0.033543
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hapoel Tel Aviv may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:50:18.092259"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.217949",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:19:20.288501"
+}

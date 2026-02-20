@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-01-22T15:47:39.607974+00:00",
+  "dry_run": true,
+  "statistics": {
+    "episodes_processed": 7,
+    "entities_created": 5,
+    "signals_created": 7,
+    "evidence_created": 7,
+    "errors": []
+  },
+  "summary": "\nMigration Summary:\n- Episodes processed: 7\n- Entities created: 5\n- Signals created: 7\n- Evidence created: 7\n- Errors: 0\n\n\u2705 Migration successful!\n"
+}

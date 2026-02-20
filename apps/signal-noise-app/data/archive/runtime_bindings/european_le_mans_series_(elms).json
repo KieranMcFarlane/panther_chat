@@ -1,0 +1,294 @@
+{
+  "entity_id": "european_le_mans_series_(elms)",
+  "entity_name": "European Le Mans Series (ELMS)",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "europeanlemansseries.com",
+    "autodromoimola.it",
+    "24h-lemans.com",
+    "ir.motorsportgames.com",
+    "lemansultimate.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "european_le_mans_series_(elms)",
+      "entity_name": "European Le Mans Series (ELMS)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://europeanlemansseries.com",
+        "https://24h-lemans.com",
+        "https://ir.motorsportgames.com",
+        "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7",
+        "https://lemansultimate.com",
+        "https://autodromoimola.it"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "European Le Mans Series (ELMS) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:48:19.436348",
+          "domain_explored": "https://europeanlemansseries.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "JavaScript Dependency",
+            "Client-Side Rendering"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 393,
+              "output_tokens": 135,
+              "elapsed_seconds": 3.7771849632263184
+            }
+          ],
+          "reasoning": "The target content is a generic JavaScript loading message. It provides no semantic data, business context, or technical specifications regarding the European Le Mans Series' procurement activities, technology stack, or governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:48:28.545087",
+          "domain_explored": "https://autodromoimola.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Biglietti)",
+              "Marketing Automation (Newsletter/App)",
+              "CRM (Contact Forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Date Confirmation: ELMS European Le Mans Series scheduled for 4-6 July 2026 at Imola.",
+              "Vendor: Formula Imola S.p.a (Venue Operator/Organizer).",
+              "Infrastructure: 'Eventi Business' (Corporate Hospitality) and 'Imola Experience' (Customer Experience) services active.",
+              "Compliance: Full GDPR compliance structure in place (DPO nominated)."
+            ]
+          },
+          "patterns_found": [
+            "Event Calendar Scheduling",
+            "Ticketing Infrastructure",
+            "Corporate Hospitality Services",
+            "Data Privacy Compliance (GDPR)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 352,
+              "elapsed_seconds": 5.482778787612915
+            }
+          ],
+          "reasoning": "While this content is from a partner venue (Autodromo Imola) rather than the ELMS governing body itself, it confirms the operational schedule for the 'ELMS European Le Mans Series' event (July 4-6, 2026). This validates the series' existence and scale. The presence of ticketing, hospitality, and marketing infrastructure at the venue level suggests potential B2B partnership opportunities for ELMS sponsors or technology vendors targeting the series ecosystem."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:48:36.242424",
+          "domain_explored": "https://24h-lemans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform (Custom/Built-in)",
+              "E-commerce Platform (boutique.lemans.org)",
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Infrastructure for 2026 Event",
+              "Corporate Hospitality Services ('Nos offres billetterie')",
+              "Merchandising and Retail Operations",
+              "Capital Project: M24 Museum Construction (Architecture & 'Environmental Requirements')"
+            ]
+          },
+          "patterns_found": [
+            "Event Infrastructure Planning",
+            "Digital Ticketing Operations",
+            "Merchandising E-commerce",
+            "Architectural Development Projects"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 350,
+              "elapsed_seconds": 4.599304914474487
+            }
+          ],
+          "reasoning": "While the target entity is the European Le Mans Series (ELMS), this content represents the primary '24 Heures du Mans' event, which operates within the same ecosystem (Automobile Club de l'Ouest). The content reveals active operational infrastructure for ticketing, hospitality, and e-commerce, as well as significant capital projects (M24 Museum). Although direct ELMS procurement signals are absent, the technological and operational patterns identified here are highly relevant proxies for understanding the ecosystem's procurement needs."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:48:43.637304",
+          "domain_explored": "https://ir.motorsportgames.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "rFactor 2 (Simulation Platform)",
+              "KartKraft",
+              "Le Mans Ultimate (Game Engine)",
+              "F1 Arcade Integration Tech"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Licensing Agreement (24 Hours of Le Mans, FIA WEC)",
+              "Esports Partnership (Le Mans Virtual Series)",
+              "Technology Licensing (Kindred Concepts/F1 Arcade)",
+              "Digital Product Investment (Version 1.2 Update/Physics Overhaul)"
+            ]
+          },
+          "patterns_found": [
+            "Official Licensing & IP Procurement",
+            "Digital Product Development (Gaming/Sim)",
+            "Partnership Ecosystem Management",
+            "Investor Relations (Financial Governance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.4105658531188965
+            }
+          ],
+          "reasoning": "The content identifies Motorsport Games as a key commercial partner of the 24 Hours of Le Mans (and by extension, the ELMS ecosystem). While this is an Investor Relations page for a vendor/partner rather than the series organizer itself, it reveals significant procurement activities related to digital licensing, esports ecosystem services, and technology platforms (rFactor 2). This signals a 'Digital Transformation' and 'Brand Licensing' procurement category."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:48:51.486306",
+          "domain_explored": "https://lemansultimate.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Steam Distribution Platform",
+              "Zendesk (Guide) - Inferred from /guide/ subdomain structure",
+              "RaceControl (Multiplayer SaaS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Licensing Agreement (FIA WEC / 24 Hours of Le Mans)",
+              "Digital E-commerce Partnership (Steam Bundle)",
+              "Community Platform Sourcing"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Licensing (Official WEC/24H Le Mans)",
+            "SaaS Platform Integration (RaceControl)",
+            "Customer Support Infrastructure (Zendesk/Guide)",
+            "Direct-to-Consumer (DTC) Digital Sales Channels"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1566,
+              "output_tokens": 319,
+              "elapsed_seconds": 4.914584159851074
+            }
+          ],
+          "reasoning": "The content confirms 'Le Mans Ultimate' as the official game partner, requiring licensing procurement from the rights holder (likely ACO/WEC). The presence of a dedicated 'Guide' subdomain (Zendesk) indicates investment in customer support infrastructure. While this is a digital product, the procurement signals relate to software licensing, platform hosting (Steam), and community management tools rather than traditional event procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:48:59.701980",
+          "domain_explored": "https://www.linkedin.com/posts/jsc1_motorsportjobs-raceengineer-enduranceracing-activity-7285236402097647616-dHQ7",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analysis Software (e.g., MoTeC, PI Toolbox)",
+              "Racing Simulation Tools",
+              "LMP2 Chassis Data Systems"
+            ],
+            "job_postings": [
+              {
+                "role": "Experienced Race Engineer",
+                "category": "LMP2 / Endurance Racing",
+                "contract_type": "Freelance",
+                "focus": "Setup, Data Analysis, Simulation, Strategy",
+                "dates": "2025 Season (Feb - Oct)"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourcing of specialized engineering skills via agencies (JSC7 Engineering)",
+              "Investment in simulation and data tooling to support engineering requirements",
+              "Budget allocation for international travel and logistics for the 2025 calendar"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Engineering Talent Procurement",
+            "Freelance Labor Market Dynamics",
+            "Technical Tooling Requirements (Data/Simulation)",
+            "2025 Seasonal Budgeting Cycle"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 411,
+              "elapsed_seconds": 4.757840156555176
+            }
+          ],
+          "reasoning": "While this is a recruitment post rather than a direct vendor RFP, it provides high-value intelligence regarding the procurement of human capital and the necessary technical toolchain. The requirement for 'data analysis, simulation, and race strategy' confirms the reliance on specialized high-performance software vendors within the ELMS ecosystem. The specific dates for the 2025 season also indicate the operational budget cycle for competing teams."
+        }
+      ],
+      "total_input_tokens": 7983,
+      "total_output_tokens": 1906,
+      "estimated_cost_usd": 0.052539
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "European Le Mans Series (ELMS) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:48:59.708835"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376740",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:05.129271"
+}

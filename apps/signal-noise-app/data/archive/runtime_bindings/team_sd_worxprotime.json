@@ -1,0 +1,114 @@
+{
+  "entity_id": "team_sd_worx\u0096protime",
+  "entity_name": "Team SD Worx\u0096Protime",
+  "template_id": "tpl_pro_contender_teams_v1",
+  "cluster_id": "uci_protour_women",
+  "discovered_domains": [
+    "teamsdworxprotime.com",
+    "procyclingstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "team_sd_worx\u0096protime",
+      "entity_name": "Team SD Worx\u0096Protime",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://teamsdworxprotime.com",
+        "https://procyclingstats.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Team SD Worx\u0096Protime may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:40:16.693059",
+          "domain_explored": "https://teamsdworxprotime.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports team news aggregation",
+            "Race results and previews",
+            "Rider contract announcements",
+            "Team presentation events"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1361,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.7199878692626953
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of sports news articles (race results, rider transfers, team presentations) for the women's cycling team. There is no mention of business operations, technology stacks, job vacancies, or procurement activities within the provided text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:40:26.343672",
+          "domain_explored": "https://procyclingstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports race results aggregation",
+            "Team abbreviations (e.g., TVL, RBH, NSN)",
+            "UCI race calendar data",
+            "PCS Ranking tables"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.1859211921691895
+            }
+          ],
+          "reasoning": "The content provided is a direct scrape of a cycling statistics aggregator (Procyclingstats.com). It contains race results, rankings, and upcoming schedules. While it lists team abbreviations (like TVL for Team SD Worx-Protime), it contains no corporate governance, procurement, or technology stack information relevant to the business entity 'Team SD Worx-Protime'."
+        }
+      ],
+      "total_input_tokens": 2773,
+      "total_output_tokens": 360,
+      "estimated_cost_usd": 0.013719
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Team SD Worx\u0096Protime may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:40:26.344226"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.383917",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:37:14.287738"
+}

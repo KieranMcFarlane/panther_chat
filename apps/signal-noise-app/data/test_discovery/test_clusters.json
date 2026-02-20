@@ -1,0 +1,52 @@
+[
+  {
+    "cluster_id": "elite_clubs_high_digital",
+    "cluster_name": "Elite Clubs with In-House Digital Teams",
+    "cluster_description": "Large clubs with internal digital, data, and fan engagement teams",
+    "cluster_signature": {
+      "sport_types": [
+        "football",
+        "basketball",
+        "cricket"
+      ],
+      "org_types": [
+        "club"
+      ],
+      "governance_models": [
+        "private",
+        "state-backed"
+      ],
+      "revenue_band": [
+        "high"
+      ],
+      "digital_maturity": [
+        "high"
+      ],
+      "procurement_style": "mixed"
+    },
+    "typical_signal_channels": [
+      "job_boards",
+      "official_sites",
+      "press"
+    ],
+    "procurement_behavior_summary": "Procurement intent appears first via senior hires and platform changes",
+    "example_entities": [
+      "arsenal_fc",
+      "liverpool_fc",
+      "manchester_united",
+      "chelsea_fc",
+      "manchester_city",
+      "tottenham_hotspur",
+      "real_madrid",
+      "barcelona",
+      "bayern_munich",
+      "psg"
+    ],
+    "entity_count": 10,
+    "expected_signal_types": [
+      "leadership_hire",
+      "platform_migration",
+      "explicit_rfp"
+    ]
+  }
+]

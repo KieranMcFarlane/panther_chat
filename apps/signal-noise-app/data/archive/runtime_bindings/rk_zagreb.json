@@ -1,0 +1,114 @@
+{
+  "entity_id": "rk_zagreb",
+  "entity_name": "RK Zagreb",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "rk-zagreb.hr",
+    "old.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_zagreb",
+      "entity_name": "RK Zagreb",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://rk-zagreb.hr",
+        "https://old.eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Zagreb may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:23:44.537538",
+          "domain_explored": "https://rk-zagreb.hr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Activity: Mention of 'Vinarija Coletti' becoming a new sponsor and 'adidas' partnership renewal (indicates commercial activity but not direct tech procurement)."
+            ]
+          },
+          "patterns_found": [
+            "Sports performance reporting",
+            "Sponsorship management",
+            "Event management (Labin Handball Cup)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.779837131500244
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news updates, match results, and player announcements. There are no signals regarding technology procurement, job vacancies, or organizational governance changes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:23:54.383307",
+          "domain_explored": "https://old.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Calendar navigation structure",
+            "Event taxonomy (Tournaments, Member Federations, National Teams)",
+            "Global federation navigation (EHF links)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 186,
+              "elapsed_seconds": 3.4479122161865234
+            }
+          ],
+          "reasoning": "The content provided is raw HTML/Text representing a calendar widget and navigation menu for the European Handball Federation (EHF) website. It contains no specific information regarding 'RK Zagreb', its internal operations, technology stack, or procurement activities. It is generic structural data for a sports federation portal."
+        }
+      ],
+      "total_input_tokens": 2760,
+      "total_output_tokens": 379,
+      "estimated_cost_usd": 0.013964999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Zagreb may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:23:54.385447"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.359599",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:57:00.051443"
+}

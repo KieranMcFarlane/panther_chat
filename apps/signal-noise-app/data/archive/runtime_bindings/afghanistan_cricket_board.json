@@ -1,0 +1,125 @@
+{
+  "entity_id": "afghanistan_cricket_board",
+  "entity_name": "Afghanistan Cricket Board",
+  "template_id": "tpl_cricket_global_governing_bodies_v1",
+  "cluster_id": "cricket_global_federations",
+  "discovered_domains": [
+    "icc-cricket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://af.linkedin.com/jobs/view/fielding-coach-at-afghanistan-cricket-board-4277362104"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afghanistan_cricket_board",
+      "entity_name": "Afghanistan Cricket Board",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://icc-cricket.com",
+        "https://af.linkedin.com/jobs/view/fielding-coach-at-afghanistan-cricket-board-4277362104"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Afghanistan Cricket Board may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:32:24.427852",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports content aggregation",
+            "Tournament marketing (ICC events)",
+            "Video streaming infrastructure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 192,
+              "elapsed_seconds": 11.27130126953125
+            }
+          ],
+          "reasoning": "The scraped content is from the ICC's global website (icc-cricket.com) and focuses on international tournaments (T20 World Cup, Women's World Cup), match highlights, and general cricket news. It contains no specific references to the Afghanistan Cricket Board (ACB), its internal operations, procurement needs, or technology stack. This is general industry noise, not an entity-specific signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:32:38.184253",
+          "domain_explored": "https://af.linkedin.com/jobs/view/fielding-coach-at-afghanistan-cricket-board-4277362104",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software",
+              "Performance Management Systems",
+              "Agility Tracking Tools"
+            ],
+            "job_postings": [
+              "Fielding Coach (National Team)"
+            ],
+            "procurement_indicators": [
+              "Investment in High-Performance Center (HPC) capabilities",
+              "Requirement for technology-driven coaching tools",
+              "Integration of sports science and medical staff (Physio/S&C)"
+            ]
+          },
+          "patterns_found": [
+            "Technical Coaching Staff Procurement",
+            "Sports Science Integration (HPC Department)",
+            "Video Analysis & Technology Utilization",
+            "High-Performance Center (HPC) Collaboration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 332,
+              "elapsed_seconds": 6.188658952713013
+            }
+          ],
+          "reasoning": "While this is a direct hiring post (HR) rather than a vendor RFP, it confirms the ACB is actively investing in its 'High-Performance Center (HPC)' infrastructure. The specific requirement for 'video analysis and other technology-driven tools' indicates an existing or planned procurement need for sports analysis software and hardware. The role also requires coordination with Strength & Conditioning and Physio staff, suggesting a broader ecosystem of performance tools."
+        }
+      ],
+      "total_input_tokens": 2794,
+      "total_output_tokens": 524,
+      "estimated_cost_usd": 0.016242
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Afghanistan Cricket Board may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:32:38.185158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.298052",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:09.554909"
+}

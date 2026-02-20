@@ -1,0 +1,472 @@
+{
+  "entity_id": "burnley",
+  "entity_name": "Burnley",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "lower_tier_club",
+  "discovered_domains": [
+    "burnleyfootballclub.com",
+    "shop.burnleyfc.com",
+    "burnley.gov.uk",
+    "burnleyfccommunity.org",
+    "burnleyfc.freshdesk.com",
+    "newsnow.co.uk"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/job%27s-jobs-burnley",
+      "https://uk.linkedin.com/jobs/full-time-jobs-burnley",
+      "https://uk.linkedin.com/jobs/free-jobs-burnley",
+      "https://uk.linkedin.com/jobs/burnley-football-club-jobs",
+      "https://uk.linkedin.com/jobs/shift-jobs-burnley",
+      "https://uk.linkedin.com/jobs/locations-jobs-burnley",
+      "https://uk.linkedin.com/jobs/admin-jobs-burnley",
+      "https://uk.linkedin.com/jobs/limitless.-jobs-greater-burnley-area",
+      "https://uk.linkedin.com/jobs/qualified-professional-jobs-burnley",
+      "https://uk.linkedin.com/jobs/recruiting-officer-jobs-burnley"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "burnley",
+      "entity_name": "Burnley",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.2,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.14,
+        0.14,
+        0.14,
+        0.14,
+        0.14,
+        0.2,
+        0.2
+      ],
+      "explored_domains": [
+        "https://burnley.gov.uk",
+        "https://uk.linkedin.com/jobs/full-time-jobs-burnley",
+        "https://uk.linkedin.com/jobs/free-jobs-burnley",
+        "https://uk.linkedin.com/jobs/burnley-football-club-jobs",
+        "https://shop.burnleyfc.com",
+        "https://burnleyfc.freshdesk.com",
+        "https://burnleyfootballclub.com",
+        "https://newsnow.co.uk",
+        "https://uk.linkedin.com/jobs/job%27s-jobs-burnley",
+        "https://burnleyfccommunity.org",
+        "https://uk.linkedin.com/jobs/shift-jobs-burnley"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public Sector Governance Structure",
+        "Corporate Procurement Function",
+        "Digital Service Delivery (Gov.UK)",
+        "Budget & Spending Transparency",
+        "Supplier Partnership Framework",
+        "Customer Support Platform (Freshdesk)",
+        "Digital Service Categorization",
+        "Fan Engagement Infrastructure",
+        "E-commerce Support Integration",
+        "Operational Staffing Procurement",
+        "Hospitality Revenue Generation",
+        "Matchday Event Management",
+        "Corporate Sales Function"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Burnley may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:57:09.279771",
+          "domain_explored": "https://burnleyfootballclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Custom E-commerce Platform (shop.burnleyfc.com)",
+              "OTT/Content Management System (Clarets+)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Commercial Partnership availability (implied by 'Commercial' section)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Integration",
+            "Digital Content Segmentation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 987,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.182244062423706
+            }
+          ],
+          "reasoning": "The content is a navigation menu and site header for Burnley Football Club. While it confirms the existence of a digital shop (shop.burnleyfc.com) and a content subscription service (Clarets+), it contains no specific news, job postings, or governance signals indicating active procurement intent or new technology investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:57:21.535506",
+          "domain_explored": "https://shop.burnleyfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Jonas Sports (E-commerce Platform)",
+              "Multi-currency Payment Processing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: Jonas Sports (Platform Provider)",
+              "Retail Supply Chain: Procurement of 2025/26 Replica Kits and Training Wear",
+              "Digital Infrastructure: Newsletter/Email Marketing setup"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Vendor (Jonas Sports)",
+            "Merchandise Supply Chain (Replica Kits, Training Wear)",
+            "Digital Sales Capabilities (Multi-currency, Newsletter)",
+            "Inventory Management (2025/26 Stock)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1398,
+              "output_tokens": 303,
+              "elapsed_seconds": 5.9463419914245605
+            }
+          ],
+          "reasoning": "While the page is a consumer-facing shop, it reveals the underlying procurement relationship with 'Jonas Sports' as the e-commerce platform provider. It also indicates active procurement cycles for retail inventory (kits for the 2025/26 season) and a need for digital marketing services (newsletter sign-up). This confirms the entity has an active commercial and retail procurement function."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:57:35.009495",
+          "domain_explored": "https://burnley.gov.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Gov.UK Platform (GDS)",
+              "Web Content Management (CMS)",
+              "Accessibility Compliance Tools (Recite Me)",
+              "Social Media Integration (Twitter/X)"
+            ],
+            "job_postings": [
+              "Various Council Vacancies (implied standard public sector roles)"
+            ],
+            "procurement_indicators": [
+              "Corporate Procurement Department",
+              "Doing Business with Burnley Council (Supplier Info)",
+              "Budget and Spending transparency reports",
+              "Tenders and Contracts (implied by governance structure)",
+              "Data Protection and Privacy Officer (Governance)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Governance Structure",
+            "Corporate Procurement Function",
+            "Digital Service Delivery (Gov.UK)",
+            "Budget & Spending Transparency",
+            "Supplier Partnership Framework"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 466,
+              "output_tokens": 380,
+              "elapsed_seconds": 6.989019870758057
+            }
+          ],
+          "reasoning": "The shift to the Local Government domain (burnley.gov.uk) provides definitive evidence of a structured procurement function. Unlike the commercial football club entity, the Council operates under statutory procurement regulations, necessitating formal vendor selection processes, budget approvals, and transparency reporting. The presence of a dedicated 'Corporate Procurement' section and references to 'Supplying the Council' confirms active procurement intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:58:37.615380",
+          "domain_explored": "https://burnleyfccommunity.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:58:47.082374",
+          "domain_explored": "https://burnleyfc.freshdesk.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Freshdesk (Customer Support Software)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SaaS Subscription for Customer Support",
+              "Integration with Ticketing and Retail Systems",
+              "Structured Digital Service Delivery"
+            ]
+          },
+          "patterns_found": [
+            "Customer Support Platform (Freshdesk)",
+            "Digital Service Categorization",
+            "Fan Engagement Infrastructure",
+            "E-commerce Support Integration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.727231979370117
+            }
+          ],
+          "reasoning": "The discovery of the Freshdesk helpdesk subdomain confirms a specific technology investment in customer relationship management (CRM) and support ticketing. This indicates procurement activity for SaaS tools to manage fan interactions, ticketing support, and retail operations. The categorization structure reveals the organizational scope of their service delivery."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:59:01.526559",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Aggregation",
+            "Political News Filtering",
+            "Off-Topic Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 745,
+              "output_tokens": 169,
+              "elapsed_seconds": 8.579267978668213
+            }
+          ],
+          "reasoning": "The scraped content from NewsNow consists of national political headlines (Peter Mandelson, Keir Starmer, Jeffrey Epstein) unrelated to the entity 'Burnley' or its procurement activities. This is a news aggregator page with no signals regarding local governance, supply chain, or technology investments relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:59:11.337412",
+          "domain_explored": "https://uk.linkedin.com/jobs/job%27s-jobs-burnley",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Service Manager - Lancashire & South Cumbria NHS Foundation Trust",
+              "Compliance Coordinator - VEA Telecoms",
+              "Assistant Store Manager - FOOTASYLUM",
+              "Junior Python Developer - Lloyds Banking Group"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1654,
+              "output_tokens": 246,
+              "elapsed_seconds": 2.666489839553833
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Burnley' rather than specific information about the entity 'Burnley' (the Council or Football Club). The listings are for unrelated entities (Lloyds, NHS, Footasylum) in neighboring towns (Bamber Bridge, Halifax, Bolton), providing no direct procurement intelligence or technology stack details for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:59:38.408412",
+          "domain_explored": "https://uk.linkedin.com/jobs/full-time-jobs-burnley",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Team Member at itu (Manchester)",
+              "Host / Receptionist at Bruntwood (Greater Manchester)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance",
+            "Entity Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1705,
+              "output_tokens": 254,
+              "elapsed_seconds": 18.717875242233276
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job search results page for 'Full Time Jobs in Burnley' rather than specific entity information. The listings provided (e.g., 'itsu' in Manchester, 'Bruntwood' in Greater Manchester) are geographically distinct from the target entity (Burnley) or represent generic noise. There are no specific procurement signals, technology stack details, or governance patterns related to the target entity 'Burnley' (Council or FC). The content is blocked behind authentication walls and does not provide actionable intelligence."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T09:59:52.097518",
+          "domain_explored": "https://uk.linkedin.com/jobs/free-jobs-burnley",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Team Member at itsu (Manchester)",
+              "Host / Receptionist at Bruntwood (Greater Manchester)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance",
+            "Entity Mismatch",
+            "Low-Value Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1754,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.3299598693847656
+            }
+          ],
+          "reasoning": "The content represents a generic job search results page for 'Free' jobs in the Burnley area. The listings are dominated by unrelated entities (e.g., itsu, Bruntwood) and low-value retail/hospitality roles (Team Member, Receptionist). There is no specific connection to the target entity (Burnley FC or Council) or high-level procurement functions. The search query 'Free' is also semantically irrelevant to procurement intelligence."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T10:00:01.729629",
+          "domain_explored": "https://uk.linkedin.com/jobs/burnley-football-club-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter"
+            ],
+            "job_postings": [
+              "Matchday / Event Security Guard",
+              "Senior Hospitality Sales Manager"
+            ],
+            "procurement_indicators": [
+              "Operational Staffing (Security Services)",
+              "Commercial Infrastructure Investment (Hospitality Sales)"
+            ]
+          },
+          "patterns_found": [
+            "Operational Staffing Procurement",
+            "Hospitality Revenue Generation",
+            "Matchday Event Management",
+            "Corporate Sales Function"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1806,
+              "output_tokens": 278,
+              "elapsed_seconds": 4.3656439781188965
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for operational roles (Security) and commercial roles (Senior Hospitality Sales Manager). While these are direct hires, they indicate active investment in matchday operations infrastructure and revenue generation capabilities. The 'Senior Hospitality Sales Manager' role specifically suggests a focus on monetizing corporate assets, which often involves procuring CRM or sales enablement tools."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T10:00:12.679763",
+          "domain_explored": "https://uk.linkedin.com/jobs/shift-jobs-burnley",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Recruitment Assistant (US Network, Blackburn)",
+              "Cell Assistants (TipTopJob, West Bradford)",
+              "Sales Host (Everlast Gyms, Trafford Park)",
+              "Junior Operations Supervisor (Gopuff, Greater Manchester)",
+              "Bar staff (J D Wetherspoon, Manchester)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance",
+            "Entity Mismatch",
+            "Low-Skill Service Sector Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1862,
+              "output_tokens": 263,
+              "elapsed_seconds": 6.079877138137817
+            }
+          ],
+          "reasoning": "The search results for 'Shift jobs in Burnley' return generic labor market listings (Bar staff, Sales Host, Cell Assistants) for entities unrelated to the target (Burnley FC or Council). The locations are often outside the immediate target area (Manchester, Trafford Park) or represent low-level operational roles that do not indicate strategic procurement activity."
+        }
+      ],
+      "total_input_tokens": 13805,
+      "total_output_tokens": 2592,
+      "estimated_cost_usd": 0.080295
+    },
+    "procurement_signals": [
+      "Public Sector Governance Structure",
+      "Corporate Procurement Function",
+      "Digital Service Delivery (Gov.UK)",
+      "Budget & Spending Transparency",
+      "Supplier Partnership Framework",
+      "Customer Support Platform (Freshdesk)",
+      "Digital Service Categorization",
+      "Fan Engagement Infrastructure",
+      "E-commerce Support Integration",
+      "Operational Staffing Procurement",
+      "Hospitality Revenue Generation",
+      "Matchday Event Management",
+      "Corporate Sales Function"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Burnley may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:00:12.682146"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.120106",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:14:04.822919"
+}

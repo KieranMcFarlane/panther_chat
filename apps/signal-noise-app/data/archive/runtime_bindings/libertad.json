@@ -1,0 +1,503 @@
+{
+  "entity_id": "libertad",
+  "entity_name": "Libertad",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "libertad.com.mx",
+    "libertad.org",
+    "clublibertad.com.py",
+    "libertadfutbolclub.com",
+    "lalibertad.gob.ec",
+    "libertad.gov.il",
+    "banxico.org.mx",
+    "ulibertad.edu.mx",
+    "colegiolibertad.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ph.linkedin.com/jobs/view/non-voice-remote-position-at-cyberbacker-careers-4363444902",
+      "https://ph.linkedin.com/jobs/view/executive-assistant-at-libertad-law-office-3958892043",
+      "https://ph.linkedin.com/jobs/view/financial-sales-associate-bacolod-libertad-at-manulife-3855208776",
+      "https://ph.linkedin.com/jobs/view/payroll-officer-at-abs-facade-int-opc-4324812993",
+      "https://ph.linkedin.com/jobs/view/non-voice-remote-jobs-at-cyberbacker-careers-4363394967",
+      "https://ph.linkedin.com/jobs/view/regional-operations-lead-at-fortem-cement-corporation-4251823973",
+      "https://ph.linkedin.com/jobs/view/marketing-assistant-at-china-bank-ph-4130083306",
+      "https://ph.linkedin.com/jobs/view/non-voice-at-cyberbacker-careers-3928430138"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "libertad",
+      "entity_name": "Libertad",
+      "total_iterations": 15,
+      "completed_iterations": 14,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://libertad.gov.il",
+        "https://banxico.org.mx",
+        "https://libertad.org",
+        "https://ph.linkedin.com/jobs/view/non-voice-remote-position-at-cyberbacker-careers-4363444902",
+        "https://ph.linkedin.com/jobs/view/non-voice-remote-jobs-at-cyberbacker-careers-4363394967",
+        "https://libertad.com.mx",
+        "https://clublibertad.com.py",
+        "https://ph.linkedin.com/jobs/view/executive-assistant-at-libertad-law-office-3958892043",
+        "https://ph.linkedin.com/jobs/view/financial-sales-associate-bacolod-libertad-at-manulife-3855208776",
+        "https://lalibertad.gob.ec",
+        "https://libertadfutbolclub.com",
+        "https://colegiolibertad.com",
+        "https://ph.linkedin.com/jobs/view/payroll-officer-at-abs-facade-int-opc-4324812993",
+        "https://ulibertad.edu.mx"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Libertad may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:01:23.810358",
+          "domain_explored": "https://libertad.com.mx",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:01:31.453671",
+          "domain_explored": "https://libertad.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity type identified as Think Tank/Advocacy Group",
+              "Content is purely editorial/educational",
+              "No 'Careers', 'About Us', or 'Services' pages detected in snippet"
+            ]
+          },
+          "patterns_found": [
+            "think tank content focus",
+            "political advocacy",
+            "educational content",
+            "no corporate procurement signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1382,
+              "output_tokens": 234,
+              "elapsed_seconds": 3.855451822280884
+            }
+          ],
+          "reasoning": "The scraped content from libertad.org reveals a Think Tank/Non-profit entity focused on US history, political economy, and liberty advocacy. The content consists entirely of articles, videos, and educational resources with no corporate structure, job postings, or technology infrastructure indicative of a commercial entity capable of procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:01:39.855653",
+          "domain_explored": "https://clublibertad.com.py",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_team_schedule",
+            "stadium_venue_data",
+            "match_scores",
+            "historical_dates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 528,
+              "output_tokens": 152,
+              "elapsed_seconds": 5.052790880203247
+            }
+          ],
+          "reasoning": "The content from clublibertad.com.py is strictly related to sports match results, schedules, and stadium information (La Bombonera) for the year 2021. There is no presence of corporate governance, technology infrastructure, or business procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:01:50.173640",
+          "domain_explored": "https://libertadfutbolclub.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress",
+              "WooCommerce",
+              "SportsPress"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_team_menu_structure",
+            "ecommerce_integration_woocommerce",
+            "player_roster_templates",
+            "league_table_features",
+            "demo_site_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 192,
+              "elapsed_seconds": 4.665776014328003
+            }
+          ],
+          "reasoning": "The content is a site map for a soccer team (Libertad F\u00fatbol Club) built with a sports-specific WordPress theme. It lists player rosters, game schedules, and WooCommerce shop pages. There are no corporate governance, procurement, or B2B technology signals present."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T20:01:54.309775",
+          "domain_explored": "https://lalibertad.gob.ec",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T20:01:57.228640",
+          "domain_explored": "https://libertad.gov.il",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T20:02:00.571857",
+          "domain_explored": "https://banxico.org.mx",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T20:02:11.633067",
+          "domain_explored": "https://ulibertad.edu.mx",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Umbraco (CMS)",
+              "PDF Hosting (media.ulibertad.edu.mx)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sales of Educational Programs (Licenciatura, Educaci\u00f3n Continua)",
+              "Digital Marketing Spend (WURI Awards promotion)",
+              "Content Management Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Umbraco CMS Detection",
+            "Academic Program Procurement",
+            "Digital Asset Management",
+            "Educational Services Sales"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1605,
+              "output_tokens": 324,
+              "elapsed_seconds": 6.214075803756714
+            }
+          ],
+          "reasoning": "The content identifies the entity as 'Universidad de la Libertad', a private educational institution in Mexico. While there are no explicit RFPs or job postings in this specific snippet, the presence of a robust CMS (Umbraco) and the nature of the content (academic calendars, continuous education offers) indicate a B2C operational model. Procurement signals here are indirect: the institution sells educational products (Licenciaturas, Diplomados) and utilizes digital infrastructure (Umbraco, media hosting) which implies ongoing vendor relationships for software and marketing, rather than public sector tendering."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T20:02:23.640122",
+          "domain_explored": "https://colegiolibertad.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web Presence (Landing Page)",
+              "Payment Processing Systems (Referenced as 'Realizar un pago')",
+              "CRM/Admissions Software (Implied by 'Becas' and 'Contacto' forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Technology Integration Strategy ('Incorporamos las \u00faltimas tecnolog\u00edas')",
+              "Infrastructure Maintenance (Two physical campuses in CDMX and Morelia)",
+              "Academic Partnerships (Alianza DBU)",
+              "Educational Model Procurement ('Formaci\u00f3n TAD')"
+            ]
+          },
+          "patterns_found": [
+            "Educational Institution Procurement",
+            "Multi-Campus Operations",
+            "Technology Integration Focus",
+            "International Academic Partnerships",
+            "Scholarship Management Systems"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1654,
+              "output_tokens": 392,
+              "elapsed_seconds": 6.812910079956055
+            }
+          ],
+          "reasoning": "The content identifies 'Colegio Libertad' as a private educational institution with multiple campuses (CDMX, Morelia). While primarily informational, it indicates procurement needs through its emphasis on 'Tecnolog\u00eda' (incorporating latest technologies), 'Formaci\u00f3n TAD' (digital/academic systems), and management of scholarships ('Sistema de becas'). The mention of an alliance with Dallas Baptist University suggests potential for international curriculum procurement or exchange programs. This represents a B2B entity capable of procurement, though specific active RFPs are not visible on this landing page."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T20:02:35.481393",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/non-voice-remote-position-at-cyberbacker-careers-4363444902",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Workspace",
+              "Zoom",
+              "Microsoft Excel",
+              "Microsoft PowerPoint"
+            ],
+            "job_postings": [
+              {
+                "title": "Virtual Assistant (Cyberbacker)",
+                "type": "Full-Time",
+                "level": "Entry Level",
+                "location": "Libertad (PH)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "BPO_Recruiting_Content",
+            "Entry_Level_Job_Posting",
+            "Location_Ambiguity",
+            "Standard_SaaS_Tooling"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1723,
+              "output_tokens": 322,
+              "elapsed_seconds": 8.202989101409912
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for a 'Virtual Assistant' role by 'Cyberbacker Careers' tagged with the location 'Libertad'. This indicates that 'Libertad' is being used as a geographic tag (likely Libertad, Zamboanga del Norte, Philippines given the language and BPO context) rather than identifying a specific corporate entity named Libertad. The role involves administrative tasks using standard consumer tools (Google Workspace, Zoom) rather than enterprise procurement decision-making. This represents labor supply (hiring) rather than procurement demand (buying)."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T20:02:44.904937",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/executive-assistant-at-libertad-law-office-3958892043",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office",
+              "Microsoft Word",
+              "Microsoft Excel",
+              "Microsoft PowerPoint"
+            ],
+            "job_postings": [
+              {
+                "role": "Executive Assistant",
+                "seniority": "Entry level",
+                "location": "Metro Manila, Philippines",
+                "department": "Administrative"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Small_Business_Operations",
+            "Administrative_Recruitment",
+            "Generic_Tech_Stack_MS_Office",
+            "Local_Jurisdiction_Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1783,
+              "output_tokens": 282,
+              "elapsed_seconds": 5.8816468715667725
+            }
+          ],
+          "reasoning": "The entity is a small law firm (Libertad Law Office) seeking an entry-level Executive Assistant. The technology stack is limited to basic productivity software (MS Office), and there are no signals of enterprise procurement, digital transformation, or vendor management. The scale of operations suggests individual software licensing rather than B2B procurement processes."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T20:03:41.768071",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/financial-sales-associate-bacolod-libertad-at-manulife-3855208776",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Financial Sales Associate"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Location_Ambiguity",
+            "B2C_Sales_Focus",
+            "Recruitment_Content",
+            "Generic_Tech_Stack"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 213,
+              "elapsed_seconds": 53.45418119430542
+            }
+          ],
+          "reasoning": "The content is a job posting for a Financial Sales Associate at Manulife, a large financial services corporation. The term 'Libertad' appears only as a geographic reference to a branch location in Bacolod (Bacolod Libertad), not as the name of the hiring entity. The role is focused on sales and customer service within a bank branch, indicating a high-volume hiring environment rather than strategic procurement activity for the entity 'Libertad'."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T20:03:48.697440",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/payroll-officer-at-abs-facade-int-opc-4324812993",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Employment Hero",
+              "Xero",
+              "Excel",
+              "Google Sheets"
+            ],
+            "job_postings": [
+              "Payroll Officer at ABS Facade Int. OPC"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Recruitment_Content",
+            "Small_Business_Operations",
+            "Generic_Tech_Stack",
+            "Location_Ambiguity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1907,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.452889919281006
+            }
+          ],
+          "reasoning": "The content is a job posting for a Payroll Officer at 'ABS Facade Int. OPC', a construction/engineering firm in Iloilo City. While it mentions payroll software (Xero, Employment Hero), this is a functional requirement for an employee, not a procurement signal for the entity 'Libertad'. The mention of 'Libertad' in the 'Similar jobs' section is a geographic artifact (Libertad, Iloilo/Makati) referring to previous Cyberbacker listings, not the target entity."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T20:03:57.211693",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/non-voice-remote-jobs-at-cyberbacker-careers-4363394967",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs Platform"
+            ],
+            "job_postings": [
+              {
+                "role": "Administrative Assistant",
+                "type": "Full-Time/Part-Time",
+                "location": "Antique (Libertad implied)",
+                "recruiter": "Cyberbacker Careers"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "BPO_Recruiting_Content",
+            "Entry_Level_Job_Posting",
+            "Location_Ambiguity",
+            "Generic_Tech_Stack"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1968,
+              "output_tokens": 288,
+              "elapsed_seconds": 5.117232084274292
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job posting for 'Non Voice Remote Jobs' by Cyberbacker Careers, located in Antique (likely Libertad, Antique). This is high-volume recruitment for entry-level administrative support roles (Virtual Assistants). While BPOs procure hardware and software, this specific content is a recruitment artifact, not a procurement signal or vendor selection process. The entity 'Libertad' appears only as a geographic tag within the location field, not as the hiring organization."
+        }
+      ],
+      "total_input_tokens": 15870,
+      "total_output_tokens": 2648,
+      "estimated_cost_usd": 0.08732999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Libertad may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:03:57.212469"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.235894",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:43:57.634394"
+}

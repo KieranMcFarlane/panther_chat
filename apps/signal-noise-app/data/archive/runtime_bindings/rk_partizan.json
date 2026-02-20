@@ -1,0 +1,186 @@
+{
+  "entity_id": "rk_partizan",
+  "entity_name": "RK Partizan",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "rkpartizan.rs",
+    "rkpartizan.com",
+    "eurohandball.com",
+    "handball-planet.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "rk_partizan",
+      "entity_name": "RK Partizan",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball-planet.com",
+        "https://rkpartizan.rs",
+        "https://rkpartizan.com",
+        "https://eurohandball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "RK Partizan may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:41:19.615960",
+          "domain_explored": "https://rkpartizan.rs",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Appointment of Ivan Dimitrijevi\u0107 as Sports Director (Internal HR move, not external procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sports team roster and player management",
+            "Sponsorship visibility (AdmiralBet naming rights)",
+            "Seasonal scheduling (2025/2026 context)",
+            "Organizational restructuring (Sports Director appointment)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 231,
+              "elapsed_seconds": 4.959812879562378
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports performance, match results, player roster updates, and internal team management (e.g., appointment of a Sports Director). There are no signals related to enterprise procurement, technology infrastructure, or business operations that would indicate a need for B2B solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:41:26.187958",
+          "domain_explored": "https://rkpartizan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Marketing campaign execution (Derby campaigns)",
+              "Scouting network utilization (Balkan region)"
+            ]
+          },
+          "patterns_found": [
+            "Content Marketing Strategy",
+            "Sports Analytics & Performance Analysis",
+            "Regional Scouting Operations",
+            "Fan Engagement Campaigns"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 238,
+              "elapsed_seconds": 3.0073070526123047
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of blog articles related to sports performance, tactical analysis, and general marketing. While 'Marketing derbija' and 'Skauting' indicate operational activities, there are no explicit signals of procurement intent (RFPs, vendor selection) or specific technology infrastructure investments (CRM/ERP naming) in this text. The content is informational rather than transactional."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:41:34.576441",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Naming Rights: 'Machineseeker EHF Champions League' (Industry benchmark for sponsorship procurement)",
+              "Event Scheduling: EHF Champions League Men (Sep 2025 - Jun 2026) indicates operational timeline for Partizan's primary competition"
+            ]
+          },
+          "patterns_found": [
+            "Competitor Analysis (Denmark, Croatia)",
+            "Tournament Scheduling (2025/2026)",
+            "Sponsorship Visibility (Machineseeker)",
+            "Cookie Consent/Gating Mechanisms"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 300,
+              "elapsed_seconds": 5.289888858795166
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) general news portal, not the specific entity RK Partizan. While it provides industry context (competitors like Denmark, scheduling for EHF Champions League where Partizan plays, and sponsorship naming rights like 'Machineseeker'), it contains zero direct procurement signals, technology stack details, or governance information specific to RK Partizan. The content is blocked by cookie walls, further limiting visibility."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:41:44.090456",
+          "domain_explored": "https://handball-planet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Competitor Benchmarking (Denmark/Croatia success metrics)",
+            "Market Intelligence (Player transfers: Dodic to Veszprem, Slavic to Ohrid)",
+            "Regional Event Hosting (Serbia vs Hungary play-offs for 2027)",
+            "Sponsorship Visibility (Nexe Grupa, TSV Hannover-Burgdorf)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1528,
+              "output_tokens": 243,
+              "elapsed_seconds": 6.330063104629517
+            }
+          ],
+          "reasoning": "The scraped content from 'handball-planet.com' is a sports news aggregation site focusing on match results, awards, and player transfers. While it mentions regional entities like Serbia and specific clubs (Veszprem, HC Ohrid), there are no direct procurement signals, technology investments, or organizational governance details specific to RK Partizan. The content provides market context but lacks actionable procurement intent."
+        }
+      ],
+      "total_input_tokens": 5769,
+      "total_output_tokens": 1012,
+      "estimated_cost_usd": 0.032487
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "RK Partizan may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:41:44.091161"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.353555",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:57.298013"
+}

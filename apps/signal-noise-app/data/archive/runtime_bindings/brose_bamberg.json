@@ -1,0 +1,134 @@
+{
+  "entity_id": "brose_bamberg",
+  "entity_name": "Brose Bamberg",
+  "template_id": "tpl_c2_corporate_state_ventures_v1",
+  "cluster_id": "bb_emea_top_league",
+  "discovered_domains": [
+    "brose.com",
+    "merchandising-onlineshop.com",
+    "zoominfo.com",
+    "wieland-electric.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brose_bamberg",
+      "entity_name": "Brose Bamberg",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://brose.com",
+        "https://zoominfo.com",
+        "https://merchandising-onlineshop.com",
+        "https://wieland-electric.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brose Bamberg may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:15:04.198758",
+          "domain_explored": "https://brose.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:15:37.287624",
+          "domain_explored": "https://merchandising-onlineshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:15:40.472105",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:15:50.653856",
+          "domain_explored": "https://wieland-electric.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Safety Controllers (SAMOS\u00ae PRO MOTION)",
+              "Pluggable Connection Systems (WIELAND PREFAB\u00ae)",
+              "Industrial Automation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Local Bamberg Partnership Potential",
+              "Machine Safety & Compliance Services",
+              "Electrical Installation Procurement"
+            ]
+          },
+          "patterns_found": [
+            "Regional Vendor Proximity",
+            "Industrial Automation Relevance",
+            "Safety Technology Portfolio"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 298,
+              "elapsed_seconds": 6.969358921051025
+            }
+          ],
+          "reasoning": "While Wieland Electric is a vendor and not the target (Brose), the content reveals a high-relevance supplier relationship. Wieland is a Bamberg-based market leader in pluggable electrical installations and safety technology (Samos Pro). Brose, being a major automotive manufacturer in Bamberg, has a high probability of procuring industrial automation, safety controllers, and building installation products from this local specialist. This identifies a key potential vendor in Brose's supply chain ecosystem."
+        }
+      ],
+      "total_input_tokens": 1445,
+      "total_output_tokens": 298,
+      "estimated_cost_usd": 0.008805
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brose Bamberg may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:15:50.655873"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.211127",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:13.796558"
+}

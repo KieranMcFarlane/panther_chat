@@ -1,0 +1,175 @@
+{
+  "entity_id": "new_south_wales_blues",
+  "entity_name": "New South Wales Blues",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "aus_state_teams",
+  "discovered_domains": [
+    "adidas.com.au",
+    "thesupporterstore.com.au",
+    "rebelsport.com.au",
+    "therugbyshop.co.uk",
+    "nrlshop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_south_wales_blues",
+      "entity_name": "New South Wales Blues",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://adidas.com.au",
+        "https://therugbyshop.co.uk",
+        "https://thesupporterstore.com.au",
+        "https://nrlshop.com",
+        "https://rebelsport.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New South Wales Blues may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:07:40.479671",
+          "domain_explored": "https://adidas.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:07:50.004161",
+          "domain_explored": "https://thesupporterstore.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Retail Merchandising",
+              "Inventory Management"
+            ]
+          },
+          "patterns_found": [
+            "e-commerce_product_listing",
+            "retail_inventory_management"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 524,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.9336960315704346
+            }
+          ],
+          "reasoning": "The content represents a standard e-commerce product page for retail merchandise (Magic Round Rugby Ball). This indicates a B2C sales channel rather than B2B procurement activity or organizational infrastructure investment. No signals regarding internal technology stacks, governance, or vendor partnerships were detected."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:07:53.715033",
+          "domain_explored": "https://rebelsport.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:08:00.215278",
+          "domain_explored": "https://therugbyshop.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "e-commerce_product_listing",
+            "retail_inventory_management",
+            "brand_distributorship"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1463,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.797116994857788
+            }
+          ],
+          "reasoning": "The content is a standard e-commerce product catalog for a UK-based rugby retailer (The Rugby Shop). It lists consumer goods (boots, jerseys, equipment) and brands (Adidas, Mizuno, Canterbury). There is no information regarding the internal procurement operations, technology stack, or governance of the target entity 'New South Wales Blues'. This is a third-party retailer, not the entity itself or a direct procurement channel for the team's operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:08:08.641868",
+          "domain_explored": "https://nrlshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "e-commerce_product_listing",
+            "retail_inventory_management",
+            "league_licensed_merchandise"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1511,
+              "output_tokens": 221,
+              "elapsed_seconds": 4.823714256286621
+            }
+          ],
+          "reasoning": "The scraped content from nrlshop.com displays consumer-facing product listings for 'All Stars' jerseys and apparel. This is a retail outlet for the National Rugby League (NRL), not the New South Wales Blues (NSW Rugby League). While the Blues participate in the NRL, this specific page is a generic league store page selling Indigenous and M\u0101ori All Stars merchandise, which is unrelated to NSW Blues procurement operations or technology stack. No procurement signals, RFPs, or corporate technology investments were detected."
+        }
+      ],
+      "total_input_tokens": 3498,
+      "total_output_tokens": 603,
+      "estimated_cost_usd": 0.019539
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New South Wales Blues may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:08:08.650202"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302120",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:26.922531"
+}

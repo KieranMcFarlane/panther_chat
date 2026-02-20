@@ -1,0 +1,228 @@
+{
+  "entity_id": "wellington_phoenix",
+  "entity_name": "Wellington Phoenix",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "wellingtonphoenixacademy.com",
+    "flashscore.in",
+    "aleagues.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://nz.linkedin.com/jobs/player-development-jobs",
+      "https://nz.linkedin.com/jobs/view/continuing-professional-development-and-education-training-support-new-zealand-orthopaedic-association-at-mclaren-recruitment-4255960605"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wellington_phoenix",
+      "entity_name": "Wellington Phoenix",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wellingtonphoenixacademy.com",
+        "https://nz.linkedin.com/jobs/player-development-jobs",
+        "https://nz.linkedin.com/jobs/view/continuing-professional-development-and-education-training-support-new-zealand-orthopaedic-association-at-mclaren-recruitment-4255960605",
+        "https://aleagues.com.au",
+        "https://flashscore.in"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Wellington Phoenix may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:02:22.822387",
+          "domain_explored": "https://wellingtonphoenixacademy.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Registration Platforms (implied by camps)",
+              "CRM (Academy management)",
+              "Ticketing/Event Management"
+            ],
+            "job_postings": [
+              "Head of Pro Development (Chris Greenacre re-signing)"
+            ],
+            "procurement_indicators": [
+              "Venue procurement (Fraser Park for awards)",
+              "Camp operations (Equipment, staffing for 9am-12pm events)",
+              "Sponsorship management ('Thank you to our partners')"
+            ]
+          },
+          "patterns_found": [
+            "Academy Expansion",
+            "Event Management",
+            "Partnership Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 298,
+              "elapsed_seconds": 5.362512111663818
+            }
+          ],
+          "reasoning": "The content confirms the active operation and growth of the Wellington Phoenix Academy. While no direct RFPs are listed, the organization of camps, awards nights, and the management of multiple teams (men's/women's reserves) indicate a need for event management software, CRM tools for player/family engagement, and facilities management. The mention of 'Partners' suggests an active sponsorship stack requiring management."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:02:29.291405",
+          "domain_explored": "https://flashscore.in",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Non-Operational Content",
+            "Third-Party Sports Aggregator"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 423,
+              "output_tokens": 152,
+              "elapsed_seconds": 3.4787635803222656
+            }
+          ],
+          "reasoning": "The provided content consists of repetitive 'Loading...' and 'AD' placeholders typical of a sports results aggregator (FlashScore). This site displays historical match data and odds, offering zero insight into Wellington Phoenix's internal operations, technology stack, or procurement strategy."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:02:35.831239",
+          "domain_explored": "https://aleagues.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Level Aggregation",
+            "Non-Operational Content",
+            "Public Relations Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1446,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.553718090057373
+            }
+          ],
+          "reasoning": "The content is sourced from the central league aggregator (aleagues.com.au), not the Wellington Phoenix entity. While it mentions Wellington Phoenix in a news headline regarding a match result, the site structure is focused on league-wide standings, schedules, and news. It contains no operational data, technology stacks, or procurement signals specific to the club's internal decision-making."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:02:43.108196",
+          "domain_explored": "https://nz.linkedin.com/jobs/player-development-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Product Marketing Manager at Tradify",
+              "Software Engineer at Serko",
+              "Key Account Manager at Eastern Times"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Search Aggregation",
+            "Non-Specific Entity Matching",
+            "Irrelevant Industry Sectors"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1499,
+              "output_tokens": 249,
+              "elapsed_seconds": 3.3999600410461426
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Player Development' in New Zealand. While the search term is relevant to a football club, the specific results listed (Central Otago District Council, Tradify, Serko, Eastern Times, Te R\u016bnanga o Ng\u0101i Tahu, Tranzit Group) are unrelated to Wellington Phoenix. There is no direct mention of the entity, its subsidiaries, or specific procurement activities. The content is noise generated by a broad keyword match."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:02:50.154660",
+          "domain_explored": "https://nz.linkedin.com/jobs/view/continuing-professional-development-and-education-training-support-new-zealand-orthopaedic-association-at-mclaren-recruitment-4255960605",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "TIMS (Trainee Information Management System)",
+              "CPD Website"
+            ],
+            "job_postings": [
+              "Continuing Professional Development and Education & Training Support"
+            ],
+            "procurement_indicators": [
+              "System Upgrade Oversight (TIMS)",
+              "CPD Platform Management"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Irrelevant Sector",
+            "Generic Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 229,
+              "elapsed_seconds": 3.6252448558807373
+            }
+          ],
+          "reasoning": "The content describes a role for the New Zealand Orthopaedic Association (NZOA), a medical body, which is entirely unrelated to Wellington Phoenix (football club). The only connection is the shared location (Wellington CBD). This is a false positive generated by location-based keyword matching on LinkedIn."
+        }
+      ],
+      "total_input_tokens": 6314,
+      "total_output_tokens": 1112,
+      "estimated_cost_usd": 0.035622
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Wellington Phoenix may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:02:50.155455"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.189504",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:49.858069"
+}

@@ -1,0 +1,115 @@
+{
+  "entity_id": "equatorial_guinea_basketball_federation",
+  "entity_name": "Equatorial Guinea Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "kids.kiddle.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/electoral-officer-at-mygwork-lgbtq%2B-business-community-4353695753"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "equatorial_guinea_basketball_federation",
+      "entity_name": "Equatorial Guinea Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://www.linkedin.com/jobs/view/electoral-officer-at-mygwork-lgbtq%2B-business-community-4353695753"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Equatorial Guinea Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:11:57.591270",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General educational content",
+            "Encyclopedia structure",
+            "Irrelevant domain (kids.kiddle.co)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 186,
+              "elapsed_seconds": 4.653116226196289
+            }
+          ],
+          "reasoning": "The scraped content is from the Kiddle encyclopedia (kids.kiddle.co), a general knowledge website for children. It contains a list of scientific categories (Astronomy, Geology, Biology) and generic site navigation. There is absolutely no mention of the Equatorial Guinea Basketball Federation, procurement activities, or specific technology implementations relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:12:05.092857",
+          "domain_explored": "https://www.linkedin.com/jobs/view/electoral-officer-at-mygwork-lgbtq%2B-business-community-4353695753",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic login/gatekeeper content",
+            "Irrelevant job titles (Chief Knowledge Officer, CTIO)",
+            "Irrelevant geography (United States, WA, ID)",
+            "Irrelevant entities (Edmonds College, City of Pocatello)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 216,
+              "elapsed_seconds": 3.3571319580078125
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn login wall and a list of job postings for 'Chief Knowledge Officer' roles in the United States (Edmonds College, City of Pocatello). There is absolutely no mention of Equatorial Guinea, its Basketball Federation, or any relevant procurement activities. The URL also references 'mygwork' and 'electoral officer', which is unrelated to the target entity."
+        }
+      ],
+      "total_input_tokens": 2807,
+      "total_output_tokens": 402,
+      "estimated_cost_usd": 0.014450999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Equatorial Guinea Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:12:05.094420"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.267692",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:30:05.825403"
+}

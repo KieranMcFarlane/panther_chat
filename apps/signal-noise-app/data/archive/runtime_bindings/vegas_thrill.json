@@ -1,0 +1,117 @@
+{
+  "entity_id": "vegas_thrill",
+  "entity_name": "Vegas Thrill",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "provolleyball.com",
+    "fox5vegas.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vegas_thrill",
+      "entity_name": "Vegas Thrill",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://fox5vegas.com",
+        "https://provolleyball.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Vegas Thrill may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:26:59.605838",
+          "domain_explored": "https://provolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Corporate Partners: Franklin Sports (Equipment)",
+              "Corporate Partners: REN Athletics (Apparel)",
+              "Corporate Partners: Spalding (Balls)",
+              "Corporate Partners: USA Volleyball (Governing Body)"
+            ]
+          },
+          "patterns_found": [
+            "League-level partnership structure",
+            "Official equipment suppliers",
+            "Governing body affiliation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 813,
+              "output_tokens": 240,
+              "elapsed_seconds": 2.460259199142456
+            }
+          ],
+          "reasoning": "The content identifies specific corporate partners (Franklin Sports, REN Athletics, Spalding) and an affiliation with USA Volleyball. While this confirms an active vendor ecosystem and partnership model, it lists existing sponsors rather than active procurement signals (RFPs) or new technology investments. It establishes the vendor baseline."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:27:07.671698",
+          "domain_explored": "https://fox5vegas.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Local news aggregation",
+            "Public safety reporting",
+            "General business news (Latin Chamber, A's baseball)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.1011619567871094
+            }
+          ],
+          "reasoning": "The scraped content from fox5vegas.com consists of general local news headlines covering crime, weather, sports, and community events. There is no mention of 'Vegas Thrill', nor are there any procurement signals, RFPs, or technology stack details relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2221,
+      "total_output_tokens": 403,
+      "estimated_cost_usd": 0.012708
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Vegas Thrill may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:27:07.673279"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324595",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:43.260477"
+}

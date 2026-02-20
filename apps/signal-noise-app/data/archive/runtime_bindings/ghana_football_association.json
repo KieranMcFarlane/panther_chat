@@ -1,0 +1,186 @@
+{
+  "entity_id": "ghana_football_association",
+  "entity_name": "Ghana Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "global_fifa_federations",
+  "discovered_domains": [
+    "ghanafa.org",
+    "inside.fifa.com",
+    "cafonline.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ng.linkedin.com/jobs/view/general-manager-football-academy-at-ia-staffing-agency-4163587581"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ghana_football_association",
+      "entity_name": "Ghana Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ghanafa.org",
+        "https://inside.fifa.com",
+        "https://cafonline.com",
+        "https://ng.linkedin.com/jobs/view/general-manager-football-academy-at-ia-staffing-agency-4163587581"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ghana Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:26:47.430251",
+          "domain_explored": "https://ghanafa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive content structure (scraping artifact)",
+            "Operational news focus (match results, logistics)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 174,
+              "elapsed_seconds": 5.113576173782349
+            }
+          ],
+          "reasoning": "The provided content is a raw scrape of news headlines and match reports (Division One League, Premier League). It contains no information regarding procurement, job postings, technology acquisition, or governance. The repetition of headlines indicates a scraping loop or parsing error. There are zero signals of commercial intent."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:26:55.600096",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Program (Global Context - Infrastructure Funding)"
+            ]
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Repetitive Navigation Structure",
+            "Global Sports News Focus"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 222,
+              "elapsed_seconds": 2.5179450511932373
+            }
+          ],
+          "reasoning": "The content provided is from the global FIFA website (inside.fifa.com), not the Ghana Football Association (GFA). While it mentions 'FIFA Forward' funding for stadium refurbishment (in Burundi), this is a global governance news item and does not reflect specific procurement activities, technology stacks, or vendor needs of the GFA. The content is also highly repetitive (scraping artifact). There are no signals relevant to GFA procurement."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:27:22.835103",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive Navigation Structure",
+            "Consumer-Facing Content Focus",
+            "Irrelevant Domain Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1021,
+              "output_tokens": 219,
+              "elapsed_seconds": 20.665820360183716
+            }
+          ],
+          "reasoning": "The scraped content from cafonline.com consists almost entirely of repetitive navigation links and UI elements (e.g., 'Show more', 'See all', 'FeaturedMatches'). There is no textual content related to governance, administration, or procurement operations. Furthermore, CAF (Confederation of African Football) is a continental governing body; while it sets standards, it does not handle the specific procurement or vendor selection for the Ghana Football Association (GFA), which operates as a distinct national entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:27:35.398639",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/general-manager-football-academy-at-ia-staffing-agency-4163587581",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "General Manager - Football Academy (Accra, Ghana)"
+            ],
+            "procurement_indicators": [
+              "Budgeting responsibility",
+              "Facility coordination",
+              "Logistics management",
+              "Academic curriculum integration"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: General Manager",
+            "Location: Accra, Ghana",
+            "Responsibility: Budgeting & Resource Management",
+            "Responsibility: Facility Coordination & Logistics",
+            "Responsibility: Sports Programme Development"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 308,
+              "elapsed_seconds": 4.128921985626221
+            }
+          ],
+          "reasoning": "The content is a job posting for a General Manager of a football academy located in Accra, Ghana. While the hiring entity (IA Staffing) is not the Ghana Football Association (GFA) itself, the role involves significant operational, budgetary, and logistical responsibilities for a football entity within the target geography. This indicates active market activity and potential future procurement needs for software, facilities, or services managed by this role, though it is not a direct GFA tender."
+        }
+      ],
+      "total_input_tokens": 5331,
+      "total_output_tokens": 923,
+      "estimated_cost_usd": 0.029838
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ghana Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:27:35.399991"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205243",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:57:46.255606"
+}

@@ -1,0 +1,450 @@
+{
+  "entity_id": "alpine_f1_team",
+  "entity_name": "Alpine F1 Team",
+  "template_id": "tpl_motorsport_oem_factory_teams_v1",
+  "cluster_id": "motorsport_factory_works_teams",
+  "discovered_domains": [
+    "media.alpinecars.com",
+    "alpinecars.es",
+    "formula1.com",
+    "f1store.formula1.com",
+    "f1experiences.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/machinist-weekend-days-at-alpine-formula-one-team-4330644978",
+      "https://uk.linkedin.com/jobs/view/ai-research-engineer-at-alpine-formula-one-team-4326611896",
+      "https://uk.linkedin.com/jobs/view/electronics-technician-at-alpine-formula-one-team-4365869601",
+      "https://uk.linkedin.com/jobs/view/senior-cyber-security-engineer-at-alpine-formula-one-team-4366854893",
+      "https://uk.linkedin.com/jobs/view/ndt-technician-at-alpine-formula-one-team-4330485877",
+      "https://uk.linkedin.com/jobs/view/mechanical-design-engineer-validation-at-alpine-formula-one-team-4366004688",
+      "https://uk.linkedin.com/jobs/view/partner-manager-at-alpine-formula-one-team-4330774854",
+      "https://uk.linkedin.com/jobs/view/electronics-design-engineer-at-alpine-formula-one-team-4359162530",
+      "https://uk.linkedin.com/jobs/view/junior-tyre-science-modelling-engineer-at-alpine-formula-one-team-4331966570",
+      "https://www.linkedin.com/posts/motorsportjobs_motorsportjobs-motorsport-jobs-activity-7416071391743295488-bUCX"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "alpine_f1_team",
+      "entity_name": "Alpine F1 Team",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://alpinecars.es",
+        "https://uk.linkedin.com/jobs/view/ndt-technician-at-alpine-formula-one-team-4330485877",
+        "https://uk.linkedin.com/jobs/view/ai-research-engineer-at-alpine-formula-one-team-4326611896",
+        "https://uk.linkedin.com/jobs/view/senior-cyber-security-engineer-at-alpine-formula-one-team-4366854893",
+        "https://uk.linkedin.com/jobs/view/electronics-technician-at-alpine-formula-one-team-4365869601",
+        "https://media.alpinecars.com",
+        "https://f1store.formula1.com",
+        "https://uk.linkedin.com/jobs/view/machinist-weekend-days-at-alpine-formula-one-team-4330644978",
+        "https://f1experiences.com",
+        "https://formula1.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Alpine F1 Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:53:24.471597",
+          "domain_explored": "https://media.alpinecars.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Renewal/Continuity of sponsorship: BWT Alpine F1 Team",
+              "Event procurement: MSC Cruises partnership for launch event"
+            ]
+          },
+          "patterns_found": [
+            "Seasonal PR cadence (Pre-season testing)",
+            "Partnership visibility (BWT, MSC Croisi\u00e8res)",
+            "Standardized media distribution format"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 230,
+              "elapsed_seconds": 2.7924041748046875
+            }
+          ],
+          "reasoning": "The content is a list of press releases regarding the 2026 F1 season launch (livery reveal, Barcelona shakedown). While this confirms the entity's operational status and existing partners (BWT, MSC), it contains no explicit signals regarding new procurement activities, technology stack changes, or job openings. It is operational noise rather than procurement signal."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:53:36.402411",
+          "domain_explored": "https://alpinecars.es",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web-based Product Configurator (CPQ)",
+              "CMS (Content Management System) for localized pricing"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "B2B section 'Alpine Empresas' (Enterprise) - indicates potential corporate sales procurement needs, but no vendor details visible."
+            ]
+          },
+          "patterns_found": [
+            "Consumer-facing navigation structure",
+            "Product lifecycle management (A110 discontinuation in 2026)",
+            "B2C 'Configurator' functionality",
+            "Regional localization (ES market)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.8360910415649414
+            }
+          ],
+          "reasoning": "The scraped content from alpinecars.es is strictly consumer-facing, focusing on vehicle models (A110, A290, A390), pricing, and lifestyle. While the 'Configura tu Alpine' (Configure your Alpine) feature indicates the use of web-based CPQ (Configure, Price, Quote) software, this is a standard sales tool rather than a specific procurement signal. The content does not contain job postings, RFPs, or vendor partnership details relevant to the Alpine F1 Team's procurement operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:53:47.670433",
+          "domain_explored": "https://formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports media content aggregation",
+            "Standardized editorial cadence (Race highlights, Driver standings)",
+            "B2C engagement features (F1 Store, Tickets, Fantasy)",
+            "Global regulatory focus (2026 regulations)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1479,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.9812731742858887
+            }
+          ],
+          "reasoning": "The scraped content is from the general Formula 1 homepage and focuses on global sport-wide news, standings, and media. While it mentions Alpine drivers (Gasly, Ocon), it contains no specific information regarding Alpine F1 Team's internal procurement operations, technology stack, or vendor partnerships. The content is strictly consumer-facing and editorial."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:53:58.303800",
+          "domain_explored": "https://f1store.formula1.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Fanatics)",
+              "Payment Processors (Visa, Mastercard, PayPal, Amex)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing Deal: Alpine utilizes Fanatics/Formula 1 Licensing BV for merchandise distribution."
+            ]
+          },
+          "patterns_found": [
+            "Merchandising Licensing (Fanatics, LLC)",
+            "B2C E-commerce structure",
+            "Seasonal product refresh cycles (2026 Teamwear)",
+            "Generic customer support framework (90-Day Returns, 'Worry Free Shopping')"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 292,
+              "elapsed_seconds": 3.565161943435669
+            }
+          ],
+          "reasoning": "The content is scraped from the official F1 Store (operated by Fanatics, LLC). While it confirms Alpine's participation in the merchandising ecosystem, it is a consumer-facing retail interface. It reveals nothing about Alpine's internal procurement operations, technology stack, or B2B vendor relationships. The 'Modern Slavery' and 'Cookie' links are standard compliance footer links for the platform operator, not specific procurement signals from Alpine."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T07:54:09.024926",
+          "domain_explored": "https://f1experiences.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Renewed title sponsorship agreements (e.g., Lenovo, MSC Cruises)",
+              "Hospitality vendor partnerships (Gordon Ramsay)"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Ticketing E-commerce",
+            "Title Sponsorship Visibility (Lenovo, MSC, Heineken, AWS)",
+            "2026 Calendar Planning",
+            "Celebrity Partnership Integration (Gordon Ramsay)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 263,
+              "elapsed_seconds": 5.4911370277404785
+            }
+          ],
+          "reasoning": "The content is exclusively focused on B2C/B2B hospitality sales and event scheduling for the 2026 F1 season. While it confirms the existence of major sponsorship deals (e.g., Lenovo, MSC Cruises), it provides no insight into Alpine F1 Team's specific procurement operations, technology stack, or vendor selection processes. The entity context is Alpine F1 Team, and this generic series-wide content does not advance that specific intelligence goal."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T07:54:21.159531",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/machinist-weekend-days-at-alpine-formula-one-team-4330644978",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Mazak QuickTurn (CNC Hardware)",
+              "Mazatrol (Control Software)",
+              "Advanced IT Systems (Likely MES/ERP for logging)"
+            ],
+            "job_postings": [
+              "Machinist - Weekend Days (Metallic Production Dept)"
+            ],
+            "procurement_indicators": [
+              "Vendor Lock-in: Mazak/Mazatrol ecosystem",
+              "Supply Chain: Aerospace-grade materials procurement",
+              "Digital Transformation: IT systems for material tracking and continuous improvement"
+            ]
+          },
+          "patterns_found": [
+            "In-house Manufacturing Capability (Vertical Integration)",
+            "Specific Technology Stack (Mazak/Mazatrol)",
+            "Continuous Improvement Methodology",
+            "Aerospace-grade Material Sourcing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 361,
+              "elapsed_seconds": 4.592557191848755
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, it reveals critical procurement intelligence regarding Alpine's 'Metallic Production Department'. The explicit mention of 'Mazak QuickTurn' and 'Mazatrol' confirms a specific hardware vendor relationship. The requirement to 'Log activity and materials using advanced IT systems' indicates the presence of an ERP or MES (Manufacturing Execution System) procurement need. Furthermore, the focus on 'aerospace-grade materials' signals ongoing raw material procurement cycles."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T07:54:32.471018",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/ai-research-engineer-at-alpine-formula-one-team-4326611896",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Python",
+              "PyTorch",
+              "TensorFlow",
+              "Docker",
+              "Kubernetes",
+              "Azure DevOps",
+              "GitHub Actions",
+              "LangChain",
+              "LLMs"
+            ],
+            "job_postings": [
+              "AI Research Engineer"
+            ],
+            "procurement_indicators": [
+              "Cloud Infrastructure (Azure referenced via DevOps)",
+              "MLOps Platform Licensing",
+              "Compute Resource Procurement (GPU/Training clusters implied)"
+            ]
+          },
+          "patterns_found": [
+            "In-house AI/ML Capability Development",
+            "MLOps & Infrastructure Investment",
+            "Cloud & DevOps Tooling (Azure, Docker, K8s)",
+            "Cross-functional R&D Integration (Simulation, Vehicle Performance)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1763,
+              "output_tokens": 344,
+              "elapsed_seconds": 4.433067798614502
+            }
+          ],
+          "reasoning": "The job posting confirms Alpine F1 is building internal capabilities for advanced AI and MLOps rather than outsourcing these functions. While not a direct procurement signal for external vendors, it reveals the specific technology stack (Azure DevOps, Docker, Kubernetes, PyTorch) that the organization is standardizing on. This indicates a mature internal infrastructure that likely procures cloud computing resources and software licenses."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T07:54:46.094169",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/electronics-technician-at-alpine-formula-one-team-4365869601",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Electronic Control Units (ECU)",
+              "Wiring Loom Manufacturing",
+              "Automotive Sensors",
+              "Diagnostic Calibration Tools"
+            ],
+            "job_postings": [
+              "Electronics Technician (Enstone, UK)"
+            ],
+            "procurement_indicators": [
+              "Direct sourcing of electronic components (sensors, wiring)",
+              "Procurement of precision testing and calibration equipment",
+              "Supply chain for high-reliability automotive hardware"
+            ]
+          },
+          "patterns_found": [
+            "In-house Electronics Manufacturing Capability",
+            "Vertical Integration of Hardware Assembly",
+            "High-Frequency Component Lifecycle Management",
+            "Specialized Tooling & Calibration Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1838,
+              "output_tokens": 328,
+              "elapsed_seconds": 3.949241876602173
+            }
+          ],
+          "reasoning": "The job posting confirms Alpine F1 Team maintains an internal 'Electronics group' responsible for the end-to-end lifecycle of race car electronics, from building wiring looms to fault diagnosis. This signals a procurement requirement for raw electronic components (sensors, wiring, control units) and specialized diagnostic tools, rather than outsourcing the assembly of these systems."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T07:54:59.927589",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/senior-cyber-security-engineer-at-alpine-formula-one-team-4366854893",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Next-Generation Firewalls (NGFW)",
+              "IDS/IPS (Intrusion Detection/Prevention Systems)",
+              "Endpoint Protection Platforms (EPP)",
+              "Vulnerability Management Scanners",
+              "Penetration Testing Tooling"
+            ],
+            "job_postings": [
+              "Senior Cyber Security Engineer"
+            ],
+            "procurement_indicators": [
+              "Infrastructure Refresh Cycle (Security Stack)",
+              "Compliance-Driven Procurement (Renault Internal Controls)",
+              "Group-Level Vendor Standardization"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Governance Alignment (Groupe Renault)",
+            "NIST Cybersecurity Framework Adoption",
+            "Next-Generation Security Infrastructure Investment",
+            "Vendor Consolidation / Standardization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1921,
+              "output_tokens": 365,
+              "elapsed_seconds": 5.153795003890991
+            }
+          ],
+          "reasoning": "The job posting confirms Alpine F1 is investing in 'next-generation' security infrastructure (Firewalls, IDS/IPS, Endpoint Protection). While this indicates procurement activity, the strong alignment with 'Groupe Renault's Internal Control requirements' and 'group-level initiatives' suggests that vendor selection and procurement strategy may be heavily influenced or dictated by the parent organization, reducing the autonomy of the Alpine F1 procurement team in this specific category."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T07:55:11.299261",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/ndt-technician-at-alpine-formula-one-team-4330485877",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "NDT Methods: Ultrasonic (UT), Penetrant (PT), Magnetic Particle (MP), Eddy Current (ET), Radiographic (RT)",
+              "Quality Standards: PCN, EN4179 (Aerospace)"
+            ],
+            "job_postings": [
+              "NDT Technician (Dayshift) - Enstone, UK"
+            ],
+            "procurement_indicators": [
+              "Internalization of Quality Control processes",
+              "Requirement for specialized inspection equipment procurement",
+              "Compliance procurement for aerospace-grade certification standards"
+            ]
+          },
+          "patterns_found": [
+            "In-house Quality Assurance (QA) Capability",
+            "Vertical Integration of Component Inspection",
+            "High-Frequency Component Lifecycle Management",
+            "Non-Destructive Testing (NDT) Standards Compliance (PCN/EN4179)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2000,
+              "output_tokens": 347,
+              "elapsed_seconds": 4.573110103607178
+            }
+          ],
+          "reasoning": "The job posting confirms Alpine F1 Team maintains an internal Quality and Manufacturing department responsible for inspecting both new and in-service components. The requirement for NDT Level 2/3 qualifications and knowledge of specific methods (UT, PT, MP, ET, RT) indicates a procurement need for specialized high-precision testing equipment and certification services, rather than outsourcing these critical safety checks."
+        }
+      ],
+      "total_input_tokens": 16616,
+      "total_output_tokens": 3047,
+      "estimated_cost_usd": 0.095553
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Alpine F1 Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:55:11.300196"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.363224",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:00:22.927659"
+}

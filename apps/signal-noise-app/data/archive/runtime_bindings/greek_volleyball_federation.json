@@ -1,0 +1,178 @@
+{
+  "entity_id": "greek_volleyball_federation",
+  "entity_name": "Greek Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "volleyball.gr",
+    "sportsvacationgreece.com",
+    "gamecocksonline.com",
+    "santaclarabroncos.com",
+    "websites.auth.gr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "greek_volleyball_federation",
+      "entity_name": "Greek Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportsvacationgreece.com",
+        "https://volleyball.gr",
+        "https://websites.auth.gr",
+        "https://santaclarabroncos.com",
+        "https://gamecocksonline.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Greek Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:17:57.766446",
+          "domain_explored": "https://volleyball.gr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Governance Activity: Announcement of '\u03a4\u03b1\u03ba\u03c4\u03b9\u03ba\u03ae \u0393\u03b5\u03bd\u03b9\u03ba\u03ae \u03a3\u03c5\u03bd\u03ad\u03bb\u03b5\u03c5\u03c3\u03b7 2026' (Regular General Assembly 2026) indicates active governance and potential budget cycles, though no specific procurement is listed."
+            ]
+          },
+          "patterns_found": [
+            "Sports Operations Management",
+            "Event Scheduling",
+            "Governance (General Assembly)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 230,
+              "elapsed_seconds": 4.071552038192749
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports results, match schedules, referee appointments, and organizational governance announcements (General Assembly). There are no explicit signals regarding technology procurement, job vacancies, or RFPs. The mention of 'Cosmos' and 'Pre League' refers to sports categories, not technology stacks."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:18:00.504447",
+          "domain_explored": "https://sportsvacationgreece.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:18:08.093237",
+          "domain_explored": "https://gamecocksonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (University of South Carolina Athletics)",
+            "Sports News Aggregation",
+            "Sponsorship Links (Automotive)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1443,
+              "output_tokens": 188,
+              "elapsed_seconds": 4.646272897720337
+            }
+          ],
+          "reasoning": "The scraped content is from 'gamecocksonline.com', which is the athletics website for the University of South Carolina (NCAA), not the Greek Volleyball Federation (EOPE). The content consists of sports news, game schedules, and a sponsorship link to a car dealership. There is absolutely no relevance to Greek volleyball governance, procurement, or technology stacks."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:18:11.277647",
+          "domain_explored": "https://santaclarabroncos.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:18:19.971894",
+          "domain_explored": "https://websites.auth.gr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress CMS",
+              "eforms.auth.gr (Internal Forms)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity (Aristotle University of Thessaloniki)",
+            "Internal Service Provision (Centralized Web Hosting)",
+            "Educational Sector Governance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1530,
+              "output_tokens": 203,
+              "elapsed_seconds": 4.728060960769653
+            }
+          ],
+          "reasoning": "The content is explicitly for the Aristotle University of Thessaloniki (AUTH), offering a centralized WordPress service for its internal departments. This is an internal IT service provider page, completely unrelated to the Greek Volleyball Federation. There are no procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4336,
+      "total_output_tokens": 621,
+      "estimated_cost_usd": 0.022323000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Greek Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:18:19.972629"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.341839",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:30.366968"
+}

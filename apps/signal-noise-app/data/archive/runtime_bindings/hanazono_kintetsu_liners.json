@@ -1,0 +1,260 @@
+{
+  "entity_id": "hanazono_kintetsu_liners",
+  "entity_name": "Hanazono Kintetsu Liners",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "hanazono-liners.jp",
+    "league-one.jp",
+    "sports.pref.osaka.jp",
+    "en.rugby-japan.jp",
+    "en.osaka-info.jp",
+    "play.google.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hanazono_kintetsu_liners",
+      "entity_name": "Hanazono Kintetsu Liners",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://league-one.jp",
+        "https://en.rugby-japan.jp",
+        "https://hanazono-liners.jp",
+        "https://sports.pref.osaka.jp",
+        "https://en.osaka-info.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Hanazono Kintetsu Liners may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:45:53.644779",
+          "domain_explored": "https://hanazono-liners.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Liners Mobile App)",
+              "YouTube (KCN Channel)",
+              "Social Media Platforms (X/Twitter, LINE, Facebook, Instagram)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Stamp Rally Implementation (Event: 2025.12.19)",
+              "Fan Club Voting System ('Oshi Men Voting 2025-26')",
+              "Merchandise E-commerce (Goods Shop)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Digitization",
+            "Mobile App Presence",
+            "Digital Marketing Campaigns",
+            "Social Media Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.3126838207244873
+            }
+          ],
+          "reasoning": "The content confirms the active use of digital platforms for fan engagement and marketing, specifically the 'Liners Mobile App' and YouTube channel (KCN). While these are operational tools rather than new procurement signals, they indicate a capability for digital service consumption. The 'Digital Stamp Rally' event suggests a willingness to procure or utilize third-party digital engagement solutions."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:46:00.743237",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized Ticketing Platform: League One uses ticketrugby.jp for ticket distribution, suggesting a league-level vendor partnership rather than individual team procurement for ticketing."
+            ]
+          },
+          "patterns_found": [
+            "League One Ecosystem",
+            "Ticketing Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 234,
+              "elapsed_seconds": 2.6342480182647705
+            }
+          ],
+          "reasoning": "The content is a schedule and results page for 'League One' (Japan Rugby League One). While Hanazono Kintetsu Liners is a member of this league, this specific page contains only generic match data, scores, and links to a centralized ticketing platform (ticketrugby.jp). It provides no specific information regarding Hanazono Kintetsu Liners' internal procurement activities, technology stack, or business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:46:10.803622",
+          "domain_explored": "https://sports.pref.osaka.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "X (Twitter) Integration",
+              "Web Content Management (Dynamic event listing)",
+              "Video Streaming Platforms (Movie/Report sections)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Agency for Sports Grants (Subsidized events)",
+              "Corporate Sponsorship Agreements (Meiji Yasuda Life, Namihaya Fund)",
+              "Venue Partnerships (Aeon Malls, LaLaport)",
+              "Fan Engagement Projects (Free ticket distribution, Sports experience days)"
+            ]
+          },
+          "patterns_found": [
+            "Public-Private Partnership (PPP) Ecosystem",
+            "Regional Sports Promotion Strategy",
+            "Event-Based Vendor Engagement",
+            "Fanbase Development Initiatives"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1451,
+              "output_tokens": 365,
+              "elapsed_seconds": 3.2419631481170654
+            }
+          ],
+          "reasoning": "The content reveals a strong ecosystem relationship between Hanazono Kintetsu Liners and the Osaka Prefectural Government via the 'OSAKA SPORTS PROJECT' and 'One Team' initiatives. While this page does not list direct RFPs, it confirms the entity operates within a subsidized, partnership-heavy environment. Procurement is likely influenced by public sector cycles and grant-based funding (e.g., JAPAN SPORTS COUNCIL/Agency for Sports). The 'Fan Development' and 'Sports Experience' events indicate a need for event management, staffing, and promotional vendors."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:46:19.280989",
+          "domain_explored": "https://en.rugby-japan.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube (Streaming)",
+              "Custom E-commerce Platform (shop.rugby-japan.jp)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "National Federation Ecosystem",
+            "E-commerce Integration (Online Shop)",
+            "Content Streaming (Japan Rugby TV)",
+            "Fan Club Management (Sakura Club)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 778,
+              "output_tokens": 249,
+              "elapsed_seconds": 4.160604000091553
+            }
+          ],
+          "reasoning": "The content analyzed is from the Japan Rugby Football Union (JRFU) national site, not the specific entity Hanazono Kintetsu Liners. While the site confirms standard digital assets (Shop, TV, Fan Club) common to the sport, it provides no specific procurement signals, vendor selection processes, or technology stack details relevant to the target entity. The target entity operates within this ecosystem but this page does not reveal their specific procurement intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:46:34.845724",
+          "domain_explored": "https://en.osaka-info.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Tourism Promotion",
+            "Event Aggregation",
+            "Generic Content Publishing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 181,
+              "elapsed_seconds": 12.303286075592041
+            }
+          ],
+          "reasoning": "The content is purely promotional and informational, focusing on tourism events (Kaiyukan Illuminations, Klimt Alive) and general travel updates. There are no signals of internal procurement activities, technology adoption, or corporate governance related to Hanazono Kintetsu Liners. The entity operates this site for destination marketing, not as a channel for vendor engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:46:57.531354",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Mobile Gaming Ecosystem",
+            "Consumer App Marketplace",
+            "Irrelevant Content (Gaming/Entertainment)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1608,
+              "output_tokens": 177,
+              "elapsed_seconds": 19.204410076141357
+            }
+          ],
+          "reasoning": "The scraped content from the Google Play Store is a generic list of popular mobile games (e.g., Roblox, Candy Crush, PUBG) and app categories. It contains no specific information regarding Hanazono Kintetsu Liners, their business operations, or their technology stack. The content is entirely unrelated to the entity's procurement needs."
+        }
+      ],
+      "total_input_tokens": 8172,
+      "total_output_tokens": 1497,
+      "estimated_cost_usd": 0.046971
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Hanazono Kintetsu Liners may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:46:57.533181"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.274769",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:26:46.702248"
+}

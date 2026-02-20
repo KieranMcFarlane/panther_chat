@@ -1,0 +1,211 @@
+{
+  "entity_id": "football_federation_australia",
+  "entity_name": "Football Federation Australia",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "footballaustralia.com.au",
+    "playfootball.com.au",
+    "ausport.gov.au",
+    "socceroos.com.au",
+    "zoominfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "football_federation_australia",
+      "entity_name": "Football Federation Australia",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://playfootball.com.au",
+        "https://footballaustralia.com.au",
+        "https://ausport.gov.au",
+        "https://socceroos.com.au",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Football Federation Australia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:55:07.770093",
+          "domain_explored": "https://footballaustralia.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PlayFootball (Registration Platform)",
+              "E-commerce Platform (Shop functionality)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship activation: 'Ninja A-League 2025/26' (implies active marketing partnerships)",
+              "Merchandise sales: 'Home Jersey $125.00' (implies existing supply chain/ecommerce vendor)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce integration (Jersey sales)",
+            "League naming rights sponsorship (Ninja A-League)",
+            "Grassroots platform dependency (PlayFootball)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 268,
+              "elapsed_seconds": 4.149731159210205
+            }
+          ],
+          "reasoning": "The scraped content is limited to the homepage header/footer and recent news headlines. While it confirms the existence of an e-commerce store and the 'PlayFootball' registration platform, it contains no explicit signals of new procurement activities, RFPs, or technology upgrades. The content is operational rather than strategic."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:55:18.933031",
+          "domain_explored": "https://playfootball.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PlayFootball Platform (Proprietary/Custom)",
+              "Registration Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship: Coles (MiniRoos naming rights)"
+            ]
+          },
+          "patterns_found": [
+            "Grassroots Registration Platform",
+            "Sponsorship Integration (Coles MiniRoos)",
+            "User Role Segmentation (Players, Coaches, Referees)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 225,
+              "elapsed_seconds": 3.86608624458313
+            }
+          ],
+          "reasoning": "The content is strictly functional UI text for the 'PlayFootball' registration platform. It confirms the existence of a digital platform for grassroots management but contains no technical specifications, vendor credits, or procurement intent signals. It is a user-facing interface, not a corporate or technical document."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:55:39.320543",
+          "domain_explored": "https://ausport.gov.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T05:55:59.397742",
+          "domain_explored": "https://socceroos.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Template literals detected: {{ match.* }})",
+              "Payment Gateways (implied by 'Buy Tickets', 'FA+')",
+              "Streaming Platform (FA+ Video content)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations (Buy Tickets buttons)",
+              "Travel Services (FIFA World Cup 2026 Travel Packages)",
+              "Digital Subscriptions (FA+ Unlock)",
+              "Merchandising (Online Store)"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Platform Integration",
+            "Digital Content Management (FA+)",
+            "E-commerce Integration (Online Store)",
+            "Sponsorship Integration (CommBank, Oppo)",
+            "Travel Package Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 329,
+              "elapsed_seconds": 12.768206119537354
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing (fixtures/results), the underlying infrastructure reveals procurement dependencies. The presence of 'Buy Tickets', 'FA+' (subscription/paywall), 'Travel Packages', and 'Shop' indicates active contracts or RFPs for Ticketing Systems, CMS/Payment Gateways, and Travel Management services. This shifts confidence from zero to weak as it confirms operational complexity requiring vendors."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T05:56:07.990317",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "B2B Sales Intelligence Platform",
+            "Irrelevant Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1573,
+              "output_tokens": 185,
+              "elapsed_seconds": 4.255188941955566
+            }
+          ],
+          "reasoning": "The scraped content is a landing page for ZoomInfo, a B2B sales intelligence vendor. It describes ZoomInfo's product features (AI, Copilot, intent data) and benefits for sales teams. It does not contain information about Football Federation Australia's internal operations, technology stack, or procurement activities. This is a false positive in the scraping process or irrelevant vendor noise."
+        }
+      ],
+      "total_input_tokens": 5865,
+      "total_output_tokens": 1007,
+      "estimated_cost_usd": 0.0327
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Football Federation Australia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:56:07.991818"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.202117",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:20.115846"
+}

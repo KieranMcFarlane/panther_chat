@@ -66,7 +66,7 @@ async def test_all_question_templates():
         # Show question summary
         for q in questions[:3]:
             services = ', '.join([s.value for s in q.yp_service_fit])
-            print(f"   - {q.question_id}: {q.question[:50]}...")
+            print(f"   - {q.question_id}: {q.question}")
             print(f"     YP: {services} | Budget: {q.budget_range}")
     
     print(f"\n📊 Total Questions Across All Entity Types: {total_questions}")
@@ -108,7 +108,7 @@ async def test_all_hypothesis_generation():
             })
             
             services = ', '.join(hyp['metadata']['yp_service_fit'])
-            print(f"   - {hyp['statement'][:55]}...")
+            print(f"   - {hyp['statement']}")
             print(f"     YP: {services} | {hyp['metadata']['budget_range']}")
     
     print(f"\n📊 Total Hypotheses Generated: {len(all_hypotheses)}")

@@ -1,0 +1,447 @@
+{
+  "entity_id": "fia_africa",
+  "entity_name": "FIA Africa",
+  "template_id": "tpl_motorsport_global_federations_v1",
+  "cluster_id": "motorsport_global_federations",
+  "discovered_domains": [
+    "safarirally.ke",
+    "thevoiceofafrica.com",
+    "allafrica.com",
+    "documents1.worldbank.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://gh.linkedin.com/jobs/view/content-marketing-manager-at-farming-in-africa-4239639581",
+      "https://gh.linkedin.com/jobs/view/telesales-executive-at-farming-in-africa-4079761193",
+      "https://ng.linkedin.com/jobs/view/marketing-manager-at-farming-in-africa-4157273805",
+      "https://gh.linkedin.com/jobs/view/sales-executive-at-farming-in-africa-3789274964?refId=yXnqNMihyF36fLBpNvG7sg%3D%3D&trackingId=iYAQ9CigSvtsEL6PPmWklA%3D%3D&position=18&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://gh.linkedin.com/jobs/view/business-development-officer-at-farming-in-africa-3997752980",
+      "https://gh.linkedin.com/jobs/view/business-development-manager-at-farming-in-africa-4132861331",
+      "https://gh.linkedin.com/jobs/view/telesales-manager-at-farming-in-africa-3860150581",
+      "https://gh.linkedin.com/jobs/view/sales-coordinator-at-farming-in-africa-3958086677"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_africa",
+      "entity_name": "FIA Africa",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.24,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18,
+        0.24
+      ],
+      "explored_domains": [
+        "https://documents1.worldbank.org",
+        "https://gh.linkedin.com/jobs/view/content-marketing-manager-at-farming-in-africa-4239639581",
+        "https://ng.linkedin.com/jobs/view/marketing-manager-at-farming-in-africa-4157273805",
+        "https://gh.linkedin.com/jobs/view/business-development-officer-at-farming-in-africa-3997752980",
+        "https://safarirally.ke",
+        "https://thevoiceofafrica.com",
+        "https://gh.linkedin.com/jobs/view/telesales-executive-at-farming-in-africa-4079761193",
+        "https://allafrica.com",
+        "https://gh.linkedin.com/jobs/view/sales-executive-at-farming-in-africa-3789274964?refId=yXnqNMihyF36fLBpNvG7sg%3D%3D&trackingId=iYAQ9CigSvtsEL6PPmWklA%3D%3D&position=18&pageNum=0&trk=public_jobs_jserp-result_search-card"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Regional Expansion",
+        "Digital Marketing Stack Investment",
+        "Lead Generation Operations",
+        "Social Media Infrastructure Scaling",
+        "Field Sales Operations Expansion",
+        "Direct Sales Channel Investment",
+        "Performance-Based Sales Culture",
+        "Customer Relationship Management (CRM) Dependency",
+        "Retail Infrastructure Development",
+        "Strategic Partnership Development",
+        "Proposal & Pitch Deck Generation",
+        "Market Research & Intelligence Operations",
+        "CRM & Sales Reporting Requirements"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA Africa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:34:05.278855",
+          "domain_explored": "https://safarirally.ke",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Eventhos (Event Management/Accreditation Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Accreditation Process (Operational)",
+              "Event Planning for 2026 Cycle"
+            ]
+          },
+          "patterns_found": [
+            "Event Management Technology Usage",
+            "Recurring Event Cycle (Annual)",
+            "Media Operations Workflow"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.1084039211273193
+            }
+          ],
+          "reasoning": "The content reveals the use of 'Eventhos' (an event management platform) for media accreditation. While this is a direct technology usage signal, it appears to be a standardized operational tool for the event registration process rather than a new procurement opportunity or a complex enterprise stack implementation. The recurring nature of the Safari Rally (2026 dates mentioned) indicates a stable, ongoing operational cycle."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:34:17.938644",
+          "domain_explored": "https://thevoiceofafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Content",
+            "Geopolitical Coverage",
+            "Irrelevant Domain Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.626765251159668
+            }
+          ],
+          "reasoning": "The scraped content from 'thevoiceofafrica.com' consists of general news headlines covering geopolitics (UN, Saudi Arabia), economy (mining, battery supply chains), and culture. There is no mention of FIA Africa, motorsport, rally events, or specific procurement activities related to the target entity. The content is irrelevant to the objective of finding procurement signals for FIA Africa."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:34:29.129955",
+          "domain_explored": "https://allafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Premium Partner List: African Development Bank, Afreximbank, OCPGroup, Invest Namibia, Corporate Council on Africa"
+            ]
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Geopolitical Coverage",
+            "Sponsorship/Partnership Links (Non-Procurement)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1452,
+              "output_tokens": 227,
+              "elapsed_seconds": 4.917963027954102
+            }
+          ],
+          "reasoning": "The scraped content represents a general news aggregator homepage (AllAfrica) focusing on geopolitics, security, and entertainment. While 'Premium Partners' are listed (e.g., Afreximbank, OCPGroup), these are content or sponsorship relationships, not direct procurement signals for FIA Africa. The content lacks specific RFPs, technology tenders, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:34:38.631474",
+          "domain_explored": "https://documents1.worldbank.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (toggleMore)",
+              "Social Media Integration (LinkedIn, Twitter, etc.)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "General Access to Information Policy",
+              "Public Disclosure Repository"
+            ]
+          },
+          "patterns_found": [
+            "Generic Repository Navigation",
+            "Global Development Context",
+            "Document Archiving Interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1506,
+              "output_tokens": 263,
+              "elapsed_seconds": 3.519320011138916
+            }
+          ],
+          "reasoning": "The content represents the generic navigation shell and documentation repository of the World Bank (documents1.worldbank.org). While the World Bank is a major procurement entity, this specific page is a high-level archive interface with no specific mention of 'FIA Africa', motorsport, or specific procurement opportunities relevant to the target entity. It is a false positive likely triggered by the presence of 'Africa' in the language options or general development context."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:34:54.911086",
+          "domain_explored": "https://gh.linkedin.com/jobs/view/content-marketing-manager-at-farming-in-africa-4239639581",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Content Management Systems (CMS)",
+              "Digital Marketing Platforms",
+              "Social Media Management Tools"
+            ],
+            "job_postings": [
+              {
+                "role": "Content Marketing Manager",
+                "location": "Accra, Ghana",
+                "type": "Full-time",
+                "focus": "Content Strategy, Digital Marketing, Writing"
+              }
+            ],
+            "procurement_indicators": [
+              "Expansion of marketing capabilities",
+              "Need for content infrastructure and tools",
+              "Focus on ROI and efficient infrastructure (per company description)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Marketing Investment",
+            "Content Management Operations",
+            "Organizational Growth Phase",
+            "Agricultural Technology Context"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 374,
+              "elapsed_seconds": 7.715983152389526
+            }
+          ],
+          "reasoning": "The content confirms 'Farming In Africa' (FIA) as the target entity and indicates active investment in marketing infrastructure. The hiring of a Content Marketing Manager suggests a need for software tools to support content strategies, digital campaigns, and customer relationship management (CRM). While this is a hiring signal rather than a direct procurement tender, it validates the entity's growth and the potential for future procurement of marketing technologies (MarTech) and creative services."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:35:07.442280",
+          "domain_explored": "https://gh.linkedin.com/jobs/view/telesales-executive-at-farming-in-africa-4079761193",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM (Customer Relationship Management System)",
+              "Computer Applications",
+              "Messaging Platforms",
+              "Social Media Platforms (Facebook, TikTok, YouTube)"
+            ],
+            "job_postings": [
+              "Telesales Executive (Accra, Ghana)"
+            ],
+            "procurement_indicators": [
+              "CRM system maintenance/licensing implied",
+              "Digital payment processing requirements",
+              "Telecommunications infrastructure needs"
+            ]
+          },
+          "patterns_found": [
+            "CRM System Utilization",
+            "Digital Sales Operations",
+            "Customer Support Infrastructure",
+            "Multi-subsidiary Organizational Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1638,
+              "output_tokens": 328,
+              "elapsed_seconds": 4.882403135299683
+            }
+          ],
+          "reasoning": "The job description explicitly mentions the use of a 'Customer Relationship Management (CRM) system' for documenting interactions, indicating an existing investment in sales technology. The role supports a 'multi-subsidiary' structure, suggesting a complex operational environment that likely requires integrated software solutions. While this confirms technology usage, it is an operational role rather than a direct procurement signal, warranting a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T03:35:38.486439",
+          "domain_explored": "https://ng.linkedin.com/jobs/view/marketing-manager-at-farming-in-africa-4157273805",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Facebook, TikTok, YouTube)",
+              "WhatsApp Business/Community Tools",
+              "Digital Marketing Analytics",
+              "Lead Generation Systems"
+            ],
+            "job_postings": [
+              "Marketing Manager (Abuja, Nigeria) - Focus on strategy, digital channels, and sales growth"
+            ],
+            "procurement_indicators": [
+              "Regional Market Expansion (Nigeria/Abuja)",
+              "Budget Allocation for Marketing Campaigns",
+              "Vendor Requirement for 'Traditional and Digital Channels'",
+              "Lead Generation and Sales Focus"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Regional Expansion",
+            "Digital Marketing Stack Investment",
+            "Lead Generation Operations",
+            "Social Media Infrastructure Scaling"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1702,
+              "output_tokens": 355,
+              "elapsed_seconds": 22.459399223327637
+            }
+          ],
+          "reasoning": "This posting confirms a strategic expansion into the Nigerian market (Abuja) requiring a full-time Marketing Manager. The detailed description of responsibilities (market research, campaign management, lead generation) indicates a structured procurement function for marketing services and tools. The explicit mention of 'digital channels' and 'qualified leads' suggests an active or upcoming need for marketing automation, CRM, and analytics software."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T03:35:51.492168",
+          "domain_explored": "https://gh.linkedin.com/jobs/view/sales-executive-at-farming-in-africa-3789274964?refId=yXnqNMihyF36fLBpNvG7sg%3D%3D&trackingId=iYAQ9CigSvtsEL6PPmWklA%3D%3D&position=18&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Platforms (Facebook, TikTok, YouTube)",
+              "Sales Reporting Tools (implied by 'financial and statistical data' requirement)",
+              "CRM Software (implied by 'maintain positive business relationships')"
+            ],
+            "job_postings": [
+              {
+                "role": "Field Sales Executive",
+                "entity": "FIA AgroVentures (Farming In Africa)",
+                "location": "Accra, Ghana",
+                "type": "Full-time",
+                "focus": "Direct Sales, Field Work, Customer Relationship Management"
+              }
+            ],
+            "procurement_indicators": [
+              "Hiring for revenue-generating roles indicates budget availability",
+              "Requirement for data reporting suggests investment in sales analytics",
+              "Field operations imply potential procurement of mobile devices or transportation",
+              "Focus on 'innovative sales strategies' suggests openness to sales tech solutions"
+            ]
+          },
+          "patterns_found": [
+            "Field Sales Operations Expansion",
+            "Direct Sales Channel Investment",
+            "Performance-Based Sales Culture",
+            "Customer Relationship Management (CRM) Dependency",
+            "Retail Infrastructure Development"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1802,
+              "output_tokens": 461,
+              "elapsed_seconds": 4.522691965103149
+            }
+          ],
+          "reasoning": "The job posting for a Field Sales Executive at FIA AgroVentures confirms active investment in physical sales infrastructure and direct-to-consumer channels. The requirement for 'financial and statistical data' reporting and 'monitoring competitors' indicates a structured sales governance model that likely utilizes CRM or sales tracking tools. This reinforces the procurement signal for sales technology and field operations support."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T03:36:04.351983",
+          "domain_explored": "https://gh.linkedin.com/jobs/view/business-development-officer-at-farming-in-africa-3997752980",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office Suite (Word, Excel, PowerPoint)",
+              "CRM Software (Implied by 'client relationships' and 'sales activities')",
+              "Business Intelligence Tools (Implied by 'market research' and 'performance metrics')"
+            ],
+            "job_postings": [
+              "Business Development Officer (FiaKare Subsidiary)"
+            ],
+            "procurement_indicators": [
+              "B2B Partnership Procurement",
+              "Market Research Acquisition",
+              "Sales Training & Enablement Tools",
+              "Presentation/Design Software for Pitch Decks"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Development",
+            "Proposal & Pitch Deck Generation",
+            "Market Research & Intelligence Operations",
+            "CRM & Sales Reporting Requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1872,
+              "output_tokens": 350,
+              "elapsed_seconds": 4.823836088180542
+            }
+          ],
+          "reasoning": "The posting for a Business Development Officer confirms active investment in growth infrastructure. The requirement to 'develop and deliver compelling proposals and pitch decks' indicates a structured B2B sales cycle involving external stakeholders. Additionally, the need for 'market research' and 'performance metrics' reporting suggests the use of business intelligence tools and CRM systems to track sales pipelines and market trends."
+        }
+      ],
+      "total_input_tokens": 14307,
+      "total_output_tokens": 2786,
+      "estimated_cost_usd": 0.08471100000000001
+    },
+    "procurement_signals": [
+      "Strategic Regional Expansion",
+      "Digital Marketing Stack Investment",
+      "Lead Generation Operations",
+      "Social Media Infrastructure Scaling",
+      "Field Sales Operations Expansion",
+      "Direct Sales Channel Investment",
+      "Performance-Based Sales Culture",
+      "Customer Relationship Management (CRM) Dependency",
+      "Retail Infrastructure Development",
+      "Strategic Partnership Development",
+      "Proposal & Pitch Deck Generation",
+      "Market Research & Intelligence Operations",
+      "CRM & Sales Reporting Requirements"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA Africa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:36:04.357385"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.378656",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:03.787271"
+}

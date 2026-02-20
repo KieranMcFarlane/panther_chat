@@ -1,0 +1,122 @@
+{
+  "entity_id": "wbsc_europe",
+  "entity_name": "WBSC Europe",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "wbsceurope.org",
+    "wbsc.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wbsc_europe",
+      "entity_name": "WBSC Europe",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://wbsc.org",
+        "https://wbsceurope.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "WBSC Europe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:56:08.939471",
+          "domain_explored": "https://wbsceurope.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Registration Platform (implied)",
+              "Event Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Contracting: Fira de Barcelona",
+              "Event Organization Services",
+              "Participant Registration Management"
+            ]
+          },
+          "patterns_found": [
+            "Event_Management_Services",
+            "Venue_Procurement",
+            "Registration_System_Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 445,
+              "output_tokens": 248,
+              "elapsed_seconds": 3.0346341133117676
+            }
+          ],
+          "reasoning": "The announcement of the '2026 European Softball Blue Convention in Barcelona' confirms active event planning. While the event is in the future, the opening of registration implies the procurement of venue services (Fira de Barcelona) and the utilization of a registration platform (likely third-party or proprietary). This signals a need for event management vendors and digital registration tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:56:21.638202",
+          "domain_explored": "https://wbsc.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Kayo Sports",
+              "GameTime"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Broadcasting_Rights",
+            "Streaming_Services",
+            "Regional_Affiliate_Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 467,
+              "output_tokens": 184,
+              "elapsed_seconds": 2.4610049724578857
+            }
+          ],
+          "reasoning": "The content is a news article regarding the broadcasting rights for the 'Softball Australia Cup' on 'GameTime' and 'Kayo Sports'. This pertains to the Australian affiliate (Softball Australia) and local media distribution, not the procurement activities or technology stack of WBSC Europe. There is no signal relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 912,
+      "total_output_tokens": 432,
+      "estimated_cost_usd": 0.009216
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "WBSC Europe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:56:21.640634"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.311834",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:40:28.120664"
+}

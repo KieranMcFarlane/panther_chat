@@ -1,0 +1,272 @@
+{
+  "entity_id": "ekstraklasa",
+  "entity_name": "Ekstraklasa",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "ekstraklasa.org",
+    "ekstraklasa.tv",
+    "ekstraklasaexports.com",
+    "futsalekstraklasa.pl",
+    "flashscore.com",
+    "apps.apple.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/view/professional-footballer-at-mafanikio-sports-management-4266378525",
+      "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "ekstraklasa",
+      "entity_name": "Ekstraklasa",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ekstraklasa.org",
+        "https://flashscore.com",
+        "https://ekstraklasaexports.com",
+        "https://futsalekstraklasa.pl",
+        "https://uk.linkedin.com/jobs/view/professional-footballer-at-mafanikio-sports-management-4266378525",
+        "https://ekstraklasa.tv",
+        "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124",
+        "https://apps.apple.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Ekstraklasa may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:52:19.472718",
+          "domain_explored": "https://ekstraklasa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ekstraklasa.tv (OTT Platform)",
+              "Lotto Fantasy (Gaming/Fantasy Sports)",
+              "Ekstraklasa Games",
+              "Aplikacja mobilna (Mobile App)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partner Technologiczny (Technology Partner)",
+              "Oficjalny dostawca danych meczowych (Official Match Data Provider)",
+              "Oficjalny dostawca pi\u0142ek (Official Ball Supplier)",
+              "Oficjalna marka zegark\u00f3w (Official Watch Brand)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Product Ecosystem",
+            "Sponsorship/Partnership Structure",
+            "OTT/Streaming Service"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 296,
+              "elapsed_seconds": 4.110327959060669
+            }
+          ],
+          "reasoning": "The content reveals the structure of Ekstraklasa's digital product portfolio (Fantasy, Games, TV, Live Park) and lists specific technology partners (Technologiczny Partner, Oficjalny dostawca danych meczowych). While no direct RFPs are present, the existence of these categories confirms active vendor relationships and a need for data and gaming technology support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:52:26.572124",
+          "domain_explored": "https://ekstraklasa.tv",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:52:38.724983",
+          "domain_explored": "https://ekstraklasaexports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Editorial Content",
+            "Sports Journalism",
+            "Transfer News"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 183,
+              "elapsed_seconds": 4.542630910873413
+            }
+          ],
+          "reasoning": "The scraped content from 'ekstraklasaexports.com' is a sports blog/editorial site focused on football news, match analysis, and player transfers (e.g., Oskar Pietuszewski to Porto). It is not an official B2B procurement portal, nor does it contain technology stacks, job postings, or RFPs related to the Ekstraklasa league's operational needs. This is a content site, not a business entity procurement channel."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:52:47.475557",
+          "domain_explored": "https://futsalekstraklasa.pl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:53:00.555176",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Third-Party Media Rights Holder",
+            "Betting/Gambling Affiliate Content",
+            "Generic Sports Aggregation",
+            "No Corporate Governance Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 691,
+              "output_tokens": 188,
+              "elapsed_seconds": 5.498810768127441
+            }
+          ],
+          "reasoning": "The content is from Flashscore, a third-party live-score service aggregator, not the official Ekstraklasa corporate entity. The text consists of gambling warnings, loading states, and generic navigation. There are no signals regarding internal procurement, technology stacks, or decision-making processes relevant to Ekstraklasa's operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:53:03.912446",
+          "domain_explored": "https://apps.apple.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T09:53:24.234597",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/professional-footballer-at-mafanikio-sports-management-4266378525",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "HR Business Partner, Games (Netflix)",
+              "HR Business Partner (Meta)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Unrelated Job Board Content",
+            "Generic HR Roles",
+            "Geographic Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 216,
+              "elapsed_seconds": 5.223423957824707
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn job search results page for 'Hr Adviseur' roles in the United States, featuring companies like Netflix and Meta. The URL slug mentions 'mafaniikio-sports-management', which appears to be a third-party agency unrelated to Ekstraklasa's direct procurement operations. There is no content linking this page to the Ekstraklasa organization, its technology stack, or its procurement needs."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T09:53:32.738452",
+          "domain_explored": "https://pl.linkedin.com/jobs/view/lead-generation-specialist-%E2%80%93-sales-representative-at-tisa-group-4289835124",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Lead Generation Specialist \u2013 Sales Representative",
+                "company": "TISA Group",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Rate Limiting / Access Restriction",
+            "Third-Party Job Board Content",
+            "Unrelated Entity (TISA Group)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 704,
+              "output_tokens": 204,
+              "elapsed_seconds": 3.253046989440918
+            }
+          ],
+          "reasoning": "The content indicates a rate-limiting error preventing access to the LinkedIn page, and the visible metadata refers to a 'Lead Generation Specialist' role at 'TISA Group', which is an external entity unrelated to Ekstraklasa's direct procurement operations."
+        }
+      ],
+      "total_input_tokens": 5789,
+      "total_output_tokens": 1087,
+      "estimated_cost_usd": 0.033672
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Ekstraklasa may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:53:32.739242"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.445962",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:31.945101"
+}

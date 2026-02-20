@@ -1,0 +1,282 @@
+{
+  "entity_id": "international_table_tennis_federation_(ittf)",
+  "entity_name": "International Table Tennis Federation (ITTF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://sg.linkedin.com/jobs/view/director-of-operations-at-international-table-tennis-federation-ittf-3937797498",
+      "https://sg.linkedin.com/jobs/view/ittf-group-coordinator-at-international-table-tennis-federation-3552101811",
+      "https://sg.linkedin.com/jobs/view/social-media-specialist-at-ittf-international-table-tennis-federation-4183473775",
+      "https://sg.linkedin.com/jobs/view/wtt-finance-manager-at-world-table-tennis-4228771778",
+      "https://sg.linkedin.com/jobs/view/ittf-tribunal-member-at-international-table-tennis-federation-ittf-2257996161?trk=public_post_main-feed-card_reshare_feed-job-posting-content",
+      "https://sg.linkedin.com/jobs/view/wtt-social-media-manager-at-world-table-tennis-4291067610",
+      "https://au.linkedin.com/jobs/view/customer-experience-and-growth-manager-at-table-tennis-australia-4325516047",
+      "https://sg.linkedin.com/jobs/view/hr-operations-at-world-table-tennis-2613495652?refId=pEbLpY8xDqcahglRjgU%2FnA%3D%3D&trackingId=QlCrF2vAwRGPOr%2F9l0LnKw%3D%3D&position=6&pageNum=0&trk=public_jobs_jserp-result_search-card"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_table_tennis_federation_(ittf)",
+      "entity_name": "International Table Tennis Federation (ITTF)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001,
+        0.14
+      ],
+      "explored_domains": [
+        "https://sg.linkedin.com/jobs/view/ittf-group-coordinator-at-international-table-tennis-federation-3552101811",
+        "https://sg.linkedin.com/jobs/view/social-media-specialist-at-ittf-international-table-tennis-federation-4183473775",
+        "https://sg.linkedin.com/jobs/view/director-of-operations-at-international-table-tennis-federation-ittf-3937797498",
+        "https://sg.linkedin.com/jobs/view/ittf-tribunal-member-at-international-table-tennis-federation-ittf-2257996161?trk=public_post_main-feed-card_reshare_feed-job-posting-content",
+        "https://sg.linkedin.com/jobs/view/wtt-finance-manager-at-world-table-tennis-4228771778"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Leadership Hiring",
+        "Operational Transformation",
+        "Financial Governance & Control",
+        "Event Operations Management"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Table Tennis Federation (ITTF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:31:13.230111",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/director-of-operations-at-international-table-tennis-federation-ittf-3937797498",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "ERP Systems (implied by 'financial reporting' & 'safeguard assets')",
+              "Event Management Software",
+              "Financial Compliance & Audit Tools",
+              "Budgeting & Forecasting Tools"
+            ],
+            "job_postings": [
+              {
+                "title": "Director of Operations",
+                "location": "Singapore",
+                "reports_to": "CEO",
+                "status": "Closed (1 year ago)",
+                "key_function": "Operations & Finance Management"
+              }
+            ],
+            "procurement_indicators": [
+              "Intent to implement new operational strategies and procedures",
+              "Requirement for enhanced financial controls and reporting",
+              "Need to streamline processes and improve communication",
+              "Oversight of fundraising and sponsorship management"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Hiring",
+            "Operational Transformation",
+            "Financial Governance & Control",
+            "Event Operations Management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 433,
+              "elapsed_seconds": 6.925649166107178
+            }
+          ],
+          "reasoning": "The job posting for a Director of Operations is a high-level procurement signal indicating a restructuring or strengthening of the ITTF's core operational backbone. This role directly oversees the Finance Department and 'operational strategies,' implying an immediate need for financial software (ERP/Accounting), event management solutions, and compliance tools. The requirement to 'streamline processes' and 'safeguard assets' suggests a move away from manual or legacy systems towards more robust, controlled digital environments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:31:19.482245",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/ittf-group-coordinator-at-international-table-tennis-federation-3552101811",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Presentation Software (PowerPoint/Keynote)",
+              "Scheduling & Calendar Tools",
+              "Communication Platforms"
+            ],
+            "job_postings": [
+              "ITTF Group Coordinator (Singapore)"
+            ],
+            "procurement_indicators": [
+              "Event planning and execution for internal/external stakeholders",
+              "Protocol and logistics management for VIP events",
+              "Process standardization initiatives",
+              "Official communication drafting (potential translation services)"
+            ]
+          },
+          "patterns_found": [
+            "Executive Support & Governance",
+            "Event Management & Protocol",
+            "Bilingual Operational Requirements (English/Chinese)",
+            "Process Improvement & Standardization"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 334,
+              "elapsed_seconds": 2.5099079608917236
+            }
+          ],
+          "reasoning": "While this is an administrative role reporting to the Group CEO, the specific mention of 'process improvements and standardization' and 'planning and executing events' indicates a need for organizational tools and event management vendors. The requirement for English and Chinese proficiency suggests potential procurement needs for translation services or localized software solutions in the Asia-Pacific region."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:31:27.933705",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/social-media-specialist-at-ittf-international-table-tennis-federation-4183473775",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Social Media Management Platforms (e.g., Hootsuite, Sprout Social)",
+              "Content Creation Tools (Adobe Creative Cloud, Canva)",
+              "Digital Asset Management (DAM)",
+              "Remote Collaboration Tools (Zoom, Slack, Teams)"
+            ],
+            "job_postings": [
+              "Social Media Specialist (Remote)"
+            ],
+            "procurement_indicators": [
+              "Investment in digital engagement capabilities",
+              "Requirement for tools to manage multi-platform content calendars",
+              "Infrastructure needs for remote live event coverage"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Production Demand",
+            "Social Media Management Stack",
+            "Remote Collaboration Infrastructure",
+            "Event-Based Content Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1545,
+              "output_tokens": 349,
+              "elapsed_seconds": 4.938517093658447
+            }
+          ],
+          "reasoning": "The job posting confirms ITTF's investment in expanding its digital footprint and brand engagement. While primarily a hiring signal, it indicates a need for supporting software tools (social media management, creative suites) and remote collaboration infrastructure to support a 'Remote position' covering global events. It validates the organization's growth phase but offers less direct procurement intent than executive operational roles."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:31:35.834330",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/wtt-finance-manager-at-world-table-tennis-4228771778",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Xero (Accounting Software)",
+              "Microsoft Excel (Advanced)"
+            ],
+            "job_postings": [
+              "WTT Finance Manager"
+            ],
+            "procurement_indicators": [
+              "Explicit requirement for Xero experience suggests existing or planned procurement of Xero licenses/implementation",
+              "Management of subsidiaries implies potential need for consolidated ERP or multi-entity accounting tools",
+              "Compliance requirements (GST/VAT) indicate a need for compliant tax software or consulting services"
+            ]
+          },
+          "patterns_found": [
+            "Financial Software Stack (Xero)",
+            "Subsidiary Governance & Compliance",
+            "Commercial Rights Management Structure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 321,
+              "elapsed_seconds": 4.319767951965332
+            }
+          ],
+          "reasoning": "While this is a job posting for WTT (a commercial entity of ITTF), it explicitly confirms the use of 'Xero' as the accounting software and highlights the management of 'subsidiaries' and 'GST/VAT'. This provides concrete evidence of the financial technology stack and the complexity of the corporate structure, which are critical for procurement intelligence regarding ERP and accounting systems."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:31:50.284745",
+          "domain_explored": "https://sg.linkedin.com/jobs/view/ittf-tribunal-member-at-international-table-tennis-federation-ittf-2257996161?trk=public_post_main-feed-card_reshare_feed-job-posting-content",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Case Management Systems",
+              "Legal Research Platforms",
+              "Secure Communication Tools"
+            ],
+            "job_postings": [
+              "ITTF Tribunal Chair",
+              "ITTF Tribunal Members (Up to 7)"
+            ],
+            "procurement_indicators": [
+              "Requirement for administrative resources to support the Tribunal",
+              "Need for operational tools to manage caseloads and documentation",
+              "Potential procurement of legal software or services for dispute resolution"
+            ]
+          },
+          "patterns_found": [
+            "Legal & Compliance Governance Structure",
+            "Dispute Resolution Infrastructure",
+            "Athlete Safeguarding & Integrity Operations",
+            "Independent Panel Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1708,
+              "output_tokens": 341,
+              "elapsed_seconds": 10.828697204589844
+            }
+          ],
+          "reasoning": "While this is a governance appointment rather than a direct procurement role, the establishment of an ITTF Tribunal indicates a maturing organizational structure requiring specific operational support. The responsibilities listed for the Chair (proposing resources, proposing amendments to regulations, annual reporting) suggest a need for administrative tools, case management software, and legal research platforms to support the Tribunal's functions."
+        }
+      ],
+      "total_input_tokens": 7726,
+      "total_output_tokens": 1778,
+      "estimated_cost_usd": 0.049848
+    },
+    "procurement_signals": [
+      "Executive Leadership Hiring",
+      "Operational Transformation",
+      "Financial Governance & Control",
+      "Event Operations Management"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Table Tennis Federation (ITTF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:31:50.285432"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.463502",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:24:19.614337"
+}

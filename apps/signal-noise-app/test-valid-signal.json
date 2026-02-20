@@ -1,0 +1,28 @@
+[
+  {
+    "entity_id": "test-entity-valid",
+    "signal_type": "RFP_DETECTED",
+    "confidence": 0.85,
+    "evidence": [
+      {
+        "source": "LinkedIn",
+        "credibility_score": 0.8,
+        "date": "2026-01-27",
+        "url": "https://linkedin.com/example"
+      },
+      {
+        "source": "Perplexity",
+        "credibility_score": 0.7,
+        "extracted_text": "Market research confirms RFP"
+      },
+      {
+        "source": "Crunchbase",
+        "credibility_score": 0.9
+      }
+    ],
+    "metadata": {
+      "first_seen": "2026-01-27T17:28:00Z",
+      "category": "Technology"
+    }
+  }
+]

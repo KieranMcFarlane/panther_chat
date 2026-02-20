@@ -1,0 +1,239 @@
+{
+  "entity_id": "adana_demirspor",
+  "entity_name": "Adana Demirspor",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "adanademirspor.com.tr",
+    "demir-spor.com",
+    "adanaspor.com.tr",
+    "football.fandom.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-dean-holden-has-activity-7312495158481092608-LfFk",
+      "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "adana_demirspor",
+      "entity_name": "Adana Demirspor",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-dean-holden-has-activity-7312495158481092608-LfFk",
+        "https://adanaspor.com.tr",
+        "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view",
+        "https://adanademirspor.com.tr",
+        "https://demir-spor.com",
+        "https://football.fandom.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Adana Demirspor may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:04:18.943972",
+          "domain_explored": "https://adanademirspor.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom 'Forman\u0131 Tasarla' tool)",
+              "Digital Payment Processing (implied by 'Sepete Ekle' / Add to Cart)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active procurement of retail inventory (Joma, New Balance, Tempo)",
+              "Vendor Partnership: Joma (Primary kit supplier)",
+              "Vendor Partnership: New Balance (Accessories)",
+              "Vendor Partnership: Tempo (Training wear)",
+              "In-house Brand: ADS Store (Internal manufacturing/white-labeling)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Procurement",
+            "Vendor Partnerships (Sportswear)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 323,
+              "elapsed_seconds": 3.6980268955230713
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the club's official online store (ADS Store). While it does not contain explicit RFPs or job postings, it provides clear evidence of the club's procurement activities regarding retail inventory and technology. The presence of a 'Customize' feature indicates the use of e-commerce software, and the product list reveals active supply chain relationships with specific sportswear manufacturers."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:04:56.024911",
+          "domain_explored": "https://demir-spor.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Stadium Infrastructure: Mentions 'Yeni Adana Stadyumu' built by T.C. Gen\u00e7lik ve Spor Bakanl\u0131\u011f\u0131 (140M TRY cost, 54 locas). This is historical public infrastructure data, not an active procurement signal.",
+              "Sponsorship: Mentions 'Yukatel' as a naming rights sponsor (historical context)."
+            ]
+          },
+          "patterns_found": [
+            "Historical Data",
+            "General Information",
+            "Facility Specifications"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1408,
+              "output_tokens": 257,
+              "elapsed_seconds": 34.01778292655945
+            }
+          ],
+          "reasoning": "The scraped content from demir-spor.com is a historical overview and general information page about Adana Demirspor. It covers history, stadium details, and fan groups. There are no signals related to procurement activities, technology stacks, job postings, or vendor partnerships. The content is static and informational, offering no actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:04:59.135560",
+          "domain_explored": "https://adanaspor.com.tr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:05:05.646776",
+          "domain_explored": "https://football.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Football Information",
+            "Wiki-based Content Aggregation",
+            "Fan Engagement Platform"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 185,
+              "elapsed_seconds": 3.5010688304901123
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of 'Football Wiki' (a Fandom community site). It contains navigation elements, generic calls to action for editors, and links to major leagues (Premier League, La Liga). There is no specific mention of Adana Demirspor, nor are there any procurement signals, technology stacks, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:05:11.884498",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-dean-holden-has-activity-7312495158481092608-LfFk",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Assistant Manager (Dean Holden) - Filled/Archived"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Management Personnel Changes",
+            "Third-Party Recruitment Announcements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1581,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.9433999061584473
+            }
+          ],
+          "reasoning": "The content reports a specific personnel appointment (Assistant Manager) via a third-party job board. While this confirms organizational activity and hiring capacity, it does not provide specific signals regarding technology procurement, RFPs, or digital transformation initiatives required for the current objective."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:05:18.335614",
+          "domain_explored": "https://www.linkedin.com/posts/transferroom-ltd_jobsinsport-careers-sportsbiz-activity-7083010058023755776-8vF6?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Vacancy: Sporting Director (Adana Demirspor)"
+            ],
+            "procurement_indicators": [
+              "Executive Departure (Muhammed T\u00fcrkmen) indicating potential upcoming strategic shifts or reorganization."
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Vacancy",
+            "Strategic Restructuring",
+            "Talent Acquisition Market Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.156893730163574
+            }
+          ],
+          "reasoning": "The content confirms a significant vacancy in Adana Demirspor's executive structure with the departure of the Sporting Director, Muhammed T\u00fcrkmen. While this is a personnel matter rather than a direct procurement event, high-level executive vacancies often trigger organizational reviews, new strategic initiatives, and subsequent vendor selection processes (e.g., recruitment agencies, consulting firms) once the role is filled."
+        }
+      ],
+      "total_input_tokens": 7488,
+      "total_output_tokens": 1194,
+      "estimated_cost_usd": 0.040374
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Adana Demirspor may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:05:18.337510"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.147408",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:14.191674"
+}

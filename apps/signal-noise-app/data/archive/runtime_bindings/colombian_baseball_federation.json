@@ -1,0 +1,343 @@
+{
+  "entity_id": "colombian_baseball_federation",
+  "entity_name": "Colombian Baseball Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseballdecuba.com",
+    "wbscamericas.org",
+    "baseballjapan.org",
+    "peace-sport.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/associate-software-engineer-baseball-enterprise-at-major-league-baseball-mlb-4344932833",
+      "https://www.linkedin.com/jobs/view/intern-baseball-operations-at-usa-baseball-4340945271",
+      "https://www.linkedin.com/jobs/view/office-services-lead-at-ricoh-colombia-4362366515",
+      "https://www.linkedin.com/jobs/view/applied-data-science-intern-%E2%80%93-generative-ai-at-ricoh-colombia-4308627844",
+      "https://ie.linkedin.com/jobs/jobs-in-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colombian_baseball_federation",
+      "entity_name": "Colombian Baseball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/office-services-lead-at-ricoh-colombia-4362366515",
+        "https://www.linkedin.com/jobs/view/intern-baseball-operations-at-usa-baseball-4340945271",
+        "https://www.linkedin.com/jobs/view/applied-data-science-intern-%E2%80%93-generative-ai-at-ricoh-colombia-4308627844",
+        "https://wbscamericas.org",
+        "https://baseballdecuba.com",
+        "https://ie.linkedin.com/jobs/jobs-in-worldwide",
+        "https://www.linkedin.com/jobs/view/associate-software-engineer-baseball-enterprise-at-major-league-baseball-mlb-4344932833",
+        "https://baseballjapan.org",
+        "https://peace-sport.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colombian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:37:41.813722",
+          "domain_explored": "https://baseballdecuba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports scoreboards",
+            "PDF document hosting (usrfiles.com)",
+            "Spanish language content (Cuban baseball context)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 191,
+              "elapsed_seconds": 2.7218918800354004
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive sports scoreboard data (game times, team codes like 'VCL', 'LTU', 'HOL') and links to PDF files hosted on a generic file-sharing service (usrfiles.com). There is no mention of the Colombian Baseball Federation, procurement processes, technology vendors, or organizational governance. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:37:44.934178",
+          "domain_explored": "https://wbscamericas.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:37:51.489985",
+          "domain_explored": "https://baseballjapan.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:37:59.492683",
+          "domain_explored": "https://peace-sport.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "NGO/Foundation content (Peace and Sport)",
+            "Event promotion (International Forum)",
+            "Ambassador programs (Champions for Peace)",
+            "General news/updates",
+            "Social media integration"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 214,
+              "elapsed_seconds": 4.115877151489258
+            }
+          ],
+          "reasoning": "The content is from 'Peace and Sport', a Monaco-based NGO/foundation. While it mentions 'Cop Colombia International' as a partner, the site itself is a promotional platform for peace-through-sport advocacy, events, and champions. It does not contain operational procurement signals, technology stacks, or governance structures relevant to the Colombian Baseball Federation's purchasing needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:38:09.256405",
+          "domain_explored": "https://www.linkedin.com/jobs/view/associate-software-engineer-baseball-enterprise-at-major-league-baseball-mlb-4344932833",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CI/CD",
+              "Observability (Logs, Metrics, Traces)",
+              "AI Code Assistants",
+              "APIs"
+            ],
+            "job_postings": [
+              {
+                "title": "Associate Software Engineer, Baseball Enterprise",
+                "entity": "Major League Baseball (MLB)",
+                "location": "Boulder, CO",
+                "salary": "$90,000 - $120,000/yr"
+              }
+            ],
+            "procurement_indicators": [
+              "Investment in 'Baseball Enterprise' core platforms",
+              "Focus on roster/player lifecycle management software",
+              "Broadcast and content operations tooling"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Major League Baseball - MLB)",
+            "Tech Stack: APIs, CI/CD, Observability, AI-assisted development",
+            "Role: Associate Software Engineer",
+            "Entity Mismatch: MLB vs. Colombian Baseball Federation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 387,
+              "elapsed_seconds": 5.909359931945801
+            }
+          ],
+          "reasoning": "The content provided is a job posting for Major League Baseball (MLB) based in Boulder, CO. While it contains strong procurement signals regarding software engineering and technology stacks (APIs, UIs, Observability), the entity is explicitly MLB, not the Colombian Baseball Federation. This indicates a false positive in the scraping/retrieval process relative to the target entity. There is no relevant information for the Colombian Baseball Federation in this text."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:38:16.029615",
+          "domain_explored": "https://www.linkedin.com/jobs/view/intern-baseball-operations-at-usa-baseball-4340945271",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Aggregation Page",
+            "Generic Search Results",
+            "Unrelated Entities (Tesla, HP, Coca-Cola)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1645,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.1474449634552
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for 'Operations Management Intern' roles. It lists opportunities for unrelated entities such as Tesla, HP, and Coca-Cola. There is no specific content regarding 'USA Baseball' or the 'Colombian Baseball Federation', nor are there any procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:38:24.775043",
+          "domain_explored": "https://www.linkedin.com/jobs/view/office-services-lead-at-ricoh-colombia-4362366515",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft Office (Word, Excel, PowerPoint)",
+              "Adobe",
+              "Legal Software"
+            ],
+            "job_postings": [
+              "Office Services Lead (Site Leader, Legal) at Ricoh Colombia"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Posting (Ricoh Colombia)",
+            "Managed Services / Facilities Management",
+            "Legal Industry Focus",
+            "Location Mismatch (New York, NY listed for Colombian entity)",
+            "LinkedIn Authentication Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1711,
+              "output_tokens": 243,
+              "elapsed_seconds": 5.125169277191162
+            }
+          ],
+          "reasoning": "The content is a job posting for Ricoh Colombia (an office equipment/services vendor) for a position based in New York, NY, focusing on legal office services. There is no connection to the Colombian Baseball Federation, sports governance, or relevant technology procurement for the target entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:38:33.423273",
+          "domain_explored": "https://www.linkedin.com/jobs/view/applied-data-science-intern-%E2%80%93-generative-ai-at-ricoh-colombia-4308627844",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AWS",
+              "Generative AI",
+              "Large Language Models (LLMs)",
+              "Retrieval-Augmented Generation (RAG)",
+              "Model Context Protocol (MCP)"
+            ],
+            "job_postings": [
+              "Applied Data Science Intern \u2013 Generative AI (Ricoh)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Job Posting (Ricoh USA/Colombia)",
+            "Internship Role (Data Science)",
+            "Tech Stack: AWS, Generative AI, RAG, LLMs",
+            "Location Mismatch (Boulder, CO vs Colombia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1784,
+              "output_tokens": 269,
+              "elapsed_seconds": 4.827367067337036
+            }
+          ],
+          "reasoning": "The content is a job posting for an Applied Data Science Intern role at Ricoh (referenced as Ricoh Colombia but located in Boulder, CO, USA). While it highlights advanced technology procurement (AWS, AI frameworks), the entity is Ricoh, a global managed services provider, not the Colombian Baseball Federation. There is no relevance to the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T13:38:44.506359",
+          "domain_explored": "https://ie.linkedin.com/jobs/jobs-in-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cabin Crew - flyadeal (Saudi Arabia)",
+              "Product Manager - Flipkart (India)",
+              "Area Business Manager - Aditya Birla Fashion (India)",
+              "Secretary - Sulaiman Al Rajhi University (Saudi Arabia)",
+              "Administrative Assistant - Asociaci\u00f3n Peruano Japonesa (Peru)",
+              "Receptionist - Senator Hotels (Spain)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Saudi Arabia, India, Peru, Spain)",
+            "Sector Mismatch (Aviation, Retail, Hospitality, Education)",
+            "High Volume / Low Specificity (8.8M+ jobs)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1844,
+              "output_tokens": 308,
+              "elapsed_seconds": 6.8058083057403564
+            }
+          ],
+          "reasoning": "The content represents a generic, high-volume job search results page with no filtering for the target entity (Colombian Baseball Federation) or relevant sectors. The listings are geographically dispersed (Saudi Arabia, India, Peru, Spain) and belong to unrelated industries (Aviation, Retail, Hospitality). There is zero signal relevance to Colombian baseball or procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 11395,
+      "total_output_tokens": 1790,
+      "estimated_cost_usd": 0.061035
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colombian Baseball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:38:44.509155"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.312901",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:30.144828"
+}

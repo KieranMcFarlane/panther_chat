@@ -1,0 +1,232 @@
+{
+  "entity_id": "brunei_darussalam_volleyball_association",
+  "entity_name": "Brunei Darussalam Volleyball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bruneiolympic.org",
+    "asianvolleyball.net",
+    "peak.com.bn",
+    "volleyballsa.com.au",
+    "isg-2025.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brunei_darussalam_volleyball_association",
+      "entity_name": "Brunei Darussalam Volleyball Association",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://peak.com.bn",
+        "https://asianvolleyball.net",
+        "https://volleyballsa.com.au",
+        "https://isg-2025.com",
+        "https://bruneiolympic.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brunei Darussalam Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:55:37.604204",
+          "domain_explored": "https://bruneiolympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Website Template/CMS (evidenced by 'Sample ADs' placeholders)",
+              "Web Analytics (Visitor counter)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Logistics & Contingent Management (SEA Games operations)",
+              "Marketing/Advertising Inventory (Placeholder ads suggest potential for sponsorship management procurement)",
+              "General Administrative Services (Secretariat/Medical personnel mentions)"
+            ]
+          },
+          "patterns_found": [
+            "High-visibility event management (SEA Games)",
+            "National Federation ecosystem presence",
+            "Content management system usage (Sample ADs placeholders)",
+            "Standard corporate governance structure (Vision/Mission/History)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 367,
+              "elapsed_seconds": 3.4897239208221436
+            }
+          ],
+          "reasoning": "While the content is from the National Olympic Council (BDNOC) rather than the Volleyball Association directly, it confirms the broader ecosystem and operational context. The presence of 'Sample ADs' placeholders indicates a website built on a template CMS, suggesting a need for basic web maintenance services. The heavy focus on the SEA Games contingent implies significant logistical and administrative activity, which often trickles down to member associations like the Volleyball Association in terms of equipment, travel, and kit procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:55:51.456331",
+          "domain_explored": "https://asianvolleyball.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Regional Federation News",
+            "High-level Strategic Coordination",
+            "Event Ecosystem Reporting"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 902,
+              "output_tokens": 192,
+              "elapsed_seconds": 2.9190824031829834
+            }
+          ],
+          "reasoning": "The content is a news report from the Asian Volleyball Confederation (AVC) regarding a high-level coordination meeting in Japan. While it establishes the regional ecosystem context, it contains no specific information regarding the Brunei Darussalam Volleyball Association's internal operations, technology needs, or procurement activities. It is a secondary source lacking direct signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:56:04.980808",
+          "domain_explored": "https://peak.com.bn",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Consumer-facing Website CMS",
+              "Membership Management Portal"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Membership Pricing Pages (Consumer Revenue)",
+              "Facility Booking Links (Operational)"
+            ]
+          },
+          "patterns_found": [
+            "B2C Consumer Focus",
+            "Hospitality & Lifestyle Services",
+            "Generic Facility Listings",
+            "Membership Sales Funnels"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 261,
+              "elapsed_seconds": 4.849902868270874
+            }
+          ],
+          "reasoning": "The analyzed content belongs to 'Peak Club', a private lifestyle and fitness center in Brunei. The content is entirely focused on B2C (Business-to-Consumer) activities such as gym memberships, family facilities, and recreational classes. There is no connection to the Brunei Darussalam Volleyball Association (BDVA), nor are there any B2B procurement signals, vendor solicitations, or governance-related technologies relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:56:17.733486",
+          "domain_explored": "https://volleyballsa.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic CMS (implied by structure)",
+              "Event Management Widgets (Countdown timers)",
+              "Social Media Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Local Sponsorship Agreements (Pelligra, Mahindra, Govt of South Australia)",
+              "Facility Rentals (Thebarton, CBC)",
+              "Grassroots Program Funding (Spikezone)"
+            ]
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (South Australia vs Brunei)",
+            "B2C Community Engagement Focus",
+            "Domestic Competition Management",
+            "Local Sponsorship Ecosystem"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1532,
+              "output_tokens": 352,
+              "elapsed_seconds": 3.973266839981079
+            }
+          ],
+          "reasoning": "The analyzed content is from Volleyball South Australia (Volleyball SA), a state-level governing body in Australia. While it shares the 'Volleyball Federation' archetype with the target entity (Brunei Darussalam Volleyball Association), the geographic disconnect (South Australia vs Brunei) renders the specific procurement signals (local sponsors like 'Nippy's', 'City of Holdfast Bay', and specific domestic competitions) irrelevant to the target. The site demonstrates standard federation operations (membership management, social leagues) but offers no intelligence on Brunei's specific vendor ecosystem or technology stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:56:30.466352",
+          "domain_explored": "https://isg-2025.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DAZN (Streaming Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Irrelevance (Saudi Arabia/Bahrain vs Brunei)",
+            "Sports Domain Mismatch (Handball/Camel Racing vs Volleyball)",
+            "Event-Specific Content (ISG 2025 Results)",
+            "Streaming Integration (DAZN)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.3015191555023193
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the results and news of the 2025 Islamic Solidarity Games in Riyadh (Handball, Camel Racing, Athletics). There is no mention of Brunei Darussalam, the Volleyball Association, or any procurement activities relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6876,
+      "total_output_tokens": 1370,
+      "estimated_cost_usd": 0.041178
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brunei Darussalam Volleyball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:56:30.467853"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.335091",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:28.172981"
+}

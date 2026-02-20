@@ -1,0 +1,442 @@
+{
+  "entity_id": "columbus_crew",
+  "entity_name": "Columbus Crew",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "columbuscrew.com",
+    "mlssoccer.com",
+    "foxsports.com",
+    "columbussoccershop.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/columbus-crew-jobs-columbus-oh",
+      "https://www.linkedin.com/jobs/view/manager-academy-operations-administration-at-columbus-crew-4367952382",
+      "https://www.linkedin.com/jobs/view/manager-corporate-partnerships-activation-at-columbus-crew-4345868006",
+      "https://www.linkedin.com/jobs/sports-jobs-columbus-oh",
+      "https://www.linkedin.com/jobs/view/director-corporate-partnerships-at-columbus-crew-4283084996",
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%9D%F0%9D%97%BC%F0%9D%97%AF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%81-columbus-crew-is-seeking-activity-7307788982287822848-vRAa",
+      "https://www.linkedin.com/posts/football-careers_%3F%3F%3F-%3F%3F%3F%3F%3F-columbus-crew-is-seeking-activity-7165744754830290944-HVDz",
+      "https://www.linkedin.com/jobs/partnerships-jobs-columbus-ohio-metropolitan-area"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "columbus_crew",
+      "entity_name": "Columbus Crew",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.22,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.1,
+        0.16,
+        0.16,
+        0.22
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/manager-academy-operations-administration-at-columbus-crew-4367952382",
+        "https://foxsports.com",
+        "https://mlssoccer.com",
+        "https://columbussoccershop.com",
+        "https://www.linkedin.com/jobs/sports-jobs-columbus-oh",
+        "https://columbuscrew.com",
+        "https://www.linkedin.com/jobs/view/director-corporate-partnerships-at-columbus-crew-4283084996",
+        "https://www.linkedin.com/jobs/view/manager-corporate-partnerships-activation-at-columbus-crew-4345868006",
+        "https://www.linkedin.com/jobs/columbus-crew-jobs-columbus-oh"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Academy operations management",
+        "Compliance and roster administration",
+        "Budget and financial reporting",
+        "Immigration and legal processing",
+        "Facility and security scheduling",
+        "Travel and logistics coordination",
+        "Homestay program management",
+        "Educational liaison duties",
+        "Partnership activation and fulfillment management",
+        "Budget allocation and cost tracking for client assets",
+        "Cross-functional collaboration (Digital, Marketing, Operations)",
+        "ROI reporting and performance measurement",
+        "Event logistics and VIP experience management",
+        "Cross-property sales strategy (Haslam Sports Group)",
+        "Complex rights package development",
+        "Long-form agreement negotiation",
+        "Custom presentation generation (Business Intelligence integration)",
+        "Integrated sponsorship sales"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Columbus Crew may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:25:08.184732",
+          "domain_explored": "https://columbuscrew.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports roster management",
+            "Event hosting operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 133,
+              "elapsed_seconds": 3.0112533569335938
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations (player transfers, contracts, match schedules). There are no signals related to corporate procurement, technology acquisition, or business infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:25:15.600969",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports roster management",
+            "Player transfer tracking",
+            "League-wide news aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.952002763748169
+            }
+          ],
+          "reasoning": "The scraped content from mlssoccer.com focuses exclusively on player transfers (Red Bull New York, Inter Miami, San Jose Earthquakes) and league sports news. There is no mention of Columbus Crew, nor are there any signals regarding business operations, technology procurement, or vendor management relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:25:21.863049",
+          "domain_explored": "https://foxsports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Live sports scores",
+            "Betting odds integration",
+            "Video streaming",
+            "General entertainment content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 167,
+              "elapsed_seconds": 3.213193893432617
+            }
+          ],
+          "reasoning": "The scraped content from foxsports.com is a consumer-facing media homepage featuring sports scores, news stories, and video highlights. It lacks any corporate governance, supplier relationship, or operational procurement data relevant to the Columbus Crew entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:25:28.744344",
+          "domain_explored": "https://columbussoccershop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (Inferred from URL structure /collections)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnerships: adidas, Sportiqe (Apparel manufacturing)",
+              "Inventory Procurement: 2025 season kits, 'OG Collection', 'Rekive base range'",
+              "Digital Commerce Infrastructure: Webstore maintenance and hosting"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce platform utilization (Shopify)",
+            "Merchandising and inventory management",
+            "Vendor partnership management (adidas, Sportiqe)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 964,
+              "output_tokens": 311,
+              "elapsed_seconds": 3.9090797901153564
+            }
+          ],
+          "reasoning": "The content confirms the operation of a direct-to-consumer (DTC) e-commerce channel (Columbus Soccer Shop). While this is primarily a consumer-facing site, it indicates procurement activities related to inventory management, supply chain logistics for physical goods, and the maintenance of an e-commerce platform (likely Shopify based on URL structure). The presence of specific vendor collections (adidas, Sportiqe) confirms active vendor partnerships for merchandise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:25:37.492823",
+          "domain_explored": "https://www.linkedin.com/jobs/columbus-crew-jobs-columbus-oh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Ticketing Systems (implied by 'Ticket Operations')",
+              "Workforce Management Tools"
+            ],
+            "job_postings": [
+              "Stadium Operations Assistant - Seasonal",
+              "Matchday Ticket Operations - Seasonal"
+            ],
+            "procurement_indicators": [
+              "Seasonal workforce procurement",
+              "Matchday consumables procurement",
+              "Ticketing platform maintenance/operations"
+            ]
+          },
+          "patterns_found": [
+            "Operational staffing (Stadium & Ticketing)",
+            "Event logistics management",
+            "Workforce management for matchday events"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1562,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.368214130401611
+            }
+          ],
+          "reasoning": "The content reveals active hiring for 'Stadium Operations Assistant' and 'Matchday Ticket Operations'. While these are operational roles rather than strategic procurement positions, they indicate active workforce management and potential procurement needs for event supplies, staffing services, or ticketing software support."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:25:44.683180",
+          "domain_explored": "https://www.linkedin.com/jobs/view/manager-academy-operations-administration-at-columbus-crew-4367952382",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Kitman (Team management)",
+              "Comet (Compliance/Registration)",
+              "US Soccer Connect (Registration)",
+              "Online administrative platforms (unspecified)"
+            ],
+            "job_postings": [
+              "Manager, Academy Operations & Administration"
+            ],
+            "procurement_indicators": [
+              "Budget center management and expense reporting",
+              "Immigration legal services (Visas, Green Cards)",
+              "Travel planning and execution services",
+              "Homestay family vetting and background checks",
+              "Educational software/services for online school management",
+              "Facility operations and security scheduling",
+              "Marketing services for host family recruitment"
+            ]
+          },
+          "patterns_found": [
+            "Academy operations management",
+            "Compliance and roster administration",
+            "Budget and financial reporting",
+            "Immigration and legal processing",
+            "Facility and security scheduling",
+            "Travel and logistics coordination",
+            "Homestay program management",
+            "Educational liaison duties"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1639,
+              "output_tokens": 438,
+              "elapsed_seconds": 3.5710830688476562
+            }
+          ],
+          "reasoning": "This job posting reveals significant administrative and operational complexity within the Columbus Crew Academy, indicating a need for robust software tools to manage rosters, compliance, budgets, and travel. The explicit mention of specific platforms like 'Kitman' and 'Comet' provides direct intelligence on their current technology stack. The role involves financial oversight and vendor management (travel, homestay), which are key procurement triggers."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:25:51.912865",
+          "domain_explored": "https://www.linkedin.com/jobs/view/manager-corporate-partnerships-activation-at-columbus-crew-4345868006",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CRM Software (implied for 'book of business' management)",
+              "Analytics/ROI Measurement Tools",
+              "Inventory Management Systems"
+            ],
+            "job_postings": [
+              "Manager, Corporate Partnerships Activation"
+            ],
+            "procurement_indicators": [
+              "Tracking and monitoring client's assets and monthly inventory needs",
+              "Manage partnership fulfillment costs and strategically allocate funds",
+              "Execution of partner activations, VIP experiences, and hospitality spaces",
+              "Compliance with team, stadium, and league guidelines"
+            ]
+          },
+          "patterns_found": [
+            "Partnership activation and fulfillment management",
+            "Budget allocation and cost tracking for client assets",
+            "Cross-functional collaboration (Digital, Marketing, Operations)",
+            "ROI reporting and performance measurement",
+            "Event logistics and VIP experience management"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1711,
+              "output_tokens": 411,
+              "elapsed_seconds": 3.6365692615509033
+            }
+          ],
+          "reasoning": "The job description for 'Manager, Corporate Partnerships Activation' reveals significant procurement and operational responsibilities. Specifically, the role requires tracking partnership fulfillment costs, strategically allocating funds to stay within budgets, and managing inventory needs for assets. This indicates a need for procurement of promotional materials, event services, and hospitality items. Additionally, the focus on ROI reporting suggests the use of analytics platforms to measure partnership effectiveness."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:26:03.657119",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-jobs-columbus-oh",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Live Breaker - Pok\u00e9mon (Midwest Cards)",
+              "Basketball Tournament Director (Prep Network)",
+              "Court Reporter (City of Lancaster)",
+              "Sport Coordinator Baseball (Columbus Zoo and Aquarium)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports market aggregation",
+            "Unrelated local sports entities (Columbus Zoo, Prep Network)",
+            "Retail card trading operations (Midwest Cards)",
+            "Public sector listings (City of Lancaster)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1788,
+              "output_tokens": 260,
+              "elapsed_seconds": 8.07262110710144
+            }
+          ],
+          "reasoning": "The search query for 'Sports jobs in Columbus' returned a broad set of results that are not specific to the entity 'Columbus Crew'. The listings include unrelated organizations such as the Columbus Zoo, Prep Network, and Midwest Cards. None of the visible content pertains to Columbus Crew's procurement, operations, or management."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:26:10.964994",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-corporate-partnerships-at-columbus-crew-4283084996",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Business Intelligence Tools (implied by 'internal business intelligence')",
+              "Presentation Software (likely Microsoft Office/Google Workspace)",
+              "CRM Systems (implied by 'pipeline of prospects')"
+            ],
+            "job_postings": [
+              "Director, Corporate Partnerships"
+            ],
+            "procurement_indicators": [
+              "Cross-property collaboration with Haslam Sports Group entities",
+              "Negotiation of long-term contracts and complex rights packages",
+              "Utilization of business intelligence for sales strategy",
+              "Management of partnership assets and inventory"
+            ]
+          },
+          "patterns_found": [
+            "Cross-property sales strategy (Haslam Sports Group)",
+            "Complex rights package development",
+            "Long-form agreement negotiation",
+            "Custom presentation generation (Business Intelligence integration)",
+            "Integrated sponsorship sales"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1869,
+              "output_tokens": 429,
+              "elapsed_seconds": 3.750793933868408
+            }
+          ],
+          "reasoning": "The job description for 'Director, Corporate Partnerships' reveals significant procurement and revenue operations. It explicitly mentions cross-property selling within the Haslam Sports Group (Cleveland Browns, Milwaukee Bucks), indicating a multi-entity procurement structure. The requirement to 'create custom presentations' using 'internal business intelligence' suggests the use of data analytics or BI tools for sales enablement. Furthermore, the responsibility for 'overseeing complex rights packages' and 'negotiating long-form agreements' points to a mature contract lifecycle and vendor management process."
+        }
+      ],
+      "total_input_tokens": 13731,
+      "total_output_tokens": 2595,
+      "estimated_cost_usd": 0.080118
+    },
+    "procurement_signals": [
+      "Academy operations management",
+      "Compliance and roster administration",
+      "Budget and financial reporting",
+      "Immigration and legal processing",
+      "Facility and security scheduling",
+      "Travel and logistics coordination",
+      "Homestay program management",
+      "Educational liaison duties",
+      "Partnership activation and fulfillment management",
+      "Budget allocation and cost tracking for client assets",
+      "Cross-functional collaboration (Digital, Marketing, Operations)",
+      "ROI reporting and performance measurement",
+      "Event logistics and VIP experience management",
+      "Cross-property sales strategy (Haslam Sports Group)",
+      "Complex rights package development",
+      "Long-form agreement negotiation",
+      "Custom presentation generation (Business Intelligence integration)",
+      "Integrated sponsorship sales"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Columbus Crew may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:26:10.965704"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.150905",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:28.804046"
+}

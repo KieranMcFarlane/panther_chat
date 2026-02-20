@@ -1,0 +1,239 @@
+{
+  "entity_id": "montpellier_hb",
+  "entity_name": "Montpellier HB",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "eurohandball.com",
+    "jak.ppke.hu",
+    "globalsportsarchive.com",
+    "ehfel.eurohandball.com",
+    "playmakerstats.com",
+    "sporting.pt",
+    "fcbarcelona.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "montpellier_hb",
+      "entity_name": "Montpellier HB",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ehfel.eurohandball.com",
+        "https://playmakerstats.com",
+        "https://globalsportsarchive.com",
+        "https://eurohandball.com",
+        "https://jak.ppke.hu",
+        "https://fcbarcelona.com",
+        "https://sporting.pt"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Montpellier HB may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:34:01.664732",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news content",
+            "Cookie consent walls",
+            "Generic event calendar listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 195,
+              "elapsed_seconds": 3.9776248931884766
+            }
+          ],
+          "reasoning": "The provided content is from the European Handball Federation's general news portal (eurohandball.com). It focuses on match results (Denmark, Croatia), player awards (Gidsel), and general EHF tournament calendars. There is no mention of the specific entity 'Montpellier HB', nor are there any signals regarding their internal procurement, technology stack, or governance. This is irrelevant noise for the specific target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:34:04.549560",
+          "domain_explored": "https://jak.ppke.hu",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:34:09.901057",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports navigation menu",
+            "League and competition listings",
+            "No entity-specific content",
+            "Static sports archive structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1435,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.0148298740386963
+            }
+          ],
+          "reasoning": "The content is a generic navigation menu for a sports statistics website (Global Sports Archive). It lists soccer leagues and competitions globally but contains zero information regarding Montpellier HB, procurement, technology stacks, or organizational governance. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:34:29.900293",
+          "domain_explored": "https://ehfel.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports league navigation menu",
+            "Repetitive match results and news headlines",
+            "E-commerce 'Shop Now' calls to action",
+            "General 'Become a Partner' non-specific CTAs"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1487,
+              "output_tokens": 209,
+              "elapsed_seconds": 16.71386694908142
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the EHF European League (a competition organizer), not the specific entity Montpellier HB. It contains generic match results, navigation for different leagues, and standard e-commerce/partnership links. There is no mention of Montpellier HB, nor are there specific procurement signals, technology stacks, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:34:32.739700",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:34:39.079609",
+          "domain_explored": "https://sporting.pt",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Sporting CP vs Montpellier HB)",
+            "Generic Sports Navigation",
+            "Match Fixtures and Results",
+            "Ticketing Shop Links"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1573,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.970029830932617
+            }
+          ],
+          "reasoning": "The scraped content is from Sporting CP (sporting.pt), a Portuguese football club, which is completely unrelated to the target entity Montpellier HB (a French handball club). The content consists of standard sports team website elements like match schedules, ticket sales, and news headlines. There are no procurement signals or technology stack indicators relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:35:06.181835",
+          "domain_explored": "https://fcbarcelona.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (FC Barcelona vs Montpellier HB)",
+            "Generic Sports Navigation (Tickets, Shop, Teams)",
+            "E-commerce Calls to Action (Shop Now, Store)",
+            "Fan Engagement Content (News, Draws, Culers Community)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1626,
+              "output_tokens": 221,
+              "elapsed_seconds": 23.889741897583008
+            }
+          ],
+          "reasoning": "The scraped content is exclusively from FC Barcelona's official website (fcbarcelona.com). This represents a complete entity mismatch with the target entity, Montpellier HB. The content consists of standard sports team website elements: match calendars, ticket sales, merchandise shops, and fan news. There are no procurement signals, technology stacks, or governance patterns relevant to Montpellier HB."
+        }
+      ],
+      "total_input_tokens": 7478,
+      "total_output_tokens": 1000,
+      "estimated_cost_usd": 0.037433999999999995
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Montpellier HB may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:35:06.182783"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.347284",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:00:17.659286"
+}

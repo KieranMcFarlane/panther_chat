@@ -1,0 +1,150 @@
+{
+  "entity_id": "lg_twins",
+  "entity_name": "LG Twins",
+  "template_id": "tpl_top_5_league_clubs_v1",
+  "cluster_id": "tier_1_professional_clubs",
+  "discovered_domains": [
+    "lgtwins.com",
+    "eng.koreabaseball.com",
+    "mykbostats.com",
+    "globalsportsarchive.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "lg_twins",
+      "entity_name": "LG Twins",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://eng.koreabaseball.com",
+        "https://mykbostats.com",
+        "https://globalsportsarchive.com",
+        "https://lgtwins.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "LG Twins may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:00:52.723070",
+          "domain_explored": "https://lgtwins.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Single Page Application (SPA) architecture",
+              "CRM (Customer Relationship Management)",
+              "Ticketing System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "2026 Season Ticket Sales (Corporate & Individual)",
+              "Annual Membership Recruitment Campaign",
+              "Event Management Operations (BBQ, Fan Parties)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform Usage",
+            "Membership Management Systems",
+            "Event Ticketing & Registration",
+            "Corporate Sales Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 315,
+              "elapsed_seconds": 10.324265003204346
+            }
+          ],
+          "reasoning": "The content reveals active use of digital platforms for membership management ('2026 \uc5f0\uac04\ud68c\uc6d0 \ubaa8\uc9d1'), event registration ('\ud32c \ub9e5\uc8fc \ud30c\ud2f0 \uc2e0\uccad'), and content distribution ('\ucf58\ud150\uce20 \uc774\uc6a9 \uac00\uc774\ub4dc'). While no explicit RFPs are visible, the reliance on web-based CRM and ticketing systems to manage season tickets (corporate and individual) and events indicates a functional need for these technologies. The presence of 'javascript:void(0)' links suggests a Single Page Application (SPA) architecture, likely built with a modern JS framework."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:00:56.546575",
+          "domain_explored": "https://eng.koreabaseball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:00:59.401771",
+          "domain_explored": "https://mykbostats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:01:05.624547",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Data Aggregation",
+            "Global League Listings"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.6744611263275146
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com represents a generic sitemap or navigation list for global soccer leagues (UEFA, AFC, CONCACAF, etc.). It contains no specific references to the LG Twins, KBO (Korean Baseball Organization), or any procurement-related activities such as RFPs, technology investments, or vendor partnerships. The content is entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2818,
+      "total_output_tokens": 494,
+      "estimated_cost_usd": 0.015864
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "LG Twins may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:01:05.627317"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309674",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:05.407427"
+}

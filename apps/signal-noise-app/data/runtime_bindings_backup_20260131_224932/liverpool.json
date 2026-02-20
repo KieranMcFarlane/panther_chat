@@ -1,0 +1,76 @@
+{
+  "entity_id": "liverpool",
+  "entity_name": "Liverpool",
+  "template_id": "top_tier_club_global",
+  "discovered_at": "2026-01-30T14:59:05.460958Z",
+  "domains": [
+    "liverpool.com",
+    "www.liverpool.com"
+  ],
+  "channels": {
+    "jobs": "linkedin.com/jobs@liverpool",
+    "careers": "liverpool.com/careers",
+    "news": "liverpool.com/news",
+    "press": "liverpool.com/press"
+  },
+  "patterns": {
+    "Digital Infrastructure & Stack": {
+      "patterns_found": [
+        "API modernization",
+        "New ticketing system",
+        "Cloud migration",
+        "Mobile app revamp"
+      ],
+      "iterations_used": 25,
+      "confidence": 0.76,
+      "accept_rate": 0.93
+    },
+    "Commercial & Revenue Systems": {
+      "patterns_found": [
+        "Hospitality booking system",
+        "Digital advertising platform",
+        "Merchandise platform",
+        "Sponsorship tech integration"
+      ],
+      "iterations_used": 17,
+      "confidence": 0.76,
+      "accept_rate": 0.84
+    },
+    "Fan Engagement & Experience": {
+      "patterns_found": [
+        "Gamification platform",
+        "Social media integration"
+      ],
+      "iterations_used": 19,
+      "confidence": 0.83,
+      "accept_rate": 0.85
+    },
+    "Data & Analytics": {
+      "patterns_found": [
+        "Business intelligence dashboard",
+        "Data warehouse implementation"
+      ],
+      "iterations_used": 17,
+      "confidence": 0.82,
+      "accept_rate": 0.82
+    },
+    "Operations & Stadium": {
+      "patterns_found": [
+        "Smart ticketing gates",
+        "Venue management system",
+        "Stadium Wi-Fi upgrade",
+        "Security surveillance system"
+      ],
+      "iterations_used": 21,
+      "confidence": 0.8,
+      "accept_rate": 0.91
+    }
+  },
+  "performance_metrics": {
+    "total_iterations": 30,
+    "categories_discovered": 5,
+    "overall_confidence": 0.79,
+    "total_cost_usd": 0.75
+  },
+  "next_refresh": "2026-01-30T14:59:05.460961Z"
+}

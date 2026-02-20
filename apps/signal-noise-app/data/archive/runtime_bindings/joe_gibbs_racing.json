@@ -1,0 +1,338 @@
+{
+  "entity_id": "joe_gibbs_racing",
+  "entity_name": "Joe Gibbs Racing",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "joegibbsracing.com",
+    "shopjgr.com",
+    "latino.nascar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7391480441788063744-mAsf",
+      "https://www.linkedin.com/jobs/view/team-mechanic-at-joe-gibbs-racing-4346063513",
+      "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7373726611252215808-_voX",
+      "https://www.linkedin.com/jobs/view/communications-manager-at-joe-gibbs-racing-4346034647",
+      "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7273389350711656449-Law3"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "joe_gibbs_racing",
+      "entity_name": "Joe Gibbs Racing",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.12000000000000001,
+        0.14
+      ],
+      "explored_domains": [
+        "https://shopjgr.com",
+        "https://www.linkedin.com/jobs/view/communications-manager-at-joe-gibbs-racing-4346034647",
+        "https://latino.nascar.com",
+        "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7391480441788063744-mAsf",
+        "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7373726611252215808-_voX",
+        "https://joegibbsracing.com",
+        "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7273389350711656449-Law3",
+        "https://www.linkedin.com/jobs/view/team-mechanic-at-joe-gibbs-racing-4346063513"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Specialized Engineering Talent Acquisition",
+        "Simulation & Analysis Software Procurement",
+        "High-Performance Computing Infrastructure",
+        "Technical Leadership Expansion"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Joe Gibbs Racing may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:58:17.495357",
+          "domain_explored": "https://joegibbsracing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (ShopJGR.com)",
+              "Content Management System (CMS) for news/schedules"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship acquisition: United Rentals, Bennett Transportation & Logistics, Focused Health",
+              "Logistics/Travel procurement: High volume of event travel (Daytona, Atlanta, Nashville, etc.)",
+              "Retail operations: Merchandising and e-commerce infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Procurement (B2B Partnership)",
+            "E-commerce Integration",
+            "Event Logistics & Travel"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1294,
+              "output_tokens": 291,
+              "elapsed_seconds": 3.9458329677581787
+            }
+          ],
+          "reasoning": "The content is primarily marketing-oriented (About Us, Schedule, News). However, the '2026 Schedule' reveals specific named sponsors (e.g., United Rentals, Bennett Transportation, Focused Health) which indicates active procurement of B2B services and logistics partnerships. The presence of a 'Shop Now' link confirms an e-commerce operation requiring platform maintenance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:58:25.050465",
+          "domain_explored": "https://shopjgr.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Likely Shopify or Magento based on structure)",
+              "Payment Gateway Integration",
+              "Inventory Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Apparel Sourcing (Hats, Tees, Jackets)",
+              "Licensed Manufacturing (Die-cast models, e.g., Lionel Racing)",
+              "Third-party Logistics (Shipping/fulfillment for online orders)",
+              "Retail Merchandising (Point of Sale displays, Lobby shop)"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Merchandise Inventory Management",
+            "Supply Chain for Die-cast Models",
+            "Direct-to-Consumer (DTC) Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 316,
+              "elapsed_seconds": 4.082215785980225
+            }
+          ],
+          "reasoning": "The content represents the primary e-commerce storefront for Joe Gibbs Racing. While it does not contain explicit procurement language (like RFPs), it confirms active procurement categories: physical inventory (apparel, die-casts), manufacturing partners (Castore), and logistics for DTC shipping. The presence of 'Sheetmetal' and 'Diecasts' indicates a supply chain for collectibles."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:58:27.859626",
+          "domain_explored": "https://latino.nascar.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:58:36.650892",
+          "domain_explored": "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7391480441788063744-mAsf",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Vehicle Simulation Software",
+              "Data Analysis Platforms",
+              "Telemetry Systems",
+              "CAD/CAE Tools"
+            ],
+            "job_postings": [
+              "Director of Performance Engineering"
+            ],
+            "procurement_indicators": [
+              "Expansion of engineering simulation capabilities",
+              "Investment in analytical tool stacks",
+              "Infrastructure support for multidisciplinary engineering groups"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Engineering Talent Acquisition",
+            "Simulation & Analysis Software Procurement",
+            "High-Performance Computing Infrastructure",
+            "Technical Leadership Expansion"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1513,
+              "output_tokens": 352,
+              "elapsed_seconds": 5.529936075210571
+            }
+          ],
+          "reasoning": "The job posting for a Director of Performance Engineering is a strong procurement signal. This leadership role explicitly oversees 'simulation development' and 'vehicle performance analysis,' indicating a need for advanced CAE (Computer-Aided Engineering) software, CFD (Computational Fluid Dynamics) tools, and data telemetry infrastructure. The requirement for 'robust engineering processes' suggests potential investment in PLM (Product Lifecycle Management) or project management tools. This is a direct signal of technical infrastructure expansion."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:58:43.814967",
+          "domain_explored": "https://www.linkedin.com/jobs/view/team-mechanic-at-joe-gibbs-racing-4346063513",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Login Wall / Gated Content",
+            "Unrelated Industry Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.6214468479156494
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for 'Mechanical Technician' roles, not a specific job posting for Joe Gibbs Racing (JGR). The content lists unrelated companies (ThisWay Global, Breeze Airways) and is obscured by repeated login prompts. There is no text specific to JGR's operations, requirements, or procurement needs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:58:49.869835",
+          "domain_explored": "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7373726611252215808-_voX",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs",
+              "ATS (Applicant Tracking System)"
+            ],
+            "job_postings": [
+              "General Hiring Campaign"
+            ],
+            "procurement_indicators": [
+              "HR Software Subscription",
+              "Recruitment Marketing Spend"
+            ]
+          },
+          "patterns_found": [
+            "ATS (Applicant Tracking System) Usage",
+            "Talent Acquisition Pipeline",
+            "Employer Branding Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1657,
+              "output_tokens": 232,
+              "elapsed_seconds": 2.7293481826782227
+            }
+          ],
+          "reasoning": "While the specific content is a generic 'We're Hiring' wrapper post, it confirms the active use of a centralized careers platform (LinkedIn Jobs / ATS) and a structured hiring pipeline. It validates the 'HR/Talent Acquisition' vector but offers no specific technical procurement details (like specific software stacks) within this text."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:58:58.257010",
+          "domain_explored": "https://www.linkedin.com/jobs/view/communications-manager-at-joe-gibbs-racing-4346034647",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Login Wall / Gated Content",
+            "Unrelated Industry Listings"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1725,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.9082658290863037
+            }
+          ],
+          "reasoning": "The content provided is a generic LinkedIn job aggregation page for 'Senior Communications Manager' roles. It lists positions for Roku, Freshworks, Wrike, and Dyson, but contains no specific information regarding a Joe Gibbs Racing (JGR) opening. The URL suggests a specific JGR posting, but the scraped content is a generic search results page, likely due to a redirect or expiration. No procurement signals specific to JGR are present."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:59:08.148870",
+          "domain_explored": "https://www.linkedin.com/posts/joe-gibbs-racing_careers-at-jgr-joe-gibbs-racing-activity-7273389350711656449-Law3",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Recruiting)"
+            ],
+            "job_postings": [
+              "General Hiring Call (Multiple Openings)"
+            ],
+            "procurement_indicators": [
+              "Active Workforce Expansion",
+              "HRIS / Onboarding Software Usage (Inferred)"
+            ]
+          },
+          "patterns_found": [
+            "Talent Acquisition Pipeline",
+            "Employer Branding Strategy",
+            "Recruitment Funnel Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1795,
+              "output_tokens": 253,
+              "elapsed_seconds": 6.38405704498291
+            }
+          ],
+          "reasoning": "The content is a high-level recruitment announcement ('We have several job openings') that acts as a funnel to a careers portal. While it confirms active hiring (which implies future procurement needs for onboarding, HRIS, and equipment), the content itself is generic and does not specify the technologies or job roles required to derive specific procurement signals. It is accepted weakly as it validates the 'growth' signal."
+        }
+      ],
+      "total_input_tokens": 10980,
+      "total_output_tokens": 1817,
+      "estimated_cost_usd": 0.060195
+    },
+    "procurement_signals": [
+      "Specialized Engineering Talent Acquisition",
+      "Simulation & Analysis Software Procurement",
+      "High-Performance Computing Infrastructure",
+      "Technical Leadership Expansion"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Joe Gibbs Racing may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:59:08.150649"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.365215",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:43:08.213582"
+}

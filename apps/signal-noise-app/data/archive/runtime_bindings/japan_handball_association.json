@@ -1,0 +1,132 @@
+{
+  "entity_id": "japan_handball_association",
+  "entity_name": "Japan Handball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "handball.or.jp",
+    "byokaneworld.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "japan_handball_association",
+      "entity_name": "Japan Handball Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://handball.or.jp",
+        "https://byokaneworld.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Japan Handball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:01:48.686520",
+          "domain_explored": "https://handball.or.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platforms (implied by 'League H' and 'Ticket' links)",
+              "CRM / Fan Club Management Software (implied by 'Official Fan Club')",
+              "Web CMS (for news and match report management)",
+              "Video Streaming / Hosting (for '100th Anniversary Movie')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization: 'All Japan Social Handball Challenge 2026' and 'Beach Hand Fest' (Vendor procurement for event logistics/production)",
+              "Sponsorship Management: 'Presented by ENEOS' (Partnership activation services)",
+              "Media Production: '100th Anniversary Movie' (Creative agency procurement)",
+              "Medical/Compliance: 'Anti-Doping', 'Medical', 'Compliance Declaration' (Specialized software or consulting services)"
+            ]
+          },
+          "patterns_found": [
+            "Event Management & Ticketing Operations",
+            "Sponsorship & Partnership Activation",
+            "Digital Content & Media Production",
+            "Governance & Compliance Frameworks"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 475,
+              "elapsed_seconds": 3.763476848602295
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage news feed and navigation menu of the Japan Handball Association. While it does not contain explicit RFPs or job postings, it reveals active operational areas that drive procurement. Specifically, the management of 'League H', ticketing operations, and the 'Official Fan Club' suggests a need for CRM and ticketing platforms. The 'Beach Hand Fest Presented by ENEOS' indicates active sponsorship management requiring marketing tools. The presence of 'Compliance', 'Anti-Doping', and 'Medical' sections suggests governance software or specialized consulting procurement. The '100th Anniversary Movie' indicates a need for creative agency services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:02:06.265193",
+          "domain_explored": "https://byokaneworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "FA (Factory Automation)",
+              "MIM (Metal Injection Molding)",
+              "Die Casting",
+              "Cold Forging"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global procurement needs (sourcing/sales)",
+              "Vendor awards (Ricoh Group Supplier Award)",
+              "Manufacturing facility expansion (India/Vietnam)"
+            ]
+          },
+          "patterns_found": [
+            "Manufacturing & Industrial Components",
+            "Global Supply Chain Management",
+            "B2B Sales & Distribution"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 265,
+              "elapsed_seconds": 7.57819390296936
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Tokyo Byokan' (Tokyo Byokan Co., Ltd.), a manufacturer of precision screws and metal components, not the Japan Handball Association. The entity is a B2B industrial supplier with no apparent connection to sports administration, event management, or handball operations. This constitutes a false positive in the scraping process."
+        }
+      ],
+      "total_input_tokens": 2783,
+      "total_output_tokens": 740,
+      "estimated_cost_usd": 0.019449
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Japan Handball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:02:06.266590"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361868",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:20:51.638757"
+}

@@ -1,0 +1,163 @@
+{
+  "entity_id": "alvark_tokyo",
+  "entity_name": "Alvark Tokyo",
+  "template_id": "tpl_c4_high_fidelity_league_entities_v1",
+  "cluster_id": "bb_apac_corp_league",
+  "discovered_domains": [
+    "alvark-tokyo.jp",
+    "en.sports-tokyo-info.metro.tokyo.lg.jp",
+    "bleague-shop.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "alvark_tokyo",
+      "entity_name": "Alvark Tokyo",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+        "https://bleague-shop.jp",
+        "https://alvark-tokyo.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Alvark Tokyo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:37:42.065059",
+          "domain_explored": "https://alvark-tokyo.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Official Mobile App (Fan Club integration)",
+              "YouTube (Content distribution)",
+              "Online Shop (E-commerce platform)",
+              "NEOBANK (Financial services partnership)"
+            ],
+            "job_postings": [
+              "Staff Recruitment (General link present, no specific roles listed in snippet)"
+            ],
+            "procurement_indicators": [
+              "Fan Club 2025-26 Membership System (Active)",
+              "Hospitality Packages (Sales operations)",
+              "Online Shop Operations",
+              "Digital Content Creation (Video production)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform Integration",
+            "Digital Content Production",
+            "Hospitality & Ticketing Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 335,
+              "elapsed_seconds": 4.682633876800537
+            }
+          ],
+          "reasoning": "The content reveals a mature digital ecosystem including a dedicated 'Official App' with Fan Club linkage, a 'NEOBANK' financial service integration, and active digital media production (YouTube, 'THE FOCUS' documentaries). While no explicit RFP is present, the complexity of the 'Fan Club 2025-26' and 'Hospitality Package' sections indicates a reliance on CRM and ticketing platforms that require maintenance or vendor support."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:37:52.428246",
+          "domain_explored": "https://en.sports-tokyo-info.metro.tokyo.lg.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "World Athletics Championships Tokyo 2025 (Event context only)",
+              "Sports volunteer information (Public sector)",
+              "Facility administrative information (Public sector)"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector Information Portal",
+            "General Sports Promotion",
+            "Legacy Event Management (World Athletics 2025)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 297,
+              "elapsed_seconds": 2.9981818199157715
+            }
+          ],
+          "reasoning": "The analyzed content belongs to the Tokyo Metropolitan Government's 'Office for Sports Promotion' (Sports TOKYO Information). This is a public sector information portal designed to disseminate general sports news, facility information, and volunteer opportunities. While it mentions major events like the World Athletics Championships Tokyo 2025, it acts as a media/educational resource rather than a corporate procurement entity for Alvark Tokyo. There is no direct commercial relationship, vendor solicitation, or corporate technology stack information relevant to Alvark Tokyo's procurement needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:38:12.634633",
+          "domain_explored": "https://bleague-shop.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic E-commerce Platform (Likely SaaS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide vendor contract for merchandising platform"
+            ]
+          },
+          "patterns_found": [
+            "League-Level Aggregation",
+            "Generic E-commerce Catalog",
+            "Merchandise Fulfillment"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 264,
+              "elapsed_seconds": 12.052078247070312
+            }
+          ],
+          "reasoning": "The target URL (bleague-shop.jp) is the B.LEAGUE's official centralized online store, not a proprietary platform operated by Alvark Tokyo. While Alvark merchandise is likely hosted here, the site represents a league-wide vendor relationship (likely with a platform provider like Shopify or a local Japanese e-commerce vendor) rather than a direct procurement signal from Alvark Tokyo itself. The content focuses on consumer goods (apparel, towels, accessories) and lacks corporate governance, technology stack, or RFP data relevant to Alvark's internal procurement."
+        }
+      ],
+      "total_input_tokens": 4240,
+      "total_output_tokens": 896,
+      "estimated_cost_usd": 0.026160000000000003
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Alvark Tokyo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:38:12.636340"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216811",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:42.187224"
+}

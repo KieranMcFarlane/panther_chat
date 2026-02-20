@@ -1,0 +1,188 @@
+{
+  "entity_id": "handebol_londrina",
+  "entity_name": "Handebol Londrina",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "blog.londrina.pr.gov.br",
+    "grokipedia.com",
+    "londrinaesporteclube.com.br",
+    "playmakerstats.com",
+    "temlondrina.com.br",
+    "sofascore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "handebol_londrina",
+      "entity_name": "Handebol Londrina",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://temlondrina.com.br",
+        "https://playmakerstats.com",
+        "https://grokipedia.com",
+        "https://sofascore.com",
+        "https://londrinaesporteclube.com.br",
+        "https://blog.londrina.pr.gov.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Handebol Londrina may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:43:07.038752",
+          "domain_explored": "https://blog.londrina.pr.gov.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ISS Digital (Tax system modernization)",
+              "Digital Systems (General municipal modernization)"
+            ],
+            "job_postings": [
+              "Mutir\u00e3o de Aprendizagem (Youth Apprenticeship Drive)",
+              "618 Opportunities in Londrina (General Market)",
+              "Training for Municipal Guards"
+            ],
+            "procurement_indicators": [
+              "Modernization of tax systems (ISS Digital)",
+              "School/CMEI infrastructure improvements",
+              "Support for 'Mulher Empreendedora' (Vendor ecosystem)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Digital Transformation (ISS Digital)",
+            "Public Sector Hiring & Training (Mutir\u00f5es, Job Generation)",
+            "Sports Infrastructure Usage (APVE Londrina Basketball)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 359,
+              "elapsed_seconds": 4.592549800872803
+            }
+          ],
+          "reasoning": "While the content is from the general city blog and not specific to 'Handebol Londrina', it reveals a strong municipal context for digital transformation (ISS Digital) and sports development (APVE Basketball). The 'ISS Digital' implementation indicates a budget and willingness for modernization, which increases the probability of similar investments in sports management technologies. The mention of APVE Basketball suggests an active ecosystem for team-based sports, validating the market context."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:43:09.851501",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:43:24.048372",
+          "domain_explored": "https://londrinaesporteclube.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Coordinator for Youth Categories (Germano) - Football specific"
+            ],
+            "procurement_indicators": [
+              "Ticketing platform usage (Ingressos dispon\u00edveis)",
+              "Stadium operations (Est\u00e1dio do Caf\u00e9)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Operations (Londrina Esporte Clube - Football)",
+            "Ticket Sales Management",
+            "Match Day Logistics"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 260,
+              "elapsed_seconds": 7.679688930511475
+            }
+          ],
+          "reasoning": "The content analyzed is from 'Londrina Esporte Clube' (LEC), a professional football (soccer) club website, not 'Handebol Londrina' (a handball entity). While both are sports organizations in Londrina, they are distinct legal entities with different procurement needs. The content focuses exclusively on football match results, ticket sales, and player management, which are irrelevant to the specific procurement intelligence target for Handebol Londrina."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:43:26.931204",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:43:31.503920",
+          "domain_explored": "https://temlondrina.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:43:35.411577",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2821,
+      "total_output_tokens": 619,
+      "estimated_cost_usd": 0.017748
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Handebol Londrina may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:43:35.412575"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.358299",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:49.412837"
+}

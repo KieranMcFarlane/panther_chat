@@ -1,0 +1,255 @@
+{
+  "entity_id": "brunei_darussalam_basketball_association",
+  "entity_name": "Brunei Darussalam Basketball Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bruneiolympic.org",
+    "borneo363.rssing.com",
+    "acronymattic.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://mm.linkedin.com/jobs/view/looking-for-multi-sports-coach-at-psinternational-academy-brunei-4206258379",
+      "https://bn.linkedin.com/jobs/view/head-of-pe-and-sports-at-tes-fe-news-4307978599",
+      "https://bn.linkedin.com/jobs/view/pe-and-sports-teacher-at-tes-fe-news-4307978597",
+      "https://www.linkedin.com/jobs/view/4343404283/"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "brunei_darussalam_basketball_association",
+      "entity_name": "Brunei Darussalam Basketball Association",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://bn.linkedin.com/jobs/view/pe-and-sports-teacher-at-tes-fe-news-4307978597",
+        "https://borneo363.rssing.com",
+        "https://www.linkedin.com/jobs/view/4343404283/",
+        "https://mm.linkedin.com/jobs/view/looking-for-multi-sports-coach-at-psinternational-academy-brunei-4206258379",
+        "https://bruneiolympic.org",
+        "https://acronymattic.com",
+        "https://bn.linkedin.com/jobs/view/head-of-pe-and-sports-at-tes-fe-news-4307978599"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Brunei Darussalam Basketball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:30:12.491674",
+          "domain_explored": "https://bruneiolympic.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "BDNOC Funding Section: Indicates a centralized budget distribution mechanism which National Sports Associations (like BDBA) rely on.",
+              "Sports Organisations Menu: Confirms BDBA is a constituent member, implying shared governance or procurement platforms.",
+              "Event Management: High frequency of news regarding SEA Games and athlete logistics suggests ongoing demand for event management software, travel services, and medical support equipment."
+            ]
+          },
+          "patterns_found": [
+            "Funding Dependency",
+            "Sports Federation Hierarchy",
+            "Event Management Activity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 342,
+              "elapsed_seconds": 5.816461086273193
+            }
+          ],
+          "reasoning": "While the content is primarily news and not a direct procurement source, it confirms the Brunei Darussalam Basketball Association (BDBA) operates under the governance of the Brunei Darussalam National Olympic Council (BDNOC). The presence of a 'BDNOC Funding' section and 'Sports Organisations' menu indicates a centralized funding and support model. This suggests BDBA is a beneficiary of BDNOC's resource allocation, making BDNOC a key stakeholder or potential procurement channel for technology and services intended for BDBA."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:30:23.437497",
+          "domain_explored": "https://borneo363.rssing.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevant Content (Astronomy, Banking, Traffic Accidents)",
+            "Lack of Target Entity Specificity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.987563133239746
+            }
+          ],
+          "reasoning": "The provided content is a general RSS feed snapshot from the Borneo Bulletin (dated April 2021). It contains generic local news articles about astronomy, banking, traffic accidents, and community events. There is absolutely no mention of the Brunei Darussalam Basketball Association (BDBA), nor are there any procurement signals, job postings, or technology investments relevant to the target entity. The content is noise relative to the objective."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:30:55.364820",
+          "domain_explored": "https://acronymattic.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Dictionary Content",
+            "Irrelevant Navigation Structure",
+            "Lack of Entity Specificity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1102,
+              "output_tokens": 166,
+              "elapsed_seconds": 28.114982843399048
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage text for 'Acronym Attic', a dictionary website. It contains no information regarding the Brunei Darussalam Basketball Association, its procurement activities, or its technology stack. The text is purely navigational and promotional for the acronym service itself."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:31:06.514127",
+          "domain_explored": "https://mm.linkedin.com/jobs/view/looking-for-multi-sports-coach-at-psinternational-academy-brunei-4206258379",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Multi-Sports Coach",
+                "entity": "PISA Academy (PSInternational Academy)",
+                "relevance_to_target": "Low - Tangential industry (Sports) but wrong entity",
+                "procurement_relevance": "None - Direct hiring"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Private Sector Recruitment",
+            "Operational Role (Coaching)",
+            "Generic Email Contact"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 294,
+              "elapsed_seconds": 7.581651210784912
+            }
+          ],
+          "reasoning": "The content is a job posting for 'PISA Academy' (PSInternational Academy), a private sports academy, not the Brunei Darussalam Basketball Association (BDBA). While the job description mentions basketball coaching, it is a direct hiring role for service delivery (coaching youth), not a procurement signal for BDBA. The contact method is a generic Gmail address, indicating a lack of corporate procurement infrastructure. There is no evidence of BDBA purchasing technology, services, or goods."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:31:09.828011",
+          "domain_explored": "https://bn.linkedin.com/jobs/view/head-of-pe-and-sports-at-tes-fe-news-4307978599",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:31:13.229243",
+          "domain_explored": "https://bn.linkedin.com/jobs/view/pe-and-sports-teacher-at-tes-fe-news-4307978597",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:31:25.517653",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4343404283/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AI technologies",
+              "Machine Learning"
+            ],
+            "job_postings": [
+              "Country Operations Specialist at Stats Perform"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Private Sector Recruitment",
+            "Geographic Irrelevance (Kuala Lumpur vs Brunei)",
+            "Operational Role (Data Collection Management)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1685,
+              "output_tokens": 240,
+              "elapsed_seconds": 8.795342922210693
+            }
+          ],
+          "reasoning": "The content is a job posting for 'Stats Perform', a private sports technology company, for a position based in Kuala Lumpur, Malaysia. There is no relation to the Brunei Darussalam Basketball Association (BDBA) or procurement activities within Brunei. The role involves managing freelance data collectors, which is an operational expense for the vendor, not a procurement signal for the target entity."
+        }
+      ],
+      "total_input_tokens": 7123,
+      "total_output_tokens": 1251,
+      "estimated_cost_usd": 0.040134
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Brunei Darussalam Basketball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:31:25.519428"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.255148",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:24:34.074959"
+}

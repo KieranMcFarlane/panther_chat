@@ -1,0 +1,437 @@
+{
+  "entity_id": "kick_sauber_f1_team",
+  "entity_name": "Kick Sauber F1 Team",
+  "template_id": "tpl_motorsport_privateer_teams_v1",
+  "cluster_id": "motorsport_privateer_teams",
+  "discovered_domains": [
+    "f1store.formula1.com",
+    "fuelforfans.com",
+    "lego.saudiblocks.com",
+    "extremenetworks.com",
+    "drivenby.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ge.linkedin.com/jobs/view/machine-learning-engineer-remote-at-libertex-group-4360965651",
+      "https://am.linkedin.com/jobs/view/marketing-automation-manager-relocation-to-montenegro-or-remote-at-libertex-group-4304123000?refId=emu94paB5WTkW7dWiIFMlQ%3D%3D&trackingId=%2FbYnFgbpmOC4VVeJY5BI0g%3D%3D",
+      "https://ge.linkedin.com/jobs/view/front-end-engineer-remote-or-relocation-to-montenegro-at-libertex-group-4360809402",
+      "https://www.linkedin.com/jobs/view/junior-risk-payment-business-liaison-part-time-at-libertex-group-4348342949",
+      "https://ge.linkedin.com/jobs/view/technical-support-associate-relocation-to-montenegro-at-libertex-group-4362003307",
+      "https://ge.linkedin.com/jobs/view/quality-assurance-guild-master-relocation-to-montenegro-at-libertex-group-4305745201",
+      "https://cy.linkedin.com/jobs/view/in-app-media-buying-team-leader-remote-or-relocation-to-montenegro-at-libertex-group-4231816975",
+      "https://ge.linkedin.com/jobs/view/site-reliability-engineer-remote-or-relocation-to-montenegro-at-libertex-group-4333814842",
+      "https://ge.linkedin.com/jobs/view/security-grc-governance-risk-and-compliance-specialist-relocation-to-mne-at-libertex-group-4289919379",
+      "https://ge.linkedin.com/jobs/view/infrastructure-engineer-remote-or-relocation-to-montenegro-at-libertex-group-4338853131"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kick_sauber_f1_team",
+      "entity_name": "Kick Sauber F1 Team",
+      "total_iterations": 15,
+      "completed_iterations": 10,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://ge.linkedin.com/jobs/view/technical-support-associate-relocation-to-montenegro-at-libertex-group-4362003307",
+        "https://lego.saudiblocks.com",
+        "https://ge.linkedin.com/jobs/view/front-end-engineer-remote-or-relocation-to-montenegro-at-libertex-group-4360809402",
+        "https://www.linkedin.com/jobs/view/junior-risk-payment-business-liaison-part-time-at-libertex-group-4348342949",
+        "https://fuelforfans.com",
+        "https://drivenby.co",
+        "https://f1store.formula1.com",
+        "https://ge.linkedin.com/jobs/view/machine-learning-engineer-remote-at-libertex-group-4360965651",
+        "https://extremenetworks.com",
+        "https://am.linkedin.com/jobs/view/marketing-automation-manager-relocation-to-montenegro-or-remote-at-libertex-group-4304123000?refId=emu94paB5WTkW7dWiIFMlQ%3D%3D&trackingId=%2FbYnFgbpmOC4VVeJY5BI0g%3D%3D"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kick Sauber F1 Team may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:07:04.665594",
+          "domain_explored": "https://f1store.formula1.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:07:11.423080",
+          "domain_explored": "https://fuelforfans.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic E-commerce Content",
+            "Competitor Focus",
+            "Consumer Marketing (B2C)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 706,
+              "output_tokens": 167,
+              "elapsed_seconds": 3.249497175216675
+            }
+          ],
+          "reasoning": "The scraped content from 'fuelforfans.com' is a generic B2C e-commerce storefront listing merchandise for competitors (Ferrari, Red Bull, McLaren) and general F1 branding. There is zero mention of 'Kick Sauber', 'Sauber', 'Stake', or 'Alfa Romeo'. The content represents retail sales rather than corporate procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:07:14.262702",
+          "domain_explored": "https://lego.saudiblocks.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:07:24.551904",
+          "domain_explored": "https://extremenetworks.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Extreme Platform ONE (AI Networking)",
+              "6 GHz Wi-Fi",
+              "Extreme Fabric",
+              "Cloud-Based Networking",
+              "Zero Trust Security"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Industry Solution: Sports & Venues",
+              "Case Study: Liverpool FC (High-density wireless deployment)",
+              "Case Study: Operational Excellence (Airports)"
+            ]
+          },
+          "patterns_found": [
+            "Sports & Venues Industry Vertical",
+            "High-Density Wi-Fi (6 GHz)",
+            "Stadium Connectivity Case Studies (Liverpool FC, Airports)",
+            "AI-Networking Platform (Extreme Platform ONE)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1465,
+              "output_tokens": 375,
+              "elapsed_seconds": 5.694556951522827
+            }
+          ],
+          "reasoning": "While this is a vendor site (Extreme Networks) rather than a direct procurement portal for Kick Sauber, it is highly relevant to the 'Sports & Venues' focus area. The content explicitly references 'Sports & Venues' as a key industry solution and provides a case study for Liverpool FC involving '1,100 new APs' to create a 'connected fan experience.' F1 teams require high-performance, low-latency networking for track operations, telemetry, and factory connectivity. Extreme Networks' focus on 'AI networking' and '6 GHz Wi-Fi' aligns with the technological needs of a modern F1 team. This signals potential technology stack adoption or partnership opportunities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:07:33.961666",
+          "domain_explored": "https://drivenby.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shopify (inferred from '/collections/' URL structure)",
+              "E-commerce Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Historical Reference: 'Charles Leclerc C37 Azerbaijan GP... Sauber F1 Team' (Legacy data, not active procurement)"
+            ]
+          },
+          "patterns_found": [
+            "B2C Retailer",
+            "Merchandise Catalogue",
+            "Competitor Inventory (Red Bull, Ferrari, McLaren)",
+            "Historical Team Reference (Sauber F1 Team 2018)",
+            "E-commerce Cart Functionality"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1523,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.888298034667969
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-facing (B2C) e-commerce inventory. While it lists a 'Sauber F1 Team' model car, it is a historical collectible from the 2018 season (C37), not a current procurement signal for the Kick Sauber F1 Team. The site acts as a reseller/retailer for F1 memorabilia rather than a B2B partner or supplier."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:07:42.976433",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/machine-learning-engineer-remote-at-libertex-group-4360965651",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "AWS (Sagemaker, EC2, EKS, EMR, Bedrock)",
+              "Python",
+              "PyTorch",
+              "SQL (MSSQL, Postgres)",
+              "ClickHouse",
+              "Docker",
+              "FastAPI",
+              "Kafka",
+              "Airflow",
+              "LLM (LangChain, LangGraph, RAG, Agents)"
+            ],
+            "job_postings": [
+              {
+                "role": "Senior Machine Learning Engineer",
+                "entity": "Libertex Group (Official Partner)",
+                "focus": "LTV prediction, churn prediction, antifraud, GenAI, LLM integration"
+              }
+            ],
+            "procurement_indicators": [
+              "Sponsor is actively procuring advanced AI capabilities (GenAI/LLMs)",
+              "Investment in MLOps and scalable cloud infrastructure (AWS)",
+              "Cross-functional data science application (Sales, Marketing, Payments)",
+              "Potential alignment on data-driven decision making between partner and team"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "Advanced Data Infrastructure (AWS, MLOps)",
+            "LLM & Generative AI Adoption",
+            "Fintech Procurement Standards"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1590,
+              "output_tokens": 452,
+              "elapsed_seconds": 5.355592966079712
+            }
+          ],
+          "reasoning": "While this is a job posting for a sponsor (Libertex) rather than the team itself, it provides high-value intelligence regarding the technological ecosystem surrounding the team. It confirms the sponsor is heavily investing in AI/ML infrastructure (AWS, LLMs, MLOps), which suggests potential for technology transfer, joint analytics projects, or data-driven sponsorship activations. It signals a partner with a sophisticated tech stack relevant to F1 performance analytics."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:07:51.569758",
+          "domain_explored": "https://am.linkedin.com/jobs/view/marketing-automation-manager-relocation-to-montenegro-or-remote-at-libertex-group-4304123000?refId=emu94paB5WTkW7dWiIFMlQ%3D%3D&trackingId=%2FbYnFgbpmOC4VVeJY5BI0g%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Braze",
+              "Blueshift",
+              "Customer.io",
+              "Iterable",
+              "Mixpanel",
+              "Amplitude",
+              "Google Analytics",
+              "HTML/CSS"
+            ],
+            "job_postings": [
+              "Marketing Automation Manager (Libertex Group)"
+            ],
+            "procurement_indicators": [
+              "Adoption of multi-channel automation platforms (Email, SMS, Push)",
+              "Investment in product analytics and user behavior tracking",
+              "Focus on A/B testing and conversion rate optimization (CRO) tools",
+              "Cross-functional alignment between Product, Sales, and IT"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "MarTech Stack Expansion",
+            "Customer Lifecycle Management",
+            "Data-Driven Marketing Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1691,
+              "output_tokens": 385,
+              "elapsed_seconds": 4.990691900253296
+            }
+          ],
+          "reasoning": "While this is a job posting for a sponsor (Libertex) rather than the team itself, it reveals specific technology procurement and implementation patterns relevant to the F1 ecosystem. The role requires hands-on management of CRM and automation platforms (Braze, Iterable, etc.) and analytics tools (Mixpanel, Amplitude). This indicates a direct investment in marketing technology infrastructure to support the partnership, offering insight into the technological capabilities and data maturity of entities closely tied to Kick Sauber."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:08:11.813131",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/front-end-engineer-remote-or-relocation-to-montenegro-at-libertex-group-4360809402",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Vue.js",
+              "TypeScript",
+              "Cordova",
+              "JavaScript",
+              "HTML5/CSS3",
+              "CI/CD",
+              "Git",
+              "Webpack/npm"
+            ],
+            "job_postings": [
+              "Front-end Engineer (Remote or Relocation to Montenegro) - Libertex Group"
+            ],
+            "procurement_indicators": [
+              "Investment in high-performance web and mobile trading apps",
+              "Talent acquisition for UI/UX implementation and scalability",
+              "Utilization of Udemy Business for training (EdTech procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "Fintech Platform Development",
+            "Frontend Stack Standardization (Vue.js, TypeScript, Cordova)",
+            "High-Performance Application Architecture"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 356,
+              "elapsed_seconds": 16.571228981018066
+            }
+          ],
+          "reasoning": "This job posting confirms Libertex (Kick Sauber's sponsor) is actively investing in their digital engineering capabilities to support their trading platform. While this is a direct hire for the sponsor rather than the team, it indicates the sponsor's robust technical health and continued investment in the infrastructure that supports the partnership. The specific stack (Vue.js, TypeScript, Cordova) reveals the technology standards in use."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:08:26.388712",
+          "domain_explored": "https://www.linkedin.com/jobs/view/junior-risk-payment-business-liaison-part-time-at-libertex-group-4348342949",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Payment Processing Systems",
+              "Crypto Payment Gateways",
+              "KYC (Know Your Customer) Verification Tools",
+              "CRM (Customer Relationship Management) - implied by account maintenance"
+            ],
+            "job_postings": [
+              "Junior Risk Payment Business Liaison (Part-time) - Libertex Group"
+            ],
+            "procurement_indicators": [
+              "Regional Expansion (LATAM) requiring local payment vendor partnerships",
+              "Crypto payment integration requirements",
+              "Compliance and risk management tool adoption",
+              "Udemy Business subscription (Corporate Learning procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "Fintech Infrastructure Expansion",
+            "Payment Gateway Operations",
+            "KYC & Compliance Workflows",
+            "Latin American Market Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1847,
+              "output_tokens": 443,
+              "elapsed_seconds": 11.127713680267334
+            }
+          ],
+          "reasoning": "While this is a job posting for a support/operational role rather than a direct procurement role, it provides deep insight into the infrastructure and vendor ecosystem of the sponsor (Libertex Group). The explicit mention of 'Knowledge of crypto payments' and 'payment workflows' indicates active investment in financial technology stacks. The focus on LATAM and specific payment systems suggests Libertex is building out regional infrastructure, which often involves procuring local payment gateway solutions, KYC verification services, and compliance tools. This reinforces the 'Sponsorship Technology Integration' pattern seen in previous iterations, showing the sponsor is scaling their technical capacity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T14:08:35.110359",
+          "domain_explored": "https://ge.linkedin.com/jobs/view/technical-support-associate-relocation-to-montenegro-at-libertex-group-4362003307",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "VictoriaMetrics",
+              "Dynatrace",
+              "Grafana",
+              "Zabbix",
+              "Atlassian Products (Jira implied)",
+              "Python/Bash/Groovy"
+            ],
+            "job_postings": [
+              "Technical Support Associate (Relocation to Montenegro)"
+            ],
+            "procurement_indicators": [
+              "Collaboration with service providers",
+              "Service Desk system usage",
+              "Monitoring infrastructure procurement"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Technology Integration",
+            "IT Infrastructure Monitoring Stack (VictoriaMetrics, Dynatrace, Grafana, Zabbix)",
+            "ITSM / ITIL Service Desk Operations",
+            "Vendor & Service Provider Collaboration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1923,
+              "output_tokens": 341,
+              "elapsed_seconds": 4.956348180770874
+            }
+          ],
+          "reasoning": "While this is a support role, it explicitly reveals the internal technology stack required to maintain Libertex's (Kick Sauber's sponsor) operations. The mention of specific monitoring tools (Dynatrace, Zabbix, Grafana) and collaboration with 'service providers' indicates a complex IT environment that relies on third-party software procurement. This reinforces the pattern of the sponsor investing in robust digital infrastructure to support the partnership."
+        }
+      ],
+      "total_input_tokens": 12510,
+      "total_output_tokens": 2778,
+      "estimated_cost_usd": 0.07919999999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kick Sauber F1 Team may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:08:35.111530"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.364018",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:44:03.439493"
+}

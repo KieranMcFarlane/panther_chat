@@ -1,0 +1,409 @@
+{
+  "entity_id": "river_plate",
+  "entity_name": "River Plate",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "cariverplate.com.ar",
+    "tiendariver.com",
+    "lapaginamillonaria.com",
+    "somosriver.com",
+    "riverid.com.ar",
+    "iuriverplate.edu.ar",
+    "adidas.com.ar"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ar.linkedin.com/jobs/view/ufs-head-of-country-river-plate-at-unilever-4304323240",
+      "https://ar.linkedin.com/jobs/view/ufs-head-of-finance-%E2%80%93-river-plate-at-unilever-4364217254",
+      "https://ar.linkedin.com/jobs/popular-empleos",
+      "https://ar.linkedin.com/jobs/view/global-finance-rotational-program-at-sap-4103389339",
+      "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&geoId=100446943&location=Argentina",
+      "https://ar.linkedin.com/jobs/popular-empleos-buenos-aires-y-alrededores",
+      "https://ar.linkedin.com/jobs/view/desarrollador-semi-senior-net-presencial-3-dias-caba-at-qservices-4354143264"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "river_plate",
+      "entity_name": "River Plate",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://adidas.com.ar",
+        "https://ar.linkedin.com/jobs/view/ufs-head-of-finance-%E2%80%93-river-plate-at-unilever-4364217254",
+        "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&geoId=100446943&location=Argentina",
+        "https://riverid.com.ar",
+        "https://ar.linkedin.com/jobs/view/global-finance-rotational-program-at-sap-4103389339",
+        "https://cariverplate.com.ar",
+        "https://lapaginamillonaria.com",
+        "https://somosriver.com",
+        "https://tiendariver.com",
+        "https://ar.linkedin.com/jobs/view/ufs-head-of-country-river-plate-at-unilever-4304323240",
+        "https://iuriverplate.edu.ar",
+        "https://ar.linkedin.com/jobs/popular-empleos"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "River Plate may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:21:46.498968",
+          "domain_explored": "https://cariverplate.com.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:22:19.215151",
+          "domain_explored": "https://tiendariver.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:22:27.631481",
+          "domain_explored": "https://lapaginamillonaria.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Content",
+            "Match Schedule Data",
+            "Repetitive Scrolling Layout"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 145,
+              "elapsed_seconds": 5.518723964691162
+            }
+          ],
+          "reasoning": "The scraped content is exclusively sports journalism (news, match results, player opinions) and fixture data from 'La P\u00e1gina Millonaria'. There are no signals regarding business operations, technology procurement, or corporate governance."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:22:36.031634",
+          "domain_explored": "https://somosriver.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "River ID (SSO/Identity Provider)",
+              "Gamification Engine (Points/Ranking System)",
+              "CRM (likely underlying the user data)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Use of external identity domain (login.riverid.com.ar) suggests potential vendor contract for auth services",
+              "Management of 'convenios' (commercial partnerships) indicates vendor relationship management",
+              "Digital experience procurement (platform development/maintenance)"
+            ]
+          },
+          "patterns_found": [
+            "Fan Engagement Platform (Gamification)",
+            "Loyalty Program Infrastructure (River ID)",
+            "Third-Party Identity Management (login.riverid.com.ar)",
+            "Commercial Partnership Ecosystem (Discounts/Carnet)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 339,
+              "elapsed_seconds": 4.050192832946777
+            }
+          ],
+          "reasoning": "The content reveals 'Somos River', a dedicated fan community and loyalty platform. While it does not show direct procurement intent (like RFPs), it confirms a sophisticated digital ecosystem involving 'River ID' (identity management), gamification engines, and a commercial discount network. This implies procurement needs for SaaS licenses, identity providers, and partnership management tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:23:08.727641",
+          "domain_explored": "https://riverid.com.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:23:18.923764",
+          "domain_explored": "https://iuriverplate.edu.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "LMS (Learning Management Systems)",
+              "Video Conferencing / Virtual Classroom Infrastructure",
+              "Student Information Systems (SIS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Usage Agreements (Club Deportivo Luj\u00e1n, Crucero del Norte, etc.)",
+              "Curriculum Development Services (New 'Periodismo Deportivo' degree)",
+              "Educational Software Licensing"
+            ]
+          },
+          "patterns_found": [
+            "Multi-Regional Educational Infrastructure",
+            "Academic Program Expansion (New Degrees)",
+            "Hybrid Learning Model (Remote/In-person)",
+            "Third-Party Venue Partnerships"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 345,
+              "elapsed_seconds": 5.949812173843384
+            }
+          ],
+          "reasoning": "The Instituto Universitario River Plate (IURP) represents a significant operational arm of the club. While the content is primarily marketing for student recruitment, the scale of operations\u2014specifically the 'Distance with in-person practices' model utilizing a network of third-party venues (clubs in Misiones, Santa Fe, etc.)\u2014implies complex procurement needs. These include Learning Management Systems (LMS) for remote delivery, physical facility management agreements, and administrative software for a multi-site educational institution."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T17:23:21.939915",
+          "domain_explored": "https://adidas.com.ar",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T17:23:28.747295",
+          "domain_explored": "https://ar.linkedin.com/jobs/view/ufs-head-of-country-river-plate-at-unilever-4304323240",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "UFS Head of Country River Plate",
+                "company": "Unilever",
+                "department": "Unilever Food Solutions (UFS)",
+                "focus": "B2B Food Service Sales"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "B2B Food Service Terminology",
+            "Regional Sales Management Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.2657759189605713
+            }
+          ],
+          "reasoning": "The content is a job posting for 'UFS Head of Country River Plate' at Unilever. In this context, 'River Plate' refers to a commercial sales region defined by Unilever (likely covering Argentina and Uruguay), not the football club entity (Club Atl\u00e9tico River Plate). The role involves selling food products to chefs (B2B), which is unrelated to the club's procurement or operations."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T17:23:41.773649",
+          "domain_explored": "https://ar.linkedin.com/jobs/view/ufs-head-of-finance-%E2%80%93-river-plate-at-unilever-4364217254",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "B2B Food Service Terminology",
+            "Internal Sales Unit Designation",
+            "Unilever Corporate Branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1727,
+              "output_tokens": 229,
+              "elapsed_seconds": 9.522573947906494
+            }
+          ],
+          "reasoning": "The job title 'UFS Head of Finance \u2013 River Plate' refers to a specific sales territory or business unit within Unilever Food Solutions (UFS), likely named after the geographical region or a specific internal sales channel, rather than the football club River Plate. The content explicitly describes Unilever's 'Food Solutions' business unit, its B2B food service operations, and global turnover targets. This is a corporate finance role for a consumer goods conglomerate, not a procurement signal for the sports entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T17:23:49.646611",
+          "domain_explored": "https://ar.linkedin.com/jobs/popular-empleos",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Jobs",
+              "LinkedIn Talent Solutions"
+            ],
+            "job_postings": [
+              {
+                "title": "Electricista",
+                "entity": "Club Atl\u00e9tico River Plate",
+                "location": "Buenos Aires, Argentina",
+                "posted": "6 days ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Facilities Maintenance Procurement",
+              "Operational Staffing",
+              "Direct Hiring Infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Direct Entity Hiring (Club Atl\u00e9tico River Plate)",
+            "Facilities Maintenance Role (Electrician)",
+            "Manual Labor/Operations Recruitment",
+            "LinkedIn Jobs Platform Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1782,
+              "output_tokens": 315,
+              "elapsed_seconds": 3.9148459434509277
+            }
+          ],
+          "reasoning": "The content reveals a direct job posting for 'Electricista' (Electrician) by 'Club Atl\u00e9tico River Plate' in Buenos Aires. This confirms the entity utilizes the LinkedIn Jobs platform for recruitment. While an operational role rather than a procurement function, it indicates active HR spending and potential facility expansion or maintenance requiring external labor/vendors."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T17:23:57.527475",
+          "domain_explored": "https://ar.linkedin.com/jobs/view/global-finance-rotational-program-at-sap-4103389339",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "False Positive Entity Match",
+            "Vendor Recruitment (SAP)",
+            "General Finance/Procurement Training Program",
+            "Irrelevant Corporate Culture Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1859,
+              "output_tokens": 176,
+              "elapsed_seconds": 4.114141941070557
+            }
+          ],
+          "reasoning": "The content is a job posting for SAP's internal 'Global Finance Rotational Program'. While the job description mentions 'procurement' as a rotation area, this is a training program for SAP employees, not a procurement signal or job posting from River Plate. The entity match is invalid."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T17:24:04.390236",
+          "domain_explored": "https://www.linkedin.com/jobs/search/?alertAction=viewjobs&geoId=100446943&location=Argentina",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Cajero/a Full Time - Tienda Arcos (Adidas)",
+              "Stockroom Full Time - Arcos (Adidas)",
+              "Sumate al equipo de ICBC (ICBC Argentina)",
+              "Personal de Limpieza (Rapanui)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Unrelated Industry Hiring (Retail, Banking, Aviation, FMCG)",
+            "High Volume / Low Relevance Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1929,
+              "output_tokens": 235,
+              "elapsed_seconds": 2.8362324237823486
+            }
+          ],
+          "reasoning": "The search results for 'Jobs in Argentina' return a high volume of listings for entities unrelated to River Plate (e.g., Adidas, ICBC, Emirates, Rapanui). While Adidas is a vendor partner, these are retail floor staff jobs, not corporate procurement signals. The content represents generic noise rather than targeted intelligence."
+        }
+      ],
+      "total_input_tokens": 13386,
+      "total_output_tokens": 2031,
+      "estimated_cost_usd": 0.07062299999999999
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "River Plate may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:24:04.391772"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.115083",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:15:12.625657"
+}

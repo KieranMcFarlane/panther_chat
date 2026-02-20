@@ -1,0 +1,141 @@
+{
+  "entity_id": "sydney_university_handball_club",
+  "entity_name": "Sydney University Handball Club",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "handballaustralia.org.au",
+    "susf.com.au",
+    "globalsportsarchive.com",
+    "nswhandball.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "sydney_university_handball_club",
+      "entity_name": "Sydney University Handball Club",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://globalsportsarchive.com",
+        "https://handballaustralia.org.au",
+        "https://susf.com.au",
+        "https://nswhandball.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Sydney University Handball Club may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:18:33.395453",
+          "domain_explored": "https://handballaustralia.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Federation Content",
+            "Event Marketing"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 452,
+              "output_tokens": 153,
+              "elapsed_seconds": 2.88687801361084
+            }
+          ],
+          "reasoning": "The content is a national team sports announcement regarding the 'Aussie Crocs' and the Asian Championship. It relates to the sport of handball generally but contains no specific information regarding the Sydney University Handball Club's internal operations, technology needs, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:18:36.463474",
+          "domain_explored": "https://susf.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:18:46.885877",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Irrelevant Content (Soccer Focus)",
+            "Global Sports Database"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 168,
+              "elapsed_seconds": 4.125658988952637
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com is a generic navigation menu for global soccer leagues and competitions. It contains no information regarding the Sydney University Handball Club, its internal operations, technology stack, or procurement activities. This content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:18:50.993859",
+          "domain_explored": "https://nswhandball.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1889,
+      "total_output_tokens": 321,
+      "estimated_cost_usd": 0.010482
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Sydney University Handball Club may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:18:50.995055"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.357572",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:33:31.651884"
+}

@@ -1,0 +1,76 @@
+{
+  "entity_id": "arsenal",
+  "entity_name": "Arsenal",
+  "template_id": "top_tier_club_global",
+  "discovered_at": "2026-01-30T14:59:05.457639Z",
+  "domains": [
+    "arsenal.com",
+    "www.arsenal.com"
+  ],
+  "channels": {
+    "jobs": "linkedin.com/jobs@arsenal",
+    "careers": "arsenal.com/careers",
+    "news": "arsenal.com/news",
+    "press": "arsenal.com/press"
+  },
+  "patterns": {
+    "Digital Infrastructure & Stack": {
+      "patterns_found": [
+        "CRM platform upgrade",
+        "New ticketing system",
+        "API modernization"
+      ],
+      "iterations_used": 16,
+      "confidence": 0.77,
+      "accept_rate": 0.78
+    },
+    "Commercial & Revenue Systems": {
+      "patterns_found": [
+        "E-commerce expansion",
+        "Merchandise platform",
+        "Digital advertising platform",
+        "Sponsorship tech integration"
+      ],
+      "iterations_used": 25,
+      "confidence": 0.84,
+      "accept_rate": 0.81
+    },
+    "Fan Engagement & Experience": {
+      "patterns_found": [
+        "Social media integration",
+        "Personalized content delivery",
+        "Gamification platform",
+        "Loyalty program launch"
+      ],
+      "iterations_used": 21,
+      "confidence": 0.71,
+      "accept_rate": 0.83
+    },
+    "Data & Analytics": {
+      "patterns_found": [
+        "Data warehouse implementation",
+        "Fan analytics platform",
+        "Performance tracking system"
+      ],
+      "iterations_used": 23,
+      "confidence": 0.86,
+      "accept_rate": 0.83
+    },
+    "Operations & Stadium": {
+      "patterns_found": [
+        "Operations automation",
+        "Venue management system"
+      ],
+      "iterations_used": 23,
+      "confidence": 0.77,
+      "accept_rate": 0.84
+    }
+  },
+  "performance_metrics": {
+    "total_iterations": 30,
+    "categories_discovered": 5,
+    "overall_confidence": 0.79,
+    "total_cost_usd": 0.75
+  },
+  "next_refresh": "2026-01-30T14:59:05.458227Z"
+}

@@ -1,0 +1,135 @@
+{
+  "entity_id": "s\u00e3o_paulo_fc",
+  "entity_name": "S\u00e3o Paulo FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "saopaulofc.net",
+    "spfcticket.net",
+    "futebolpaulista.com.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "s\u00e3o_paulo_fc",
+      "entity_name": "S\u00e3o Paulo FC",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://spfcticket.net",
+        "https://futebolpaulista.com.br",
+        "https://saopaulofc.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "S\u00e3o Paulo FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:21:27.576775",
+          "domain_explored": "https://saopaulofc.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Sports Journalism",
+            "Fan Engagement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 167,
+              "elapsed_seconds": 3.353255271911621
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on match results, player interviews, and sports news (e.g., 'Vit\u00f3ria do Tricolor', 'Pr\u00f3ximo jogo'). There is no presence of corporate governance, career sections, technology infrastructure, or procurement-related language. The content is highly repetitive and lacks business intelligence signals."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:21:39.045557",
+          "domain_explored": "https://spfcticket.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Marketing Attribution Platforms (UTM tracking)",
+              "Membership Management Systems (CRM)",
+              "Payment Gateway Integration"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: sociotorcedor.com.br (Platform/Service Provider)",
+              "Campaign: Active traffic acquisition strategy",
+              "Infrastructure: High-availability ticketing and checkout systems"
+            ]
+          },
+          "patterns_found": [
+            "Subscription Tier Management",
+            "Cross-Domain Traffic Attribution",
+            "Customer Loyalty Logic"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1397,
+              "output_tokens": 281,
+              "elapsed_seconds": 3.6363980770111084
+            }
+          ],
+          "reasoning": "While the page is consumer-facing, the detailed URL parameters (utm_source, utm_medium, utm_campaign) reveal a sophisticated marketing technology stack and active vendor relationship with 'sociotorcedor.com.br'. The tiered pricing structure (Vermelho to Diamante) indicates a deployed CRM system capable of managing complex membership rules, benefits, and inventory allocation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T05:21:45.547271",
+          "domain_explored": "https://futebolpaulista.com.br",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2753,
+      "total_output_tokens": 448,
+      "estimated_cost_usd": 0.014979000000000001
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "S\u00e3o Paulo FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:21:45.548089"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.116887",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:44:13.812764"
+}

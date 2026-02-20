@@ -1,0 +1,227 @@
+{
+  "entity_id": "north_macedonia_football_federation",
+  "entity_name": "North Macedonia Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "forum.topeleven.com",
+    "firstpost.com",
+    "supersport.com",
+    "reuters.com",
+    "flashscore.com",
+    "timesofindia.indiatimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "north_macedonia_football_federation",
+      "entity_name": "North Macedonia Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://forum.topeleven.com",
+        "https://reuters.com",
+        "https://timesofindia.indiatimes.com",
+        "https://flashscore.com",
+        "https://supersport.com",
+        "https://firstpost.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "North Macedonia Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:56:55.112654",
+          "domain_explored": "https://forum.topeleven.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "vBulletin (Forum Software)",
+              "PHP (implied by forumdisplay.php URLs)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gaming community forum structure",
+            "User-generated content (UGC) platform",
+            "Consumer-facing support channels"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.38480281829834
+            }
+          ],
+          "reasoning": "The content is entirely derived from 'forum.topeleven.com', which is a user community for the mobile game 'Top Eleven' developed by Nordeus. It contains no information regarding the North Macedonia Football Federation (FFM). The topics (game tactics, bugs, associations) are related to virtual football management, not the operations, procurement, or governance of the actual national football federation."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:57:14.114825",
+          "domain_explored": "https://firstpost.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news media structure",
+            "Consumer-facing content (videos, shorts, quizzes)",
+            "Global geopolitical and financial reporting",
+            "Irrelevant keyword noise (e.g., 'Budget', 'AI', 'Sports' used in general context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1422,
+              "output_tokens": 225,
+              "elapsed_seconds": 11.323179006576538
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a major general news outlet (Firstpost). While keywords like 'Budget', 'AI', and 'Sports' appear, they are strictly related to general news reporting (e.g., Indian Union Budget, AI layoffs, T20 World Cup) and do not correlate with the North Macedonia Football Federation's procurement activities. There is no connection to the target entity or B2B procurement signals."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:57:18.865110",
+          "domain_explored": "https://supersport.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:57:27.873162",
+          "domain_explored": "https://reuters.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global financial news aggregation",
+            "Macroeconomic reporting (commodities, markets)",
+            "General geopolitical and lifestyle news",
+            "High-volume consumer media structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.2107367515563965
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of a major global news agency (Reuters). The articles focus on macroeconomic trends (commodities slumps, factory activity), geopolitical events (Japan elections, UK politics), and pop culture (Grammy Awards). There is no content specific to the North Macedonia Football Federation, its local procurement activities, or its vendor ecosystem. The domain is irrelevant to the specific entity being targeted."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:57:39.405155",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports results aggregation",
+            "Gambling affiliation (Betting ads)",
+            "Consumer-facing live score interface",
+            "Multi-language localization (FR, DE, PT, UA)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 751,
+              "output_tokens": 192,
+              "elapsed_seconds": 3.436706066131592
+            }
+          ],
+          "reasoning": "The scraped content confirms that Flashscore is a consumer-oriented sports results portal. The presence of gambling addiction warnings ('Les jeux d\u2019argent...', '18+') and 'Loading...' indicators for live scores identifies this as a B2C media platform rather than a source for Federation procurement intelligence or corporate governance data."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T06:57:52.940527",
+          "domain_explored": "https://timesofindia.indiatimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General news media structure",
+            "Consumer-facing content (videos, shorts, quizzes)",
+            "Global geopolitical and financial reporting",
+            "Irrelevant geographic focus (India)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1621,
+              "output_tokens": 191,
+              "elapsed_seconds": 5.012717008590698
+            }
+          ],
+          "reasoning": "The content is from the Times of India, a major consumer news outlet. The articles focus on general news, cricket (BCCI), Bollywood, and Indian finance. There is no connection to the North Macedonia Football Federation, nor are there any procurement signals, RFPs, or technology stack details relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6670,
+      "total_output_tokens": 1051,
+      "estimated_cost_usd": 0.035775
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "North Macedonia Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:57:52.941773"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.207846",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:52:50.012134"
+}

@@ -1,0 +1,213 @@
+{
+  "entity_id": "guernsey_cricket_board",
+  "entity_name": "Guernsey Cricket Board",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "guernseycricket.com",
+    "guernseysports.com",
+    "icc-cricket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://gg.linkedin.com/jobs/view/cricket-development-manager-at-guernsey-cricket-3983540004"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "guernsey_cricket_board",
+      "entity_name": "Guernsey Cricket Board",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.06
+      ],
+      "explored_domains": [
+        "https://gg.linkedin.com/jobs/view/cricket-development-manager-at-guernsey-cricket-3983540004",
+        "https://guernseycricket.com",
+        "https://icc-cricket.com",
+        "https://guernseysports.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Strategic Management Role",
+        "Programme Analytics & Reporting",
+        "Facilities Management & Procurement",
+        "Volunteer Workforce Orchestration",
+        "Safeguarding & Welfare Compliance"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Guernsey Cricket Board may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T20:08:45.727271",
+          "domain_explored": "https://guernseycricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship engagement model"
+            ]
+          },
+          "patterns_found": [
+            "Historical governance context",
+            "Sponsorship dependency",
+            "Repetitive content structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.1417460441589355
+            }
+          ],
+          "reasoning": "The scraped content is a repetitive excerpt of the 'About Us' page and a 'Sponsors' header. It provides historical context (ICC membership since 2008) and indicates a reliance on sponsorship, but contains no specific signals regarding technology procurement, job vacancies, or active RFPs. The content is too generic to derive actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T20:08:53.463265",
+          "domain_explored": "https://guernseysports.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Online portal (for coaches)",
+              "Digital platforms (for 'Sport in the Library')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership with Brittany Ferries (Travel/Logistics)",
+              "Construction/Installation of sea swimming platform (Infrastructure)",
+              "Third-party training workshops (UKCC, First Aid)",
+              "Sponsorship reliance (Specsavers)"
+            ]
+          },
+          "patterns_found": [
+            "Third-party dependency for travel logistics (Brittany Ferries)",
+            "Investment in physical infrastructure (Sea swimming platform)",
+            "Outsourced training delivery (UKCC qualifications)",
+            "Digital enablement for coaches (Online portal)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 358,
+              "elapsed_seconds": 4.755880832672119
+            }
+          ],
+          "reasoning": "The content confirms the entity (Guernsey Sports Commission) is a charitable organization reliant on partnerships and external vendors to deliver services. While direct procurement signals (RFPs) are absent, the reliance on 'travel funds backed by Brittany Ferries', 'online portals', and 'new sea swimming platforms' indicates a dependency on third-party vendors for logistics, technology, and infrastructure. This suggests a procurement function focused on partnerships and service provision rather than internal software acquisition."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T20:09:01.783080",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content source",
+            "Global federation focus",
+            "Editorial/News content structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 183,
+              "elapsed_seconds": 5.178400039672852
+            }
+          ],
+          "reasoning": "The scraped content is from the International Cricket Council (ICC), the global governing body. It focuses on high-level tournament news (T20 World Cup 2026), international squads, and global broadcasting. It contains no specific information regarding the Guernsey Cricket Board's local operations, procurement needs, or technology stack. This is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T20:09:10.652890",
+          "domain_explored": "https://gg.linkedin.com/jobs/view/cricket-development-manager-at-guernsey-cricket-3983540004",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Programme Analytics Platforms",
+              "Social Media Management Tools",
+              "CRM (implied by 'large volunteer workforce' management)"
+            ],
+            "job_postings": [
+              "Cricket Development Manager (Historical - 1 year ago)"
+            ],
+            "procurement_indicators": [
+              "Budget responsibility for initiatives",
+              "Facility booking and management",
+              "Equipment procurement",
+              "Sourcing training/education (UKCC qualifications)",
+              "Safeguarding training procurement"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Management Role",
+            "Programme Analytics & Reporting",
+            "Facilities Management & Procurement",
+            "Volunteer Workforce Orchestration",
+            "Safeguarding & Welfare Compliance"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 331,
+              "elapsed_seconds": 5.664571285247803
+            }
+          ],
+          "reasoning": "The job description for 'Cricket Development Manager' reveals significant administrative and procurement responsibilities. The role explicitly requires managing budgets, sourcing facilities, purchasing equipment, and maintaining 'programme analytics'. This confirms the entity has structured procurement needs and operational complexity beyond simple club sports."
+        }
+      ],
+      "total_input_tokens": 5810,
+      "total_output_tokens": 1065,
+      "estimated_cost_usd": 0.033405000000000004
+    },
+    "procurement_signals": [
+      "Strategic Management Role",
+      "Programme Analytics & Reporting",
+      "Facilities Management & Procurement",
+      "Volunteer Workforce Orchestration",
+      "Safeguarding & Welfare Compliance"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Guernsey Cricket Board may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T20:09:10.654841"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301049",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:45:18.426590"
+}

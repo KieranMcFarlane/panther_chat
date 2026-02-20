@@ -1,0 +1,172 @@
+{
+  "entity_id": "argentine_cricket_association",
+  "entity_name": "Argentine Cricket Association",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "cricket_associate_members",
+  "discovered_domains": [
+    "icc-cricket.com",
+    "grokipedia.com",
+    "wikidata.org",
+    "i.imgci.com",
+    "downloads.cricinfo.com",
+    "vault.nimc.gov.ng"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "argentine_cricket_association",
+      "entity_name": "Argentine Cricket Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://i.imgci.com",
+        "https://icc-cricket.com",
+        "https://downloads.cricinfo.com",
+        "https://grokipedia.com",
+        "https://wikidata.org",
+        "https://vault.nimc.gov.ng"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Argentine Cricket Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:55:30.569532",
+          "domain_explored": "https://icc-cricket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content",
+            "Global sports news",
+            "Tournament coverage"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 157,
+              "elapsed_seconds": 2.528903007507324
+            }
+          ],
+          "reasoning": "The scraped content is from the ICC's global news feed regarding the 2026 T20 World Cup (Sri Lanka, Afghanistan squads). It contains no information specific to the Argentine Cricket Association, its local operations, or its procurement activities. The content is purely general sports journalism."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:55:33.444114",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:55:36.353983",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:55:39.224004",
+          "domain_explored": "https://i.imgci.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:55:45.607033",
+          "domain_explored": "https://downloads.cricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic redirect page",
+            "Legacy WAP site reference",
+            "Javascript requirement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 562,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.6572418212890625
+            }
+          ],
+          "reasoning": "The scraped content from 'downloads.cricinfo.com' is a simple redirect/landing page prompting users to enable Javascript or visit the main Cricinfo homepage. It contains no information regarding the Argentine Cricket Association, procurement activities, or internal technology infrastructure."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:56:18.294295",
+          "domain_explored": "https://vault.nimc.gov.ng",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1926,
+      "total_output_tokens": 317,
+      "estimated_cost_usd": 0.010533
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Argentine Cricket Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:56:18.295747"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.299823",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:19:55.949236"
+}

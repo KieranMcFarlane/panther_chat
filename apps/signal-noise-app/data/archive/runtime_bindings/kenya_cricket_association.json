@@ -1,0 +1,166 @@
+{
+  "entity_id": "kenya_cricket_association",
+  "entity_name": "Kenya Cricket Association",
+  "template_id": "tpl_cricket_associate_federations_v1",
+  "cluster_id": "icc_global_federations",
+  "discovered_domains": [
+    "sportsheritage.go.ke",
+    "sportinkenya.wordpress.com",
+    "new.kenyalaw.org",
+    "downloads.cricinfo.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kenya_cricket_association",
+      "entity_name": "Kenya Cricket Association",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportinkenya.wordpress.com",
+        "https://new.kenyalaw.org",
+        "https://sportsheritage.go.ke",
+        "https://downloads.cricinfo.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kenya Cricket Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:59:59.399841",
+          "domain_explored": "https://sportsheritage.go.ke",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:00:05.372946",
+          "domain_explored": "https://sportinkenya.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "fundraising_event",
+            "individual_athlete_sponsorship",
+            "motorsport_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1395,
+              "output_tokens": 145,
+              "elapsed_seconds": 2.3226230144500732
+            }
+          ],
+          "reasoning": "The content is entirely focused on a motorsport athlete (Rufus Njeru Holmes) and a personal fundraising event. There is absolutely no mention of the Kenya Cricket Association, cricket operations, or related organizational procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:00:12.447717",
+          "domain_explored": "https://new.kenyalaw.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Search Capabilities",
+              "Database Platform"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Website Upgrade (Historical/General)"
+            ]
+          },
+          "patterns_found": [
+            "legal_repository",
+            "government_gazette_archive",
+            "judicial_database",
+            "wrong_entity_target"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.459378957748413
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kenya Law' (National Council for Law Reporting), a state corporation dedicated to legal reporting. While it mentions a 'website upgrade' and 'enhanced search capabilities', this is a historical reference to their own platform maintenance, not a procurement signal for the Kenya Cricket Association. The entity is completely unrelated to the target (sports vs. judiciary), and no relevant procurement signals for KCA were found."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:00:20.316769",
+          "domain_explored": "https://downloads.cricinfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "JavaScript (Client-side requirement)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "javascript_redirect",
+            "external_sports_news_portal",
+            "mobile_gateway"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 553,
+              "output_tokens": 191,
+              "elapsed_seconds": 3.8874380588531494
+            }
+          ],
+          "reasoning": "The scraped content represents a generic gateway/redirect page for ESPNcricinfo, a global sports news entity. It contains no specific data regarding the Kenya Cricket Association's internal operations, governance, or procurement activities. The content is purely navigational and technical (browser requirements), offering zero intelligence value for the target entity."
+        }
+      ],
+      "total_input_tokens": 3388,
+      "total_output_tokens": 575,
+      "estimated_cost_usd": 0.018789
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kenya Cricket Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:00:20.318229"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.301438",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:30:35.316369"
+}

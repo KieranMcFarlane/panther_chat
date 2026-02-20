@@ -1,0 +1,159 @@
+{
+  "entity_id": "nascar_whelen_modified_tour",
+  "entity_name": "NASCAR Whelen Modified Tour",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "nascar.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4367330007",
+      "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4244900781"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nascar_whelen_modified_tour",
+      "entity_name": "NASCAR Whelen Modified Tour",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4367330007",
+        "https://nascar.com",
+        "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4244900781"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NASCAR Whelen Modified Tour may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:40:06.200863",
+          "domain_explored": "https://nascar.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship procurement: Spire Motorsports securing IKEA and Best Buy for Hocevar's ride.",
+              "Sponsorship procurement: JR Motorsports partnership with Arby's.",
+              "Sponsorship procurement: Bennett Family of Companies extends partnership with RCR."
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship announcements (B2B marketing)",
+            "Broadcasting schedule adjustments (Logistics)",
+            "Sports journalism content (Race results/previews)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 275,
+              "elapsed_seconds": 2.726694107055664
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on race results, driver announcements, sponsorship deals (e.g., IKEA, Best Buy, Arby's), and operational logistics regarding weather delays. There are no signals related to the NASCAR Whelen Modified Tour specifically, nor are there any indicators of internal procurement activities, technology adoption, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:40:17.660050",
+          "domain_explored": "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4367330007",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Company-specific Race Control Software",
+              "Communication Hardware (Radios)",
+              "Timekeeping Devices (Watches)"
+            ],
+            "job_postings": [
+              "Part Time Official, Whelen Modified Tour (Concord, NC)"
+            ],
+            "procurement_indicators": [
+              "Requirement for securing equipment (binoculars, watches, flags, radios)",
+              "Mandate for proficiency in company software/hardware",
+              "Operational logistics (90% travel requirement implies logistical vendor needs)"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting (Event Operations)",
+            "Hardware Requirements (Operational Equipment)",
+            "Software Proficiency Requirement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1444,
+              "output_tokens": 346,
+              "elapsed_seconds": 3.2866899967193604
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct procurement solicitation, it reveals specific operational requirements for the Whelen Modified Tour. The listing explicitly requires candidates to be 'Proficient in all Company software and hardware' and responsible for 'securing equipment (e.g. binoculars, watch, flags, radios)'. This indicates an existing technology stack and a supply chain for operational gear (radios, flags, binoculars) that must be procured and maintained for the tour to function."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:40:28.024036",
+          "domain_explored": "https://www.linkedin.com/jobs/view/part-time-official-whelen-modified-tour-at-nascar-4244900781",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content",
+            "Healthcare Sector Listings",
+            "Platform Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 165,
+              "elapsed_seconds": 2.1346988677978516
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for 'At Home Healthcare' positions (e.g., Registered Nurses, Home Health Aides). It contains no information regarding NASCAR, the Whelen Modified Tour, or any related procurement activities. This is likely a result of a URL redirection error or scraping noise."
+        }
+      ],
+      "total_input_tokens": 4324,
+      "total_output_tokens": 786,
+      "estimated_cost_usd": 0.024762
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NASCAR Whelen Modified Tour may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:40:28.024503"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.373415",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:35.857842"
+}

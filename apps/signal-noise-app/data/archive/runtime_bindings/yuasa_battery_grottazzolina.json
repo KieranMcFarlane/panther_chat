@@ -1,0 +1,243 @@
+{
+  "entity_id": "yuasa_battery_grottazzolina",
+  "entity_name": "Yuasa Battery Grottazzolina",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "scuolapallavolo.it",
+    "legavolley.it",
+    "cisternavolley.it",
+    "lubevolley.it",
+    "en.volleyballworld.com",
+    "verovolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "yuasa_battery_grottazzolina",
+      "entity_name": "Yuasa Battery Grottazzolina",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://legavolley.it",
+        "https://scuolapallavolo.it",
+        "https://verovolley.com",
+        "https://en.volleyballworld.com",
+        "https://cisternavolley.it",
+        "https://lubevolley.it"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Yuasa Battery Grottazzolina may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:15:08.819956",
+          "domain_explored": "https://scuolapallavolo.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal: BMB (Oct 2025)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Team Sponsorship",
+            "Brand Visibility (Jersey/Title Sponsor)",
+            "Local Community Engagement"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 182,
+              "elapsed_seconds": 6.908063173294067
+            }
+          ],
+          "reasoning": "The content is entirely focused on volleyball match results, player injuries, and team standings for 'Yuasa Battery Grottazzolina'. While this confirms the entity's existence and marketing spend (sponsorship), it contains zero signals regarding procurement, technology adoption, or corporate governance."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:15:20.844985",
+          "domain_explored": "https://legavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Participation in top-tier professional league implies operational budget",
+              "Association with major sponsors (Credem Banca, Del Monte) suggests high-value partnership ecosystem"
+            ]
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Brand Visibility (Title Sponsorship)",
+            "Competitive Environment"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1415,
+              "output_tokens": 226,
+              "elapsed_seconds": 4.5573201179504395
+            }
+          ],
+          "reasoning": "The content is a navigation menu and team roster for 'SuperLega' (Italy's top volleyball league). While it confirms Yuasa Battery Grottazzolina is a top-tier professional team, it contains no information regarding internal operations, technology stacks, or procurement activities. It is purely descriptive of the sporting context."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:15:31.147532",
+          "domain_explored": "https://cisternavolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Sponsorship Visibility (Gas Sales Bluenergy)",
+            "Competitor Analysis"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1467,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.7312142848968506
+            }
+          ],
+          "reasoning": "The scraped content from cisternavolley.it is a sports news feed covering match results, player interviews, and team logistics. It lists a competitor sponsor (Gas Sales Bluenergy) but contains no information regarding Yuasa Battery Grottazzolina, nor does it contain any procurement signals, technology stacks, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:15:42.314244",
+          "domain_explored": "https://lubevolley.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Sponsorship Visibility (Lube Volley)",
+            "Competitive Environment",
+            "Fan Engagement (Predators)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1517,
+              "output_tokens": 213,
+              "elapsed_seconds": 3.0717267990112305
+            }
+          ],
+          "reasoning": "The scraped content from lubevolley.it is exclusively focused on sports news, match results, and team announcements (e.g., 'Lube dominante', 'Champions League'). There are no mentions of Yuasa Battery, nor are there any procurement signals such as job postings, RFPs, or technology infrastructure details. This domain is relevant only for general competitive analysis within the volleyball sector, not for direct procurement intelligence regarding Yuasa."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:15:53.157331",
+          "domain_explored": "https://en.volleyballworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports League Affiliation",
+            "Global Sports Coverage",
+            "Generic Content Consumption"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1569,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.4757819175720215
+            }
+          ],
+          "reasoning": "The scraped content represents a generic sports news and ranking page for global volleyball competitions. While it mentions the 'Lega Volley Femminile A1' (Italian League), it contains no specific information regarding Yuasa Battery Grottazzolina, its operations, technology stack, or procurement activities. The content is purely informational regarding match results and player rankings, offering no actionable procurement intelligence."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:16:08.858402",
+          "domain_explored": "https://verovolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Team Operations",
+            "Competitor Analysis",
+            "Sponsorship Visibility (Numia, Allianz, Credem Banca)",
+            "Event Management (Ticketing, Galleries)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1617,
+              "output_tokens": 195,
+              "elapsed_seconds": 5.499382019042969
+            }
+          ],
+          "reasoning": "The content is focused on sports news, match results (Vero Volley Monza vs Yuasa Battery Grottazzolina), and player statistics. While it confirms the competitive relationship between Vero Volley and the target entity, it contains no information regarding procurement activities, technology stacks, or business operations relevant to B2B sales intelligence."
+        }
+      ],
+      "total_input_tokens": 8949,
+      "total_output_tokens": 1194,
+      "estimated_cost_usd": 0.044757
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Yuasa Battery Grottazzolina may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:16:08.860247"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.317378",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:11.599552"
+}

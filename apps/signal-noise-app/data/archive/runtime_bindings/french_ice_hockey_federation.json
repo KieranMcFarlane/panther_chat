@@ -1,0 +1,285 @@
+{
+  "entity_id": "french_ice_hockey_federation",
+  "entity_name": "French Ice Hockey Federation",
+  "template_id": "tpl_national_federations_v1",
+  "cluster_id": "global_national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "internationalhockeywiki.com",
+    "internationalhockey.fandom.com",
+    "sportcal.com",
+    "nationalteamsoficehockey.com",
+    "pointstreak.com",
+    "support.fullleafteacompany.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "french_ice_hockey_federation",
+      "entity_name": "French Ice Hockey Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nationalteamsoficehockey.com",
+        "https://internationalhockey.fandom.com",
+        "https://sportcal.com",
+        "https://internationalhockeywiki.com",
+        "https://support.fullleafteacompany.com",
+        "https://wikidata.org",
+        "https://pointstreak.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "French Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:32:47.610396",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform content",
+            "Irrelevant context (Wikimedia/Wikipedia ecosystem)",
+            "No entity-specific signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 197,
+              "elapsed_seconds": 3.781277894973755
+            }
+          ],
+          "reasoning": "The content provided is the generic homepage text for Wikidata, a Wikimedia project. It contains general information about the platform, community events (WikidataCon 2025), and technical features (SPARQL, temporary accounts). There is absolutely no mention of the French Ice Hockey Federation (FFHG), nor are there any procurement signals, job postings, or technology stack details relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:32:58.362825",
+          "domain_explored": "https://internationalhockeywiki.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic wiki platform structure",
+            "Historical data aggregation",
+            "Broad international scope (IIHF members)",
+            "Static content delivery"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 201,
+              "elapsed_seconds": 4.064708948135376
+            }
+          ],
+          "reasoning": "The content is from a general historical wiki ('International Hockey Wiki') rather than the official French Ice Hockey Federation (FFHG) entity. While it lists 'France' as an IIHF member and mentions the 'Ligue Magnus', the context is encyclopedic history rather than organizational operations. There are no signals regarding the FFHG's specific procurement needs, technology stack, or governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:33:34.708913",
+          "domain_explored": "https://internationalhockey.fandom.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic wiki platform structure (Fandom)",
+            "Historical data aggregation",
+            "Broad international scope (IIHF members)",
+            "User-generated content model"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 181,
+              "elapsed_seconds": 30.431880950927734
+            }
+          ],
+          "reasoning": "The content is from a fan-maintained wiki (Fandom) focused on historical statistics, league results, and general international hockey trivia. It lacks administrative context, governance details, or commercial operations related to the French Ice Hockey Federation. No procurement signals were detected."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:33:53.587199",
+          "domain_explored": "https://sportcal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Secutix (Ticketing - mentioned for MLC)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "CEO election (EuroLeague)",
+              "Investment group formation (MotoGP)",
+              "Stadium naming rights deal (River Plate)",
+              "Content partnership (LPGA)",
+              "Ticketing solution adoption (MLC)"
+            ]
+          },
+          "patterns_found": [
+            "General sports industry news aggregator",
+            "Irrelevant sports entities (EuroLeague, MotoGP, LPGA, MLC)",
+            "Generic financial and sponsorship reporting",
+            "No entity-specific mentions (French Ice Hockey Federation)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1531,
+              "output_tokens": 298,
+              "elapsed_seconds": 11.849040031433105
+            }
+          ],
+          "reasoning": "The scraped content represents a general sports business news feed (Sportcal). While it contains procurement signals (e.g., 'MLC taps Secutix for ticketing'), these signals relate to other organizations (Major League Cricket, LPGA, EuroLeague), not the French Ice Hockey Federation. There is no mention of the target entity, French hockey, or relevant vendors in the specific context of the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:34:04.070213",
+          "domain_explored": "https://nationalteamsoficehockey.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports news aggregation",
+            "Historical and encyclopedic content focus",
+            "Global scope (IIHF, Olympics) rather than entity-specific",
+            "Fan-focused content (recaps, previews, scores)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1598,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.464359760284424
+            }
+          ],
+          "reasoning": "The source is a general news and information portal for international ice hockey. While it mentions 'France ice hockey history', the content is purely informational/historical for fans and lacks any governance, operational, or vendor-related signals specific to the French Ice Hockey Federation."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:34:24.853787",
+          "domain_explored": "https://pointstreak.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Pointstreak Statistics",
+              "Pointstreak Websites",
+              "Pointstreak Stream"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports statistics platform",
+            "North American market focus (GLCHL, NECBL, Seton Hall)",
+            "B2C product marketing (Websites, Stream, Registration)",
+            "Irrelevant geographic scope (Canada/US)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1658,
+              "output_tokens": 243,
+              "elapsed_seconds": 16.515090227127075
+            }
+          ],
+          "reasoning": "The scraped content confirms Pointstreak is a sports statistics and website provider. However, the content is entirely focused on North American leagues (Great Lakes Collegiate Hockey League, NECBL, Seton Hall) and generic product marketing. There is no mention of the French Ice Hockey Federation (FFHG), European leagues, or specific procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:34:37.505358",
+          "domain_explored": "https://support.fullleafteacompany.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant domain content (Tea company support page)",
+            "Spam/SEO content farm structure (repetitive lists)",
+            "Keyword stuffing (NBA, NFL, F1, Weather)",
+            "Future-dated content (2026 dates)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 200,
+              "elapsed_seconds": 5.8001708984375
+            }
+          ],
+          "reasoning": "The scraped content comes from 'support.fullleafteacompany.com', which is completely unrelated to the French Ice Hockey Federation. The page displays a list of generic, SEO-spam articles covering US sports, weather, and entertainment, with no connection to ice hockey, European sports governance, or French federation procurement activities."
+        }
+      ],
+      "total_input_tokens": 10772,
+      "total_output_tokens": 1509,
+      "estimated_cost_usd": 0.054951
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "French Ice Hockey Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:34:37.506703"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.306000",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:05:12.702480"
+}

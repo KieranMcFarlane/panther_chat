@@ -1,0 +1,88 @@
+{
+  "entity_id": "union_cycliste_internationale_(uci)",
+  "entity_name": "Union Cycliste Internationale (UCI)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "ucichile2025.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "union_cycliste_internationale_(uci)",
+      "entity_name": "Union Cycliste Internationale (UCI)",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://ucichile2025.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Union Cycliste Internationale (UCI) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:18:19.734407",
+          "domain_explored": "https://ucichile2025.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS) - Standard web infrastructure",
+              "Tissot Timing/Scoring Systems (Inferred via sponsorship)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Sponsorship Procurement (Tissot)",
+              "Venue Infrastructure Requirements (250m wooden track)",
+              "Local Organizing Committee (LOC) Vendor Management"
+            ]
+          },
+          "patterns_found": [
+            "Event_Sponsorship_Signal",
+            "Local_Organizing_Committee_Procurement",
+            "Infrastructure_Vendor_Engagement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1368,
+              "output_tokens": 323,
+              "elapsed_seconds": 5.332732200622559
+            }
+          ],
+          "reasoning": "The content confirms the 'UCI Track Cycling World Championships 2025' in Chile, sponsored by Tissot. While this is a localized event site (ucichile2025.org) and not the central UCI procurement portal, it validates the operational ecosystem. The presence of a 'Partners' section and specific infrastructure details (Velodromo specifications) indicates procurement activities handled by the Local Organizing Committee (LOC) under UCI supervision. This signals a need for event-specific vendors (hospitality, security, tech) but does not explicitly list current RFPs."
+        }
+      ],
+      "total_input_tokens": 1368,
+      "total_output_tokens": 323,
+      "estimated_cost_usd": 0.008949
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Union Cycliste Internationale (UCI) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:18:19.735818"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.457299",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:49:48.045802"
+}

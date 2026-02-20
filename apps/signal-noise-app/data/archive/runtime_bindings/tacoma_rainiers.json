@@ -1,0 +1,230 @@
+{
+  "entity_id": "tacoma_rainiers",
+  "entity_name": "Tacoma Rainiers",
+  "template_id": "tpl_lower_tier_operational_clubs_v1",
+  "cluster_id": "north_american_minor_league",
+  "discovered_domains": [
+    "wertacoma.com",
+    "rainiers.milbstore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/2026-milb-abs-tech-seasonal-at-major-league-baseball-mlb-4331172824",
+      "https://www.linkedin.com/pulse/18-sports-pr-jobs-i-saw-week-feb-3-2025-tim-miller-mba-apr-cbehc"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "tacoma_rainiers",
+      "entity_name": "Tacoma Rainiers",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/2026-milb-abs-tech-seasonal-at-major-league-baseball-mlb-4331172824",
+        "https://rainiers.milbstore.com",
+        "https://wertacoma.com",
+        "https://www.linkedin.com/pulse/18-sports-pr-jobs-i-saw-week-feb-3-2025-tim-miller-mba-apr-cbehc"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Technology Procurement (Hardware/Software)",
+        "League-Wide Standardization",
+        "Operational Infrastructure Investment",
+        "Data Operations Role",
+        "Human Capital Procurement",
+        "Operational Staffing",
+        "Seasonal Workforce Planning",
+        "Media Relations Infrastructure"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Tacoma Rainiers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:41:29.910733",
+          "domain_explored": "https://wertacoma.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Future Season Planning (2026 Schedule)"
+            ]
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Historical Archiving",
+            "Schedule Promotion"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.5314760208129883
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of historical news (2021 championship, 2024 retirement) and promotional links for the 2026 season schedule. There is no mention of technology infrastructure, vendor procurement, job openings, or organizational changes that would signal active buying intent. The content is purely fan-facing and archival."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:41:39.373229",
+          "domain_explored": "https://rainiers.milbstore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Fanatics Platform (implied by milbstore.com domain)",
+              "Liquid Templating (implied by 'Translation missing' syntax common in Shopify/Liquid based themes)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: New Era (Headwear)",
+              "Vendor: '47 Brand (Headwear/Apparel)",
+              "Vendor: 108 Stitches (Apparel)",
+              "Platform: MiLB E-commerce Store"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Supply Chain Partners",
+            "Localization Issues"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1402,
+              "output_tokens": 284,
+              "elapsed_seconds": 3.173226833343506
+            }
+          ],
+          "reasoning": "The content confirms the use of a hosted e-commerce solution (Fanatics/MLB) and identifies specific merchandise vendors (New Era, '47 Brand, 108 Stitches). While this indicates existing vendor relationships, it provides no direct signal of active procurement for new services or technologies. The 'Translation missing' errors suggest a potential need for technical maintenance or platform optimization services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:42:06.331727",
+          "domain_explored": "https://www.linkedin.com/jobs/view/2026-milb-abs-tech-seasonal-at-major-league-baseball-mlb-4331172824",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Automated Ball and Strike (ABS) System",
+              "Optical Tracking Data",
+              "iOS (iPhone Application)",
+              "WiFi Infrastructure",
+              "Slack (Communication)",
+              "Windows OS"
+            ],
+            "job_postings": [
+              {
+                "title": "2026 MiLB ABS Tech (Seasonal)",
+                "department": "Data Operations / Game Day Operations",
+                "type": "Seasonal / On-site",
+                "reporting_structure": "MLB Central Staff / Data Operations Supervisor"
+              }
+            ],
+            "procurement_indicators": [
+              "Hardware Procurement: ABS tracking equipment and wiring.",
+              "Device Procurement: League-supplied iPhones.",
+              "Infrastructure Upgrade: Requirement for dedicated WiFi connection at field level.",
+              "Service Contract: Role implies a budget for game-day technical staffing and support."
+            ]
+          },
+          "patterns_found": [
+            "Technology Procurement (Hardware/Software)",
+            "League-Wide Standardization",
+            "Operational Infrastructure Investment",
+            "Data Operations Role"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1468,
+              "output_tokens": 430,
+              "elapsed_seconds": 4.0045411586761475
+            }
+          ],
+          "reasoning": "The content explicitly confirms the procurement and deployment of the Automated Ball and Strike (ABS) system for the Tacoma Rainiers' stadium. This involves significant technology procurement, including optical tracking hardware, networking infrastructure (WiFi), and mobile devices (MLB-supplied iPhones). It also indicates the procurement of specialized labor to support this technology, representing a clear operational investment."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:42:15.531628",
+          "domain_explored": "https://www.linkedin.com/pulse/18-sports-pr-jobs-i-saw-week-feb-3-2025-tim-miller-mba-apr-cbehc",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Media Relations Intern"
+            ],
+            "procurement_indicators": [
+              "Active Recruitment",
+              "Departmental Growth (Media Relations)"
+            ]
+          },
+          "patterns_found": [
+            "Human Capital Procurement",
+            "Operational Staffing",
+            "Seasonal Workforce Planning",
+            "Media Relations Infrastructure"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1541,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.015996217727661
+            }
+          ],
+          "reasoning": "The content explicitly lists a 'Media Relations Intern' role for the Tacoma Rainiers. While this is a human resource acquisition rather than a technology or service procurement, it indicates active operational expansion and investment in the organization's communications infrastructure. This confirms the entity is actively hiring and investing in its operational capabilities."
+        }
+      ],
+      "total_input_tokens": 5768,
+      "total_output_tokens": 1126,
+      "estimated_cost_usd": 0.034194
+    },
+    "procurement_signals": [
+      "Technology Procurement (Hardware/Software)",
+      "League-Wide Standardization",
+      "Operational Infrastructure Investment",
+      "Data Operations Role",
+      "Human Capital Procurement",
+      "Operational Staffing",
+      "Seasonal Workforce Planning",
+      "Media Relations Infrastructure"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Tacoma Rainiers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:42:15.532667"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.309323",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:33.887525"
+}

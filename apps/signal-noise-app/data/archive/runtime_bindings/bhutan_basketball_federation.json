@@ -1,0 +1,173 @@
+{
+  "entity_id": "bhutan_basketball_federation",
+  "entity_name": "Bhutan Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "bhutanolympiccommittee.org",
+    "bhutanbasketball.org",
+    "raonline.ch"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bhutan_basketball_federation",
+      "entity_name": "Bhutan Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://raonline.ch",
+        "https://bhutanbasketball.org",
+        "https://bhutanolympiccommittee.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Direct Procurement Activity",
+        "Digital Transformation (Court Booking)",
+        "E-commerce Integration (Merchandise)",
+        "Operational Governance (Tenders & Reporting)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Bhutan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:10:47.307918",
+          "domain_explored": "https://bhutanolympiccommittee.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Live Tracking Systems (Race Tracking)",
+              "Match Centre Platforms",
+              "Digital Learning Platforms (for Sports Science/Admin courses)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "OCA & OS Regional Forum 2025 (Event Procurement)",
+              "Sports Administrators Course (June 2025)",
+              "Sports Science Course (3rd Batch)",
+              "Clean Sport Weekly (Content Production)",
+              "National School Games 2025"
+            ]
+          },
+          "patterns_found": [
+            "Event Hosting & Logistics",
+            "Educational Program Delivery",
+            "Sports Science & Anti-Doping Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 326,
+              "elapsed_seconds": 3.132678985595703
+            }
+          ],
+          "reasoning": "The content reveals the Bhutan Olympic Committee (BOC) is actively hosting major regional events (OCA & OS Regional Forum 2025) and delivering specialized educational courses (Sports Science, Sports Administrators). While not explicitly listing RFPs, these activities necessitate procurement for event management, training materials, and sports science technology. The BOC is the governing body for the Basketball Federation, indicating shared infrastructure and procurement cycles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:10:55.910029",
+          "domain_explored": "https://bhutanbasketball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Court Booking System (SaaS/Custom)",
+              "E-commerce Platform (Merchandise)",
+              "Event Management System (Centralized Calendar)",
+              "CMS (WordPress/Custom for News & Announcements)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Invitation for Tender (Supply of goods and/or services)",
+              "Court Booking System Implementation",
+              "Merchandise Store Management",
+              "Annual Reporting & Governance Audits"
+            ]
+          },
+          "patterns_found": [
+            "Direct Procurement Activity",
+            "Digital Transformation (Court Booking)",
+            "E-commerce Integration (Merchandise)",
+            "Operational Governance (Tenders & Reporting)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 300,
+              "elapsed_seconds": 4.734560012817383
+            }
+          ],
+          "reasoning": "The content provides explicit confirmation of procurement intent through the 'Invitation for Tender' news item dated 12/12/2025. Additionally, the presence of functional 'Court Booking' and 'Merchandise' sections indicates active or developing digital infrastructure requiring technical support and maintenance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:11:02.052435",
+          "domain_explored": "https://raonline.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Content Source",
+            "General Tourism/News Portal"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 627,
+              "output_tokens": 158,
+              "elapsed_seconds": 3.224796772003174
+            }
+          ],
+          "reasoning": "The scraped content from 'raonline.ch' is a general navigation index for a news and tourism portal covering Switzerland, Bhutan, and Nepal. It contains no specific references to the Bhutan Basketball Federation, nor does it contain procurement signals, RFPs, or technology stack details relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 3415,
+      "total_output_tokens": 784,
+      "estimated_cost_usd": 0.022005
+    },
+    "procurement_signals": [
+      "Direct Procurement Activity",
+      "Digital Transformation (Court Booking)",
+      "E-commerce Integration (Merchandise)",
+      "Operational Governance (Tenders & Reporting)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Bhutan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:11:02.054034"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.252773",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:48:09.294472"
+}

@@ -1,0 +1,81 @@
+{
+  "entity_id": "avtodor_volgograd",
+  "entity_name": "Avtodor Volgograd",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "bgbasket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "avtodor_volgograd",
+      "entity_name": "Avtodor Volgograd",
+      "total_iterations": 15,
+      "completed_iterations": 1,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://bgbasket.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Avtodor Volgograd may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:57:04.118826",
+          "domain_explored": "https://bgbasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Sports Media Navigation",
+            "Bulgarian Language Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 167,
+              "elapsed_seconds": 5.44809103012085
+            }
+          ],
+          "reasoning": "The scraped content is from 'bgbasket.com', a Bulgarian sports news portal. It contains navigation menus for basketball, football, and volleyball news, which is entirely unrelated to 'Avtodor Volgograd', a Russian state-owned road construction enterprise. There is no overlap in industry, geography, or business function."
+        }
+      ],
+      "total_input_tokens": 1358,
+      "total_output_tokens": 167,
+      "estimated_cost_usd": 0.006579
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Avtodor Volgograd may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:57:04.120383"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.228856",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:59.387862"
+}

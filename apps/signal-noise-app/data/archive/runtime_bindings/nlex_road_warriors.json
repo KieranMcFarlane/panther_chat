@@ -1,0 +1,117 @@
+{
+  "entity_id": "nlex_road_warriors",
+  "entity_name": "NLEX Road Warriors",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "professional_clubs",
+  "discovered_domains": [
+    "basketball.asia-basket.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/lancecham_sportsgm-pba-careers-activity-7137401027825172480-XjYU"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nlex_road_warriors",
+      "entity_name": "NLEX Road Warriors",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/lancecham_sportsgm-pba-careers-activity-7137401027825172480-XjYU",
+        "https://basketball.asia-basket.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NLEX Road Warriors may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:26:03.737053",
+          "domain_explored": "https://basketball.asia-basket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content",
+            "General_sports_news"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 165,
+              "elapsed_seconds": 13.986885070800781
+            }
+          ],
+          "reasoning": "The scraped content from asia-basket.com consists entirely of general basketball news, game statistics, and player transfers across various Asian leagues (Taiwan, Japan, UAE, etc.). There is absolutely no mention of NLEX Road Warriors, their management, or any operational activities that would indicate procurement needs, technology investments, or hiring."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:26:11.229947",
+          "domain_explored": "https://www.linkedin.com/posts/lancecham_sportsgm-pba-careers-activity-7137401027825172480-XjYU",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Key_Decision_Maker_Identified: Larry N. Fonacier (Sports GM / Team Manager)",
+              "Operational_Need: Logistics and team management coordination"
+            ]
+          },
+          "patterns_found": [
+            "Leadership_transition",
+            "Operational_responsibilities",
+            "Logistics_management",
+            "Culture_building"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1418,
+              "output_tokens": 236,
+              "elapsed_seconds": 4.054155111312866
+            }
+          ],
+          "reasoning": "While the content is primarily a career narrative, it explicitly identifies the new decision-maker (Larry Fonacier) and highlights his transition from player to a managerial role involving logistics ('arrange everything logistically'). This establishes the governance structure and implies a need for operational efficiency tools or services, though no specific procurement action is taken yet."
+        }
+      ],
+      "total_input_tokens": 2780,
+      "total_output_tokens": 401,
+      "estimated_cost_usd": 0.014355
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NLEX Road Warriors may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:26:11.231289"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.238668",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:51.031139"
+}

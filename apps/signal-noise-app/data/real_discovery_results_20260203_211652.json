@@ -1,0 +1,63 @@
+{
+  "report": {
+    "timestamp": "2026-02-03T21:16:52.431533+00:00",
+    "entities_tested": 3,
+    "total_cost_usd": 0.0,
+    "total_iterations": 0,
+    "entity_results": {
+      "liverpool-fc": {
+        "status": "failed",
+        "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)"
+      },
+      "bayern-munich": {
+        "status": "failed",
+        "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)"
+      },
+      "psg": {
+        "status": "failed",
+        "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)"
+      }
+    },
+    "comparison": {
+      "best_confidence": {
+        "entity_id": null,
+        "confidence": 0.0
+      },
+      "lowest_cost": {
+        "entity_id": null,
+        "cost": Infinity
+      },
+      "most_iterations": {
+        "entity_id": null,
+        "iterations": 0
+      },
+      "actionable_count": 0
+    },
+    "analysis": {},
+    "averages": {
+      "confidence": 0.0,
+      "cost_usd": 0.0,
+      "iterations": 0.0
+    }
+  },
+  "detailed_results": {
+    "liverpool-fc": {
+      "entity_id": "liverpool-fc",
+      "entity_name": "Liverpool FC",
+      "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 126, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 223, in __init__\n    self.eig_calculator = EIGCalculator(eig_config)\n                          ~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/eig_calculator.py\", line 195, in __init__\n    from hypothesis_persistence_native import HypothesisRepository\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_persistence_native.py\", line 398\n    True if saved successfully, False otherwise (but doesn't raise)\n                                                          ^\nSyntaxError: unterminated string literal (detected at line 398)\n"
+    },
+    "bayern-munich": {
+      "entity_id": "bayern-munich",
+      "entity_name": "Bayern Munich",
+      "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 126, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 223, in __init__\n    self.eig_calculator = EIGCalculator(eig_config)\n                          ~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/eig_calculator.py\", line 195, in __init__\n    from hypothesis_persistence_native import HypothesisRepository\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_persistence_native.py\", line 398\n    True if saved successfully, False otherwise (but doesn't raise)\n                                                          ^\nSyntaxError: unterminated string literal (detected at line 398)\n"
+    },
+    "psg": {
+      "entity_id": "psg",
+      "entity_name": "Paris Saint-Germain",
+      "error": "unterminated string literal (detected at line 398) (hypothesis_persistence_native.py, line 398)",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/scripts/run_real_discovery_comparison.py\", line 126, in discover_entity\n    discovery = HypothesisDrivenDiscovery(\n        claude_client=self.claude,\n        brightdata_client=self.brightdata,\n        cache_enabled=True\n    )\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_driven_discovery.py\", line 223, in __init__\n    self.eig_calculator = EIGCalculator(eig_config)\n                          ~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/eig_calculator.py\", line 195, in __init__\n    from hypothesis_persistence_native import HypothesisRepository\n  File \"/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/backend/hypothesis_persistence_native.py\", line 398\n    True if saved successfully, False otherwise (but doesn't raise)\n                                                          ^\nSyntaxError: unterminated string literal (detected at line 398)\n"
+    }
+  }
+}

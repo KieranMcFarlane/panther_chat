@@ -1,0 +1,157 @@
+{
+  "entity_id": "us_monastir",
+  "entity_name": "US Monastir",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "bb_developing_market",
+  "discovered_domains": [
+    "usmonastir.co",
+    "bal.nba.com",
+    "transfermarkt.us",
+    "cafonline.com",
+    "playmakerstats.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "us_monastir",
+      "entity_name": "US Monastir",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://playmakerstats.com",
+        "https://transfermarkt.us",
+        "https://bal.nba.com",
+        "https://cafonline.com",
+        "https://usmonastir.co"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "US Monastir may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:41:51.819762",
+          "domain_explored": "https://usmonastir.co",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:42:24.645837",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:42:30.237432",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_news_aggregation",
+            "player_market_valuations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.5445191860198975
+            }
+          ],
+          "reasoning": "The scraped content from 'transfermarkt.us' is a sports news portal focused on football (soccer) player transfers, market values, and rumors. It contains no information regarding 'US Monastir' (the Tunisian sports club), nor does it contain any corporate procurement signals, technology stacks, or governance patterns relevant to business intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:42:42.273250",
+          "domain_explored": "https://cafonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content",
+            "sports_news_aggregation",
+            "navigation_menu_structure"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1013,
+              "output_tokens": 156,
+              "elapsed_seconds": 8.170172929763794
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and homepage structure of the Confederation of African Football (CAF). It focuses on sports fixtures, videos, and competitions (AFCON, Champions League). There is no content related to US Monastir, procurement, or business operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:42:45.060883",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 2425,
+      "total_output_tokens": 329,
+      "estimated_cost_usd": 0.01221
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "US Monastir may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:42:45.062078"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.216563",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:51:37.113807"
+}

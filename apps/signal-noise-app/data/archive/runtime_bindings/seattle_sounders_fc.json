@@ -1,0 +1,370 @@
+{
+  "entity_id": "seattle_sounders_fc",
+  "entity_name": "Seattle Sounders FC",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "soundersfc.com",
+    "mlssoccer.com",
+    "mlsstore.com",
+    "visitseattle.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs-worldwide",
+      "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs",
+      "https://www.linkedin.com/jobs/view/head-of-fitness-at-seattle-sounders-fc-4358130652",
+      "https://www.linkedin.com/jobs/football-jobs-seattle-wa",
+      "https://www.linkedin.com/posts/seattle-sounders-fc_seattle-sounders-fc-jobs-activity-6907015766663684096-pNAT?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "seattle_sounders_fc",
+      "entity_name": "Seattle Sounders FC",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.12000000000000001,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.1,
+        0.12000000000000001
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs-worldwide",
+        "https://mlssoccer.com",
+        "https://visitseattle.org",
+        "https://www.linkedin.com/jobs/view/head-of-fitness-at-seattle-sounders-fc-4358130652",
+        "https://www.linkedin.com/posts/seattle-sounders-fc_seattle-sounders-fc-jobs-activity-6907015766663684096-pNAT?trk=public_profile_like_view",
+        "https://www.linkedin.com/jobs/football-jobs-seattle-wa",
+        "https://mlsstore.com",
+        "https://soundersfc.com",
+        "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Seattle Sounders FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:14:49.433857",
+          "domain_explored": "https://soundersfc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partnership evolution with Providence Health",
+              "International training camps (Spain/Portugal)"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Partnership Evolution",
+            "Sports Performance Operations",
+            "International Travel Logistics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 241,
+              "elapsed_seconds": 2.9797861576080322
+            }
+          ],
+          "reasoning": "While the content is primarily sports news, the repeated mention of a 'planned evolution of their partnership' with Providence (a major health system) indicates active strategic business development. This suggests a potential procurement cycle for associated services (e.g., medical technology, training facilities, or joint marketing ventures). The international training location (Spain/Portugal) also implies ongoing vendor relationships for travel and logistics."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:14:55.950788",
+          "domain_explored": "https://mlssoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League-Wide Transfer Activity",
+            "Competitor Roster Analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1411,
+              "output_tokens": 166,
+              "elapsed_seconds": 2.8652970790863037
+            }
+          ],
+          "reasoning": "The content provided is a list of MLS transfer news headlines and snippets regarding other teams (Red Bull New York, Inter Miami, San Jose Earthquakes, Orlando City, Houston Dynamo). There is absolutely no mention of Seattle Sounders FC, nor are there any procurement signals, technology investments, or job postings relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:15:00.376003",
+          "domain_explored": "https://mlsstore.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:15:08.609548",
+          "domain_explored": "https://visitseattle.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA World Cup 26 Host City Operations (June-July 2026)",
+              "Lumen Field Event Logistics & Traffic Management",
+              "Regional Tourism Infrastructure Upgrades (WSDOT Revive I-5)"
+            ]
+          },
+          "patterns_found": [
+            "Major Event Infrastructure Planning",
+            "Regional Logistics Coordination",
+            "Stakeholder Ecosystem Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1481,
+              "output_tokens": 251,
+              "elapsed_seconds": 4.209429979324341
+            }
+          ],
+          "reasoning": "While the content is from a tourism board and not a direct procurement portal, it highlights a critical macro-driver for Seattle Sounders FC procurement: the 2026 FIFA World Cup. The explicit mention of hosting matches at Lumen Field (Sounders' home stadium) indicates upcoming requirements for event services, infrastructure upgrades, and vendor coordination to support the influx of visitors and operations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:15:16.177226",
+          "domain_explored": "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Monitoring Tools (implied by Head of Fitness role)",
+              "Hospitality POS & Management Systems (implied by Premium Hospitality role)"
+            ],
+            "job_postings": [
+              "Head of Fitness (Seattle Sounders FC, Renton WA)",
+              "Director of Premium Hospitality - Lumen Field (Levy Restaurants, Seattle WA)"
+            ],
+            "procurement_indicators": [
+              "Outsourced Stadium Operations (Levy Restaurants)",
+              "Investment in High-Performance Medical/Training Staff",
+              "Vendor-Managed Ecosystem"
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Performance Technology Procurement",
+            "Venue Operations & Hospitality Management",
+            "Third-Party Vendor Ecosystem (Levy Restaurants)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1545,
+              "output_tokens": 352,
+              "elapsed_seconds": 4.29610800743103
+            }
+          ],
+          "reasoning": "While the page is largely gated by a login wall, the visible snippets reveal specific roles that drive procurement decisions. The 'Head of Fitness' role implies a need for performance monitoring hardware and software. The 'Director of Premium Hospitality' role, employed by vendor partner Levy Restaurants, confirms an outsourcing model for stadium concessions and premium services, indicating partnership-based procurement rather than direct hiring for those functions."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:15:29.083131",
+          "domain_explored": "https://www.linkedin.com/jobs/seattle-sounders-fc-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Monitoring Tools (implied by Head of Fitness role)",
+              "Hospitality POS Systems (implied by Levy role)"
+            ],
+            "job_postings": [
+              "Head of Fitness",
+              "Director of Premium Hospitality - Lumen Field (Levy Restaurants)"
+            ],
+            "procurement_indicators": [
+              "Hiring for specialized performance leadership suggests upcoming budget for sports tech.",
+              "Levy Restaurants role confirms outsourced concession model."
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Performance Technology Procurement",
+            "Venue Operations & Hospitality Management",
+            "Third-Party Vendor Ecosystem (Levy Restaurants)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1617,
+              "output_tokens": 319,
+              "elapsed_seconds": 9.08434796333313
+            }
+          ],
+          "reasoning": "The job listing for 'Head of Fitness' indicates a direct investment in sports performance infrastructure, which typically requires the procurement of specialized technology (GPS trackers, HR monitoring) and equipment. The listing for 'Director of Premium Hospitality' under Levy Restaurants confirms the outsourcing model for food services, identifying a key channel partner for venue-related procurement."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T18:15:39.424575",
+          "domain_explored": "https://www.linkedin.com/jobs/view/head-of-fitness-at-seattle-sounders-fc-4358130652",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Player Tracking / GPS Wearables (e.g., Catapult, STATSports)",
+              "Player Management Systems (PMS)",
+              "Data Visualization/Reporting Tools (for load management)",
+              "Rehabilitation Technology"
+            ],
+            "job_postings": [
+              {
+                "title": "Head of Fitness",
+                "department": "Performance",
+                "salary_range": "$100,000 - $130,000",
+                "location": "Renton, WA",
+                "procurement_relevance": "Responsible for utilizing and potentially selecting performance monitoring and gym technologies."
+              }
+            ],
+            "procurement_indicators": [
+              "Requirement for 'detailed insights and reporting' implies existing or needed software licenses.",
+              "Collaboration with medical staff suggests integrated ecosystem for Electronic Medical Records (EMR) and return-to-play workflows.",
+              "Focus on 'injury mitigation' and 'player loading' signals investment in preventative tech solutions."
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Performance Technology Procurement",
+            "Data-Driven Performance Management",
+            "High-Value Human Capital Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1697,
+              "output_tokens": 466,
+              "elapsed_seconds": 6.731056213378906
+            }
+          ],
+          "reasoning": "While this is a job posting (human capital), the role explicitly requires the procurement and utilization of specific technologies to perform essential duties. The requirement for 'detailed insights and reporting' on 'player loading' and 'performance improvements' indicates a dependency on wearable technology (GPS trackers), data analytics software, and potentially gym management systems. The salary range ($100k-$130k) confirms significant investment in this operational area."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T18:15:45.869693",
+          "domain_explored": "https://www.linkedin.com/jobs/football-jobs-seattle-wa",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "TOCA Football (Training Technology)"
+            ],
+            "job_postings": [
+              "Soccer Skills Trainer - TOCA Football",
+              "Sport Coordinator - i9 Sports"
+            ],
+            "procurement_indicators": [
+              "Regional demand for performance training tools",
+              "Youth sports operational infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Regional Ecosystem Analysis",
+            "Competitive Labor Market Intelligence",
+            "Indirect Procurement Indicators (Training Tech)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1765,
+              "output_tokens": 310,
+              "elapsed_seconds": 2.8886070251464844
+            }
+          ],
+          "reasoning": "While this specific URL is a generic search results page for 'Football' roles in Seattle rather than a dedicated Sounders FC career page, it provides valuable context on the local sports ecosystem. The presence of 'Soccer Skills Trainer' roles at TOCA Football (Redmond) indicates regional investment in soccer training technology, which aligns with the Sounders' focus on performance innovation. It confirms the region is a hub for soccer-related operations, but lacks direct procurement intent for the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T18:15:53.352866",
+          "domain_explored": "https://www.linkedin.com/posts/seattle-sounders-fc_seattle-sounders-fc-jobs-activity-6907015766663684096-pNAT?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Multiple Positions (Unspecified)"
+            ],
+            "procurement_indicators": [
+              "Organizational Expansion"
+            ]
+          },
+          "patterns_found": [
+            "General Recruitment Activity",
+            "Organizational Growth Phase",
+            "Talent Acquisition Pipeline"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1851,
+              "output_tokens": 198,
+              "elapsed_seconds": 4.273077011108398
+            }
+          ],
+          "reasoning": "The content confirms active hiring (multiple positions) but lacks the specific details required to identify procurement signals (e.g., specific technologies, vendor management roles, or RFPs). It validates organizational growth but does not advance the specific procurement hypothesis significantly beyond previous iterations."
+        }
+      ],
+      "total_input_tokens": 12726,
+      "total_output_tokens": 2303,
+      "estimated_cost_usd": 0.072723
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Seattle Sounders FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:15:53.353764"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.156188",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:22:57.095696"
+}

@@ -1,0 +1,198 @@
+{
+  "entity_id": "repco_supercars_championship",
+  "entity_name": "Repco Supercars Championship",
+  "template_id": "tpl_motorsport_development_series_v1",
+  "cluster_id": "motorsport_development_series",
+  "discovered_domains": [
+    "supercars.com",
+    "repco.com.au"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://au.linkedin.com/jobs/view/brand-sponsorship-specialist-gpc-asia-pacific-rowville-at-gpc-asia-pacific-4365018860",
+      "https://au.linkedin.com/jobs/view/content-creator-at-network-r-4093144911"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "repco_supercars_championship",
+      "entity_name": "Repco Supercars Championship",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://au.linkedin.com/jobs/view/brand-sponsorship-specialist-gpc-asia-pacific-rowville-at-gpc-asia-pacific-4365018860",
+        "https://au.linkedin.com/jobs/view/content-creator-at-network-r-4093144911",
+        "https://repco.com.au",
+        "https://supercars.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active recruitment for sponsorship management",
+        "Direct management of Repco Supercars Championship partnership",
+        "Event activation and execution requirements",
+        "Data-led marketing analysis requirements"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Repco Supercars Championship may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:10:20.754752",
+          "domain_explored": "https://supercars.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Renewal: Dunlop branding visible on '2026 DUNLOP Sydney 500', indicating active or renewed sponsorship contracts.",
+              "Ticketing Operations: Active sales cycle for the Sydney 500 event implies reliance on existing ticketing vendors/platforms."
+            ]
+          },
+          "patterns_found": [
+            "Event countdown and ticketing urgency",
+            "Team operational news (Triple Eight, Walkinshaw)",
+            "Sponsorship visibility (Dunlop, Repco)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.661508083343506
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (event schedules, ticket sales, driver market news) and high-level team announcements. There are no technical specifications, job postings, RFP notices, or backend infrastructure details that indicate procurement activity or technology stack changes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:10:23.972489",
+          "domain_explored": "https://repco.com.au",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:10:32.108072",
+          "domain_explored": "https://au.linkedin.com/jobs/view/brand-sponsorship-specialist-gpc-asia-pacific-rowville-at-gpc-asia-pacific-4365018860",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Marketing Analytics Platforms (implied by 'data-led marketing')",
+              "Project Management Software (implied by 'project management skills')"
+            ],
+            "job_postings": [
+              "Brand & Sponsorship Specialist - GPC Asia Pacific (Rowville/Brisbane)"
+            ],
+            "procurement_indicators": [
+              "Management of major sponsorships (Repco Supercars Championship)",
+              "Procurement of event activation services",
+              "Investment in brand campaign delivery",
+              "Vendor management for event partners"
+            ]
+          },
+          "patterns_found": [
+            "Active recruitment for sponsorship management",
+            "Direct management of Repco Supercars Championship partnership",
+            "Event activation and execution requirements",
+            "Data-led marketing analysis requirements"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1476,
+              "output_tokens": 367,
+              "elapsed_seconds": 4.235514163970947
+            }
+          ],
+          "reasoning": "The job posting for a 'Brand & Sponsorship Specialist' at GPC Asia Pacific (Repco) provides direct evidence of procurement activity related to the Repco Supercars Championship. The role explicitly involves managing the 'Repco Supercars Championship partnerships' and 'Supercars teams', executing event activations, and managing brand campaigns. This indicates an active investment in marketing services, event management, and potentially analytics tools to support these functions."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:10:39.073345",
+          "domain_explored": "https://au.linkedin.com/jobs/view/content-creator-at-network-r-4093144911",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Premiere Pro",
+              "Adobe After Effects",
+              "Adobe Photoshop",
+              "Final Cut Pro",
+              "DaVinci Resolve",
+              "Drones (UAV technology)"
+            ],
+            "job_postings": [
+              "Content Creator (Network R) - 12-month contract"
+            ],
+            "procurement_indicators": [
+              "Outsourcing of content creation to specialized agencies",
+              "Requirement for travel and event logistics support",
+              "Demand for high-volume video editing workstations"
+            ]
+          },
+          "patterns_found": [
+            "Agency ecosystem procurement",
+            "Content supply chain management",
+            "Event-based production requirements",
+            "Adobe Creative Suite dependency"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 316,
+              "elapsed_seconds": 3.1136200428009033
+            }
+          ],
+          "reasoning": "While this is a job posting for an agency (Network R) rather than the championship directly, it confirms the procurement of content services by teams/clients within the ecosystem. It highlights the technology stack (Adobe) and the operational requirement for high-volume, fast-turnaround video content, which drives demand for software and hardware procurement."
+        }
+      ],
+      "total_input_tokens": 4393,
+      "total_output_tokens": 935,
+      "estimated_cost_usd": 0.027204
+    },
+    "procurement_signals": [
+      "Active recruitment for sponsorship management",
+      "Direct management of Repco Supercars Championship partnership",
+      "Event activation and execution requirements",
+      "Data-led marketing analysis requirements"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Repco Supercars Championship may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:10:39.074776"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.376495",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:21:41.084778"
+}

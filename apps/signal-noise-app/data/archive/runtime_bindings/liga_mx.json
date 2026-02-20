@@ -1,0 +1,258 @@
+{
+  "entity_id": "liga_mx",
+  "entity_name": "Liga MX",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "ligamx.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/4344497002/?refId=RhXLF2J1R82u988odFcqaA%3D%3D&trackingId=RhXLF2J1R82u988odFcqaA%3D%3D",
+      "https://mx.linkedin.com/jobs/view/la-liga-mx-lead-officiating-manager-%E2%80%93-saot-at-genius-sports-4363383598",
+      "https://www.linkedin.com/jobs/genius-sports-jobs-worldwide",
+      "https://www.linkedin.com/jobs/view/vice-president-sports-business-public-relations-at-berlinrosen-an-orchestra-company-4315379795"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "liga_mx",
+      "entity_name": "Liga MX",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06,
+        0.08
+      ],
+      "explored_domains": [
+        "https://mx.linkedin.com/jobs/view/la-liga-mx-lead-officiating-manager-%E2%80%93-saot-at-genius-sports-4363383598",
+        "https://www.linkedin.com/jobs/genius-sports-jobs-worldwide",
+        "https://ligamx.net",
+        "https://www.linkedin.com/jobs/view/4344497002/?refId=RhXLF2J1R82u988odFcqaA%3D%3D&trackingId=RhXLF2J1R82u988odFcqaA%3D%3D",
+        "https://www.linkedin.com/jobs/view/vice-president-sports-business-public-relations-at-berlinrosen-an-orchestra-company-4315379795"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Vendor Partnership Confirmation (Genius Sports)",
+        "Semi-Automated Offside Technology (SAOT) Implementation",
+        "High-Value Operational Contract",
+        "Specialized Technical Infrastructure Deployment"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Liga MX may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:10:51.768958",
+          "domain_explored": "https://ligamx.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Mobile Application (Native/Hybrid)",
+              "Push Notification System",
+              "Real-time Data Feed (Match scores)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile App Interface Elements",
+            "User Configuration Settings",
+            "Real-time Match Data Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1352,
+              "output_tokens": 197,
+              "elapsed_seconds": 2.3560590744018555
+            }
+          ],
+          "reasoning": "The content represents scraped UI strings from the Liga MX mobile application or web widget (settings for notifications, sounds, and match center layout). While this confirms the use of mobile technology, it contains no corporate governance, procurement, or vendor information."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:11:01.315518",
+          "domain_explored": "https://www.linkedin.com/jobs/view/4344497002/?refId=RhXLF2J1R82u988odFcqaA%3D%3D&trackingId=RhXLF2J1R82u988odFcqaA%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Director/A De Operaciones \u2014 Food Project Galicia",
+              "SAINT LAURENT Store Director \u2014 Saint Laurent",
+              "Retail Manager Director - Murcia \u2014 rpc Espa\u00f1a",
+              "Managing Director, Iberia \u2014 Dyson"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Geographic Irrelevance (Spain vs Mexico)",
+            "Sector Mismatch (Retail/Food vs Sports)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1428,
+              "output_tokens": 255,
+              "elapsed_seconds": 4.583495855331421
+            }
+          ],
+          "reasoning": "The provided content is a generic LinkedIn job search results page for Director-level positions in Spain. None of the listings (Saint Laurent, Dyson, rpc Espa\u00f1a, Food Project Galicia) are associated with Liga MX or the Mexican football federation. The geographic focus (Spain) and industry sectors (Luxury Retail, Appliances) are irrelevant to the target entity's procurement activities in Mexico."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:11:11.044818",
+          "domain_explored": "https://mx.linkedin.com/jobs/view/la-liga-mx-lead-officiating-manager-%E2%80%93-saot-at-genius-sports-4363383598",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Semi-Automated Offside Technology (SAOT)",
+              "VAR (Video Assistant Referee) Systems",
+              "Live Data Operations Platforms"
+            ],
+            "job_postings": [
+              "La Liga MX Lead Officiating Manager \u2013 SAOT (Genius Sports)"
+            ],
+            "procurement_indicators": [
+              "Confirmed Vendor: Genius Sports (Technology Partner)",
+              "Service Category: Officiating Technology & Data Operations",
+              "Contract Scope: Live match operations, system integration, and personnel management for Liga MX",
+              "Investment Type: Infrastructure & Specialized Personnel"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation (Genius Sports)",
+            "Semi-Automated Offside Technology (SAOT) Implementation",
+            "High-Value Operational Contract",
+            "Specialized Technical Infrastructure Deployment"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 357,
+              "elapsed_seconds": 6.3927531242370605
+            }
+          ],
+          "reasoning": "The content confirms a major procurement partnership between Liga MX and Genius Sports for the deployment of Semi-Automated Offside Technology (SAOT). This is a high-value, high-tech procurement signal indicating investment in advanced officiating infrastructure. The job posting confirms the operational phase of this contract, requiring significant personnel and technical resources."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:11:17.493898",
+          "domain_explored": "https://www.linkedin.com/jobs/genius-sports-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Manager, Social Media (Canadian Football League)",
+              "Graphic Designer (Canadian Football League)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Board Interface",
+            "Entity Mismatch (CFL vs Liga MX)",
+            "Authentication Gate/Sign-in Wall"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1576,
+              "output_tokens": 237,
+              "elapsed_seconds": 2.9047181606292725
+            }
+          ],
+          "reasoning": "The scraped content represents a generic job listing page for Genius Sports but primarily features roles for the Canadian Football League (CFL), not Liga MX. While Genius Sports is a known vendor (confirmed in Iteration 3), this specific page does not contain new procurement signals relevant to Liga MX. It is a high-level job board view blocked by a login wall, offering no specific insight into Liga MX's technology stack or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:11:26.863841",
+          "domain_explored": "https://www.linkedin.com/jobs/view/vice-president-sports-business-public-relations-at-berlinrosen-an-orchestra-company-4315379795",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Vice President, Sports Business Public Relations",
+                "entity": "BerlinRosen (Vendor)",
+                "client_confirmed": "Liga MX",
+                "location": "New York, NY",
+                "function": "Strategic Communications, PR, Media Relations"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "type": "Vendor Engagement",
+                "vendor": "BerlinRosen / Orchestra",
+                "service_category": "Public Relations & Communications",
+                "status": "Active (Client Listed)",
+                "potential_value": "High (Retainer/Project based)"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership Confirmation (BerlinRosen)",
+            "Scope: Public Relations & Communications Strategy",
+            "Cross-League Portfolio Management (MLB, NFL, NBA, Liga MX)",
+            "Integrated Communications Services (Digital, Influencer, Media)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 395,
+              "elapsed_seconds": 5.692609786987305
+            }
+          ],
+          "reasoning": "While this is a job posting for a PR firm (BerlinRosen) rather than Liga MX directly, it explicitly lists Liga MX as a current client within their 'Sports Business' portfolio. This confirms an active vendor relationship for communications services. It provides insight into Liga MX's governance regarding external narrative management and media strategy, though it lacks specific technology or procurement spend data."
+        }
+      ],
+      "total_input_tokens": 7514,
+      "total_output_tokens": 1441,
+      "estimated_cost_usd": 0.044157
+    },
+    "procurement_signals": [
+      "Vendor Partnership Confirmation (Genius Sports)",
+      "Semi-Automated Offside Technology (SAOT) Implementation",
+      "High-Value Operational Contract",
+      "Specialized Technical Infrastructure Deployment"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Liga MX may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:11:26.865455"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.418989",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:36.352411"
+}

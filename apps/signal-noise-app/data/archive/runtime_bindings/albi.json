@@ -1,0 +1,633 @@
+{
+  "entity_id": "albi",
+  "entity_name": "Albi",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "albi.eu",
+    "albi.fr",
+    "albi-tourisme.fr",
+    "albigroup.com",
+    "albi.org",
+    "albidc.com",
+    "albiware.com",
+    "comune.albi.cz.it",
+    "albi.cz"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/company/albihq/jobs",
+      "https://fr.linkedin.com/jobs/job-manager-emplois-albi",
+      "https://www.linkedin.com/jobs/view/creative-lead-at-albi-4359182802",
+      "https://www.linkedin.com/jobs/view/senior-full-stack-engineer-flutter-backend-at-albi-4319376288",
+      "https://www.linkedin.com/jobs/view/growth-demand-generation-manager-at-albi-4359078574",
+      "https://www.linkedin.com/jobs/view/enterprise-customer-success-manager-csm-at-albi-4319992693",
+      "https://www.linkedin.com/jobs/view/performance-marketing-manager-at-albi-4359147729",
+      "https://www.linkedin.com/jobs/view/large-tier-mid-market-onboarding-manager-at-albi-4319900573"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "albi",
+      "entity_name": "Albi",
+      "total_iterations": 15,
+      "completed_iterations": 14,
+      "current_confidence": 0.26,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.08,
+        0.08,
+        0.14,
+        0.2,
+        0.26
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/creative-lead-at-albi-4359182802",
+        "https://www.linkedin.com/jobs/view/senior-full-stack-engineer-flutter-backend-at-albi-4319376288",
+        "https://albidc.com",
+        "https://albi-tourisme.fr",
+        "https://www.linkedin.com/jobs/view/growth-demand-generation-manager-at-albi-4359078574",
+        "https://albi.cz",
+        "https://www.linkedin.com/company/albihq/jobs",
+        "https://fr.linkedin.com/jobs/job-manager-emplois-albi",
+        "https://albiware.com",
+        "https://albi.eu",
+        "https://albi.org",
+        "https://albigroup.com",
+        "https://comune.albi.cz.it",
+        "https://albi.fr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Active Recruitment for Technical Roles",
+        "Investment in AI/ML and Automation",
+        "Customer Success & Onboarding Expansion",
+        "Demand Generation & Marketing Operations",
+        "Global Distributed Engineering (Offshoring to Pakistan)",
+        "SaaS Procurement Intent (Restoration Industry)",
+        "Y Combinator Backing (Venture Capital)",
+        "Visual-First Marketing Transformation",
+        "Design System Procurement (Figma, Adobe)",
+        "High-Growth Startup Hiring (Chicago)",
+        "SaaS Procurement Intent (Restoration Industry)",
+        "Y Combinator Backing (Venture Capital)",
+        "Mobile-First Digital Transformation",
+        "Cross-Platform Development Strategy",
+        "Cloud Infrastructure Investment (Azure/AWS/GCP)",
+        "API-First Architecture",
+        "MarTech Stack Optimization (HubSpot)",
+        "Full-Funnel Attribution Modeling",
+        "AI & Automation Tool Evaluation",
+        "B2B SaaS Demand Generation",
+        "Venture-Backed Growth Phase"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Albi may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:22:50.883665",
+          "domain_explored": "https://albi.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Product Catalog Content",
+            "B2C Marketing Material",
+            "Creative Industry Output"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1350,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.393364191055298
+            }
+          ],
+          "reasoning": "The scraped content consists exclusively of product descriptions for board games (Severton, Garden Lake, Dirt & Dust). This indicates that 'Albi' is a publisher or retailer in the gaming industry. There are absolutely no procurement signals, technology infrastructure details, or corporate governance information present in this text. It is pure consumer-facing content."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:22:56.720631",
+          "domain_explored": "https://albi.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF generation (Albimag download)",
+              "Newsletter subscription management"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public Infrastructure Projects (Transformation de la place Jean-Jaur\u00e8s)",
+              "Public Service Contracts (Mutuelle communale, Menus cantine)"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Government Portal",
+            "B2C Citizen Services",
+            "Public Sector Event Listings",
+            "Local Urban Planning Projects"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1394,
+              "output_tokens": 287,
+              "elapsed_seconds": 2.790153980255127
+            }
+          ],
+          "reasoning": "The scraped content from albi.fr confirms the entity is the Ville d'Albi (City of Albi), a municipal government body in France. The content is entirely focused on citizen services (canteen menus, IDs), cultural events (musees, expositions), and public infrastructure projects (Place Jean-Jaur\u00e8s). There are no corporate procurement signals, B2B service offerings, or commercial technology stacks present. This contradicts the hypothesis of a commercial entity procurement target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:23:03.479135",
+          "domain_explored": "https://albi-tourisme.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C Destination Marketing",
+            "Tourism Promotion Content",
+            "Visitor Service Listings (City Pass, Hotels, Restaurants)",
+            "Newsletter Subscription Forms"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1441,
+              "output_tokens": 179,
+              "elapsed_seconds": 3.207336187362671
+            }
+          ],
+          "reasoning": "The content analyzed is exclusively consumer-facing tourism marketing material from the 'Office de Tourisme d'Albi'. It focuses on visitor experiences, accommodations, and gastronomy. There are no corporate governance structures, technology stacks, or procurement signals present in this content."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T16:23:14.026970",
+          "domain_explored": "https://albigroup.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Albi Online)",
+              "Inventory Management Systems (Stock synchronization)",
+              "Logistics Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Business Development / Partnership contact channel",
+              "FMCG Distribution partnerships",
+              "International brand franchising",
+              "Real Estate development projects"
+            ]
+          },
+          "patterns_found": [
+            "Corporate Conglomerate Structure",
+            "Multi-Vertical Operations (Retail, Real Estate, FMCG)",
+            "Digital Transformation (E-commerce Platform)",
+            "Supply Chain & Distribution Management",
+            "Partnership & Vendor Inquiries"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1496,
+              "output_tokens": 360,
+              "elapsed_seconds": 4.851607084274292
+            }
+          ],
+          "reasoning": "The content reveals Albi Group is a diversified family-owned conglomerate in Kosovo with significant operational complexity. While the page is primarily informational (About Us), the description of business units\u2014specifically 'Albi Online' (cutting-edge e-commerce), 'Albi Mall' (property management), and 'Albi Commerce' (FMCG distribution)\u2014indicates a high likelihood of procurement needs for ERP, CRM, logistics software, and infrastructure. The explicit mention of a 'business development team' for partnerships confirms a procurement function exists."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T16:23:21.521571",
+          "domain_explored": "https://albi.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Albi Film and Television Fund (Grantmaking)",
+              "Albi Institute (Educational Programs)",
+              "Albi Lab (Experimental Funding)"
+            ]
+          },
+          "patterns_found": [
+            "Non-Profit/NGO Mission Statement",
+            "Grantmaking and Funding Operations",
+            "Cultural Advocacy and Political Narrative Shaping",
+            "Programmatic 'Lab' and 'Institute' Structures",
+            "Content Marketing (Mission-Driven)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 268,
+              "elapsed_seconds": 3.701249599456787
+            }
+          ],
+          "reasoning": "The entity identified at albi.org is a non-profit organization (fund/institute) focused on cultural production and political narrative change. While it operates a 'Fund' and a 'Lab', these are grantmaking and programmatic vehicles for social impact, not corporate procurement units. There is no evidence of B2B procurement, supply chain management, or enterprise software acquisition relevant to the target persona."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T16:23:31.034257",
+          "domain_explored": "https://albidc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Physical renovation project (2025) - implies construction/design vendors, but not scalable tech procurement"
+            ]
+          },
+          "patterns_found": [
+            "B2C Hospitality & Dining",
+            "Culinary Narrative & Brand Storytelling",
+            "Operational Renovation (Physical Construction)",
+            "Awards & Recognition Listing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1612,
+              "output_tokens": 271,
+              "elapsed_seconds": 5.197338342666626
+            }
+          ],
+          "reasoning": "The content describes a Michelin-starred restaurant (Albi) in Washington D.C., founded by Chef Michael Rafidi. The text focuses entirely on culinary philosophy, menu descriptions, interior design renovations, and industry awards. While there is a mention of a 'full renovation' in 2025, this refers to physical construction and interior design rather than corporate procurement or technology acquisition. The entity is a consumer-facing hospitality business with no signals of B2B procurement intent relevant to the target profile."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T16:23:36.802664",
+          "domain_explored": "https://albiware.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T16:23:49.290057",
+          "domain_explored": "https://comune.albi.cz.it",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Institutional CMS (implied by structure)",
+              "Web Accessibility Tools (mentioned in news)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Transformation (Public Sector)",
+              "E-Government Services"
+            ]
+          },
+          "patterns_found": [
+            "Municipal Government Portal (Italian)",
+            "B2C Citizen Services",
+            "Public Sector Information Architecture",
+            "Generic CMS Content (Repeated News Blocks)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1696,
+              "output_tokens": 293,
+              "elapsed_seconds": 6.731740951538086
+            }
+          ],
+          "reasoning": "The content confirms this is the official website for the Municipality of Albi, Italy (Comune di Albi). It focuses on citizen services, administrative transparency (Mayor, Council), and general announcements about the website redesign. While there is a mention of digital innovation ('Nuovo Portale'), this refers to the consumption of the site itself by citizens, not an enterprise procurement signal. The entity is a public sector administrative body, distinct from the commercial 'Albi' target or the conglomerate 'Albigroup'."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T16:23:58.038466",
+          "domain_explored": "https://albi.cz",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Legacy based on URL structure)",
+              "Web Analytics (Implied by marketing tracking)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C E-commerce Product Catalog",
+            "Consumer Retail Marketing (Discounts, Promotions)",
+            "Direct-to-Consumer Sales Interface",
+            "Physical Goods Inventory Management (Books, Toys, Games)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1747,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.426665306091309
+            }
+          ],
+          "reasoning": "The content scraped from albi.cz is exclusively focused on consumer retail operations. The text highlights Valentine's Day promotions, children's books, thermos bottles, and school preparation games. This represents the 'Albi' entity as a toy/book publisher and retailer (Albi s.r.o., Czech Republic), not a corporate entity seeking procurement services or software solutions. The signals are strictly B2C sales."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T16:24:17.224541",
+          "domain_explored": "https://www.linkedin.com/company/albihq/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Flutter",
+              "Backend Development",
+              "AI / ML (Applied AI & Automations)",
+              "Marketing Automation (implied by Performance Marketing role)",
+              "CRM (implied by Customer Success role)"
+            ],
+            "job_postings": [
+              "Senior Full Stack Engineer (Flutter & Backend)",
+              "AI / ML Engineer (Applied AI & Automations)",
+              "Support Engineer",
+              "Enterprise Customer Success Manager (CSM)",
+              "Large Tier/Mid-Market Onboarding Manager",
+              "Creative Lead",
+              "Performance Marketing Manager",
+              "Growth & Demand Generation Manager"
+            ],
+            "procurement_indicators": [
+              "Digital Transformation (AI implementation)",
+              "B2B SaaS Operations (Enterprise CSM, Onboarding)",
+              "Marketing Technology Acquisition (Performance/Demand Gen)",
+              "Software Development Lifecycle Management"
+            ]
+          },
+          "patterns_found": [
+            "Active Recruitment for Technical Roles",
+            "Investment in AI/ML and Automation",
+            "Customer Success & Onboarding Expansion",
+            "Demand Generation & Marketing Operations",
+            "Global Distributed Engineering (Offshoring to Pakistan)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1809,
+              "output_tokens": 505,
+              "elapsed_seconds": 14.807976007461548
+            }
+          ],
+          "reasoning": "The content reveals a company in active growth/hiring phase ('Albi' - Software Development for restoration industry). The job postings indicate direct procurement of human capital and technology infrastructure. Specifically, the 'AI / ML Engineer' and 'Senior Full Stack Engineer' roles signal technology stack procurement and development, while 'Performance Marketing Manager' and 'Growth & Demand Generation Manager' roles indicate procurement of marketing tools and services. The presence of 'Enterprise Customer Success' and 'Onboarding' roles suggests a B2B SaaS model with complex client integration needs."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T16:24:26.213220",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-manager-emplois-albi",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "CDI Responsable service et relation client magasin (Leroy Merlin)",
+              "ASSISTANT\u00b7E MANAGER H&R (Tetranergy Business School)",
+              "Responsable de secteur adjoint (Arnal Resotainer)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Job Aggregation (Albi, Occitanie)",
+            "Generic Retail & Hospitality Roles",
+            "Local SME Recruitment (Leroy Merlin, Tetranergy, Arnal)",
+            "Absence of Entity-Specific Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1873,
+              "output_tokens": 281,
+              "elapsed_seconds": 5.337363958358765
+            }
+          ],
+          "reasoning": "The scraped content is a generic LinkedIn job search results page filtered by the geographic location 'Albi, France'. It lists vacancies for local entities like Leroy Merlin (retail) and Tetranergy (education), none of which correlate with the target entity 'Albi' (presumably the SaaS/Procurement platform identified in Iteration 10). There are no procurement signals, technology stacks, or corporate strategy insights relevant to the target entity."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T16:24:39.500207",
+          "domain_explored": "https://www.linkedin.com/jobs/view/creative-lead-at-albi-4359182802",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Figma",
+              "Adobe Creative Suite (Illustrator, Photoshop, InDesign)",
+              "After Effects",
+              "Premiere Pro"
+            ],
+            "job_postings": [
+              "Creative Lead (Chicago, IL)",
+              "Global Marketing & Ops Leader (Chiara B.)"
+            ],
+            "procurement_indicators": [
+              "SaaS Subscription for Design Tools",
+              "Recruitment Budget ($115k-$135k + Bonus)",
+              "Investment in Brand Scalability Systems",
+              "Y Combinator Funding (Capital Availability)"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Procurement Intent (Restoration Industry)",
+            "Y Combinator Backing (Venture Capital)",
+            "Visual-First Marketing Transformation",
+            "Design System Procurement (Figma, Adobe)",
+            "High-Growth Startup Hiring (Chicago)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1946,
+              "output_tokens": 369,
+              "elapsed_seconds": 9.996550798416138
+            }
+          ],
+          "reasoning": "This content confirms 'Albi' as a high-growth SaaS entity targeting the restoration industry (construction/insurance vertical). The job posting for a Creative Lead reveals specific technology procurement (Figma, Adobe Creative Suite) and an intent to build scalable design systems. The mention of Y Combinator and 'Top Startup' rankings indicates available capital for technology procurement. This aligns perfectly with the search for a corporate entity capable of B2B software procurement."
+        },
+        {
+          "iteration_number": 13,
+          "timestamp": "2026-02-02T16:24:49.163833",
+          "domain_explored": "https://www.linkedin.com/jobs/view/senior-full-stack-engineer-flutter-backend-at-albi-4319376288",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Flutter",
+              "Dart",
+              ".NET",
+              "RESTful APIs",
+              "GraphQL",
+              "PostgreSQL",
+              "MongoDB",
+              "Firestore",
+              "CI/CD (GitHub Actions, Bitrise, Codemagic)",
+              "Cloud Platforms (Azure, AWS, GCP)"
+            ],
+            "job_postings": [
+              "Senior Full Stack Engineer (Flutter & Backend)"
+            ],
+            "procurement_indicators": [
+              "Rapid growth and product expansion phase",
+              "Investment in scalable cloud infrastructure",
+              "Adoption of cross-platform mobile frameworks",
+              "Integration of third-party APIs and cloud services"
+            ]
+          },
+          "patterns_found": [
+            "SaaS Procurement Intent (Restoration Industry)",
+            "Y Combinator Backing (Venture Capital)",
+            "Mobile-First Digital Transformation",
+            "Cross-Platform Development Strategy",
+            "Cloud Infrastructure Investment (Azure/AWS/GCP)",
+            "API-First Architecture"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 13,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2023,
+              "output_tokens": 403,
+              "elapsed_seconds": 4.037446737289429
+            }
+          ],
+          "reasoning": "The job posting confirms Albi is a VC-backed SaaS entity (Y Combinator, Top 10 Chicago Start-up) targeting the restoration industry. The requirement for a Senior Full Stack Engineer to build Flutter apps and .NET backends indicates a significant procurement need for mobile development tools, cloud infrastructure, and potentially CI/CD software licenses. The salary range ($115k-$150k) suggests a well-funded organization capable of enterprise procurement."
+        },
+        {
+          "iteration_number": 14,
+          "timestamp": "2026-02-02T16:24:58.635656",
+          "domain_explored": "https://www.linkedin.com/jobs/view/growth-demand-generation-manager-at-albi-4359078574",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HubSpot (CRM, Marketing Automation, Workflows)",
+              "Analytics & Attribution Platforms",
+              "AI & Automation Tools",
+              "Paid Media Platforms"
+            ],
+            "job_postings": [
+              "Growth & Demand Generation Manager"
+            ],
+            "procurement_indicators": [
+              "Explicit mandate to 'Hunt for leverage' by evaluating new tools and AI capabilities",
+              "Requirement for 'HubSpot power user' indicating current investment",
+              "Focus on 'full-funnel attribution' suggesting data analytics tool procurement",
+              "Collaboration with Performance Marketing indicating paid media spend"
+            ]
+          },
+          "patterns_found": [
+            "MarTech Stack Optimization (HubSpot)",
+            "Full-Funnel Attribution Modeling",
+            "AI & Automation Tool Evaluation",
+            "B2B SaaS Demand Generation",
+            "Venture-Backed Growth Phase"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 14,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2097,
+              "output_tokens": 355,
+              "elapsed_seconds": 5.808743953704834
+            }
+          ],
+          "reasoning": "The job description explicitly states the role involves evaluating new tools, AI capabilities, and automation opportunities to multiply output. It confirms the use of HubSpot as a core platform and highlights a need for attribution modeling and paid campaign management. This indicates active procurement and optimization of the marketing technology stack."
+        }
+      ],
+      "total_input_tokens": 22040,
+      "total_output_tokens": 4001,
+      "estimated_cost_usd": 0.126135
+    },
+    "procurement_signals": [
+      "Active Recruitment for Technical Roles",
+      "Investment in AI/ML and Automation",
+      "Customer Success & Onboarding Expansion",
+      "Demand Generation & Marketing Operations",
+      "Global Distributed Engineering (Offshoring to Pakistan)",
+      "SaaS Procurement Intent (Restoration Industry)",
+      "Y Combinator Backing (Venture Capital)",
+      "Visual-First Marketing Transformation",
+      "Design System Procurement (Figma, Adobe)",
+      "High-Growth Startup Hiring (Chicago)",
+      "SaaS Procurement Intent (Restoration Industry)",
+      "Y Combinator Backing (Venture Capital)",
+      "Mobile-First Digital Transformation",
+      "Cross-Platform Development Strategy",
+      "Cloud Infrastructure Investment (Azure/AWS/GCP)",
+      "API-First Architecture",
+      "MarTech Stack Optimization (HubSpot)",
+      "Full-Funnel Attribution Modeling",
+      "AI & Automation Tool Evaluation",
+      "B2B SaaS Demand Generation",
+      "Venture-Backed Growth Phase"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Albi may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:24:58.637650"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.275528",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:05:34.597521"
+}

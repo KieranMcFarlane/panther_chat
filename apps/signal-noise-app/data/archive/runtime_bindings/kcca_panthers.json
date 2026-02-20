@@ -1,0 +1,178 @@
+{
+  "entity_id": "kcca_panthers",
+  "entity_name": "KCCA Panthers",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "sofascore.com",
+    "standard.ucu.ac.ug",
+    "sports.mtn.co.ug",
+    "redpepper.co.ug"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kcca_panthers",
+      "entity_name": "KCCA Panthers",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sports.mtn.co.ug",
+        "https://sofascore.com",
+        "https://standard.ucu.ac.ug",
+        "https://redpepper.co.ug"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KCCA Panthers may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:50:34.835993",
+          "domain_explored": "https://sofascore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain_content",
+            "generic_sports_data",
+            "consumer_facing_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 171,
+              "elapsed_seconds": 2.8830487728118896
+            }
+          ],
+          "reasoning": "The provided content is from Sofascore, a consumer sports statistics website. It contains generic descriptions of football leagues, live scores, and player comparison tools. There is absolutely no mention of 'KCCA Panthers', procurement activities, or enterprise governance structures. This content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:50:46.153022",
+          "domain_explored": "https://standard.ucu.ac.ug",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "academic_institution_news",
+            "student_exchange_program",
+            "content_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 461,
+              "output_tokens": 183,
+              "elapsed_seconds": 2.7651116847991943
+            }
+          ],
+          "reasoning": "The scraped content originates from the Standard (UCU - Uganda Christian University) website and discusses student exchange programs to the Netherlands. This is entirely unrelated to KCCA Panthers, which is a sports entity (basketball/franchise). The content contains no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:50:53.332586",
+          "domain_explored": "https://sports.mtn.co.ug",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_sports_news",
+            "match_results_reporting",
+            "irrelevant_entity_content",
+            "consumer_facing_sports_portal"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.382337808609009
+            }
+          ],
+          "reasoning": "The scraped content from sports.mtn.co.ug consists entirely of football match results and general sports news (Uganda Premier League, Big League, U-17 AFCON). There is no mention of 'KCCA Panthers' (the target entity) nor any procurement, technology, or business intelligence signals. The content is purely informational for sports fans."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:51:02.652963",
+          "domain_explored": "https://redpepper.co.ug",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_news_aggregator",
+            "irrelevant_entity_content",
+            "tabloid_journalism",
+            "political_news",
+            "entertainment_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1493,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.4755918979644775
+            }
+          ],
+          "reasoning": "The scraped content from Red Pepper is a general news aggregator covering politics, business, and entertainment. There is no mention of KCCA Panthers, nor are there specific procurement signals, technology stack details, or job postings relevant to the entity. The content is consumer-facing news, not corporate governance or supply chain data."
+        }
+      ],
+      "total_input_tokens": 4758,
+      "total_output_tokens": 719,
+      "estimated_cost_usd": 0.025058999999999998
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KCCA Panthers may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:51:02.662003"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.231424",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:54.465037"
+}

@@ -1,0 +1,230 @@
+{
+  "entity_id": "al_ittihad_aleppo",
+  "entity_name": "Al Ittihad Aleppo",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "flashscore.com",
+    "grokipedia.com",
+    "livesoccertv.com",
+    "betsapi.com",
+    "sportsdatabase.io",
+    "365scores.com",
+    "betexplorer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_ittihad_aleppo",
+      "entity_name": "Al Ittihad Aleppo",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://sportsdatabase.io",
+        "https://betsapi.com",
+        "https://flashscore.com",
+        "https://365scores.com",
+        "https://grokipedia.com",
+        "https://betexplorer.com",
+        "https://livesoccertv.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Ittihad Aleppo may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:02:28.735973",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_responsibility_disclaimers",
+            "generic_sports_content",
+            "multi_language_localization"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 544,
+              "output_tokens": 162,
+              "elapsed_seconds": 3.1229360103607178
+            }
+          ],
+          "reasoning": "The content is exclusively scraped from Flashscore.com, a live sports score service. It contains gambling addiction disclaimers, generic 'Football' navigation labels, and loading indicators. There is absolutely no mention of Al Ittihad Aleppo, corporate strategy, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:02:35.351182",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:02:44.389368",
+          "domain_explored": "https://livesoccertv.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_sports_scheduling",
+            "broadcasting_rights_listings",
+            "multi_language_localization",
+            "consumer_facing_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1436,
+              "output_tokens": 169,
+              "elapsed_seconds": 2.6676688194274902
+            }
+          ],
+          "reasoning": "The content is a TV schedule grid for global soccer matches. It lists broadcasters (e.g., ESPN, DAZN) and times but contains no information regarding Al Ittihad Aleppo's internal operations, technology stack, or procurement needs. It is consumer-facing content, not business intelligence."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:02:53.448042",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "APIs (Data Feed)",
+              "Real-time Websockets (implied by 'Live updates without Refresh')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "gambling_data_feed",
+            "live_odds_aggregation",
+            "api_service_monetization",
+            "esports_betting_markets"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1484,
+              "output_tokens": 208,
+              "elapsed_seconds": 2.3742380142211914
+            }
+          ],
+          "reasoning": "The scraped content is from BetsAPI, a service providing real-time sports data and odds for gambling purposes. The presence of 'Buy VIP', 'Pricing', and 'API' links indicates this is a vendor selling data services to bookmakers, not a procurement page for Al Ittihad Aleppo. There is no correlation with the target entity's procurement needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:03:32.857714",
+          "domain_explored": "https://sportsdatabase.io",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "REST APIs",
+              "Webhooks",
+              "TypeScript SDK",
+              "GraphQL"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "api_service_monetization",
+            "developer_documentation",
+            "freemium_subscription_model",
+            "generic_sports_data_feed"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 193,
+              "elapsed_seconds": 4.76609206199646
+            }
+          ],
+          "reasoning": "The content is a landing page for 'SportsDatabase.io', a B2B data provider selling API access to sports statistics. It is a vendor site, not the entity (Al Ittihad Aleppo). There are no signals regarding Al Ittihad Aleppo's internal procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:03:38.896161",
+          "domain_explored": "https://365scores.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:03:46.765316",
+          "domain_explored": "https://betexplorer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4993,
+      "total_output_tokens": 732,
+      "estimated_cost_usd": 0.025959
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Ittihad Aleppo may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:03:46.765839"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233304",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:28:59.050093"
+}

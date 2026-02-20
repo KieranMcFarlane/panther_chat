@@ -1,0 +1,182 @@
+{
+  "entity_id": "cuban_basketball_federation",
+  "entity_name": "Cuban Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "cubanbasketball.blogspot.com",
+    "cubasi.cu",
+    "goccusports.com",
+    "reuters.com",
+    "nbcbayarea.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "cuban_basketball_federation",
+      "entity_name": "Cuban Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://goccusports.com",
+        "https://cubanbasketball.blogspot.com",
+        "https://nbcbayarea.com",
+        "https://reuters.com",
+        "https://cubasi.cu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Cuban Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T19:09:16.864840",
+          "domain_explored": "https://cubanbasketball.blogspot.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Infrastructure Project: Renovation of 3 local basketball courts (Havana, 2015)",
+              "Vendor Partnership: NBA Cares (Corporate Social Responsibility)",
+              "Government Stakeholder: Ministry of Sports (INDERM) & Cuban Basketball Federation",
+              "Supply Gap: High demand for basketball footwear/apparel vs. local affordability (Nike/Adidas presence noted as 'museums')",
+              "Facility Condition: Courts noted as needing repair prior to intervention"
+            ]
+          },
+          "patterns_found": [
+            "Infrastructure Renovation Projects",
+            "International NGO Partnerships",
+            "Equipment Supply Gaps (Apparel/Footwear)",
+            "Facility Maintenance Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1367,
+              "output_tokens": 346,
+              "elapsed_seconds": 5.706099033355713
+            }
+          ],
+          "reasoning": "The content provides historical evidence of a specific procurement project: the renovation of three basketball courts in Havana in 2015 via a partnership with NBA Cares and the Ministry of Sports (INDERM). While the specific event is historical, it establishes a precedent for infrastructure procurement and highlights ongoing supply chain gaps (equipment, footwear) and facility maintenance needs that likely persist or require future vendor engagement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T19:09:43.522519",
+          "domain_explored": "https://cubasi.cu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "General sports team announcements (Baseball focus)"
+            ]
+          },
+          "patterns_found": [
+            "General Sports Coverage",
+            "National Team Announcements",
+            "Generic News Aggregation"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 221,
+              "elapsed_seconds": 4.6458518505096436
+            }
+          ],
+          "reasoning": "The scraped content from Cubasi.cu represents a general news portal homepage. While there is a section for 'Deportes' (Sports) and a specific headline regarding the Baseball 'Serie de las Am\u00e9ricas', there is zero specific mention of the Cuban Basketball Federation, basketball-specific procurement, or relevant technology signals. The content is high-level geopolitical and general sports news, lacking the granularity required for procurement intelligence."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T19:09:48.175923",
+          "domain_explored": "https://goccusports.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T19:09:51.750074",
+          "domain_explored": "https://reuters.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T19:10:01.467519",
+          "domain_explored": "https://nbcbayarea.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports News Coverage",
+            "Regional Event Reporting (Super Bowl)",
+            "Irrelevant Local News (Crime, Weather, Traffic)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1525,
+              "output_tokens": 173,
+              "elapsed_seconds": 2.856455087661743
+            }
+          ],
+          "reasoning": "The scraped content from NBC Bay Area is a general news aggregator feed focused on local San Jose/Bay Area events, crime, weather, and the Super Bowl. There is no mention of the Cuban Basketball Federation, Cuban sports governance, or international procurement activities relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4313,
+      "total_output_tokens": 740,
+      "estimated_cost_usd": 0.024039
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Cuban Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T19:10:01.468999"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.266394",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:32:19.469226"
+}

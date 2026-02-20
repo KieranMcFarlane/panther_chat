@@ -1,0 +1,246 @@
+{
+  "entity_id": "new_york_yankees",
+  "entity_name": "New York Yankees",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/new-york-yankees-jobs",
+      "https://www.linkedin.com/jobs/new-york-yankees-jobs-new-york-ny",
+      "https://www.linkedin.com/jobs/yankee-stadium-jobs-port-morris-ny",
+      "https://www.linkedin.com/company/major-league-baseball/jobs",
+      "https://www.linkedin.com/jobs/yankee-stadium-jobs",
+      "https://do.linkedin.com/company/major-league-baseball/jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "new_york_yankees",
+      "entity_name": "New York Yankees",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/major-league-baseball/jobs",
+        "https://www.linkedin.com/jobs/new-york-yankees-jobs-new-york-ny",
+        "https://www.linkedin.com/jobs/yankee-stadium-jobs-port-morris-ny",
+        "https://www.linkedin.com/jobs/yankee-stadium-jobs",
+        "https://www.linkedin.com/jobs/new-york-yankees-jobs"
+      ],
+      "explored_channels": {
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "New York Yankees may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:31:33.406909",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-yankees-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sports Strategy Manager, Prime Video Sports",
+                "company": "Prime Video & Amazon MGM Studios",
+                "location": "New York, NY",
+                "relevance": "False Positive - Keyword match only"
+              },
+              {
+                "title": "Associate, Talent & Training - Youth Camps & Events",
+                "company": "Headfirst Summer Camps",
+                "location": "Washington, DC",
+                "relevance": "False Positive - Keyword match only"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Platform gating (authentication required)",
+            "Aggregated job listings (non-entity specific)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 329,
+              "elapsed_seconds": 8.082288980484009
+            }
+          ],
+          "reasoning": "The scraped content represents the generic LinkedIn login wall and a list of aggregated jobs where 'New York Yankees' appears as a keyword or location context, but not necessarily as the hiring entity (e.g., 'Prime Video & Amazon MGM Studios'). The content is blocked behind a 'Sign in' requirement, preventing access to actual job descriptions or direct procurement signals from the Yankees organization."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:31:40.953884",
+          "domain_explored": "https://www.linkedin.com/jobs/new-york-yankees-jobs-new-york-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Coach, Yankees Baseball Summer Camps",
+                "entity": "Headfirst Professional Sports Camps",
+                "relevance": "Low (Operational/Outsourced)"
+              },
+              {
+                "title": "Sports Strategy Manager, Prime Video Sports",
+                "entity": "Prime Video & Amazon MGM Studios",
+                "relevance": "None (False Positive)"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Platform Gating (Authentication Wall)",
+            "Keyword Noise (Irrelevant Aggregation)",
+            "Dynamic Content Loading (Scraped HTML vs. Rendered DOM)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 309,
+              "elapsed_seconds": 2.887286901473999
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication gate ('Sign in to set job alerts') and repetitive boilerplate text. The visible job listings are aggregations (e.g., Amazon Prime Video, Headfirst Camps) rather than direct Yankees corporate roles. The lack of access to the actual job descriptions prevents the identification of procurement-specific technologies or intent."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:32:26.322094",
+          "domain_explored": "https://www.linkedin.com/jobs/yankee-stadium-jobs-port-morris-ny",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Street Team, Live Events",
+                "entity": "New York City FC",
+                "relevance": "Low (Tenant Operations)"
+              },
+              {
+                "title": "Staffing & Community Engagement Manager (Yankee Stadium)",
+                "entity": "Legends Global",
+                "relevance": "Medium (Hospitality Vendor)"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor Management (Legends Global identified as operator)"
+            ]
+          },
+          "patterns_found": [
+            "Platform Gating (Authentication Wall)",
+            "Entity Ambiguity (Third-Party Operators)",
+            "Keyword Noise (Irrelevant Aggregation)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1498,
+              "output_tokens": 328,
+              "elapsed_seconds": 39.719996213912964
+            }
+          ],
+          "reasoning": "The scraped content is dominated by LinkedIn's authentication wall ('Sign in to set job alerts'), preventing access to detailed job descriptions. The visible text reveals roles for 'Legends Global' and 'New York City FC' rather than direct New York Yankees procurement or technology roles. This indicates the search term 'Yankee Stadium' returns tenant and vendor operations rather than the Yankees' corporate procurement signals."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:32:35.318125",
+          "domain_explored": "https://www.linkedin.com/company/major-league-baseball/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Platform Gating (Authentication Wall)",
+            "Entity Scope Drift (League vs. Team)",
+            "Technical Constraint (URL Routing)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 576,
+              "output_tokens": 209,
+              "elapsed_seconds": 6.527814865112305
+            }
+          ],
+          "reasoning": "The target URL (Major League Baseball corporate) represents a different entity scope than the subject (New York Yankees). While MLB is the governing body, procurement signals for the Yankees specifically are unlikely to be found here. Furthermore, the content indicates a 'Forbidden' status and URL routing restrictions, confirming that LinkedIn remains a gated platform requiring authentication. No actionable procurement intelligence was retrieved."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:32:44.091198",
+          "domain_explored": "https://www.linkedin.com/jobs/yankee-stadium-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Street Team, Live Events - New York City FC (Tenant, not Yankees)",
+              "Head Football Coach - Core Trading Consultants (Irrelevant)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Ambiguity (New York City FC vs. Yankees)",
+            "Keyword Noise (Irrelevant Aggregation)",
+            "Platform Gating (Authentication Wall)",
+            "Low Signal-to-Noise Ratio"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1629,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.8697378635406494
+            }
+          ],
+          "reasoning": "The search query 'Yankee Stadium' returns results dominated by New York City FC (a soccer tenant) and irrelevant listings (e.g., Core Trading Consultants in Ithaca). The content is largely obscured by repeated authentication prompts. There is no direct visibility into New York Yankees procurement or corporate operations."
+        }
+      ],
+      "total_input_tokens": 6494,
+      "total_output_tokens": 1405,
+      "estimated_cost_usd": 0.040556999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "New York Yankees may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:32:44.095073"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307050",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:51.720309"
+}

@@ -1,0 +1,131 @@
+{
+  "entity_id": "j1_league",
+  "entity_name": "J1 League",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "store.jleague.jp",
+    "urawa-reds.co.jp"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "j1_league",
+      "entity_name": "J1 League",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://store.jleague.jp",
+        "https://urawa-reds.co.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "J1 League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T05:39:06.638341",
+          "domain_explored": "https://store.jleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary)",
+              "Inventory Management System (IMS)",
+              "Customer Relationship Management (CRM) - for membership tracking",
+              "Payment Gateway"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operation of centralized digital store infrastructure",
+              "Vendor management for physical merchandise manufacturing (Nike, Adidas, etc.)",
+              "Logistics and fulfillment partnerships"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Utilization",
+            "Customer Segmentation (B2C/B2B)",
+            "Inventory Management",
+            "Membership Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 326,
+              "elapsed_seconds": 13.656866073608398
+            }
+          ],
+          "reasoning": "The content represents the consumer-facing frontend of the J League Store. While it does not contain explicit RFPs or job postings, it confirms the operation of a centralized e-commerce platform (store.jleague.jp) that handles inventory, membership tiers (Supporters Club vs. Season Pass), and multi-club logistics. This implies an underlying technology stack for e-commerce, CRM, and payment processing that requires maintenance and potential vendor procurement."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T05:39:18.405028",
+          "domain_explored": "https://urawa-reds.co.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "REX TICKET (Ticketing System)",
+              "Custom E-commerce Platform (e-shop.urawa-reds.co.jp)",
+              "DAZN (Streaming Partner)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Outsourced Ticketing Operations",
+              "Outsourced Merchandise Sales",
+              "Membership Management System"
+            ]
+          },
+          "patterns_found": [
+            "Third-Party Ticketing Platform Utilization (REX TICKET)",
+            "E-commerce Platform Utilization (Online Shop)",
+            "Digital Membership Management (REX CLUB)",
+            "Sponsorship Integration (DAZN, Meiji Yasuda)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 288,
+              "elapsed_seconds": 4.239016056060791
+            }
+          ],
+          "reasoning": "The content confirms the use of specific external platforms for ticketing (REX TICKET) and e-commerce, indicating a reliance on SaaS vendors for core revenue operations. While no direct procurement intent (like an RFP) is visible, the identification of these vendors validates the 'Technology Stack' focus area and suggests potential for contract renewals or add-on services."
+        }
+      ],
+      "total_input_tokens": 2760,
+      "total_output_tokens": 614,
+      "estimated_cost_usd": 0.01749
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "J1 League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T05:39:18.406163"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.419310",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:45:43.226930"
+}

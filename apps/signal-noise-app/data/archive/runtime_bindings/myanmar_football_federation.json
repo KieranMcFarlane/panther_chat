@@ -1,0 +1,271 @@
+{
+  "entity_id": "myanmar_football_federation",
+  "entity_name": "Myanmar Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "the-mff.org",
+    "inside.fifa.com",
+    "aseanfootball.org",
+    "assets.the-afc.com",
+    "zoominfo.com",
+    "league321.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_oferta-job-entrenador-activity-6615887493705285633-3j7t?trk=public_profile_like_view"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "myanmar_football_federation",
+      "entity_name": "Myanmar Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://assets.the-afc.com",
+        "https://www.linkedin.com/posts/futboljobs.com_oferta-job-entrenador-activity-6615887493705285633-3j7t?trk=public_profile_like_view",
+        "https://the-mff.org",
+        "https://league321.com",
+        "https://inside.fifa.com",
+        "https://aseanfootball.org",
+        "https://zoominfo.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Myanmar Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:49:25.563383",
+          "domain_explored": "https://the-mff.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Management Systems (for Media Accreditation)",
+              "Learning Management Systems (LMS) (implied for Coaching/Referee courses)",
+              "Financial Reporting Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Licensing Coaching Course (Jan 2026)",
+              "2026 AFC U-23 Asian Cup Qualification Media Accreditation",
+              "Free Referee Training Courses",
+              "Financial Documents / Reports section"
+            ]
+          },
+          "patterns_found": [
+            "Educational Program Procurement",
+            "Event Management & Media Accreditation",
+            "Referee Training Programs",
+            "Financial Transparency Reporting"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 355,
+              "elapsed_seconds": 11.639180898666382
+            }
+          ],
+          "reasoning": "The content reveals active operational initiatives that imply underlying procurement needs. Specifically, the 'Licensing Coaching Course' (first time in Myanmar) suggests a need for educational materials, venue management, and training software. The 'Media Card' application for the 2026 AFC U-23 Asian Cup indicates event management and security/access control systems. The 'Referee Courses' imply procurement of training services and equipment. The presence of a 'Financial Report' section suggests a structured governance environment capable of vendor contracts."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:49:35.079167",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward-funded refurbishment (General context)",
+              "Women's football development programs (General context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Football Governance",
+            "FIFA Forward Program",
+            "Women's Football Development"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 233,
+              "elapsed_seconds": 2.8239939212799072
+            }
+          ],
+          "reasoning": "The scraped content is from FIFA's global news portal (inside.fifa.com), not the Myanmar Football Federation (MFF). While it mentions relevant topics like the FIFA Forward program (which funds MFF infrastructure) and Women's Football development, there are no specific procurement signals, job postings, or technology stack details related to MFF's specific operations or vendor needs. This represents a distraction from the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:49:44.692673",
+          "domain_explored": "https://aseanfootball.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism",
+            "League Results Reporting",
+            "Regional Federation News Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 724,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.0295910835266113
+            }
+          ],
+          "reasoning": "The content is a standard sports news report regarding the Myanmar Women's League results, published by the ASEAN Football Federation. It focuses on athletic outcomes (Ayeyawady FC winning the championship) rather than the organizational operations, procurement activities, or governance of the Myanmar Football Federation (MFF). There are no signals of purchasing intent, technology investment, or organizational hiring."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:50:24.923316",
+          "domain_explored": "https://assets.the-afc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Asset Storage Error",
+            "Broken Link / 404"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 549,
+              "output_tokens": 124,
+              "elapsed_seconds": 33.92778015136719
+            }
+          ],
+          "reasoning": "The target URL returned an AWS S3 'NoSuchKey' error, indicating a broken link or an expired asset. No content regarding procurement, technology, or governance could be extracted from this source."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:50:34.333839",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2B Data Vendor Marketing Content",
+            "Generic GTM Platform Promotion",
+            "Sales Intelligence Case Studies"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1549,
+              "output_tokens": 176,
+              "elapsed_seconds": 4.701948881149292
+            }
+          ],
+          "reasoning": "The scraped content is the homepage of ZoomInfo, a B2B data and sales intelligence vendor. It contains generic marketing copy, testimonials, and product feature descriptions unrelated to the Myanmar Football Federation. There are no specific procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T08:50:53.080177",
+          "domain_explored": "https://league321.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T08:51:02.100780",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_oferta-job-entrenador-activity-6615887493705285633-3j7t?trk=public_profile_like_view",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Head Coach - Myanmar Women's National Team"
+            ],
+            "procurement_indicators": [
+              "Use of third-party recruitment platform (FutbolJobs)",
+              "International search for technical staff"
+            ]
+          },
+          "patterns_found": [
+            "Sports Recruitment / Headhunting",
+            "Women's Football Development",
+            "International Staffing",
+            "External Hiring Platforms (FutbolJobs)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1656,
+              "output_tokens": 238,
+              "elapsed_seconds": 4.296194076538086
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a high-profile technical role (Head Coach for Women's Team) via an external platform. While this is a direct hiring signal rather than a technology procurement signal, it validates the entity's active operational status and willingness to engage international vendors/partners for talent acquisition."
+        }
+      ],
+      "total_input_tokens": 7256,
+      "total_output_tokens": 1319,
+      "estimated_cost_usd": 0.041553
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Myanmar Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:51:02.103392"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.206086",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:23.809104"
+}

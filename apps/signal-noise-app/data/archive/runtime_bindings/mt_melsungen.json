@@ -1,0 +1,321 @@
+{
+  "entity_id": "mt_melsungen",
+  "entity_name": "MT Melsungen",
+  "template_id": "tpl_european_top_league_clubs_v1",
+  "cluster_id": "european_top_league_clubs",
+  "discovered_domains": [
+    "mt-melsungen.de",
+    "eurohandball.com",
+    "play.google.com",
+    "trajtenberg.co.il"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://de.linkedin.com/jobs/view/mitarbeiter-kommunikation-w-m-d-at-mt-melsungen-4356153373",
+      "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-mt-melsungen-at-kinexon-4263634094",
+      "https://uk.linkedin.com/jobs/remote-jobs-sand",
+      "https://de.linkedin.com/jobs/view/maschinen-und-anlagenf%C3%BChrer-produktion-kunststoff-at-horn-bauer-group-4317855385"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mt_melsungen",
+      "entity_name": "MT Melsungen",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://play.google.com",
+        "https://uk.linkedin.com/jobs/remote-jobs-sand",
+        "https://de.linkedin.com/jobs/view/maschinen-und-anlagenf%C3%BChrer-produktion-kunststoff-at-horn-bauer-group-4317855385",
+        "https://eurohandball.com",
+        "https://trajtenberg.co.il",
+        "https://mt-melsungen.de",
+        "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-mt-melsungen-at-kinexon-4263634094",
+        "https://de.linkedin.com/jobs/view/mitarbeiter-kommunikation-w-m-d-at-mt-melsungen-4356153373"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Vendor Partnership (KINEXON)",
+        "Sports Technology Procurement",
+        "Data Analytics & Performance Tracking",
+        "Freelance/Service Contracting",
+        "IoT & Sensor Technology Usage"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "MT Melsungen may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:32:04.944721",
+          "domain_explored": "https://mt-melsungen.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing system presence (implied by '/tickets/dauerkarte' link)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club context (Handball Bundesliga)",
+            "Ticketing and fan engagement focus",
+            "Repetitive navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 196,
+              "elapsed_seconds": 3.929103136062622
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports operations (handball matches, season tickets 'Dauerkarte', team rosters 'Kader', and fan magazine 'KvA'). There is no mention of corporate procurement, enterprise technology, job vacancies, or governance structures relevant to B2B procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:32:12.684908",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Cookie consent walls",
+            "Tournament schedules (EHF EURO, Champions League)",
+            "Sponsorship branding (Machineseeker)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 182,
+              "elapsed_seconds": 3.951353073120117
+            }
+          ],
+          "reasoning": "The content is entirely focused on European handball federation (EHF) news, match results, and tournament schedules. There is no mention of MT Melsungen, corporate operations, or procurement activities. The domain 'eurohandball.com' is a sports governing body site, unrelated to the corporate entity MT Melsungen."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:32:19.639977",
+          "domain_explored": "https://play.google.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mobile gaming storefront",
+            "Consumer entertainment content",
+            "Generic app store taxonomy (Role Playing, Sports, Puzzle)",
+            "In-app purchase monetization indicators"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 190,
+              "elapsed_seconds": 3.4223899841308594
+            }
+          ],
+          "reasoning": "The content is a direct scrape of the Google Play Store homepage (or a games sub-section), listing popular mobile games like Candy Crush, PUBG MOBILE, and Minecraft. This is a consumer-facing content aggregation platform with no relevance to the corporate procurement, governance, or technology infrastructure of MT Melsungen."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:32:22.711050",
+          "domain_explored": "https://trajtenberg.co.il",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:32:31.036158",
+          "domain_explored": "https://de.linkedin.com/jobs/view/mitarbeiter-kommunikation-w-m-d-at-mt-melsungen-4356153373",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Canva (Design Software)",
+              "Instagram",
+              "TikTok",
+              "Facebook",
+              "LinkedIn",
+              "Custom MT-App (Mobile Application)"
+            ],
+            "job_postings": [
+              "Mitarbeiter Kommunikation (w/m/d)"
+            ],
+            "procurement_indicators": [
+              "Digital content creation tools procurement",
+              "App maintenance/development requirements",
+              "Social media management platform needs"
+            ]
+          },
+          "patterns_found": [
+            "Job posting for Communications/Marketing role",
+            "Explicit mention of 'MT-App' and 'Social-Media-Kan\u00e4le'",
+            "Requirement for 'Grafisches Verst\u00e4ndnis' and 'Canva' skills",
+            "Requirement for 'Videoschnitt' (Video editing) skills",
+            "Direct contact email for applications (lipke@mt-melsungen.de)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1567,
+              "output_tokens": 357,
+              "elapsed_seconds": 4.762584686279297
+            }
+          ],
+          "reasoning": "While this is a job posting (HR) rather than a direct procurement tender, it reveals specific technology usage and content creation needs. The requirement for skills in Canva, video editing, and managing a dedicated 'MT-App' indicates active investment in digital content infrastructure and software tools. This signals a need for creative software licenses, potential app maintenance contracts, or digital asset management tools."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:32:40.634119",
+          "domain_explored": "https://de.linkedin.com/jobs/view/tracking-operator-m-f-d-mt-melsungen-at-kinexon-4263634094",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "KINEXON System (IoT/Sensor-based tracking)",
+              "Sports Analytics Software",
+              "Network & Computing Hardware"
+            ],
+            "job_postings": [
+              "Tracking Operator (m/f/d) - Freelance/Minijob - Focus on game day data operations"
+            ],
+            "procurement_indicators": [
+              "Vendor: KINEXON (Munich-based tech provider)",
+              "Service: Player tracking and data provision for media",
+              "Contract Type: Service level agreement (implied by seasonal operator role)",
+              "Application: Match day analysis, referee communication, media metrics"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Partnership (KINEXON)",
+            "Sports Technology Procurement",
+            "Data Analytics & Performance Tracking",
+            "Freelance/Service Contracting",
+            "IoT & Sensor Technology Usage"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1653,
+              "output_tokens": 352,
+              "elapsed_seconds": 6.295875787734985
+            }
+          ],
+          "reasoning": "This content provides explicit evidence of a procurement relationship between MT Melsungen and KINEXON. The job posting is for a 'Tracking Operator' specifically for MT Melsungen, hired by KINEXON to manage the 'KINEXON system' during Bundesliga games. This confirms MT Melsungen procures and utilizes advanced IoT/sensor technology for player performance tracking and media data provision."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:33:11.399538",
+          "domain_explored": "https://uk.linkedin.com/jobs/remote-jobs-sand",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HubSpot",
+              "Java",
+              "SQL",
+              "Cloud"
+            ],
+            "job_postings": [
+              "Project Manager HubSpot at OPEN Digitalgruppe",
+              "IT Systemadministrator at fino taxtech",
+              "Software Engineer at GLS IT Services"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Job Aggregation",
+            "Geographic Irrelevance (Sand, Norway)",
+            "Unrelated Local Entities (fino taxtech, GLS, OPEN Digitalgruppe)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1711,
+              "output_tokens": 272,
+              "elapsed_seconds": 26.042659044265747
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Remote jobs in Sand' (likely Sand, Norway given the .uk domain context). While some listings mention the Kassel area (e.g., GLS, fino taxtech), these are distinct entities from MT Melsungen. There is no mention of MT Melsungen, the handball club, or associated procurement activities. The search query appears to be a false positive or irrelevant drift."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T13:33:14.674613",
+          "domain_explored": "https://de.linkedin.com/jobs/view/maschinen-und-anlagenf%C3%BChrer-produktion-kunststoff-at-horn-bauer-group-4317855385",
+          "channel_type": "linkedin_jobs",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 9163,
+      "total_output_tokens": 1549,
+      "estimated_cost_usd": 0.050724
+    },
+    "procurement_signals": [
+      "Vendor Partnership (KINEXON)",
+      "Sports Technology Procurement",
+      "Data Analytics & Performance Tracking",
+      "Freelance/Service Contracting",
+      "IoT & Sensor Technology Usage"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "MT Melsungen may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:33:14.675168"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.349232",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:39:50.188131"
+}

@@ -1,0 +1,475 @@
+{
+  "entity_id": "nwsl",
+  "entity_name": "NWSL",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "emerging_league_franchises",
+  "discovered_domains": [
+    "nwslsoccer.com",
+    "nwslshop.com",
+    "nwslplayers.com",
+    "nccourage.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/manager-partner-management-at-national-women-s-soccer-league-nwsl-4321313301",
+      "https://www.linkedin.com/jobs/view/director-league-safety-officer-at-national-women-s-soccer-league-nwsl-4367319712",
+      "https://www.linkedin.com/jobs/view/vp-game-operations-at-national-women-s-soccer-league-nwsl-4367938527",
+      "https://www.linkedin.com/jobs/view/broadcast-manager-at-national-women-s-soccer-league-nwsl-4365926371",
+      "https://www.linkedin.com/jobs/view/manager-club-fringe-benefits-at-national-women-s-soccer-league-nwsl-4367525776",
+      "https://www.linkedin.com/jobs/view/sr-manager-officiating-at-national-women-s-soccer-league-nwsl-4365013868",
+      "https://www.linkedin.com/jobs/view/manager-game-operations-at-national-women-s-soccer-league-nwsl-4365022273",
+      "https://www.linkedin.com/jobs/view/legal-counsel-at-national-women-s-soccer-league-nwsl-4367541392",
+      "https://www.linkedin.com/jobs/view/visual-storyteller-partnerships-at-national-women-s-soccer-league-nwsl-4362064633"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nwsl",
+      "entity_name": "NWSL",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.36,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.3,
+        0.36
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/manager-club-fringe-benefits-at-national-women-s-soccer-league-nwsl-4367525776",
+        "https://nwslplayers.com",
+        "https://www.linkedin.com/jobs/view/manager-partner-management-at-national-women-s-soccer-league-nwsl-4321313301",
+        "https://www.linkedin.com/jobs/view/vp-game-operations-at-national-women-s-soccer-league-nwsl-4367938527",
+        "https://nccourage.com",
+        "https://www.linkedin.com/jobs/view/director-league-safety-officer-at-national-women-s-soccer-league-nwsl-4367319712",
+        "https://nwslshop.com",
+        "https://www.linkedin.com/jobs/view/broadcast-manager-at-national-women-s-soccer-league-nwsl-4365926371",
+        "https://nwslsoccer.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Sponsorship Lifecycle Management",
+        "Cross-Functional Vendor Orchestration",
+        "Performance Analytics & Reporting Requirements",
+        "Upsell & Incremental Revenue Generation",
+        "Specialized Compliance & Governance Role",
+        "Third-Party Investigative Partnerships",
+        "Data-Driven Reporting Infrastructure",
+        "League-Wide Training & Enablement Procurement",
+        "Stakeholder Management Systems",
+        "High-Value Executive Budget Authority",
+        "Event Operations & Logistics Procurement",
+        "Broadcast & In-Game Technology Integration",
+        "Security & Safety Infrastructure Management",
+        "Third-Party Officiating Partnerships (PRO)",
+        "Stadium & Venue Standardization",
+        "High-Volume Freelance Labor Procurement",
+        "Travel & Logistics Supply Chain Management",
+        "Broadcast Production Equipment & Platform Procurement",
+        "Vendor Coordination for Live Events",
+        "Salary Cap Management & Compliance Systems",
+        "Tax Classification & External Advisory Partnerships",
+        "Financial Reconciliation & Audit Support Infrastructure",
+        "Cross-Functional Financial Governance (Finance, Payroll, Legal)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "NWSL may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:20:44.293553",
+          "domain_explored": "https://nwslsoccer.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Content Repetition",
+            "Generic Navigation Elements"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 468,
+              "output_tokens": 147,
+              "elapsed_seconds": 3.0410690307617188
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive headlines regarding a player contract (Trinity Rodman) and generic navigation links ('Latest News', 'How to Watch'). There are no explicit signals of procurement activity, technology adoption, or organizational infrastructure changes."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:20:51.808572",
+          "domain_explored": "https://nwslshop.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (suspected Shopify based on 'Quick add' and URL structure /collections/, /products/)",
+              "Digital Merchandising Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: 'Dead Dirt x NWSL' (Apparel/Merchandise design and manufacturing)",
+              "Vendor Partnership: 'Nike' (Official Equipment Supplier - 'Nike Control OmniSculpt Ball')",
+              "Retail Operations: Online store management and inventory logistics"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Structure",
+            "Merchandise Collaboration Signals",
+            "Equipment Supply Chain Indicators"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 382,
+              "elapsed_seconds": 4.496746063232422
+            }
+          ],
+          "reasoning": "The content is scraped from the NWSL's e-commerce storefront (nwslshop.com). While primarily consumer-facing, the presence of 'Quick add' functionality and specific product structures indicates the use of a standardized e-commerce platform (likely Shopify or similar). The 'Dead Dirt x NWSL' collaboration signals active vendor partnerships for merchandise. The 'Official NWSL 2026 Nike Control OmniSculpt Ball' listing confirms the existing equipment supply chain relationship with Nike. This provides weak evidence of the league's procurement activities regarding retail technology and sporting goods, though it does not reveal internal B2B procurement needs like software or services."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:21:00.102165",
+          "domain_explored": "https://nwslplayers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Collective Bargaining Agreement (CBA) availability",
+              "Governance via Executive Committee",
+              "Mission to elevate professional standards (potential future vendor need)"
+            ]
+          },
+          "patterns_found": [
+            "Collective Bargaining Agreement (CBA) Reference",
+            "Labor Union Governance Structure",
+            "Operational Mission Statements",
+            "Stakeholder Advocacy Language"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1445,
+              "output_tokens": 295,
+              "elapsed_seconds": 5.114535808563232
+            }
+          ],
+          "reasoning": "The content represents the NWSL Players Association (NWSLPA), the labor union distinct from the League office. While it does not contain direct procurement signals (RFPs, tech stacks), it identifies a critical governance entity and a key legal document (CBA) that dictates operational standards. Understanding the CBA is essential for procurement intelligence as it defines labor costs and compliance requirements. The mention of 'elevating professional standards' implies future operational investments, though intent is not explicit here."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:21:08.168281",
+          "domain_explored": "https://nccourage.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Email Marketing Automation (implied by newsletter signup)",
+              "Ticketing Management System (implied by ticket sales)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Newsletter subscription form (CRM maintenance)",
+              "Ticketing portal (Third-party vendor management)"
+            ]
+          },
+          "patterns_found": [
+            "CRM/Direct Marketing Funnel",
+            "Fan Engagement Infrastructure",
+            "Ticketing Platform Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 616,
+              "output_tokens": 276,
+              "elapsed_seconds": 4.488898038864136
+            }
+          ],
+          "reasoning": "While the content is primarily consumer-facing marketing copy, the 'Subscribe to The Star Weekly Newsletter' call-to-action indicates the use of email marketing platforms (e.g., Mailchimp, HubSpot, Salesforce Marketing Cloud) and data capture mechanisms. The '2026 Tickets' reference implies a ticketing vendor relationship (e.g., Ticketmaster, AXS). These are operational tools that fall under the broader procurement umbrella of the league's stakeholders."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:21:23.737268",
+          "domain_explored": "https://www.linkedin.com/jobs/view/manager-partner-management-at-national-women-s-soccer-league-nwsl-4321313301",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Presentation Software (PowerPoint/Keynote/Google Slides)",
+              "CRM/Project Management Tools (Implied by 'monitor and maintain reports')",
+              "Marketing Asset Management Systems"
+            ],
+            "job_postings": [
+              {
+                "title": "Manager, Partner Management",
+                "department": "Partnership Marketing",
+                "location": "New York, NY",
+                "salary_range": "$95,000 - $110,000",
+                "reporting_line": "Partnership Marketing Senior Manager",
+                "key_responsibility": "Vendor relationship management and sponsorship fulfillment"
+              }
+            ],
+            "procurement_indicators": [
+              "Sponsorship Fulfillment Procurement: The role involves 'Delivery of contracted sponsorship obligations,' which often requires procuring event assets, media space, or promotional materials from third parties.",
+              "Analytics & Reporting Tools: The requirement to 'Create, monitor, and maintain reports that track effectiveness' suggests a need for analytics software or dashboards.",
+              "Marketing Services Procurement: 'Upsell new ideas and programs' indicates a budget for developing new marketing assets or campaigns, likely involving external agencies or production partners.",
+              "Strategic Vendor Management: The role functions as a quasi-procurement officer for partners, managing the 'portfolio' and ensuring ROI, which is a key metric in renewing vendor contracts."
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Lifecycle Management",
+            "Cross-Functional Vendor Orchestration",
+            "Performance Analytics & Reporting Requirements",
+            "Upsell & Incremental Revenue Generation"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1575,
+              "output_tokens": 633,
+              "elapsed_seconds": 11.81123685836792
+            }
+          ],
+          "reasoning": "The job posting for 'Manager, Partner Management' provides direct evidence of the NWSL's commercial operations structure and how they manage third-party vendor relationships (sponsors). It reveals a shift from simple fulfillment to strategic partnership management, including the procurement of marketing assets, the need for cross-departmental collaboration (indicating internal stakeholders for vendor selection), and specific requirements for tracking effectiveness (analytics procurement). The salary range ($95k-$110k) and location (NY) also provide budgetary and geographic intelligence for the league's headquarters operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:21:31.517830",
+          "domain_explored": "https://www.linkedin.com/jobs/view/director-league-safety-officer-at-national-women-s-soccer-league-nwsl-4367319712",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Survey/Feedback Platforms (for Annual Player Survey)",
+              "Case Management Systems (CMS) (for incident tracking/reporting)",
+              "Data Analytics Tools (for reporting findings)"
+            ],
+            "job_postings": [
+              "Director, League Safety Officer (New York, NY) - $130k-$160k"
+            ],
+            "procurement_indicators": [
+              "Vendor Management: Explicit management of 'third-party investigators' for misconduct inquiries.",
+              "Service Procurement: Need for 'mandatory in-person training' providers across 16 clubs.",
+              "Consulting Engagement: Collaboration with 'U.S. Soccer's Office of Player Safeguarding' implies alignment on external standards or tools.",
+              "Infrastructure Investment: Budget allocation for 'League-wide safety reporting and compliance obligations'."
+            ]
+          },
+          "patterns_found": [
+            "Specialized Compliance & Governance Role",
+            "Third-Party Investigative Partnerships",
+            "Data-Driven Reporting Infrastructure",
+            "League-Wide Training & Enablement Procurement",
+            "Stakeholder Management Systems"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1655,
+              "output_tokens": 456,
+              "elapsed_seconds": 4.099149227142334
+            }
+          ],
+          "reasoning": "The posting for a Director, League Safety Officer reveals a critical operational procurement category focused on risk management and compliance. The explicit requirement to 'manage third-party investigators' confirms the use of external vendors for sensitive services. Additionally, the responsibility to conduct 'mandatory in-person training' and analyze 'annual surveys' indicates procurement needs for training service providers, survey platforms, and likely a Case Management System (CMS) to track incidents and compliance league-wide."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T14:21:38.530280",
+          "domain_explored": "https://www.linkedin.com/jobs/view/vp-game-operations-at-national-women-s-soccer-league-nwsl-4367938527",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Broadcast Technology Integration",
+              "In-Game Stadium Technology",
+              "Scheduling & Logistics Software"
+            ],
+            "job_postings": [
+              "VP, Game Operations (Salary: $200k-$250k)",
+              "Reports to: Chief Legal Officer",
+              "Manages: Operations Department"
+            ],
+            "procurement_indicators": [
+              "Annual Departmental Budget Management",
+              "Vendor selection for broadcast technology",
+              "Procurement of security and safety infrastructure",
+              "Stadium operations equipment and services",
+              "Partnership management with Professional Referee Organization (PRO)",
+              "Event logistics and execution services"
+            ]
+          },
+          "patterns_found": [
+            "High-Value Executive Budget Authority",
+            "Event Operations & Logistics Procurement",
+            "Broadcast & In-Game Technology Integration",
+            "Security & Safety Infrastructure Management",
+            "Third-Party Officiating Partnerships (PRO)",
+            "Stadium & Venue Standardization"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1732,
+              "output_tokens": 422,
+              "elapsed_seconds": 3.330293893814087
+            }
+          ],
+          "reasoning": "This posting reveals a C-Suite level operational role with direct oversight of the annual departmental budget and resource allocation. It explicitly signals procurement needs for broadcast technology, security infrastructure, stadium equipment, and logistics for major events. The mention of 'Technology: Manage broadcast and in-game technology integration' is a direct signal for upcoming vendor engagement, likely tied to the referenced media rights negotiations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T14:21:58.646045",
+          "domain_explored": "https://www.linkedin.com/jobs/view/broadcast-manager-at-national-women-s-soccer-league-nwsl-4365926371",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Broadcast Production Software",
+              "Travel Management Platforms",
+              "Logistics Coordination Tools"
+            ],
+            "job_postings": [
+              "Broadcast Manager (New York, NY, $95k-$110k)"
+            ],
+            "procurement_indicators": [
+              "Management of 60+ freelance talent contracts",
+              "Weekly travel and logistics procurement for 25+ crew members",
+              "Procurement of broadcast equipment and supplies",
+              "Coordination of domestic and international match operations"
+            ]
+          },
+          "patterns_found": [
+            "High-Volume Freelance Labor Procurement",
+            "Travel & Logistics Supply Chain Management",
+            "Broadcast Production Equipment & Platform Procurement",
+            "Vendor Coordination for Live Events"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1810,
+              "output_tokens": 353,
+              "elapsed_seconds": 16.424176692962646
+            }
+          ],
+          "reasoning": "The job description explicitly outlines a role focused on the procurement and management of external resources, specifically '60 or more freelance production and on-air talent' and '25+ freelance production crew' on a weekly basis. It details significant logistical supply chain operations involving travel coordination and equipment procurement. The salary range ($95k-$110k) indicates a mid-level management role with budget authority for these operational expenses."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T14:22:05.601858",
+          "domain_explored": "https://www.linkedin.com/jobs/view/manager-club-fringe-benefits-at-national-women-s-soccer-league-nwsl-4367525776",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Salary Cap Management Software",
+              "Payroll Processing Systems",
+              "Financial Reporting & Reconciliation Tools",
+              "Tax Compliance Platforms"
+            ],
+            "job_postings": [
+              "Manager, Club Fringe Benefits (New York, NY)"
+            ],
+            "procurement_indicators": [
+              "Requirement for specialized Salary Cap tracking systems",
+              "Procurement of external tax advisory and audit services",
+              "Investment in financial data reconciliation tools",
+              "Vendor management for payroll and benefits administration"
+            ]
+          },
+          "patterns_found": [
+            "Salary Cap Management & Compliance Systems",
+            "Tax Classification & External Advisory Partnerships",
+            "Financial Reconciliation & Audit Support Infrastructure",
+            "Cross-Functional Financial Governance (Finance, Payroll, Legal)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1894,
+              "output_tokens": 367,
+              "elapsed_seconds": 3.3398590087890625
+            }
+          ],
+          "reasoning": "The job description for 'Manager, Club Fringe Benefits' reveals a critical financial governance role requiring specialized systems for salary cap management, tax compliance, and benefits tracking. The explicit mention of 'Salary Cap systems,' 'external advisors,' and 'audit support' indicates a reliance on specialized software vendors and professional services to maintain competitive integrity and regulatory compliance."
+        }
+      ],
+      "total_input_tokens": 12586,
+      "total_output_tokens": 3331,
+      "estimated_cost_usd": 0.087723
+    },
+    "procurement_signals": [
+      "Sponsorship Lifecycle Management",
+      "Cross-Functional Vendor Orchestration",
+      "Performance Analytics & Reporting Requirements",
+      "Upsell & Incremental Revenue Generation",
+      "Specialized Compliance & Governance Role",
+      "Third-Party Investigative Partnerships",
+      "Data-Driven Reporting Infrastructure",
+      "League-Wide Training & Enablement Procurement",
+      "Stakeholder Management Systems",
+      "High-Value Executive Budget Authority",
+      "Event Operations & Logistics Procurement",
+      "Broadcast & In-Game Technology Integration",
+      "Security & Safety Infrastructure Management",
+      "Third-Party Officiating Partnerships (PRO)",
+      "Stadium & Venue Standardization",
+      "High-Volume Freelance Labor Procurement",
+      "Travel & Logistics Supply Chain Management",
+      "Broadcast Production Equipment & Platform Procurement",
+      "Vendor Coordination for Live Events",
+      "Salary Cap Management & Compliance Systems",
+      "Tax Classification & External Advisory Partnerships",
+      "Financial Reconciliation & Audit Support Infrastructure",
+      "Cross-Functional Financial Governance (Finance, Payroll, Legal)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "NWSL may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:22:05.603087"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.447556",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:49:44.847333"
+}

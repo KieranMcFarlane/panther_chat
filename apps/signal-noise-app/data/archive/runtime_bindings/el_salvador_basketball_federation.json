@@ -1,0 +1,112 @@
+{
+  "entity_id": "el_salvador_basketball_federation",
+  "entity_name": "El Salvador Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "betsapi.com",
+    "selecaoppge.unb.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "el_salvador_basketball_federation",
+      "entity_name": "El Salvador Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://betsapi.com",
+        "https://selecaoppge.unb.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "El Salvador Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:27:00.289849",
+          "domain_explored": "https://betsapi.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content_source",
+            "Gambling_data_aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 154,
+              "elapsed_seconds": 5.723961114883423
+            }
+          ],
+          "reasoning": "The scraped content originates from 'BetsAPI', a third-party gambling data aggregator. It lists live scores and odds for 'Ebasketball' simulations and global leagues, but contains no information regarding the El Salvador Basketball Federation's internal operations, governance, or procurement activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:27:12.372680",
+          "domain_explored": "https://selecaoppge.unb.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant_content_source",
+            "Content_farm_aggregation",
+            "Sports_news_aggregation",
+            "Future_dated_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 197,
+              "elapsed_seconds": 8.681963682174683
+            }
+          ],
+          "reasoning": "The scraped content from 'selecaoppge.unb.br' displays a list of generalized sports and entertainment news headlines (NBA, NFL, F1, Spotify) with future dates (2026). This indicates a content aggregation or 'content farm' site rather than the official procurement or academic portal of the University of Bras\u00edlia (UNB). There is no connection to the El Salvador Basketball Federation or any procurement signals."
+        }
+      ],
+      "total_input_tokens": 2772,
+      "total_output_tokens": 351,
+      "estimated_cost_usd": 0.013581
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "El Salvador Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:27:12.375158"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.267593",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:50:14.882487"
+}

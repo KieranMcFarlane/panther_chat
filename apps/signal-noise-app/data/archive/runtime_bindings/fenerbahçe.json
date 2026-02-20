@@ -1,0 +1,215 @@
+{
+  "entity_id": "fenerbah\u00e7e",
+  "entity_name": "Fenerbah\u00e7e",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "fenerbahce.org",
+    "fenerbahcefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ph.linkedin.com/jobs/view/scheduling-coordinator-at-career-talentpad-3920064889?refId=zqmrE9x4sGSVN5jb6t6OQQ%3D%3D&trackingId=91MP6r26UDpsFH0nRUf5TA%3D%3D&position=13&pageNum=0&trk=public_jobs_jserp-result_search-card",
+      "https://ar.linkedin.com/jobs/view/scheduling-coordinator-latam-at-career-talentpad-3921344881",
+      "https://www.linkedin.com/jobs/advertising-jobs-istanbul"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fenerbah\u00e7e",
+      "entity_name": "Fenerbah\u00e7e",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fenerbahcefootball.com",
+        "https://ph.linkedin.com/jobs/view/scheduling-coordinator-at-career-talentpad-3920064889?refId=zqmrE9x4sGSVN5jb6t6OQQ%3D%3D&trackingId=91MP6r26UDpsFH0nRUf5TA%3D%3D&position=13&pageNum=0&trk=public_jobs_jserp-result_search-card",
+        "https://www.linkedin.com/jobs/advertising-jobs-istanbul",
+        "https://fenerbahce.org",
+        "https://ar.linkedin.com/jobs/view/scheduling-coordinator-latam-at-career-talentpad-3921344881"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fenerbah\u00e7e may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:55:14.107426",
+          "domain_explored": "https://fenerbahce.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "Error during analysis: Illegal trailing comma before end of array: line 19 column 61 (char 1183)"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:55:23.274790",
+          "domain_explored": "https://fenerbahcefootball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Match reports and previews",
+            "Managerial interviews",
+            "Disciplinary notices (PFDK)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 179,
+              "elapsed_seconds": 2.651569128036499
+            }
+          ],
+          "reasoning": "The scraped content from fenerbahcefootball.com is exclusively focused on sports journalism, match results, and player/coach news. There are no references to corporate operations, technology infrastructure, job vacancies, or vendor partnerships. The domain appears to be a news portal rather than a corporate procurement channel."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:55:38.192788",
+          "domain_explored": "https://ph.linkedin.com/jobs/view/scheduling-coordinator-at-career-talentpad-3920064889?refId=zqmrE9x4sGSVN5jb6t6OQQ%3D%3D&trackingId=91MP6r26UDpsFH0nRUf5TA%3D%3D&position=13&pageNum=0&trk=public_jobs_jserp-result_search-card",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Company software system (for tracking/dispatch)",
+              "Digital dispatching integrations"
+            ],
+            "job_postings": [
+              {
+                "title": "Scheduling Coordinator",
+                "entity": "Fenerbah\u00e7e Fans",
+                "location": "Makati, National Capital Region, Philippines",
+                "status": "No longer accepting applications"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Mismatch",
+            "Geographic Mismatch",
+            "Functional Irrelevance"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1483,
+              "output_tokens": 287,
+              "elapsed_seconds": 6.276417016983032
+            }
+          ],
+          "reasoning": "The job posting is attributed to an entity named 'Fenerbah\u00e7e Fans' located in Makati, Philippines. This entity is distinct from the target organization (Fenerbah\u00e7e Spor Kul\u00fcb\u00fc in Turkey). The job description focuses on construction scheduling and technician dispatching, which is irrelevant to the sports club's core operations or procurement needs. The listing appears to be a false positive due to a generic keyword match."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:55:46.518699",
+          "domain_explored": "https://ar.linkedin.com/jobs/view/scheduling-coordinator-latam-at-career-talentpad-3921344881",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Scheduling Coordinator (LatAm)",
+                "entity": "Fenerbah\u00e7e Fans",
+                "location": "Argentina",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Mismatch",
+            "Geographic Mismatch",
+            "Functional Irrelevance",
+            "Industry Mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1544,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.3932573795318604
+            }
+          ],
+          "reasoning": "The job posting is for 'Fenerbah\u00e7e Fans' (a distinct entity from Fenerbah\u00e7e Spor Kul\u00fcb\u00fc), located in Argentina, and focuses on construction scheduling/technician dispatch. This is irrelevant to the procurement strategy of the Turkish sports club."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T08:55:54.568062",
+          "domain_explored": "https://www.linkedin.com/jobs/advertising-jobs-istanbul",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Unilever Future Leaders Programme (Marketing)",
+              "Pazarlama & Kurumsal \u0130leti\u015fim Uzman\u0131 at MUDO",
+              "Marketing Communication Specialist at Toyota",
+              "Integrated Marketing Executive at BSH"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Name Mismatch",
+            "Geographic Noise",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 217,
+              "elapsed_seconds": 3.7831830978393555
+            }
+          ],
+          "reasoning": "The content is a generic LinkedIn job search results page for 'Advertising' roles in Istanbul. None of the visible listings (Unilever, MUDO, Toyota, BSH) are associated with Fenerbah\u00e7e. The page lacks specific procurement signals or technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 6008,
+      "total_output_tokens": 890,
+      "estimated_cost_usd": 0.031374
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fenerbah\u00e7e may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:55:54.569242"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.315730",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:38.553672"
+}

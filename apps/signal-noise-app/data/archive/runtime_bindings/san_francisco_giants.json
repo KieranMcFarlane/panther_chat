@@ -1,0 +1,335 @@
+{
+  "entity_id": "san_francisco_giants",
+  "entity_name": "San Francisco Giants",
+  "template_id": "tpl_major_league_franchises_v1",
+  "cluster_id": "major_league_franchises",
+  "discovered_domains": [
+    "mlbshop.com",
+    "giantssuites.com",
+    "giants365.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/san-francisco-giants-jobs",
+      "https://www.linkedin.com/jobs/san-francisco-giants-jobs-san-francisco-ca",
+      "https://www.linkedin.com/jobs/san-francisco-giants-jobs-worldwide",
+      "https://www.linkedin.com/jobs/sf-giants-jobs",
+      "https://www.linkedin.com/jobs/sports-operations-jobs-san-francisco-ca",
+      "https://www.linkedin.com/jobs/sports-jobs-san-francisco-ca",
+      "https://www.linkedin.com/jobs/minor-league-baseball-jobs",
+      "https://www.linkedin.com/jobs/view/coordinator-baseball-video-systems-at-san-francisco-giants-4338907355",
+      "https://www.linkedin.com/jobs/stadium-jobs-san-francisco-ca"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "san_francisco_giants",
+      "entity_name": "San Francisco Giants",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://giants365.com",
+        "https://www.linkedin.com/jobs/san-francisco-giants-jobs",
+        "https://mlbshop.com",
+        "https://www.linkedin.com/jobs/sports-operations-jobs-san-francisco-ca",
+        "https://www.linkedin.com/jobs/san-francisco-giants-jobs-worldwide",
+        "https://www.linkedin.com/jobs/sf-giants-jobs",
+        "https://www.linkedin.com/jobs/san-francisco-giants-jobs-san-francisco-ca",
+        "https://giantssuites.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "San Francisco Giants may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T12:07:52.528825",
+          "domain_explored": "https://mlbshop.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T12:07:58.876907",
+          "domain_explored": "https://giantssuites.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C_sales_interface",
+            "hospitality_marketing",
+            "static_content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1388,
+              "output_tokens": 156,
+              "elapsed_seconds": 2.750270128250122
+            }
+          ],
+          "reasoning": "The scraped content from giantssuites.com is a consumer-facing marketing site for luxury suite sales and event bookings. It contains no information regarding internal procurement operations, technology infrastructure, vendor selection, or corporate governance. It is strictly a sales channel."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T12:08:05.594737",
+          "domain_explored": "https://giants365.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "B2C_news_aggregation",
+            "sports_journalism",
+            "player_transactions",
+            "editorial_content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1431,
+              "output_tokens": 181,
+              "elapsed_seconds": 2.574084758758545
+            }
+          ],
+          "reasoning": "The scraped content from giants365.com is a sports news aggregation site focused on player roster moves (Luis Arraez, Robbie Ray), game analysis, and editorial opinions. There is no presence of corporate operations, technology infrastructure, job postings, or procurement-related documentation (RFPs, vendor lists). This domain is strictly consumer-facing media."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T12:08:14.435408",
+          "domain_explored": "https://www.linkedin.com/jobs/san-francisco-giants-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics (implied by Analyst roles)",
+              "CRM (implied by Partnerships role)"
+            ],
+            "job_postings": [
+              "Baseball Operations Analyst",
+              "Partnerships & Business Development Intern",
+              "Baseball Operations Associate Analyst",
+              "Guest Services Director",
+              "Promotions and Special Events Intern"
+            ],
+            "procurement_indicators": [
+              "Active recruitment in Business Development (potential vendor management)",
+              "Investment in Baseball Operations (potential software/tools procurement)",
+              "Hospitality staffing (potential service procurement)"
+            ]
+          },
+          "patterns_found": [
+            "job_postings_aggregation",
+            "business_development_recruitment",
+            "baseball_operations_analytics",
+            "hospitality_staffing"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 354,
+              "elapsed_seconds": 5.341785907745361
+            }
+          ],
+          "reasoning": "The content is a list of active job postings on LinkedIn. While it does not contain explicit procurement documents (RFPs/RFIs), the 'Partnerships & Business Development' and 'Baseball Operations Analyst' roles indicate active investment in growth and analytics infrastructure. These roles often drive vendor selection and technology adoption, representing a weak signal for future procurement intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T12:08:21.816371",
+          "domain_explored": "https://www.linkedin.com/jobs/san-francisco-giants-jobs-san-francisco-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Recruiter",
+              "Analytics Platforms (implied by Analyst role)"
+            ],
+            "job_postings": [
+              "Baseball Operations Analyst",
+              "Guest Services Usher/Greeter"
+            ],
+            "procurement_indicators": [
+              "Talent acquisition for technical roles",
+              "Operational staffing for Oracle Park"
+            ]
+          },
+          "patterns_found": [
+            "job_postings_aggregation",
+            "business_development_recruitment",
+            "baseball_operations_analytics"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1546,
+              "output_tokens": 301,
+              "elapsed_seconds": 3.937120199203491
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for 'Baseball Operations Analyst' and 'Guest Services' roles. While these are HR signals rather than direct procurement solicitations, the 'Baseball Operations Analyst' role indicates investment in data analytics infrastructure, which often requires software procurement. The presence of a 'Business Development' role (implied by the context of MLB front offices) suggests partnership management. However, the content is largely gated behind LinkedIn authentication, limiting deep analysis."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T12:08:29.492694",
+          "domain_explored": "https://www.linkedin.com/jobs/san-francisco-giants-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics (implied by Baseball Operations Analyst)",
+              "CRM (implied by Partnerships role)"
+            ],
+            "job_postings": [
+              "Baseball Operations Analyst",
+              "Partnerships & Business Development Intern"
+            ],
+            "procurement_indicators": [
+              "Partnership Management (Vendor facing)",
+              "Analytics Investment"
+            ]
+          },
+          "patterns_found": [
+            "job_postings_aggregation",
+            "baseball_operations_analytics",
+            "business_development_recruitment",
+            "partnership_management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1607,
+              "output_tokens": 271,
+              "elapsed_seconds": 4.227892160415649
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for roles that imply technology usage and vendor management (Partnerships & Business Development, Baseball Operations Analyst). While the page is largely a login gate, the visible job snippets indicate organizational investment in analytics and business development, which are precursors to procurement activity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T12:08:37.401807",
+          "domain_explored": "https://www.linkedin.com/jobs/sf-giants-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Partnerships & Business Development Intern",
+              "Baseball Operations Analyst",
+              "Promotions and Special Events Intern",
+              "Guest Services Director",
+              "Baseball Operations Associate Analyst"
+            ],
+            "procurement_indicators": [
+              "Active recruitment in Business Development (Partnerships)",
+              "Expansion in Baseball Operations (Analyst roles)",
+              "Operational staffing (Guest Services)"
+            ]
+          },
+          "patterns_found": [
+            "job_postings_aggregation",
+            "business_development_recruitment",
+            "baseball_operations_analytics",
+            "hospitality_operations_hiring"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1663,
+              "output_tokens": 316,
+              "elapsed_seconds": 4.462177038192749
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page listing 24 open positions. While it confirms active hiring and organizational structure (Business Development, Baseball Ops, Guest Services), it lacks specific procurement intent (RFPs, tech stack details, or vendor management roles). It reinforces the 'Business Development' signal seen in previous iterations but does not provide new procurement-specific data."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T12:08:43.827069",
+          "domain_explored": "https://www.linkedin.com/jobs/sports-operations-jobs-san-francisco-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "generic_job_aggregation",
+            "login_gate",
+            "unrelated_entities",
+            "high_school_operations",
+            "non_profit_operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1726,
+              "output_tokens": 226,
+              "elapsed_seconds": 2.9109721183776855
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Sports Operations' in San Francisco. It does not contain specific listings for the San Francisco Giants entity. The visible results are for unrelated organizations (Fellowship of Christian Athletes, San Francisco University High School). The content is largely repetitive login prompts and generic UI elements, providing no specific procurement intelligence, technology stack details, or governance patterns for the target entity."
+        }
+      ],
+      "total_input_tokens": 10843,
+      "total_output_tokens": 1805,
+      "estimated_cost_usd": 0.059604000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "San Francisco Giants may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T12:08:43.829118"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.307539",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:29:36.949992"
+}

@@ -1,0 +1,256 @@
+{
+  "entity_id": "serie_b",
+  "entity_name": "Serie B",
+  "template_id": "tpl_tier_2_3_professional_leagues_v1",
+  "cluster_id": "tier_2_professional_leagues",
+  "discovered_domains": [
+    "europeanleagues.com",
+    "destinationcalcio.com",
+    "legapallacanestro.com",
+    "brasileiraoserieb.com.br",
+    "onefootball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ca.linkedin.com/jobs/view/marketing-coordinator-coordonnateur-trice-marketing-at-local-logic-4336905242",
+      "https://ca.linkedin.com/jobs/view/senior-enterprise-account-executive-mortgage-and-financial-services-at-local-logic-4336994822?position=18&pageNum=0&refId=CElnjhOrp5LId5Cw5bKItg%3D%3D&trackingId=hGihFd8iHqOkqYV0OtUrDQ%3D%3D"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "serie_b",
+      "entity_name": "Serie B",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://onefootball.com",
+        "https://ca.linkedin.com/jobs/view/marketing-coordinator-coordonnateur-trice-marketing-at-local-logic-4336905242",
+        "https://ca.linkedin.com/jobs/view/senior-enterprise-account-executive-mortgage-and-financial-services-at-local-logic-4336994822?position=18&pageNum=0&refId=CElnjhOrp5LId5Cw5bKItg%3D%3D&trackingId=hGihFd8iHqOkqYV0OtUrDQ%3D%3D",
+        "https://destinationcalcio.com",
+        "https://brasileiraoserieb.com.br",
+        "https://europeanleagues.com",
+        "https://legapallacanestro.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Serie B may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:28:25.001197",
+          "domain_explored": "https://europeanleagues.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event: 52nd European Leagues General Assembly (Sofia, March 2026)",
+              "Event: Safety and Security Task Force meeting (London)"
+            ]
+          },
+          "patterns_found": [
+            "General Assembly Governance",
+            "Safety & Security Task Force",
+            "Transfer Window Operations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.1655561923980713
+            }
+          ],
+          "reasoning": "The content is from the European Leagues (an umbrella organization) rather than Serie B specifically. While Serie B is a member, the articles focus on high-level governance (General Assembly), generic safety/security task forces, and transfer window countdowns. There are no specific signals regarding Serie B's technology procurement, vendor selection, or digital transformation initiatives in this text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:28:37.502338",
+          "domain_explored": "https://destinationcalcio.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DCTV (Streaming Platform)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media Rights Distribution (Sampdoria vs Palermo on DCTV)",
+              "Travel & Tourism Partnerships (Content focus)"
+            ]
+          },
+          "patterns_found": [
+            "Content Marketing Strategy",
+            "Broadcast Distribution (DCTV)",
+            "Fan Engagement (Travel & Lifestyle)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 259,
+              "elapsed_seconds": 5.480425119400024
+            }
+          ],
+          "reasoning": "The content analyzed is from 'Destination Calcio', a media and travel partner site, not the official Serie B procurement portal. The site focuses on fan travel, lifestyle content, and promoting the league's culture. While it mentions 'DCTV' (Destination Calcio TV) for live streaming, this indicates a media partnership rather than a direct procurement signal for the league's internal operations (ERP, CRM, etc.). No RFPs, job postings, or technology stack details were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:29:40.298857",
+          "domain_explored": "https://legapallacanestro.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:29:53.783693",
+          "domain_explored": "https://brasileiraoserieb.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "SEO Spam Injection",
+            "Affiliate Marketing Content",
+            "Irrelevant Gambling Keywords",
+            "Content Farming"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1491,
+              "output_tokens": 229,
+              "elapsed_seconds": 5.926113605499268
+            }
+          ],
+          "reasoning": "The scraped content from 'brasileiraoserieb.com.br' is heavily compromised by SEO spam and affiliate marketing links (e.g., 'plinkoportugal', 'sweetbonanzajogo', 'bet7k'). While the site title references 'Brasileir\u00e3o S\u00e9rie B', the content is a mix of generic sports news headlines and unrelated gambling advertisements. There is no evidence of official governance, procurement operations, or corporate decision-making structures relevant to the entity 'Serie B' (Italian league) or its Brazilian equivalent. This source is rejected as noise."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:30:00.106372",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:30:10.477049",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/marketing-coordinator-coordonnateur-trice-marketing-at-local-logic-4336905242",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "HubSpot"
+            ],
+            "job_postings": [
+              "Marketing Coordinator"
+            ],
+            "procurement_indicators": [
+              "Series B Funding (Venture Capital)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Local Logic vs Serie B)",
+            "Series B Funding Context",
+            "Real Estate Tech Sector",
+            "HubSpot Usage"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1588,
+              "output_tokens": 227,
+              "elapsed_seconds": 3.0354909896850586
+            }
+          ],
+          "reasoning": "The content provided is a job description for 'Local Logic', a real estate data analytics company based in Montreal. While the text mentions 'Series B funding', this refers to the company's investment stage (Venture Capital), not the Italian football league 'Serie B' (Lega Nazionale Professionisti Serie B). The entity is completely unrelated to the target procurement intelligence goal."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:30:25.642498",
+          "domain_explored": "https://ca.linkedin.com/jobs/view/senior-enterprise-account-executive-mortgage-and-financial-services-at-local-logic-4336994822?position=18&pageNum=0&refId=CElnjhOrp5LId5Cw5bKItg%3D%3D&trackingId=hGihFd8iHqOkqYV0OtUrDQ%3D%3D",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Enterprise Account Executive, Mortgage and Financial Services"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Local Logic vs Serie B)",
+            "Series B Funding Context",
+            "Real Estate Tech Sector",
+            "Sales Role (Account Executive)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1689,
+              "output_tokens": 204,
+              "elapsed_seconds": 7.886085033416748
+            }
+          ],
+          "reasoning": "The content is a job posting for Local Logic, a real estate data analytics company. While the text mentions 'Series B funding', it refers to the venture capital funding stage of Local Logic, not the Italian football league Serie B. The entity and sector (Real Estate/FinTech) are entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7528,
+      "total_output_tokens": 1150,
+      "estimated_cost_usd": 0.039834
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Serie B may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:30:25.645660"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.446921",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:36:13.686372"
+}

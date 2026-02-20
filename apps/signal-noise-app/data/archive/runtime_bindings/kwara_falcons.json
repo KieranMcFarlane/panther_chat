@@ -1,0 +1,165 @@
+{
+  "entity_id": "kwara_falcons",
+  "entity_name": "Kwara Falcons",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "bal.nba.com",
+    "grokipedia.com",
+    "globalsportsarchive.com",
+    "voaafrica.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kwara_falcons",
+      "entity_name": "Kwara Falcons",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://grokipedia.com",
+        "https://bal.nba.com",
+        "https://voaafrica.com",
+        "https://globalsportsarchive.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Kwara Falcons may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:04:57.100792",
+          "domain_explored": "https://bal.nba.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide partnership renewal with Afreximbank (Ecosystem context only)",
+              "Fan experience survey implementation (League-level activity)"
+            ]
+          },
+          "patterns_found": [
+            "League-level strategic partnerships (Afreximbank)",
+            "Geographic expansion (Season 6 host cities)",
+            "Fan engagement initiatives (Surveys)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 265,
+              "elapsed_seconds": 2.661281108856201
+            }
+          ],
+          "reasoning": "The content is sourced from the official Basketball Africa League (BAL) website and focuses on macro-level league operations, season schedules, and title sponsorships. While Kwara Falcons competes in this league, this content does not contain specific procurement signals, technology adoption, or organizational changes for the Kwara Falcons entity itself. It represents the ecosystem context but provides no direct intelligence on Kwara Falcons' purchasing intent or vendor needs."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:05:02.741877",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:05:15.012578",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports taxonomy",
+            "Global competition listings",
+            "Navigation structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1448,
+              "output_tokens": 147,
+              "elapsed_seconds": 3.622519016265869
+            }
+          ],
+          "reasoning": "The scraped content consists of a generic navigation menu for soccer leagues and competitions from Global Sports Archive. There is no mention of 'Kwara Falcons', basketball, or specific procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:05:24.739231",
+          "domain_explored": "https://voaafrica.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DummyTube (Video Player)",
+              "Standard Web Accessibility Navigation"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic news media taxonomy",
+            "Video streaming infrastructure (DummyTube)",
+            "General African news coverage (Politics, Health, Lifestyle)",
+            "Irrelevant geographic focus (DRC, US Congress, South Sudan)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 246,
+              "elapsed_seconds": 3.021890163421631
+            }
+          ],
+          "reasoning": "The scraped content represents the homepage of VOA Africa, a general international news broadcaster. The content focuses on broad geopolitical news, documentaries, and generic media categories (Health, Business, Technology) rather than specific organizational details about 'Kwara Falcons'. There is no mention of the basketball team, its management, or specific procurement activities related to the entity."
+        }
+      ],
+      "total_input_tokens": 4297,
+      "total_output_tokens": 658,
+      "estimated_cost_usd": 0.022761
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Kwara Falcons may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:05:24.740926"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.230270",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:53:21.145683"
+}

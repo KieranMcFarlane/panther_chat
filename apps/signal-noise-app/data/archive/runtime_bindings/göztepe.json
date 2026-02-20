@@ -1,0 +1,349 @@
+{
+  "entity_id": "g\u00f6ztepe",
+  "entity_name": "G\u00f6ztepe",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c3_club_emerging_markets",
+  "discovered_domains": [
+    "goztepe.org.tr",
+    "gozgoz.com.tr",
+    "goztepesk.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-english-at-tekce-%C2%AE-4356454187",
+      "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-russian-at-tekce-real-estate-4356624281",
+      "https://cy.linkedin.com/jobs/view/real-estate-sales-agent-spain-dubai-turkey-n-cyprus-at-tekce-academy-3908854292",
+      "https://tr.linkedin.com/jobs/view/accounting-supervisor-i%CC%87stanbul-g%C3%B6ztepe-at-tekce-real-estate-4347785026",
+      "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-chinese-at-tekce-%C2%AE-4096815344",
+      "https://tr.linkedin.com/jobs/view/real-estate-portfolio-supervisor-i%CC%87stanbul-g%C3%B6ztepe-at-tekce-%C2%AE-4273334781",
+      "https://tr.linkedin.com/jobs/tour-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "g\u00f6ztepe",
+      "entity_name": "G\u00f6ztepe",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.02,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tr.linkedin.com/jobs/view/accounting-supervisor-i%CC%87stanbul-g%C3%B6ztepe-at-tekce-real-estate-4347785026",
+        "https://goztepesk.net",
+        "https://cy.linkedin.com/jobs/view/real-estate-sales-agent-spain-dubai-turkey-n-cyprus-at-tekce-academy-3908854292",
+        "https://gozgoz.com.tr",
+        "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-english-at-tekce-%C2%AE-4356454187",
+        "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-russian-at-tekce-real-estate-4356624281",
+        "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-chinese-at-tekce-%C2%AE-4096815344",
+        "https://goztepe.org.tr"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "G\u00f6ztepe may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:19:43.745064",
+          "domain_explored": "https://goztepe.org.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (External: gozgoz.com.tr)",
+              "Virtual Tour Technology (Sanal Stadyum)",
+              "Social Media Integration (Facebook, Instagram, YouTube)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Acquisition (Osmanl\u0131 Yat\u0131r\u0131m - Jersey Sponsor)",
+              "Facility Naming Rights Deal (Isonem Park)",
+              "Merchandise Operations (Store link)"
+            ]
+          },
+          "patterns_found": [
+            "Sponsorship Revenue Generation",
+            "Stadium Naming Rights",
+            "Merchandising E-commerce Integration",
+            "Multi-Domain Digital Presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 314,
+              "elapsed_seconds": 5.040448904037476
+            }
+          ],
+          "reasoning": "The content provides strong evidence of commercial activity and revenue diversification through sponsorships (Osmanl\u0131 Yat\u0131r\u0131m, Isonem) and merchandise (Gozgoz store). While not direct procurement of office supplies, these signals indicate an active commercial department capable of entering vendor partnerships. The presence of 'Olimpik Bran\u015flar' and 'Sanal Stadyum' suggests potential needs for specialized sports management software or VR/3D rendering services."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:19:57.751040",
+          "domain_explored": "https://gozgoz.com.tr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-commerce Platform (Custom/Proprietary based on URL structure)",
+              "Email Marketing Tools (Newsletter functionality)",
+              "Payment Gateway Integration (Implied by pricing)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active Retail Inventory (Sweatshirts, Jackets, Jerseys)",
+              "Seasonal Collection Updates (2025-2026 Antrenman Koleksiyonu)",
+              "Physical Store Operations (G\u00fczelyal\u0131 & Stadyum Ma\u011faza)",
+              "Brand Licensing (Umbro partnership visible on products)"
+            ]
+          },
+          "patterns_found": [
+            "Merchandising E-commerce Integration",
+            "Supply Chain & Inventory Management",
+            "Retail Operations (Physical & Digital)",
+            "Marketing Campaign Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 371,
+              "elapsed_seconds": 10.458024978637695
+            }
+          ],
+          "reasoning": "The content is the homepage of the official G\u00f6ztepe merchandise store (G\u00d6ZG\u00d6Z). While it does not contain explicit procurement tenders or job postings, it confirms active commercial operations requiring backend support. The presence of specific 'New Product' labels, a 2025-2026 collection, and a newsletter signup indicates active inventory management and digital marketing efforts. This supports the hypothesis of procurement needs in retail logistics, e-commerce platform maintenance, and marketing tools, though direct intent is not visible."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:20:03.505782",
+          "domain_explored": "https://goztepesk.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Historical Data Archiving",
+            "Roster Management",
+            "Fan Engagement Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 159,
+              "elapsed_seconds": 2.6602089405059814
+            }
+          ],
+          "reasoning": "The scraped content is a historical overview and static roster list (circa 2018-2019 based on player names like Cameron Jerome and Andr\u00e9 Castro). It contains no actionable procurement signals, technology infrastructure details, or business operations data. It is purely informational/historical."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:20:11.062646",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-english-at-tekce-%C2%AE-4356454187",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "Windows",
+              "Internet"
+            ],
+            "job_postings": [
+              "Real Estate Agent at TEKCE (G\u00f6ztepe, Istanbul)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic False Positive",
+            "Recruitment (External Entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1529,
+              "output_tokens": 223,
+              "elapsed_seconds": 4.120469808578491
+            }
+          ],
+          "reasoning": "The content is a job posting for 'TEKCE \u00ae', a real estate agency, located in the G\u00f6ztepe district of Istanbul. While the location matches the target entity name, the employer is an external real estate organization (TEKCE), not the G\u00f6ztepe sports club (G\u00f6ztepe SK). This constitutes a geographic false positive and provides no procurement intelligence regarding the sports club's operations, technology stack, or vendor needs."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:20:21.723354",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-russian-at-tekce-real-estate-4356624281",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "Windows",
+              "Internet"
+            ],
+            "job_postings": [
+              "Real Estate Agent (Russian Speaking)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic False Positive",
+            "Recruitment (External Entity)",
+            "Real Estate Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1595,
+              "output_tokens": 199,
+              "elapsed_seconds": 7.014630079269409
+            }
+          ],
+          "reasoning": "The job posting is for TEKCE \u00ae, a real estate agency, and uses 'G\u00f6ztepe' solely to denote the physical location of their office within Istanbul. There is no connection to the sports club G\u00f6ztepe SK or its procurement activities. This is a false positive based on the entity name matching a district name."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:20:30.539567",
+          "domain_explored": "https://cy.linkedin.com/jobs/view/real-estate-sales-agent-spain-dubai-turkey-n-cyprus-at-tekce-academy-3908854292",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "Windows"
+            ],
+            "job_postings": [
+              "Real Estate Sales Agent"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic False Positive",
+            "Recruitment (External Entity)",
+            "Real Estate Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1665,
+              "output_tokens": 222,
+              "elapsed_seconds": 5.248913764953613
+            }
+          ],
+          "reasoning": "The scraped content is a job posting for 'TEKCE Academy', a real estate company. Although the job description mentions a training location in the 'G\u00f6ztepe office', this refers to the neighborhood/district in Istanbul (where Tekce is located), not the sports entity G\u00f6ztepe SK. The content is entirely related to real estate sales and recruitment for an external commercial entity, providing no procurement signals for the football club."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T11:20:37.143404",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/accounting-supervisor-i%CC%87stanbul-g%C3%B6ztepe-at-tekce-real-estate-4347785026",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Mikro (Accounting Program)",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Accounting Supervisor at TEKCE Real Estate"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic False Positive",
+            "Recruitment (External Entity)",
+            "Real Estate Operations",
+            "Accounting Software Usage (Mikro)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1735,
+              "output_tokens": 205,
+              "elapsed_seconds": 2.455542802810669
+            }
+          ],
+          "reasoning": "The content is a job posting for an 'Accounting Supervisor' at TEKCE Real Estate, located in the G\u00f6ztepe district of Istanbul. While it mentions accounting software (Mikro), the entity is a real estate company, not the G\u00f6ztepe sports club. This is a geographic false positive."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T11:20:56.612404",
+          "domain_explored": "https://tr.linkedin.com/jobs/view/real-estate-agent-i%CC%87stanbul-g%C3%B6ztepe-chinese-at-tekce-%C2%AE-4096815344",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "MS Office",
+              "Windows",
+              "Internet"
+            ],
+            "job_postings": [
+              "Real Estate Agent (Chinese Speaker)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic False Positive",
+            "Recruitment (External Entity)",
+            "Real Estate Operations"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1805,
+              "output_tokens": 204,
+              "elapsed_seconds": 16.20237898826599
+            }
+          ],
+          "reasoning": "The content is a job posting for 'TEKCE \u00ae', a global real estate firm, located in the G\u00f6ztepe district of Istanbul. While the location matches the target entity name, the hiring entity is an external real estate agency, not the football club G\u00f6ztepe. This indicates a keyword collision rather than a relevant procurement signal."
+        }
+      ],
+      "total_input_tokens": 12547,
+      "total_output_tokens": 1897,
+      "estimated_cost_usd": 0.066096
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "G\u00f6ztepe may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:20:56.617183"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.150300",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:02.545865"
+}

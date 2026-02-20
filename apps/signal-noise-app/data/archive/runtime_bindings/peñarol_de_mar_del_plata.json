@@ -1,0 +1,179 @@
+{
+  "entity_id": "pe\u00f1arol_de_mar_del_plata",
+  "entity_name": "Pe\u00f1arol de Mar del Plata",
+  "template_id": "tpl_latin_american_clubs_v1",
+  "cluster_id": "latam_clubs",
+  "discovered_domains": [
+    "laliganacional.com.ar",
+    "wikidata.org",
+    "wikiwand.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pe\u00f1arol_de_mar_del_plata",
+      "entity_name": "Pe\u00f1arol de Mar del Plata",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wikiwand.com",
+        "https://commons.wikimedia.org",
+        "https://laliganacional.com.ar",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pe\u00f1arol de Mar del Plata may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:26:27.705421",
+          "domain_explored": "https://laliganacional.com.ar",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports league content",
+            "Irrelevant competitor mentions",
+            "No specific entity targeting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 206,
+              "elapsed_seconds": 2.0065412521362305
+            }
+          ],
+          "reasoning": "The scraped content from 'laliganacional.com.ar' is a general sports news aggregator page listing scores, standings, and news for various teams (Platense, Obras, Boca, etc.). While 'Pe\u00f1arol' is mentioned in a historical headline ('Victoria de Quimsa ante Pe\u00f1arol'), the content is purely informational (sports results) and contains no procurement signals, technology infrastructure details, or business intent related to Pe\u00f1arol de Mar del Plata's operations."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:26:36.384446",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SPARQL",
+              "Wikibase"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform landing page",
+            "Community news and events",
+            "Documentation links",
+            "No entity-specific targeting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.4462828636169434
+            }
+          ],
+          "reasoning": "The scraped content is the generic homepage of Wikidata, a global open-data repository. It contains general information about the platform, community events (WikidataCon), and documentation. There is absolutely no mention of 'Pe\u00f1arol de Mar del Plata', nor are there any procurement signals, job postings, or vendor selection processes relevant to the specific entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:26:43.911428",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform landing page",
+            "Marketing copy for AI features",
+            "Irrelevant historical examples (Abraham Lincoln, Usain Bolt)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1461,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.998995065689087
+            }
+          ],
+          "reasoning": "The content is scraped from the Wikiwand homepage, a Wikipedia interface tool. It contains generic marketing text about 'Top Questions', 'Timelines', and 'AI Chat', along with example biographies of Abraham Lincoln and Usain Bolt. There is absolutely no mention of Pe\u00f1arol de Mar del Plata, procurement activities, or specific technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:26:49.877012",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic platform landing page",
+            "Media repository navigation",
+            "Community contribution guidelines",
+            "Irrelevant historical and cultural content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 185,
+              "elapsed_seconds": 2.61185884475708
+            }
+          ],
+          "reasoning": "The content is the generic landing page for Wikimedia Commons, a media repository. It contains navigation links, generic calls for contribution, and standard copyright information. There is no mention of Pe\u00f1arol de Mar del Plata, no procurement signals, and no technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 5760,
+      "total_output_tokens": 787,
+      "estimated_cost_usd": 0.029085
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pe\u00f1arol de Mar del Plata may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:26:49.878150"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.220038",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:11:23.206305"
+}

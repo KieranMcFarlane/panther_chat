@@ -1,0 +1,122 @@
+{
+  "entity_id": "enyimba_fc",
+  "entity_name": "Enyimba FC",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "enyimbafc.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%A1%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-liam-fox-has-been-activity-7402711028737736705-cfH7"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "enyimba_fc",
+      "entity_name": "Enyimba FC",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%A1%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-liam-fox-has-been-activity-7402711028737736705-cfH7",
+        "https://enyimbafc.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Enyimba FC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:51:07.785400",
+          "domain_explored": "https://enyimbafc.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facebook API Integration",
+              "Twitter/X Integration",
+              "Content Management System (CMS)",
+              "Match Statistics Module"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Social Media Management",
+              "Sports Analytics Software",
+              "Player Database Management"
+            ]
+          },
+          "patterns_found": [
+            "Social Media Integration",
+            "Match Analytics Display",
+            "Roster Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 272,
+              "elapsed_seconds": 2.2802512645721436
+            }
+          ],
+          "reasoning": "The content reveals a basic digital infrastructure with social media integration (Facebook/Twitter) and a structured display of match statistics and player rosters. While no direct procurement requests are visible, the presence of detailed match analytics (Pass Accuracy, Shots, etc.) and roster management suggests the use of backend software or CMS, indicating potential for procurement of analytics or CRM tools to enhance these capabilities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:51:15.967107",
+          "domain_explored": "https://www.linkedin.com/posts/football-careers_%F0%9D%97%96%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%A1%F0%9D%97%B2%F0%9D%98%84%F0%9D%98%80-liam-fox-has-been-activity-7402711028737736705-cfH7",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Match",
+            "Job Market Noise"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1450,
+              "output_tokens": 155,
+              "elapsed_seconds": 2.2537550926208496
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn post from 'Football Careers' regarding the appointment of Liam Fox as head coach of 'Sporting JAX' (a US-based club). There is absolutely no mention, connection, or relevance to Enyimba FC (the target entity). This represents a false positive in the scraping process or irrelevant noise."
+        }
+      ],
+      "total_input_tokens": 2804,
+      "total_output_tokens": 427,
+      "estimated_cost_usd": 0.014817
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Enyimba FC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:51:15.968850"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.184260",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:18:59.418768"
+}

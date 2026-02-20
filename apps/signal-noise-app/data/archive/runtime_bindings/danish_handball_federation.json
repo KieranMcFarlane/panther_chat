@@ -1,0 +1,179 @@
+{
+  "entity_id": "danish_handball_federation",
+  "entity_name": "Danish Handball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "wikidata.org",
+    "eurohandball.com",
+    "eu.puma.com",
+    "us.select-sport.com",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "danish_handball_federation",
+      "entity_name": "Danish Handball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://eurohandball.com",
+        "https://us.select-sport.com",
+        "https://eu.puma.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Danish Handball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:55:05.535547",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:55:14.057902",
+          "domain_explored": "https://eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Machineseeker identified as a title sponsor for EHF Champions League (Sponsorship signal, not direct procurement)"
+            ]
+          },
+          "patterns_found": [
+            "cookie_consent_gating",
+            "tournament_results_content",
+            "future_event_scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 208,
+              "elapsed_seconds": 4.793134689331055
+            }
+          ],
+          "reasoning": "The scraped content is from the European Handball Federation (EHF) news site, not the Danish Handball Federation (DHF). The content focuses on tournament results (Men's EHF EURO 2026) and is partially blocked by cookie consent walls. There are no direct procurement signals, technology stacks, or governance details related to the Danish entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:55:25.614088",
+          "domain_explored": "https://eu.puma.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "ecommerce_product_listing",
+            "brand_marketing_content",
+            "consumer_retail_interface"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 148,
+              "elapsed_seconds": 6.734865188598633
+            }
+          ],
+          "reasoning": "The content is exclusively focused on consumer retail marketing (PUMA x McLaren, Valentine's Day gifts, Speedcat shoes). There is no corporate governance, B2B procurement, or organizational information related to the Danish Handball Federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:55:38.282485",
+          "domain_explored": "https://us.select-sport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Catalog: Select Sport 2026 Equipment Catalog",
+              "Vendor Capability: Custom Jersey Creator (Teamwear)"
+            ]
+          },
+          "patterns_found": [
+            "ecommerce_product_listing",
+            "brand_marketing_content",
+            "consumer_retail_interface",
+            "catalog_marketing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1485,
+              "output_tokens": 250,
+              "elapsed_seconds": 9.328142642974854
+            }
+          ],
+          "reasoning": "The content is from a commercial vendor (Select Sport) and consists of retail marketing copy, product catalogs, and calls to action for purchasing equipment (e.g., 'Build your jersey', 'View Catalog'). While Select Sport is a relevant vendor for handball equipment, this specific page does not contain procurement signals, decision-making data, or technology stack information regarding the Danish Handball Federation itself. It is a supplier storefront, not a target entity signal."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:55:41.111823",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4313,
+      "total_output_tokens": 606,
+      "estimated_cost_usd": 0.022029
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Danish Handball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:55:41.112135"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.361454",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:13.250227"
+}

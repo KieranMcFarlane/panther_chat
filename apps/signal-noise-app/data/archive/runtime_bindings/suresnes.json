@@ -1,0 +1,462 @@
+{
+  "entity_id": "suresnes",
+  "entity_name": "Suresnes",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "suresnes.fr",
+    "en.suresnes-tourisme.com",
+    "visitsuresnes.com",
+    "theatre-suresnes.fr",
+    "yolo-suresnes.fr",
+    "mus.suresnes.fr"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/subsea-7-emplois-suresnes?src_gapi=3400",
+      "https://www.linkedin.com/company/belcorporate/jobs",
+      "https://fr.linkedin.com/jobs/job-con-emplois-suresnes",
+      "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+      "https://uk.linkedin.com/jobs/view/vp-of-mature-markets-at-hid-4315959215",
+      "https://in.linkedin.com/company/belcorporate/jobs",
+      "https://www.linkedin.com/jobs/chapsvision-jobs-worldwide",
+      "https://www.linkedin.com/company/ingenico/jobs",
+      "https://www.linkedin.com/showcase/skema-talent-&-careers/",
+      "https://ie.linkedin.com/jobs/view/sales-manager-rfid-solutions-at-hid-4260269278"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "suresnes",
+      "entity_name": "Suresnes",
+      "total_iterations": 15,
+      "completed_iterations": 11,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://mus.suresnes.fr",
+        "https://www.linkedin.com/company/belcorporate/jobs",
+        "https://en.suresnes-tourisme.com",
+        "https://yolo-suresnes.fr",
+        "https://uk.linkedin.com/jobs/view/vp-of-mature-markets-at-hid-4315959215",
+        "https://suresnes.fr",
+        "https://visitsuresnes.com",
+        "https://www.linkedin.com/jobs/subsea-7-emplois-suresnes?src_gapi=3400",
+        "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+        "https://theatre-suresnes.fr",
+        "https://fr.linkedin.com/jobs/job-con-emplois-suresnes"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Suresnes may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:04:28.455076",
+          "domain_explored": "https://suresnes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Calam\u00e9o (Digital Publishing Platform)"
+            ],
+            "job_postings": [
+              "General Hiring (Link detected: 'La mairie recrute')"
+            ],
+            "procurement_indicators": [
+              "Urban Renewal Project: Renouveau du Centre-Ville",
+              "Governance Reporting: Bilan de mandat 2025",
+              "Service Delivery: Guide enfance jeunesse 2025-2026"
+            ]
+          },
+          "patterns_found": [
+            "Digital Document Management (Calam\u00e9o)",
+            "Urban Renewal Projects",
+            "Public Service Portals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 271,
+              "elapsed_seconds": 3.0802130699157715
+            }
+          ],
+          "reasoning": "The content reveals a reliance on Calam\u00e9o for digital publishing (Magazines, Mandate Reports) and active urban renewal initiatives ('Renouveau du Centre-Ville'). While no direct RFPs are listed, the 'Bilan de mandat 2025' and 'Renouveau du Centre-Ville' sections indicate active governance and potential infrastructure/consulting spend. The 'La mairie recrute' link confirms active HR cycles."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:04:36.377146",
+          "domain_explored": "https://en.suresnes-tourisme.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "Multilingual Localization (En/Fr/Es)",
+              "Interactive Web Modules (Basket/Caddy)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Investment in Tourism Digital Infrastructure",
+              "Support for Local Artisans and Businesses (Heritage and Artisanship section)",
+              "Business Travel Promotion (Corporate Tourism)"
+            ]
+          },
+          "patterns_found": [
+            "Tourism Office Digital Presence",
+            "Multilingual CMS Implementation",
+            "User Experience Features (Basket/Save functionality)",
+            "Local Business Promotion (Heritage, Accommodations, Dining)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1405,
+              "output_tokens": 325,
+              "elapsed_seconds": 4.609686851501465
+            }
+          ],
+          "reasoning": "The content represents the official tourism portal for Suresnes (Office de Tourisme). While it does not contain direct procurement signals (RFPs, budgets), it confirms the entity's investment in digital infrastructure for tourism promotion. The presence of a 'basket' feature and multilingual support indicates a sophisticated CMS setup, suggesting potential future needs for digital services, maintenance, or marketing tools to support local businesses."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:04:50.788531",
+          "domain_explored": "https://visitsuresnes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Forecast7 (Weather Widget)",
+              "Booking.com Affiliate API",
+              "Google Custom Search"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Domain Sales Offer: 'Acquire the iconic domain name VisitSuresnes.com'",
+              "Affiliate Marketing Model (Hotels.com, VRBO)"
+            ]
+          },
+          "patterns_found": [
+            "Domain Parking / Sales Listing",
+            "Affiliate Link Integration (Booking.com, Hotels.com)",
+            "Template-Based Content Aggregation",
+            "Third-Party Directory Links (PhoneBookoftheWorld)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1464,
+              "output_tokens": 293,
+              "elapsed_seconds": 11.62073302268982
+            }
+          ],
+          "reasoning": "The content analyzed is from a domain parking page (VisitSuresnes.com) explicitly offering the domain for acquisition. It contains no official municipal procurement signals, technology stack details, or governance information. The links provided are affiliate partnerships (Booking.com, Hertz) or references to other established entities, but the page itself is a commercial placeholder, not an active municipal project or procurement portal."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:05:05.636365",
+          "domain_explored": "https://theatre-suresnes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "CMS (Content Management System)",
+              "Media Hosting (Video/Audio streaming)",
+              "Ticketing/Booking Platform (implied)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Cultural Programming Operations",
+              "Digital Content Management (Replays/Podcasts)",
+              "Workshop & Event Logistics"
+            ]
+          },
+          "patterns_found": [
+            "Cultural Venue Management",
+            "Event Scheduling & Ticketing Systems",
+            "Content Management (CMS)",
+            "Digital Media Hosting (Video/Audio Replay)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1522,
+              "output_tokens": 305,
+              "elapsed_seconds": 11.71337890625
+            }
+          ],
+          "reasoning": "The content represents the official website of the Th\u00e9\u00e2tre de Suresnes, a cultural venue managed by the municipality. While the page displays public-facing event listings and news (spectacles, workshops, replays), it confirms the entity's operational scope. The presence of digital features like video replays and podcast links indicates a need for media hosting and web content management infrastructure, supporting the procurement hypothesis for digital services, albeit indirectly."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:05:08.402451",
+          "domain_explored": "https://yolo-suresnes.fr",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:05:17.000296",
+          "domain_explored": "https://mus.suresnes.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WebMuseo (Virtual Museum SaaS)",
+              "CMS (Custom/Proprietary for mus.suresnes.fr)",
+              "Event Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Usage of 'WebMuseo' platform for virtual collections",
+              "Digital fundraising mechanism ('Sauvons le Portail aux Escargots')",
+              "Online agenda and event booking infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Digital Asset Management (WebMuseo)",
+            "Event Management & Ticketing",
+            "Cultural Heritage Digitization",
+            "Fundraising / Donation Portals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1602,
+              "output_tokens": 290,
+              "elapsed_seconds": 2.9476020336151123
+            }
+          ],
+          "reasoning": "The content reveals the 'Mus\u00e9e de Suresnes' (MUS) utilizing a dedicated SaaS platform (WebMuseo) for its virtual museum and collections. This indicates a procurement track for specialized cultural sector software. The presence of a 'souscription' (subscription/donation) portal and event management features suggests ongoing needs for CRM and payment processing integration."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:05:24.168592",
+          "domain_explored": "https://www.linkedin.com/jobs/subsea-7-emplois-suresnes?src_gapi=3400",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Senior Document controller",
+              "Business Improvement Trainee",
+              "Project & Installation Engineers",
+              "Senior Installation & Project Engineer",
+              "Senior Project Operations Engineer"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Employment",
+            "Geographic Misalignment (Paris vs. Suresnes)",
+            "Engineering & Operations Roles"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1667,
+              "output_tokens": 247,
+              "elapsed_seconds": 3.461155891418457
+            }
+          ],
+          "reasoning": "The content pertains to Subsea 7, a private multinational company, listing jobs primarily located in 'Paris, \u00cele-de-France'. While the URL slug references 'Suresnes', the job data itself does not explicitly list Suresnes locations, and more importantly, private sector hiring does not reflect the procurement intent or governance patterns of the Suresnes public entity."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:05:31.957605",
+          "domain_explored": "https://www.linkedin.com/company/belcorporate/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "Corporate ERP/Controlling Software (Implied)"
+            ],
+            "job_postings": [
+              "Industrial Controlling Manager (Sourcing)",
+              "Global Senior Brand Manager Boursin",
+              "Assistant/e Charg\u00e9/e de Projets - Fondation Bel"
+            ],
+            "procurement_indicators": [
+              "Private Sector Hiring",
+              "Internal Talent Pool Management"
+            ]
+          },
+          "patterns_found": [
+            "Private Sector Corporate Entity",
+            "FMCG/Manufacturing Focus",
+            "Internal Controlling & Brand Management Roles",
+            "Global Operations (Non-Local Procurement Context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1727,
+              "output_tokens": 321,
+              "elapsed_seconds": 4.58310604095459
+            }
+          ],
+          "reasoning": "The content is from the LinkedIn page of 'Bel' (Groupe Bel), a major private food manufacturing company headquartered in Suresnes. While they have a significant presence in the city, the job listings (Industrial Controlling, Brand Management, Foundation Internships) reflect internal corporate operations rather than public sector procurement signals or municipal governance. This does not align with the objective of analyzing the 'Suresnes' public entity procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:05:39.379282",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-con-emplois-suresnes",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Regional People Partner/HRBP - Mango (Paris)",
+              "Managers CDI - Mango (Paris)",
+              "Customer Service Agents - Winamax (Paris)",
+              "Marketing Manager - ATM Gaming (Ville de Paris)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment Aggregation",
+            "Geographic Misalignment (Paris vs. Suresnes)",
+            "Generic Job Search Query ('Job Con')",
+            "Retail & Gaming Sector Focus (Mango, Winamax, ATM Gaming)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1788,
+              "output_tokens": 277,
+              "elapsed_seconds": 3.7350451946258545
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page triggered by a malformed query ('Job Con' in Suresnes). The listings returned are predominantly for private sector entities (Mango, Winamax) located in the broader Paris metropolitan area rather than specific Suresnes municipal governance or procurement roles. There is no direct relevance to Suresnes public procurement or technology implementation."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T15:05:46.577059",
+          "domain_explored": "https://www.linkedin.com/jobs/phagos-jobs-worldwide?f_C=75033025",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data & AI",
+              "Microbiology Lab Equipment"
+            ],
+            "job_postings": [
+              "Laboratory technician in microbiology",
+              "Spontaneous application - Data & AI team"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Biotechnology Entity",
+            "R&D & Laboratory Operations Focus",
+            "Scientific Recruitment (Microbiology, Data & AI)",
+            "Geographic Alignment (Suresnes) but Non-Public Entity"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1856,
+              "output_tokens": 257,
+              "elapsed_seconds": 3.9391307830810547
+            }
+          ],
+          "reasoning": "The content confirms 'Phagos' is a private biotechnology company operating in Suresnes, focused on bacteriophage-based biotechnology. While the location matches the target entity (Suresnes), the activity is private sector recruitment for scientific roles (Lab Technicians, Data Scientists). This does not constitute public procurement intelligence for the municipality of Suresnes."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T15:06:11.470841",
+          "domain_explored": "https://uk.linkedin.com/jobs/view/vp-of-mature-markets-at-hid-4315959215",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Physical Access Control Solutions (PACS)",
+              "Biometric Technologies",
+              "Mobile Access Solutions"
+            ],
+            "job_postings": [
+              "VP of Mature Markets at HID Global (Suresnes, France)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Corporate Entity",
+            "High-Tech Manufacturing & Security (HID Global)",
+            "Strategic Sales Leadership (VP Level)",
+            "P&L Responsibility Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1926,
+              "output_tokens": 271,
+              "elapsed_seconds": 21.370738983154297
+            }
+          ],
+          "reasoning": "The content describes a high-level executive role (VP of Mature Markets) at HID Global, a private high-tech company specializing in physical access control security solutions. While the role involves 'technology partnerships' and 'commercial operations,' it is fundamentally a private sector sales and leadership position focused on revenue growth and P&L management, not public procurement or municipal governance for the city of Suresnes."
+        }
+      ],
+      "total_input_tokens": 16310,
+      "total_output_tokens": 2857,
+      "estimated_cost_usd": 0.091785
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Suresnes may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:06:11.471694"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.278675",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:41.007607"
+}

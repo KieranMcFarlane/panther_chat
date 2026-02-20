@@ -1,0 +1,193 @@
+{
+  "entity_id": "croatian_volleyball_federation",
+  "entity_name": "Croatian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "mikasasports.eu",
+    "hos-web.dataproject.com",
+    "inside.cev.eu",
+    "worldofvolley.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "croatian_volleyball_federation",
+      "entity_name": "Croatian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://mikasasports.eu",
+        "https://worldofvolley.com",
+        "https://inside.cev.eu",
+        "https://hos-web.dataproject.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Croatian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:03:47.979712",
+          "domain_explored": "https://mikasasports.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor: Mikasa Sports Europe (Official Equipment Supplier)",
+              "Product: V200W-CEV (FIVB match ball)",
+              "Product: VNC Indoor Volleyball Net",
+              "Event: VNL (Volleyball Nations League) reference",
+              "Event: CEV (European Volleyball Confederation) reference"
+            ]
+          },
+          "patterns_found": [
+            "Official Equipment Vendor Identification",
+            "Product Portfolio Analysis",
+            "Event Sponsorship Signals"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 269,
+              "elapsed_seconds": 2.9233481884002686
+            }
+          ],
+          "reasoning": "The content confirms Mikasa as a primary equipment vendor for volleyball (FIVB/CEV balls, nets). While this is a vendor catalog rather than a direct procurement signal from the Federation, it establishes the supply chain baseline. The Federation likely procures these specific items (V200W-CEV, nets) or relies on them for official events. No direct RFPs or tech stack changes were found."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:03:59.755872",
+          "domain_explored": "https://hos-web.dataproject.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "DataProject HOS-Web",
+              "Sports Analytics Software",
+              "League Management System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Active contract/usage of DataProject software",
+              "Digital transformation of league operations (Stats, Live Scoring)"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data Analytics Platform Usage",
+            "Competition Management System Integration",
+            "Vendor: DataProject (HOS-Web)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1419,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.46915602684021
+            }
+          ],
+          "reasoning": "The content confirms the Croatian Volleyball Federation utilizes the 'DataProject HOS-Web' platform for managing league statistics, standings, and match data. This identifies a key technology vendor and an active investment in digital sports infrastructure. While it confirms current usage (Capability), it does not explicitly signal a new procurement event (Intent/RFP), resulting in a WEAK_ACCEPT."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:04:09.895798",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "EuroVolley 2028 Bid Support (Montenegro)",
+              "Scouting Program Development (Azerbaijan)"
+            ]
+          },
+          "patterns_found": [
+            "General Sports News Aggregation",
+            "Regional Federation Activity (Montenegro/Azerbaijan)",
+            "Event Bidding Activity (EuroVolley 2028)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1475,
+              "output_tokens": 259,
+              "elapsed_seconds": 3.545330047607422
+            }
+          ],
+          "reasoning": "The scraped content from inside.cev.eu represents a general news feed listing articles about other federations (Montenegro, Azerbaijan) and general development topics. There is no specific mention of the Croatian Volleyball Federation (HOS), no specific technology vendors related to Croatia, and no direct procurement signals (RFPs, job postings) applicable to the target entity. The content is relevant to the industry context but does not advance the specific intelligence profile for the Croatian federation."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:04:20.100315",
+          "domain_explored": "https://worldofvolley.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship naming rights observed (e.g., Vodafone Sultanlar Ligi) - indicates potential marketing partners, but no direct link to HOS procurement."
+            ]
+          },
+          "patterns_found": [
+            "Global Sports News Aggregation",
+            "International League Coverage (Italy, Turkey, Poland, Brazil)",
+            "Transfer Market Activity (Player Signings/Deals)",
+            "Sponsorship Visibility (Vodafone, Credem Banca)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1536,
+              "output_tokens": 276,
+              "elapsed_seconds": 3.8852100372314453
+            }
+          ],
+          "reasoning": "The content from WorldofVolley is a global sports news aggregator focusing on match results, league standings, and player transfers. While it mentions 'Done deals' regarding player signings, there are no signals related to the Croatian Volleyball Federation's procurement needs, technology infrastructure, or governance. The content is relevant to general market intelligence but does not advance the specific procurement hypothesis for the target entity."
+        }
+      ],
+      "total_input_tokens": 5795,
+      "total_output_tokens": 1068,
+      "estimated_cost_usd": 0.033405000000000004
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Croatian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:04:20.103606"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.338111",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:48:46.493793"
+}

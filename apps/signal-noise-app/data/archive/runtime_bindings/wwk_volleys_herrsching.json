@@ -1,0 +1,225 @@
+{
+  "entity_id": "wwk_volleys_herrsching",
+  "entity_name": "WWK Volleys Herrsching",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "traditional_european_club",
+  "discovered_domains": [
+    "geilsterclubderwelt.de",
+    "www-old.cev.eu",
+    "globalsportsarchive.com",
+    "volleyball-bundesliga.de",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "wwk_volleys_herrsching",
+      "entity_name": "WWK Volleys Herrsching",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://www-old.cev.eu",
+        "https://commons.wikimedia.org",
+        "https://globalsportsarchive.com",
+        "https://geilsterclubderwelt.de",
+        "https://volleyball-bundesliga.de"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "WWK Volleys Herrsching may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T06:01:20.775092",
+          "domain_explored": "https://geilsterclubderwelt.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing System (inferred from /bundesliga/1vbl-ticketshop)",
+              "PDF Documentation (Sponsorship decks)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Sponsorship Sales (Business Club PDF)",
+              "Event Ticketing Operations"
+            ]
+          },
+          "patterns_found": [
+            "Ticketing Operations",
+            "Sponsorship Documentation",
+            "Venue Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1363,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.1880908012390137
+            }
+          ],
+          "reasoning": "The content reveals operational infrastructure rather than active procurement signals. The link to the 'Business Club' PDF indicates established sponsorship packages (B2B sales), and the ticket shop link confirms the use of a ticketing platform. While this confirms the organization has revenue streams requiring software tools, there is no explicit evidence of new technology acquisition or RFPs in this specific text."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T06:01:32.337517",
+          "domain_explored": "https://www-old.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Regulatory Compliance Context (CEV)"
+            ]
+          },
+          "patterns_found": [
+            "Governing Body Structure",
+            "Event Calendar Management",
+            "Historical Data Archiving"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1407,
+              "output_tokens": 215,
+              "elapsed_seconds": 5.285670757293701
+            }
+          ],
+          "reasoning": "The content is scraped from the European Volleyball Confederation (CEV) website, specifically a navigation menu and event calendar. While this establishes the regulatory and competitive environment in which WWK Volleys operates, it contains zero specific information regarding WWK Volleys Herrsching's internal operations, technology stack, or procurement activities. It is contextually relevant but analytically void for the specific entity target."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T06:01:42.124291",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Sports Aggregation",
+            "Global League Taxonomy",
+            "Static Content Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1458,
+              "output_tokens": 177,
+              "elapsed_seconds": 2.426947832107544
+            }
+          ],
+          "reasoning": "The scraped content from globalsportsarchive.com represents a generic sports navigation sitemap (Soccer, UEFA, etc.). It lacks specific entity data regarding 'WWK Volleys Herrsching', contains no procurement signals (RFPs, vendors), and offers no insight into the club's technology stack or governance. It is irrelevant noise for the specific target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T06:01:55.334955",
+          "domain_explored": "https://volleyball-bundesliga.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "VBL-Ticker (League Data Feed)",
+              "VBL-SAMS (Sports Application Management System)",
+              "Dyn (Streaming Platform)",
+              "SPORT1 (Broadcast Partner)"
+            ],
+            "job_postings": [
+              "VBL Jobs Section (League Level)"
+            ],
+            "procurement_indicators": [
+              "Centralized Streaming Contracts (Dyn)",
+              "League-Level Data Aggregation (VBL-Wiki/Stats)",
+              "Sponsorship/Partner Acquisition Pipeline"
+            ]
+          },
+          "patterns_found": [
+            "League-Wide Digital Infrastructure",
+            "Centralized Streaming Rights Management",
+            "Vendor Partnership Ecosystem",
+            "Official Data & Statistics Platform"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1508,
+              "output_tokens": 335,
+              "elapsed_seconds": 5.677626848220825
+            }
+          ],
+          "reasoning": "The content reveals that WWK Volleys Herrsching operates within a highly centralized league structure (Volleyball Bundesliga). Procurement is likely governed by league-level partnerships (e.g., Dyn for streaming, VBL for data) rather than independent club decisions. The presence of a 'Jobs' section and 'Partner werden' (Become a Partner) indicates active commercial and HR activities, though specific technical procurement signals are abstracted by the league's central tech stack."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T06:02:04.857260",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository",
+            "User-Generated Content Aggregation",
+            "Static Taxonomy Structure"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1564,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.790753126144409
+            }
+          ],
+          "reasoning": "The scraped content represents the generic homepage of Wikimedia Commons, a global media repository. There is no specific content related to 'WWK Volleys Herrsching', nor are there any procurement signals, vendor lists, or technology stacks specific to the entity. The text consists of standard navigation elements, upload guidelines, and generic category listings (Nature, Society, Sports) which do not provide actionable intelligence regarding the target entity's procurement operations."
+        }
+      ],
+      "total_input_tokens": 7300,
+      "total_output_tokens": 1190,
+      "estimated_cost_usd": 0.03975
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "WWK Volleys Herrsching may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T06:02:04.858862"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321808",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:47:58.910541"
+}

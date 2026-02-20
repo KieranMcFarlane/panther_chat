@@ -1,0 +1,220 @@
+{
+  "entity_id": "columbus_fury",
+  "entity_name": "Columbus Fury",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "provolleyball.com",
+    "columbussports.org",
+    "web.columbus.org",
+    "destinationsport.com",
+    "nationwidearena.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "columbus_fury",
+      "entity_name": "Columbus Fury",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://provolleyball.com",
+        "https://columbussports.org",
+        "https://web.columbus.org",
+        "https://nationwidearena.com",
+        "https://destinationsport.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Columbus Fury may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:04:36.487292",
+          "domain_explored": "https://provolleyball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "League-managed CMS (provolleyball.com)",
+              "Video streaming infrastructure (implied by 'Full Screen/Mute' UI elements)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide Corporate Partners: Franklin Sports, REN Athletics, Spalding, USA Volleyball",
+              "League Operations: Season 3 scheduling and standings management"
+            ]
+          },
+          "patterns_found": [
+            "League-level corporate partnerships",
+            "Standardized league technology infrastructure",
+            "Team-specific landing page presence"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 813,
+              "output_tokens": 309,
+              "elapsed_seconds": 3.6832690238952637
+            }
+          ],
+          "reasoning": "The content confirms Columbus Fury as an active franchise within the Pro Volleyball Federation (PVF) for Season 3. While no direct procurement signals (like RFPs) are present, the identification of league-wide corporate partners (Franklin Sports, Spalding, USA Volleyball) suggests a centralized procurement model where vendors may be contracted at the league level rather than the individual team level. The presence of a dedicated team page on the league domain indicates shared web infrastructure."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:04:43.345615",
+          "domain_explored": "https://columbussports.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Event branding focus",
+            "Non-relevant entity association (NCAA vs. Pro Volleyball)",
+            "General sports commission news"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 542,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.4042651653289795
+            }
+          ],
+          "reasoning": "The content focuses on the 2027 NCAA Women's Final Four branding and the Greater Columbus Sports Commission. While it highlights the volleyball market in Columbus, it pertains to collegiate events and sports commission activities rather than the specific procurement, operations, or vendor needs of the Columbus Fury professional franchise."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:04:50.312204",
+          "domain_explored": "https://web.columbus.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch (Chamber of Commerce vs. Pro Volleyball Team)",
+            "Generic Navigation Structure",
+            "B2B Service Focus (Membership, Economic Development)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1472,
+              "output_tokens": 207,
+              "elapsed_seconds": 3.168445110321045
+            }
+          ],
+          "reasoning": "The scraped content confirms the target URL is for the Columbus Chamber of Commerce, a regional B2B membership organization, not the Columbus Fury pro volleyball team. While the Chamber may be a potential partner or sponsor, it is a distinct legal entity with separate procurement operations. The content focuses on membership services and economic development, not team operations or sports technology procurement."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:04:57.682608",
+          "domain_explored": "https://destinationsport.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Competitor Intelligence: Destination Sport lists 'Omaha Supernovas' as a partner, indicating a potential vendor relationship for team travel/logistics within the league."
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch (Travel Vendor vs. Team)",
+            "B2B Service Provider Focus",
+            "Global Sports Organization Clientele"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 230,
+              "elapsed_seconds": 3.3135697841644287
+            }
+          ],
+          "reasoning": "The content analyzed belongs to 'Destination Sport Group,' a B2B travel management company, not 'Columbus Fury.' While the site lists 'Omaha Supernovas' (a direct rival in the PVF) as a client, this establishes the entity as a vendor/supplier rather than the target procurement entity. There are no procurement signals for Columbus Fury on this page."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:05:06.386422",
+          "domain_explored": "https://nationwidearena.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketmaster (implied via 'Buy Tickets' links standard for Arena venues)",
+              "Corporate CMS (likely shared with Blue Jackets/Avenue)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Tenancy Agreement (Shared Services)",
+              "Event Operations & Logistics",
+              "Ticketing Platform Integration"
+            ]
+          },
+          "patterns_found": [
+            "Venue Partnership Confirmation",
+            "Shared Infrastructure Usage",
+            "Co-located Tenant Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1592,
+              "output_tokens": 298,
+              "elapsed_seconds": 5.254448890686035
+            }
+          ],
+          "reasoning": "The content confirms that Columbus Fury is a primary tenant of Nationwide Arena, evidenced by the specific 'THE COLUMBUS FURY' navigation link alongside the primary anchor tenant (Columbus Blue Jackets). While the page is primarily an events calendar (B2C), the tenant relationship implies shared procurement for venue services, security, and ticketing infrastructure. However, the specific page content is purely promotional events data, lacking direct procurement signals like RFPs or tech stack details."
+        }
+      ],
+      "total_input_tokens": 5956,
+      "total_output_tokens": 1224,
+      "estimated_cost_usd": 0.036227999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Columbus Fury may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:05:06.387829"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324362",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:56.353958"
+}

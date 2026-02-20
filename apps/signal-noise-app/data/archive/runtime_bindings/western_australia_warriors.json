@@ -1,0 +1,246 @@
+{
+  "entity_id": "western_australia_warriors",
+  "entity_name": "Western Australia Warriors",
+  "template_id": "tpl_developmental_teams_v1",
+  "cluster_id": "aus_state_teams",
+  "discovered_domains": [
+    "wikiwand.com",
+    "cricket.com.au",
+    "endometriosiswa.org.au",
+    "makeadifference.volunteering.nsw.gov.au",
+    "cricstralia.com.au",
+    "limbs4life.org.au",
+    "acncpubfilesprodstorage.blob.core.windows.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "western_australia_warriors",
+      "entity_name": "Western Australia Warriors",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://wikiwand.com",
+        "https://limbs4life.org.au",
+        "https://makeadifference.volunteering.nsw.gov.au",
+        "https://acncpubfilesprodstorage.blob.core.windows.net",
+        "https://cricstralia.com.au",
+        "https://endometriosiswa.org.au",
+        "https://cricket.com.au"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Western Australia Warriors may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:23:17.048933",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:23:23.549627",
+          "domain_explored": "https://cricket.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "carousel_slider_ui",
+            "sports_news_headlines",
+            "player_injury_reports",
+            "match_scheduling"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1391,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.0323562622070312
+            }
+          ],
+          "reasoning": "The scraped content is from the general Cricket Australia homepage and consists solely of sports news headlines, match results, and player updates. There is no mention of the Western Australia Warriors entity, nor are there any signals regarding business operations, technology stacks, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:23:37.965509",
+          "domain_explored": "https://endometriosiswa.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Mismatch: Content refers to a health charity (Endometriosis WA), not the target sports entity."
+            ]
+          },
+          "patterns_found": [
+            "volunteer_driven_non_profit",
+            "health_advocacy_ngo",
+            "community_fundraising_events",
+            "medical_research_scholarship"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1437,
+              "output_tokens": 201,
+              "elapsed_seconds": 3.4618301391601562
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Endometriosis WA Warriors' is a volunteer-run health advocacy non-profit, not a professional sports team. This entity is distinct from the target 'Western Australia Warriors' (sports franchise). There are no procurement signals relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:23:47.073941",
+          "domain_explored": "https://makeadifference.volunteering.nsw.gov.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "volunteer_portal_login",
+            "generic_email_alert_system",
+            "nsw_government_domain",
+            "user_authentication_ui"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 659,
+              "output_tokens": 163,
+              "elapsed_seconds": 4.590229749679565
+            }
+          ],
+          "reasoning": "The content is a login page for a volunteering portal managed by the NSW Government. It contains no information regarding the Western Australia Warriors, nor does it display any procurement signals, technology stacks, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:23:54.313555",
+          "domain_explored": "https://cricstralia.com.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Content Management System (CMS)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "sports_news_aggregator",
+            "match_highlights_content",
+            "historical_statistics_display",
+            "fan_subscription_cta",
+            "editorial_content_management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 180,
+              "elapsed_seconds": 2.317617893218994
+            }
+          ],
+          "reasoning": "The content is exclusively consumer-focused sports journalism and entertainment (news, scores, highlights). It lacks any corporate governance, infrastructure, or operational procurement signals relevant to the Western Australia Warriors entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:24:04.326605",
+          "domain_explored": "https://limbs4life.org.au",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "non_profit_charity_mission",
+            "peer_support_services",
+            "prosthetist_directory_listing",
+            "patient_advocacy_resources",
+            "community_support_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1584,
+              "output_tokens": 201,
+              "elapsed_seconds": 3.4879229068756104
+            }
+          ],
+          "reasoning": "The scraped content is from 'Limbs 4 Life', a non-profit organization dedicated to supporting amputees. The content focuses on peer support, finding prosthetists, and personal stories. There is absolutely no connection to the 'Western Australia Warriors' (a sports entity) nor any procurement signals, technology stacks, or corporate governance data relevant to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:24:08.285489",
+          "domain_explored": "https://acncpubfilesprodstorage.blob.core.windows.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6608,
+      "total_output_tokens": 915,
+      "estimated_cost_usd": 0.033549
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Western Australia Warriors may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:24:08.286440"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.302595",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:38:32.263292"
+}

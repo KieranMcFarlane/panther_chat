@@ -1,0 +1,208 @@
+{
+  "entity_id": "confederation_of_north,_central_america_and_caribbean_association_football_(concacaf)",
+  "entity_name": "Confederation of North, Central America and Caribbean Association Football (CONCACAF)",
+  "template_id": "tpl_global_governing_bodies_v1",
+  "cluster_id": "global_governing_bodies",
+  "discovered_domains": [
+    "concacaf.com",
+    "qa.concacaf.com",
+    "inside.fifa.com",
+    "ttsecglobal.com",
+    "ussoccer.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "confederation_of_north,_central_america_and_caribbean_association_football_(concacaf)",
+      "entity_name": "Confederation of North, Central America and Caribbean Association Football (CONCACAF)",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://ttsecglobal.com",
+        "https://qa.concacaf.com",
+        "https://concacaf.com",
+        "https://inside.fifa.com",
+        "https://ussoccer.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [
+        "Vendor Case Study (CONCACAF)",
+        "Service Portfolio (Accreditation, Access Control, Media Management)",
+        "B2B Service Description (Turnkey solutions, staffing, training)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Confederation of North, Central America and Caribbean Association Football (CONCACAF) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:39:54.909667",
+          "domain_explored": "https://concacaf.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "High volume of repetitive navigation text",
+            "Absence of semantic business content",
+            "Scraping artifact (likely truncated or malformed HTML)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 508,
+              "output_tokens": 197,
+              "elapsed_seconds": 4.224051237106323
+            }
+          ],
+          "reasoning": "The provided content consists almost entirely of repeated UI navigation labels (e.g., 'Scores & Stats', 'Live Matches', 'Schedule') and lacks any substantive information regarding business operations, technology infrastructure, or procurement activities. This indicates a scraping failure or a truncated view of the website's header/footer, yielding no actionable intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:40:03.094938",
+          "domain_explored": "https://qa.concacaf.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Repetitive navigation text (Schedule, Live Matches)",
+            "Scraping artifact (likely truncated or malformed HTML)",
+            "Absence of semantic business content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 605,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.0123660564422607
+            }
+          ],
+          "reasoning": "The content provided is a QA environment (qa.concacaf.com) and consists almost entirely of repeated navigation labels ('Schedule', 'Live Matches', 'Scores & Stats'). This indicates a scraping error where the HTML structure was flattened or truncated, resulting in a loss of all meaningful business data. There are no procurement signals, technology stacks, or governance details present in this noise."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:40:09.341151",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant domain (FIFA vs. CONCACAF)",
+            "Sports news content (Women's Champions Cup)",
+            "Repetitive navigation text",
+            "Scraping artifact (truncated HTML)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1519,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.241426944732666
+            }
+          ],
+          "reasoning": "The content provided is from 'inside.fifa.com', which is the domain of the international governing body (FIFA), not the target entity (CONCACAF). The content focuses on sports news, match results, and general football governance rather than procurement, technology stacks, or business operations specific to CONCACAF. Therefore, this provides no value for the specific intelligence gathering on CONCACAF."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:40:24.253768",
+          "domain_explored": "https://ttsecglobal.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Web-based Accreditation Systems",
+              "Media Management Platforms",
+              "Vehicle Access/Parking Systems (VAPPS)",
+              "Access Control Hardware (Scanners, Printers)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Vendor Partnership: TTSEC Global",
+              "Service Category: Event Security & Access Control",
+              "Service Category: Staffing & Training",
+              "Service Category: Media Accreditation"
+            ]
+          },
+          "patterns_found": [
+            "Vendor Case Study (CONCACAF)",
+            "Service Portfolio (Accreditation, Access Control, Media Management)",
+            "B2B Service Description (Turnkey solutions, staffing, training)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 307,
+              "elapsed_seconds": 4.062252044677734
+            }
+          ],
+          "reasoning": "The content explicitly lists 'CONCACAF' under the 'OUR WORK' section of TTSEC Global, a security and access control provider. This confirms a direct vendor relationship where CONCACAF procures event security, accreditation software, and staffing services. This is a strong procurement signal indicating investment in event technology and operational services."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:40:32.461493",
+          "domain_explored": "https://ussoccer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 4206,
+      "total_output_tokens": 916,
+      "estimated_cost_usd": 0.026358
+    },
+    "procurement_signals": [
+      "Vendor Case Study (CONCACAF)",
+      "Service Portfolio (Accreditation, Access Control, Media Management)",
+      "B2B Service Description (Turnkey solutions, staffing, training)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Confederation of North, Central America and Caribbean Association Football (CONCACAF) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:40:32.462671"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.198708",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:12:51.395909"
+}

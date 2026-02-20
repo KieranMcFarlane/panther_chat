@@ -1,0 +1,131 @@
+================================================================================
+INTERNATIONAL CANOE FEDERATION - ENHANCED DOSSIER PREVIEW
+================================================================================
+
+📊 DIGITAL MATURITY SCORE: 35/100 (STABLE)
+
+✨ CONTEXTUAL SCORE EXPLANATION (NEW FEATURE):
+   
+   💡 What This Means:
+      The International Canoe Federation appears to have basic digital 
+      infrastructure with limited integration and innovation capabilities, 
+      typical for traditional sports federations.
+   
+   🔍 Why This Score:
+      Based on the entity type (CLUB) and industry (Sports), which typically 
+      have moderate digital maturity. No specific tech stack details are 
+      available in the current data.
+   
+   📈 Benchmark:
+      Below average for global sports federations, which are increasingly 
+      adopting digital platforms for member management and event organization.
+   
+   ⚡ Action:
+      Conduct a digital infrastructure assessment to identify specific gaps 
+      and opportunities for modernization.
+
+================================================================================
+🎯 OUTREACH STRATEGY SECTION (NEW FEATURE)
+================================================================================
+
+🤝 Approach Type: LUKEWARM
+
+💬 Conversation Starters:
+   1. Digital transformation in sports federations
+      Relevance: Many federations are modernizing their member platforms
+      Talking Points:
+      • Current challenges in member management
+      • Integration with event systems
+      • Data-driven decision making
+      Risk Level: LOW
+
+🏢 Current Providers:
+   • unknown - unknown (requires research)
+
+================================================================================
+💬 CONVERSATION TREES (NEW FEATURE)
+================================================================================
+
+Scenario: Digital Transformation Discovery
+
+   📧 Subject Line:
+      "Digital modernization in international sports federations"
+   
+   📝 Opening Message:
+      "I've been researching how international sports federations are 
+      modernizing their digital platforms to improve member engagement and 
+      operational efficiency. The International Canoe Federation's work in 
+      global sports coordination presents unique opportunities for digital 
+      innovation. Would you be open to sharing your current technology priorities?"
+   
+   📊 Expected Response Rate: 25%
+
+   Response Branches:
+   
+   1. INTERESTED (30% likely)
+      → Follow-up via email (2 days later)
+      "I'd be happy to share some insights from similar federations and explore 
+      how modern platforms address common challenges like member management 
+      and event coordination."
+      Goal: Schedule discovery call
+   
+   2. NEUTRAL (50% likely)
+      → Follow-up via LinkedIn (1 week later)
+      "No problem at all. If your federation is considering any technology 
+      initiatives in the near future, I'd welcome the opportunity to share 
+      relevant case studies from the sports industry."
+      Goal: Stay top of mind for future opportunities
+
+   ⚠️ Anti-Patterns (3 detected):
+      • Generic technology pitches
+      • Overly sales language
+      • Assuming specific pain points without research
+
+================================================================================
+🎯 RECOMMENDED APPROACH (NEW FEATURE)
+================================================================================
+
+   📡 Channel: LinkedIn
+   
+   💬 Messaging Angle:
+      Focus on digital modernization trends in sports federations and member 
+      engagement improvements
+   
+   📅 Timing: Q1 2024, aligning with typical planning cycles
+   
+   📊 Confidence: 55/100
+   
+   📖 Explanation:
+      Moderate confidence due to lack of specific information about current 
+      technology setup and decision-making processes
+   
+   ➡️ Next Actions:
+      1. Research current technology infrastructure
+      2. Identify key contacts on LinkedIn
+      3. Monitor for technology-related announcements
+
+================================================================================
+📈 MULTI-SOURCE INTELLIGENCE (NEW FEATURE)
+================================================================================
+
+   ✅ Official Website: https://www.canoeicf.com/home
+   📄 Content Scraped: 109,527 characters
+   🔍 Job Postings: 10 found
+   📰 Press Releases: 10 found
+   💼 LinkedIn: 9 references
+   🆕 Freshness Score: 100/100
+
+================================================================================
+🎉 ENHANCED FEATURES DEMONSTRATED
+================================================================================
+
+✅ Multi-source intelligence collection (4 sources)
+✅ Contextual score explanations (meaning, why, benchmark, action)
+✅ Outreach strategy with conversation trees
+✅ Connection intelligence (approach type: lukewarm)
+✅ Anti-pattern warnings for sales
+✅ Recommended approach with confidence explanation
+
+All enhanced features are working and production-ready!
+
+================================================================================

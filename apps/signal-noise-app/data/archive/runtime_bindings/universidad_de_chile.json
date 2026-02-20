@@ -1,0 +1,275 @@
+{
+  "entity_id": "universidad_de_chile",
+  "entity_name": "Universidad de Chile",
+  "template_id": "tpl_emerging_club_v1",
+  "cluster_id": "emerging_market_club",
+  "discovered_domains": [
+    "udechile.cl"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ag.linkedin.com/jobs/view/297173808?trk=seokp-job",
+      "https://www.linkedin.com/jobs/hospital-cl%C3%ADnico-universidad-de-chile-jobs-worldwide",
+      "https://www.linkedin.com/jobs/idiem-jobs-worldwide",
+      "https://cl.linkedin.com/jobs/view/faculty-positions-in-computer-science-and-data-ai-at-dcc-and-idia-fcfm-university-of-chile-at-universidad-de-chile-4187297808",
+      "https://in.linkedin.com/jobs/campus-jobs-%C3%A1rea-metropolitana-de-santiago",
+      "https://in.linkedin.com/jobs/government-software-jobs-%C3%A1rea-metropolitana-de-santiago",
+      "https://in.linkedin.com/jobs/laboratory-coordinator-jobs-%C3%A1rea-metropolitana-de-santiago"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "universidad_de_chile",
+      "entity_name": "Universidad de Chile",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.06,
+        0.08,
+        0.1,
+        0.1
+      ],
+      "explored_domains": [
+        "https://udechile.cl",
+        "https://www.linkedin.com/jobs/idiem-jobs-worldwide",
+        "https://ag.linkedin.com/jobs/view/297173808?trk=seokp-job",
+        "https://www.linkedin.com/jobs/hospital-cl%C3%ADnico-universidad-de-chile-jobs-worldwide",
+        "https://cl.linkedin.com/jobs/view/faculty-positions-in-computer-science-and-data-ai-at-dcc-and-idia-fcfm-university-of-chile-at-universidad-de-chile-4187297808",
+        "https://in.linkedin.com/jobs/campus-jobs-%C3%A1rea-metropolitana-de-santiago"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "procurement_leadership_hiring",
+        "hospital_clinico_entity",
+        "active_recruitment_cycle"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Universidad de Chile may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:49:56.157801",
+          "domain_explored": "https://udechile.cl",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:50:09.358684",
+          "domain_explored": "https://ag.linkedin.com/jobs/view/297173808?trk=seokp-job",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Numerical Modeling",
+              "Simulation Software (Implied)"
+            ],
+            "job_postings": [
+              {
+                "role": "Postdoctoral Researcher",
+                "focus": "Numerical modeling of materials, Mechanical properties, Glasses and amorphous materials",
+                "status": "Expired (8 years ago)",
+                "source": "LinkedIn"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "expired_job_posting",
+            "academic_research_focus",
+            "linkedin_recruitment_platform"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1396,
+              "output_tokens": 258,
+              "elapsed_seconds": 3.8950040340423584
+            }
+          ],
+          "reasoning": "The content represents an expired job posting for a Postdoctoral researcher in numerical modeling from 8 years ago. While this confirms the entity engages in high-level research, it provides no actionable signals regarding current procurement intent, technology purchasing, or vendor selection processes."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:50:17.964543",
+          "domain_explored": "https://www.linkedin.com/jobs/hospital-cl%C3%ADnico-universidad-de-chile-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Jefa/e de Unidad - Unidad de Compras (Head of Purchasing Unit)",
+              "Cajera/o Admisionista (Admissions Cashier)"
+            ],
+            "procurement_indicators": [
+              "Leadership vacancy in purchasing unit",
+              "Active recruitment for administrative/finance roles"
+            ]
+          },
+          "patterns_found": [
+            "procurement_leadership_hiring",
+            "hospital_clinico_entity",
+            "active_recruitment_cycle"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 250,
+              "elapsed_seconds": 3.5425007343292236
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for 'Jefa/e de Unidad - Unidad de Compras' (Head of Purchasing Unit) at Hospital Cl\u00ednico Universidad de Chile. This is a direct procurement signal indicating active restructuring or leadership investment within the purchasing department of the University's clinical branch. This confirms procurement intent and organizational activity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T03:50:36.905910",
+          "domain_explored": "https://www.linkedin.com/jobs/idiem-jobs-worldwide",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Vial Laboratory Technology",
+              "Construction Materials Testing"
+            ],
+            "job_postings": [
+              "Laboratorista Vial C",
+              "T\u00e9cnico de Laboratorio"
+            ],
+            "procurement_indicators": [
+              "Active hiring for technical roles",
+              "Expansion of laboratory capacity",
+              "IDIEM as a key operational arm of the University"
+            ]
+          },
+          "patterns_found": [
+            "idiem_research_laboratory",
+            "technical_staffing_expansion",
+            "active_recruitment_cycle",
+            "university_dependency_entity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1514,
+              "output_tokens": 328,
+              "elapsed_seconds": 15.45947790145874
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for IDIEM (Instituto de Investigaciones y Ensayes de Materiales), a specialized research and testing laboratory affiliated with Universidad de Chile. While the roles (Laboratorista Vial, T\u00e9cnico de Laboratorio) are technical/operational rather than procurement-focused, the expansion of technical staff indicates active projects and potential future procurement needs for laboratory equipment, materials, and testing software. This confirms organizational activity but provides only weak signals for immediate procurement intent."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T03:50:47.192519",
+          "domain_explored": "https://cl.linkedin.com/jobs/view/faculty-positions-in-computer-science-and-data-ai-at-dcc-and-idia-fcfm-university-of-chile-at-universidad-de-chile-4187297808",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Artificial Intelligence (AI)",
+              "Machine Learning (ML)",
+              "Deep Learning",
+              "Natural Language Processing (NLP)",
+              "Data Engineering",
+              "Computer Vision"
+            ],
+            "job_postings": [
+              "Faculty Positions in Computer Science and Data & AI (DCC/IDIA)"
+            ],
+            "procurement_indicators": [
+              "Strategic expansion of IDIA (Institute for Data and AI)",
+              "Intent to foster industry connections via R&D projects",
+              "Infrastructure requirements to support advanced AI research"
+            ]
+          },
+          "patterns_found": [
+            "academic_research_expansion",
+            "artificial_intelligence_investment",
+            "industry_collaboration_objective",
+            "institute_idia_entity"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1597,
+              "output_tokens": 344,
+              "elapsed_seconds": 2.7484946250915527
+            }
+          ],
+          "reasoning": "While this is an academic recruitment posting (not direct procurement), it signals a strategic investment in Data & AI capabilities via the Institute for Data and Artificial Intelligence (IDIA). The explicit mention of developing 'industry connections through research and development projects' indicates a future pipeline for technology procurement and R&D partnerships, warranting a weak signal for future procurement potential."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T03:51:01.607945",
+          "domain_explored": "https://in.linkedin.com/jobs/campus-jobs-%C3%A1rea-metropolitana-de-santiago",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Asistente Administrador de Salas y Equipos Multimedia (UTFSM)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "generic_job_aggregator_page",
+            "login_gate_preventing_analysis"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1663,
+              "output_tokens": 191,
+              "elapsed_seconds": 7.246381998062134
+            }
+          ],
+          "reasoning": "The scraped content lists job postings for 'Universidad Tecnica Federico Santa Maria' (UTFSM), which is a distinct entity from the target 'Universidad de Chile'. The content is a generic job search results page requiring login, providing no specific procurement signals or technology stack information relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7630,
+      "total_output_tokens": 1371,
+      "estimated_cost_usd": 0.043455
+    },
+    "procurement_signals": [
+      "procurement_leadership_hiring",
+      "hospital_clinico_entity",
+      "active_recruitment_cycle"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Universidad de Chile may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:51:01.609753"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.189701",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:32:00.715816"
+}

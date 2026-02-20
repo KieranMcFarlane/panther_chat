@@ -1,0 +1,490 @@
+{
+  "entity_id": "niort",
+  "entity_name": "Niort",
+  "template_id": "tpl_rugby_pro_club_emerging_v1",
+  "cluster_id": "rugby_pro_clubs_emerging",
+  "discovered_domains": [
+    "vivre-a-niort.com",
+    "niortmaraispoitevin.com",
+    "boutique-musees.niortagglo.fr",
+    "grandhotelniortcentre.com-hotel.com",
+    "niort-tech.fr",
+    "cparici.com",
+    "youth.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/jobs-in-niort?trk=guest_job_search_related_jserp_link",
+      "https://fr.linkedin.com/jobs/job-center-emplois-niort",
+      "https://www.linkedin.com/company/castorama/jobs",
+      "https://www.linkedin.com/company/doctolib/jobs/",
+      "https://www.linkedin.com/jobs/orange-jobs/?f_C=1110%2C12800%2C5115950%2C3165553%2C603115%2C10916%2C8331%2C3297950%2C8238%2C5509188%2C3093%2C2625246%2C1112%2C947572%2C11018069%2C407323&geoId=105015875&trk=top-companies-2022-jobs",
+      "https://www.linkedin.com/company/k-lagan/jobs",
+      "https://www.linkedin.com/jobs/intersport-france-jobs-worldwide",
+      "https://www.linkedin.com/jobs/mayoly-jobs-worldwide",
+      "https://www.linkedin.com/jobs/search?keywords=Graphic+Designer&geoId=105015875&trk=d_flagship3_salary_explorer",
+      "https://www.linkedin.com/jobs/securitas-france-jobs-worldwide"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "niort",
+      "entity_name": "Niort",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.14,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.04,
+        0.1,
+        0.1,
+        0.1,
+        0.12000000000000001,
+        0.14,
+        0.14,
+        0.14,
+        0.14
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/company/castorama/jobs",
+        "https://boutique-musees.niortagglo.fr",
+        "https://www.linkedin.com/jobs/jobs-in-niort?trk=guest_job_search_related_jserp_link",
+        "https://fr.linkedin.com/jobs/job-center-emplois-niort",
+        "https://www.linkedin.com/company/doctolib/jobs/",
+        "https://niort-tech.fr",
+        "https://www.linkedin.com/jobs/orange-jobs/?f_C=1110%2C12800%2C5115950%2C3165553%2C603115%2C10916%2C8331%2C3297950%2C8238%2C5509188%2C3093%2C2625246%2C1112%2C947572%2C11018069%2C407323&geoId=105015875&trk=top-companies-2022-jobs",
+        "https://niortmaraispoitevin.com",
+        "https://vivre-a-niort.com",
+        "https://cparici.com",
+        "https://grandhotelniortcentre.com-hotel.com",
+        "https://youth.europa.eu"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Public-Private Partnership (PPP) Infrastructure",
+        "Digital Skills & Education Procurement",
+        "Coworking & Facility Management Services",
+        "Cybersecurity Training Initiatives",
+        "Innovation Ecosystem Support"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Niort may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T02:27:38.579472",
+          "domain_explored": "https://vivre-a-niort.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Webcam infrastructure (live streaming)",
+              "Meteo France integration",
+              "CMS (implied by site structure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Direct link to 'Les consultations en cours' (Active Tenders)",
+              "Project: R\u00e9novation des Halles (Heritage restoration)",
+              "Project: R\u00e9am\u00e9nagement de l'espace de loisirs (Sainte-Pezenne)",
+              "Project: Travaux rue du Pont (Infrastructure)"
+            ]
+          },
+          "patterns_found": [
+            "Public Procurement Portal Link",
+            "Urban Renewal & Infrastructure Projects",
+            "Digital Service Delivery (Webcams)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1353,
+              "output_tokens": 300,
+              "elapsed_seconds": 3.8281190395355225
+            }
+          ],
+          "reasoning": "The content confirms the existence of a dedicated 'March\u00e9s publics' (Public Procurement) section, which is the primary entry point for RFPs. Additionally, news regarding the 'r\u00e9novation des Halles' (market renovation) and various 'Info travaux' (construction works) indicates active infrastructure spending that often requires associated technology and service vendor contracts."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T02:27:48.101840",
+          "domain_explored": "https://niortmaraispoitevin.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism Promotion Content",
+            "Destination Marketing",
+            "Cultural Heritage Branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 168,
+              "elapsed_seconds": 2.0238451957702637
+            }
+          ],
+          "reasoning": "The content is exclusively focused on tourism promotion, highlighting destinations like Marais Poitevin, Niort Secr\u00e8te, and Port Boinot. There are no indicators of corporate governance, technology procurement, or administrative operations. This domain serves a marketing function rather than a procurement or operational one."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T02:27:59.423032",
+          "domain_explored": "https://boutique-musees.niortagglo.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "E-Commerce Platform (Custom/Proprietary based on JSON structure)",
+              "Online Payment Processing",
+              "Product Information Management (PIM)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Digital Service Delivery (Ticketing/Shop)",
+              "Cultural Sector Investment",
+              "Vendor reliance for platform hosting/maintenance"
+            ]
+          },
+          "patterns_found": [
+            "E-Commerce Platform Implementation",
+            "Digital Ticketing & Revenue Management",
+            "Cultural Heritage Digitization",
+            "Structured Product Data Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1460,
+              "output_tokens": 310,
+              "elapsed_seconds": 3.882521152496338
+            }
+          ],
+          "reasoning": "The content reveals a functional e-commerce platform ('boutique-musees') for the Niort Agglo museums. While this is not a direct procurement call, it confirms active investment in digital infrastructure for cultural services. The presence of structured product data and online ticketing indicates a requirement for ongoing platform maintenance, payment gateway management, and potentially future RFPs for e-commerce enhancements or digital experience upgrades."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T02:28:09.187976",
+          "domain_explored": "https://grandhotelniortcentre.com-hotel.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Booking Engine",
+              "Multi-language CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Commercial Booking Engine",
+            "Hospitality Marketing Content",
+            "Third-Party Affiliate Platform (com-hotel.com)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1521,
+              "output_tokens": 194,
+              "elapsed_seconds": 2.0945308208465576
+            }
+          ],
+          "reasoning": "The content is a commercial hotel booking page for 'Grand H\u00f4tel Niort Centre', hosted on a third-party affiliate platform ('com-hotel.com'). It focuses on room reservations, pricing, and guest amenities. There is no connection to municipal governance, public procurement, or strategic technology investments by the city of Niort."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T02:28:27.428257",
+          "domain_explored": "https://niort-tech.fr",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Digital Event Management Platforms",
+              "Cybersecurity Simulation Tools (Serious Games)",
+              "Educational Robotics (Eliobot)",
+              "Collaboration & Coworking Management Software"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Service contracts for 'Animation et programmation' (Event management)",
+              "Procurement of educational/training workshops (Cybersecurity, Robotics)",
+              "Facility management for 6 meeting rooms and event spaces",
+              "Partnerships with higher education (Universit\u00e9 de La Rochelle)",
+              "Vendor hosting/incubation services"
+            ]
+          },
+          "patterns_found": [
+            "Public-Private Partnership (PPP) Infrastructure",
+            "Digital Skills & Education Procurement",
+            "Coworking & Facility Management Services",
+            "Cybersecurity Training Initiatives",
+            "Innovation Ecosystem Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1574,
+              "output_tokens": 357,
+              "elapsed_seconds": 7.291179895401001
+            }
+          ],
+          "reasoning": "The site represents a major public infrastructure project ('Lieu TOTEM') aimed at economic development. It reveals significant procurement needs in facility management, digital education services, and IT security training. The presence of a structured incubator and event spaces indicates ongoing vendor requirements for service delivery."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T02:28:35.907302",
+          "domain_explored": "https://cparici.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T02:29:10.836022",
+          "domain_explored": "https://youth.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "EU-Level Informational Portal",
+            "Educational & Cultural Content Aggregation",
+            "Generic Youth Mobility Programs (Erasmus+, DiscoverEU)",
+            "No Local Governance or Procurement Signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1661,
+              "output_tokens": 215,
+              "elapsed_seconds": 4.680857181549072
+            }
+          ],
+          "reasoning": "The content is from the European Union's official youth portal (youth.europa.eu). While it mentions funding programs like Erasmus+ and the European Solidarity Corps, it is a centralized information resource for end-users (youth/citizens) rather than a local procurement portal for the city of Niort. There are no specific signals regarding Niort's purchasing decisions, technology stack, or local governance."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T02:29:24.051642",
+          "domain_explored": "https://www.linkedin.com/jobs/jobs-in-niort?trk=guest_job_search_related_jserp_link",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn Talent Solutions",
+              "ATS (Applicant Tracking Systems)"
+            ],
+            "job_postings": [
+              "Coordinateur-trice d'Equipes et de Projets (Unis-Cit\u00e9)",
+              "Charg\u00e9(e) de Scolarit\u00e9 (Formation et Sant\u00e9 - CFAAD - Agora)"
+            ],
+            "procurement_indicators": [
+              "Active recruitment in Non-Profit sector (Unis-Cit\u00e9)",
+              "Active recruitment in Vocational Training sector (CFAAD - Agora)",
+              "Operational roles requiring project management tools"
+            ]
+          },
+          "patterns_found": [
+            "Public Sector & Non-Profit Recruitment",
+            "Education & Vocational Training Administration",
+            "Project Coordination Roles",
+            "Geographic Labor Market Aggregation"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1736,
+              "output_tokens": 333,
+              "elapsed_seconds": 6.6401050090789795
+            }
+          ],
+          "reasoning": "While this is a generic job board, the specific listings extracted for the 'Niort' filter reveal active hiring by public and semi-public entities (Unis-Cit\u00e9, CFAAD-Agora). This indicates operational budgets and potential upcoming needs for HR tools, training platforms, or project management software. It confirms the presence of organizations in Niort with procurement potential, even if the page itself is just a directory."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T02:29:45.486155",
+          "domain_explored": "https://fr.linkedin.com/jobs/job-center-emplois-niort",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "IT Infrastructure",
+              "Technical Architecture"
+            ],
+            "job_postings": [
+              "IMA GIE - Responsable du Service Infrastructures H/F",
+              "IMA GIE - CTO/Directeur Technique H/F",
+              "Manager Commerce (H/F) - Decathlon",
+              "VENDEUR(SE) RAYON FITNESS - RUNNING (H/F) - Decathlon"
+            ],
+            "procurement_indicators": [
+              "Infrastructure Management Expansion",
+              "Strategic Technical Leadership Investment"
+            ]
+          },
+          "patterns_found": [
+            "IT Infrastructure Leadership Recruitment",
+            "Technical Executive Hiring (CTO/Dir Technique)",
+            "Private Sector Technology Expansion"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1801,
+              "output_tokens": 318,
+              "elapsed_seconds": 3.493813991546631
+            }
+          ],
+          "reasoning": "The content reveals active recruitment for high-level technology roles (CTO, Infrastructure Manager) at Groupe IMA in Niort. While these are private sector hires, they indicate significant technology investments and infrastructure scaling within the local economic ecosystem. This suggests a maturing market for advanced IT services and potential B2B procurement opportunities, though direct public procurement signals are absent."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T02:29:54.845812",
+          "domain_explored": "https://www.linkedin.com/company/castorama/jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Sales Advisor",
+              "Warehouse Employee",
+              "Department Manager",
+              "Visual Merchandiser"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Retail Entity",
+            "Corporate Employment Board",
+            "National/International Recruitment Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 877,
+              "output_tokens": 230,
+              "elapsed_seconds": 6.888355016708374
+            }
+          ],
+          "reasoning": "The target URL points to the LinkedIn jobs page for Castorama, a private retail company (home improvement/DIY). While Castorama has a physical presence in Niort, this page represents standard private sector hiring (sales associates, warehouse staff, store management) rather than public procurement signals, municipal governance, or B2G technology investments specific to the City of Niort's strategic initiatives."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T02:29:59.889757",
+          "domain_explored": "https://www.linkedin.com/company/doctolib/jobs/",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Recruitment",
+            "SaaS Platform Provider",
+            "National/International Scope"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 936,
+              "output_tokens": 195,
+              "elapsed_seconds": 2.6113898754119873
+            }
+          ],
+          "reasoning": "Doctolib is a private, for-profit SaaS company (eHealth), not a public entity or a direct procurement channel for the city of Niort. While the city of Niort might be a client of Doctolib, analyzing Doctolib's corporate job board does not reveal specific procurement signals, technology stack choices, or governance patterns specific to Niort's administration. The content is irrelevant to the target entity's procurement activities."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T02:30:10.856980",
+          "domain_explored": "https://www.linkedin.com/jobs/orange-jobs/?f_C=1110%2C12800%2C5115950%2C3165553%2C603115%2C10916%2C8331%2C3297950%2C8238%2C5509188%2C3093%2C2625246%2C1112%2C947572%2C11018069%2C407323&geoId=105015875&trk=top-companies-2022-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Responsable de projet (Project Manager)",
+              "Manager d'\u00e9quipe Digital (Digital Team Manager)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Private Sector Telecommunications Entity",
+            "National/International Recruitment Scope",
+            "Generic Authentication & Sign-in Walls"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 2024,
+              "output_tokens": 234,
+              "elapsed_seconds": 4.838330030441284
+            }
+          ],
+          "reasoning": "The content is a LinkedIn jobs portal for Orange (a major private telecommunications operator), filtered for France. While it shows hiring activity (Project Management, Digital Team Management), the scope is national/international (Brittany, etc.) and corporate, not specific to Niort's public procurement or local governance needs. It lacks the specific 'Niort' entity focus required for local procurement intelligence."
+        }
+      ],
+      "total_input_tokens": 16353,
+      "total_output_tokens": 2854,
+      "estimated_cost_usd": 0.091869
+    },
+    "procurement_signals": [
+      "Public-Private Partnership (PPP) Infrastructure",
+      "Digital Skills & Education Procurement",
+      "Coworking & Facility Management Services",
+      "Cybersecurity Training Initiatives",
+      "Innovation Ecosystem Support"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Niort may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T02:30:10.859061"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.277710",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:23:42.238652"
+}

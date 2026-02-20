@@ -1,0 +1,182 @@
+{
+  "entity_id": "fc_z\u00fcrich",
+  "entity_name": "FC Z\u00fcrich",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "suedkurve.ch",
+    "onefootball.com",
+    "stadionletzigrund.ch"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4261916928"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fc_z\u00fcrich",
+      "entity_name": "FC Z\u00fcrich",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04
+      ],
+      "explored_domains": [
+        "https://stadionletzigrund.ch",
+        "https://suedkurve.ch",
+        "https://ch.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4261916928",
+        "https://onefootball.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FC Z\u00fcrich may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T08:47:32.383880",
+          "domain_explored": "https://suedkurve.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Operational requirement for ticketing systems (implied by 'Tickets werden im Zug verkauft')",
+              "Venue management needs for 'LOKAL' (Buckhauserstrasse 30)"
+            ]
+          },
+          "patterns_found": [
+            "Event Logistics Management",
+            "Fan Engagement Activities",
+            "Venue Management (LOKAL)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1354,
+              "output_tokens": 232,
+              "elapsed_seconds": 3.706116199493408
+            }
+          ],
+          "reasoning": "The scraped content from 'suedkurve.ch' is focused on fan engagement, event logistics (train travel to away games), and community activities (Stylebattle, memorial services). While this indicates operational activity, it does not contain explicit signals of procurement intent (RFPs, job postings, technology investments) or governance patterns suitable for immediate sales intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T08:47:38.846537",
+          "domain_explored": "https://onefootball.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T08:48:11.286958",
+          "domain_explored": "https://stadionletzigrund.ch",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Systems (implied by 'Ticket' references)",
+              "Wayfinding/Signage Systems"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Security Services (Sicherheitskontrolle)",
+              "Transportation Partnerships (ZVV, SBB integration)",
+              "Parking Management (Tiefgarage management)",
+              "Accessibility Compliance Services"
+            ]
+          },
+          "patterns_found": [
+            "Venue Management",
+            "Event Logistics",
+            "Transportation Management",
+            "Security Services",
+            "Accessibility Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 302,
+              "elapsed_seconds": 24.31150484085083
+            }
+          ],
+          "reasoning": "The content is the official website for Stadion Letzigrund, the home stadium of FC Z\u00fcrich. While it does not contain explicit procurement notices (RFPs/Tenders), it reveals the operational scope and infrastructure requirements managed by the stadium entity (which FCZ relies on). It highlights needs for security services, transportation logistics, and accessibility infrastructure, indicating potential procurement categories for venue operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T08:48:24.210861",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/sports-statistician-data-collection-at-genius-sports-4261916928",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smartphone-enabled Data Collection Software",
+              "Sports Analytics Platforms"
+            ],
+            "job_postings": [
+              "Sports Statistician (Data Collection) - Genius Sports (covering FCZ home games)"
+            ],
+            "procurement_indicators": [
+              "Outsourced data collection operations",
+              "Vendor partnership for official sports data",
+              "Match-day technology integration"
+            ]
+          },
+          "patterns_found": [
+            "Sports Data & Analytics",
+            "Event Operations & Logistics",
+            "Vendor Partnership (Genius Sports)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1494,
+              "output_tokens": 261,
+              "elapsed_seconds": 3.090216875076294
+            }
+          ],
+          "reasoning": "While this is a job posting for Genius Sports (a vendor), it explicitly confirms FC Z\u00fcrich as a client venue for data collection services. It signals an active operational relationship and a procurement of data services/analytics infrastructure, validating FC Z\u00fcrich's investment in sports technology."
+        }
+      ],
+      "total_input_tokens": 4280,
+      "total_output_tokens": 795,
+      "estimated_cost_usd": 0.024765000000000002
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FC Z\u00fcrich may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T08:48:24.238125"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.177983",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:06:14.365240"
+}

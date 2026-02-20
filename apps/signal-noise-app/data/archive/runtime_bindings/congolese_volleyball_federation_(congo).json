@@ -1,0 +1,255 @@
+{
+  "entity_id": "congolese_volleyball_federation_(congo)",
+  "entity_name": "Congolese Volleyball Federation (Congo)",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "worldparavolley.org",
+    "republic-congo.com",
+    "media.un.org",
+    "thenationonlineng.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://cd.linkedin.com/jobs/view/91763637",
+      "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "congolese_volleyball_federation_(congo)",
+      "entity_name": "Congolese Volleyball Federation (Congo)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill",
+        "https://media.un.org",
+        "https://republic-congo.com",
+        "https://cd.linkedin.com/jobs/view/91763637",
+        "https://thenationonlineng.net"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Congolese Volleyball Federation (Congo) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:00:41.011996",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports news aggregation",
+            "Event results reporting (ASEAN Para Games)",
+            "Organizational appointments (World ParaVolley)",
+            "Sports certification and training courses"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1370,
+              "output_tokens": 207,
+              "elapsed_seconds": 2.4408369064331055
+            }
+          ],
+          "reasoning": "The content provided is from the World ParaVolley website and focuses exclusively on international match results (ASEAN Para Games), global organizational appointments, and general sports news. There is no mention of the Congolese Volleyball Federation, its specific procurement activities, technology stack, or governance patterns. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:00:53.271941",
+          "domain_explored": "https://republic-congo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Tourism promotion content",
+            "General national statistics (Climate, Currency, Population)",
+            "Cultural heritage descriptions",
+            "Government structure overview (Unitary Republic)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1430,
+              "output_tokens": 180,
+              "elapsed_seconds": 5.102174997329712
+            }
+          ],
+          "reasoning": "The content is a generic tourism and national overview page for the Republic of Congo (republic-congo.com). It contains no information regarding the Congolese Volleyball Federation, sports governance, or procurement activities. It is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:01:00.630523",
+          "domain_explored": "https://media.un.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global media aggregation",
+            "General UN event scheduling",
+            "Humanitarian crisis reporting (Mozambique, Sudan, South Sudan)",
+            "Broadcasting service descriptions (UNTV, Unifeed)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1488,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.459151268005371
+            }
+          ],
+          "reasoning": "The content is from the main United Nations media portal and focuses on global news, general assembly meetings, and international humanitarian efforts. There is no specific mention of the 'Congolese Volleyball Federation', the Republic of the Congo, or any specific procurement activities related to volleyball governance or local federation technology stacks."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:01:08.636150",
+          "domain_explored": "https://thenationonlineng.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entertainment news aggregation",
+            "General Nigerian news reporting",
+            "Celebrity gossip coverage",
+            "National security reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1547,
+              "output_tokens": 161,
+              "elapsed_seconds": 3.4041049480438232
+            }
+          ],
+          "reasoning": "The content is strictly entertainment and general news (Grammys, Nollywood, Nigerian security). There is absolutely no mention of the Congolese Volleyball Federation, sports governance, or procurement activities relevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:01:21.427011",
+          "domain_explored": "https://cd.linkedin.com/jobs/view/91763637",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "SAP",
+              "CMMS (Computerised Maintenance Management System)",
+              "Microsoft Office"
+            ],
+            "job_postings": [
+              "Superintendent Electrical at MMG Limited (Kinsevere Operation)"
+            ],
+            "procurement_indicators": [
+              "Infrastructure maintenance (HV, MV & LV power systems)",
+              "Workforce localization strategy",
+              "Village facilities maintenance (including sporting facilities)"
+            ]
+          },
+          "patterns_found": [
+            "Job posting for technical leadership role",
+            "Mention of specific technology stack (SAP, CMMS)",
+            "Reference to recreational facilities (Volleyball court)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1603,
+              "output_tokens": 331,
+              "elapsed_seconds": 7.1310670375823975
+            }
+          ],
+          "reasoning": "While this is a job posting for MMG Limited (a mining company) and not the Federation itself, it provides valuable indirect intelligence. It confirms the presence of volleyball facilities (courts) within major DRC industrial compounds (Kinsevere mine), which are potential venues or partners for corporate sponsorship/tournaments. It also identifies SAP and CMMS as technologies used by major entities in the region, relevant for potential future partnerships or digital standardization."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T09:01:30.977135",
+          "domain_explored": "https://www.linkedin.com/jobs2/view/13072185?trk=job_view_browse_map_backfill",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Advisor - Strategic Maintenance (MMG Limited, 2014)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Mining sector employment (MMG Limited)",
+            "Volleyball mentioned only as recreational facility amenity",
+            "Location mismatch (Katanga/Lubumbashi vs. Federation entity)",
+            "Historical job posting (2014)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1683,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.7767810821533203
+            }
+          ],
+          "reasoning": "The content is a job posting for a mining company (MMG Limited) in Katanga Province. While it mentions 'volleyball' in the context of village recreational facilities for staff, it has no connection to the Congolese Volleyball Federation (FECOVOLLEY) or its procurement activities. The entity is a private mining operator, not the sports federation, and the posting is from 2014."
+        }
+      ],
+      "total_input_tokens": 9121,
+      "total_output_tokens": 1313,
+      "estimated_cost_usd": 0.047058
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Congolese Volleyball Federation (Congo) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:01:30.978373"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337265",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:07:46.861503"
+}

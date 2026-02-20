@@ -1,0 +1,295 @@
+{
+  "entity_id": "fia_world_rally_championship_(wrc)",
+  "entity_name": "FIA World Rally Championship (WRC)",
+  "template_id": "tpl_motorsport_premium_series_v1",
+  "cluster_id": "motorsport_top_tier_promoters",
+  "discovered_domains": [
+    "api.fia.com",
+    "rally-saudiarabia.com",
+    "centraleuropeanrally.eu",
+    "motorsport.hyundai.com",
+    "store.steampowered.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ch.linkedin.com/jobs/view/wrc-sporting-coordinator-at-fia-%E2%80%93-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-4218698711"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fia_world_rally_championship_(wrc)",
+      "entity_name": "FIA World Rally Championship (WRC)",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.1,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.08,
+        0.08,
+        0.1
+      ],
+      "explored_domains": [
+        "https://motorsport.hyundai.com",
+        "https://store.steampowered.com",
+        "https://centraleuropeanrally.eu",
+        "https://rally-saudiarabia.com",
+        "https://ch.linkedin.com/jobs/view/wrc-sporting-coordinator-at-fia-%E2%80%93-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-4218698711",
+        "https://api.fia.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "FIA World Rally Championship (WRC) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:09:29.511743",
+          "domain_explored": "https://api.fia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Link to 'Invitation to Tender' (Procurement Portal)",
+              "Link to 'FIA Partners and suppliers' (Vendor Management)",
+              "Link to 'Data Privacy Notice' (Compliance/Security Procurement Driver)"
+            ]
+          },
+          "patterns_found": [
+            "Governance Structure Identification",
+            "Centralized Procurement Portal",
+            "Regulatory Framework Access"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1366,
+              "output_tokens": 242,
+              "elapsed_seconds": 11.724241018295288
+            }
+          ],
+          "reasoning": "The content is the main navigation menu of the FIA API portal. While it does not contain specific procurement data (like RFPs) or technology stack details, it confirms the existence of a structured 'Partners and suppliers' section and an 'Invitation to Tender' pathway. This validates the governance structure and indicates where procurement signals would originate."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:09:42.709909",
+          "domain_explored": "https://rally-saudiarabia.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Timing and Scoring Systems (implied for 17 stages)",
+              "Sustainability Tracking Tech (embedded in operations)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Local Organizing Committee: Saudi Automobile & Motorcycle Federation (SAMF) & Saudi Motorsport Company (SMC)",
+              "Venue Partner: ROSHN (Waterfront venue)",
+              "Operational Requirement: Sustainability initiatives embedded in planning",
+              "Infrastructure Needs: 17 demanding stages, Super Special Stage construction"
+            ]
+          },
+          "patterns_found": [
+            "Event Infrastructure Procurement",
+            "Local Entity Governance (SAMF/SMC)",
+            "Sustainability Compliance Requirements",
+            "Venue Operations (ROSHN Front/Jeddah Corniche)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1420,
+              "output_tokens": 343,
+              "elapsed_seconds": 9.140711784362793
+            }
+          ],
+          "reasoning": "While this is a consumer-facing event page, it confirms the operational structure for the new Saudi Arabian round. The involvement of the Saudi Motorsport Company (SMC) and specific venue references (ROSHN Waterfront) identifies the local procurement decision-makers and infrastructure requirements (stages, timing, security, sustainability). It shifts the focus from FIA central procurement to local event organizer needs."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:09:49.411286",
+          "domain_explored": "https://centraleuropeanrally.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "RallyPin App (Mobile Event Platform)",
+              "WhatsApp Business API (Broadcasting)",
+              "Instagram (Social Media)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "SaaS procurement for Fan Engagement (RallyPin)",
+              "Digital Communication Infrastructure (WhatsApp Channel)",
+              "Event Services (Security, Logistics, Stage Setup) across 3 countries",
+              "Vendor Management (Main Partners, Event Partners, Media Partners)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Fan Engagement Stack",
+            "Multi-Jurisdictional Event Logistics",
+            "Sponsorship & Partnership Ecosystem"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1478,
+              "output_tokens": 313,
+              "elapsed_seconds": 3.4384267330169678
+            }
+          ],
+          "reasoning": "The content reveals a specific technology stack (RallyPin App, WhatsApp Channel) used for fan engagement, indicating procurement of SaaS and mobile development services. The detailed itinerary across Germany, Austria, and Czech Republic highlights complex logistical procurement needs for border-crossing events. The listing of 'Main Partners' and 'Event Partners' confirms an active vendor and sponsorship ecosystem."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:10:01.152167",
+          "domain_explored": "https://motorsport.hyundai.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Third-party Cookie Consent Management",
+              "Social Media Aggregation/Embed (Instagram)",
+              "Video Hosting/Streaming (HTML5 Video controls)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Customer Programme Sales (B2B vehicle/part supply)",
+              "Global Event Logistics (Sweden, Kenya, Qatar, Croatia, Italy)",
+              "Technical Partnership Requirements (implied by 'best people and technology')"
+            ]
+          },
+          "patterns_found": [
+            "Tier 1 Supplier Ecosystem",
+            "Customer Racing Program Structure",
+            "Global Logistics & Event Scheduling",
+            "Social Media Integration (Instagram)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1534,
+              "output_tokens": 319,
+              "elapsed_seconds": 6.42641806602478
+            }
+          ],
+          "reasoning": "The content confirms Hyundai as a key 'Tier 1' stakeholder (Manufacturer) in the WRC ecosystem. While the page is primarily marketing-facing, the explicit structure of 'Customer Programmes' (Rally2, TCR) indicates a B2B sales channel for race cars and parts, which drives procurement for parts manufacturing and logistics. The 'Social Feed' section indicates usage of third-party cookie management and social media integration tools."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:10:07.360248",
+          "domain_explored": "https://store.steampowered.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Steam Web API",
+              "Localization (Multi-language support)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer Digital Distribution Platform",
+            "Gaming Retail Interface",
+            "Irrelevant Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1589,
+              "output_tokens": 212,
+              "elapsed_seconds": 2.4989712238311768
+            }
+          ],
+          "reasoning": "The scraped content is from the Steam Store (store.steampowered.com), a consumer-facing video game distribution platform owned by Valve Corporation. It contains retail listings, game discounts, and user interface elements. There is no connection to the FIA World Rally Championship (WRC), motorsport governance, or B2B procurement activities. This represents a significant deviation from the target entity."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T17:10:14.838273",
+          "domain_explored": "https://ch.linkedin.com/jobs/view/wrc-sporting-coordinator-at-fia-%E2%80%93-f%C3%A9d%C3%A9ration-internationale-de-l-automobile-4218698711",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Adobe Creative Suite (Acrobat, InDesign)",
+              "FIA.com (CMS)",
+              "Microsoft Office (Implied by reporting/standard enterprise use)"
+            ],
+            "job_postings": [
+              {
+                "role": "WRC Sporting Coordinator",
+                "department": "WRC Category Management",
+                "reporting_line": "WRC Category Manager",
+                "key_responsibilities": [
+                  "Championship registration management",
+                  "Accreditation process oversight",
+                  "Event services assessment (JWRC)",
+                  "Website coordination & content updates"
+                ],
+                "location": "Geneva Metropolitan Area"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor/Service Assessment: Role involves assessing 'on-site conditions and services provided' by organizers/hosts.",
+              "Software Licensing: Requirement for Adobe Creative Suite indicates specific software procurement needs.",
+              "Event Logistics: Coordination of 6 JWRC events implies procurement of travel and event services.",
+              "Stakeholder Management: Interaction with ASNs, Promoters, and Organizers suggests a B2B relationship management."
+            ]
+          },
+          "patterns_found": [
+            "Operational Governance Structure",
+            "Stakeholder Management Ecosystem",
+            "Digital Information Management Requirements",
+            "Event-Based Service Procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1666,
+              "output_tokens": 529,
+              "elapsed_seconds": 3.832059860229492
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct tender, it reveals the internal operational structure of the WRC category within the FIA. It identifies the 'WRC Category Manager' as a key decision-maker and highlights the need for tools to manage accreditation, registrations, and website updates. The mention of 'on-site conditions and services provided to competitors' implies a procurement chain for event services (hospitality, logistics) managed by this coordinator."
+        }
+      ],
+      "total_input_tokens": 9053,
+      "total_output_tokens": 1958,
+      "estimated_cost_usd": 0.056528999999999996
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "FIA World Rally Championship (WRC) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:10:14.840118"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.372765",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:13:05.882205"
+}

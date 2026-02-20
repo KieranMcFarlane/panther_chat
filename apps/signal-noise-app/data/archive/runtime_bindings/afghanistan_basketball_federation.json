@@ -1,0 +1,168 @@
+{
+  "entity_id": "afghanistan_basketball_federation",
+  "entity_name": "Afghanistan Basketball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "nytimes.com",
+    "hindustantimes.com",
+    "searchaa.io"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ke.linkedin.com/jobs/view/sr-manager-communications-aim-national-or-international-at-brac-4206991469"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "afghanistan_basketball_federation",
+      "entity_name": "Afghanistan Basketball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://nytimes.com",
+        "https://searchaa.io",
+        "https://hindustantimes.com",
+        "https://ke.linkedin.com/jobs/view/sr-manager-communications-aim-national-or-international-at-brac-4206991469"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Afghanistan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:54:08.712305",
+          "domain_explored": "https://nytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "general_news_feed",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1365,
+              "output_tokens": 160,
+              "elapsed_seconds": 2.456941843032837
+            }
+          ],
+          "reasoning": "The provided content is a scraped list of general news headlines from the New York Times (US/Global focus). There is absolutely no mention of the Afghanistan Basketball Federation, sports procurement in Afghanistan, or related technology investments. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:54:17.005143",
+          "domain_explored": "https://hindustantimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_content_source",
+            "geographic_mismatch",
+            "general_news_feed",
+            "navigation_structure_only"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1410,
+              "output_tokens": 201,
+              "elapsed_seconds": 2.1532890796661377
+            }
+          ],
+          "reasoning": "The scraped content represents the navigation menu and header links of Hindustan Times, a major Indian news outlet. The content is entirely focused on general news categories (Cricket, Budget, Lifestyle, Astrology) and serves the Indian market. There is absolutely no connection to the Afghanistan Basketball Federation, nor are there any signals regarding procurement, governance, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:54:35.120370",
+          "domain_explored": "https://searchaa.io",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:54:42.405902",
+          "domain_explored": "https://ke.linkedin.com/jobs/view/sr-manager-communications-aim-national-or-international-at-brac-4206991469",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Sr. Manager, Communications, AIM",
+                "entity": "BRAC International",
+                "location": "Nairobi, Kenya",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity",
+            "geographic_mismatch",
+            "sector_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1503,
+              "output_tokens": 215,
+              "elapsed_seconds": 3.175318956375122
+            }
+          ],
+          "reasoning": "The content describes a job opening for BRAC International, an NGO focused on gender equality and development, located in Nairobi, Kenya. There is no connection to the Afghanistan Basketball Federation, nor are there procurement signals relevant to the target entity's sports operations or technology needs."
+        }
+      ],
+      "total_input_tokens": 4278,
+      "total_output_tokens": 576,
+      "estimated_cost_usd": 0.021474
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Afghanistan Basketball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:54:42.407200"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.244234",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:19:13.831217"
+}

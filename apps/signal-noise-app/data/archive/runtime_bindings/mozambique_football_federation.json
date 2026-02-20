@@ -1,0 +1,155 @@
+{
+  "entity_id": "mozambique_football_federation",
+  "entity_name": "Mozambique Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "clubofmozambique.com",
+    "commonwealthofnations.org",
+    "gtechfootballacademy.wordpress.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "mozambique_football_federation",
+      "entity_name": "Mozambique Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://clubofmozambique.com",
+        "https://gtechfootballacademy.wordpress.com",
+        "https://commonwealthofnations.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Mozambique Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:14:12.250248",
+          "domain_explored": "https://clubofmozambique.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General business news aggregation",
+            "Irrelevant entity focus (Chamber of Commerce vs. Football Federation)",
+            "High-level diplomatic agreements (MoU)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 605,
+              "output_tokens": 189,
+              "elapsed_seconds": 2.6496870517730713
+            }
+          ],
+          "reasoning": "The provided content focuses entirely on a Memorandum of Understanding (MoU) between the Louisiana Chamber of Commerce Foundation and the Chamber of Commerce Mozambique USA. There is no mention of the Mozambique Football Federation (FMF), sports procurement, or related technology investments. The content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:14:20.234672",
+          "domain_explored": "https://commonwealthofnations.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic diplomatic directory",
+            "High-level country overview",
+            "Broad sector categorization (Business, Civil Society, Government)",
+            "Static informational content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1432,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.3077239990234375
+            }
+          ],
+          "reasoning": "The Commonwealth of Nations website serves as a high-level directory and diplomatic information portal. While it lists Mozambique as a member state and provides broad categories like 'Government' and 'Business', it lacks the specific operational detail required for procurement intelligence. It does not contain specific tenders, job postings, or technology implementation details for the Mozambique Football Federation."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T03:14:31.831930",
+          "domain_explored": "https://gtechfootballacademy.wordpress.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "WordPress (Content Management)",
+              "Google Maps (Implied by 'Map' data often found on such contact pages)"
+            ],
+            "job_postings": [
+              "Clubs Seeks Players",
+              "Clubs Seeks Coaches",
+              "Soccer Scholarships"
+            ],
+            "procurement_indicators": [
+              "Donations / Sponsorship requests (Non-profit fundraising)",
+              "Volunteer recruitment"
+            ]
+          },
+          "patterns_found": [
+            "Third-party job board/aggregator",
+            "WordPress subdomain infrastructure",
+            "B2C focus (player/coach placement)",
+            "Geographic categorization (Mozambique listed as a region, not a specific entity)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 314,
+              "elapsed_seconds": 5.286669969558716
+            }
+          ],
+          "reasoning": "The source is a third-party football academy agency (Gtech) using a WordPress blog to aggregate player and coach profiles across Africa. While Mozambique is listed as a region, the content focuses on individual career placement (players, agents, scholarships) rather than Federation-level procurement, governance, or enterprise technology acquisition. There is no signal of B2G interaction or official Federation business."
+        }
+      ],
+      "total_input_tokens": 3532,
+      "total_output_tokens": 716,
+      "estimated_cost_usd": 0.021336
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Mozambique Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:14:31.833935"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.205894",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:28:14.847076"
+}

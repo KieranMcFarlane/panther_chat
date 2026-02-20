@@ -1,0 +1,213 @@
+{
+  "entity_id": "kps_siedlce",
+  "entity_name": "KPS Siedlce",
+  "template_id": "tpl_developmental_club_v1",
+  "cluster_id": "semi_pro_challenger",
+  "discovered_domains": [
+    "kps.siedlce.pl",
+    "zoominfo.com",
+    "tn.1xbet.com",
+    "volleybox.net",
+    "volleytimes.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "kps_siedlce",
+      "entity_name": "KPS Siedlce",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://tn.1xbet.com",
+        "https://volleytimes.com",
+        "https://kps.siedlce.pl",
+        "https://zoominfo.com",
+        "https://volleybox.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "KPS Siedlce may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T09:56:08.353296",
+          "domain_explored": "https://kps.siedlce.pl",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Public funding mention (Wsp\u00f3\u0142finansowanie ze \u015brodk\u00f3w)",
+              "Strategic Partners (PSG, Tauron)"
+            ]
+          },
+          "patterns_found": [
+            "Sports club entity (Volleyball)",
+            "Sponsorship structure (PSG, Tauron)",
+            "Public funding utilization (Wsp\u00f3\u0142finansowanie)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1355,
+              "output_tokens": 196,
+              "elapsed_seconds": 4.3815391063690186
+            }
+          ],
+          "reasoning": "The scraped content is exclusively focused on sports news (volleyball match results, player achievements) and standard website navigation elements. There are no signals related to IT procurement, technology stack, or business operations relevant to the target persona."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T09:56:14.996080",
+          "domain_explored": "https://zoominfo.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Vendor Marketing Content",
+            "Irrelevant Domain",
+            "B2B Sales Software Promotion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1412,
+              "output_tokens": 176,
+              "elapsed_seconds": 2.14979887008667
+            }
+          ],
+          "reasoning": "The provided content is scraped from ZoomInfo's homepage and describes their B2B sales intelligence software. It contains generic marketing copy, testimonials, and product feature descriptions. There is absolutely no information regarding KPS Siedlce, its procurement activities, technology stack, or governance. This content is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T09:56:28.489083",
+          "domain_explored": "https://tn.1xbet.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Gambling and Betting Promotions",
+            "Consumer Marketing Content",
+            "Irrelevant Domain (1xbet.com)",
+            "Multi-language Advertisements (Hindi, Polish context)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1457,
+              "output_tokens": 202,
+              "elapsed_seconds": 2.944657802581787
+            }
+          ],
+          "reasoning": "The content is entirely scraped from a gambling website (1xbet.com) and consists of promotional material for sports betting, casino bonuses, and partnerships with major sports clubs (Barcelona, PSG). There is absolutely no connection to 'KPS Siedlce' (a Polish volleyball club) or any procurement activities related to the entity. The domain and content are irrelevant to the target."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T09:56:48.106714",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Are you looking for a new volleyball club? (Generic Player Recruitment)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer Market Data",
+            "Player Recruitment/Rumors",
+            "Community Forum Activity",
+            "Generic Sports Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1507,
+              "output_tokens": 224,
+              "elapsed_seconds": 13.924580812454224
+            }
+          ],
+          "reasoning": "The scraped content from Volleybox.net is a general sports aggregation site focused on player transfers, rumors, and community forums. While it mentions 'job offers' for players, this refers to athlete recruitment (talent acquisition), not corporate procurement or B2B vendor selection. There is no mention of KPS Siedlce's specific technology stack, governance, or purchasing intent within this generic content."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T09:56:56.576251",
+          "domain_explored": "https://volleytimes.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism / News Aggregation",
+            "Generic Volleyball Results",
+            "Transfer Market Rumors",
+            "No Entity Specific Content (KPS Siedlce)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1555,
+              "output_tokens": 182,
+              "elapsed_seconds": 2.9371368885040283
+            }
+          ],
+          "reasoning": "The content is a list of general volleyball news headlines, match results, and transfer rumors from various countries (Poland, France, Italy, Turkey). There is absolutely no mention of 'KPS Siedlce', nor are there any procurement signals, job postings, or technology investment indicators relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7286,
+      "total_output_tokens": 980,
+      "estimated_cost_usd": 0.036558
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "KPS Siedlce may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T09:56:56.578068"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.328303",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:13:55.186953"
+}

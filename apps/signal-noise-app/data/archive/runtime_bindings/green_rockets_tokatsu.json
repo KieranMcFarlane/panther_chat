@@ -1,0 +1,154 @@
+{
+  "entity_id": "green_rockets_tokatsu",
+  "entity_name": "Green Rockets Tokatsu",
+  "template_id": "tpl_rugby_corporate_league_one_v1",
+  "cluster_id": "rugby_corporate_league_one",
+  "discovered_domains": [
+    "green.necrockets.net",
+    "league-one.jp",
+    "ultimaterugby.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "green_rockets_tokatsu",
+      "entity_name": "Green Rockets Tokatsu",
+      "total_iterations": 15,
+      "completed_iterations": 3,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://ultimaterugby.com",
+        "https://league-one.jp",
+        "https://green.necrockets.net"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Green Rockets Tokatsu may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T16:43:42.481627",
+          "domain_explored": "https://green.necrockets.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Ticketing Platform: ticketrugby.jp (External SaaS)",
+              "Web CMS: Custom site structure (likely WordPress or similar Japanese CMS)",
+              "Analytics/Tracking: Implied usage for ticket sales and user tracking"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Third-party Ticketing System Usage (ticketrugby.jp)",
+              "Event Operations (Venue management, scheduling)",
+              "Digital Content Management (News publishing, match reports)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Ticketing Operations",
+            "Event Management Platforms",
+            "Content Management System (CMS) Usage"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1362,
+              "output_tokens": 303,
+              "elapsed_seconds": 4.202390909194946
+            }
+          ],
+          "reasoning": "The content reveals operational infrastructure for a professional sports team. While no direct procurement requests are visible, the presence of specific ticketing URLs (ticketrugby.jp), event management workflows, and structured news sections indicates the use of third-party SaaS platforms for ticketing, web hosting, and fan engagement. These are ongoing operational expenditures."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T16:43:49.324775",
+          "domain_explored": "https://league-one.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "League-wide ticketing platform usage (ticketrugby.jp)"
+            ]
+          },
+          "patterns_found": [
+            "League Schedule Aggregation",
+            "External Ticketing Links",
+            "Team Abbreviations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1414,
+              "output_tokens": 239,
+              "elapsed_seconds": 2.4993600845336914
+            }
+          ],
+          "reasoning": "The content is a schedule page for the Japan Rugby League One. While 'Green Rockets Tokatsu' (abbreviated as \uff27\uff32\u6771\u845b) is listed as a participating team, the page is purely informational regarding match times and locations. The 'Ticket Purchase' links point to a generic league ticketing platform (ticketrugby.jp) rather than a proprietary Green Rockets system. This confirms the entity operates within a league structure but provides no specific signals regarding their internal procurement, technology stack, or business operations."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T16:44:00.353750",
+          "domain_explored": "https://ultimaterugby.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Transfer News",
+            "Player Signings",
+            "Competitor Intelligence (Sale Sharks)",
+            "External Sports Media Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 582,
+              "output_tokens": 191,
+              "elapsed_seconds": 4.504049062728882
+            }
+          ],
+          "reasoning": "The scraped content from ultimaterugby.com focuses exclusively on player transfer news (Sale Sharks signing Alex Lozowski). This is sports operations content, completely unrelated to the business operations, technology procurement, or supply chain management of Green Rockets Tokatsu. It offers zero value regarding IT infrastructure, ticketing systems, or corporate governance."
+        }
+      ],
+      "total_input_tokens": 3358,
+      "total_output_tokens": 733,
+      "estimated_cost_usd": 0.021068999999999997
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Green Rockets Tokatsu may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T16:44:00.355306"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.280969",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:07:56.299605"
+}

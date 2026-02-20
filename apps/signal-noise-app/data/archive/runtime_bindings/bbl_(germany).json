@@ -1,0 +1,249 @@
+{
+  "entity_id": "bbl_(germany)",
+  "entity_name": "BBL (Germany)",
+  "template_id": "tpl_national_league_hubs_v1",
+  "cluster_id": "domestic_leagues",
+  "discovered_domains": [
+    "europeanbasketballleagues.eu",
+    "coaching.fibaeurope.com",
+    "vtb-league.com",
+    "blacktopmanagement.com",
+    "psrecovery.com",
+    "goredfoxes.com",
+    "riverlions.ca"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "bbl_(germany)",
+      "entity_name": "BBL (Germany)",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.02
+      ],
+      "explored_domains": [
+        "https://europeanbasketballleagues.eu",
+        "https://goredfoxes.com",
+        "https://psrecovery.com",
+        "https://riverlions.ca",
+        "https://coaching.fibaeurope.com",
+        "https://vtb-league.com",
+        "https://blacktopmanagement.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "BBL (Germany) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T13:39:29.800641",
+          "domain_explored": "https://europeanbasketballleagues.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Media & Innovation Seminar: Driving Future Growth with Key Industry Partners (Indicates industry engagement but not direct procurement)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Governing Body Focus",
+            "Strategic Coordination"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1360,
+              "output_tokens": 266,
+              "elapsed_seconds": 4.486786127090454
+            }
+          ],
+          "reasoning": "The scraped content identifies the entity as 'European Basketball Leagues' (formerly ULEB), a continental governing body for national leagues, whereas the target entity is 'BBL' (Basketball Bundesliga, the German national league). While BBL is likely a member or stakeholder of this organization, the content describes high-level federation activities (coordination, cooperation, growth) rather than specific procurement signals, technology stacks, or operational investments relevant to the BBL organization itself. This represents a false positive in the discovery phase."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T13:39:36.092374",
+          "domain_explored": "https://coaching.fibaeurope.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Classic ASP (Detected in URL parameters: 'Default.asp', 'cid={GUID}')"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Contact email for feedback (coaching-europe@fiba.basketball)",
+              "Free registration model (indicates low commercial intent)"
+            ]
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Governing Body Scope",
+            "Educational/Non-Profit Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 584,
+              "output_tokens": 242,
+              "elapsed_seconds": 2.793492078781128
+            }
+          ],
+          "reasoning": "The content is explicitly from FIBA Europe (coaching.fibaeurope.com), not BBL (Germany). While FIBA is a governing body for leagues including BBL, this specific sub-domain focuses on educational content, coaching clinics, and user profiles rather than league operations or procurement. There is no signal of BBL-specific purchasing activity or technology stack implementation here."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T13:39:42.407028",
+          "domain_explored": "https://vtb-league.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Geographic Scope Mismatch",
+            "Consumer-Facing Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1449,
+              "output_tokens": 189,
+              "elapsed_seconds": 3.021519899368286
+            }
+          ],
+          "reasoning": "The content is from the VTB United League (vtb-league.com), a professional basketball league primarily based in Russia. This constitutes a complete entity mismatch with BBL (Germany), which is the target entity. The content consists of navigation menus, team rosters (e.g., CSKA Moscow, Zenit), and schedule links, indicating a consumer-facing sports portal rather than a procurement or corporate governance interface."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T13:39:51.417272",
+          "domain_explored": "https://blacktopmanagement.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Entity Mismatch",
+            "Service Provider Context",
+            "Client-Facing Content",
+            "B2C/Agent Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1495,
+              "output_tokens": 178,
+              "elapsed_seconds": 3.232800006866455
+            }
+          ],
+          "reasoning": "The scraped content confirms that 'Blacktop Management' is a sports agency representing individual basketball players (clients), not the 'BBL' (Basketball Bundesliga) entity. The content focuses on player testimonials, agent services, and career management. There is no governance, procurement, or operational overlap with the BBL league entity itself."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T13:39:58.765684",
+          "domain_explored": "https://psrecovery.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "V12 PRO Recovery System",
+              "12-chamber recovery technology"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Official Recovery Partner \u2013 Easycredit BBL",
+              "Vendor: PSR Recovery"
+            ]
+          },
+          "patterns_found": [
+            "Official Partnership Status",
+            "B2B Service Provision",
+            "Sponsorship Integration"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 239,
+              "elapsed_seconds": 3.9204020500183105
+            }
+          ],
+          "reasoning": "The content confirms PSR Recovery is the 'Official Recovery Partner' of the Easycredit BBL (Germany). While this is a vendor site rather than the league's own procurement portal, it confirms an active commercial relationship and vendor ecosystem. This provides 'Weak' evidence of the league's procurement activities (specifically vendor partnerships/sponsorships) rather than direct procurement signals like RFPs."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T13:40:02.039387",
+          "domain_explored": "https://goredfoxes.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T13:40:05.042021",
+          "domain_explored": "https://riverlions.ca",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 6426,
+      "total_output_tokens": 1114,
+      "estimated_cost_usd": 0.035988
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "BBL (Germany) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T13:40:05.042665"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.415948",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:40:46.350175"
+}

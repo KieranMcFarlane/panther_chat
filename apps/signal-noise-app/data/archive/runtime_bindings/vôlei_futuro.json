@@ -1,0 +1,141 @@
+{
+  "entity_id": "v\u00f4lei_futuro",
+  "entity_name": "V\u00f4lei Futuro",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "voleifuturo.com.br",
+    "voleifuturoalagoas.org.br"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "v\u00f4lei_futuro",
+      "entity_name": "V\u00f4lei Futuro",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "explored_domains": [
+        "https://voleifuturoalagoas.org.br",
+        "https://voleifuturo.com.br"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "V\u00f4lei Futuro may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T03:41:10.724110",
+          "domain_explored": "https://voleifuturo.com.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              {
+                "type": "Capital Injection",
+                "source": "Emenda Impositiva (Vereador Luis Boatto)",
+                "amount": "R$ 175.000,00",
+                "purpose": "New social nucleus, food, uniforms, equipment",
+                "status": "Received/Approved for 2025"
+              },
+              {
+                "type": "Funding Channel",
+                "source": "Lei de Incentivo ao Esporte (Federal)",
+                "details": "Process 71000.074221/2023-67",
+                "purpose": "Escolinha V\u00f4lei Futuro",
+                "status": "Captacao open until 11/10/2025"
+              },
+              {
+                "type": "Operational Expansion",
+                "details": "New nuclei for football, karate, and beach volleyball",
+                "procurement_implication": "Potential need for facility management, equipment procurement, and multi-sport coordination tools"
+              }
+            ]
+          },
+          "patterns_found": [
+            "Public Funding Acquisition (Emendas Impositivas)",
+            "Tax Incentive Leveraging (Lei de Incentivo ao Esporte)",
+            "Social Project Expansion (New Nuclei/Uniforms)",
+            "Multi-Sport Partnership Strategy"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 475,
+              "elapsed_seconds": 5.385141849517822
+            }
+          ],
+          "reasoning": "The content reveals significant incoming capital flows via 'Emendas Impositivas' (R$175k) and tax incentive donations, specifically allocated for expanding social projects (new nuclei, uniforms, food). While not direct IT procurement, this expansion creates a downstream need for administrative software, inventory management (uniforms/equipment), and donor relationship management (CRM). The explicit mention of opening new nuclei and managing diverse sports indicates operational scaling."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T03:41:21.580460",
+          "domain_explored": "https://voleifuturoalagoas.org.br",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Generic Web Presence (WordPress/Standard Site)",
+              "Email: Hotmail (Consumer Grade)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization (Open de Voleibol 2025)",
+              "Donation Solicitation ('Seja um Doador')",
+              "Public Funding (Implied by CNPJ and Social Project status)"
+            ]
+          },
+          "patterns_found": [
+            "Small Municipality Scope (Quebrangulo-AL)",
+            "Grassroots Focus (Social Initiation)",
+            "Generic Contact Email (Hotmail)",
+            "Manual Event Management"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1426,
+              "output_tokens": 299,
+              "elapsed_seconds": 3.3416690826416016
+            }
+          ],
+          "reasoning": "The content reveals a distinct entity, 'Associa\u00e7\u00e3o Desportiva V\u00f4lei Futuro' (ADVF), located in Quebrangulo, Alagoas. This is a small-scale, grassroots social project (founded 2016) focused on educational initiation and local events, distinct from the professional 'V\u00f4lei Futuro' entity likely associated with superliga signals. The use of a Hotmail address and the focus on basic social inclusion suggest low immediate procurement potential for complex B2B solutions."
+        }
+      ],
+      "total_input_tokens": 2783,
+      "total_output_tokens": 774,
+      "estimated_cost_usd": 0.019959
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "V\u00f4lei Futuro may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T03:41:21.582186"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.321117",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:31:29.578774"
+}

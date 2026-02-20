@@ -1,0 +1,230 @@
+{
+  "entity_id": "al_karkh_sc",
+  "entity_name": "Al Karkh SC",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "transfermarkt.us",
+    "footballtripper.com",
+    "arsenalfcsa.org",
+    "footystats.org",
+    "globalsportsarchive.com",
+    "grokipedia.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al_karkh_sc",
+      "entity_name": "Al Karkh SC",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://transfermarkt.us",
+        "https://footballtripper.com",
+        "https://globalsportsarchive.com",
+        "https://grokipedia.com",
+        "https://footystats.org",
+        "https://arsenalfcsa.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al Karkh SC may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T18:02:53.845096",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General sports news aggregation",
+            "Global football transfer data",
+            "No entity-specific governance or procurement signals"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 193,
+              "elapsed_seconds": 2.634934186935425
+            }
+          ],
+          "reasoning": "The provided content is from Transfermarkt, a general sports news portal. It contains global football transfer rumors, market values, and news about various clubs (e.g., Manchester United, Tottenham, Celtic). There is absolutely no mention of 'Al Karkh SC', nor are there any signals regarding procurement, technology investments, or governance structures relevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T18:03:04.813346",
+          "domain_explored": "https://footballtripper.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global stadium directory aggregation",
+            "Generic sports travel content",
+            "Irrelevant geographical targeting (Europe/South America focus)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1413,
+              "output_tokens": 158,
+              "elapsed_seconds": 5.825631141662598
+            }
+          ],
+          "reasoning": "The content is a navigation sitemap for 'Football Tripper,' a travel guide website. It lists global stadiums and leagues but contains no entity-specific information regarding 'Al Karkh SC', its governance, or procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T18:03:13.298085",
+          "domain_explored": "https://arsenalfcsa.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "ASP.NET (Default.aspx structure)",
+              "DotNetNuke (DNN) CMS"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Spirit Wear Store",
+              "Uniform & Apparel Store",
+              "Sponsorship listings"
+            ]
+          },
+          "patterns_found": [
+            "Geographical mismatch (Texas, USA vs Baghdad, Iraq)",
+            "Entity name collision (Arsenal FC vs Al Karkh SC)",
+            "Youth sports club structure (Recreational/Academy programs)",
+            "Generic club management content (Uniforms, Tryouts, Spirit Wear)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1473,
+              "output_tokens": 249,
+              "elapsed_seconds": 4.091249704360962
+            }
+          ],
+          "reasoning": "The scraped content is from 'Arsenal FC' (arsenalfcsa.org), a youth soccer club based in La Vernia, Texas. This is a false positive match for 'Al Karkh SC', which is a professional sports club in Baghdad, There is no overlap in governance, technology stack, or procurement intent."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T18:03:20.779806",
+          "domain_explored": "https://footystats.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Generic match prediction algorithms",
+            "Betting odds calculation",
+            "Automated data ingestion"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1541,
+              "output_tokens": 173,
+              "elapsed_seconds": 3.8375790119171143
+            }
+          ],
+          "reasoning": "The content is entirely composed of automated sports statistics, match fixtures, and betting odds for global leagues (England, Italy, Spain, etc.). There is no mention of Al Karkh SC, Iraqi football, or any entity-specific governance, technology infrastructure, or procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T18:03:26.804302",
+          "domain_explored": "https://globalsportsarchive.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Generic league directory structure",
+            "Absence of entity-specific governance or operational data",
+            "Automated content listing (no procurement intent)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1596,
+              "output_tokens": 204,
+              "elapsed_seconds": 2.577141046524048
+            }
+          ],
+          "reasoning": "The content is a generic directory of global football leagues and tournaments. It lists competitions like the UEFA Champions League and Premier League but contains no specific information regarding 'Al Karkh SC', its management, or its procurement activities. It is a data aggregation site with no relevance to the specific entity's business operations."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T18:03:29.593032",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 7379,
+      "total_output_tokens": 977,
+      "estimated_cost_usd": 0.036792
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al Karkh SC may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T18:03:29.593397"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.233462",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:20:56.900448"
+}

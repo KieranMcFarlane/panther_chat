@@ -1,0 +1,373 @@
+{
+  "entity_id": "vc_long_beach",
+  "entity_name": "VC Long Beach",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "franchise_league_club",
+  "discovered_domains": [
+    "nyheritage.contentdm.oclc.org",
+    "consumeraffairs.com",
+    "justanswer.com",
+    "archive.dyestat.com",
+    "archive.org",
+    "newspapers.com",
+    "archive.newportbeachlibrary.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/venture-capital-jobs-newport-beach-ca",
+      "https://www.linkedin.com/jobs/venture-capital-jobs-huntington-beach-ca",
+      "https://www.linkedin.com/jobs/venture-capital-analyst-jobs-los-angeles-ca",
+      "https://www.linkedin.com/jobs/venture-capital-jobs-irvine-ca",
+      "https://www.linkedin.com/jobs/view/venture-capital-fellow-at-emerging-la-4362013017",
+      "https://www.linkedin.com/jobs/venture-capital-jobs-venice-ca",
+      "https://www.linkedin.com/jobs/view/analyst-placement-agent-at-venture-search-4352589685",
+      "https://www.linkedin.com/jobs/view/corporate-associate-%E2%80%93-emerging-growth-venture-capital-at-the-people-of-professional-services-4326091055",
+      "https://www.linkedin.com/jobs/view/corporate-associate-attorney-5%2B-years-m-a-financing-venture-capital-and-more-at-jobot-4357052396",
+      "https://www.linkedin.com/jobs/search/?currentJobId=2558364633&f_TPR=r604800&geoId=90000084&keywords=venture%20capital&location=San%20Francisco%20Bay%20Area"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "vc_long_beach",
+      "entity_name": "VC Long Beach",
+      "total_iterations": 15,
+      "completed_iterations": 12,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/venture-capital-jobs-newport-beach-ca",
+        "https://archive.dyestat.com",
+        "https://newspapers.com",
+        "https://nyheritage.contentdm.oclc.org",
+        "https://www.linkedin.com/jobs/venture-capital-jobs-irvine-ca",
+        "https://consumeraffairs.com",
+        "https://justanswer.com",
+        "https://www.linkedin.com/jobs/venture-capital-jobs-huntington-beach-ca",
+        "https://archive.newportbeachlibrary.org",
+        "https://archive.org",
+        "https://www.linkedin.com/jobs/view/venture-capital-fellow-at-emerging-la-4362013017",
+        "https://www.linkedin.com/jobs/venture-capital-analyst-jobs-los-angeles-ca"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "VC Long Beach may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:13:39.200639",
+          "domain_explored": "https://nyheritage.contentdm.oclc.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:13:41.398296",
+          "domain_explored": "https://consumeraffairs.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:13:43.521713",
+          "domain_explored": "https://justanswer.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:13:45.615477",
+          "domain_explored": "https://archive.dyestat.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T04:13:54.990953",
+          "domain_explored": "https://archive.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Client-side rendering requirement",
+            "Content access barrier"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 501,
+              "output_tokens": 129,
+              "elapsed_seconds": 2.8244757652282715
+            }
+          ],
+          "reasoning": "The scraped content consists solely of a JavaScript requirement message from archive.org. No procurement signals, technology stacks, or governance patterns are visible in the raw text provided."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T04:14:05.186797",
+          "domain_explored": "https://newspapers.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Consumer genealogy service",
+            "Historical archive content",
+            "Subscription-based access model"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1518,
+              "output_tokens": 157,
+              "elapsed_seconds": 1.9968950748443604
+            }
+          ],
+          "reasoning": "The scraped content from Newspapers.com is a consumer-facing genealogy and historical research platform. It contains no information regarding 'VC Long Beach', municipal governance, or public procurement activities. It is a B2C service unrelated to the target entity."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T04:14:12.213334",
+          "domain_explored": "https://archive.newportbeachlibrary.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T04:14:20.639011",
+          "domain_explored": "https://www.linkedin.com/jobs/venture-capital-jobs-newport-beach-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Private Equity Associate - Alexander Chapman (Orange County)",
+              "Investment - Intern - Niterra North America, Inc. (Irvine)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Geographic mismatch (Newport Beach vs Long Beach)",
+            "Sector mismatch (Private Equity vs Venture Capital)",
+            "Authentication barrier to detailed data"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1613,
+              "output_tokens": 285,
+              "elapsed_seconds": 3.3885560035705566
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for 'Venture Capital' roles in Newport Beach, not Long Beach. The content lists roles for unrelated entities (Alexander Chapman, Niterra) in the Private Equity sector, which does not align with the target entity 'VC Long Beach'. Furthermore, the content is truncated behind an authentication wall ('Sign in to set job alerts'), preventing the extraction of actionable procurement intelligence or technology stack details specific to the target entity."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T04:14:27.620374",
+          "domain_explored": "https://www.linkedin.com/jobs/venture-capital-jobs-huntington-beach-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Private Equity Associate at Alexander Chapman",
+              "Investment - Intern at Niterra North America",
+              "2026 Summer Internship - Private Family Capital Analyst at PIMCO",
+              "Family Wealth Advisor at Aaron Wealth Advisors",
+              "Partnership Taxation Manager at Veracity Software Inc"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic job board aggregation",
+            "Geographic mismatch (Huntington Beach vs Long Beach)",
+            "Sector mismatch (Private Equity/Wealth Management vs Venture Capital)",
+            "Consumer-facing content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1686,
+              "output_tokens": 329,
+              "elapsed_seconds": 2.2157540321350098
+            }
+          ],
+          "reasoning": "The content represents a generic LinkedIn job search results page for 'Venture Capital' roles in Huntington Beach, not Long Beach. The listings are predominantly for Private Equity, Wealth Management, and Corporate Finance roles (e.g., Alexander Chapman, PIMCO, Aaron Wealth Advisors) rather than true Venture Capital firms. There are no signals related to 'VC Long Beach' procurement, vendor selection, or technology implementation. This is a dead end for B2B procurement intelligence regarding the target entity."
+        },
+        {
+          "iteration_number": 10,
+          "timestamp": "2026-02-02T04:14:35.376904",
+          "domain_explored": "https://www.linkedin.com/jobs/venture-capital-analyst-jobs-los-angeles-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Private Equity Analyst at Alexander Chapman (Los Angeles)",
+              "Private Equity Senior Analyst/ Associate at Alexander Chapman (Los Angeles)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication barrier",
+            "Geographic mismatch (Los Angeles vs Long Beach)",
+            "Sector mismatch (Private Equity vs Venture Capital)",
+            "Generic job board aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 10,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1766,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.0334560871124268
+            }
+          ],
+          "reasoning": "The scraped content is a LinkedIn authentication wall and a generic job listing page for the Los Angeles metropolitan area. It does not contain specific information regarding 'VC Long Beach' or its procurement activities. The listings shown are for Private Equity roles (Alexander Chapman), not Venture Capital, and the geographic scope (LA Metro) is too broad to infer specific intent for the Long Beach entity without access to the specific records."
+        },
+        {
+          "iteration_number": 11,
+          "timestamp": "2026-02-02T04:14:41.898082",
+          "domain_explored": "https://www.linkedin.com/jobs/venture-capital-jobs-irvine-ca",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Private Equity Associate at Alexander Chapman (Orange County)",
+              "Investment - Intern at Niterra North America, Inc. (Irvine)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Authentication barrier",
+            "Geographic mismatch (Irvine vs Long Beach)",
+            "Sector mismatch (Private Equity vs Venture Capital)",
+            "Generic job board aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 11,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1834,
+              "output_tokens": 253,
+              "elapsed_seconds": 2.148231029510498
+            }
+          ],
+          "reasoning": "The content is a LinkedIn job aggregation page requiring authentication to view details. The search results are for 'Venture Capital' roles in Irvine, CA, which is a distinct geographic entity from Long Beach, CA. Furthermore, the visible results (e.g., Alexander Chapman) are primarily Private Equity firms, not Venture Capital. This indicates a lack of relevance to the specific procurement intelligence of VC Long Beach."
+        },
+        {
+          "iteration_number": 12,
+          "timestamp": "2026-02-02T04:14:55.730099",
+          "domain_explored": "https://www.linkedin.com/jobs/view/venture-capital-fellow-at-emerging-la-4362013017",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Forms"
+            ],
+            "job_postings": [
+              "Venture Capital Fellow (Operations Track)",
+              "Venture Capital Fellow (Investments Track)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic mismatch (Los Angeles vs Long Beach)",
+            "Entity mismatch (Emerging LA vs VC Long Beach)",
+            "Educational/Training program structure (Fellowship)",
+            "Use of low-cost consumer tools (Google Forms for application intake)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 12,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1907,
+              "output_tokens": 259,
+              "elapsed_seconds": 8.739813089370728
+            }
+          ],
+          "reasoning": "The content describes a fellowship program offered by 'Emerging LA' targeting the Los Angeles Metropolitan Area. This is a geographic and entity mismatch for 'VC Long Beach'. Additionally, the role is an educational/entry-level training opportunity rather than a corporate procurement signal, and the use of Google Forms suggests a lack of enterprise procurement infrastructure."
+        }
+      ],
+      "total_input_tokens": 10825,
+      "total_output_tokens": 1676,
+      "estimated_cost_usd": 0.057615
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "VC Long Beach may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:14:55.735825"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.324130",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:34:05.439597"
+}

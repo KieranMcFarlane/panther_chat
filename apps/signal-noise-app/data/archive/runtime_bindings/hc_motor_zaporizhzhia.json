@@ -1,0 +1,173 @@
+{
+  "entity_id": "hc_motor_zaporizhzhia",
+  "entity_name": "HC Motor Zaporizhzhia",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "emerging_market_clubs",
+  "discovered_domains": [
+    "hcmotor.de",
+    "wikidata.org",
+    "commons.wikimedia.org",
+    "wikiwand.com",
+    "grokipedia.com",
+    "ehfeuro.eurohandball.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "hc_motor_zaporizhzhia",
+      "entity_name": "HC Motor Zaporizhzhia",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://commons.wikimedia.org",
+        "https://hcmotor.de",
+        "https://wikiwand.com",
+        "https://grokipedia.com",
+        "https://ehfeuro.eurohandball.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "HC Motor Zaporizhzhia may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T11:21:04.024082",
+          "domain_explored": "https://hcmotor.de",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Historical match reports (2023)",
+            "German language content (indicating host league context)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1359,
+              "output_tokens": 166,
+              "elapsed_seconds": 3.804893732070923
+            }
+          ],
+          "reasoning": "The scraped content consists entirely of sports news headlines and match reports from the 2022/2023 season. There is no mention of business operations, technology infrastructure, job vacancies, or organizational procurement needs. The content is purely athletic and historical."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T11:21:06.947082",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T11:21:09.759605",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T11:21:12.595503",
+          "domain_explored": "https://wikiwand.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T11:21:15.437250",
+          "domain_explored": "https://grokipedia.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T11:21:22.040451",
+          "domain_explored": "https://ehfeuro.eurohandball.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports news aggregation",
+            "Tournament results (Men's EHF EURO 2026)",
+            "Navigation menu for European Handball Federation sub-sites",
+            "Future event bidding information (2030 & 2032)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1533,
+              "output_tokens": 205,
+              "elapsed_seconds": 3.352169990539551
+            }
+          ],
+          "reasoning": "The content is exclusively focused on the European Handball Federation's (EHF) central activities, including tournament results (Denmark, Croatia), MVP awards, and future hosting bids. There is no mention of the specific entity 'HC Motor Zaporizhzhia', nor are there any procurement signals, job postings, or technology stack details relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 2892,
+      "total_output_tokens": 371,
+      "estimated_cost_usd": 0.014241
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "HC Motor Zaporizhzhia may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T11:21:22.041318"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.357091",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:23:07.075898"
+}

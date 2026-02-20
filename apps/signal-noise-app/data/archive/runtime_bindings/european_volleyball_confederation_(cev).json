@@ -1,0 +1,422 @@
+{
+  "entity_id": "european_volleyball_confederation_(cev)",
+  "entity_name": "European Volleyball Confederation (CEV)",
+  "template_id": "tpl_global_gov_bodies_v1",
+  "cluster_id": "global_gov_bodies",
+  "discovered_domains": [
+    "inside.cev.eu",
+    "championsleague.cev.eu",
+    "sport.ec.europa.eu"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w==",
+      "https://lu.linkedin.com/jobs/view/it-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4345813659",
+      "https://lu.linkedin.com/jobs/view/volleyball-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-874213207",
+      "https://lu.linkedin.com/jobs/view/data-analytics-insights-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4293767461",
+      "https://lu.linkedin.com/jobs/view/legal-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4182749190",
+      "https://lu.linkedin.com/jobs/view/volleyball-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-3765330006",
+      "https://lu.linkedin.com/jobs/view/social-media-specialist-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4341770576",
+      "https://lu.linkedin.com/jobs/view/sales-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4299146768",
+      "https://lu.linkedin.com/jobs/view/development-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-3485023399"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "european_volleyball_confederation_(cev)",
+      "entity_name": "European Volleyball Confederation (CEV)",
+      "total_iterations": 15,
+      "completed_iterations": 8,
+      "current_confidence": 0.3,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.06,
+        0.12,
+        0.18,
+        0.24,
+        0.3
+      ],
+      "explored_domains": [
+        "https://lu.linkedin.com/jobs/view/it-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4345813659",
+        "https://sport.ec.europa.eu",
+        "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w==",
+        "https://lu.linkedin.com/jobs/view/volleyball-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-874213207",
+        "https://championsleague.cev.eu",
+        "https://lu.linkedin.com/jobs/view/legal-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4182749190",
+        "https://inside.cev.eu",
+        "https://lu.linkedin.com/jobs/view/data-analytics-insights-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4293767461"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Competition Management Software Operations",
+        "Regulatory Framework Governance",
+        "Stakeholder Training & Support",
+        "Digital Workflow Administration",
+        "IT Infrastructure Modernization",
+        "Vendor Management & Oversight",
+        "Microsoft 365 Administration",
+        "Hardware Procurement & Support",
+        "ERP & CRM Implementation Planning",
+        "Competition Management Software Operations",
+        "Regulatory Framework Governance",
+        "Stakeholder Training & Support",
+        "Data Analytics Infrastructure Implementation",
+        "MarTech Stack Integration (CRM, OTT, Ticketing)",
+        "Sponsorship ROI Measurement & Reporting",
+        "Executive-Level Strategic Decision Support",
+        "Contract Lifecycle Management",
+        "Regulatory Compliance Framework",
+        "External Counsel Coordination",
+        "Sports Governance Operations"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "European Volleyball Confederation (CEV) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:06:50.705679",
+          "domain_explored": "https://inside.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Financial Management/Grant Management Platforms (Solidarity Fund)",
+              "Bid Management Tools (EuroVolley 2028)",
+              "Data Analytics/Scouting Databases (Azerbaijan scouting)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Launch of 'CEV Solidarity Fund' (implies need for fund administration/distribution software)",
+              "Active bid support for Montenegro's EuroVolley 2028 (implies need for governance/compliance tools)",
+              "Expansion of scouting operations (implies need for data management/analytics tools)"
+            ]
+          },
+          "patterns_found": [
+            "Financial Fund Management",
+            "Bid Hosting & Governance",
+            "Talent Scouting Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1369,
+              "output_tokens": 300,
+              "elapsed_seconds": 5.960248231887817
+            }
+          ],
+          "reasoning": "The content reveals active operational programs (Solidarity Fund, Scouting in Azerbaijan, EuroVolley 2028 Bid) which require administrative and technological support. While no explicit RFP is visible, the management of funds and bids suggests a need for financial software, CRM, or bid management tools."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:06:56.227811",
+          "domain_explored": "https://championsleague.cev.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Content Repetition",
+            "Navigation Structure",
+            "Marketing Campaign Tags (#CLVolley2026)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 492,
+              "output_tokens": 178,
+              "elapsed_seconds": 2.6282360553741455
+            }
+          ],
+          "reasoning": "The scraped content consists primarily of repetitive navigation links and marketing hashtags (e.g., '#CLVolleyMMen', '#CLVolley2026'). There is a complete absence of technical infrastructure details, vendor requirements, or organizational operations that would indicate procurement activity. The content is purely consumer-facing promotional material."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:07:04.528052",
+          "domain_explored": "https://sport.ec.europa.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Policy Content",
+            "Repetitive Carousel/Slider Text",
+            "Public Health Campaign Messaging (#BeActive)",
+            "High-Level EU Identity Branding"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1470,
+              "output_tokens": 226,
+              "elapsed_seconds": 5.405379056930542
+            }
+          ],
+          "reasoning": "The scraped content consists of repetitive, generic text from the European Commission's Sport page (likely slider/carousel copy). It focuses on broad policy themes ('European identity', 'physical and mental health') and public campaigns ('European Week of Sport'). There is no specific mention of the European Volleyball Confederation (CEV), no technical infrastructure details, and no procurement signals such as funding calls, tenders, or vendor partnerships relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:07:13.891051",
+          "domain_explored": "https://www.linkedin.com/jobs/view/874213207/?trackingId=Nc+ue8Q6xm45SsOuBpEz6w==",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CEV Competition Management Software (Proprietary/Custom)",
+              "MS Office",
+              "Project Management Platforms (Generic)"
+            ],
+            "job_postings": [
+              "Volleyball Coordinator (Expired: June 2022)"
+            ],
+            "procurement_indicators": [
+              "Investment in specialized software personnel",
+              "Requirement for project management platforms",
+              "Operational reliance on digital competition tools",
+              "Need for stakeholder training infrastructure"
+            ]
+          },
+          "patterns_found": [
+            "Competition Management Software Operations",
+            "Regulatory Framework Governance",
+            "Stakeholder Training & Support",
+            "Digital Workflow Administration"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 322,
+              "elapsed_seconds": 5.839411020278931
+            }
+          ],
+          "reasoning": "The job posting explicitly references a proprietary 'CEV Competition Management Software,' indicating an existing technology stack requiring specialized human capital. The role involves governance (regulatory frameworks), operations (match support), and administration (official communications), all of which are high-value procurement signals for an organization managing 56 federations."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:07:31.457069",
+          "domain_explored": "https://lu.linkedin.com/jobs/view/it-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4345813659",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Microsoft 365",
+              "ERP (Enterprise Resource Planning)",
+              "CRM (Customer Relationship Management)",
+              "Cloud Infrastructure",
+              "Cybersecurity Tools"
+            ],
+            "job_postings": [
+              "IT Manager (Operations / IT)"
+            ],
+            "procurement_indicators": [
+              "External IT Provider Collaboration",
+              "Hardware Procurement (Laptops, Printers)",
+              "Software Licensing (M365)",
+              "Infrastructure Modernization Projects",
+              "ERP/CRM System Selection"
+            ]
+          },
+          "patterns_found": [
+            "IT Infrastructure Modernization",
+            "Vendor Management & Oversight",
+            "Microsoft 365 Administration",
+            "Hardware Procurement & Support",
+            "ERP & CRM Implementation Planning"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1614,
+              "output_tokens": 326,
+              "elapsed_seconds": 13.836145162582397
+            }
+          ],
+          "reasoning": "The job posting for an IT Manager explicitly states the goal of 'driving forward the modernization of our IT infrastructure' and identifies 'collaboration with external IT providers' as a key function. This indicates a clear intent to procure external services, hardware, and software solutions to upgrade the organization's technology stack."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:07:39.852278",
+          "domain_explored": "https://lu.linkedin.com/jobs/view/volleyball-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-874213207",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "CEV Competition Management Software (Proprietary/Custom)",
+              "MS Office",
+              "Project Management Platforms"
+            ],
+            "job_postings": [
+              "Volleyball Coordinator (Closed, June 2022)"
+            ],
+            "procurement_indicators": [
+              "Operational dependency on specific Competition Management Software",
+              "Requirement for 'providing support and training' to stakeholders (suggests vendor/contractor management or internal L&D needs)",
+              "Involvement in 'Regulatory Framework' changes (governance)"
+            ]
+          },
+          "patterns_found": [
+            "Competition Management Software Operations",
+            "Regulatory Framework Governance",
+            "Stakeholder Training & Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1691,
+              "output_tokens": 304,
+              "elapsed_seconds": 4.868328094482422
+            }
+          ],
+          "reasoning": "The job posting explicitly references the 'CEV Competition Management Software' as a core tool for daily operations. It highlights the need for software proficiency, stakeholder training, and regulatory compliance, indicating active usage and potential maintenance/procurement needs for this specific technology stack."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:07:48.151759",
+          "domain_explored": "https://lu.linkedin.com/jobs/view/data-analytics-insights-manager-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4293767461",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Power BI",
+              "Tableau",
+              "Looker Studio",
+              "SQL",
+              "Python",
+              "Google Analytics",
+              "Meta Insights",
+              "CRM Systems",
+              "OTT Platforms (EuroVolleyTV)"
+            ],
+            "job_postings": [
+              "Data Analytics & Insights Manager"
+            ],
+            "procurement_indicators": [
+              "Intent to design and implement scalable data analytics infrastructure",
+              "Requirement to integrate multiple data sources (Social, OTT, Ticketing, CRM)",
+              "Need for partner-facing reporting tools to demonstrate sponsorship ROI",
+              "Budget allocation for digital transformation and data governance tools"
+            ]
+          },
+          "patterns_found": [
+            "Data Analytics Infrastructure Implementation",
+            "MarTech Stack Integration (CRM, OTT, Ticketing)",
+            "Sponsorship ROI Measurement & Reporting",
+            "Executive-Level Strategic Decision Support"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1774,
+              "output_tokens": 386,
+              "elapsed_seconds": 4.947378873825073
+            }
+          ],
+          "reasoning": "The job posting for a Data Analytics & Insights Manager reveals a significant strategic initiative to build a centralized data ecosystem. This role involves procuring and integrating tools for data visualization (Power BI, Tableau), managing data flows from OTT and ticketing platforms, and ensuring GDPR compliance. It directly signals a need for vendors in the business intelligence and data infrastructure space."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:07:56.184795",
+          "domain_explored": "https://lu.linkedin.com/jobs/view/legal-coordinator-at-cev-conf%C3%A9d%C3%A9ration-europ%C3%A9enne-de-volleyball-4182749190",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Contract Management Software",
+              "Legal Case Management Systems"
+            ],
+            "job_postings": [
+              "Legal Coordinator (Legal & Transfers Dept)"
+            ],
+            "procurement_indicators": [
+              "External Legal Counsel Engagement",
+              "Contract Drafting & Review Volumes",
+              "Commercial Partnership Agreements",
+              "Compliance & Regulatory Framework Implementation"
+            ]
+          },
+          "patterns_found": [
+            "Contract Lifecycle Management",
+            "Regulatory Compliance Framework",
+            "External Counsel Coordination",
+            "Sports Governance Operations"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1860,
+              "output_tokens": 298,
+              "elapsed_seconds": 4.382213115692139
+            }
+          ],
+          "reasoning": "The job posting for a Legal Coordinator confirms active procurement and management of legal services. It explicitly mentions 'external legal advisors' and 'contract management software', indicating a need for vendor management tools and legal tech solutions. The role supports commercial partnerships and events, suggesting a high volume of contractual transactions requiring efficient processing systems."
+        }
+      ],
+      "total_input_tokens": 11807,
+      "total_output_tokens": 2340,
+      "estimated_cost_usd": 0.070521
+    },
+    "procurement_signals": [
+      "Competition Management Software Operations",
+      "Regulatory Framework Governance",
+      "Stakeholder Training & Support",
+      "Digital Workflow Administration",
+      "IT Infrastructure Modernization",
+      "Vendor Management & Oversight",
+      "Microsoft 365 Administration",
+      "Hardware Procurement & Support",
+      "ERP & CRM Implementation Planning",
+      "Competition Management Software Operations",
+      "Regulatory Framework Governance",
+      "Stakeholder Training & Support",
+      "Data Analytics Infrastructure Implementation",
+      "MarTech Stack Integration (CRM, OTT, Ticketing)",
+      "Sponsorship ROI Measurement & Reporting",
+      "Executive-Level Strategic Decision Support",
+      "Contract Lifecycle Management",
+      "Regulatory Compliance Framework",
+      "External Counsel Coordination",
+      "Sports Governance Operations"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "European Volleyball Confederation (CEV) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:07:56.185266"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.330109",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:55:55.623878"
+}

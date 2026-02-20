@@ -1,0 +1,130 @@
+{
+  "entity_id": "albanian_football_association",
+  "entity_name": "Albanian Football Association",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "zambiafiles.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://al.linkedin.com/jobs/view/registered-nurse-at-startup-consultancy-4338828191"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "albanian_football_association",
+      "entity_name": "Albanian Football Association",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://al.linkedin.com/jobs/view/registered-nurse-at-startup-consultancy-4338828191",
+        "https://zambiafiles.com"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Albanian Football Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:39:44.796918",
+          "domain_explored": "https://zambiafiles.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_domain",
+            "geographic_mismatch",
+            "content_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1364,
+              "output_tokens": 172,
+              "elapsed_seconds": 2.313390016555786
+            }
+          ],
+          "reasoning": "The content is from 'zambiafiles.com', a Zambian public database platform. It contains generic text about document access, academic folders (School of mines), and unrelated ecosystem tools (FutureCampus). There is absolutely no mention of the Albanian Football Association (F.SH.F.) or Albanian football governance. This data is irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:40:00.082396",
+          "domain_explored": "https://al.linkedin.com/jobs/view/registered-nurse-at-startup-consultancy-4338828191",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Registered Nurse",
+                "department": "Medical / Sports Science",
+                "type": "Full-time",
+                "location": "Tirana, Albania",
+                "posted_via": "StartUp Consultancy (Vendor)"
+              }
+            ],
+            "procurement_indicators": [
+              {
+                "category": "Staffing & HR Services",
+                "vendor": "StartUp Consultancy",
+                "nature": "Outsourced Recruitment or Staffing",
+                "intent": "Acquiring medical personnel for player/staff care"
+              }
+            ]
+          },
+          "patterns_found": [
+            "direct_entity_match",
+            "staffing_outsourcing",
+            "medical_services_procurement",
+            "vendor_intermediary"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1421,
+              "output_tokens": 386,
+              "elapsed_seconds": 3.3058369159698486
+            }
+          ],
+          "reasoning": "The content explicitly identifies the Albanian Football Association (FSHF) as the client within the job description, despite the posting being under 'StartUp Consultancy'. This indicates an outsourcing or staffing relationship where FSHF procures HR/Recruitment services or medical personnel via a vendor. While this is a direct confirmation of the entity's operations, it represents a 'Weak Accept' for procurement intelligence as it reveals a vendor partnership (StartUp Consultancy) and a specific operational need (Medical/Sports Science) rather than a direct technology or infrastructure tender."
+        }
+      ],
+      "total_input_tokens": 2785,
+      "total_output_tokens": 558,
+      "estimated_cost_usd": 0.016725
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Albanian Football Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:40:00.083007"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.199983",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:28.878884"
+}

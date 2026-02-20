@@ -1,0 +1,199 @@
+{
+  "entity_id": "shabab_al_ahli",
+  "entity_name": "Shabab Al Ahli",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "asian_pacific_clubs",
+  "discovered_domains": [
+    "shababalahli.ae",
+    "uaeproleague.ae",
+    "flashscore.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/jobs4football_academy-analyst-at-shabab-al-ahli-in-uae-activity-7091343267169980416-DhKO"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "shabab_al_ahli",
+      "entity_name": "Shabab Al Ahli",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.02,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02
+      ],
+      "explored_domains": [
+        "https://flashscore.com",
+        "https://uaeproleague.ae",
+        "https://www.linkedin.com/posts/jobs4football_academy-analyst-at-shabab-al-ahli-in-uae-activity-7091343267169980416-DhKO",
+        "https://shababalahli.ae"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Shabab Al Ahli may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T07:05:42.356443",
+          "domain_explored": "https://shababalahli.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Ticketing Operations: Evidence of online ticket booking functionality ('book your ticket' buttons)."
+            ]
+          },
+          "patterns_found": [
+            "Content is primarily sports/operational (match results, player stats)",
+            "Standard 'Book your ticket' functionality (likely SaaS/Out-of-the-box)",
+            "No explicit vendor names, RFPs, or technical infrastructure details visible"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1357,
+              "output_tokens": 242,
+              "elapsed_seconds": 7.176253795623779
+            }
+          ],
+          "reasoning": "The scraped content consists of match schedules, results, and player roster data. While 'book your ticket' buttons imply the use of ticketing software, there is no specific information about the underlying technology stack, procurement needs, or decision-makers in this text. It represents standard club operations rather than procurement intelligence."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T07:05:57.388913",
+          "domain_explored": "https://uaeproleague.ae",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Sign-In (OAuth)",
+              "Modal/Popup UI Framework",
+              "Form Handling (Nationality/Email capture)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Centralized League Digital Services (Ticketing/Membership)"
+            ]
+          },
+          "patterns_found": [
+            "League-level authentication portal",
+            "Fan engagement/Customer Data Platform (CDP) functionality",
+            "Social Sign-In integration (OAuth)",
+            "User registration forms (Nationality/Email capture)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1440,
+              "output_tokens": 310,
+              "elapsed_seconds": 4.182318210601807
+            }
+          ],
+          "reasoning": "The content is from the UAE Pro League (uaeproleague.ae), not Shabab Al Ahli directly. While Shabab Al Ahli participates in this league, the presence of a generic 'Sign-In/Sign-Up' modal for fan benefits indicates a league-wide digital product (likely a centralized CRM or Ticketing platform). This does not provide specific procurement signals (RFPs, vendor names, or tech stack details) originating from Shabab Al Ahli itself. It confirms the existence of a digital ecosystem but lacks actionable intelligence for targeting the club specifically."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T07:06:12.659002",
+          "domain_explored": "https://flashscore.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic sports aggregation content",
+            "Responsible gambling warnings (regulatory compliance)",
+            "Loading indicators (dynamic content rendering)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 686,
+              "output_tokens": 173,
+              "elapsed_seconds": 7.024263858795166
+            }
+          ],
+          "reasoning": "The content provided is from Flashscore, a third-party sports aggregator. It contains generic responsible gambling warnings and loading states. There is no proprietary information, technical infrastructure details, or procurement intent related to Shabab Al Ahli. This is 'noise' data."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T07:06:21.475901",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_academy-analyst-at-shabab-al-ahli-in-uae-activity-7091343267169980416-DhKO",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Software",
+              "Video Analysis Tools",
+              "Statistical Tracking Platforms"
+            ],
+            "job_postings": [
+              {
+                "title": "Academy Analyst",
+                "entity": "Shabab Al Ahli",
+                "source": "Jobs4football / LinkedIn",
+                "recency": "2 years ago"
+              }
+            ],
+            "procurement_indicators": [
+              "Human Capital Investment in Data/Analytics",
+              "Potential Vendor Requirement: Sports Tech Stack"
+            ]
+          },
+          "patterns_found": [
+            "Job Posting: Academy Analyst",
+            "Recruitment via Third-Party Aggregator (Jobs4football)",
+            "Talent Acquisition for Performance Analysis"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1587,
+              "output_tokens": 319,
+              "elapsed_seconds": 3.5788419246673584
+            }
+          ],
+          "reasoning": "While this is a job posting and not a direct RFP, the recruitment of an 'Academy Analyst' indicates investment in performance analysis infrastructure. This role typically requires software tools (video analysis, statistical tracking) which suggests a future or current need for procurement of sports technology solutions. It confirms the entity is actively building technical capabilities."
+        }
+      ],
+      "total_input_tokens": 5070,
+      "total_output_tokens": 1044,
+      "estimated_cost_usd": 0.03087
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Shabab Al Ahli may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T07:06:21.477397"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.232973",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:53:25.447044"
+}

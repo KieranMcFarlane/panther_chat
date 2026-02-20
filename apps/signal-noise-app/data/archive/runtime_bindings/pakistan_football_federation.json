@@ -1,0 +1,242 @@
+{
+  "entity_id": "pakistan_football_federation",
+  "entity_name": "Pakistan Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "footballpakistan.com",
+    "inside.fifa.com",
+    "connect.pakistanfootballconnect.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/posts/futboljobs.com_technical-director-for-pakistan-football-activity-7345541666637864963-EWcM",
+      "https://be.linkedin.com/company/futboljobs.com"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "pakistan_football_federation",
+      "entity_name": "Pakistan Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 5,
+      "current_confidence": 0.08,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.08,
+        0.08
+      ],
+      "explored_domains": [
+        "https://be.linkedin.com/company/futboljobs.com",
+        "https://inside.fifa.com",
+        "https://footballpakistan.com",
+        "https://www.linkedin.com/posts/futboljobs.com_technical-director-for-pakistan-football-activity-7345541666637864963-EWcM",
+        "https://connect.pakistanfootballconnect.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Executive Leadership Recruitment",
+        "Technical Strategy Development",
+        "FIFA/AFC Compliance Alignment",
+        "Long-term Infrastructure Planning"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Pakistan Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:50:17.903497",
+          "domain_explored": "https://footballpakistan.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports News Coverage",
+            "Tournament Results Reporting"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 781,
+              "output_tokens": 142,
+              "elapsed_seconds": 1.8866100311279297
+            }
+          ],
+          "reasoning": "The content is a sports news report regarding the SAFF Futsal Championship results. It contains no information regarding organizational structure, technology acquisition, job vacancies, or procurement activities. It is purely operational/athletic news."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:50:25.597303",
+          "domain_explored": "https://inside.fifa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "FIFA Forward Funding Program (Global context)",
+              "Infrastructure Refurbishment Projects (Global context)"
+            ]
+          },
+          "patterns_found": [
+            "Global Sports Governance",
+            "FIFA Forward Program (Infrastructure Funding)",
+            "Women's Football Development"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1406,
+              "output_tokens": 241,
+              "elapsed_seconds": 4.704890727996826
+            }
+          ],
+          "reasoning": "The content is from FIFA's global news portal and focuses on international governance, the FIFA Forward program (infrastructure funding for Burundi), and the Women's Champions Cup. While FIFA Forward is a funding mechanism, this specific content does not contain procurement signals (RFPs, tenders) specific to the Pakistan Football Federation. It lacks localized vendor acquisition data or technology investment details relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T17:50:33.593872",
+          "domain_explored": "https://connect.pakistanfootballconnect.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Membership Portal",
+              "Authentication System"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Platform Maintenance & Hosting",
+              "Database Management Services",
+              "User Administration Support"
+            ]
+          },
+          "patterns_found": [
+            "Membership Management System",
+            "Authentication Portal",
+            "Stakeholder Database"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 854,
+              "output_tokens": 229,
+              "elapsed_seconds": 4.45751690864563
+            }
+          ],
+          "reasoning": "The discovery of 'Pakistan Football Connect' indicates a digital platform used for stakeholder management. While the visible content is limited to login/registration UI, the existence of such a platform suggests an underlying technology stack (likely a CMS or CRM) and a need for vendor support to manage user data, federation members, or licensing."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T17:50:48.225329",
+          "domain_explored": "https://www.linkedin.com/posts/futboljobs.com_technical-director-for-pakistan-football-activity-7345541666637864963-EWcM",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Performance Analysis Platforms",
+              "Talent Management Systems (CRM)",
+              "FIFA Forward Compliance Tools"
+            ],
+            "job_postings": [
+              "Technical Director"
+            ],
+            "procurement_indicators": [
+              "Strategic Vision Execution",
+              "Coach Training Systems Procurement",
+              "Elite Performance Pattern Analysis"
+            ]
+          },
+          "patterns_found": [
+            "Executive Leadership Recruitment",
+            "Technical Strategy Development",
+            "FIFA/AFC Compliance Alignment",
+            "Long-term Infrastructure Planning"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1537,
+              "output_tokens": 300,
+              "elapsed_seconds": 11.21960186958313
+            }
+          ],
+          "reasoning": "The discovery of a job posting for a Technical Director is a strong procurement signal. This C-level role involves designing and executing a 'long-term football development strategy,' which typically necessitates subsequent procurement of software for performance analysis, CRM for talent management, and infrastructure for training centers. The requirement to align with FIFA/AFC guidelines suggests upcoming investments in compliant technology stacks."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T17:50:56.213242",
+          "domain_explored": "https://be.linkedin.com/company/futboljobs.com",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Social Media)",
+              "Web Platform (Generic)"
+            ],
+            "job_postings": [
+              "General Football Industry Opportunities (Non-Specific)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Recruitment Platform",
+            "Global Job Aggregation",
+            "Social Media Marketing Content"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1594,
+              "output_tokens": 245,
+              "elapsed_seconds": 3.8370938301086426
+            }
+          ],
+          "reasoning": "The content analyzed is the generic 'About Us' and feed page of Futboljobs.com, a third-party job board. While the platform hosts recruitment opportunities, this specific page does not contain specific procurement signals, active RFPs, or technology investment details specifically attributable to the Pakistan Football Federation (PFF). It confirms the channel exists but provides no new actionable intelligence regarding PFF's internal procurement."
+        }
+      ],
+      "total_input_tokens": 6172,
+      "total_output_tokens": 1157,
+      "estimated_cost_usd": 0.035871
+    },
+    "procurement_signals": [
+      "Executive Leadership Recruitment",
+      "Technical Strategy Development",
+      "FIFA/AFC Compliance Alignment",
+      "Long-term Infrastructure Planning"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Pakistan Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:50:56.214157"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.208324",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:18:16.892572"
+}

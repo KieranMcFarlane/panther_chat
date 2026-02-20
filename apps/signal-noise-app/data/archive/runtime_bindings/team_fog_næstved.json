@@ -1,0 +1,180 @@
+{
+  "entity_id": "team_fog_n\u00e6stved",
+  "entity_name": "Team FOG N\u00e6stved",
+  "template_id": "tpl_established_club_pros_v1",
+  "cluster_id": "european_club_pros",
+  "discovered_domains": [
+    "teamfog.dk",
+    "basketball.eurobasket.com",
+    "basketligaen.dk",
+    "commons.wikimedia.org"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "team_fog_n\u00e6stved",
+      "entity_name": "Team FOG N\u00e6stved",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://teamfog.dk",
+        "https://basketligaen.dk",
+        "https://basketball.eurobasket.com",
+        "https://commons.wikimedia.org"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Team FOG N\u00e6stved may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T04:55:26.102554",
+          "domain_explored": "https://teamfog.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Partner Events & Experiences (Potential procurement of event agencies/catering)",
+              "Networking & Exposition (Potential procurement of marketing/print services)",
+              "Erhvervsnetv\u00e6rk (Business Network structure implies need for member management tools)"
+            ]
+          },
+          "patterns_found": [
+            "B2B Partnership Structure",
+            "Corporate Networking Focus",
+            "Event Management Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 546,
+              "output_tokens": 254,
+              "elapsed_seconds": 27.267882823944092
+            }
+          ],
+          "reasoning": "The scraped content reveals a dedicated 'For Partners' section focused on events, networking, and exposure. While this does not indicate immediate procurement of software or hardware, it confirms an active B2B operational model that requires event management services, catering, and potentially CRM tools to manage partner relationships and corporate hospitality."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T04:55:36.090967",
+          "domain_explored": "https://basketball.eurobasket.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Domain Content",
+            "Global Sports News Aggregation",
+            "Player Transfer/Roster Updates"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 170,
+              "elapsed_seconds": 3.477173089981079
+            }
+          ],
+          "reasoning": "The scraped content is from 'basketball.eurobasket.com', a global sports news site. It contains game results and player transfers (e.g., Justin Cobbs, Julian Larry) unrelated to the Danish basketball entity 'Team FOG N\u00e6stved'. There is no information regarding the entity's procurement, technology stack, or governance."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T04:55:46.558051",
+          "domain_explored": "https://basketligaen.dk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Sports Journalism Content",
+            "Game Results & Highlights",
+            "Event Coverage",
+            "Fan Engagement Material"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1459,
+              "output_tokens": 198,
+              "elapsed_seconds": 2.7012970447540283
+            }
+          ],
+          "reasoning": "The scraped content from basketligaen.dk is purely sports journalism, focusing on game results (Randers vs. V\u00e6rl\u00f8se), player interviews (Adama Darboe), and event recaps (Pokalfinale). While it mentions 'Team FOG N\u00e6stved', it does so in the context of athletic competition and scores, not business operations or procurement needs. There are no signals regarding technology investments, job postings, or B2B partnerships."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T04:55:59.946820",
+          "domain_explored": "https://commons.wikimedia.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Generic Media Repository Interface",
+            "User Contribution Guidelines",
+            "Global Content Aggregation",
+            "Non-Profit Context"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1505,
+              "output_tokens": 164,
+              "elapsed_seconds": 7.17437481880188
+            }
+          ],
+          "reasoning": "The content is the generic homepage text for Wikimedia Commons, a media file repository. It contains no information regarding Team FOG N\u00e6stved, their business operations, technology stack, or procurement activities. It is entirely irrelevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 4919,
+      "total_output_tokens": 786,
+      "estimated_cost_usd": 0.026547
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Team FOG N\u00e6stved may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T04:55:59.948657"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.227444",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:40:23.418654"
+}

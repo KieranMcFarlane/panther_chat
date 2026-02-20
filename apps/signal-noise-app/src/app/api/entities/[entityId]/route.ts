@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Neo4jService } from '@/lib/neo4j'
 import { createClient } from '@supabase/supabase-js'
 
 // Dynamic dossier generation function
@@ -245,19 +244,13 @@ interface Entity {
   properties: Record<string, any>
 }
 
-interface Connection {
-  relationship: string
-  target: string
-  target_type: string
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: { entityId: string } }
 ) {
   try {
     const { entityId } = params
-    
+
     // Validate entityId parameter
     if (!entityId) {
       return NextResponse.json(
@@ -265,12 +258,14 @@ export async function GET(
         { status: 400 }
       )
     }
+
     const { searchParams } = new URL(request.url)
     const useCache = searchParams.get('useCache') !== 'false' // Default to true
-    
+
     let entity: Entity | null = null
-    let connections: Connection[] = []
-    let source: 'cache' | 'neo4j' | null = null
+    let source: 'supabase' | null = null
+
+    console.log(`📖 Fetching entity ${entityId} from Supabase`)
 
     // Try to get from Supabase teams and leagues tables first (new structure)
     if (useCache) {
@@ -325,7 +320,7 @@ export async function GET(
               league_badge_s3_url: teamData.leagues?.badge_s3_url
             }
           }
-          source = 'cache'
+          source = 'supabase'
         } else {
           // Check if it's a league
           const { data: leagueData, error: leagueError } = await supabase
@@ -358,7 +353,7 @@ export async function GET(
                 league_id: leagueData.league_id
               }
             }
-            source = 'cache'
+            source = 'supabase'
           } else {
             // Fallback to cached_entities for other entity types
             // Try UUID first, then Neo4j ID
@@ -397,78 +392,23 @@ export async function GET(
                 labels: cachedEntity.labels,
                 properties: cachedEntity.properties
               }
-              source = 'cache'
+              source = 'supabase'
             }
           }
         }
       } catch (cacheError) {
-        console.log('Cache miss, falling back to Neo4j:', cacheError)
-      }
-    }
-
-    // If not found in cache or cache disabled, get from Neo4j
-    if (!entity) {
-      let session;
-      try {
-        const neo4jService = new Neo4jService()
-        await neo4jService.initialize()
-        session = neo4jService.driver.session()
-      } catch (neo4jError) {
-        console.error('Failed to initialize Neo4j:', neo4jError)
-        return NextResponse.json(
-          { error: neo4jError instanceof Error ? neo4jError.message : 'Failed to connect to database' },
-          { status: 500 }
-        )
-      }
-      try {
-        // Get entity details
-        const entityResult = await session.run(`
-          MATCH (n) 
-          WHERE n.neo4j_id = $entityId
-          RETURN n
-        `, { entityId: entityId })
-
-        if (entityResult.records.length > 0) {
-          const node = entityResult.records[0].get('n')
-          entity = {
-            id: node.identity.toString(),
-            neo4j_id: node.properties.neo4j_id?.toString() || node.identity.toString(),
-            labels: node.labels,
-            properties: node.properties
-          }
-          source = 'neo4j'
-
-          // Get connections
-          const connectionResult = await session.run(`
-            MATCH (n)-[r]-(related)
-            WHERE n.neo4j_id = $entityId
-            RETURN type(r) as relationship, 
-                   related.name as target, 
-               labels(related)[0] as target_type
-            LIMIT 50
-          `, { entityId: entityId })
-
-          connections = connectionResult.records.map(record => ({
-            relationship: record.get('relationship'),
-            target: record.get('target') || 'Unnamed',
-            target_type: record.get('target_type') || 'Unknown'
-          }))
-        }
-      } finally {
-        if (session) {
-          await session.close()
-        }
+        console.log('⚠️ Supabase query error:', cacheError)
       }
     }
 
     if (!entity) {
-      // Provide more context for missing entities
+      // Entity not found in Supabase
       return NextResponse.json(
-        { 
+        {
           error: 'Entity not found',
           entityId: entityId,
           suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
-          availableSources: ['Supabase cache', 'Neo4j database']
+          availableSources: ['Supabase cached_entities, teams, and leagues tables']
         },
         { status: 404 }
       )
@@ -489,7 +429,6 @@ export async function GET(
 
     return NextResponse.json({
       entity,
-      connections,
       source,
       dossier: comprehensiveDossier
     })

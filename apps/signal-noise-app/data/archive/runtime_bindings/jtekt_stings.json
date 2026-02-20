@@ -1,0 +1,151 @@
+{
+  "entity_id": "jtekt_stings",
+  "entity_name": "JTEKT Stings",
+  "template_id": "tpl_corp_ownership_club_v1",
+  "cluster_id": "corp_ownership_club",
+  "discovered_domains": [
+    "jtekt-stings.jp",
+    "jtekt-stings.shop",
+    "svleague.jp",
+    "volleybox.net"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "jtekt_stings",
+      "entity_name": "JTEKT Stings",
+      "total_iterations": 15,
+      "completed_iterations": 4,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.02,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://jtekt-stings.jp",
+        "https://volleybox.net",
+        "https://jtekt-stings.shop",
+        "https://svleague.jp"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "JTEKT Stings may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:54:45.009897",
+          "domain_explored": "https://jtekt-stings.jp",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:54:54.982306",
+          "domain_explored": "https://jtekt-stings.shop",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Shop-Pro (E-commerce Platform)",
+              "Credit Card Payment Gateways (VISA, Mastercard, JCB, AMEX, Diners)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Logistics Contract: Sagawa Express (Primary shipping provider)",
+              "Logistics Contract: Yamato Transport / Japan Post (Contingency providers)",
+              "Merchandise Sourcing: Uniforms, towels, apparel (OEM manufacturing)",
+              "Digital Infrastructure: Online shop hosting and maintenance"
+            ]
+          },
+          "patterns_found": [
+            "E-commerce Platform Usage",
+            "Logistics & Shipping Partners",
+            "Digital Payment Processing",
+            "Customer Support Infrastructure"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1385,
+              "output_tokens": 320,
+              "elapsed_seconds": 4.079025983810425
+            }
+          ],
+          "reasoning": "The content confirms JTEKT Stings utilizes an e-commerce platform (likely 'Shop-Pro' based on the inquiry URL structure) to manage merchandise sales. This indicates active procurement for logistics (Sagawa Express), payment gateways (Credit Card processing), and digital customer service tools. While this is B2C focused, it validates the entity's operational maturity and potential for B2B vendor expansion."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:55:01.826002",
+          "domain_explored": "https://svleague.jp",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "League Governance Structure",
+            "Multi-division Sports Management",
+            "Public Information Content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 468,
+              "output_tokens": 188,
+              "elapsed_seconds": 3.076537847518921
+            }
+          ],
+          "reasoning": "The scraped content from svleague.jp identifies the entity as the V.League Organization (Japan Volleyball League), the governing body for the sport, rather than the JTEKT Stings corporate procurement entity. While JTEKT Stings is a member club, this domain focuses on league-wide operations, standings, and schedules, offering no direct procurement signals for the specific corporate entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:55:04.667562",
+          "domain_explored": "https://volleybox.net",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 1853,
+      "total_output_tokens": 508,
+      "estimated_cost_usd": 0.013179
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "JTEKT Stings may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:55:04.698870"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.323026",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:02:07.701600"
+}

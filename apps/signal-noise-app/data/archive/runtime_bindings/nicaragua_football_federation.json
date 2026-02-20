@@ -1,0 +1,382 @@
+{
+  "entity_id": "nicaragua_football_federation",
+  "entity_name": "Nicaragua Football Federation",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "reuters.com",
+    "soccervillage.com",
+    "kaieteurnewsonline.com",
+    "weareiowa.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://ni.linkedin.com/jobs/view/football-scout-data-collector-at-img-arena-3944436316",
+      "https://ni.linkedin.com/jobs/view/football-statistician-at-genius-sports-3866018063",
+      "https://www.linkedin.com/jobs/view/virtual-assistant-sports-data-specialist-remote-soccer-industry-at-pave-talent-4317113234",
+      "https://www.linkedin.com/jobs/view/team-lead-lacif-at-dai-4236418399",
+      "https://www.linkedin.com/jobs/view/bilingual-virtual-executive-assistant-remote-at-viva-talent-4336939541",
+      "https://www.linkedin.com/jobs/view/bilingual-operations-assistant-english-spanish-at-sagan-recruitment-4320922537",
+      "https://www.linkedin.com/jobs/view/head-of-revenue-operations-at-simera-4366196815",
+      "https://www.linkedin.com/jobs/view/talent-acquisition-specialist-remote-at-indi-staffing-services-4197442364"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "nicaragua_football_federation",
+      "entity_name": "Nicaragua Football Federation",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.06,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.04,
+        0.06,
+        0.06,
+        0.06
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/view/virtual-assistant-sports-data-specialist-remote-soccer-industry-at-pave-talent-4317113234",
+        "https://reuters.com",
+        "https://kaieteurnewsonline.com",
+        "https://ni.linkedin.com/jobs/view/football-scout-data-collector-at-img-arena-3944436316",
+        "https://ni.linkedin.com/jobs/view/football-statistician-at-genius-sports-3866018063",
+        "https://soccervillage.com",
+        "https://www.linkedin.com/jobs/view/team-lead-lacif-at-dai-4236418399",
+        "https://weareiowa.com",
+        "https://www.linkedin.com/jobs/view/bilingual-virtual-executive-assistant-remote-at-viva-talent-4336939541"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Nicaragua Football Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:42:50.734479",
+          "domain_explored": "https://reuters.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:42:59.083874",
+          "domain_explored": "https://soccervillage.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity is a US-based retailer (Soccer Village), not the Nicaragua Football Federation.",
+              "Content focuses on direct-to-consumer sales (Nike, Adidas products).",
+              "Geographic scope is limited to US states (OH, KY, IN, TN)."
+            ]
+          },
+          "patterns_found": [
+            "e-commerce_product_listings",
+            "retail_b2c_focus",
+            "geographic_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1393,
+              "output_tokens": 252,
+              "elapsed_seconds": 4.76987886428833
+            }
+          ],
+          "reasoning": "The scraped content from 'soccervillage.com' identifies the entity as a regional sporting goods retailer based in the US (Ohio, Kentucky, Indiana, Tennessee). It lists consumer products (cleats, jerseys) and B2C services. There is no connection to the Nicaragua Football Federation, nor are there any signals regarding governance, enterprise procurement, or technology stacks relevant to the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:43:05.675800",
+          "domain_explored": "https://kaieteurnewsonline.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "geographic_mismatch",
+            "general_news_focus",
+            "political_content"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1438,
+              "output_tokens": 149,
+              "elapsed_seconds": 3.7290637493133545
+            }
+          ],
+          "reasoning": "The content is from a Guyanese news outlet (Kaieteur News) focusing on local politics, oil revenue, and regional crime. There is absolutely no mention of Nicaragua, the Football Federation, or related procurement activities. The geographic and topical relevance is null."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:43:11.938456",
+          "domain_explored": "https://weareiowa.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "cookie_consent_wall",
+            "platform_redirect",
+            "geographic_mismatch",
+            "media_content_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1480,
+              "output_tokens": 163,
+              "elapsed_seconds": 2.524639844894409
+            }
+          ],
+          "reasoning": "The content is a generic YouTube cookie consent wall for 'We Are Iowa' (Local 5 News), a US-based media entity. There is no content related to the Nicaragua Football Federation, procurement signals, or relevant technology stacks. The entity and geography are entirely irrelevant to the target."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:43:23.545671",
+          "domain_explored": "https://ni.linkedin.com/jobs/view/football-scout-data-collector-at-img-arena-3944436316",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Windows-based proprietary data collection software",
+              "High-definition data capture tools"
+            ],
+            "job_postings": [
+              "Football Scout - Data Collector (Estel\u00ed, Nicaragua) - Freelance"
+            ],
+            "procurement_indicators": [
+              "Vendor: IMG ARENA (Data Rights Holder/Service Provider)",
+              "Contract Scope: CONCACAF Champions Cup, Central American Cup data collection",
+              "Labor Model: Gig-economy/Freelance ($50/event)",
+              "Governance: IBIA compliance and conflict of interest restrictions for federation employees"
+            ]
+          },
+          "patterns_found": [
+            "third_party_vendor_operations",
+            "data_collection_contract",
+            "conflict_of_interest_guidelines",
+            "freelance_labor_model",
+            "event_based_procurement"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1538,
+              "output_tokens": 413,
+              "elapsed_seconds": 8.445117950439453
+            }
+          ],
+          "reasoning": "While this is not a direct procurement signal from the Nicaragua Football Federation (FENIFUT), it provides high-value intelligence on the vendor ecosystem. The posting confirms that IMG ARENA holds the data rights for CONCACAF competitions (which involve Nicaraguan clubs) and operates a freelance data collection model within Nicaragua. This reveals the technology stack (proprietary data collection software) and the vendor partnership structure (Federation/Confederation -> IMG ARENA -> Freelancers). It also identifies potential conflicts of interest, indicating that Federation employees are restricted from moonlighting for data vendors, a key governance insight."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:43:30.581143",
+          "domain_explored": "https://ni.linkedin.com/jobs/view/football-statistician-at-genius-sports-3866018063",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Smartphone-enabled data collection software",
+              "E-learning platforms"
+            ],
+            "job_postings": [
+              {
+                "title": "Football Statistician",
+                "entity": "Genius Sports",
+                "location": "Estel\u00ed, Nicaragua",
+                "type": "Contract / Per-event",
+                "focus": "Live data collection"
+              }
+            ],
+            "procurement_indicators": [
+              "Vendor Partnership: Genius Sports operates as an official data partner in the region.",
+              "Technology Transfer: Deployment of mobile interfaces for match reporting.",
+              "Data Governance: Requirement for 'official live data' collection implies rights agreements with local leagues."
+            ]
+          },
+          "patterns_found": [
+            "third_party_vendor_operations",
+            "data_collection_contract",
+            "gig_economy_model",
+            "mobile_software_deployment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1604,
+              "output_tokens": 410,
+              "elapsed_seconds": 3.695945978164673
+            }
+          ],
+          "reasoning": "The content describes a job posting for a 'Football Statistician' in Estel\u00ed, Nicaragua, posted by Genius Sports. While this is a direct employment listing rather than a procurement tender, it confirms that Genius Sports (a major official data partner) is actively deploying resources and proprietary technology within Nicaragua to collect football data. This indicates an active vendor relationship involving data acquisition software and operational logistics, which serves as a proxy for the Federation's technology ecosystem and data partnerships."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:43:37.173369",
+          "domain_explored": "https://www.linkedin.com/jobs/view/virtual-assistant-sports-data-specialist-remote-soccer-industry-at-pave-talent-4317113234",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Sheets",
+              "Mail Merge Add-ons",
+              "Google Meet"
+            ],
+            "job_postings": [
+              "Virtual Assistant - Sports Data Specialist"
+            ],
+            "procurement_indicators": [
+              "Outsourced data operations",
+              "Vendor reliance for lead generation"
+            ]
+          },
+          "patterns_found": [
+            "third_party_recruitment_agency",
+            "us_market_focus",
+            "data_entry_outsourcing",
+            "tournament_ecosystem_operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1676,
+              "output_tokens": 279,
+              "elapsed_seconds": 2.934144973754883
+            }
+          ],
+          "reasoning": "While this posting is for a data specialist role within the soccer industry, it is explicitly focused on the US market (US youth clubs, Texas tournaments) and is recruited by a third-party agency (Pave Talent) for a US-based client. It does not represent direct procurement by the Nicaragua Football Federation. However, it confirms the operational model of outsourcing data management in the soccer sector, validating the capability found in previous iterations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:43:43.630779",
+          "domain_explored": "https://www.linkedin.com/jobs/view/team-lead-lacif-at-dai-4236418399",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              {
+                "title": "Team Lead LACIF",
+                "company": "DAI",
+                "focus": "Infrastructure financing and development cooperation",
+                "relevance": "None"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "geographic_scope_mismatch",
+            "sector_mismatch",
+            "wrong_entity_target",
+            "development_cooperation_focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1734,
+              "output_tokens": 270,
+              "elapsed_seconds": 3.021697998046875
+            }
+          ],
+          "reasoning": "The job posting is for a 'Team Lead LACIF' role at DAI, a global development company. The role focuses on large-scale infrastructure financing, development banks, and European financial instruments (EFSD+). While the geographic scope includes Latin America, the sector is macro-economic development finance, not sports administration or football federation operations. There is no connection to the Nicaragua Football Federation, football technology, or sports procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:43:49.856287",
+          "domain_explored": "https://www.linkedin.com/jobs/view/bilingual-virtual-executive-assistant-remote-at-viva-talent-4336939541",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Google Workspace",
+              "Slack",
+              "Notion",
+              "AI Automation"
+            ],
+            "job_postings": [
+              {
+                "role": "Bilingual Virtual Executive Assistant",
+                "entity": "Viva Talent",
+                "target_market": "US/Canada Startups",
+                "relevance": "Low"
+              }
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "third_party_recruitment_agency",
+            "bpo_outsourcing_model",
+            "geographic_mismatch",
+            "sector_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1798,
+              "output_tokens": 281,
+              "elapsed_seconds": 2.700448989868164
+            }
+          ],
+          "reasoning": "The content describes a remote job posting by Viva Talent, a recruitment agency, for Executive Assistants serving US/Canadian startups. While it lists Nicaragua as a target location for candidates, it is a B2C employment opportunity, not a procurement signal or vendor activity by the Nicaragua Football Federation. The role involves supporting foreign tech startups, not local football federation operations."
+        }
+      ],
+      "total_input_tokens": 12661,
+      "total_output_tokens": 2217,
+      "estimated_cost_usd": 0.071238
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Nicaragua Football Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:43:49.856848"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.207183",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:01:20.133592"
+}

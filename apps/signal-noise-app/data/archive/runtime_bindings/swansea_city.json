@@ -1,0 +1,418 @@
+{
+  "entity_id": "swansea_city",
+  "entity_name": "Swansea City",
+  "template_id": "tpl_emerging_market_clubs_v1",
+  "cluster_id": "c4_club_nordic_mature",
+  "discovered_domains": [
+    "swanseacity.com",
+    "newsnow.co.uk",
+    "swansea.com",
+    "swanseacityevents.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://uk.linkedin.com/jobs/south-west-jobs-swansea",
+      "https://www.linkedin.com/posts/jobs4football_footballjobs-scouting-technicalscout-activity-7353700945911812096-XohD",
+      "https://uk.linkedin.com/jobs/ad-hoc-jobs-swansea",
+      "https://uk.linkedin.com/jobs/foundation-jobs-swansea",
+      "https://uk.linkedin.com/jobs/football-jobs-wales",
+      "https://uk.linkedin.com/jobs/view/business-analyst-at-free-work-uk-4365337970",
+      "https://uk.linkedin.com/jobs/job-coach-jobs-swansea",
+      "https://uk.linkedin.com/jobs/change-management-jobs-greater-swansea-area",
+      "https://uk.linkedin.com/jobs/business-analysis-jobs-swansea"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "swansea_city",
+      "entity_name": "Swansea City",
+      "total_iterations": 15,
+      "completed_iterations": 9,
+      "current_confidence": 0.18,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.02,
+        0.02,
+        0.04,
+        0.1,
+        0.12000000000000001,
+        0.18
+      ],
+      "explored_domains": [
+        "https://uk.linkedin.com/jobs/ad-hoc-jobs-swansea",
+        "https://www.linkedin.com/posts/jobs4football_footballjobs-scouting-technicalscout-activity-7353700945911812096-XohD",
+        "https://swanseacity.com",
+        "https://uk.linkedin.com/jobs/football-jobs-wales",
+        "https://swansea.com",
+        "https://uk.linkedin.com/jobs/foundation-jobs-swansea",
+        "https://swanseacityevents.com",
+        "https://newsnow.co.uk",
+        "https://uk.linkedin.com/jobs/south-west-jobs-swansea"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [
+        "Commercial Department Expansion",
+        "Financial Performance Analysis",
+        "Data-Driven Revenue Strategy",
+        "Direct Corporate Hiring",
+        "Elite Technical Infrastructure Investment",
+        "Academy Performance Analysis Expansion",
+        "Specialized Software Procurement (Video/Analytics)",
+        "Hybrid Hiring Models (Direct vs. Third-Party)"
+      ],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Swansea City may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:11:45.857837",
+          "domain_explored": "https://swanseacity.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "SwansTV (Proprietary streaming platform)",
+              "Social Media Platforms: Instagram, X (Twitter), Spotify, YouTube, Facebook, TikTok"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Merchandise Inventory Management (2025-26 Season Kits)",
+              "Ticketing Platform (Get Tickets / Hospitality links)"
+            ]
+          },
+          "patterns_found": [
+            "Digital Content Streaming (SwansTV)",
+            "E-commerce Merchandising (Jersey sales)",
+            "Social Media Integration (Spotify, TikTok, etc.)"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1356,
+              "output_tokens": 259,
+              "elapsed_seconds": 4.259660005569458
+            }
+          ],
+          "reasoning": "The scraped content is exclusively consumer-facing marketing material (match reports, player interviews, fixture lists, and merchandise sales). It confirms the existence of digital platforms (SwansTV, Online Store) but contains no signals regarding backend procurement, vendor selection, or technology infrastructure investments."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:11:51.352039",
+          "domain_explored": "https://newsnow.co.uk",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General News Aggregation",
+            "Irrelevance to Entity"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1416,
+              "output_tokens": 148,
+              "elapsed_seconds": 2.4243597984313965
+            }
+          ],
+          "reasoning": "The provided content is a generic news feed (NewsNow) covering UK politics, international affairs, and stock market updates. There is absolutely no mention of Swansea City, Swansea City AFC, or any associated procurement, technology, or business activities specific to the entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:11:57.905030",
+          "domain_explored": "https://swansea.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Entity Identification: Confirms 'swansea.com' is the investment firm, not the direct club operational site (swanseacity.com)."
+            ]
+          },
+          "patterns_found": [
+            "Portfolio Aggregation",
+            "Investment Firm Structure",
+            "Hospitality & Real Estate Focus",
+            "Entity Disambiguation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1427,
+              "output_tokens": 241,
+              "elapsed_seconds": 3.6866140365600586
+            }
+          ],
+          "reasoning": "The scraped content from 'swansea.com' reveals that this domain belongs to a private investment firm/holding company with a portfolio including Swansea City AFC, Morgans Hotel, and other local businesses. It is a corporate overview page, not the operational procurement portal of the football club. While it confirms ownership, it does not contain procurement signals, technology stacks, or RFPs relevant to the club's operations."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:12:04.987616",
+          "domain_explored": "https://swanseacityevents.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Facility Booking Engine",
+              "Event Management Forms",
+              "Capacity Management Tools"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Venue Capacity Management (21,000 capacity)",
+              "Catering Supply Chain (Planet-pleasing menus)",
+              "Event Prize Procurement (Corporate incentives)",
+              "Outsourced Catering Partner (Levy Restaurants)"
+            ]
+          },
+          "patterns_found": [
+            "Hospitality & Venue Management",
+            "Catering & Event Procurement",
+            "Corporate Conferencing Infrastructure",
+            "Third-Party Operations (Levy Restaurants)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1504,
+              "output_tokens": 326,
+              "elapsed_seconds": 4.219503164291382
+            }
+          ],
+          "reasoning": "The content reveals the operational side of Swansea City's real estate assets (Swansea.com Stadium). While primarily a B2C booking interface, it indicates procurement needs for large-scale hospitality, catering (award-winning chefs), and event management technologies. The presence of 'Levy Restaurants' (a Compass Group company) in the email address confirms a major outsourced vendor partnership, reducing direct procurement signals for food but increasing relevance for facilities and event tech."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:12:14.743550",
+          "domain_explored": "https://uk.linkedin.com/jobs/south-west-jobs-swansea",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Account Executive (Lloyd & Whyte)",
+              "Locum Medical Oncology Consultant (Swansea Bay University Health Board)",
+              "Mobile Vehicle Technician (The AA)",
+              "Quantity Surveyor Estimator (Dale Building Maintenance Ltd)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Geographic Noise",
+            "Unrelated Industry Sectors",
+            "Generic Job Aggregation"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1565,
+              "output_tokens": 261,
+              "elapsed_seconds": 6.0873308181762695
+            }
+          ],
+          "reasoning": "The scraped content represents a generic LinkedIn job search results page for the 'South West' region filtered by 'Swansea'. While Swansea City (the football club) is based in Swansea, the specific job listings returned (Lloyd & Whyte, Swansea Bay University Health Board, The AA, Dale Building Maintenance) are unrelated to the football club's operations. The search query was too broad to isolate entity-specific procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:12:21.764699",
+          "domain_explored": "https://www.linkedin.com/posts/jobs4football_footballjobs-scouting-technicalscout-activity-7353700945911812096-XohD",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software",
+              "Player Data Platforms"
+            ],
+            "job_postings": [
+              "First Team Technical Scout"
+            ],
+            "procurement_indicators": [
+              "Headcount Expansion in Technical Dept",
+              "Likely requirement for Scouting Software Licenses"
+            ]
+          },
+          "patterns_found": [
+            "Specialized Talent Acquisition",
+            "Technical Department Expansion",
+            "Performance Analysis Investment"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1633,
+              "output_tokens": 264,
+              "elapsed_seconds": 3.5669078826904297
+            }
+          ],
+          "reasoning": "The content confirms active recruitment for a 'First Team Technical Scout' role. While this is a direct hire rather than a vendor procurement, it indicates investment in the technical infrastructure of the club. Technical scouting roles often require subscriptions to data analytics platforms (e.g., Wyscout, Instat) and video analysis software, implying downstream procurement needs for software tools to support the new hire."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T15:12:30.062052",
+          "domain_explored": "https://uk.linkedin.com/jobs/ad-hoc-jobs-swansea",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Data Analytics Platforms",
+              "Business Intelligence (BI) Tools",
+              "Financial Modeling Software",
+              "CRM Systems (Salesforce/HubSpot implied)"
+            ],
+            "job_postings": [
+              "Senior Commercial Analyst - Swansea City Football Club (Posted 5 days ago)"
+            ],
+            "procurement_indicators": [
+              "Headcount authorization for senior commercial roles",
+              "Budget allocation for performance analysis tools",
+              "Strategic focus on maximizing commercial revenue streams",
+              "Potential requirement for external data vendors or software licenses"
+            ]
+          },
+          "patterns_found": [
+            "Commercial Department Expansion",
+            "Financial Performance Analysis",
+            "Data-Driven Revenue Strategy",
+            "Direct Corporate Hiring"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1692,
+              "output_tokens": 354,
+              "elapsed_seconds": 4.959501028060913
+            }
+          ],
+          "reasoning": "The content reveals a direct job posting from Swansea City Football Club for a 'Senior Commercial Analyst'. This is a high-value procurement signal indicating an investment in commercial infrastructure and data analytics capabilities to drive revenue growth. Unlike previous iterations which focused on general aggregation or venue management, this represents a specific, strategic hire within the club's core commercial operations."
+        },
+        {
+          "iteration_number": 8,
+          "timestamp": "2026-02-02T15:12:38.253622",
+          "domain_explored": "https://uk.linkedin.com/jobs/foundation-jobs-swansea",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Media Production Tools",
+              "Marketing Platforms"
+            ],
+            "job_postings": [
+              "Swansea City AFC Foundation - Media and Marketing Officer"
+            ],
+            "procurement_indicators": [
+              "Outsourced Recruitment via SCVS",
+              "Community Trust Operational Spend"
+            ]
+          },
+          "patterns_found": [
+            "Charitable Sector Operations",
+            "Marketing & Communications Hiring",
+            "Third-Party Administration (SCVS)"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 8,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1750,
+              "output_tokens": 275,
+              "elapsed_seconds": 4.539527177810669
+            }
+          ],
+          "reasoning": "The content reveals a specific job posting for a 'Media and Marketing Officer' within the Swansea City AFC Foundation. While this confirms hiring activity, the recruitment is handled by the Swansea Council for Voluntary Service (SCVS), suggesting a reliance on third-party public sector infrastructure rather than direct commercial procurement. This indicates operational activity but provides weak signals for high-value technology or infrastructure procurement."
+        },
+        {
+          "iteration_number": 9,
+          "timestamp": "2026-02-02T15:12:55.972003",
+          "domain_explored": "https://uk.linkedin.com/jobs/football-jobs-wales",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "Video Analysis Software (e.g., Hudl, Wyscout, Nacsport)",
+              "Performance Data Platforms",
+              "Cameras/Recording Hardware",
+              "Recruitment CRM"
+            ],
+            "job_postings": [
+              "Head of Academy Performance Analysis (Swansea City FC)",
+              "Media and Marketing Officer (Swansea City AFC Foundation)"
+            ],
+            "procurement_indicators": [
+              "Academy Department Budget Expansion",
+              "Technical Staffing Growth",
+              "Vendor-Administered Hiring (SCVS for Foundation)"
+            ]
+          },
+          "patterns_found": [
+            "Elite Technical Infrastructure Investment",
+            "Academy Performance Analysis Expansion",
+            "Specialized Software Procurement (Video/Analytics)",
+            "Hybrid Hiring Models (Direct vs. Third-Party)"
+          ],
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "tool_calls": [
+            {
+              "iteration": 9,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1809,
+              "output_tokens": 356,
+              "elapsed_seconds": 14.064144134521484
+            }
+          ],
+          "reasoning": "The content reveals a direct, high-value procurement signal: a 'Head of Academy Performance Analysis' role posted 2 hours ago. This indicates immediate investment in technical infrastructure and software (video analysis, data platforms) for the Academy. Additionally, the presence of the Foundation role (hosted by SCVS) reinforces the pattern of third-party administered procurement, while the '34 Football Jobs' aggregate suggests a regional hiring hub."
+        }
+      ],
+      "total_input_tokens": 14152,
+      "total_output_tokens": 2484,
+      "estimated_cost_usd": 0.07971600000000001
+    },
+    "procurement_signals": [
+      "Commercial Department Expansion",
+      "Financial Performance Analysis",
+      "Data-Driven Revenue Strategy",
+      "Direct Corporate Hiring",
+      "Elite Technical Infrastructure Investment",
+      "Academy Performance Analysis Expansion",
+      "Specialized Software Procurement (Video/Analytics)",
+      "Hybrid Hiring Models (Direct vs. Third-Party)"
+    ],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Swansea City may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:12:55.972869"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.157190",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:56:43.668485"
+}

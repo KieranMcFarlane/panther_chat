@@ -1,0 +1,285 @@
+{
+  "entity_id": "colombian_volleyball_federation",
+  "entity_name": "Colombian Volleyball Federation",
+  "template_id": "tpl_global_national_federations_v1",
+  "cluster_id": "national_federations",
+  "discovered_domains": [
+    "paravolleypanam.com",
+    "worldparavolley.org",
+    "taiwantoday.tw",
+    "norceca.net",
+    "olympics.com",
+    "calbears.com",
+    "repositorio.utp.edu.co"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "colombian_volleyball_federation",
+      "entity_name": "Colombian Volleyball Federation",
+      "total_iterations": 15,
+      "completed_iterations": 7,
+      "current_confidence": 0.019999999999999993,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.04,
+        0.04,
+        0.06,
+        0.06,
+        0.039999999999999994,
+        0.019999999999999993
+      ],
+      "explored_domains": [
+        "https://worldparavolley.org",
+        "https://norceca.net",
+        "https://paravolleypanam.com",
+        "https://repositorio.utp.edu.co",
+        "https://olympics.com",
+        "https://taiwantoday.tw",
+        "https://calbears.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Colombian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T01:35:56.287679",
+          "domain_explored": "https://paravolleypanam.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Accessibility Compliance Tools",
+              "Adaptive Sports Equipment"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Strategic alignment with FIVB/WPV Memorandum of Understanding",
+              "Potential future requirement for accessible infrastructure upgrades",
+              "Need for inclusive program management software"
+            ]
+          },
+          "patterns_found": [
+            "Strategic Governance Alignment",
+            "International Federation Partnerships",
+            "Inclusivity & Accessibility Mandates"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 796,
+              "output_tokens": 304,
+              "elapsed_seconds": 3.2307658195495605
+            }
+          ],
+          "reasoning": "While the content is from a partner entity (World ParaVolley PanAm) and not a direct procurement listing, the 'Historic Agreement' between FIVB and World ParaVolley signals a strategic shift towards inclusivity and global growth. For the Colombian Volleyball Federation (FCV), this implies upcoming requirements to align local operations with these new international standards, potentially necessitating procurement of adaptive sports equipment, accessible venue technologies, and compliance management systems."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T01:36:13.035682",
+          "domain_explored": "https://worldparavolley.org",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Event Registration Systems (implied by 'Sign up')",
+              "Learning Management Systems (LMS) (for Classification Courses)",
+              "Donation/Payment Gateways ('Donate to the WPV Foundation')"
+            ],
+            "job_postings": [
+              "Team Leader, World ParaVolley Referee Commission (Dr. Janko Ple\u0161nik)"
+            ],
+            "procurement_indicators": [
+              "Training Service Procurement: 'WPV Level I Sports Classification Course'",
+              "Event Operations: 'ASEAN Para Games Thailand 2025' logistics and management",
+              "Governance: 'World ParaVolley Board of Directors' strategic approvals"
+            ]
+          },
+          "patterns_found": [
+            "Educational Program Procurement",
+            "Human Capital Development",
+            "Standardization & Compliance",
+            "Event Management Operations"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1423,
+              "output_tokens": 369,
+              "elapsed_seconds": 9.750523805618286
+            }
+          ],
+          "reasoning": "The content reveals active investment in human capital through the 'Level I Sports Classification Course' and the appointment of a 'Team Leader' for the Referee Commission. While direct RFPs are absent, these activities signal underlying procurement needs for educational services, certification platforms, and event management software for the ASEAN Para Games and future World Cups. The focus on 'Safeguarding' also suggests potential future procurement for compliance training or consultancy."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T01:36:20.005553",
+          "domain_explored": "https://taiwantoday.tw",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T01:36:37.712015",
+          "domain_explored": "https://norceca.net",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "PDF Documentation (Governance/Scheduling)",
+              "Legacy Web Architecture (HTML file structures)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Rotating Hosting Schedule 2002-2030 (Indicates long-term infrastructure/event services cycles)",
+              "Development Centers (Suggests procurement of training equipment and facility management)",
+              "Commissions 2024-2028 (Indicates active governance and potential administrative vendor needs)",
+              "Branding Kit (Indicates marketing and design procurement requirements)"
+            ]
+          },
+          "patterns_found": [
+            "Long-term Event Planning Cycles",
+            "Governance & Constitutional Frameworks",
+            "Regional Confederation Affiliation",
+            "Infrastructure & Hosting Requirements"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1501,
+              "output_tokens": 370,
+              "elapsed_seconds": 3.3088080883026123
+            }
+          ],
+          "reasoning": "The content confirms the Colombian Volleyball Federation operates within a structured international ecosystem (NORCECA/FIVB). The discovery of long-term 'Hosting Schedules' (extending to 2030) and 'Development Centers' indicates a predictable, multi-year procurement cycle for event organization and infrastructure. While no direct RFPs are visible in this navigation scrape, the 'Commissions' and 'Constitution' links reveal the decision-making bodies responsible for vendor selection and governance."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T01:36:47.029559",
+          "domain_explored": "https://olympics.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "AR Lenses (Marketing/Tech)",
+              "Ticketing Platforms (External)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global Event Marketing",
+            "Consumer-Facing Content",
+            "Ticketing & Merchandising"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1556,
+              "output_tokens": 211,
+              "elapsed_seconds": 2.3462460041046143
+            }
+          ],
+          "reasoning": "The scraped content consists of promotional material for the Milano Cortina 2026 Winter Games (ticket sales, AR lenses, fashion articles). While this indicates the IOC's investment in digital engagement (AR/Marketing), it does not provide specific procurement signals, technology stack details, or governance patterns relevant to the Colombian Volleyball Federation's operations or purchasing cycles."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T01:36:55.220327",
+          "domain_explored": "https://calbears.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "YouTube",
+              "ESPN Player",
+              "ACC Network"
+            ],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant Entity Context",
+            "Consumer Media Consumption",
+            "Collegiate Athletics Focus"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 729,
+              "output_tokens": 213,
+              "elapsed_seconds": 2.2200210094451904
+            }
+          ],
+          "reasoning": "The scraped content originates from 'calbears.com', the athletic domain for the University of California, Berkeley. This entity is geographically and organizationally distinct from the Colombian Volleyball Federation (FCVB). The content focuses on media consumption (YouTube, ACC Network, TV schedules) rather than administrative or procurement operations. There is no logical connection to FCVB procurement signals."
+        },
+        {
+          "iteration_number": 7,
+          "timestamp": "2026-02-02T01:37:06.290555",
+          "domain_explored": "https://repositorio.utp.edu.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Academic Repository Content",
+            "Theoretical Research Focus",
+            "Irrelevant Subject Matter (Veterinary/Physics)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": -0.02,
+          "tool_calls": [
+            {
+              "iteration": 7,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1652,
+              "output_tokens": 170,
+              "elapsed_seconds": 2.461716890335083
+            }
+          ],
+          "reasoning": "The scraped content is from the academic repository of Universidad Tecnol\u00f3gica de Pereira (UTP). It lists thesis titles and abstracts regarding physics, veterinary science (cattle), and sociology. There is no connection to the Colombian Volleyball Federation, sports governance, or procurement activities."
+        }
+      ],
+      "total_input_tokens": 7657,
+      "total_output_tokens": 1637,
+      "estimated_cost_usd": 0.047526
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Colombian Volleyball Federation may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T01:37:06.291221"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.337021",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T01:18:15.562558"
+}

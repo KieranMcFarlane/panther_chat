@@ -1,0 +1,95 @@
+{
+  "entity_id": "international_gymnastics_federation_(fig)",
+  "entity_name": "International Gymnastics Federation (FIG)",
+  "template_id": "tpl_global_governance_federations_v1",
+  "cluster_id": "global_governance_federations",
+  "discovered_domains": [
+    "fig-docs.com",
+    "fujitsu.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "international_gymnastics_federation_(fig)",
+      "entity_name": "International Gymnastics Federation (FIG)",
+      "total_iterations": 15,
+      "completed_iterations": 2,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://fig-docs.com",
+        "https://fujitsu.com"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "International Gymnastics Federation (FIG) may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T17:01:26.736590",
+          "domain_explored": "https://fig-docs.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General entity description",
+            "External reference only"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 401,
+              "output_tokens": 140,
+              "elapsed_seconds": 2.9904067516326904
+            }
+          ],
+          "reasoning": "The provided content is a generic header and a link to the official website. It contains no specific information regarding procurement activities, technology stacks, or organizational governance. It serves only as an identifier for the entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T17:01:29.605806",
+          "domain_explored": "https://fujitsu.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        }
+      ],
+      "total_input_tokens": 401,
+      "total_output_tokens": 140,
+      "estimated_cost_usd": 0.003303
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "International Gymnastics Federation (FIG) may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T17:01:29.606748"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.458589",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T03:11:26.448008"
+}

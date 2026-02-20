@@ -1,0 +1,259 @@
+{
+  "entity_id": "belgian_pro_league",
+  "entity_name": "Belgian Pro League",
+  "template_id": "tpl_league_offices_v1",
+  "cluster_id": "c1_professional_leagues",
+  "discovered_domains": [
+    "proleague.be",
+    "worldleaguesforum.com",
+    "wikidata.org",
+    "anewagencyworld.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://gh.linkedin.com/posts/jobs4football_football-j4f-recruiting-activity-7027232829520408576-n7As",
+      "https://es.linkedin.com/jobs/view/support-specialist-match-analysis-german-speaker-at-hudl-4304321226"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "belgian_pro_league",
+      "entity_name": "Belgian Pro League",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.04,
+      "confidence_history": [
+        0.0,
+        0.02,
+        0.02,
+        0.02,
+        0.02,
+        0.04,
+        0.04
+      ],
+      "explored_domains": [
+        "https://proleague.be",
+        "https://es.linkedin.com/jobs/view/support-specialist-match-analysis-german-speaker-at-hudl-4304321226",
+        "https://worldleaguesforum.com",
+        "https://gh.linkedin.com/posts/jobs4football_football-j4f-recruiting-activity-7027232829520408576-n7As",
+        "https://anewagencyworld.com",
+        "https://wikidata.org"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Belgian Pro League may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T15:20:18.963336",
+          "domain_explored": "https://proleague.be",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "Social Media Monitoring (implied by 'online hate' initiative)",
+              "Video Streaming Platforms (evidenced by 'Samenvatting' / Highlights section)",
+              "Event Management Software (implied by corporate tournament organization)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Campaign: 'Pro League helpt spelers en staff in strijd tegen online haat' (Potential need for moderation tools or AI filtering)",
+              "Event: 'Pro League organiseert eerste bedrijventoernooi ten voordele van Younited' (Event logistics and partnership management)",
+              "Campaign: 'Week van de Belgische Muziek' (Marketing partnership execution)"
+            ]
+          },
+          "patterns_found": [
+            "Social Responsibility Initiatives",
+            "Event Organization",
+            "Digital Content Management"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 340,
+              "elapsed_seconds": 4.319847106933594
+            }
+          ],
+          "reasoning": "The content is primarily marketing and news-focused, but reveals specific operational initiatives that imply underlying technology and service needs. The 'fight against online hate' suggests a need for moderation tools or social listening software. The 'corporate tournament' and 'music week' indicate event management and partnership marketing activities."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T15:20:25.472148",
+          "domain_explored": "https://worldleaguesforum.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Event Organization: Women's Leagues Forum in London",
+              "Legal Services: Intellectual Property Rights protection"
+            ]
+          },
+          "patterns_found": [
+            "Association Governance",
+            "IP Rights Advocacy",
+            "Event Coordination"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 231,
+              "elapsed_seconds": 3.6027491092681885
+            }
+          ],
+          "reasoning": "The scraped content belongs to the World Leagues Association (WLA), an external governing body, not the Belgian Pro League itself. While the Belgian Pro League is likely a member, this content focuses on global advocacy, IP rights, and general association news rather than specific procurement activities, technology stacks, or vendor selection processes of the Belgian entity. No direct procurement signals for the target entity were found."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T15:20:28.398423",
+          "domain_explored": "https://wikidata.org",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T15:20:35.657658",
+          "domain_explored": "https://anewagencyworld.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [
+              "TikTok (Digital Distribution)",
+              "Amazon Web Services (Cloud, AI, ML)",
+              "Google Cloud (AI, Cloud Infrastructure)"
+            ],
+            "job_postings": [],
+            "procurement_indicators": [
+              "Global trend: Cloud & AI partnerships in sports",
+              "Global trend: High-value sponsorship renewals"
+            ]
+          },
+          "patterns_found": [
+            "Global Sports Sponsorship Trends",
+            "Digital Platform Partnerships",
+            "Major M&A Activity",
+            "Venue Naming Rights"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1482,
+              "output_tokens": 278,
+              "elapsed_seconds": 3.935393810272217
+            }
+          ],
+          "reasoning": "The content provided is a general news feed covering global sports business (FIFA, NBA, F1, Olympics). While it highlights high-value partnerships and technology adoption (e.g., AWS, Google Cloud) in the sports industry, there is no specific mention of the Belgian Pro League, its vendors, or its specific procurement activities. The signals are relevant to the industry vertical but do not advance the specific entity investigation."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T15:20:43.339923",
+          "domain_explored": "https://gh.linkedin.com/posts/jobs4football_football-j4f-recruiting-activity-7027232829520408576-n7As",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [
+              "LinkedIn (Recruitment)",
+              "Jobs4football Platform"
+            ],
+            "job_postings": [
+              {
+                "role": "Head of Performance",
+                "entity": "Belgian Pro League Side (Unspecified Club)",
+                "source": "Jobs4football",
+                "recruitment_type": "Agency/Third-Party"
+              }
+            ],
+            "procurement_indicators": [
+              "Outsourced Recruitment Services",
+              "Investment in High-Performance Personnel"
+            ]
+          },
+          "patterns_found": [
+            "Sports Science & Performance Recruitment",
+            "Third-Party HR Utilization",
+            "Specialized Talent Acquisition"
+          ],
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1551,
+              "output_tokens": 302,
+              "elapsed_seconds": 4.22664213180542
+            }
+          ],
+          "reasoning": "The content confirms active recruitment activity within the Belgian Pro League ecosystem via a specialized agency (Jobs4Football). While the specific role (Head of Performance) is sports-side rather than procurement-side, it validates the league's member clubs as active hiring entities utilizing external vendors for talent acquisition, indicating a capability for vendor engagement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T15:20:53.478494",
+          "domain_explored": "https://es.linkedin.com/jobs/view/support-specialist-match-analysis-german-speaker-at-hudl-4304321226",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Entrenador/A Personal Y De Grupos (DeGood)",
+              "Monitor/Entrenador personal (JG fitness)",
+              "Entrenador Personal (Entrenamiento Perfecto)",
+              "Entrenador/a de voleibol (Fundaci\u00f3n Stadion)"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "General Sports Coaching Roles",
+            "Personal Fitness Market",
+            "Local Sports Foundations"
+          ],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1624,
+              "output_tokens": 239,
+              "elapsed_seconds": 5.652311086654663
+            }
+          ],
+          "reasoning": "The content provided is a generic list of 'Entrenador Deportivo' (Sports Coach) job postings in Spain (e.g., personal trainers, volleyball coaches). There is no mention of the Belgian Pro League, professional football analytics, or the specific entity 'Hudl' in the visible text. The content does not contain procurement signals relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 7424,
+      "total_output_tokens": 1390,
+      "estimated_cost_usd": 0.043122
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Belgian Pro League may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T15:20:53.479263"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.445362",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:57:59.608291"
+}

@@ -1,0 +1,235 @@
+{
+  "entity_id": "fiji_baseball_association",
+  "entity_name": "Fiji Baseball Association",
+  "template_id": "tpl_governing_bodies_global_v1",
+  "cluster_id": "governing_bodies_global",
+  "discovered_domains": [
+    "baseball-reference.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": [
+      "https://www.linkedin.com/jobs/view/sales-operations-associate-at-fiji-water-4363591304",
+      "https://www.linkedin.com/jobs/%E6%96%B0%E9%94%A6%E6%B1%9F%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E7%BB%8F%E7%90%86%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A7470376%E2%92%94%E3%80%91%E7%BC%85%E7%94%B8%E6%96%B0%E7%99%BE%E8%83%9C%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A8267%E2%92%8Eo68%E3%80%91%E7%8E%89%E7%A5%A5%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E7%94%B5%E8%AF%9D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A29436%E2%92%8E99%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/view/major-league-performance-nutrition-fellow-at-los-angeles-dodgers-4324872561",
+      "https://www.linkedin.com/jobs/mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E7%A8%B3%E8%B5%A2%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o68%E3%80%91%E7%A6%8F%E8%BF%90%E8%B1%A1%E8%B4%A2%E7%A5%9E%E4%B8%8B%E8%BD%BD%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o6%E3%80%A5%E3%80%91mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E6%8A%80%E5%B7%A7%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A848%E2%92%907870%E3%80%91-jobs",
+      "https://www.linkedin.com/jobs/%E5%BE%B7%E7%94%B2%E5%86%A0%E5%86%9B%E6%80%8E%E4%B9%88%E4%BA%A7%E7%94%9F%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280%E3%80%82com%E3%80%912026%E7%AB%9E%E5%BD%A9%E8%B6%B3%E7%90%83app%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91%E4%B9%90%E7%9C%81%E5%96%9C%E6%8A%A51%E5%85%83%E6%89%8B%E6%9C%BA%E6%98%AF%E7%9C%9F%E7%9A%84%E5%90%97%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91-jobs"
+    ]
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "fiji_baseball_association",
+      "entity_name": "Fiji Baseball Association",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://www.linkedin.com/jobs/%E5%BE%B7%E7%94%B2%E5%86%A0%E5%86%9B%E6%80%8E%E4%B9%88%E4%BA%A7%E7%94%9F%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280%E3%80%82com%E3%80%912026%E7%AB%9E%E5%BD%A9%E8%B6%B3%E7%90%83app%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91%E4%B9%90%E7%9C%81%E5%96%9C%E6%8A%A51%E5%85%83%E6%89%8B%E6%9C%BA%E6%98%AF%E7%9C%9F%E7%9A%84%E5%90%97%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91-jobs",
+        "https://baseball-reference.com",
+        "https://www.linkedin.com/jobs/view/major-league-performance-nutrition-fellow-at-los-angeles-dodgers-4324872561",
+        "https://www.linkedin.com/jobs/view/sales-operations-associate-at-fiji-water-4363591304",
+        "https://www.linkedin.com/jobs/mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E7%A8%B3%E8%B5%A2%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o68%E3%80%91%E7%A6%8F%E8%BF%90%E8%B1%A1%E8%B4%A2%E7%A5%9E%E4%B8%8B%E8%BD%BD%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o6%E3%80%A5%E3%80%91mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E6%8A%80%E5%B7%A7%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A848%E2%92%907870%E3%80%91-jobs",
+        "https://www.linkedin.com/jobs/%E6%96%B0%E9%94%A6%E6%B1%9F%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E7%BB%8F%E7%90%86%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A7470376%E2%92%94%E3%80%91%E7%BC%85%E7%94%B8%E6%96%B0%E7%99%BE%E8%83%9C%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A8267%E2%92%8Eo68%E3%80%91%E7%8E%89%E7%A5%A5%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E7%94%B5%E8%AF%9D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A29436%E2%92%8E99%E3%80%91-jobs"
+      ],
+      "explored_channels": {
+        "official_site": [],
+        "linkedin_jobs": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Fiji Baseball Association may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T14:56:46.646211",
+          "domain_explored": "https://baseball-reference.com",
+          "channel_type": "official_site",
+          "findings": {},
+          "patterns_found": [],
+          "decision": "NO_PROGRESS",
+          "confidence_delta": 0.0,
+          "tool_calls": [],
+          "reasoning": "No content available for analysis"
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T14:56:54.663556",
+          "domain_explored": "https://www.linkedin.com/jobs/view/sales-operations-associate-at-fiji-water-4363591304",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "irrelevant_entity_mismatch",
+            "scraped_noise_data",
+            "location_mismatch"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1409,
+              "output_tokens": 163,
+              "elapsed_seconds": 3.7998738288879395
+            }
+          ],
+          "reasoning": "The provided content is a list of generic job postings from LinkedIn (Bosch, Signature Healthcare) and does not contain any information regarding the 'Fiji Baseball Association'. The URL title mentions 'Fiji Water', but the content itself is unrelated noise. There are zero procurement signals for the target entity."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T14:57:02.894336",
+          "domain_explored": "https://www.linkedin.com/jobs/%E6%96%B0%E9%94%A6%E6%B1%9F%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E7%BB%8F%E7%90%86%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A7470376%E2%92%94%E3%80%91%E7%BC%85%E7%94%B8%E6%96%B0%E7%99%BE%E8%83%9C%E5%9B%BD%E9%99%85%E5%AE%A2%E6%9C%8D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A8267%E2%92%8Eo68%E3%80%91%E7%8E%89%E7%A5%A5%E5%85%AC%E5%8F%B8%E5%AE%A2%E6%9C%8D%E5%BE%AE%E4%BF%A1%E7%94%B5%E8%AF%9D%E3%80%90google%E9%9C%B8%E5%B1%8F%2Bq%EF%BC%9A29436%E2%92%8E99%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "VP of Marketing (B2B) - BM Digital",
+              "Catalog Merchandising Strategy Manager, Games - Netflix",
+              "Analyst, Human Resources - Harry Winston"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "irrelevant_entity_mismatch",
+            "scraped_noise_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1572,
+              "output_tokens": 221,
+              "elapsed_seconds": 3.9958081245422363
+            }
+          ],
+          "reasoning": "The scraped content is heavily polluted with spam injection techniques (keyword stuffing with 'google\u9738\u5c4f' and unrelated Chinese text) used to manipulate search rankings. The actual job listings (Netflix, Harry Winston, BM Digital) are unrelated to the Fiji Baseball Association. There is no procurement signal relevant to the target entity."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T14:57:11.691264",
+          "domain_explored": "https://www.linkedin.com/jobs/view/major-league-performance-nutrition-fellow-at-los-angeles-dodgers-4324872561",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [
+              "Washtenaw County Assistance Payments Worker",
+              "CPS & Foster Care Services Specialist",
+              "Magistrate",
+              "Youth Peer Specialist"
+            ],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "scraped_noise_data",
+            "location_mismatch",
+            "irrelevant_entity_mismatch",
+            "content_divergence"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1636,
+              "output_tokens": 226,
+              "elapsed_seconds": 4.384968042373657
+            }
+          ],
+          "reasoning": "The URL indicates a target of 'Los Angeles Dodgers', but the scraped content is a generic job board listing for 'Washtenaw County' (Michigan) government roles (State of Michigan, City of Ann Arbor). There is no mention of the Fiji Baseball Association, the Dodgers, or relevant procurement signals. The content is entirely irrelevant to the target entity."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T14:57:41.645508",
+          "domain_explored": "https://www.linkedin.com/jobs/mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E7%A8%B3%E8%B5%A2%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o68%E3%80%91%E7%A6%8F%E8%BF%90%E8%B1%A1%E8%B4%A2%E7%A5%9E%E4%B8%8B%E8%BD%BD%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A82677o6%E3%80%A5%E3%80%91mg%E5%86%B0%E7%90%83%E7%AA%81%E7%A0%B4%E5%B9%B8%E8%BF%90%E7%99%BE%E6%90%AD%E6%8A%80%E5%B7%A7%E3%80%90%E7%99%BE%E5%BA%A6google%E9%9C%B8%E5%B1%8F%E6%8A%80%E6%9C%AF%2Bq%EF%BC%9A848%E2%92%907870%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "irrelevant_entity_mismatch",
+            "keyword_stuffing"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1823,
+              "output_tokens": 184,
+              "elapsed_seconds": 25.590461254119873
+            }
+          ],
+          "reasoning": "The URL and scraped content are heavily polluted with SEO spam and gambling-related keywords (e.g., 'Mg\u51b0\u7403\u7a81\u7834\u5e78\u8fd0\u767e\u642d\u7a33\u8d62', '\u798f\u8fd0\u8c61\u8d22\u795e\u4e0b\u8f7d'). The text contains repeated references to 'Baidu Google screen technology' and contact numbers (QQ IDs), characteristic of black-hat SEO spam pages. There is no content related to the Fiji Baseball Association, nor any legitimate procurement signals."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T14:57:52.162181",
+          "domain_explored": "https://www.linkedin.com/jobs/%E5%BE%B7%E7%94%B2%E5%86%A0%E5%86%9B%E6%80%8E%E4%B9%88%E4%BA%A7%E7%94%9F%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280%E3%80%82com%E3%80%912026%E7%AB%9E%E5%BD%A9%E8%B6%B3%E7%90%83app%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91%E4%B9%90%E7%9C%81%E5%96%9C%E6%8A%A51%E5%85%83%E6%89%8B%E6%9C%BA%E6%98%AF%E7%9C%9F%E7%9A%84%E5%90%97%E3%80%90%E6%9C%A8%E6%A3%AE%E4%BA%BB%E6%9C%AC%E8%82%B2%E5%AE%98%E7%BD%91zq280.com%E3%80%91-jobs",
+          "channel_type": "linkedin_jobs",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "spam_injection",
+            "seo_manipulation",
+            "irrelevant_entity_mismatch",
+            "scraped_noise_data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1991,
+              "output_tokens": 167,
+              "elapsed_seconds": 6.313231945037842
+            }
+          ],
+          "reasoning": "The URL and scraped content are heavily contaminated with SEO spam and Chinese gambling keywords (e.g., '\u5fb7\u7532\u51a0\u519b', '\u7ade\u5f69\u8db3\u7403app'). The visible job listings (Harry Winston, FanDuel, Protingent) are generic LinkedIn noise unrelated to the Fiji Baseball Association. There is no content relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 8431,
+      "total_output_tokens": 961,
+      "estimated_cost_usd": 0.039708
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Fiji Baseball Association may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T14:57:52.163573"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.314496",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:54:03.792063"
+}

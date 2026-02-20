@@ -1,0 +1,242 @@
+{
+  "entity_id": "al-nasr_benghazi",
+  "entity_name": "Al-Nasr Benghazi",
+  "template_id": "tpl_c3_emerging_market_clubs_v1",
+  "cluster_id": "emerging_markets_clubs",
+  "discovered_domains": [
+    "transfermarkt.us",
+    "playmakerstats.com",
+    "sennferrero.com",
+    "kids.kiddle.co",
+    "footballdatabase.eu",
+    "chicagofirefc.com"
+  ],
+  "discovered_channels": {
+    "linkedin_jobs": []
+  },
+  "enriched_patterns": {
+    "discovery_ledger": {
+      "entity_id": "al-nasr_benghazi",
+      "entity_name": "Al-Nasr Benghazi",
+      "total_iterations": 15,
+      "completed_iterations": 6,
+      "current_confidence": 0.0,
+      "confidence_history": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "explored_domains": [
+        "https://kids.kiddle.co",
+        "https://playmakerstats.com",
+        "https://transfermarkt.us",
+        "https://sennferrero.com",
+        "https://chicagofirefc.com",
+        "https://footballdatabase.eu"
+      ],
+      "explored_channels": {
+        "official_site": []
+      },
+      "procurement_signals": [],
+      "technology_stack": [],
+      "governance_patterns": [],
+      "procurement_hypothesis": "Al-Nasr Benghazi may have digital procurement opportunities in the next 6-12 months",
+      "hypothesis_confidence": 0.0,
+      "iterations": [
+        {
+          "iteration_number": 1,
+          "timestamp": "2026-02-02T10:29:44.246297",
+          "domain_explored": "https://transfermarkt.us",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant content",
+            "General sports news",
+            "Global football transfer data"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 1,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1358,
+              "output_tokens": 160,
+              "elapsed_seconds": 3.338094711303711
+            }
+          ],
+          "reasoning": "The scraped content from Transfermarkt.us is exclusively focused on global football transfers, market values, and player rumors. There is absolutely no mention of Al-Nasr Benghazi, Libyan football, or any corporate procurement activities (technology, governance, or operations) related to the entity."
+        },
+        {
+          "iteration_number": 2,
+          "timestamp": "2026-02-02T10:30:18.960512",
+          "domain_explored": "https://playmakerstats.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Multi-domain footer navigation (zerozero.pt, calciozz.it, etc.)",
+            "Generic football match results and league tables",
+            "Gaming/Gambling awareness disclaimers"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 2,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1404,
+              "output_tokens": 187,
+              "elapsed_seconds": 2.53816294670105
+            }
+          ],
+          "reasoning": "The content is a generic sports statistics portal (Playmakerstats/ZeroZero network) displaying global football results and navigation links to various international sports domains. There is no mention of Al-Nasr Benghazi, Libyan football, or organizational procurement activities."
+        },
+        {
+          "iteration_number": 3,
+          "timestamp": "2026-02-02T10:30:27.780985",
+          "domain_explored": "https://sennferrero.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Legal services firm description (Senn Ferrero Asociados)",
+            "Educational and academic news content (Global Winter School, ISDE, University collaborations)",
+            "Sports law arbitration and governance mentions (UCI, Arbitration commissions)",
+            "Marketing copy repetition ('A PERSONAL SERVICE, A GLOBAL COMPANY')"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 3,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1469,
+              "output_tokens": 259,
+              "elapsed_seconds": 2.800849199295044
+            }
+          ],
+          "reasoning": "The content is clearly the homepage of 'Senn Ferrero Asociados', a Spanish law firm specializing in sports law and entertainment. The text describes their services, lists partners' participation in academic events, and outlines their legal expertise. There is absolutely no relation to 'Al-Nasr Benghazi' or any procurement activities (RFPs, job postings, tech stacks) associated with the Libyan football club. This is a false positive in the scraping process."
+        },
+        {
+          "iteration_number": 4,
+          "timestamp": "2026-02-02T10:30:38.826395",
+          "domain_explored": "https://kids.kiddle.co",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Educational encyclopedia content",
+            "General knowledge categories (Science, History, Geography)",
+            "Attribution-ShareAlike licensing references",
+            "Homework help navigation",
+            "Generic content structure (Kiddle encyclopedia)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 4,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1554,
+              "output_tokens": 203,
+              "elapsed_seconds": 3.377346992492676
+            }
+          ],
+          "reasoning": "The scraped content is from 'Kiddle' (kids.kiddle.co), a children's encyclopedia. It contains a sitemap of general educational topics (Science, History, Geography) and standard site navigation. There is absolutely no connection to Al-Nasr Benghazi, football club management, or business procurement activities."
+        },
+        {
+          "iteration_number": 5,
+          "timestamp": "2026-02-02T10:30:48.547479",
+          "domain_explored": "https://footballdatabase.eu",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Global sports statistics aggregation",
+            "Historical match results database",
+            "Generic football ranking tables (Elo ratings)",
+            "Standard sports portal navigation (Teams, Competitions, Transfers)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 5,
+              "model": "claude-sonnet-4",
+              "input_tokens": 635,
+              "output_tokens": 193,
+              "elapsed_seconds": 3.0359280109405518
+            }
+          ],
+          "reasoning": "The content is strictly focused on football statistics, match results, and player/team rankings. It functions as a sports database rather than a corporate or procurement entity site. There are no signals regarding business operations, technology investments, or governance structures relevant to procurement."
+        },
+        {
+          "iteration_number": 6,
+          "timestamp": "2026-02-02T10:30:56.378290",
+          "domain_explored": "https://chicagofirefc.com",
+          "channel_type": "official_site",
+          "findings": {
+            "technologies": [],
+            "job_postings": [],
+            "procurement_indicators": []
+          },
+          "patterns_found": [
+            "Irrelevant entity (Chicago Fire FC vs Al-Nasr Benghazi)",
+            "Generic sports news content (match schedules, player transfers)",
+            "Fan engagement CTAs (Download App, Get Tickets)",
+            "Repetitive content structure (scraping artifact)"
+          ],
+          "decision": "REJECT",
+          "confidence_delta": 0.0,
+          "tool_calls": [
+            {
+              "iteration": 6,
+              "model": "claude-sonnet-4",
+              "input_tokens": 1674,
+              "output_tokens": 209,
+              "elapsed_seconds": 2.3587660789489746
+            }
+          ],
+          "reasoning": "The content is entirely focused on Chicago Fire FC, a different entity than the target (Al-Nasr Benghazi). The text consists of standard sports announcements regarding match times, player acquisitions, and fan engagement prompts. There are no procurement signals, technology stacks, or governance patterns relevant to the target entity."
+        }
+      ],
+      "total_input_tokens": 8094,
+      "total_output_tokens": 1211,
+      "estimated_cost_usd": 0.042447
+    },
+    "procurement_signals": [],
+    "technology_stack": [],
+    "governance_patterns": [],
+    "procurement_hypothesis": "Al-Nasr Benghazi may have digital procurement opportunities in the next 6-12 months",
+    "hypothesis_confidence": 0.0,
+    "last_updated": "2026-02-02T10:30:56.380012"
+  },
+  "confidence_adjustment": 0.0,
+  "version": 1,
+  "created_at": "2026-02-02T00:21:45.232551",
+  "usage_count": 0,
+  "success_rate": 0.0,
+  "discovered_at": "2026-02-02T02:16:52.870206"
+}
